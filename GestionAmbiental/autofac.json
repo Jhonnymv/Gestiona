@@ -1,0 +1,21 @@
+{
+  "defaultAssembly": "GestionAmbiental.Infrastructure",
+  "modules": [
+    {
+      "type": "GestionAmbiental.Module, GestionAmbiental",
+      "properties": {
+      }
+    },
+    {
+      "type": "GestionAmbiental.Infrastructure.ApplicationModule",
+      "properties": {
+      }
+    },
+    {
+      "type": "GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Module",
+      "properties": {
+        "ConnectionString": "Server=DESKTOP-9BUCBQF;Database=GestionAmbiental;Trusted_Connection=True;MultipleActiveResultSets=True;"
+      }
+    }
+  ]
+}
