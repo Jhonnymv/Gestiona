@@ -1,16 +1,107 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
+using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 {
     public class InspeccionesController : Controller
     {
-        public IActionResult Resumen()
+        private readonly IConsultarCabeceras _consultarCabeceras;
+        private readonly ISelectItems _selectItems;
+        public InspeccionesController(
+            IConsultarCabeceras consultarCabeceras,
+            ISelectItems selectItems
+            )
         {
+            _consultarCabeceras = consultarCabeceras;
+            _selectItems = selectItems;
+        }
+        public async Task<IActionResult> Resumen()
+        {
+          
+
+            var selectItemsResumen = await _selectItems.Execute();
+
+            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+
+            filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.Filtro = filtroGerencias;
+            ViewBag.GerenciaMC = gerenciasEjecutorasMC;
+            ViewBag.GerenciaEPCM = gerenciasEPCM;
+            ViewBag.EmpresasMC = empresasMC;
+            ViewBag.EmpresasEPCM = empresasEPCM;
+            ViewBag.TiposCondicion = tiposCondicion;
+
             return View();
         }
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo)
+        {
+            DateTime fecha;
+            if (filtroFecha != null)
+                fecha = new DateTime(2019, 5, 15);
+            else
+                fecha = (DateTime)SqlDateTime.MinValue;
+
+            filtroCodigo = filtroCodigo ?? "";
+            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo);
+            var filasTabla = "";
+            if (datosTabla.Count > 0)
+            {
+                foreach (var fila in datosTabla)
+                {
+
+                    filasTabla += "<tr>";
+                    switch (fila.Estado)
+                    {
+                        case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
+                        case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
+                        default: filasTabla += "<td class=\"alert-column\"></td>"; break;
+                    }
+                    filasTabla += "<td><a href=\"#\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
+                    filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
+                    filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
+                    filasTabla += "<td>" + fila.EmpContratEPCM + "</td>";
+                    filasTabla += "<td>" + fila.LugarInspec + "</td>";
+                    filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
+                    filasTabla += "<td>" + fila.NObservaciones + "</td>";
+                    filasTabla += "</tr>";
+                }
+            }
+            else
+            {
+                filasTabla = "Sin datos";
+            }
+
+            dynamic response = new
+            {
+                Data = filasTabla
+            };
+            return Ok(response);
+        }
+
+        
     }
 }

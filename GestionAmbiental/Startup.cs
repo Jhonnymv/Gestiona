@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Configuration;
+using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
+using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -77,6 +79,8 @@ namespace GestionAmbiental
                 .AddMvc()
                 .AddFeatureFolders(new OdeToCode.AddFeatureFolders.FeatureFolderOptions()
                 { FeatureFolderName = "UseCases" });
+            services.AddScoped<IConsultarCabeceras, ConsultarCabeceras>();
+            services.AddScoped<ISelectItems, SelectItems>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

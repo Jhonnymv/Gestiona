@@ -54,3 +54,130 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+.navbar {
+    /*background-color: #2e6793;*/
+    background-image: url(../img/fondo-header-marcobre.jpg);
+}
+
+#logo_marcobre {
+    width: 200px;
+}
+
+.navbar-nav {
+    /*align-items: flex-end;*/
+    align-items: center;
+    text-align: center;
+}
+
+.nav-tabs .nav-link {
+    color: #2e6793;
+}
+
+    .nav-tabs .nav-link.active {
+        color: white;
+        background-color: #2e6793;
+    }
+
+.tab-content {
+    border-right: 1px solid #dee2e6;
+    border-left: 1px solid #dee2e6;
+    border-bottom: 1px solid #dee2e6;
+    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 15px;
+    padding: 20px;
+}
+
+.btn-primary {
+    background-color: #2e6793;
+    border-color: #2e6793;
+}
+
+    .btn-primary:hover {
+        background-color: #627b8f;
+        border-color: #627b8f;
+    }
+
+th {
+    text-align: center;
+}
+
+td {
+    text-align: center;
+}
+
+.table {
+    border: 1px solid #2e6793;
+}
+
+@media screen and (max-width: 740px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+.table-modal {
+    display: block;
+    overflow-x: auto;
+}
+
+    .table-modal thead {
+        font-size: 15px;
+    }
+
+        .table-modal thead tr th {
+            vertical-align: inherit;
+        }
+
+.modal-xl {
+    max-width: 95%;
+}
+
+.thead-mcolor {
+    background-color: #2e6793;
+    color: white;
+}
+
+.titulo-pagina {
+    text-align: center;
+    color: #2e6793;
+}
+
+.alert-column {
+    width: 10px;
+}
+
+#tabla_inspecciones_pendientes_implementacion tbody tr td {
+    vertical-align: inherit;
+}
+
+#files {
+    visibility: hidden;
+    width: 0px;
+}
+/*Modal Header*/
+.modal-header {
+    background-color: #2e6793;
+    color: white;
+}
+
+.close {
+    color: white;
+}
+
+/*Iconos tabla modal*/
+.modal-table-icon {
+    padding: 5px;
+    border-radius: 25px;
+}
+
+    .modal-table-icon:hover {
+        background-color: #bebebe;
+        border-color: #bebebe;
+    }
+
+.modal-table-input {
+    width: 250px;
+}
