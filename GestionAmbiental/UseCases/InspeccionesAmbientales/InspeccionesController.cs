@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
+using GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,18 +16,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
     {
         private readonly IConsultarCabeceras _consultarCabeceras;
         private readonly ISelectItems _selectItems;
-        public InspeccionesController(
-            IConsultarCabeceras consultarCabeceras,
-            ISelectItems selectItems
-            )
+        private readonly IRegistrarInspeccion _registrarInspeccion;
+        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccion registrarInspeccion )
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
+            _registrarInspeccion = registrarInspeccion;
         }
         public async Task<IActionResult> Resumen()
         {
-          
-
             var selectItemsResumen = await _selectItems.Execute();
 
             var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -60,7 +59,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         {
             DateTime fecha;
             if (filtroFecha != null)
-                fecha = new DateTime(2019, 5, 15);
+                fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
             else
                 fecha = (DateTime)SqlDateTime.MinValue;
 
@@ -94,14 +93,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             {
                 filasTabla = "Sin datos";
             }
-
             dynamic response = new
             {
                 Data = filasTabla
             };
             return Ok(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> NuevaInspeccion(string data)
+        {
+            //var decodedData = HttpUtility.UrlDecode(data);
+            await _registrarInspeccion.Execute(data);
 
-        
+            var response = "";
+            return Ok(response);
+        }
     }
 }

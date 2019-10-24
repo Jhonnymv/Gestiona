@@ -22,7 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
-                c.Fecha_Inspeccion.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro : c.Fecha_Inspeccion)
+                c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 )
