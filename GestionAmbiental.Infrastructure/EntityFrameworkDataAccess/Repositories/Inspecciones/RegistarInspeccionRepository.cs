@@ -38,9 +38,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabeceraEntity.Estado = "Registrado";
                 */
                 cabeceraEntity.Area = "Medio Ambiente";
-                cabeceraEntity.Codigo = "POR DEFINIR";
+                cabeceraEntity.Codigo = "definido";
                 cabeceraEntity.Id_Gerencia_Ejecutora = 5;
-                cabeceraEntity.Id_Gerencia_EPCM = 40;
+                cabeceraEntity.Id_Gerencia_EPCM =2;
                 cabeceraEntity.Id_Empresa_Contratista = 2;
                 cabeceraEntity.Id_Empresa_Contratista_EPCM = 5;
                 cabeceraEntity.Fecha_Inspeccion = new DateTime(2019, 10, 24);
