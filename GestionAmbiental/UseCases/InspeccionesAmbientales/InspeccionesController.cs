@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -17,11 +20,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         private readonly IConsultarCabeceras _consultarCabeceras;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInspeccion _registrarInspeccion;
-        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccion registrarInspeccion )
+        private readonly IHostingEnvironment _hostingEnvironment;
+        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccion registrarInspeccion, IHostingEnvironment hostingEnvironment )
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
             _registrarInspeccion = registrarInspeccion;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task<IActionResult> Resumen()
         {
@@ -100,13 +105,32 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaInspeccion(string data)
+        public async Task<IActionResult> NuevaInspeccion(NuevaInspeccionModel model)
         {
-            //var decodedData = HttpUtility.UrlDecode(data);
-            await _registrarInspeccion.Execute(data);
+            if (ModelState.IsValid)
+            {
+                //Guardar archivos en el servidor y obtener el path generado para guardarlo en la bd
+                if (model.Observacion.Evidencias!= null)
+                {
+                    for (int i = 0; i < model.Observacion.Evidencias.Count; i++)
+                    {
+                        //TODO agregar extension al archivo
+                        var fileName = CreateUniqueFileName(i);
+                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
+                        await model.Observacion.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
+                    }
+                }
+            }
 
             var response = "";
             return Ok(response);
         }
+
+        private string CreateUniqueFileName(int nFile)
+        {
+            var fileName = "Evidencia_Inspecciones_" + User.Identity.Name + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
+            return fileName;
+        }
+        
     }
 }

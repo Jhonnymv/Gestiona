@@ -19,7 +19,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> RegistrarInspeccionCabecera(NuevaInspeccionCabecera cabecera)
         {
             
-                var cabeceraEntity = new Inspeccion_Cabecera();
+            var cabeceraEntity = new Inspeccion_Cabecera();
             try
             {
                 /*
