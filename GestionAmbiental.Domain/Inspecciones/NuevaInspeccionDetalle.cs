@@ -12,7 +12,6 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string Evidencia_Condicion { get; set; }
         public string Nivel_Riesgo_Ambiental { get; set; }
         public string Descripcion_Accion { get; set; }
-        public string Tipo_Accion { get; set; }
         public int Id_Responsable_Marcobre { get; set; }
         public string Responsable_Contratista { get; set; }
         public DateTime Fecha_Programada { get; set; }
@@ -28,7 +27,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public NuevaInspeccionDetalle(
             int id_Inspeccion_Cabecera, string descripcion_Condicion, int id_Tipo_Condicion, 
             string evidencia_Condicion, string nivel_Riesgo_Ambiental, string descripcion_Accion, 
-            int id_Responsable_Marcobre, string responsable_Contratista, DateTime fecha_Programada, string evidencia_Inspeccion)
+            int id_Responsable_Marcobre, string responsable_Contratista, DateTime fecha_Programada)
         {
             Id_Inspeccion_Cabecera = id_Inspeccion_Cabecera;
             Descripcion_Condicion = descripcion_Condicion;
@@ -39,7 +38,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             Id_Responsable_Marcobre = id_Responsable_Marcobre;
             Responsable_Contratista = responsable_Contratista;
             Fecha_Programada = fecha_Programada;
-            Evidencia_Inspeccion = evidencia_Inspeccion;
         }
         public NuevaInspeccionDetalle() { }
     }

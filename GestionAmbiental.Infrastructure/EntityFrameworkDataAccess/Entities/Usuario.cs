@@ -21,6 +21,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "varchar(50)")]
         public string Email { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Superior { get; set; }
+        public int? Id_Superior { get; set; }
     }
 }

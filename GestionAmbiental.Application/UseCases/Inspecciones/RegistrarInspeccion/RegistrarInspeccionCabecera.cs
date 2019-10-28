@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
             _registarInspeccionReadOnlyRepository = registarInspeccionReadOnlyRepository;
         }
 
-        public async Task Execute(string objetivo, int gerenciaMarc, int empresaMarc, int gerenciaEPCM, int empresaEPCM, string lugar, string fechaInspeccion, string hora, int responsableLugar, int responsableMA, string inspectores)
+        public async Task<int> Execute(string objetivo, int gerenciaMarc, int empresaMarc, int gerenciaEPCM, int empresaEPCM, string lugar, string fechaInspeccion, string hora, int responsableLugar, int responsableMA, string inspectores)
         {
             var cabecera = new NuevaInspeccionCabecera(
                 gerenciaMarc,
@@ -31,9 +31,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
                 inspectores,
                 objetivo);
 
-
-            //TODO pasar datos
             int idCabecera = await _registarInspeccionReadOnlyRepository.RegistrarInspeccionCabecera(cabecera);
+            return idCabecera;
         }
     }
 }

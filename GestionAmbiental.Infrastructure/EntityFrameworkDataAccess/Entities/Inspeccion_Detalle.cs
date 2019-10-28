@@ -24,8 +24,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public string Nivel_Riesgo_Ambiental { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Accion { get; set; }
-        [Column(TypeName = "varchar(15)")]
-        public string Tipo_Accion { get; set; }
         [Column(TypeName = "int")]
         public int Id_Responsable_Marcobre { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -37,13 +35,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "varchar(250)")]
         public string Comentario_Inspeccion { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Cierre { get; set; }
+        public DateTime? Fecha_Cierre { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Verificacion_Inspector { get; set; }
+        public DateTime? Fecha_Verificacion_Inspector { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Comentario_Inspector { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Verificacion_MA{ get; set; }
+        public DateTime? Fecha_Verificacion_MA{ get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Comentario_MA { get; set; }
         [Column(TypeName = "varchar(15)")]

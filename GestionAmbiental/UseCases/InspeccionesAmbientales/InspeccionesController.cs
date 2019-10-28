@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
+using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using Microsoft.AspNetCore.Hosting;
@@ -20,13 +21,23 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         private readonly IConsultarCabeceras _consultarCabeceras;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInspeccionCabecera _registrarInspeccionCabecera;
+        private readonly IRegistrarInspeccionObservacion _registrarInspeccionObservacion;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccionCabecera registrarInspeccionCabecera, IHostingEnvironment hostingEnvironment )
+        private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
+        public InspeccionesController(
+            IConsultarCabeceras consultarCabeceras, 
+            ISelectItems selectItems, 
+            IRegistrarInspeccionCabecera registrarInspeccionCabecera, 
+            IHostingEnvironment hostingEnvironment,
+            IRegistrarInspeccionObservacion registrarInspeccionObservacion,
+            IConsultarInspeccionDetalle consultarInspeccionDetalle)
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
             _registrarInspeccionCabecera = registrarInspeccionCabecera;
             _hostingEnvironment = hostingEnvironment;
+            _registrarInspeccionObservacion = registrarInspeccionObservacion;
+            _consultarInspeccionDetalle = consultarInspeccionDetalle;
         }
         public async Task<IActionResult> Resumen()
         {
@@ -109,27 +120,68 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [HttpPost]
         public async Task<IActionResult> NuevaInspeccion(NuevaInspeccionModel model)
         {
+            var filaObservacion = "";
             if (ModelState.IsValid)
             {
-                await _registrarInspeccionCabecera.Execute(
+                var idCabecera = await _registrarInspeccionCabecera.Execute(
                     model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
                     model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
                     model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
+                var evidencias = new List<string>();
                 //Guardar archivos en el servidor y obtener el path generado para guardarlo en la bd
-                if (model.Observacion.Evidencias!= null)
+                if (model.Observacion.Evidencias != null)
                 {
                     for (int i = 0; i < model.Observacion.Evidencias.Count; i++)
                     {
                         //TODO agregar extension al archivo
                         var fileExtension = Path.GetExtension(model.Observacion.Evidencias[i].FileName);
-                        var fileName = CreateUniqueFileName(i+1)+fileExtension;
+                        var fileName = CreateUniqueFileName(i + 1) + fileExtension;
                         var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
                         await model.Observacion.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
+                        evidencias.Add(filepath);
                     }
                 }
-            }
+                await _registrarInspeccionObservacion.Execute(
+                    idCabecera,
+                    model.Observacion.CondicionIdentificada,
+                    model.Observacion.TipoCondicion,
+                    evidencias,
+                    model.Observacion.NiveRiesgo,
+                    model.Observacion.AccionTomada,
+                    model.Observacion.ResponsableMarc,
+                    model.Observacion.ResponsableCont,
+                    model.Observacion.FechaProgramada);
+                var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera);
+                /*
+                foreach(var observacion in observaciones)
+                {
+                    var evidencia = "";
+                    for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
+                    {
+                        if (i == 1)
+                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + i + "</a>";
+                        else
+                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + i + "</a>";
+                    }
+                    filaObservacion += "<tr>";
+                    filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                    filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
+                    filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
+                    filaObservacion += "<td>" + evidencia + "</td>";
+                    filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental+"</td>";
+                    filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
+                    filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
+                    filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
+                    filaObservacion += "<td>" + observacion.Fecha_Programada + "</td>";
+                    filaObservacion += "</tr>";
 
-            var response = "";
+                }
+            */
+            }
+            dynamic response = new
+            {
+            //    Data = filaObservacion
+            };
             return Ok(response);
         }
 
