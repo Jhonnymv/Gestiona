@@ -186,7 +186,7 @@
                     <div class="row mb-2">
                         <div class="col-md-12">
                             <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                                    data-target="#modal_nuevaObservacion">
+                                    data-target="#modal_nuevaObservacion" onclick="guardarCabecera()">
                                 Agregar Observación
                             </button>
                         </div>
@@ -369,7 +369,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Agregar</button>
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">Agregar</button>
                 </div>
             </div>
         </div>
@@ -456,7 +456,7 @@
             $.ajax({
                 type: "POST",
                 traditional: true,
-                url: "/Inspecciones/NuevaInspeccion",
+                url: "/Inspecciones/NuevaObservacion",
                 data: {
                     "data": formNuevaInspeccion.serialize(),
                 },
@@ -464,6 +464,20 @@
                     console.log("Recibido")
                 }
             });
+        }
+        function guardarCabecera() {
+            if (confirm("Se registrara la información completada antes de agregar una observación")) {
+                /*$.ajax({
+                    type: "POST",
+                    data: ,
+                    url: "/Inspecciones/NuevaInspeccionCabecera",
+                    contentType: "application/json"
+                }).done(function (res) {
+
+                });*/
+            } else {
+                return;
+            }
         }
     </script>
 }

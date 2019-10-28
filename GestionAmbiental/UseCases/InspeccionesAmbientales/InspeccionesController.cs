@@ -19,13 +19,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
     {
         private readonly IConsultarCabeceras _consultarCabeceras;
         private readonly ISelectItems _selectItems;
-        private readonly IRegistrarInspeccion _registrarInspeccion;
+        private readonly IRegistrarInspeccionCabecera _registrarInspeccionCabecera;
         private readonly IHostingEnvironment _hostingEnvironment;
-        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccion registrarInspeccion, IHostingEnvironment hostingEnvironment )
+        public InspeccionesController(IConsultarCabeceras consultarCabeceras, ISelectItems selectItems, IRegistrarInspeccionCabecera registrarInspeccionCabecera, IHostingEnvironment hostingEnvironment )
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
-            _registrarInspeccion = registrarInspeccion;
+            _registrarInspeccionCabecera = registrarInspeccionCabecera;
             _hostingEnvironment = hostingEnvironment;
         }
         public async Task<IActionResult> Resumen()
@@ -105,17 +105,24 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             return Ok(response);
         }
         [HttpPost]
+        
+        [HttpPost]
         public async Task<IActionResult> NuevaInspeccion(NuevaInspeccionModel model)
         {
             if (ModelState.IsValid)
             {
+                await _registrarInspeccionCabecera.Execute(
+                    model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
+                    model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
+                    model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
                 //Guardar archivos en el servidor y obtener el path generado para guardarlo en la bd
                 if (model.Observacion.Evidencias!= null)
                 {
                     for (int i = 0; i < model.Observacion.Evidencias.Count; i++)
                     {
                         //TODO agregar extension al archivo
-                        var fileName = CreateUniqueFileName(i);
+                        var fileExtension = Path.GetExtension(model.Observacion.Evidencias[i].FileName);
+                        var fileName = CreateUniqueFileName(i+1)+fileExtension;
                         var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
                         await model.Observacion.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
                     }
@@ -125,6 +132,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             var response = "";
             return Ok(response);
         }
+
 
         private string CreateUniqueFileName(int nFile)
         {
