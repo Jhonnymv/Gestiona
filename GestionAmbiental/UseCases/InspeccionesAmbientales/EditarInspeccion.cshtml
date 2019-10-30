@@ -1,0 +1,165 @@
+﻿@model GestionAmbiental.UseCases.InspeccionesAmbientales.NuevaInspeccionModel
+
+@{
+    ViewData["Title"] = "Editar Inspeccion";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Editar Inspección</h2>
+            </div>
+        </div>
+        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Area"></label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Objetivo"></label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" asp-for="Objetivo">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Id_Gerencia_Ejecutora"></label>
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Id_Empresa_Contratista"></label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Id_Gerencia_EPCM"></label>
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Id_Empresa_Contratista_EPCM"></label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Lugar_Inspeccionado"></label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
+                </div>
+                <div class="col-md-1">
+                    <label asp-for="Fecha_Inspeccion"></label>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" value="@Model.Fecha_Inspeccion">
+                </div>
+                <div class="col-md-1">
+                    <label asp-for="Hora_Inspeccion"></label>
+                </div>
+                <div class="col-md-2">
+                    <input type="time" class="form-control" asp-for="Hora_Inspeccion" value="@Model.Hora_Inspeccion">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Id_Responsable_Lugar"></label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" asp-for="Id_Responsable_Lugar">
+                        <option value="0">-- Seleccione --</option>
+                        <option value="1">Nombres y Apellidos 1</option>
+                        <option value="2">Nombres y Apellidos 2</option>
+                        <option value="3">Nombres y Apellidos 3</option>
+                        <option value="4">Nombres y Apellidos 4</option>
+                        <option value="5">Nombres y Apellidos 5</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Id_Responsable_MA"></label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" asp-for="Id_Responsable_MA">
+                        <option value="0">-- Seleccione --</option>
+                        <option value="1">Nombres y Apellidos 1</option>
+                        <option value="2">Nombres y Apellidos 2</option>
+                        <option value="3">Nombres y Apellidos 3</option>
+                        <option value="4">Nombres y Apellidos 4</option>
+                        <option value="5">Nombres y Apellidos 5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-3">
+                    <label asp-for="Inspectores"></label>
+                </div>
+                <div class="col-md-9">
+                    <p>@Model.Inspectores</p>
+                    <input type="text" class="form-control" asp-for="Inspectores">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+                </div>
+            </div>
+            @if (ViewBag.nObservacioness > 0)
+            {
+                @*style="visibility:hidden;display:none"*@
+                <div class="row mb-2" id="div_tabla_observaciones">
+                    <div class="col-md-12">
+                        <table class="table table-modal" id="tabla_observaciones">
+                            <thead class="thead-mcolor">
+                                <tr>
+                                    <th>Acto/Condición Subestándar Identificada</th>
+                                    <th>Tipo de Condición/Acto Subestándar</th>
+                                    <th>Evidencia</th>
+                                    <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                    <th>Acción Preventiva / Correctiva Tomada</th>
+                                    <th>Responsable Marcobre</th>
+                                    <th>Responsable Contratista</th>
+                                    <th>Fecha Programada</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @Html.Raw(ViewBag.ContenidoTabla)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            <div class="buttons">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+}

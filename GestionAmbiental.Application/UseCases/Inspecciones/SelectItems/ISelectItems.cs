@@ -9,5 +9,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
     public interface ISelectItems
     {
         Task<ItemsSelectResumen> Execute();
+        Task<ItemsSelectResumen> ItemVistaResumen();
+        Task<ItemsSelectResumen> ItemVistaNuevaInspeccion();
+        Task<ItemsSelectResumen> ItemVistaEditarInspeccion();
+        Task<ItemsSelectResumen> ItemVistaNuevaObservacion();
+
     }
 }

@@ -19,6 +19,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
     public class InspeccionesController : Controller
     {
         private readonly IConsultarCabeceras _consultarCabeceras;
+        private readonly IConsultarCabecera _consultarCabecera;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInspeccionCabecera _registrarInspeccionCabecera;
         private readonly IRegistrarInspeccionObservacion _registrarInspeccionObservacion;
@@ -30,7 +31,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             IRegistrarInspeccionCabecera registrarInspeccionCabecera,
             IHostingEnvironment hostingEnvironment,
             IRegistrarInspeccionObservacion registrarInspeccionObservacion,
-            IConsultarInspeccionDetalle consultarInspeccionDetalle)
+            IConsultarInspeccionDetalle consultarInspeccionDetalle,
+            IConsultarCabecera consultarCabecera)
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
@@ -38,36 +40,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             _hostingEnvironment = hostingEnvironment;
             _registrarInspeccionObservacion = registrarInspeccionObservacion;
             _consultarInspeccionDetalle = consultarInspeccionDetalle;
+            _consultarCabecera = consultarCabecera;
         }
         public async Task<IActionResult> Resumen()
         {
-            var selectItemsResumen = await _selectItems.Execute();
+            var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
             var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
 
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-            gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-            gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
-            empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
-            empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
-            tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
             ViewBag.Filtro = filtroGerencias;
-            ViewBag.GerenciaMC = gerenciasEjecutorasMC;
-            ViewBag.GerenciaEPCM = gerenciasEPCM;
-            ViewBag.EmpresasMC = empresasMC;
-            ViewBag.EmpresasEPCM = empresasEPCM;
-            ViewBag.TiposCondicion = tiposCondicion;
 
             return View();
         }
@@ -119,7 +102,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         {
             //Cargar observaciones si se tiene
             
-            var selectItemsResumen = await _selectItems.Execute();
+            var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
 
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -132,9 +115,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
             empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
-            tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             if (idCabecera != 0)
@@ -173,7 +153,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             ViewBag.GerenciaEPCM = gerenciasEPCM;
             ViewBag.EmpresasMC = empresasMC;
             ViewBag.EmpresasEPCM = empresasEPCM;
-            ViewBag.TiposCondicion = tiposCondicion;
 
             return View(new NuevaInspeccionModel());
         }
@@ -189,89 +168,27 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
                 TempData["idCabecera"] = idCabecera;
             }
-
-                /*var filaObservacion = "";
-                var nObservaciones = 0;
-                if (ModelState.IsValid)
-                {
-                    var idCabecera = await _registrarInspeccionCabecera.Execute(
-                        model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
-                        model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
-                        model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
-                    var evidencias = new List<string>();
-                    if (model.Observacion.Evidencias != null)
-                    {
-                        nObservaciones = model.Observacion.Evidencias.Count;
-                        for (int i = 0; i < model.Observacion.Evidencias.Count; i++)
-                        {
-                            //TODO agregar extension al archivo
-                            var fileExtension = Path.GetExtension(model.Observacion.Evidencias[i].FileName);
-                            var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                            var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
-
-                            await model.Observacion.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
-                            evidencias.Add(filepath);
-                        }
-                    }
-                    await _registrarInspeccionObservacion.Execute(
-                        idCabecera,
-                        model.Observacion.CondicionIdentificada,
-                        model.Observacion.TipoCondicion,
-                        evidencias,
-                        model.Observacion.NiveRiesgo,
-                        model.Observacion.AccionTomada,
-                        model.Observacion.ResponsableMarc,
-                        model.Observacion.ResponsableCont,
-                        model.Observacion.FechaProgramada);
-                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera);
-
-                    foreach (var observacion in observaciones)
-                    {
-                        var evidencia = "";
-                        for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                        {
-                            if (i == 1)
-                                evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + i + "</a>";
-                            else
-                                evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + i + "</a>";
-                        }
-                        filaObservacion += "<tr>";
-                        filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
-                        filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
-                        filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
-                        filaObservacion += "<td>" + evidencia + "</td>";
-                        filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>";
-                        filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
-                        filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
-                        filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
-                        filaObservacion += "<td>" + observacion.Fecha_Programada + "</td>";
-                        filaObservacion += "</tr>";
-
-                    }
-
-                }
-                dynamic response = new
-                {
-                    Data = filaObservacion,
-                    Observaciones = nObservaciones
-                };*/
             return RedirectToAction("NuevaObservacion");
         }
         
         public async Task<IActionResult> NuevaObservacion()
         {
             var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
-            var selectItemsResumen = await _selectItems.Execute();
+
+            var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
+
             var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+
             tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
             ViewBag.TiposCondicion = tiposCondicion;
             ViewBag.idCabecera = idCabecera;
+
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> NuevaObservacion(NuevaObservacionModel model)
         {
-
             var evidencias = new List<string>();
             if (model.Evidencias != null)
             {
@@ -297,7 +214,91 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         model.ResponsableCont,
                         model.FechaProgramada);
             TempData["idCabecera"] = model.idCabecera;
-            return RedirectToAction("NuevaInspeccion");
+            return RedirectToAction("EditarInspeccion");
+        }
+        public async Task<IActionResult> EditarInspeccion()
+        {
+            var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
+            var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
+
+            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            
+            if (idCabecera != 0)
+            {
+                var filaObservacion = "";
+                var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera);
+                ViewBag.nObservacioness = observaciones.Count;
+
+                foreach (var observacion in observaciones)
+                {
+                    var evidencia = "";
+                    for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
+                    {
+                        if (i == 1)
+                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + i + "</a>";
+                        else
+                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + i + "</a>";
+                    }
+                    filaObservacion += "<tr>";
+                    filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                    filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
+                    filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
+                    filaObservacion += "<td>" + evidencia + "</td>";
+                    filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>";
+                    filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
+                    filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
+                    filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
+                    filaObservacion += "<td>" + observacion.Fecha_Programada + "</td>";
+                    filaObservacion += "</tr>";
+
+                }
+                ViewBag.ContenidoTabla = filaObservacion;
+            }
+
+
+            ViewBag.GerenciaMC = gerenciasEjecutorasMC;
+            ViewBag.GerenciaEPCM = gerenciasEPCM;
+            ViewBag.EmpresasMC = empresasMC;
+            ViewBag.EmpresasEPCM = empresasEPCM;
+
+            var cabecera = await _consultarCabecera.Execute(idCabecera);
+            var model = new NuevaInspeccionModel();
+
+            if (cabecera != null)
+            {
+                model.Codigo = cabecera.Codigo;
+                model.Id_Empresa_Contratista = cabecera.idEmpContratMarc;
+                model.Id_Empresa_Contratista_EPCM = cabecera.idEmpContratEPCM;
+                model.Id_Gerencia_Ejecutora = cabecera.idGerenciaEjecMar;
+                model.Id_Gerencia_EPCM = cabecera.idGerencEjectEPCM;
+                model.Lugar_Inspeccionado = cabecera.LugarInspec;
+                model.Id_Responsable_Lugar = cabecera.idResponsableLugar;
+                model.Id_Responsable_MA = cabecera.idResponsableMA;
+                model.Fecha_Inspeccion = cabecera.FechaInspec.Year + "-" + cabecera.FechaInspec.Month + "-" + cabecera.FechaInspec.Day;
+                model.Hora_Inspeccion = cabecera.FechaInspec.Hour.ToString()+":" + cabecera.FechaInspec.Minute.ToString();
+                model.Objetivo = cabecera.Objetivo;
+                model.Inspectores = cabecera.Inspectores;
+            }
+            TempData["idCabecera"] = idCabecera;
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarInspeccion(NuevaInspeccionModel model)
+        {
+            var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
+            TempData["idCabecera"] = idCabecera;
+            return RedirectToAction("NuevaObservacion");
         }
         private string CreateUniqueFileName(int nFile)
         {

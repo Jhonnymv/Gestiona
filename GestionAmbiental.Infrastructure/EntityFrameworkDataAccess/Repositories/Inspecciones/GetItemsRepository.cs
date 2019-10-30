@@ -1,9 +1,11 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Inspecciones;
+using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Inspecciones
 {
@@ -15,6 +17,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
+
+        
         public async Task<ItemsSelectResumen> GetItemsResumen()
         {
             var items = new ItemsSelectResumen();
@@ -48,6 +52,65 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             items.EmpContratEPCM = empresasEPCMDomain;
             items.TipoCondicion = tiposCondicionDomain;
             return items;
+        }
+        public async Task<List<Empresa_Contratista>> GetEmpresaContratistas()
+        {
+            var empresas = await _context.Empresas_Contratistas.Where(x => x.EPCM.Equals(0)).ToListAsync();
+            var output = new List<Empresa_Contratista>();
+            foreach(var item in empresas)
+            {
+                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social, item.EPCM));
+            }
+            return output;
+        }
+
+        public async Task<List<Empresa_Contratista>> GetEmpresaContratistasEPCM()
+        {
+            var empresas = await _context.Empresas_Contratistas.Where(x=>x.EPCM.Equals(1)).ToListAsync();
+            var output = new List<Empresa_Contratista>();
+            foreach (var item in empresas)
+            {
+                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social, item.EPCM));
+            }
+            return output;
+        }
+
+        public async Task<List<Gerencia>> GetGerencias()
+        {
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var output = new List<Gerencia>();
+            foreach (var item in gerencias)
+            {
+                output.Add(new Gerencia(item.Id_Gerencia,item.Descripcion,item.Email));
+            }
+            return output;
+        }
+
+        public async Task<List<Gerencia>> GetGerenciasEPCM()
+        {
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var output = new List<Gerencia>();
+            foreach (var item in gerencias)
+            {
+                output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion, item.Email));
+            }
+            return output;
+        }
+
+        public async Task<List<Tipo_Condicion>> GetTiposCondicion()
+        {
+            var tipos = await _context.Tipos_Condicion.ToListAsync();
+            var output = new List<Tipo_Condicion>();
+            foreach (var item in tipos)
+            {
+                output.Add(new Tipo_Condicion(item.Id_Tipo_Condicion,item.Descripcion));
+            }
+            return output;
+        }
+
+        public async Task<List<Usuario>> GetUsuarios()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -47,5 +47,29 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return TablaResumen;
         }
+
+        public async Task<InspeccionCabecera> GetInspeccionCabecera(int idCabecera)
+        {
+            var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var output = new InspeccionCabecera(
+                cabeccera.Id_Inspeccion_Cabecera, 
+                cabeccera.Codigo, 
+                cabeccera.Id_Gerencia_Ejecutora, 
+                cabeccera.Id_Empresa_Contratista, 
+                cabeccera.Id_Gerencia_EPCM, 
+                cabeccera.Id_Empresa_Contratista_EPCM, 
+                cabeccera.Lugar_Inspeccionado,
+                cabeccera.Fecha_Inspeccion, 
+                observaciones.Count, 
+                cabeccera.Estado,
+                cabeccera.Id_Responsable_Lugar,
+                cabeccera.Id_Responsable_MA,
+                cabeccera.Objetivo,
+                cabeccera.Inspectores);
+            return output;
+
+            
+        }
     }
 }

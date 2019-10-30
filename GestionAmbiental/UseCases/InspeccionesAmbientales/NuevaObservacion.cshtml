@@ -6,9 +6,12 @@
 }
 
 
-    <div class="container">
-        <h2>Nueva Observacion</h2>
-        
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Nueva Observacion</h2>
+            </div>
+        </div>
         <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaObservacion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
             <div class="modal-body">
