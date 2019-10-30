@@ -9,6 +9,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 {
     public class NuevaObservacionModel
     {
+        public int idCabecera { get; set; }
         [DisplayName("Acto/Condición Subestándar Identificada")]
         public string CondicionIdentificada { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar")]

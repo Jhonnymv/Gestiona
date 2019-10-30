@@ -1,0 +1,99 @@
+﻿@model  GestionAmbiental.UseCases.InspeccionesAmbientales.NuevaObservacionModel
+
+@{
+    ViewData["Title"] = "NuevaObservacion";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+    <div class="container">
+        <h2>Nueva Observacion</h2>
+        
+        <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaObservacion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="CondicionIdentificada"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="CondicionIdentificada" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="TipoCondicion"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicion"></select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Evidencias"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="btn btn-primary" for="Evidencias">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" multiple>
+                        <label id="files_name">0 Archivos</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="NiveRiesgo"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="NiveRiesgo">
+                            <option value="0">-- SELECCIONE --</option>
+                            <option value="No Aplica">No Aplica</option>
+                            <option value="Tolerable">Tolerable</option>
+                            <option value="Alerta">Alerta</option>
+                            <option value="No Aceptable">No Aceptable</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="AccionTomada"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="AccionTomada" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="ResponsableMarc"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="ResponsableMarc">
+                            <option value="0">-- SELECCIONE --</option>
+                            <option value="1">Nombres y Apellidos</option>
+                            <option value="2">Nombres y Apellidos</option>
+                            <option value="3">Nombres y Apellidos</option>
+                            <option value="4">Nombres y Apellidos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="ResponsableCont"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="ResponsableCont" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="FechaProgramada"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" asp-for="FechaProgramada" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" onclick="guardar()">Agregar</button>
+            </div>
+        </form>
+    </div>

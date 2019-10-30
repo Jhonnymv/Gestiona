@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Domain.ValueObjects;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -26,8 +27,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             Id_Inspeccion_Detalle = detalle.Id_Inspeccion_Detalle;
             Descripcion_Condicion = detalle.Descripcion_Condicion;
             Tipo_Condicion = detalle.Tipo_Condicion.Descripcion;
-            var obj = JsonConvert.DeserializeObject(detalle.Evidencia_Condicion);
-            
+
+            var evidencias = JArray.Parse(detalle.Evidencia_Condicion);
+            var listEvidencias = new List<string>();
+            foreach(var evidencia in evidencias)
+            {
+                listEvidencias.Add((string)evidencia);
+            }
+            Evidencia_Condicion = listEvidencias;
             Nivel_Riesgo_Ambiental = detalle.Nivel_Riesgo_Ambiental;
             Descripcion_Accion = detalle.Descripcion_Accion;
             Responsable_Marcobre = detalle.Responsable_Marcobre.Nombres +" " + detalle.Responsable_Marcobre.Apellidos;

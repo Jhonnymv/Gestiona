@@ -1,4 +1,4 @@
-﻿@model  GestionAmbiental.UseCases.InspeccionesAmbientales.NuevaInspeccionModel
+﻿@model GestionAmbiental.UseCases.InspeccionesAmbientales.NuevaInspeccionModel
 
 @{
     ViewData["Title"] = "Resumen Inspecciones";
@@ -37,10 +37,7 @@
 </form>
 <div class="row mb-2 justify-content-end">
     <div class="col-lg-2 mt-1">
-        <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                data-target="#modal_nuevaInspeccion">
-            Nueva Inspección
-        </button>
+        <a class="btn btn-primary float-right" asp-action="NuevaInspeccion" asp-controller="Inspecciones">Nueva Inspección</a>
     </div>
 </div>
 <div class="row mb-2">
@@ -64,325 +61,171 @@
         </table>
     </div>
 </div>
-<form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
-    <!-- Modal Nueva Inspección-->
-    <div class="modal fade" id="modal_nuevaInspeccion" tabindex="-1" role="dialog"
-         aria-labelledby="titulo_modal_nuevaInspeccion" aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_nuevaInspeccion">
-                        Nueva Inspección
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Area"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="Objetivo"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" asp-for="Objetivo">
-                        </div>
+@*
+    <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+        <!-- Modal Nueva Inspección-->
+        <div class="modal fade" id="modal_nuevaInspeccion" tabindex="-1" role="dialog"
+             aria-labelledby="titulo_modal_nuevaInspeccion" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo_modal_nuevaInspeccion">
+                            Nueva Inspección
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Id_Gerencia_Ejecutora"></label>
-                        </div>
-
-                        <div class="col-md-3">
-                            <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="Id_Empresa_Contratista"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Id_Gerencia_EPCM"></label>
-                        </div>
-
-                        <div class="col-md-3">
-                            <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="Id_Empresa_Contratista_EPCM"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Lugar_Inspeccionado"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
-                        </div>
-                        <div class="col-md-1">
-                            <label asp-for="Fecha_Inspeccion"></label>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
-                        </div>
-                        <div class="col-md-1">
-                            <label asp-for="Hora_Inspeccion"></label>
-                        </div>
-                        <div class="col-md-2">
-                            <input type="time" class="form-control" asp-for="Hora_Inspeccion">
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Id_Responsable_Lugar"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" asp-for="Id_Responsable_Lugar">
-                                <option value="0">-- Seleccione --</option>
-                                <option value="1">Nombres y Apellidos</option>
-                                <option value="2">Nombres y Apellidos</option>
-                                <option value="3">Nombres y Apellidos</option>
-                                <option value="4">Nombres y Apellidos</option>
-                                <option value="5">Nombres y Apellidos</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label asp-for="Id_Responsable_MA"></label>
-                        </div>
-                        <div class="col-md-3">
-                            <select class="form-control" asp-for="Id_Responsable_MA">
-                                <option value="0">-- Seleccione --</option>
-                                <option value="1">Nombres y Apellidos</option>
-                                <option value="2">Nombres y Apellidos</option>
-                                <option value="3">Nombres y Apellidos</option>
-                                <option value="4">Nombres y Apellidos</option>
-                                <option value="5">Nombres y Apellidos</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-3">
-                            <label asp-for="Inspectores"></label>
-                        </div>
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" value="Nombres y Apellidos, Nombres y Apellidos, ..." asp-for="Inspectores">
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-12">
-                            <button type="button" class="btn btn-primary float-right" data-toggle="modal"
-                                    data-target="#modal_nuevaObservacion" onclick="guardarCabecera()">
-                                Agregar Observación
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                @*
-                            <div class="row mb-2">
-                                <div class="col-md-12">
-                                    <table class="table table-modal" id="tabla_modal_inspecciones">
-                                        <thead class="thead-mcolor">
-                                            <tr>
-                                                <th>Acto/Condición Subestándar Identificada</th>
-                                                <th>Tipo de Condición/Acto Subestándar</th>
-                                                <th>Evidencia</th>
-                                                <th>Nivel de Riesgo del Aspecto Ambiental</th>
-                                                <th>Acción Preventiva / Correctiva Tomada</th>
-                                                <th>Responsable Marcobre</th>
-                                                <th>Responsable Contratista</th>
-                                                <th>Fecha Programada</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" class="form-control modal-table-input">
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-control" id="select_tipoCondicion_1" asp-items="@ViewBag.TiposCondicion" name="tipoCondicion_1">
-                                                        </select>
-                                                    </td>
-                                                    <!--
-                    <td><button type="button" class="btn btn-primary"
-                        data-toggle="modal" data-target="#modal_adjuntar">Adjuntar</button></td>-->
-                                                    <td>
-                                                        <input type="hidden" id="input_evidencia_1" name="evidencia_1" />
-                                                        <div class="modal-table-icon" data-toggle="modal" data-target="#modal_adjuntar">
-                                                            <img src="~/img/icons/attach-icon.png">
-                                                        </div>
-                                                    </td>
-
-                                                    <td>
-                                                        <select class="form-control modal-table-input" id="select_nivelRiesgo_1" name="riesgo_1">
-                                                            <option value="No Aplica">-- Seleccione --</option>
-                                                            <option value="Tolerable">Tolerable</option>
-                                                            <option value="Alerta">Alerta</option>
-                                                            <option value="No Aceptable">No Aceptable</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" class="form-control modal-table-input" id="input_accionTomada_1" name="accionTomada_1">
-                                                    </td>
-                                                    <td>
-                                                        <select class="form-control modal-table-input" id="select_responsable_1" name="responsableMarc_1">
-                                                            <option>-- Seleccione --</option>
-                                                            <option>Nombres y Apellidos</option>
-                                                            <option>Nombres y Apellidos</option>
-                                                            <option>Nombres y Apellidos</option>
-                                                            <option>Nombres y Apellidos</option>
-                                                            <option>Nombres y Apellidos</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input type="text" class="form-control modal-table-input" id="input_responsableContratista_1" name="responsableContr_1">
-                                                    </td>
-                                                    <td>
-                                                        <input type="date" class="form-control modal-table-input" id="input_fechaProgramada_1" name="fechaProgramada_1">
-                                                    </td>
-                                                    <td>
-                                                        <div class="modal-table-icon" id="button_Guardar_1"><img src="~/img/icons/add-icon.png"></div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                    </table>
-                                </div>
+                    <div class="modal-body">
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Area"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Objetivo"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" asp-for="Objetivo">
                             </div>
                         </div>
-                *@
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    @*<button type="submit" class="btn btn-primary" id="btn_modalNuevaInspeccion" onclick="guardar()">Registrar</button>*@
-                    <button type="submit" class="btn btn-primary">Registrar</button>
-                </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Id_Gerencia_Ejecutora"></label>
+                            </div>
 
+                            <div class="col-md-3">
+                                <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Id_Empresa_Contratista"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Id_Gerencia_EPCM"></label>
+                            </div>
+
+                            <div class="col-md-3">
+                                <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Id_Empresa_Contratista_EPCM"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Lugar_Inspeccionado"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
+                            </div>
+                            <div class="col-md-1">
+                                <label asp-for="Fecha_Inspeccion"></label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
+                            </div>
+                            <div class="col-md-1">
+                                <label asp-for="Hora_Inspeccion"></label>
+                            </div>
+                            <div class="col-md-2">
+                                <input type="time" class="form-control" asp-for="Hora_Inspeccion">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Id_Responsable_Lugar"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" asp-for="Id_Responsable_Lugar">
+                                    <option value="0">-- Seleccione --</option>
+                                    <option value="1">Nombres y Apellidos</option>
+                                    <option value="2">Nombres y Apellidos</option>
+                                    <option value="3">Nombres y Apellidos</option>
+                                    <option value="4">Nombres y Apellidos</option>
+                                    <option value="5">Nombres y Apellidos</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label asp-for="Id_Responsable_MA"></label>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-control" asp-for="Id_Responsable_MA">
+                                    <option value="0">-- Seleccione --</option>
+                                    <option value="1">Nombres y Apellidos</option>
+                                    <option value="2">Nombres y Apellidos</option>
+                                    <option value="3">Nombres y Apellidos</option>
+                                    <option value="4">Nombres y Apellidos</option>
+                                    <option value="5">Nombres y Apellidos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <label asp-for="Inspectores"></label>
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" value="Nombres y Apellidos, Nombres y Apellidos, ..." asp-for="Inspectores">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-md-12">
+                                <button type="button" class="btn btn-primary float-right" data-toggle="modal"
+                                        data-target="#modal_nuevaObservacion">
+                                    Agregar Observación
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row mb-2" id="div_tabla_modal_inspecciones">
+                            <div class="col-md-12">
+                                <table class="table table-modal" id="tabla_modal_inspecciones">
+                                    <thead class="thead-mcolor">
+                                        <tr>
+                                            <th>Acto/Condición Subestándar Identificada</th>
+                                            <th>Tipo de Condición/Acto Subestándar</th>
+                                            <th>Evidencia</th>
+                                            <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                            <th>Acción Preventiva / Correctiva Tomada</th>
+                                            <th>Responsable Marcobre</th>
+                                            <th>Responsable Contratista</th>
+                                            <th>Fecha Programada</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="EnviarInspeccion()">Registrar</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Modal Nueva Observacion-->
-    <div class="modal fade" id="modal_nuevaObservacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_observacion"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_observacion">
-                        Nueva Observación
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.CondicionIdentificada"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" asp-for="Observacion.CondicionIdentificada" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.TipoCondicion"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <select class="form-control" asp-for="Observacion.TipoCondicion" asp-items="@ViewBag.TiposCondicion"></select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.Evidencias"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <label class="btn btn-primary" for="Observacion_Evidencias">Seleccione</label>
-                            <input type="file" style="visibility:hidden" asp-for="Observacion.Evidencias" multiple>
-                            <label id="files_name">0 Archivos</label>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.NiveRiesgo"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <select class="form-control" asp-for="Observacion.NiveRiesgo">
-                                <option value="0">-- SELECCIONE --</option>
-                                <option value="No Aplica">No Aplica</option>
-                                <option value="Tolerable">Tolerable</option>
-                                <option value="Alerta">Alerta</option>
-                                <option value="No Aceptable">No Aceptable</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.AccionTomada"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" asp-for="Observacion.AccionTomada" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.ResponsableMarc"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <select class="form-control" asp-for="Observacion.ResponsableMarc">
-                                <option value="0">-- SELECCIONE --</option>
-                                <option value="1">Nombres y Apellidos</option>
-                                <option value="2">Nombres y Apellidos</option>
-                                <option value="3">Nombres y Apellidos</option>
-                                <option value="4">Nombres y Apellidos</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.ResponsableCont"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" asp-for="Observacion.ResponsableCont" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-md-4">
-                            <label asp-for="Observacion.FechaProgramada"></label>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="date" class="form-control" asp-for="Observacion.FechaProgramada" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary" data-dismiss="modal">Agregar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-<!-- Modal Adjuntar Archivo-->
-<div class="modal fade" id="modal_adjuntar" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_adjuntar"
+<!-- Modal Nueva Observacion-->
+<div class="modal fade" id="modal_nuevaObservacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_observacion"
      aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_adjuntar">
-                    Adjuntar Foto
+                <h5 class="modal-title" id="titulo_modal_observacion">
+                    Nueva Observación
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -391,27 +234,101 @@
             <div class="modal-body">
                 <div class="row mb-2">
                     <div class="col-md-4">
-                        <label>Evidencia:</label>
+                        <label asp-for="Observacion.CondicionIdentificada"></label>
                     </div>
-                    <div class="col-8">
-                        <label class="btn btn-primary" for="files">Seleccione</label>
-                        <input type="file" id="files" style="visibility:hidden" multiple>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Observacion.CondicionIdentificada" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.TipoCondicion"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="Observacion.TipoCondicion" asp-items="@ViewBag.TiposCondicion"></select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.Evidencias"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="btn btn-primary" for="Observacion_Evidencias">Seleccione</label>
+                        <input type="file" style="visibility:hidden" asp-for="Observacion.Evidencias" multiple>
                         <label id="files_name">0 Archivos</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.NiveRiesgo"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="Observacion.NiveRiesgo">
+                            <option value="0">-- SELECCIONE --</option>
+                            <option value="No Aplica">No Aplica</option>
+                            <option value="Tolerable">Tolerable</option>
+                            <option value="Alerta">Alerta</option>
+                            <option value="No Aceptable">No Aceptable</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.AccionTomada"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Observacion.AccionTomada" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.ResponsableMarc"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <select class="form-control" asp-for="Observacion.ResponsableMarc">
+                            <option value="0">-- SELECCIONE --</option>
+                            <option value="1">Nombres y Apellidos</option>
+                            <option value="2">Nombres y Apellidos</option>
+                            <option value="3">Nombres y Apellidos</option>
+                            <option value="4">Nombres y Apellidos</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.ResponsableCont"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Observacion.ResponsableCont" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label asp-for="Observacion.FechaProgramada"></label>
+                    </div>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" asp-for="Observacion.FechaProgramada" />
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Adjuntar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Agregar</button>
             </div>
         </div>
     </div>
 </div>
-
+</form>
+    
+*@
 @section scripts{
     <script type="text/javascript">
-
+        var listArchivos = [];
         $(document).ready(function () {
+            nObservaciones = 0;
+
+            $("#div_tabla_modal_inspecciones").css("visibility", "hidden");
+            $("#div_tabla_modal_inspecciones").css("display", "none");
 
             $('#gerenciaEjecutora_filtro').change(function () {
                 filtroGerencia = $(this).children("option:selected").val();
@@ -432,6 +349,22 @@
             filtrar();
 
         });
+        function enviar() {
+            $("#form_nuevaInspeccion").submit(function (e) {
+                e.preventDefault();
+            });
+        }
+        function EnviarInspeccion() {
+            $.ajax({
+                type: "POST",
+                url: "/Inspecciones/SubirArchivos",
+                data: listArchivos,
+                traditional: true,
+                success: (response) => {
+                    console.log("Success");
+                }
+            });
+        }
         function filtrar() {
             $.ajax({
                 type: "POST",
@@ -453,31 +386,26 @@
         }
         function guardar() {
             var formNuevaInspeccion = $("#form_nuevaInspeccion");
-            $.ajax({
+            //listArchivos.push($("#Observacion_Evidencias"))
+            console.log($("#Observacion_Evidencias"));
+            /*$.ajax({
                 type: "POST",
                 traditional: true,
-                url: "/Inspecciones/NuevaObservacion",
-                data: {
-                    "data": formNuevaInspeccion.serialize(),
-                },
+                url: "/Inspecciones/NuevaInspeccion",
+                data: formNuevaInspeccion.serialize(),
                 success: (response) => {
-                    console.log("Recibido")
-                }
-            });
-        }
-        function guardarCabecera() {
-            if (confirm("Se registrara la información completada antes de agregar una observación")) {
-                /*$.ajax({
-                    type: "POST",
-                    data: ,
-                    url: "/Inspecciones/NuevaInspeccionCabecera",
-                    contentType: "application/json"
-                }).done(function (res) {
+                    nObservaciones = response.Observaciones;
+                    if (nObservaciones > 0) {
+                        $("#div_tabla_modal_inspecciones").css("visibility", "visible");
+                        $("#div_tabla_modal_inspecciones").css("display", "inline");
 
-                });*/
-            } else {
-                return;
-            }
+                        $('#tabla_modal_inspecciones tbody').empty()
+                        $('#tabla_modal_inspecciones tbody').html(response.data)
+                    }
+                    console.log(response.Observaciones);
+                    console.log(response.data);
+                }
+            });*/
         }
     </script>
 }

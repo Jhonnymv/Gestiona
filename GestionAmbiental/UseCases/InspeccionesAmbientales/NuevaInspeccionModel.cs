@@ -34,6 +34,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         public string Inspectores { get; set; }
         [DisplayName("Objetivo de la Inspección")]
         public string Objetivo { get; set; }
-        public NuevaObservacionModel Observacion { get; set; }
+        //public NuevaObservacionModel Observacion { get; set; }
     }
 }
