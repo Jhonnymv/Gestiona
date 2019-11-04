@@ -47,11 +47,11 @@
                     </div>
                     <div class="col-md-8">
                         <select class="form-control" asp-for="NiveRiesgo">
-                            <option value="0">-- SELECCIONE --</option>
-                            <option value="No Aplica">No Aplica</option>
-                            <option value="Tolerable" style="background-color:green">Tolerable</option>
+                            <option value="0" style="background-color:white">-- SELECCIONE --</option>
+                            <option value="No Aplica" style="background-color:white">No Aplica</option>
+                            <option value="Tolerable" style="background-color:green; color:white">Tolerable</option>
                             <option value="Alerta" style="background-color:yellow">Alerta</option>
-                            <option value="No Aceptable" style="background-color:red">No Aceptable</option>
+                            <option value="No Aceptable" style="background-color:red; color:white">No Aceptable</option>
                         </select>
                     </div>
                 </div>
@@ -105,6 +105,14 @@
     $("#Evidencias").change(function () {
         var filesname = this.files.length + " Archivos";
         $("#files_name").text(filesname);
+    });
+    $("#NiveRiesgo").change(function () {
+        switch ($("#NiveRiesgo").val()) {
+            case "Tolerable": $("#NiveRiesgo").css("background-color", "green");$("#NiveRiesgo").css("color", "white"); break;
+            case "Alerta":  $("#NiveRiesgo").css("background-color", "yellow");$("#NiveRiesgo").css("color", "black"); break;
+            case "No Aceptable":  $("#NiveRiesgo").css("background-color", "red");$("#NiveRiesgo").css("color", "white"); break;
+            default:  $("#NiveRiesgo").css("background-color", "white");$("#NiveRiesgo").css("color", "black"); break;
+        }
     });
 </script>
 }

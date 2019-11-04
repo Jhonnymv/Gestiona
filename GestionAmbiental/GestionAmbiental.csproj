@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
-    <Folder Include="UseCases\InspeccionesAmbientales\Verificacion\" />
   </ItemGroup>
 
 </Project>

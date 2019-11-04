@@ -126,6 +126,61 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        {
+            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
+                c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
+                && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
+                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
+                )
+                .OrderByDescending(x => x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var empresas = await _context.Empresas_Contratistas.ToListAsync();
+            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera)).ToListAsync();
 
+            var TablaResumen = new List<InspeccionCabecera>();
+            foreach (var item in cabeceras)
+            {
+                var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_Ejecutora)).FirstOrDefault();
+                var gerEjectEPCM = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_EPCM)).FirstOrDefault();
+                var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista)).FirstOrDefault();
+                var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista_EPCM)).FirstOrDefault();
+                var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
+
+                TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
+                    empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
+                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+            }
+
+            return TablaResumen;
+        }
+
+        public async Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera)
+        {
+            var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado.Equals("Implementado")).ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var empresas = await _context.Empresas_Contratistas.ToListAsync();
+
+            var output = new InspeccionCabecera(
+                cabeccera.Id_Inspeccion_Cabecera,
+                cabeccera.Codigo,
+                cabeccera.Objetivo,
+                gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion,
+                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social,
+                gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion,
+                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social,
+                cabeccera.Lugar_Inspeccionado,
+                cabeccera.Id_Responsable_Lugar,
+                cabeccera.Id_Responsable_MA,
+                cabeccera.Fecha_Inspeccion,
+                observaciones.Count,
+                cabeccera.Inspectores,
+                cabeccera.Estado
+                );
+            return output;
+        }
     }
 }

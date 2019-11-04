@@ -182,7 +182,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 }
                 await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario);
             }
-            return Ok();
+            return RedirectToAction("ImplementarInspeccion", new { IdCabecera = model.idCabecera });
         }
         private string CreateUniqueFileName(int nFile)
         {

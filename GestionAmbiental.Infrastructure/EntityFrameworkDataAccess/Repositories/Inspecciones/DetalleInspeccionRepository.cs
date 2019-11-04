@@ -40,7 +40,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.Descripcion_Accion,
                     new Domain.ValueObjects.Usuario(responsableMarc.Id_Usuario, responsableMarc.Id_Rol, responsableMarc.Nombres, responsableMarc.Apellidos, responsableMarc.Email),
                     item.Responsable_Contratista,
-                    item.Fecha_Programada));
+                    item.Fecha_Programada,
+                    item.Evidencia_Inspeccion,
+                    item.Comentario_Inspeccion,
+                    item.Fecha_Cierre,
+                    item.Fecha_Verificacion_Inspector,
+                    item.Comentario_Inspector,
+                    item.Fecha_Verificacion_MA,
+                    item.Comentario_MA,
+                    item.Estado));
             }
             
             return detalles;
@@ -62,7 +70,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 inspeccionDetalle.Descripcion_Accion,
                 responsableMarcobre_Domain,
                 inspeccionDetalle.Responsable_Contratista,
-                inspeccionDetalle.Fecha_Programada
+                inspeccionDetalle.Fecha_Programada,
+                inspeccionDetalle.Evidencia_Inspeccion,
+                inspeccionDetalle.Comentario_Inspeccion,
+                inspeccionDetalle.Fecha_Cierre,
+                inspeccionDetalle.Fecha_Verificacion_Inspector,
+                inspeccionDetalle.Comentario_Inspector,
+                inspeccionDetalle.Fecha_Verificacion_MA,
+                inspeccionDetalle.Comentario_MA,
+                inspeccionDetalle.Estado
                 );
             return detalle;
         }
