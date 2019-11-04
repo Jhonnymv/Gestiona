@@ -9,5 +9,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     public interface IDetalleInspeccionReadOnlyRepository
     {
         Task<List<InspeccionDetalle>> GetInspeccionDetalles(int idCabecera);
+        Task<InspeccionDetalle> GetInspeccionDetalle(int idDetalle);
     }
 }

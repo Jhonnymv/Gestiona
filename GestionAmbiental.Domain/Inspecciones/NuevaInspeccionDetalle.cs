@@ -6,6 +6,7 @@ namespace GestionAmbiental.Domain.Inspecciones
 {
     public class NuevaInspeccionDetalle
     {
+        public int Id_Inspeccion_Detalle { get; set; }
         public int Id_Inspeccion_Cabecera { get; set; }
         public string Descripcion_Condicion { get; set; }
         public int Id_Tipo_Condicion { get; set; }

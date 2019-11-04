@@ -21,7 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var cabeceraEntity = new Inspeccion_Cabecera
             {
-                Area = "Medio Ambiente",
+                Area = "Medio Ambiente y Permisos",
                 Codigo = "DEFINIR",
                 Objetivo = cabecera.Objetivo,
                 Fecha_Inspeccion = cabecera.Fecha_Inspeccion,

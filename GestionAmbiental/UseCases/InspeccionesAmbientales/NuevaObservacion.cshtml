@@ -49,9 +49,9 @@
                         <select class="form-control" asp-for="NiveRiesgo">
                             <option value="0">-- SELECCIONE --</option>
                             <option value="No Aplica">No Aplica</option>
-                            <option value="Tolerable">Tolerable</option>
-                            <option value="Alerta">Alerta</option>
-                            <option value="No Aceptable">No Aceptable</option>
+                            <option value="Tolerable" style="background-color:green">Tolerable</option>
+                            <option value="Alerta" style="background-color:yellow">Alerta</option>
+                            <option value="No Aceptable" style="background-color:red">No Aceptable</option>
                         </select>
                     </div>
                 </div>
@@ -100,3 +100,11 @@
             </div>
         </form>
     </div>
+@section scripts{
+<script>
+    $("#Evidencias").change(function () {
+        var filesname = this.files.length + " Archivos";
+        $("#files_name").text(filesname);
+    });
+</script>
+}

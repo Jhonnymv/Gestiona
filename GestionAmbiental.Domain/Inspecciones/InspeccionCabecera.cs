@@ -44,6 +44,38 @@ namespace GestionAmbiental.Domain.Inspecciones
         }
 
         public InspeccionCabecera(
+            int idCabecera, 
+            string codigo, 
+            string objetivo, 
+            string gerenEjecMar,
+            string empContratMarc, 
+            string gerenEjecEPCM,
+            string empContratEPCM, 
+            string lugarInspec, 
+            int idResponsableLugar,
+            int idResponsableMA,
+            DateTime fechaInspec, 
+            int nObservaciones, 
+            string inspectores,
+            string estado)
+        {
+            IdCabecera = idCabecera;
+            Codigo = codigo;
+            Objetivo = objetivo;
+            GerenEjecMar = gerenEjecMar;
+            EmpContratMarc = empContratMarc;
+            GerenEjecEPCM = gerenEjecEPCM;
+            EmpContratEPCM = empContratEPCM;
+            LugarInspec = lugarInspec;
+            this.idResponsableLugar = idResponsableLugar;
+            this.idResponsableMA = idResponsableMA;
+            FechaInspec = fechaInspec;
+            NObservaciones = nObservaciones;
+            Inspectores = inspectores;
+            Estado = estado;
+        }
+
+        public InspeccionCabecera(
             int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc, 
             int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec, 
             int nObservaciones, string estado,int idResponsableLug, int idResponsableMA,string objetivo,string inspectores)

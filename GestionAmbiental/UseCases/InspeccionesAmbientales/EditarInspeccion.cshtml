@@ -14,20 +14,7 @@
         </div>
         <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
 
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Area"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Objetivo"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" asp-for="Objetivo">
-                </div>
-            </div>
+
             <div class="row mb-2">
                 <div class="col-md-3">
                     <label asp-for="Id_Gerencia_Ejecutora"></label>
@@ -48,7 +35,6 @@
                 <div class="col-md-3">
                     <label asp-for="Id_Gerencia_EPCM"></label>
                 </div>
-
                 <div class="col-md-3">
                     <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
                     </select>
@@ -69,16 +55,16 @@
                     <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
                 </div>
                 <div class="col-md-1">
-                    <label asp-for="Fecha_Inspeccion"></label>
-                </div>
-                <div class="col-md-2">
-                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" value="@Model.Fecha_Inspeccion">
-                </div>
-                <div class="col-md-1">
                     <label asp-for="Hora_Inspeccion"></label>
                 </div>
                 <div class="col-md-2">
                     <input type="time" class="form-control" asp-for="Hora_Inspeccion" value="@Model.Hora_Inspeccion">
+                </div>
+                <div class="col-md-1">
+                    <label asp-for="Fecha_Inspeccion"></label>
+                </div>
+                <div class="col-md-2">
+                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" value="@Model.Fecha_Inspeccion">
                 </div>
             </div>
             <div class="row mb-2">
@@ -116,6 +102,20 @@
                 <div class="col-md-9">
                     <p>@Model.Inspectores</p>
                     <input type="text" class="form-control" asp-for="Inspectores">
+                </div>
+            </div>
+            <div class="row mb-2">
+                @*<div class="col-md-3">
+                    <label asp-for="Area"></label>
+                </div>
+                <div class="col-md-3">
+                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
+                </div>*@
+                <div class="col-md-3">
+                    <label asp-for="Objetivo"></label>
+                </div>
+                <div class="col-md-9">
+                    <input type="text" class="form-control" asp-for="Objetivo">
                 </div>
             </div>
             <div class="row mb-2">

@@ -128,10 +128,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     var evidencia = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                     {
-                        if (i == 1)
-                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + i + "</a>";
+                        if (i == 0)
+                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i+1) + "</a>";
                         else
-                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + i + "</a>";
+                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -189,31 +189,34 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [HttpPost]
         public async Task<IActionResult> NuevaObservacion(NuevaObservacionModel model)
         {
-            var evidencias = new List<string>();
-            if (model.Evidencias != null)
+            if (ModelState.IsValid)
             {
-                for (int i = 0; i < model.Evidencias.Count; i++)
+                var evidencias = new List<string>();
+                if (model.Evidencias != null)
                 {
-                    //TODO agregar extension al archivo
-                    var fileExtension = Path.GetExtension(model.Evidencias[i].FileName);
-                    var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                    var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
+                    for (int i = 0; i < model.Evidencias.Count; i++)
+                    {
+                        //TODO agregar extension al archivo
+                        var fileExtension = Path.GetExtension(model.Evidencias[i].FileName);
+                        var fileName = CreateUniqueFileName(i + 1) + fileExtension;
+                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
 
-                    await model.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
-                    evidencias.Add(filepath);
+                        await model.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
+                        evidencias.Add(filepath);
+                    }
                 }
+                await _registrarInspeccionObservacion.Execute(
+                            model.idCabecera,
+                            model.CondicionIdentificada,
+                            model.TipoCondicion,
+                            evidencias,
+                            model.NiveRiesgo,
+                            model.AccionTomada,
+                            model.ResponsableMarc,
+                            model.ResponsableCont,
+                            model.FechaProgramada);
+                TempData["idCabecera"] = model.idCabecera;
             }
-            await _registrarInspeccionObservacion.Execute(
-                        model.idCabecera,
-                        model.CondicionIdentificada,
-                        model.TipoCondicion,
-                        evidencias,
-                        model.NiveRiesgo,
-                        model.AccionTomada,
-                        model.ResponsableMarc,
-                        model.ResponsableCont,
-                        model.FechaProgramada);
-            TempData["idCabecera"] = model.idCabecera;
             return RedirectToAction("EditarInspeccion");
         }
         public async Task<IActionResult> EditarInspeccion()
@@ -245,17 +248,23 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     var evidencia = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                     {
-                        if (i == 1)
-                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + i + "</a>";
+                        if (i == 0)
+                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i+1) + "</a>";
                         else
-                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + i + "</a>";
+                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
                     filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
                     filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
                     filaObservacion += "<td>" + evidencia + "</td>";
-                    filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>";
+                    switch (observacion.Nivel_Riesgo_Ambiental)
+                    {
+                        case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>";break;
+                        case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                        case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                        default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                    }
                     filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";

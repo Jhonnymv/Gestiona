@@ -10,21 +10,21 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
     public class NuevaObservacionModel
     {
         public int idCabecera { get; set; }
-        [DisplayName("Acto/Condición Subestándar Identificada")]
+        [DisplayName("Acto/Condición Subestándar Identificada:")]
         public string CondicionIdentificada { get; set; }
-        [DisplayName("Tipo de Condición/Acto Subestándar")]
+        [DisplayName("Tipo de Condición/Acto Subestándar:")]
         public int TipoCondicion { get; set; }
-        [DisplayName("Evidencia")]
+        [DisplayName("Evidencia:")]
         public List<IFormFile> Evidencias { get; set; }
-        [DisplayName("Nivel de Riesgo del Aspecto Ambiental")]
+        [DisplayName("Nivel de Riesgo del Aspecto Ambiental:")]
         public string NiveRiesgo { get; set; }
-        [DisplayName("Acción Preventiva / Correctiva Tomada")]
+        [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable Marcobre")]
+        [DisplayName("Responsable Marcobre:")]
         public int ResponsableMarc { get; set; }
-        [DisplayName("Responsable Contratista")]
+        [DisplayName("Responsable Contratista:")]
         public string ResponsableCont { get; set; }
-        [DisplayName("Fecha Programada")]
+        [DisplayName("Fecha Programada:")]
         public string FechaProgramada { get; set; }
 
         public NuevaObservacionModel()
