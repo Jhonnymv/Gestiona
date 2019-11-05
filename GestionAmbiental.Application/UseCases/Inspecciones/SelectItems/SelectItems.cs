@@ -26,11 +26,13 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var empresa_Contratistas_EPCM = await _getItemsReadOnlyRepository.GetEmpresaContratistasEPCM();
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var gerencias_EPCM = await _getItemsReadOnlyRepository.GetGerenciasEPCM();
+            var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
             var output = new ItemsSelectResumen();
             output.EmpContratMarcobre = empresa_Contratistas;
             output.EmpContratEPCM = empresa_Contratistas_EPCM;
             output.GerenciaEjecutora = gerencias;
             output.GerenciasEPCM = gerencias_EPCM;
+            output.Usuarios = usuarios;
             return output;
         }
 
@@ -40,19 +42,23 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var empresa_Contratistas_EPCM = await _getItemsReadOnlyRepository.GetEmpresaContratistasEPCM();
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var gerencias_EPCM = await _getItemsReadOnlyRepository.GetGerenciasEPCM();
+            var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
             var output = new ItemsSelectResumen();
             output.EmpContratMarcobre = empresa_Contratistas;
             output.EmpContratEPCM = empresa_Contratistas_EPCM;
             output.GerenciaEjecutora = gerencias;
             output.GerenciasEPCM = gerencias_EPCM;
+            output.Usuarios = usuarios;
             return output;
         }
 
         public async Task<ItemsSelectResumen> ItemVistaNuevaObservacion()
         {
             var tipos = await _getItemsReadOnlyRepository.GetTiposCondicion();
+            var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
             var output = new ItemsSelectResumen();
             output.TipoCondicion = tipos;
+            output.Usuarios = usuarios;
             return output;
         }
 

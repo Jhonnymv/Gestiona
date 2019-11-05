@@ -12,5 +12,6 @@ namespace GestionAmbiental.Domain.Inspecciones
         public List<Empresa_Contratista> EmpContratMarcobre { get; set; }
         public List<Empresa_Contratista> EmpContratEPCM { get; set; }
         public List<Tipo_Condicion> TipoCondicion { get; set; }
+        public List<Usuario> Usuarios { get; set; }
     }
 }

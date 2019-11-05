@@ -16,9 +16,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             _editarInspeccionReadonlyRepository = editarInspeccionReadonlyRepository ?? throw new ArgumentNullException(nameof(editarInspeccionReadonlyRepository));
         }
 
-        public async Task Execute(string objetivo, int gerenciaMarc, int empresaMarc, int gerenciaEPCM, int empresaEPCM, string lugar, string fechaInspeccion, string hora, int responsableLugar, int responsableMA, string inspectores)
+        public async Task Execute(int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc, int gerenciaEPCM, int empresaEPCM, string lugar, string fechaInspeccion, string hora, int responsableLugar, int responsableMA, string inspectores)
         {
             var cabecera = new NuevaInspeccionCabecera(
+                idCabecera,
                 gerenciaMarc,
                 gerenciaEPCM,
                empresaMarc,

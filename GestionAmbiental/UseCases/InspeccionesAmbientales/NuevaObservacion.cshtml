@@ -68,13 +68,8 @@
                         <label asp-for="ResponsableMarc"></label>
                     </div>
                     <div class="col-md-8">
-                        <select class="form-control" asp-for="ResponsableMarc">
-                            <option value="0">-- SELECCIONE --</option>
-                            <option value="1">Nombres y Apellidos</option>
-                            <option value="2">Nombres y Apellidos</option>
-                            <option value="3">Nombres y Apellidos</option>
-                            <option value="4">Nombres y Apellidos</option>
-                        </select>
+                        <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
+                        <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>
                     </div>
                 </div>
                 <div class="row mb-2">

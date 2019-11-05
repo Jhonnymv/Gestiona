@@ -21,12 +21,14 @@
                 </div>
 
                 <div class="col-md-3">
+                    <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
                     <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Id_Empresa_Contratista"></label>
                 </div>
                 <div class="col-md-3">
+                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
                     <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
                     </select>
                 </div>
@@ -37,6 +39,7 @@
                 </div>
 
                 <div class="col-md-3">
+                    <span class="text-danger" asp-validation-for="Id_Gerencia_EPCM"></span>
                     <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
                     </select>
                 </div>
@@ -44,6 +47,7 @@
                     <label asp-for="Id_Empresa_Contratista_EPCM"></label>
                 </div>
                 <div class="col-md-3">
+                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista_EPCM"></span>
                     <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
                     </select>
                 </div>
@@ -59,12 +63,14 @@
                     <label asp-for="Hora_Inspeccion"></label>
                 </div>
                 <div class="col-md-2">
+                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
                     <input type="time" class="form-control" asp-for="Hora_Inspeccion">
                 </div>
                 <div class="col-md-1">
                     <label asp-for="Fecha_Inspeccion"></label>
                 </div>
                 <div class="col-md-2">
+                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
                     <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
                 </div>
             </div>
@@ -73,27 +79,15 @@
                     <label asp-for="Id_Responsable_Lugar"></label>
                 </div>
                 <div class="col-md-3">
-                    <select class="form-control" asp-for="Id_Responsable_Lugar">
-                        <option value="0">-- Seleccione --</option>
-                        <option value="1">Nombres y Apellidos</option>
-                        <option value="2">Nombres y Apellidos</option>
-                        <option value="3">Nombres y Apellidos</option>
-                        <option value="4">Nombres y Apellidos</option>
-                        <option value="5">Nombres y Apellidos</option>
-                    </select>
+                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
+                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
                 </div>
                 <div class="col-md-3">
                     <label asp-for="Id_Responsable_MA"></label>
                 </div>
                 <div class="col-md-3">
-                    <select class="form-control" asp-for="Id_Responsable_MA">
-                        <option value="0">-- Seleccione --</option>
-                        <option value="1">Nombres y Apellidos</option>
-                        <option value="2">Nombres y Apellidos</option>
-                        <option value="3">Nombres y Apellidos</option>
-                        <option value="4">Nombres y Apellidos</option>
-                        <option value="5">Nombres y Apellidos</option>
-                    </select>
+                    <span class="text-danger" asp-validation-for="Id_Responsable_MA"></span>
+                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_MA"></select>
                 </div>
             </div>
             <div class="row mb-2">
@@ -101,7 +95,7 @@
                     <label asp-for="Inspectores"></label>
                 </div>
                 <div class="col-md-9">
-                    <input type="text" class="form-control" value="Nombres y Apellidos, Nombres y Apellidos, ..." asp-for="Inspectores">
+                    <input type="text" class="form-control" asp-for="Inspectores">
                 </div>
             </div>
             <div class="row mb-2">
@@ -159,6 +153,14 @@
 @section scripts{
     <script>
         $(document).ready(function () {
+        });
+        $("#Id_Gerencia_Ejecutora, #Id_Empresa_Contratista").on('change', function () {
+            $("#Id_Gerencia_EPCM").val(1);
+            $("#Id_Empresa_Contratista_EPCM").val(1);
+        });
+        $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
+            $("#Id_Gerencia_Ejecutora").val(1);
+            $("#Id_Empresa_Contratista").val(1);
         });
     </script>
 }

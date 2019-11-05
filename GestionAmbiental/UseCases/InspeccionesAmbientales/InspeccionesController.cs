@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
+using GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         private readonly IRegistrarInspeccionObservacion _registrarInspeccionObservacion;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
+        private readonly IEditarInspeccionCabecera _editarInspeccionCabecera;
         public InspeccionesController(
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
@@ -32,7 +34,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             IHostingEnvironment hostingEnvironment,
             IRegistrarInspeccionObservacion registrarInspeccionObservacion,
             IConsultarInspeccionDetalle consultarInspeccionDetalle,
-            IConsultarCabecera consultarCabecera)
+            IConsultarCabecera consultarCabecera,
+            IEditarInspeccionCabecera editarInspeccionCabecera)
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
@@ -41,13 +44,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             _registrarInspeccionObservacion = registrarInspeccionObservacion;
             _consultarInspeccionDetalle = consultarInspeccionDetalle;
             _consultarCabecera = consultarCabecera;
+            _editarInspeccionCabecera = editarInspeccionCabecera;
         }
         public async Task<IActionResult> Resumen()
         {
             var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
             var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-
+            filtroGerencias.Insert(0, new SelectListItem("No Aplica", "1"));
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.Filtro = filtroGerencias;
@@ -77,7 +81,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
                     }
-                    filasTabla += "<td><a href=\"#\">" + fila.Codigo + "</a></td>";
+                    //href="/Inspecciones/NuevaInspeccion"
+                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera="+fila.IdCabecera+"\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
                     filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
@@ -111,10 +116,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasEPCM.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " "+ g.Apellidos }).ToList();
+            responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             if (idCabecera != 0)
@@ -153,6 +163,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             ViewBag.GerenciaEPCM = gerenciasEPCM;
             ViewBag.EmpresasMC = empresasMC;
             ViewBag.EmpresasEPCM = empresasEPCM;
+            ViewBag.Responsables = responsables;
 
             return View(new NuevaInspeccionModel());
         }
@@ -167,22 +178,32 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
                 model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
                 TempData["idCabecera"] = idCabecera;
+
+                return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
             }
-            return RedirectToAction("NuevaObservacion");
+            else
+            {
+                return RedirectToAction("NuevaInspeccion", model);
+            }
         }
         
-        public async Task<IActionResult> NuevaObservacion()
+        public async Task<IActionResult> NuevaObservacion(int IdCabecera)
         {
-            var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
+            //var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
 
             var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
             var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
-
             tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+           
+
             ViewBag.TiposCondicion = tiposCondicion;
-            ViewBag.idCabecera = idCabecera;
+            ViewBag.Responsables = responsables;
+            ViewBag.idCabecera = IdCabecera;
 
             return View();
         }
@@ -200,8 +221,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         var fileExtension = Path.GetExtension(model.Evidencias[i].FileName);
                         var fileName = CreateUniqueFileName(i + 1) + fileExtension;
                         var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
-
-                        await model.Evidencias[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
+                        var file = new FileStream(filepath, FileMode.Create);
+                        await model.Evidencias[i].CopyToAsync(file);
+                        file.Close();
                         evidencias.Add(filepath);
                     }
                 }
@@ -215,13 +237,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                             model.ResponsableMarc,
                             model.ResponsableCont,
                             model.FechaProgramada);
-                TempData["idCabecera"] = model.idCabecera;
+                //TempData["idCabecera"] = model.idCabecera;
             }
-            return RedirectToAction("EditarInspeccion");
+            return RedirectToAction("EditarInspeccion",new { IdCabecera = model.idCabecera});
         }
-        public async Task<IActionResult> EditarInspeccion()
+        public async Task<IActionResult> EditarInspeccion(int IdCabecera)
         {
-            var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
+            //var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -231,16 +253,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            empresasEPCM.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            
-            if (idCabecera != 0)
+            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            if (IdCabecera != 0)
             {
                 var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera);
+                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 ViewBag.nObservacioness = observaciones.Count;
 
                 foreach (var observacion in observaciones)
@@ -248,10 +274,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     var evidencia = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                     {
+                        /* if (i == 0)
+                             evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i+1) + "</a>";
+                         else
+                             evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";*/
                         if (i == 0)
-                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i+1) + "</a>";
+                            evidencia = "<a href=\"/Inspecciones/Download?path="+ observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                         else
-                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";
+                            evidencia = "<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -280,12 +310,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             ViewBag.GerenciaEPCM = gerenciasEPCM;
             ViewBag.EmpresasMC = empresasMC;
             ViewBag.EmpresasEPCM = empresasEPCM;
+            ViewBag.Responsables = responsables;
 
-            var cabecera = await _consultarCabecera.Execute(idCabecera);
+            var cabecera = await _consultarCabecera.Execute(IdCabecera);
             var model = new NuevaInspeccionModel();
 
             if (cabecera != null)
             {
+                model.Id_Inspeccion_Cabecera = IdCabecera;
                 model.Codigo = cabecera.Codigo;
                 model.Id_Empresa_Contratista = cabecera.idEmpContratMarc;
                 model.Id_Empresa_Contratista_EPCM = cabecera.idEmpContratEPCM;
@@ -294,26 +326,77 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Lugar_Inspeccionado = cabecera.LugarInspec;
                 model.Id_Responsable_Lugar = cabecera.idResponsableLugar;
                 model.Id_Responsable_MA = cabecera.idResponsableMA;
-                model.Fecha_Inspeccion = cabecera.FechaInspec.Year + "-" + cabecera.FechaInspec.Month + "-" + cabecera.FechaInspec.Day;
-                model.Hora_Inspeccion = cabecera.FechaInspec.Hour.ToString()+":" + cabecera.FechaInspec.Minute.ToString();
+                model.Fecha_Inspeccion = cabecera.FechaInspec.Year + "-" + (cabecera.FechaInspec.Month.ToString().Length>1? cabecera.FechaInspec.Month.ToString():"0"+ cabecera.FechaInspec.Month.ToString()) + "-" + (cabecera.FechaInspec.Day.ToString().Length > 1 ? cabecera.FechaInspec.Day.ToString() : "0" + cabecera.FechaInspec.Day.ToString());
+                model.Hora_Inspeccion = (cabecera.FechaInspec.Hour.ToString().Length > 1 ? cabecera.FechaInspec.Hour.ToString() : "0" + cabecera.FechaInspec.Hour.ToString()) + ":" + (cabecera.FechaInspec.Minute.ToString().Length > 1 ? cabecera.FechaInspec.Minute.ToString() : "0" + cabecera.FechaInspec.Minute.ToString());
                 model.Objetivo = cabecera.Objetivo;
                 model.Inspectores = cabecera.Inspectores;
             }
-            TempData["idCabecera"] = idCabecera;
+            //TempData["idCabecera"] = IdCabecera;
             return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> EditarInspeccion(NuevaInspeccionModel model)
         {
-            var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
-            TempData["idCabecera"] = idCabecera;
-            return RedirectToAction("NuevaObservacion");
+            if (ModelState.IsValid)
+            {
+                await _editarInspeccionCabecera.Execute(
+                    model.Id_Inspeccion_Cabecera,
+                    model.Objetivo,
+                    model.Id_Gerencia_Ejecutora,
+                    model.Id_Empresa_Contratista,
+                    model.Id_Gerencia_EPCM,
+                    model.Id_Empresa_Contratista_EPCM,
+                    model.Lugar_Inspeccionado,
+                    model.Fecha_Inspeccion,
+                    model.Hora_Inspeccion,
+                    model.Id_Responsable_Lugar,
+                    model.Id_Responsable_MA,
+                    model.Inspectores
+                    );
+            }
+            return RedirectToAction("NuevaObservacion",new { IdCabecera = model.Id_Inspeccion_Cabecera });
         }
         private string CreateUniqueFileName(int nFile)
         {
             var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
             return fileName;
         }
-        
+        public async Task<IActionResult> Download(string path)
+        {
+            if (path == null)
+                return Content("No se encontró el archivo");
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},  
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
+        }
     }
 }

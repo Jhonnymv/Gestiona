@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,6 +22,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         public string AccionTomada { get; set; }
         [DisplayName("Responsable Marcobre:")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opccion")]
         public int ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista:")]
         public string ResponsableCont { get; set; }

@@ -110,7 +110,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            throw new NotImplementedException();
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var output = new List<Usuario>();
+            foreach (var item in usuarios)
+            {
+                output.Add(new Usuario(item.Id_Usuario,item.Id_Rol,item.Nombres,item.Apellidos,item.Email));
+            }
+            return output;
         }
     }
 }
