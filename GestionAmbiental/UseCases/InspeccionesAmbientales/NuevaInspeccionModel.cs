@@ -9,22 +9,23 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 {
     public class NuevaInspeccionModel
     {
+        public string opcion { get; set; }
         public int Id_Inspeccion_Cabecera { get; set; }
         [DisplayName("Código")]
         public string Codigo { get; set; }
         [DisplayName("Área")]
         public string Area { get; set; }
         [DisplayName("Gerencia Inspeccionada Marcobre:")]
-        [Range(1,99,ErrorMessage ="Debe seleccionar una opccion")]
+        [Range(1,99,ErrorMessage ="Debe seleccionar una opcción")]
         public int Id_Gerencia_Ejecutora { get; set; }
         [DisplayName("Gerencia Inspeccionada EPCM:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opccion")]
+        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Gerencia_EPCM { get; set; }
         [DisplayName("Empresa Contratista Marcobre:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opccion")]
+        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Empresa_Contratista { get; set; }
         [DisplayName("Empresa Contratista EPCM:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opccion")]
+        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Empresa_Contratista_EPCM { get; set; }
         [DisplayName("Fecha:")]
         [Required(ErrorMessage ="Debe ingresar una fecha")]

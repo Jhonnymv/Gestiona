@@ -134,6 +134,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                         filaObservacion += "</tr>";
                     }
                 }
+                ViewBag.NObservaciones = observaciones.Count;
                 ViewBag.ContenidoTabla = filaObservacion;
             }
             return View();
@@ -162,8 +163,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
         public async Task<IActionResult> VerificarObservacion(VerificarObservacionModel model)
         {
             if (ModelState.IsValid)
-            {
-               
+            {               
                 await _verificarObservacion.Execute(model.idObservacion,  model.ComentarioVerificacion);
             }
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });

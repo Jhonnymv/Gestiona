@@ -14,10 +14,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Acto/Condición Subestándar Identificada:")]
         public string CondicionIdentificada { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar:")]
+        [Range(1,Int32.MaxValue,ErrorMessage ="Debe seleccionar una opción")]
         public int TipoCondicion { get; set; }
         [DisplayName("Evidencia:")]
         public List<IFormFile> Evidencias { get; set; }
         [DisplayName("Nivel de Riesgo del Aspecto Ambiental:")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opccion")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         public string AccionTomada { get; set; }
@@ -27,6 +29,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Responsable Contratista:")]
         public string ResponsableCont { get; set; }
         [DisplayName("Fecha Programada:")]
+        [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string FechaProgramada { get; set; }
 
         public NuevaObservacionModel()

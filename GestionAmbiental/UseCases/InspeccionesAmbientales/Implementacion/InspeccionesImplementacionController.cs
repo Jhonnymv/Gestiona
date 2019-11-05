@@ -111,35 +111,38 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 foreach (var observacion in observaciones)
                 {
-                    var evidencia = "";
-                    for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
+                    if (!observacion.Fecha_Cierre.HasValue)
                     {
-                        if (i == 0)
-                            evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
-                        else
-                            evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                        var evidencia = "";
+                        for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
+                        {
+                            if (i == 0)
+                                evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                            else
+                                evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                        }
+                        filaObservacion += "<tr>";
+                        filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                        filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
+                        filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
+                        filaObservacion += "<td>" + evidencia + "</td>";
+                        switch (observacion.Nivel_Riesgo_Ambiental)
+                        {
+                            case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                            case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                            case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                            default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                        }
+                        filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
+                        filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
+                        filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
+                        filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td><a href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
+                        filaObservacion += "</tr>";
                     }
-                    filaObservacion += "<tr>";
-                    filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
-                    filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
-                    filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
-                    filaObservacion += "<td>" + evidencia + "</td>";
-                    switch (observacion.Nivel_Riesgo_Ambiental)
-                    {
-                        case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                        case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                        case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                        default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                    }
-                    filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
-                    filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
-                    filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
-                    filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                    filaObservacion += "<td><a href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
-                    filaObservacion += "</tr>";
-
                 }
                 ViewBag.ContenidoTabla = filaObservacion;
+                ViewBag.NObservaciones = observaciones.Count;
             }
             return View();
         }

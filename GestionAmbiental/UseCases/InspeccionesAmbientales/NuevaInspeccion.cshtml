@@ -14,7 +14,6 @@
         </div>
         <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
 
-
             <div class="row mb-2">
                 <div class="col-md-3">
                     <label asp-for="Id_Gerencia_Ejecutora"></label>
@@ -114,7 +113,7 @@
             </div>
             <div class="row mb-2">
                 <div class="col-md-12">
-                    <button type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+                    <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
                 </div>
             </div>
             @if (ViewBag.nObservacioness > 0)
@@ -146,8 +145,9 @@
 
             <div class="buttons">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
+                <button id="guardar" type="submit" class="btn btn-primary">Guardar</button>
             </div>
+            <input type="hidden" asp-for="opcion" />
         </form>
     </div>
 @section scripts{
@@ -161,6 +161,12 @@
         $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
             $("#Id_Gerencia_Ejecutora").val(1);
             $("#Id_Empresa_Contratista").val(1);
+        });
+        $("#guardar").click(function () {
+            $("#opcion").val("Guardar");
+        });
+        $("#nueva_obs").click(function () {
+            $("#opcion").val("Observacion");
         });
     </script>
 }

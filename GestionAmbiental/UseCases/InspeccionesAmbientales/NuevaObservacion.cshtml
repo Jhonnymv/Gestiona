@@ -46,8 +46,9 @@
                         <label asp-for="NiveRiesgo"></label>
                     </div>
                     <div class="col-md-8">
+                        <span class="text-danger" asp-validation-for="NiveRiesgo"></span>
                         <select class="form-control" asp-for="NiveRiesgo">
-                            <option value="0" style="background-color:white">-- SELECCIONE --</option>
+                            <option value="" style="background-color:white">-- SELECCIONE --</option>
                             <option value="No Aplica" style="background-color:white">No Aplica</option>
                             <option value="Tolerable" style="background-color:green; color:white">Tolerable</option>
                             <option value="Alerta" style="background-color:yellow">Alerta</option>

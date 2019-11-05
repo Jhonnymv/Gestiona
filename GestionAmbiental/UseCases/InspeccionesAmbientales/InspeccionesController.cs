@@ -178,18 +178,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
                 model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
                 TempData["idCabecera"] = idCabecera;
-
-                return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
+                if(model.opcion.Equals("Observacion"))
+                    return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
+                else
+                    return RedirectToAction("NuevaInspeccion");
             }
             else
-            {
-                return RedirectToAction("NuevaInspeccion", model);
-            }
+                return RedirectToAction("Resumen", model);
         }
         
         public async Task<IActionResult> NuevaObservacion(int IdCabecera)
         {
-            //var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
 
             var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
@@ -237,7 +236,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                             model.ResponsableMarc,
                             model.ResponsableCont,
                             model.FechaProgramada);
-                //TempData["idCabecera"] = model.idCabecera;
             }
             return RedirectToAction("EditarInspeccion",new { IdCabecera = model.idCabecera});
         }

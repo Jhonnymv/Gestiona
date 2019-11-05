@@ -93,6 +93,8 @@
                 <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
             </div>
         </div>
+        @if (ViewBag.NObservaciones != 0)
+        {
             <div class="row mb-2" id="div_tabla_observaciones">
                 <div class="col-md-12">
                     <table class="table table-modal" id="tabla_observaciones">
@@ -115,7 +117,7 @@
                     </table>
                 </div>
             </div>
-
+        }
         <div class="buttons">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
             <button type="button" class="btn btn-primary">Guardar</button>
