@@ -184,7 +184,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     return RedirectToAction("NuevaInspeccion");
             }
             else
-                return RedirectToAction("Resumen", model);
+                return RedirectToAction("Resumen");
         }
         
         public async Task<IActionResult> NuevaObservacion(int IdCabecera)
@@ -226,7 +226,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         evidencias.Add(filepath);
                     }
                 }
-                await _registrarInspeccionObservacion.Execute(
+                var idObservacion = await _registrarInspeccionObservacion.Execute(
                             model.idCabecera,
                             model.CondicionIdentificada,
                             model.TipoCondicion,
@@ -236,8 +236,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                             model.ResponsableMarc,
                             model.ResponsableCont,
                             model.FechaProgramada);
+
+                return RedirectToAction("NotificarNuevaObservacionAsignada", "Notificaciones", new { IdObservacion = idObservacion });
             }
-            return RedirectToAction("EditarInspeccion",new { IdCabecera = model.idCabecera});
+            else
+                return RedirectToAction("NuevaObservacion", model);
+            
         }
         public async Task<IActionResult> EditarInspeccion(int IdCabecera)
         {
@@ -277,9 +281,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                          else
                              evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";*/
                         if (i == 0)
-                            evidencia = "<a href=\"/Inspecciones/Download?path="+ observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                            evidencia = evidencia+"<a href=\"/Inspecciones/Download?path="+ observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                         else
-                            evidencia = "<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                            evidencia = evidencia+"<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -351,8 +355,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Id_Responsable_MA,
                     model.Inspectores
                     );
+                if (model.opcion.Equals("Observacion"))
+                    return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                else
+                    return RedirectToAction("Resumen");
             }
-            return RedirectToAction("NuevaObservacion",new { IdCabecera = model.Id_Inspeccion_Cabecera });
+            return RedirectToAction("Resumen");
         }
         private string CreateUniqueFileName(int nFile)
         {

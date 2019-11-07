@@ -143,16 +143,19 @@
                 </div>
             }
 
-            <div class="buttons">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button id="guardar" type="submit" class="btn btn-primary">Guardar</button>
-            </div>
+        <div class="buttons d-flex justify-content-end">
+            <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+            <button id="guardar" type="submit" class="btn btn-primary">Guardar</button>
+        </div>
             <input type="hidden" asp-for="opcion" />
         </form>
     </div>
 @section scripts{
     <script>
         $(document).ready(function () {
+            jQuery.validator.addMethod("notEqual", function (value, element, param) {
+                return this.optional(element) || value != param;
+            }, "Seleccione una opción");
         });
         $("#Id_Gerencia_Ejecutora, #Id_Empresa_Contratista").on('change', function () {
             $("#Id_Gerencia_EPCM").val(1);
@@ -168,5 +171,12 @@
         $("#nueva_obs").click(function () {
             $("#opcion").val("Observacion");
         });
+        function Validar() {
+            $("#form_nuevaInspeccion").validate({
+                rules: {
+                    Id_Inspeccion_Cabecera: { notEqual: 0 }
+                }
+            });
+        }
     </script>
 }

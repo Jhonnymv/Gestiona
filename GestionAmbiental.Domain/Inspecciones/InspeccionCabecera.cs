@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionAmbiental.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +20,9 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string EmpContratEPCM { get; set; }
         public string LugarInspec { get; set; }
         public int idResponsableLugar { get; set; }
+        public Usuario Responsable_Lugar { get; set; }
         public int idResponsableMA { get; set; }
+        public Usuario ResponsableMA { get; set; }
         public DateTime FechaInspec { get; set; }
         public int NObservaciones { get; set; }
         public string Inspectores { get; set; }
@@ -94,6 +97,55 @@ namespace GestionAmbiental.Domain.Inspecciones
             this.idResponsableMA = idResponsableMA;
             Objetivo = objetivo;
             Inspectores = inspectores;
+        }
+        public InspeccionCabecera(
+            int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc,
+            int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec,
+            string estado, int idResponsableLug, int idResponsableMA, string objetivo, string inspectores)
+        {
+            IdCabecera = idCabecera;
+            Codigo = codigo;
+            this.idGerenciaEjecMar = idGerenciaEjecMar;
+            this.idEmpContratMarc = idEmpContratMarc;
+            this.idGerencEjectEPCM = idGerencEjectEPCM;
+            this.idEmpContratEPCM = idEmpContratEPCM;
+            LugarInspec = lugarInspec;
+            FechaInspec = fechaInspec;
+            Estado = estado;
+            idResponsableLugar = idResponsableLug;
+            this.idResponsableMA = idResponsableMA;
+            Objetivo = objetivo;
+            Inspectores = inspectores;
+        }
+
+        public InspeccionCabecera(
+            int idCabecera, 
+            string codigo, 
+            string objetivo,
+            string gerenEjecMar, 
+            string empContratMarc,
+            string gerenEjecEPCM, 
+            string empContratEPCM, 
+            string lugarInspec,
+            Usuario responsable_Lugar,
+            Usuario responsableMA,
+            DateTime fechaInspec, 
+            string inspectores,
+            string estado)
+        {
+            IdCabecera = idCabecera;
+            Codigo = codigo;
+            Objetivo = objetivo;
+            GerenEjecMar = gerenEjecMar;
+            EmpContratMarc = empContratMarc;
+            GerenEjecEPCM = gerenEjecEPCM;
+            EmpContratEPCM = empContratEPCM;
+            LugarInspec = lugarInspec;
+            Responsable_Lugar = responsable_Lugar;
+            ResponsableMA = responsableMA;
+            FechaInspec = fechaInspec;
+            Inspectores = inspectores;
+            Estado = estado;
         }
     }
 }

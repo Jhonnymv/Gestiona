@@ -36,10 +36,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Lugar Inspeccionado:")]
         public string Lugar_Inspeccionado { get; set; }
         [DisplayName("Responsable Lugar Inspeccionado:")]
-        [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opccion")]
+        [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Responsable_Lugar { get; set; }
         [DisplayName("Responsable Medio Ambiente:")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opccion")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Responsable_MA { get; set; }
         [DisplayName("Inspector(es):")]
         public string Inspectores { get; set; }
