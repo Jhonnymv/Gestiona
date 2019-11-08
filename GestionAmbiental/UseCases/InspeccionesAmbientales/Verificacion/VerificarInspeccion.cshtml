@@ -10,9 +10,9 @@
                 <h2>Verificar Inspección</h2>
             </div>
         </div>
+
+        @*---------------------REVISAR UTILIDAD DEL FORM-------------------------------*@
         <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
-
-
             <div class="row mb-2">
                 <div class="col-md-3">
                     <label>Gerencia Ejecutora:</label>
@@ -95,28 +95,28 @@
             </div>
             @if (ViewBag.NObservaciones != 0)
             {
-            <div class="row mb-2" id="div_tabla_observaciones">
-                <div class="col-md-12">
-                    <table class="table table-modal" id="tabla_observaciones">
-                        <thead class="thead-mcolor">
-                            <tr>
-                                <th>Acto/Condición Subestándar Identificada</th>
-                                <th>Tipo de Condición/Acto Subestándar</th>
-                                <th>Evidencia</th>
-                                <th>Nivel de Riesgo del Aspecto Ambiental</th>
-                                <th>Acción Preventiva / Correctiva Tomada</th>
-                                <th>Responsable Marcobre</th>
-                                <th>Responsable Contratista</th>
-                                <th>Fecha Programada</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @Html.Raw(ViewBag.ContenidoTabla)
-                        </tbody>
-                    </table>
+                <div class="row mb-2" id="div_tabla_observaciones">
+                    <div class="col-md-12">
+                        <table class="table table-modal" id="tabla_observaciones">
+                            <thead class="thead-mcolor">
+                                <tr>
+                                    <th>Acto/Condición Subestándar Identificada</th>
+                                    <th>Tipo de Condición/Acto Subestándar</th>
+                                    <th>Evidencia</th>
+                                    <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                    <th>Acción Preventiva / Correctiva Tomada</th>
+                                    <th>Responsable Marcobre</th>
+                                    <th>Responsable Contratista</th>
+                                    <th>Fecha Programada</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @Html.Raw(ViewBag.ContenidoTabla)
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
             }
             <div class="buttons">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>

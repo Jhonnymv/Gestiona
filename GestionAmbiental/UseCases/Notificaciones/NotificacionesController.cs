@@ -96,7 +96,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;
                 MyMail.EnableSsl = true;
-                MyMail.Send(MyMsg);
+                await MyMail.SendMailAsync(MyMsg);
             }
             catch (Exception ex)
             {

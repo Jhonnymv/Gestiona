@@ -101,9 +101,11 @@
                 </div>
             </div>
         </div>
+
+        <input type="hidden" asp-for="Accion" />
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Rechazar</button>
-            <button type="submit" class="btn btn-primary">Aprobar</button>
+            <button id="rechazar" type="submit" class="btn btn-secondary">Rechazar</button>
+            <button id="aprobar" type="submit" class="btn btn-primary">Aprobar</button>
         </div>
     </form>
 </div>
@@ -112,6 +114,12 @@
         $("#EvidenciasInspeccion").change(function () {
             var filesname = this.files.length + " Archivos";
             $("#files_name").text(filesname);
+        });
+         $("#rechazar").click(function () {
+            $("#Accion").val("Rechazar");
+        });
+        $("#aprobar").click(function () {
+            $("#Accion").val("Aprobar");
         });
     </script>
 }

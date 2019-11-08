@@ -24,6 +24,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public DateTime Fecha_Verificacion_MA { get; set; }
         public string Comentario_MA { get; set; }
         public string Estado { get; set; }
+        public string Accion { get; set; }
 
         public NuevaInspeccionDetalle(
             int id_Inspeccion_Cabecera, string descripcion_Condicion, int id_Tipo_Condicion, 

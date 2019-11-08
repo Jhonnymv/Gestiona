@@ -111,8 +111,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 foreach (var observacion in observaciones)
                 {
-                    if (!observacion.Fecha_Cierre.HasValue)
-                    {
+                    /*if (!observacion.Fecha_Cierre.HasValue)
+                    {*/
                         var evidencia = "";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
@@ -137,9 +137,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                        filaObservacion += "<td><a href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
+                        if(observacion.Estado.Equals("Registrado") || observacion.Estado.Equals("Editado"))
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
+                        else
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Inspeccionar" + "</button></td>";
                         filaObservacion += "</tr>";
-                    }
+                    //}
                 }
                 ViewBag.ContenidoTabla = filaObservacion;
                 ViewBag.NObservaciones = observaciones.Count;

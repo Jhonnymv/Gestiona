@@ -16,9 +16,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Verifi
             _verificarObservacionReadOnlyRepository = verificarObservacionReadOnlyRepository ?? throw new ArgumentNullException(nameof(verificarObservacionReadOnlyRepository));
         }
 
-        public async Task Execute(int IdObservacion, string Comentario)
+        public async Task Execute(int IdObservacion, string Comentario,string Estado)
         {
             var observacion = new NuevaInspeccionDetalle();
+            observacion.Estado = Estado;
             observacion.Id_Inspeccion_Detalle = IdObservacion;
             observacion.Comentario_Inspector = Comentario;
             await _verificarObservacionReadOnlyRepository.VerificarObservacion(observacion);

@@ -102,22 +102,5 @@
                 }
             });
     }
-    function abrir(id) {
-        $.ajax({
-                type: "POST",
-                url: "/InspeccionesVeerificacion/Verificar",
-                data: {
-                    "IdCabecera": id
-                },
-                traditional: true,
-                success: (response) => {
-                    console.log("Success" + response.data);
-                    $('#tabla_resumen_inspecciones tbody').empty()
-                    $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    /*$('#paginado').html(response.paginador)
-                    $('#nRegistros').html(response.nRegistros)*/
-                }
-            });
-    }
     </script>
 }

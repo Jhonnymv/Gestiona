@@ -130,7 +130,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                        filaObservacion += "<td><a href=\"/InspeccionesVerificacion/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
+                        filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacion/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Verificar" + "</a></td>";
                         filaObservacion += "</tr>";
                     }
                 }
@@ -163,8 +163,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
         public async Task<IActionResult> VerificarObservacion(VerificarObservacionModel model)
         {
             if (ModelState.IsValid)
-            {               
-                await _verificarObservacion.Execute(model.idObservacion,  model.ComentarioVerificacion);
+            {   if(model.Accion.Equals("Rechazar"))
+                    await _verificarObservacion.Execute(model.idObservacion,  model.ComentarioVerificacion,"Rechazado");
+                else
+                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacion, "Aprobado");
             }
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });
         }
