@@ -117,9 +117,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                             else
-                                evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                                evidencia += "<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
                         filaObservacion += "<tr>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -128,10 +128,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.Nivel_Riesgo_Ambiental)
                         {
-                            case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                            case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>";break;
                         }
                         filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
@@ -139,8 +139,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                         if(observacion.Estado.Equals("Registrado") || observacion.Estado.Equals("Editado"))
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
+                        else if(observacion.Estado.Equals("Vencido"))
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</button></td>";
                         else
-                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Inspeccionar" + "</button></td>";
+                        filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Inspeccionar" + "</button></td>";
                         filaObservacion += "</tr>";
                     //}
                 }
@@ -180,7 +182,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         //TODO agregar extension al archivo
                         var fileExtension = Path.GetExtension(model.EvidenciasInspeccion[i].FileName);
                         var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
+                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, "InspeccionesAmbientales", "EvidenciasImplementacion", fileName);
 
                         await model.EvidenciasInspeccion[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
                         evidencias.Add(filepath);
@@ -190,10 +192,53 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = model.idCabecera });
         }
+        public async Task<IActionResult> SolicitarAmpliacion(int IdObservacion)
+        {
+            //notificar
+            var response = "";
+            return Ok(response);
+        }
         private string CreateUniqueFileName(int nFile)
         {
             var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
             return fileName;
+        }
+        public async Task<IActionResult> Download(string path)
+        {
+            if (path == null)
+                return Content("No se encontró el archivo");
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"}
+            };
         }
     }
 }

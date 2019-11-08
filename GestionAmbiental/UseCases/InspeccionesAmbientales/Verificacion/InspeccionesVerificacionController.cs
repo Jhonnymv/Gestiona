@@ -68,7 +68,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                     filasTabla += "<tr>";
                     switch (fila.Estado)
                     {
-                        case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
+                        case "Implementado": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
                     }

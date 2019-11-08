@@ -219,7 +219,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         //TODO agregar extension al archivo
                         var fileExtension = Path.GetExtension(model.Evidencias[i].FileName);
                         var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, fileName);
+                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, "InspeccionesAmbientales", "EvidenciasRegistro", fileName);
                         var file = new FileStream(filepath, FileMode.Create);
                         await model.Evidencias[i].CopyToAsync(file);
                         file.Close();
@@ -292,10 +292,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filaObservacion += "<td>" + evidencia + "</td>";
                     switch (observacion.Nivel_Riesgo_Ambiental)
                     {
-                        case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>";break;
-                        case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                        case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                        default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                        case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
                     }
                     filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";

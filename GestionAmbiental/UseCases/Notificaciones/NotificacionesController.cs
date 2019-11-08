@@ -90,13 +90,12 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 {
                     MyMsg.Attachments.Add(new Attachment(evidencia));
                 }
-                //MyMsg.Attachments.Add(new Attachment("E:/Pruebas/PruebaEnviarMensaje.zip"));
-                //MyMsg.Attachments.Add(new Attachment("C:/Users/KEVIN/Downloads/20191001_155957.mp4"));
                 MyMail.UseDefaultCredentials = false;
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;
                 MyMail.EnableSsl = true;
                 await MyMail.SendMailAsync(MyMsg);
+                MyMsg.Attachments.Dispose();
             }
             catch (Exception ex)
             {
