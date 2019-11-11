@@ -145,7 +145,8 @@
 
         <div class="buttons d-flex justify-content-end">
             <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-            <button id="guardar" type="submit" class="btn btn-primary">Guardar</button>
+            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+            @*<button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>*@
         </div>
             <input type="hidden" asp-for="opcion" />
         </form>
@@ -157,26 +158,32 @@
                 return this.optional(element) || value != param;
             }, "Seleccione una opción");
         });
-        $("#Id_Gerencia_Ejecutora, #Id_Empresa_Contratista").on('change', function () {
+        $("#Id_Empresa_Contratista").on('change', function () {
             $("#Id_Gerencia_EPCM").val(1);
-            $("#Id_Empresa_Contratista_EPCM").val(1);
+            $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
+            $("#Id_Empresa_Contratista_EPCM").val(1);            
+            $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
         });
         $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
-            $("#Id_Gerencia_Ejecutora").val(1);
-            $("#Id_Empresa_Contratista").val(1);
+            $("#Id_Empresa_Contratista").val(1);            
+            $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
         });
         $("#guardar").click(function () {
-            $("#opcion").val("Guardar");
+            $("#opcion").val("Guardar");      
+            habilitarSelect();
+        });
+         $("#guardar_estado").click(function () {
+            $("#opcion").val("GuardarEstado");            
+            habilitarSelect();
         });
         $("#nueva_obs").click(function () {
-            $("#opcion").val("Observacion");
+            $("#opcion").val("Observacion");            
+            habilitarSelect();
         });
-        function Validar() {
-            $("#form_nuevaInspeccion").validate({
-                rules: {
-                    Id_Inspeccion_Cabecera: { notEqual: 0 }
-                }
-            });
+        function habilitarSelect() {            
+            $('#Id_Gerencia_EPCM').prop('disabled', false);
+            $('#Id_Empresa_Contratista_EPCM').prop('disabled', false);
+            $('#Id_Empresa_Contratista').prop('disabled', false);
         }
     </script>
 }

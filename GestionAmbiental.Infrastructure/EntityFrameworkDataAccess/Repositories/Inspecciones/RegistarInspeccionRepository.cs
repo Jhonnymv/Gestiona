@@ -33,7 +33,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Id_Responsable_MA = cabecera.Id_Responsable_MA,
                 Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar,
                 Inspectores = cabecera.Inspectores,
-                Estado = "Registrado"
+                Estado = cabecera.Estado
             };
 
             _context.Inspecciones_Cabecera.Add(cabeceraEntity);

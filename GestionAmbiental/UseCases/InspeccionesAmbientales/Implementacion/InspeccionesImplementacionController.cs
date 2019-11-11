@@ -4,11 +4,13 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ImplementarObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -111,8 +113,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 foreach (var observacion in observaciones)
                 {
-                    /*if (!observacion.Fecha_Cierre.HasValue)
-                    {*/
+                    if (!observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString())||
+                        !observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
+                    {
                         var evidencia = "";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
@@ -144,7 +147,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         else
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Inspeccionar" + "</button></td>";
                         filaObservacion += "</tr>";
-                    //}
+                    }
                 }
                 ViewBag.ContenidoTabla = filaObservacion;
                 ViewBag.NObservaciones = observaciones.Count;
@@ -194,7 +197,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> SolicitarAmpliacion(int IdObservacion)
         {
+            
             //notificar
+
             var response = "";
             return Ok(response);
         }

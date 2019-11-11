@@ -6,171 +6,266 @@
 }
 
 
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-12 titulo-pagina">
-                <h2>Editar Inspección</h2>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Editar Inspección</h2>
         </div>
-        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+    </div>
+    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
 
-            <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Id_Gerencia_Ejecutora"></label>
-                </div>
+        <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label asp-for="Id_Gerencia_Ejecutora"></label>
+            </div>
 
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
-                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Id_Empresa_Contratista"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
-                    <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Id_Gerencia_EPCM"></label>
-                </div>
-
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Gerencia_EPCM"></span>
-                    <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Id_Empresa_Contratista_EPCM"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista_EPCM"></span>
-                    <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Lugar_Inspeccionado"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
-                </div>
-                <div class="col-md-1">
-                    <label asp-for="Hora_Inspeccion"></label>
-                </div>
-                <div class="col-md-2">
-                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
-                    <input type="time" class="form-control" asp-for="Hora_Inspeccion">
-                </div>
-                <div class="col-md-1">
-                    <label asp-for="Fecha_Inspeccion"></label>
-                </div>
-                <div class="col-md-2">
-                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
-                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Id_Responsable_Lugar"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Id_Responsable_MA"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_MA"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_MA"></select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Inspectores"></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" asp-for="Inspectores">
-                </div>
-            </div>
-            <div class="row mb-2">
-                @*<div class="col-md-3">
-                <label asp-for="Area"></label>
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
+                <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-            </div>*@
+                <label asp-for="Id_Empresa_Contratista"></label>
+            </div>
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
+                <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label asp-for="Id_Gerencia_EPCM"></label>
+            </div>
+
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Gerencia_EPCM"></span>
+                <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Id_Empresa_Contratista_EPCM"></label>
+            </div>
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Empresa_Contratista_EPCM"></span>
+                <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
+                </select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label asp-for="Lugar_Inspeccionado"></label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
+            </div>
+            <div class="col-md-1">
+                <label asp-for="Hora_Inspeccion"></label>
+            </div>
+            <div class="col-md-2">
+                <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
+                <input type="time" class="form-control" asp-for="Hora_Inspeccion">
+            </div>
+            <div class="col-md-1">
+                <label asp-for="Fecha_Inspeccion"></label>
+            </div>
+            <div class="col-md-2">
+                <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
+                <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label asp-for="Id_Responsable_Lugar"></label>
+            </div>
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
+                <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Id_Responsable_MA"></label>
+            </div>
+            <div class="col-md-3">
+                <span class="text-danger" asp-validation-for="Id_Responsable_MA"></span>
+                <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_MA"></select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label asp-for="Inspectores"></label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" class="form-control" asp-for="Inspectores">
+            </div>
+        </div>
+        <div class="row mb-2">
+            @*<div class="col-md-3">
+                    <label asp-for="Area"></label>
+                </div>
                 <div class="col-md-3">
-                    <label asp-for="Objetivo"></label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" asp-for="Objetivo">
-                </div>
+                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
+                </div>*@
+            <div class="col-md-3">
+                <label asp-for="Objetivo"></label>
             </div>
-            <div class="row mb-2">
+            <div class="col-md-9">
+                <input type="text" class="form-control" asp-for="Objetivo">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-12">
+                <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+            </div>
+        </div>
+        @if (ViewBag.nObservacioness > 0)
+        {
+            @*style="visibility:hidden;display:none"*@
+            <div class="row mb-2" id="div_tabla_observaciones">
                 <div class="col-md-12">
-                    <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+                    <table class="table table-modal" id="tabla_observaciones">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Acto/Condición Subestándar Identificada</th>
+                                <th>Tipo de Condición/Acto Subestándar</th>
+                                <th>Evidencia</th>
+                                <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                <th>Acción Preventiva / Correctiva Tomada</th>
+                                <th>Responsable Marcobre</th>
+                                <th>Responsable Contratista</th>
+                                <th>Fecha Programada</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @Html.Raw(ViewBag.ContenidoTabla)
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            @if (ViewBag.nObservacioness > 0)
-            {
-                @*style="visibility:hidden;display:none"*@
-                <div class="row mb-2" id="div_tabla_observaciones">
-                    <div class="col-md-12">
-                        <table class="table table-modal" id="tabla_observaciones">
-                            <thead class="thead-mcolor">
-                                <tr>
-                                    <th>Acto/Condición Subestándar Identificada</th>
-                                    <th>Tipo de Condición/Acto Subestándar</th>
-                                    <th>Evidencia</th>
-                                    <th>Nivel de Riesgo del Aspecto Ambiental</th>
-                                    <th>Acción Preventiva / Correctiva Tomada</th>
-                                    <th>Responsable Marcobre</th>
-                                    <th>Responsable Contratista</th>
-                                    <th>Fecha Programada</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @Html.Raw(ViewBag.ContenidoTabla)
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
+        }
 
         <div class="buttons d-flex justify-content-end">
-            <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-            <button id="guardar" type="submit" class="btn btn-primary">Guardar</button>
+            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+            <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+            <button id="guardar_estado" type="submit" class="btn btn-primary mr-2">Guardar Estado</button>
+            <button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>
         </div>
+        <input type="hidden" asp-for="opcion" />
+        <input type="hidden" asp-for="Estado" />
+    </form>
+</div>
 
-            <input type="hidden" asp-for="opcion" />
-        </form>
+<!-- Modal Ampliar Fecha-->
+<div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_ampliacion">
+                    Ampliar Fecha de Observación
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label>Nueva Fecha:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="hidden" class="form-control" id="idObserv" />
+                        <input type="date" class="form-control" id="nuevaFecha" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
+            </div>
+        </div>
     </div>
-@section scripts{
-    <script>
-        $(document).ready(function () {
+</div>
 
-        });
-        $("#Id_Gerencia_Ejecutora, #Id_Empresa_Contratista").on('change', function () {
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+           if ('@Model.Estado' != "Pendiente") {
+                //hide buttons
+                $("#nueva_obs").hide();
+                $("#guardar_estado").hide();
+                $("#guardar").hide();
+                $("#cancelar").hide();
+                $("#volver").show();
+                //disable inputs
+                $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
+                $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
+                $('#Id_Gerencia_Ejecutora').prop('disabled', 'disabled');
+                $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
+                $('#Id_Responsable_Lugar').prop('disabled', 'disabled');
+                $('#Id_Responsable_MA').prop('disabled', 'disabled');
+                $('#Lugar_Inspeccionado').prop('readonly', 'readonly');
+                $('#Inspectores').prop('readonly', 'readonly');
+                $('#Hora_Inspeccion').prop('readonly', 'readonly');
+                $('#Fecha_Inspeccion').prop('readonly', 'readonly');
+                $('#Objetivo').prop('readonly', 'readonly');
+            } else {
+                $("#volver").hide();
+            }
+
+    });
+        $("#Id_Empresa_Contratista").on('change', function () {
             $("#Id_Gerencia_EPCM").val(1);
+            $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
             $("#Id_Empresa_Contratista_EPCM").val(1);
+            $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
         });
         $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
-            $("#Id_Gerencia_Ejecutora").val(1);
             $("#Id_Empresa_Contratista").val(1);
+            $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
         });
-        
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");
+            habilitarSelect();
+        });
+        $("#guardar_estado").click(function () {
+            $("#opcion").val("GuardarEstado");
+            habilitarSelect();
         });
         $("#nueva_obs").click(function () {
             $("#opcion").val("Observacion");
+            habilitarSelect();
         });
+        function habilitarSelect() {
+            $('#Id_Gerencia_EPCM').prop('disabled', false);
+            $('#Id_Empresa_Contratista_EPCM').prop('disabled', false);
+            $('#Id_Empresa_Contratista').prop('disabled', false);
+        }
+        function EnviarNuevaFecha() {
+            var fecha = $("#nuevaFecha").val();
+            var idObservacion = $("#idObserv").val();
+            if (fecha != "") {
+                $.ajax({
+                    async: true,
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("AmpliarFechaObservacion", "Inspecciones"))",
+                    data: {
+                        "idCabecera": $("#Id_Inspeccion_Cabecera").val(),
+                        "idObservacion": idObservacion,
+                        "fecha": fecha
+                    },
+                    success: function (data) {
+                        location.reload()
+                    }
+                });
+            } else {
+                alert("Debe seleccionar una fecha");
+            }
+        }
+        function ampliarInspeccion(idObservacion) {
+            $("#modal_ampliacion").modal("show");
+            $("#idObserv").val(idObservacion);
+        }
     </script>
 }

@@ -30,7 +30,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Fecha:")]
         [Required(ErrorMessage ="Debe ingresar una fecha")]
         public string Fecha_Inspeccion { get; set; }
-        [DisplayName("Hora:")]
+        [DisplayName("Hora (24h):")]
         [Required(ErrorMessage = "Debe ingresar una hora")]
         public string Hora_Inspeccion { get; set; }
         [DisplayName("Lugar Inspeccionado:")]
@@ -46,5 +46,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Objetivo de la Inspección:")]
         public string Objetivo { get; set; }
         //public NuevaObservacionModel Observacion { get; set; }
+        public string Estado { get; set; }
     }
 }

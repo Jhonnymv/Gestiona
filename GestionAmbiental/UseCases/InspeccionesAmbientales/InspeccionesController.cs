@@ -5,11 +5,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +29,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
         private readonly IEditarInspeccionCabecera _editarInspeccionCabecera;
+        private readonly IAmpliarFechaObservacion _ampliarFechaObservacion;
         public InspeccionesController(
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
@@ -35,7 +38,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             IRegistrarInspeccionObservacion registrarInspeccionObservacion,
             IConsultarInspeccionDetalle consultarInspeccionDetalle,
             IConsultarCabecera consultarCabecera,
-            IEditarInspeccionCabecera editarInspeccionCabecera)
+            IEditarInspeccionCabecera editarInspeccionCabecera,
+            IAmpliarFechaObservacion ampliarFechaObservacion)
         {
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
@@ -45,6 +49,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             _consultarInspeccionDetalle = consultarInspeccionDetalle;
             _consultarCabecera = consultarCabecera;
             _editarInspeccionCabecera = editarInspeccionCabecera;
+            _ampliarFechaObservacion = ampliarFechaObservacion;
         }
         public async Task<IActionResult> Resumen()
         {
@@ -90,6 +95,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
                     filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
                     filasTabla += "</tr>";
                 }
             }
@@ -176,14 +182,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 int idCabecera = await _registrarInspeccionCabecera.Execute(
                 model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
                 model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
-                model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores);
-                TempData["idCabecera"] = idCabecera;
+                model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores,model.opcion);
                 if(model.opcion.Equals("Observacion"))
                     return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
-                else
-                    return RedirectToAction("NuevaInspeccion");
             }
-            else
                 return RedirectToAction("Resumen");
         }
         
@@ -197,8 +199,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-           
 
             ViewBag.TiposCondicion = tiposCondicion;
             ViewBag.Responsables = responsables;
@@ -240,8 +240,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 return RedirectToAction("NotificarNuevaObservacionAsignada", "Notificaciones", new { IdObservacion = idObservacion });
             }
             else
-                return RedirectToAction("NuevaObservacion", model);
-            
+                return RedirectToAction("NuevaObservacion", model);            
         }
         public async Task<IActionResult> EditarInspeccion(int IdCabecera)
         {
@@ -301,6 +300,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                     filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
+                    if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()))
+                    {
+                        filaObservacion += "<td><a class=\"btn btn-primary\" style=\"color:white\" onclick=\"ampliarInspeccion("+observacion.Id_Inspeccion_Detalle+")\">Ampliar Fecha</a></td>";
+                    }
                     filaObservacion += "</tr>";
 
                 }
@@ -332,6 +335,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Hora_Inspeccion = (cabecera.FechaInspec.Hour.ToString().Length > 1 ? cabecera.FechaInspec.Hour.ToString() : "0" + cabecera.FechaInspec.Hour.ToString()) + ":" + (cabecera.FechaInspec.Minute.ToString().Length > 1 ? cabecera.FechaInspec.Minute.ToString() : "0" + cabecera.FechaInspec.Minute.ToString());
                 model.Objetivo = cabecera.Objetivo;
                 model.Inspectores = cabecera.Inspectores;
+                model.Estado = cabecera.Estado;                
             }
             //TempData["idCabecera"] = IdCabecera;
             return View(model);
@@ -341,7 +345,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         {
             if (ModelState.IsValid)
             {
-                await _editarInspeccionCabecera.Execute(
+                if (model.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
+                {
+                    await _editarInspeccionCabecera.Execute(
                     model.Id_Inspeccion_Cabecera,
                     model.Objetivo,
                     model.Id_Gerencia_Ejecutora,
@@ -353,14 +359,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Hora_Inspeccion,
                     model.Id_Responsable_Lugar,
                     model.Id_Responsable_MA,
-                    model.Inspectores
+                    model.Inspectores,
+                    model.opcion
                     );
-                if (model.opcion.Equals("Observacion"))
-                    return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
-                else
-                    return RedirectToAction("Resumen");
+                    if (model.opcion.Equals("Observacion"))
+                        return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                }                
             }
             return RedirectToAction("Resumen");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AmpliarFechaObservacion(int idCabecera, int idObservacion, string fecha)
+        {
+            await _ampliarFechaObservacion.Execute(idObservacion, fecha);
+            return RedirectToAction("EditarInspeccion", new { IdCabecera = idCabecera });
         }
         private string CreateUniqueFileName(int nFile)
         {

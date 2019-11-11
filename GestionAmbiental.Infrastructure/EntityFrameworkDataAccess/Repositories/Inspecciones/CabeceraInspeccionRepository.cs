@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -77,6 +78,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
+                && c.Estado.Equals(EstadosInspeccion.Registrado.ToString())
                 )
                 .OrderByDescending(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
@@ -97,7 +99,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
                     item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
             }
-
             return TablaResumen;
         }
         public async Task<InspeccionCabecera> GetInspeccionCabeceraImplementacion(int idCabecera)

@@ -32,16 +32,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Id_Responsable_MA = cabecera.Id_Responsable_MA;
             cabeceraEntity.Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar;
             cabeceraEntity.Inspectores = cabecera.Inspectores;
-            cabeceraEntity.Estado = "Registrado";
+            cabeceraEntity.Estado = cabecera.Estado;
 
             _context.Inspecciones_Cabecera.Update(cabeceraEntity);
             await _context.SaveChangesAsync();
 
         }
 
-        public Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle)
+        public async Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle)
         {
-            throw new NotImplementedException();
+            var detalleEntity = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(detalle.Id_Inspeccion_Detalle));
+
+            detalleEntity.Fecha_Programada = detalle.Fecha_Programada;
+            detalleEntity.Estado = detalle.Estado;
+
+            _context.Inspecciones_Detalle.Update(detalleEntity);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -8,6 +8,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.VerificarObservacion;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -104,7 +105,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                 var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 foreach (var observacion in observaciones)
                 {
-                    if (observacion.Estado.Equals("Implementado"))
+                    if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
                     {
                         var evidencia = "";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
@@ -121,10 +122,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.Nivel_Riesgo_Ambiental)
                         {
-                            case "Tolerable": filaObservacion += "<td style:\"background-color:green\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            case "Alerta": filaObservacion += "<td style:\"background-color:yellow\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            case "No Aceptable": filaObservacion += "<td style:\"background-color:red\">" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
-                            default: filaObservacion += "<td>" + observacion.Nivel_Riesgo_Ambiental + "</td>"; break;
+                            case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                            default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
                         }
                         filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
