@@ -80,13 +80,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 {
 
                     filasTabla += "<tr>";
-                    switch (fila.Estado)
+                    /*switch (fila.Estado)
                     {
                         case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }
-                    //href="/Inspecciones/NuevaInspeccion"
+                    }*/
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera="+fila.IdCabecera+"\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
@@ -364,6 +363,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     );
                     if (model.opcion.Equals("Observacion"))
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                    else if (model.opcion.Equals("Guardar"))
+                        return RedirectToAction("NotificarInspección","Notificaciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                 }                
             }
             return RedirectToAction("Resumen");

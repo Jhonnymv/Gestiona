@@ -144,11 +144,17 @@
             </div>
         }
 
-        <div class="buttons d-flex justify-content-end">
-            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
-            <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-            <button id="guardar_estado" type="submit" class="btn btn-primary mr-2">Guardar Estado</button>
+    <div class="buttons d-flex justify-content-end">
+        <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+        <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>        
+        @if (ViewBag.nObservacioness > 0)
+        {   <button id="guardar_estado" type="submit" class="btn btn-primary mr-2">Guardar Estado</button>
             <button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>
+        }
+        else
+        {
+            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+        }
         </div>
         <input type="hidden" asp-for="opcion" />
         <input type="hidden" asp-for="Estado" />

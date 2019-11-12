@@ -67,13 +67,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Verificacion
                 {
 
                     filasTabla += "<tr>";
-                    switch (fila.Estado)
+                    /*switch (fila.Estado)
                     {
                         case "Implementado": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }
-                    //filasTabla += "<td><a onclick=\"abrir("+fila.IdCabecera.ToString()+")\" href=\"#\">" + fila.Codigo + "</a></td>";                    
+                    }*/
                     filasTabla += "<td><a href=\"/InspeccionesVerificacion/VerificarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";

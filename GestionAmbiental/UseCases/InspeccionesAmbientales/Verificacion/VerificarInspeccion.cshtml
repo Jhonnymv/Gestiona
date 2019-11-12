@@ -12,116 +12,115 @@
         </div>
 
         @*---------------------REVISAR UTILIDAD DEL FORM-------------------------------*@
-        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label>Gerencia Ejecutora:</label>
-                </div>
+    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Gerencia Ejecutora:</label>
+            </div>
 
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecMar" readonly="readonly" />
-                </div>
-                <div class="col-md-3">
-                    <label>Empresa Contratista:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratMarc" readonly="readonly" />
-                </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecMar" readonly="readonly" />
             </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label>Gerencia EPCM:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecEPCM" readonly="readonly" />
-                </div>
-                <div class="col-md-3">
-                    <label>Empresa Contratista EPCM:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratEPCM" readonly="readonly" />
-                </div>
+            <div class="col-md-3">
+                <label>Empresa Contratista:</label>
             </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label>Lugar Inspeccionado:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.LugarInspec" readonly="readonly" />
-                </div>
-                <div class="col-md-3">
-                    <label>Fecha de Inspección:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspec" readonly="readonly">
-                </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratMarc" readonly="readonly" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Gerencia EPCM:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecEPCM" readonly="readonly" />
+            </div>
+            <div class="col-md-3">
+                <label>Empresa Contratista EPCM:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratEPCM" readonly="readonly" />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Lugar Inspeccionado:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.LugarInspec" readonly="readonly" />
+            </div>
+            <div class="col-md-3">
+                <label>Fecha de Inspección:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspec" readonly="readonly">
+            </div>
 
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Responsable del lugar:</label>
             </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label>Responsable del lugar:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.idResponsableLugar" readonly="readonly">
-                </div>
-                <div class="col-md-3">
-                    <label>Responsable Medio Ambiente:</label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.idResponsableMA" readonly="readonly">
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.idResponsableLugar" readonly="readonly">
+            </div>
+            <div class="col-md-3">
+                <label>Responsable Medio Ambiente:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.idResponsableMA" readonly="readonly">
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Inspectores:</label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.Inspectores" readonly="readonly">
+            </div>
+        </div>
+        <div class="row mb-2">
+            @*<div class="col-md-3">
+                <label asp-for="Area"></label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
+            </div>*@
+            <div class="col-md-3">
+                <label>Objetivo de Inspección:</label>
+            </div>
+            <div class="col-md-9">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
+            </div>
+        </div>
+        @if (ViewBag.NObservaciones != 0)
+        {
+            <div class="row mb-2" id="div_tabla_observaciones">
+                <div class="col-md-12">
+                    <table class="table table-modal" id="tabla_observaciones">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Acto/Condición Subestándar Identificada</th>
+                                <th>Tipo de Condición/Acto Subestándar</th>
+                                <th>Evidencia</th>
+                                <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                <th>Acción Preventiva / Correctiva Tomada</th>
+                                <th>Responsable Marcobre</th>
+                                <th>Responsable Contratista</th>
+                                <th>Fecha Programada</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @Html.Raw(ViewBag.ContenidoTabla)
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
-                    <label>Inspectores:</label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Inspectores" readonly="readonly">
-                </div>
-            </div>
-            <div class="row mb-2">
-                @*<div class="col-md-3">
-                    <label asp-for="Area"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-                </div>*@
-                <div class="col-md-3">
-                    <label>Objetivo de Inspección:</label>
-                </div>
-                <div class="col-md-9">
-                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
-                </div>
-            </div>
-            @if (ViewBag.NObservaciones != 0)
-            {
-                <div class="row mb-2" id="div_tabla_observaciones">
-                    <div class="col-md-12">
-                        <table class="table table-modal" id="tabla_observaciones">
-                            <thead class="thead-mcolor">
-                                <tr>
-                                    <th>Acto/Condición Subestándar Identificada</th>
-                                    <th>Tipo de Condición/Acto Subestándar</th>
-                                    <th>Evidencia</th>
-                                    <th>Nivel de Riesgo del Aspecto Ambiental</th>
-                                    <th>Acción Preventiva / Correctiva Tomada</th>
-                                    <th>Responsable Marcobre</th>
-                                    <th>Responsable Contratista</th>
-                                    <th>Fecha Programada</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @Html.Raw(ViewBag.ContenidoTabla)
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-            <div class="buttons">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
+        }
+        <div class="buttons d-flex justify-content-end">
+            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+        </div>
+    </form>
     </div>
 

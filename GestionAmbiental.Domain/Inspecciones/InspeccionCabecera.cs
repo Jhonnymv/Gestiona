@@ -27,6 +27,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int NObservaciones { get; set; }
         public string Inspectores { get; set; }
         public string Estado { get; set; }
+        public List<InspeccionDetalle> Observaciones { get; set; }
 
         public InspeccionCabecera(
             int idCabecera, string codigo, string gerenEjecMar, 
@@ -146,6 +147,10 @@ namespace GestionAmbiental.Domain.Inspecciones
             FechaInspec = fechaInspec;
             Inspectores = inspectores;
             Estado = estado;
+        }
+
+        public InspeccionCabecera()
+        {
         }
     }
 }

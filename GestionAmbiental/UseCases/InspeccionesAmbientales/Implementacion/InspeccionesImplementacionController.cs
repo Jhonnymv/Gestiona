@@ -75,13 +75,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {
 
                     filasTabla += "<tr>";
-                    switch (fila.Estado)
+                    /*switch (fila.Estado)
                     {
                         case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }
-                    //filasTabla += "<td><a onclick=\"abrir("+fila.IdCabecera.ToString()+")\" href=\"#\">" + fila.Codigo + "</a></td>";                    
+                    }*/                 
                     filasTabla += "<td><a href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + fila.IdCabecera.ToString()+"\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
@@ -140,12 +139,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                        if(observacion.Estado.Equals("Registrado") || observacion.Estado.Equals("Editado"))
-                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Inspeccionar" + "</a></td>";
-                        else if(observacion.Estado.Equals("Vencido"))
-                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</button></td>";
+                        filaObservacion += "<td>" + observacion.Estado+ "</td>";
+                        if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                            observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()) ||
+                            observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
+                        else if(observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()))
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
                         else
-                        filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Inspeccionar" + "</button></td>";
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
                         filaObservacion += "</tr>";
                     }
                 }

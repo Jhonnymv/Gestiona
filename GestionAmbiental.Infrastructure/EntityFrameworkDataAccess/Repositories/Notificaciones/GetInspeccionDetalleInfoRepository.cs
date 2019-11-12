@@ -38,7 +38,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 inspeccionDetalle.Fecha_Programada
                 );
             return detalle;
-
         }
     }
 }

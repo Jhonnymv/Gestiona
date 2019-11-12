@@ -48,8 +48,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabeccera.Fecha_Inspeccion,
                 cabeccera.Inspectores,
                 cabeccera.Estado
-
-
                );
             return output;
         }

@@ -82,5 +82,9 @@ namespace GestionAmbiental.Domain.Inspecciones
             Comentario_MA = comentario_MA;
             Estado = estado;
         }
+
+        public InspeccionDetalle()
+        {
+        }
     }
 }
