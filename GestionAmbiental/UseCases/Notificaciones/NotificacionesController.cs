@@ -166,30 +166,30 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
                 try
                 {
-                    SmtpClient MyMail = new SmtpClient();
-                    MailMessage MyMsg = new MailMessage();
-                    MyMail.Host = "smtp.gmail.com";
-                    MyMsg.Priority = MailPriority.Normal;
-                    MyMail.EnableSsl = true;
-                    MyMsg.To.Add(new MailAddress(observacion.Responsable_Marcobre.Email));
-                    MyMsg.Subject = "Nueva Observacion Asignada";
-                    MyMsg.SubjectEncoding = Encoding.UTF8;
-                    MyMsg.IsBodyHtml = true;
-                    MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Control - Marcobre");
-                    MyMsg.BodyEncoding = Encoding.UTF8;
-                    MyMsg.Body = msgBody;
+                    SmtpClient mail = new SmtpClient();
+                    MailMessage msg = new MailMessage();
+                    mail.Host = "smtp.gmail.com";
+                    msg.Priority = MailPriority.Normal;
+                    mail.EnableSsl = true;
+                    msg.To.Add(new MailAddress(observacion.Responsable_Marcobre.Email));
+                    msg.Subject = "Nueva Observacion Asignada";
+                    msg.SubjectEncoding = Encoding.UTF8;
+                    msg.IsBodyHtml = true;
+                    msg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Control - Marcobre");
+                    msg.BodyEncoding = Encoding.UTF8;
+                    msg.Body = msgBody;
                     foreach (var evidencia in listEvidencias_condicion)
                     {
-                        MyMsg.Attachments.Add(new Attachment(evidencia));
+                        msg.Attachments.Add(new Attachment(evidencia));
                     }
-                    MyMail.UseDefaultCredentials = false;
+                    mail.UseDefaultCredentials = false;
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
-                    MyMail.Credentials = MyCredentials;
-                    MyMail.EnableSsl = true;
-                    await MyMail.SendMailAsync(MyMsg);
-                    MyMsg.Attachments.Dispose();
-                    MyMail.Dispose();
-                    MyMsg.Dispose();
+                    mail.Credentials = MyCredentials;
+                    mail.EnableSsl = true;
+                    await mail.SendMailAsync(msg);
+                    msg.Attachments.Dispose();
+                    mail.Dispose();
+                    msg.Dispose();
                 }
                 catch (Exception ex)
                 {

@@ -12,7 +12,7 @@
             <h2>Editar Inspección</h2>
         </div>
     </div>
-    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
 
         <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
         <div class="row mb-2">
@@ -155,7 +155,7 @@
         {
             <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
         }
-        </div>
+    </div>
         <input type="hidden" asp-for="opcion" />
         <input type="hidden" asp-for="Estado" />
     </form>
