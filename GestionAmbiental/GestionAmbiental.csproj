@@ -5,6 +5,10 @@
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot\MailTemplates\NuevaObservacion.html" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
@@ -34,6 +38,11 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Include="wwwroot\MailTemplates\NuevaObservacion.html" />
   </ItemGroup>
 
 </Project>

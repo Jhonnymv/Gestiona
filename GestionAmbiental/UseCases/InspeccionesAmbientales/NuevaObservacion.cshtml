@@ -12,7 +12,7 @@
                 <h2>Nueva Observación</h2>
             </div>
         </div>
-        <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaObservacion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data">
+        <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaObservacion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
             <div class="modal-body">
                 <div class="row mb-2">

@@ -9,7 +9,7 @@
         <h2>Inspecciones - Pendientes de Verificación</h2>
     </div>
 </div>
-<form>
+<form autocomplete="off">
     <div class="row mb-2 justify-content-center">
         <div class="col-lg-1 mt-1">
             <label>Fecha de Inspección:</label>
@@ -93,7 +93,6 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    console.log("Success" + response.data);
                     $('#tabla_resumen_inspecciones tbody').empty()
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
                     /*$('#paginado').html(response.paginador)

@@ -33,7 +33,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
         public async Task<IActionResult> NotificarNuevaObservacionAsignada(int IdObservacion)
         {
             var info = await _getNuevaObservacionInfo.Execute(IdObservacion);
-            var template = Path.Combine(_hostingEnvironment.ContentRootPath, "UseCases", "Notificaciones", "Templates",GetTemplate("NuevaObservacion"));
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", GetTemplate("NuevaObservacion"));
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
 
@@ -113,7 +113,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
 
-            var template = Path.Combine(_hostingEnvironment.ContentRootPath, "UseCases", "Notificaciones", "Templates", GetTemplate("NuevaObservacion"));
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", GetTemplate("NuevaObservacion"));
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
 
@@ -145,15 +145,15 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.EmpContratEPCM,
                 info.LugarInspec,
                 info.FechaInspec,
-                info.Responsable_Lugar.Nombres + info.Responsable_Lugar.Apellidos,
-                info.ResponsableMA.Nombres + info.ResponsableMA.Apellidos,
+                info.Responsable_Lugar.Nombres + " " + info.Responsable_Lugar.Apellidos,
+                info.ResponsableMA.Nombres + " " + info.ResponsableMA.Apellidos,
                 info.Inspectores,
                 info.Objetivo,
                 observacion.Descripcion_Condicion,
                 observacion.Tipo_Condicion.Descripcion,
                 observacion.Nivel_Riesgo_Ambiental,
                 observacion.Descripcion_Accion,
-                observacion.Responsable_Marcobre.Nombres + observacion.Responsable_Marcobre.Apellidos,
+                observacion.Responsable_Marcobre.Nombres+" " + observacion.Responsable_Marcobre.Apellidos,
                 observacion.Responsable_Contratista,
                 observacion.Fecha_Programada.ToShortDateString());
 
