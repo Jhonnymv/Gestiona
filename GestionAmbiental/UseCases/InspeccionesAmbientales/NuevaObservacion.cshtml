@@ -30,8 +30,8 @@
             </div>
             <div class="row mb-2">
                 <div class="col-md-4">
-                    <label class="AsesorMedioAmbiente" style="display:none">Asesor de Medio Ambiente</label>
-                    <label class="AsesorSeguridad" style="display:none">Asesor de Seguridad</label>
+                    <label class="AsesorMedioAmbiente" style="display:none">Asesor de Medio Ambiente:</label>
+                    <label class="AsesorSeguridad" style="display:none">Asesor de Seguridad:</label>
                 </div>
                 <div class="col-md-8">
                     <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
@@ -127,6 +127,7 @@
                     <label asp-for="FechaProgramada"></label>
                 </div>
                 <div class="col-md-8">
+                    <span class="text-danger" asp-validation-for="FechaProgramada"></span>
                     <input type="date" class="form-control" asp-for="FechaProgramada" />
                 </div>
             </div>

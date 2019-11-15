@@ -16,14 +16,14 @@
 
     <div class="row mb-2">
         <div class="col-md-3">
-            <label>Gerencia Ejecutora:</label>
+            <label>Gerencia Marcobre:</label>
         </div>
 
         <div class="col-md-3">
             <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecMar" readonly="readonly" />
         </div>
         <div class="col-md-3">
-            <label>Empresa Contratista:</label>
+            <label>Empresa Contratista Marcobre:</label>
         </div>
         <div class="col-md-3">
             <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratMarc" readonly="readonly" />
@@ -65,12 +65,6 @@
         <div class="col-md-3">
             <input type="text" class="form-control" value="@ViewBag.Cabecera.Responsable_Lugar.Nombres" readonly="readonly">
         </div>
-        <div class="col-md-3">
-            <label>Responsable Medio Ambiente:</label>
-        </div>
-        <div class="col-md-3">
-            <input type="text" class="form-control" value="@ViewBag.Cabecera.ResponsableMA.Nombres" readonly="readonly">
-        </div>
     </div>
     <div class="row mb-2">
         <div class="col-md-3">
@@ -95,6 +89,8 @@
                 <table class="table table-modal" id="tabla_observaciones">
                     <thead class="thead-mcolor">
                         <tr>
+                            <th>Tipo de Observación</th>
+                            <th>Asesor de Seguridad / Medio Ambiente</th>
                             <th>Acto/Condición Subestándar Identificada</th>
                             <th>Tipo de Condición/Acto Subestándar</th>
                             <th>Evidencia</th>
@@ -103,6 +99,8 @@
                             <th>Responsable Marcobre</th>
                             <th>Responsable Contratista</th>
                             <th>Fecha Programada</th>
+                            <th>Evidencia Implementación</th>
+                            <th>Comentario Implementación</th>
                             <th></th>
                         </tr>
                     </thead>

@@ -23,6 +23,9 @@ namespace GestionAmbiental.Domain.Inspecciones
         public Usuario Responsable_Lugar { get; set; }
         public DateTime FechaInspec { get; set; }
         public int NObservaciones { get; set; }
+        public int NObsImplementadas { get; set; }
+        public int NObsAprobadas { get; set; }
+        public int NObsRechazadas { get; set; }
         public string Inspectores { get; set; }
         public string Estado { get; set; }
         public List<InspeccionDetalle> Observaciones { get; set; }

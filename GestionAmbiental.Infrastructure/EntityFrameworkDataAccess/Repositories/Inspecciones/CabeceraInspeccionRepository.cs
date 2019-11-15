@@ -41,10 +41,29 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista)).FirstOrDefault();
                 var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista_EPCM)).FirstOrDefault();
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
-                
-                TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
+                var nObsImplementadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Implementado.ToString())).Count();
+                var nObsAprobadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString())).Count();
+                var nObsRechazadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString())).Count();
+
+                var cabecera = new InspeccionCabecera();
+                cabecera.IdCabecera = item.Id_Inspeccion_Cabecera;
+                cabecera.Codigo = item.Codigo;
+                cabecera.GerenEjecMar = gerEjectMar.Descripcion;
+                cabecera.EmpContratMarc = empContMar.Razon_Social;
+                cabecera.GerenEjecEPCM = gerEjectEPCM.Descripcion;
+                cabecera.EmpContratEPCM = empContEPCM.Razon_Social;
+                cabecera.LugarInspec = item.Lugar_Inspeccionado;
+                cabecera.FechaInspec = item.Fecha_Inspeccion;
+                cabecera.NObservaciones = nObservaciones;
+                cabecera.Estado = item.Estado;
+                cabecera.NObsImplementadas = nObsImplementadas;
+                cabecera.NObsAprobadas = nObsAprobadas;
+                cabecera.NObsRechazadas = nObsRechazadas;
+                TablaResumen.Add(cabecera);
+
+                /*TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
                     empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
-                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));*/
             }
 
             return TablaResumen;

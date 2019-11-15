@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Consul
 {
     public interface IConsultarDetallesVerificacion
     {
-        Task<InspeccionDetalle> Execute(int IdObservacion);
+        Task<InspeccionDetalleOutput> Execute(int IdObservacion);
     }
 }

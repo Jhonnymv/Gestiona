@@ -86,10 +86,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
                     }*/
-                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
-                        filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera="+fila.IdCabecera+"\">TBD</a></td>";
-                    else
-                        filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + fila.IdCabecera + "\">"+fila.Codigo+"</a></td>";
+                    double avance = fila.NObsImplementadas!=0? Math.Round((float)fila.NObsImplementadas / fila.NObservaciones * 100,1) : 0;
+                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + fila.IdCabecera + "\">"+fila.Codigo+"</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
                     filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
@@ -97,7 +95,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
                     filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance+"%;\" aria-valuemin=\"0\" aria-valuemax=\"100\">"+ avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
             }

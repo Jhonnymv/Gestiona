@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
@@ -8,6 +9,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.VerificarObservacion;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -104,20 +106,32 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
                 foreach (var observacion in observaciones)
                 {
-                    if (observacion.Estado.Equals("Aprobado"))
+                    if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
                     {
                         var evidencia = "";
+                        var evidencia_implementacion = "";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia = "<label style=\"width:110px\"><a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                             else
-                                evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                                evidencia += "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
+                        evidencia += "</label>";
+                        for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
+                        {
+                            if (i == 0)
+                                evidencia_implementacion = "<label style=\"width:110px\"><a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                            else
+                                evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                        }
+                        evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                        filaObservacion += "<td>" + observacion.Tipo_Inspeccion + "</td>";
+                        filaObservacion += "<td>" + observacion.Asesor_MA_Seguridad + "</td>";
                         filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
-                        filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
+                        filaObservacion += "<td><label style=\"width:250px\">" + observacion.Tipo_Condicion + "</label></td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.Nivel_Riesgo_Ambiental)
                         {
@@ -126,15 +140,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                             case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                             default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
                         }
-                        filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";
+                        filaObservacion += "<td><label style=\"width:200px\">" + observacion.Descripcion_Accion + "</label></td>";
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td>" + evidencia_implementacion + "</td>";
+                        filaObservacion += "<td>" + observacion.Comentario_Inspeccion + "</td>";
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Verificar" + "</a></td>";
                         filaObservacion += "</tr>";
                     }
                 }
-                ViewBag.NObservaciones = observaciones.Count;
+                ViewBag.NObservaciones = observaciones.Where(x=>x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList().Count;
                 ViewBag.ContenidoTabla = filaObservacion;
             }
             return View();
@@ -147,11 +163,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             model.idObservacion = observacion.Id_Inspeccion_Detalle;
             model.idCabecera = observacion.Id_Inspeccion_Cabecera;
             model.CondicionIdentificada = observacion.Descripcion_Condicion;
-            model.TipoCondicion = observacion.Tipo_Condicion.Descripcion;
+            model.TipoCondicion = observacion.Tipo_Condicion;
             model.Evidencias = observacion.Evidencia_Condicion;
             model.NiveRiesgo = observacion.Nivel_Riesgo_Ambiental;
             model.AccionTomada = observacion.Descripcion_Accion;
-            model.ResponsableMarc = observacion.Responsable_Marcobre.Nombres + " " + observacion.Responsable_Marcobre.Apellidos;
+            model.ResponsableMarc = observacion.Responsable_Marcobre;
             model.ResponsableCont = observacion.Responsable_Contratista;
             model.FechaProgramada = observacion.Fecha_Programada.ToShortDateString();
             model.EvidenciasInspeccion = observacion.Evidencia_Inspeccion;
@@ -170,6 +186,45 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacion, "AprobadoMA");
             }
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });
+        }
+        public async Task<IActionResult> Download(string path)
+        {
+            if (path == null)
+                return Content("No se encontró el archivo");
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(path, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+            return File(memory, GetContentType(path), Path.GetFileName(path));
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"},
+                {".ppt", "application/vnd.ms-powerpoint" },
+                {".pptx", "application/vnd.ms-powerpoint" }
+            };
         }
     }
 }

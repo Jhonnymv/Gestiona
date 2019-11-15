@@ -15,7 +15,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         [DisplayName("Tipo de Condición/Acto Subestándar:")]
         public string TipoCondicion { get; set; }
         [DisplayName("Evidencia:")]
-        public string Evidencias { get; set; }
+        public List<string> Evidencias { get; set; }
         [DisplayName("Nivel de Riesgo del Aspecto Ambiental:")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
@@ -27,7 +27,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         [DisplayName("Fecha Programada:")]
         public string FechaProgramada { get; set; }
         [DisplayName("Evidencia:")]
-        public string EvidenciasInspeccion { get; set; }
+        public List<string> EvidenciasInspeccion { get; set; }
         [DisplayName("Comentario Implementación:")]
         public string ComentarioImplementacion { get; set; }
         [DisplayName("Comentario Verificación:")]

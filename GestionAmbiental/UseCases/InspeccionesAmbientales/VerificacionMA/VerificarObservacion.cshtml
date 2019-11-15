@@ -35,7 +35,17 @@
                     <label asp-for="Evidencias"></label>
                 </div>
                 <div class="col-md-8">
-
+                    @for (int i = 0; i < Model.Evidencias.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia @(i + 1)</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">, Evidencia @(i + 1)</a>
+                        }
+                    }
                 </div>
             </div>
             <div class="row mb-2">
@@ -83,6 +93,17 @@
                     <label asp-for="EvidenciasInspeccion"></label>
                 </div>
                 <div class="col-md-8">
+                    @for (int i = 0; i < Model.EvidenciasInspeccion.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">Evidencia @(i + 1)</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">, Evidencia @(i + 1)</a>
+                        }
+                    }
                 </div>
             </div>
             <div class="row mb-2">
@@ -91,14 +112,6 @@
                 </div>
                 <div class="col-md-8">
                     <textarea class="form-control" asp-for="ComentarioImplementacion" rows="3" readonly="readonly"></textarea>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="ComentarioVerificacion"></label>
-                </div>
-                <div class="col-md-8">
-                    <textarea class="form-control" asp-for="ComentarioVerificacion" rows="3" readonly="readonly"></textarea>
                 </div>
             </div>
             <div class="row mb-2">

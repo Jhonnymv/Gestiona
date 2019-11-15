@@ -16,9 +16,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Consul
             _detalleInspeccionReadOnly = detalleInspeccionReadOnly ?? throw new ArgumentNullException(nameof(detalleInspeccionReadOnly));
         }
 
-        public async Task<InspeccionDetalle> Execute(int IdObservacion)
+        public async Task<InspeccionDetalleOutput> Execute(int IdObservacion)
         {
-            var output = await _detalleInspeccionReadOnly.GetInspeccionDetalle(IdObservacion);
+            var inspeccionDetalle = await _detalleInspeccionReadOnly.GetInspeccionDetalle(IdObservacion);
+            var output = new InspeccionDetalleOutput(inspeccionDetalle);
+
             return output;
         }
     }

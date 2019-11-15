@@ -32,9 +32,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
             cabecera.Objetivo = objetivo;
             switch (opcion)
             {
-                case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString();break;
-                case "Guardar": cabecera.Estado = EstadosInspeccion.Registrado.ToString(); break;
-                case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString();break;
+                case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
+                case "Guardar": cabecera.Estado = EstadosInspeccion.Registrado.ToString(); cabecera.Codigo = "CÓDIGO"; break;
+                case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString();cabecera.Codigo = "TBD" ;break;
             }
 
             int idCabecera = await _registarInspeccionReadOnlyRepository.RegistrarInspeccionCabecera(cabecera);

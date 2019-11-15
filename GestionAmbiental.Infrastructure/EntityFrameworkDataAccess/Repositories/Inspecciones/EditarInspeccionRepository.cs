@@ -22,6 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var cabeceraEntity = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Cabecera));
 
+            cabeceraEntity.Codigo = cabecera.Codigo;
             cabeceraEntity.Objetivo = cabecera.Objetivo;
             cabeceraEntity.Fecha_Inspeccion = cabecera.Fecha_Inspeccion;
             cabeceraEntity.Id_Empresa_Contratista = cabecera.Id_Empresa_Contratista != 0 ? cabecera.Id_Empresa_Contratista: 1;
