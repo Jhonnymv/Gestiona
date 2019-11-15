@@ -116,15 +116,28 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         !observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
                     {
                         var evidencia = "";
+                        var evidencia_implementación = "";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
                             if (i == 0)
                                 evidencia = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                             else
-                                evidencia += "<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                                evidencia += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
+                        if (observacion.Evidencia_Inspeccion != null)
+                        {
+                            for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
+                            {
+                                if (i == 0)
+                                    evidencia_implementación = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                else
+                                    evidencia_implementación += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                            }
+                        }                        
                         filaObservacion += "<tr>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                        filaObservacion += "<td>" + observacion.Tipo_Inspeccion + "</td>";
+                        filaObservacion += "<td>" + observacion.Asesor_MA_Seguridad + "</td>";
                         filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
                         filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
@@ -139,7 +152,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                        filaObservacion += "<td>" + observacion.Estado+ "</td>";
+                        filaObservacion += "<td>" + evidencia_implementación+ "</td>";
+                        filaObservacion += "<td>" + observacion.Comentario_Inspeccion + "</td>";
                         if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
                             observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()) ||
                             observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))
@@ -188,8 +202,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         var fileExtension = Path.GetExtension(model.EvidenciasInspeccion[i].FileName);
                         var fileName = CreateUniqueFileName(i + 1) + fileExtension;
                         var filepath = Path.Combine(_hostingEnvironment.WebRootPath, "InspeccionesAmbientales", "EvidenciasImplementacion", fileName);
-
-                        await model.EvidenciasInspeccion[i].CopyToAsync(new FileStream(filepath, FileMode.Create));
+                        var file = new FileStream(filepath, FileMode.Create);
+                        await model.EvidenciasInspeccion[i].CopyToAsync(file);
+                        file.Close();
                         evidencias.Add(filepath);
                     }
                 }
@@ -244,7 +259,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
-                {".csv", "text/csv"}
+                {".csv", "text/csv"},
+                {".ppt", "application/vnd.ms-powerpoint" },
+                {".pptx", "application/vnd.ms-powerpoint" }
             };
         }
     }

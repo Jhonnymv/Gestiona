@@ -29,12 +29,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in inspeccionesDetalle)
             {
                 var responsableMarc = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
+                var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_MA));
                 var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
                 detalles.Add(new InspeccionDetalle(
                     item.Id_Inspeccion_Cabecera,
                     item.Id_Inspeccion_Detalle,
+                    item.Tipo_Observacion,
                     item.Descripcion_Condicion,
-                    new Domain.ValueObjects.Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion),
+                    new Domain.ValueObjects.Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo),
                     item.Evidencia_Condicion,
                     item.Nivel_Riesgo_Ambiental,
                     item.Descripcion_Accion,
@@ -44,8 +46,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.Evidencia_Inspeccion,
                     item.Comentario_Inspeccion,
                     item.Fecha_Cierre,
-                    item.Fecha_Verificacion_Inspector,
-                    item.Comentario_Inspector,
+                    new Domain.ValueObjects.Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres,responsableMA.Apellidos, responsableMA.Email),
                     item.Fecha_Verificacion_MA,
                     item.Comentario_MA,
                     item.Estado));
@@ -57,12 +58,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(idDetalle));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
-            var tipoCondicion_Domain = new Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion);
+            var tipoCondicion_Domain = new Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo);
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario,responsableMarcobre.Id_Rol,responsableMarcobre.Nombres,responsableMarcobre.Apellidos,responsableMarcobre.Email);
+            var responsableMA = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_MA));
+            var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
+
             var detalle = new InspeccionDetalle(
                 inspeccionDetalle.Id_Inspeccion_Cabecera,
                 inspeccionDetalle.Id_Inspeccion_Detalle,
+                inspeccionDetalle.Tipo_Observacion,
                 inspeccionDetalle.Descripcion_Condicion,
                 tipoCondicion_Domain,
                 inspeccionDetalle.Evidencia_Condicion,
@@ -74,8 +79,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 inspeccionDetalle.Evidencia_Inspeccion,
                 inspeccionDetalle.Comentario_Inspeccion,
                 inspeccionDetalle.Fecha_Cierre,
-                inspeccionDetalle.Fecha_Verificacion_Inspector,
-                inspeccionDetalle.Comentario_Inspector,
+                responsableMA_Domain,
                 inspeccionDetalle.Fecha_Verificacion_MA,
                 inspeccionDetalle.Comentario_MA,
                 inspeccionDetalle.Estado

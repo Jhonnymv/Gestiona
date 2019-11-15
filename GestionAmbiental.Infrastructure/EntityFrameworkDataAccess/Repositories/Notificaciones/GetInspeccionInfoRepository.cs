@@ -33,9 +33,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
            
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
-            var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_MA));
-            var responsableMADomain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
-
+            
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
@@ -49,7 +47,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.EmpContratEPCM = empContEPCM;
             output.LugarInspec = cabeccera.Lugar_Inspeccionado;
             output.Responsable_Lugar = responsableLugarDomain;
-            output.ResponsableMA = responsableMADomain;
             output.FechaInspec = cabeccera.Fecha_Inspeccion;
             output.Inspectores = cabeccera.Inspectores;
             output.Estado = cabeccera.Estado;
@@ -58,13 +55,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var observacion in observaciones)
             {
                 var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(observacion.Id_Tipo_Condicion));
-                var tipoCondicion_Domain = new Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion);
+                var tipoCondicion_Domain = new Tipo_Condicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo);
                 var responsableMarcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre));
                 var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
 
                 var detalle = new InspeccionDetalle(
                 observacion.Id_Inspeccion_Cabecera,
                 observacion.Id_Inspeccion_Detalle,
+                observacion.Tipo_Observacion,
                 observacion.Descripcion_Condicion,
                 tipoCondicion_Domain,
                 observacion.Evidencia_Condicion,

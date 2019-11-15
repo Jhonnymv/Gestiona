@@ -86,7 +86,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
                     }*/
-                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera="+fila.IdCabecera+"\">" + fila.Codigo + "</a></td>";
+                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
+                        filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera="+fila.IdCabecera+"\">TBD</a></td>";
+                    else
+                        filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + fila.IdCabecera + "\">"+fila.Codigo+"</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
                     filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
@@ -181,7 +184,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 int idCabecera = await _registrarInspeccionCabecera.Execute(
                 model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
                 model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
-                model.Id_Responsable_Lugar, model.Id_Responsable_MA, model.Inspectores,model.opcion);
+                model.Id_Responsable_Lugar, model.Inspectores,model.opcion);
                 if(model.opcion.Equals("Observacion"))
                     return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
             }
@@ -193,15 +196,28 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
-            var tiposCondicion = selectItemsResumen.TipoCondicion.Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
-            tiposCondicion.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x=>x.Grupo.Equals(TiposCondicion.ASA.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            ViewBag.TiposCondicion = tiposCondicion;
+            var asesoresMA = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var asesoresSeguridad = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.TiposActoMA = tiposActoMA;
+            ViewBag.TiposCondicionMA = tiposCondicionMA;
             ViewBag.Responsables = responsables;
             ViewBag.idCabecera = IdCabecera;
+
+            ViewBag.AsesoresMA = asesoresSeguridad;
+            ViewBag.AsesoresSeguridad = asesoresSeguridad;
 
             return View();
         }
@@ -227,6 +243,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 }
                 var idObservacion = await _registrarInspeccionObservacion.Execute(
                             model.idCabecera,
+                            model.TipoInspeccion,
+                            model.Asesor_MA_Seguridad,
                             model.CondicionIdentificada,
                             model.TipoCondicion,
                             evidencias,
@@ -274,17 +292,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     var evidencia = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                     {
-                        /* if (i == 0)
-                             evidencia = "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i+1) + "</a>";
-                         else
-                             evidencia += "<a href=\"" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i+1) + "</a>";*/
-                        if (i == 0)
+                      if (i == 0)
                             evidencia = evidencia+"<a href=\"/Inspecciones/Download?path="+ observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                         else
                             evidencia = evidencia+"<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
+                    filaObservacion += "<td>" + observacion.Tipo_Inspeccion + "</td>";
+                    filaObservacion += "<td>" + observacion.Asesor_MA_Seguridad + "</td>";
                     filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
                     filaObservacion += "<td>" + observacion.Tipo_Condicion + "</td>";
                     filaObservacion += "<td>" + evidencia + "</td>";
@@ -329,7 +345,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 model.Id_Gerencia_EPCM = cabecera.idGerencEjectEPCM;
                 model.Lugar_Inspeccionado = cabecera.LugarInspec;
                 model.Id_Responsable_Lugar = cabecera.idResponsableLugar;
-                model.Id_Responsable_MA = cabecera.idResponsableMA;
                 model.Fecha_Inspeccion = cabecera.FechaInspec.Year + "-" + (cabecera.FechaInspec.Month.ToString().Length>1? cabecera.FechaInspec.Month.ToString():"0"+ cabecera.FechaInspec.Month.ToString()) + "-" + (cabecera.FechaInspec.Day.ToString().Length > 1 ? cabecera.FechaInspec.Day.ToString() : "0" + cabecera.FechaInspec.Day.ToString());
                 model.Hora_Inspeccion = (cabecera.FechaInspec.Hour.ToString().Length > 1 ? cabecera.FechaInspec.Hour.ToString() : "0" + cabecera.FechaInspec.Hour.ToString()) + ":" + (cabecera.FechaInspec.Minute.ToString().Length > 1 ? cabecera.FechaInspec.Minute.ToString() : "0" + cabecera.FechaInspec.Minute.ToString());
                 model.Objetivo = cabecera.Objetivo;
@@ -357,7 +372,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Fecha_Inspeccion,
                     model.Hora_Inspeccion,
                     model.Id_Responsable_Lugar,
-                    model.Id_Responsable_MA,
                     model.Inspectores,
                     model.opcion
                     );

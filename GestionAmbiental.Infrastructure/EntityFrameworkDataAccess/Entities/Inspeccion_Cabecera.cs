@@ -15,8 +15,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Inspeccion_Cabecera { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Codigo { get; set; }
-        [Column(TypeName = "varchar(50)")]
-        public string Area { get; set; }
         [Column(TypeName = "int")]
         public int Id_Gerencia_Ejecutora { get; set; }
         [Column(TypeName = "int")]
@@ -31,8 +29,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public string Lugar_Inspeccionado { get; set; }
         [Column(TypeName = "int")]
         public int Id_Responsable_Lugar { get; set; }
-        [Column(TypeName = "int")]
-        public int Id_Responsable_MA { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Inspectores { get; set; }
         [Column(TypeName = "varchar(100)")]

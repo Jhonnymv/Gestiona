@@ -78,16 +78,9 @@
             <div class="col-md-3">
                 <label asp-for="Id_Responsable_Lugar"></label>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                 <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
-            </div>
-            <div class="col-md-3">
-                <label asp-for="Id_Responsable_MA"></label>
-            </div>
-            <div class="col-md-3">
-                <span class="text-danger" asp-validation-for="Id_Responsable_MA"></span>
-                <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_MA"></select>
             </div>
         </div>
         <div class="row mb-2">
@@ -99,12 +92,6 @@
             </div>
         </div>
         <div class="row mb-2">
-            @*<div class="col-md-3">
-                    <label asp-for="Area"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-                </div>*@
             <div class="col-md-3">
                 <label asp-for="Objetivo"></label>
             </div>
@@ -125,6 +112,8 @@
                     <table class="table table-modal" id="tabla_observaciones">
                         <thead class="thead-mcolor">
                             <tr>
+                                <th>Tipo de Observación</th>
+                                <th>Asesor de Seguridad / Medio Ambiente</th>
                                 <th>Acto/Condición Subestándar Identificada</th>
                                 <th>Tipo de Condición/Acto Subestándar</th>
                                 <th>Evidencia</th>

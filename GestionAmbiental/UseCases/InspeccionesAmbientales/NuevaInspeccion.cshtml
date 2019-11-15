@@ -77,16 +77,9 @@
                 <div class="col-md-3">
                     <label asp-for="Id_Responsable_Lugar"></label>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-9">
                     <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                     <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Id_Responsable_MA"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_MA"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_MA"></select>
                 </div>
             </div>
             <div class="row mb-2">
@@ -98,12 +91,6 @@
                 </div>
             </div>
             <div class="row mb-2">
-                @*<div class="col-md-3">
-                    <label asp-for="Area"></label>
-                </div>
-                <div class="col-md-3">
-                    <input type="text" class="form-control" value="Medio ambiente y permisos" asp-for="Area" readonly="readonly">
-                </div>*@
                 <div class="col-md-3">
                     <label asp-for="Objetivo"></label>
                 </div>
@@ -159,14 +146,29 @@
             }, "Seleccione una opción");
         });
         $("#Id_Empresa_Contratista").on('change', function () {
-            $("#Id_Gerencia_EPCM").val(1);
-            $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
-            $("#Id_Empresa_Contratista_EPCM").val(1);            
-            $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
+            if ($("#Id_Empresa_Contratista").val()==1) {
+                $("#Id_Gerencia_EPCM").val(0);
+                $('#Id_Gerencia_EPCM').prop('disabled', false);
+                $("#Id_Empresa_Contratista_EPCM").val(0);
+                $('#Id_Empresa_Contratista_EPCM').prop('disabled', false);
+            } else {
+                $("#Id_Gerencia_EPCM").val(1);
+                $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
+                $("#Id_Empresa_Contratista_EPCM").val(1);
+                $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
+            }
+            
         });
         $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
-            $("#Id_Empresa_Contratista").val(1);            
-            $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
+            if ($("#Id_Gerencia_EPCM").val() == 1 || $("#Id_Empresa_Contratista_EPCM").val() == 1) {
+                $("#Id_Empresa_Contratista").val(0);
+                $('#Id_Empresa_Contratista').prop('disabled', false);
+                $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").val(1);
+                $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").prop('disabled', 'disabled');
+            } else {
+                $("#Id_Empresa_Contratista").val(1);
+                $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
+            }            
         });
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");      

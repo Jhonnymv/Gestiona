@@ -21,8 +21,6 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string LugarInspec { get; set; }
         public int idResponsableLugar { get; set; }
         public Usuario Responsable_Lugar { get; set; }
-        public int idResponsableMA { get; set; }
-        public Usuario ResponsableMA { get; set; }
         public DateTime FechaInspec { get; set; }
         public int NObservaciones { get; set; }
         public string Inspectores { get; set; }
@@ -30,9 +28,9 @@ namespace GestionAmbiental.Domain.Inspecciones
         public List<InspeccionDetalle> Observaciones { get; set; }
 
         public InspeccionCabecera(
-            int idCabecera, string codigo, string gerenEjecMar, 
-            string empContratMarc, string gerenEjecEPCM, 
-            string empContratEPCM, string lugarInspec, DateTime fechaInspec, 
+            int idCabecera, string codigo, string gerenEjecMar,
+            string empContratMarc, string gerenEjecEPCM,
+            string empContratEPCM, string lugarInspec, DateTime fechaInspec,
             int nObservaciones, string estado)
         {
             IdCabecera = idCabecera;
@@ -48,18 +46,17 @@ namespace GestionAmbiental.Domain.Inspecciones
         }
 
         public InspeccionCabecera(
-            int idCabecera, 
-            string codigo, 
-            string objetivo, 
+            int idCabecera,
+            string codigo,
+            string objetivo,
             string gerenEjecMar,
-            string empContratMarc, 
+            string empContratMarc,
             string gerenEjecEPCM,
-            string empContratEPCM, 
-            string lugarInspec, 
+            string empContratEPCM,
+            string lugarInspec,
             int idResponsableLugar,
-            int idResponsableMA,
-            DateTime fechaInspec, 
-            int nObservaciones, 
+            DateTime fechaInspec,
+            int nObservaciones,
             string inspectores,
             string estado)
         {
@@ -72,7 +69,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             EmpContratEPCM = empContratEPCM;
             LugarInspec = lugarInspec;
             this.idResponsableLugar = idResponsableLugar;
-            this.idResponsableMA = idResponsableMA;
             FechaInspec = fechaInspec;
             NObservaciones = nObservaciones;
             Inspectores = inspectores;
@@ -80,9 +76,9 @@ namespace GestionAmbiental.Domain.Inspecciones
         }
 
         public InspeccionCabecera(
-            int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc, 
-            int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec, 
-            int nObservaciones, string estado,int idResponsableLug, int idResponsableMA,string objetivo,string inspectores)
+            int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc,
+            int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec,
+            int nObservaciones, string estado, int idResponsableLug,string objetivo,string inspectores)
         {
             IdCabecera = idCabecera;
             Codigo = codigo;
@@ -95,14 +91,13 @@ namespace GestionAmbiental.Domain.Inspecciones
             NObservaciones = nObservaciones;
             Estado = estado;
             idResponsableLugar = idResponsableLug;
-            this.idResponsableMA = idResponsableMA;
             Objetivo = objetivo;
             Inspectores = inspectores;
         }
         public InspeccionCabecera(
             int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc,
             int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec,
-            string estado, int idResponsableLug, int idResponsableMA, string objetivo, string inspectores)
+            string estado, int idResponsableLug, string objetivo, string inspectores)
         {
             IdCabecera = idCabecera;
             Codigo = codigo;
@@ -114,7 +109,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             FechaInspec = fechaInspec;
             Estado = estado;
             idResponsableLugar = idResponsableLug;
-            this.idResponsableMA = idResponsableMA;
             Objetivo = objetivo;
             Inspectores = inspectores;
         }
@@ -129,7 +123,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             string empContratEPCM, 
             string lugarInspec,
             Usuario responsable_Lugar,
-            Usuario responsableMA,
             DateTime fechaInspec, 
             string inspectores,
             string estado)
@@ -143,7 +136,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             EmpContratEPCM = empContratEPCM;
             LugarInspec = lugarInspec;
             Responsable_Lugar = responsable_Lugar;
-            ResponsableMA = responsableMA;
             FechaInspec = fechaInspec;
             Inspectores = inspectores;
             Estado = estado;

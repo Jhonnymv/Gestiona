@@ -8,6 +8,8 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public int Id_Inspeccion_Detalle { get; set; }
         public int Id_Inspeccion_Cabecera { get; set; }
+        public string Tipo_Inspeccion { get; set; }
+        public int Id_Asesor_MA_Seguridad { get; set; }
         public string Descripcion_Condicion { get; set; }
         public int Id_Tipo_Condicion { get; set; }
         public string Evidencia_Condicion { get; set; }

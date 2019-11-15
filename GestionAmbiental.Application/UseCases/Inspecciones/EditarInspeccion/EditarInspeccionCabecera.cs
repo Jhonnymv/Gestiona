@@ -27,8 +27,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             string lugar, 
             string fechaInspeccion,
             string hora,
-            int responsableLugar, 
-            int responsableMA, 
+            int responsableLugar,
             string inspectores,
             string opcion)
         {
@@ -42,7 +41,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             cabecera.Fecha_Inspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
             cabecera.Lugar_Inspeccionado = lugar;
             cabecera.Id_Responsable_Lugar = responsableLugar;
-            cabecera.Id_Responsable_MA = responsableMA;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
 

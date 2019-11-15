@@ -20,5 +20,9 @@ namespace GestionAmbiental.Domain.ValueObjects
             Apellidos = apellidos;
             Email = email;
         }
+
+        public Usuario()
+        {
+        }
     }
 }

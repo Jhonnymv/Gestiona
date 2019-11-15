@@ -31,8 +31,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var usuarios = await _context.Usuarios.ToListAsync();
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
-            var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_MA));
-            var responsableMADomain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
 
             var output = new InspeccionCabecera(
                 cabeccera.Id_Inspeccion_Cabecera,
@@ -44,7 +42,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 empContEPCM,
                 cabeccera.Lugar_Inspeccionado,
                 responsableLugarDomain,
-                responsableMADomain,
                 cabeccera.Fecha_Inspeccion,
                 cabeccera.Inspectores,
                 cabeccera.Estado

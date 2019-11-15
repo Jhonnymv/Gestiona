@@ -14,5 +14,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Tipo_Condicion { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Descripcion { get; set; }
+        [Column(TypeName = "varchar(3)")]
+        public string Grupo { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
         }
 
         public async Task<int> Execute(
-            int Id_Inspeccion_Cabecera, string Descripcion_Condicion, int Id_Tipo_Condicion, List<string> Evidencia_Condicion, 
+            int Id_Inspeccion_Cabecera, string Tipo_Inspeccion, int Asesor_MA_Seguridad, string Descripcion_Condicion, int Id_Tipo_Condicion, List<string> Evidencia_Condicion, 
             string Nivel_Riesgo_Ambiental, string Descripcion_Accion, int Id_Responsable_Marcobre, string Responsable_Contratista, 
             string Fecha_Programada)
         {
@@ -27,6 +27,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
             var detalle = new NuevaInspeccionDetalle
             {
                 Id_Inspeccion_Cabecera = Id_Inspeccion_Cabecera,
+                Tipo_Inspeccion = Tipo_Inspeccion,
+                Id_Asesor_MA_Seguridad = Asesor_MA_Seguridad,
                 Descripcion_Condicion = Descripcion_Condicion,
                 Id_Tipo_Condicion = Id_Tipo_Condicion,
                 Nivel_Riesgo_Ambiental = Nivel_Riesgo_Ambiental,

@@ -29,7 +29,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Id_Gerencia_Ejecutora = cabecera.Id_Gerencia_Ejecutora != 0 ? cabecera.Id_Gerencia_Ejecutora : 1;
             cabeceraEntity.Id_Gerencia_EPCM = cabecera.Id_Gerencia_EPCM != 0 ? cabecera.Id_Gerencia_EPCM : 1;
             cabeceraEntity.Lugar_Inspeccionado = cabecera.Lugar_Inspeccionado;
-            cabeceraEntity.Id_Responsable_MA = cabecera.Id_Responsable_MA;
             cabeceraEntity.Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar;
             cabeceraEntity.Inspectores = cabecera.Inspectores;
             cabeceraEntity.Estado = cabecera.Estado;

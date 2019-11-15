@@ -16,15 +16,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task VerificarObservacion(NuevaInspeccionDetalle nuevaInspeccionDetalle)
-        {
-            var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.Id_Inspeccion_Detalle));
-            detalle.Comentario_Inspector = nuevaInspeccionDetalle.Comentario_Inspector;
-            detalle.Estado = nuevaInspeccionDetalle.Estado;
-            detalle.Fecha_Verificacion_Inspector = DateTime.Now;
-            _context.Inspecciones_Detalle.Update(detalle);
-            await _context.SaveChangesAsync();
-        }
 
         public async Task VerificarObservacionMA(NuevaInspeccionDetalle nuevaInspeccionDetalle)
         {

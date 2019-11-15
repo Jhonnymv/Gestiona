@@ -21,7 +21,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var cabeceraEntity = new Inspeccion_Cabecera
             {
-                Area = "Medio Ambiente y Permisos",
                 Codigo = "DEFINIR",
                 Objetivo = cabecera.Objetivo,
                 Fecha_Inspeccion = cabecera.Fecha_Inspeccion,
@@ -30,7 +29,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Id_Gerencia_Ejecutora = cabecera.Id_Gerencia_Ejecutora != 0 ? cabecera.Id_Gerencia_Ejecutora : 1,
                 Id_Gerencia_EPCM = cabecera.Id_Gerencia_EPCM != 0 ? cabecera.Id_Gerencia_EPCM : 1,
                 Lugar_Inspeccionado = cabecera.Lugar_Inspeccionado,
-                Id_Responsable_MA = cabecera.Id_Responsable_MA,
                 Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar,
                 Inspectores = cabecera.Inspectores,
                 Estado = cabecera.Estado
@@ -49,6 +47,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
            var detalleEntity = new Inspeccion_Detalle
                 {
                     Id_Inspeccion_Cabecera = detalle.Id_Inspeccion_Cabecera,
+                    Tipo_Observacion = detalle.Tipo_Inspeccion,
+                    Id_Responsable_MA = detalle.Id_Asesor_MA_Seguridad,
                     Descripcion_Condicion = detalle.Descripcion_Condicion,
                     Id_Tipo_Condicion = detalle.Id_Tipo_Condicion,
                     Nivel_Riesgo_Ambiental = detalle.Nivel_Riesgo_Ambiental,
@@ -60,7 +60,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Estado = "Registrado",
 
                     Fecha_Cierre = null,
-                    Fecha_Verificacion_Inspector = null,
                     Fecha_Verificacion_MA = null,
                 };
                 _context.Inspecciones_Detalle.Add(detalleEntity);

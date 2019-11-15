@@ -44,7 +44,6 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
             output.Lugar_Inspeccionado = cabecera.LugarInspec;
             output.Fecha_Inspeccion = cabecera.FechaInspec.ToString();
             output.Responsable_Lugar = cabecera.Responsable_Lugar.Nombres +" " + cabecera.Responsable_Lugar.Apellidos;
-            output.Responsable_MA = cabecera.ResponsableMA.Nombres+ " " + cabecera.ResponsableMA.Apellidos;
             output.Inspectores = cabecera.Inspectores;
             output.Objetivo = cabecera.Objetivo;
             output.Descripcion_Condicion = observacion.Descripcion_Condicion;

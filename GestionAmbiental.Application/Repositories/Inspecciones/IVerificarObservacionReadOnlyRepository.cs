@@ -8,7 +8,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
 {
     public interface IVerificarObservacionReadOnlyRepository
     {
-        Task VerificarObservacion(NuevaInspeccionDetalle nuevaInspeccionDetalle);
         Task VerificarObservacionMA(NuevaInspeccionDetalle nuevaInspeccionDetalle);
     }
 }

@@ -9,6 +9,7 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public int Id_Inspeccion_Cabecera { get; set; }
         public int Id_Inspeccion_Detalle { get; set; }
+        public string Tipo_Observacion { get; set; }
         public string Descripcion_Condicion { get; set; }
         public Tipo_Condicion Tipo_Condicion { get; set; }
         public string Evidencia_Condicion { get; set; }
@@ -20,19 +21,19 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string Evidencia_Inspeccion { get; set; }
         public string Comentario_Inspeccion { get; set; }
         public DateTime? Fecha_Cierre { get; set; }
-        public DateTime? Fecha_Verificacion_Inspector { get; set; }
-        public string Comentario_Inspector { get; set; }
+        public Usuario Responsable_MA { get; set; }
         public DateTime? Fecha_Verificacion_MA { get; set; }
         public string Comentario_MA { get; set; }
         public string Estado { get; set; }
 
         public InspeccionDetalle(
-            int id_Inspeccion_Cabecera, int id_Inspeccion_Detalle, string descripcion_Condicion, 
+            int id_Inspeccion_Cabecera, int id_Inspeccion_Detalle,string tipo_Observacion, string descripcion_Condicion, 
             Tipo_Condicion tipo_Condicion, string evidencia_Condicion, string nivel_Riesgo_Ambiental, 
             string descripcion_Accion, Usuario responsable_Marcobre, string responsable_Contratista, DateTime fecha_Programada)
         {
             Id_Inspeccion_Cabecera = id_Inspeccion_Cabecera;
             Id_Inspeccion_Detalle = id_Inspeccion_Detalle;
+            Tipo_Observacion = tipo_Observacion;
             Descripcion_Condicion = descripcion_Condicion;
             Tipo_Condicion = tipo_Condicion;
             Evidencia_Condicion = evidencia_Condicion;
@@ -46,25 +47,26 @@ namespace GestionAmbiental.Domain.Inspecciones
         public InspeccionDetalle(
             int id_Inspeccion_Cabecera,
             int id_Inspeccion_Detalle,
-            string descripcion_Condicion,
+            string tipo_Observacion,
+            string descripcion_Condicion, 
             Tipo_Condicion tipo_Condicion, 
             string evidencia_Condicion, 
             string nivel_Riesgo_Ambiental,
             string descripcion_Accion,
-            Usuario responsable_Marcobre,
-            string responsable_Contratista,
-            DateTime fecha_Programada, 
+            Usuario responsable_Marcobre, 
+            string responsable_Contratista, 
+            DateTime fecha_Programada,
             string evidencia_Inspeccion, 
-            string comentario_Inspeccion,
-            DateTime? fecha_Cierre,
-            DateTime? fecha_Verificacion_Inspector,
-            string comentario_Inspector,
+            string comentario_Inspeccion, 
+            DateTime? fecha_Cierre, 
+            Usuario responsable_MA, 
             DateTime? fecha_Verificacion_MA,
-            string comentario_MA,
+            string comentario_MA, 
             string estado)
         {
             Id_Inspeccion_Cabecera = id_Inspeccion_Cabecera;
             Id_Inspeccion_Detalle = id_Inspeccion_Detalle;
+            Tipo_Observacion = tipo_Observacion;
             Descripcion_Condicion = descripcion_Condicion;
             Tipo_Condicion = tipo_Condicion;
             Evidencia_Condicion = evidencia_Condicion;
@@ -76,8 +78,7 @@ namespace GestionAmbiental.Domain.Inspecciones
             Evidencia_Inspeccion = evidencia_Inspeccion;
             Comentario_Inspeccion = comentario_Inspeccion;
             Fecha_Cierre = fecha_Cierre;
-            Fecha_Verificacion_Inspector = fecha_Verificacion_Inspector;
-            Comentario_Inspector = comentario_Inspector;
+            Responsable_MA = responsable_MA;
             Fecha_Verificacion_MA = fecha_Verificacion_MA;
             Comentario_MA = comentario_MA;
             Estado = estado;

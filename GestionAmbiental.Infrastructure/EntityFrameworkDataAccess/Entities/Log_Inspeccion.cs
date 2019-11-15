@@ -12,15 +12,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
     {
         [Key]
         public int Id_Log_Inspeccion { get; set; }
-        [Column(TypeName = "int")]
-        public int Id_Inspeccion_Detalle { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha { get; set; }
         [Column(TypeName = "text")]
         public string Bkp { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Usuario { get; set; }
-        [Column(TypeName = "varchar(15)")]
-        public int Estado { get; set; }
+        public int Id_Inspeccion_Cabecera { get; set; }
     }
 }

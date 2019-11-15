@@ -110,32 +110,13 @@ namespace GestionAmbiental.UseCases.Notificaciones
         }
         public async Task<IActionResult> NotificarInspección(int IdCabecera)
         {
-
+            /*
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
 
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", GetTemplate("NuevaObservacion"));
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
 
-            /*
-             Gerencia Inspeccionada Marcobre{0}
-             Empresa Contratista Marcobre{1}
-             Gerencia Inspeccionada EPCM{2}
-             Empresa Contratista EPCM{3}
-             Lugar Inspeccionado{4}
-             Fecha Inspección{5}
-             Responsable Lugar Inspeccionado{6}
-             Responsable Medio Ambiente{7}
-             Inspector(es){8}
-             Objetivo de la Inspección{9}
-             Acto / Condición Subestándar Identificada{10}
-             Tipo de Condición / Acto Subestándar{11}
-             Nivel de Riesgo del Aspecto Ambiental{12}
-             Acción Preventiva / Correctiva Tomada{13}
-             Responsable Marcobre{14}
-             Responsable Contratista{15}
-             Fecha Programada{16}
-             */
             foreach (var observacion in info.Observaciones)
             {
                 var msgBody = string.Format(templateReaded,
@@ -146,7 +127,6 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.LugarInspec,
                 info.FechaInspec,
                 info.Responsable_Lugar.Nombres + " " + info.Responsable_Lugar.Apellidos,
-                info.ResponsableMA.Nombres + " " + info.ResponsableMA.Apellidos,
                 info.Inspectores,
                 info.Objetivo,
                 observacion.Descripcion_Condicion,
@@ -195,8 +175,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 {
                     Console.WriteLine(ex.Message);
                 }
-            }
-            return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = info.IdCabecera });
+            }*/
+            return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdCabecera });
         }
         private string GetTemplate(string accion)
         {

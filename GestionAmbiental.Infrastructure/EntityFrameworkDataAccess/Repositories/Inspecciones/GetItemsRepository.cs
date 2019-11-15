@@ -44,7 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var tiposCondicionDomain = new List<Domain.ValueObjects.Tipo_Condicion>();
             foreach (var tipo in tiposCondicion)
             {
-                tiposCondicionDomain.Add(new Domain.ValueObjects.Tipo_Condicion(tipo.Id_Tipo_Condicion,tipo.Descripcion));
+                tiposCondicionDomain.Add(new Domain.ValueObjects.Tipo_Condicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
             }
             items.GerenciaEjecutora = gerenciasDomain;
             items.GerenciasEPCM = gerenciasDomain;
@@ -103,7 +103,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Tipo_Condicion>();
             foreach (var item in tipos)
             {
-                output.Add(new Tipo_Condicion(item.Id_Tipo_Condicion,item.Descripcion));
+                output.Add(new Tipo_Condicion(item.Id_Tipo_Condicion,item.Descripcion,item.Grupo));
             }
             return output;
         }

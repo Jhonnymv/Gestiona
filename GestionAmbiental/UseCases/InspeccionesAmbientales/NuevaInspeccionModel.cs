@@ -15,10 +15,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         public string Codigo { get; set; }
         [DisplayName("Área")]
         public string Area { get; set; }
-        [DisplayName("Gerencia Inspeccionada Marcobre:")]
+        [DisplayName("Gerencia Marcobre:")]
         [Range(1,99,ErrorMessage ="Debe seleccionar una opcción")]
         public int Id_Gerencia_Ejecutora { get; set; }
-        [DisplayName("Gerencia Inspeccionada EPCM:")]
+        [DisplayName("Gerencia EPCM:")]
         [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Gerencia_EPCM { get; set; }
         [DisplayName("Empresa Contratista Marcobre:")]
@@ -38,9 +38,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [DisplayName("Responsable Lugar Inspeccionado:")]
         [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Responsable_Lugar { get; set; }
-        [DisplayName("Responsable Medio Ambiente:")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
-        public int Id_Responsable_MA { get; set; }
         [DisplayName("Inspector(es):")]
         public string Inspectores { get; set; }
         [DisplayName("Objetivo de la Inspección:")]

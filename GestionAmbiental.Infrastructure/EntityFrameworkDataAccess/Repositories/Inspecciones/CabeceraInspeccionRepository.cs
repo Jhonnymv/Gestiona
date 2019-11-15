@@ -54,21 +54,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
-            var output = new InspeccionCabecera(
-                cabeccera.Id_Inspeccion_Cabecera, 
-                cabeccera.Codigo, 
-                cabeccera.Id_Gerencia_Ejecutora, 
-                cabeccera.Id_Empresa_Contratista, 
-                cabeccera.Id_Gerencia_EPCM, 
-                cabeccera.Id_Empresa_Contratista_EPCM, 
-                cabeccera.Lugar_Inspeccionado,
-                cabeccera.Fecha_Inspeccion, 
-                observaciones.Count, 
-                cabeccera.Estado,
-                cabeccera.Id_Responsable_Lugar,
-                cabeccera.Id_Responsable_MA,
-                cabeccera.Objetivo,
-                cabeccera.Inspectores);
+            var output = new InspeccionCabecera();
+            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabeccera.Codigo;
+            output.idGerenciaEjecMar = cabeccera.Id_Gerencia_Ejecutora;
+            output.idEmpContratMarc = cabeccera.Id_Empresa_Contratista;
+            output.idGerencEjectEPCM = cabeccera.Id_Gerencia_EPCM;
+            output.idEmpContratEPCM = cabeccera.Id_Empresa_Contratista_EPCM;
+            output.LugarInspec = cabeccera.Lugar_Inspeccionado;
+            output.FechaInspec = cabeccera.Fecha_Inspeccion;
+            output.NObservaciones = observaciones.Count;
+            output.Estado = cabeccera.Estado;
+            output.idResponsableLugar = cabeccera.Id_Responsable_Lugar;
+            output.Objetivo = cabeccera.Objetivo;
+            output.Inspectores = cabeccera.Inspectores;
+
             return output;
         }
         public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
@@ -107,23 +107,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas_Contratistas.ToListAsync();
-
-            var output = new InspeccionCabecera(
-                cabeccera.Id_Inspeccion_Cabecera,
-                cabeccera.Codigo,
-                cabeccera.Objetivo,
-                gerencias.FirstOrDefault(x=>x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion,
-                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social,
-                gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion,
-                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social,
-                cabeccera.Lugar_Inspeccionado,
-                cabeccera.Id_Responsable_Lugar,
-                cabeccera.Id_Responsable_MA,
-                cabeccera.Fecha_Inspeccion,
-                observaciones.Count,
-                cabeccera.Inspectores,
-                cabeccera.Estado
-                );
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
+            foreach(var item in usuarios)
+            {
+                usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario,item.Id_Rol,item.Nombres,item.Apellidos,item.Email));
+            }
+            var output = new InspeccionCabecera();
+            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabeccera.Codigo;
+            output.Objetivo = cabeccera.Objetivo;
+            output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion;
+            output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social;
+            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion;
+            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social;
+            output.LugarInspec = cabeccera.Lugar_Inspeccionado;
+            output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
+            output.FechaInspec = cabeccera.Fecha_Inspeccion;
+            output.NObservaciones = observaciones.Count;
+            output.Inspectores = cabeccera.Inspectores;
+            output.Estado = cabeccera.Estado;
             return output;
         }
 
@@ -165,22 +168,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas_Contratistas.ToListAsync();
 
-            var output = new InspeccionCabecera(
-                cabeccera.Id_Inspeccion_Cabecera,
-                cabeccera.Codigo,
-                cabeccera.Objetivo,
-                gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion,
-                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social,
-                gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion,
-                empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social,
-                cabeccera.Lugar_Inspeccionado,
-                cabeccera.Id_Responsable_Lugar,
-                cabeccera.Id_Responsable_MA,
-                cabeccera.Fecha_Inspeccion,
-                observaciones.Count,
-                cabeccera.Inspectores,
-                cabeccera.Estado
-                );
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
+            foreach (var item in usuarios)
+            {
+                usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario, item.Id_Rol, item.Nombres, item.Apellidos, item.Email));
+            }
+
+            var output = new InspeccionCabecera();
+            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabeccera.Codigo;
+            output.Objetivo = cabeccera.Objetivo;
+            output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion;
+            output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social;
+            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion;
+            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social;
+            output.LugarInspec = cabeccera.Lugar_Inspeccionado;
+            output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
+            output.FechaInspec = cabeccera.Fecha_Inspeccion;
+            output.NObservaciones = observaciones.Count;
+            output.Inspectores = cabeccera.Inspectores;
+            output.Estado = cabeccera.Estado;
             return output;
         }
     }

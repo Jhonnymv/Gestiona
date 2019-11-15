@@ -156,7 +156,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             model.FechaProgramada = observacion.Fecha_Programada.ToShortDateString();
             model.EvidenciasInspeccion = observacion.Evidencia_Inspeccion;
             model.ComentarioImplementacion = observacion.Comentario_Inspeccion;
-            model.ComentarioVerificacion = observacion.Comentario_Inspector;
 
             return View(model);
         }
