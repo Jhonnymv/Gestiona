@@ -90,6 +90,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+
         public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
@@ -208,6 +209,68 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.NObservaciones = observaciones.Count;
             output.Inspectores = cabeccera.Inspectores;
             output.Estado = cabeccera.Estado;
+            return output;
+        }
+        public async Task<InspeccionCabecera> GetInspeccionCabeceraDescarga(int idCabecera)
+        {
+            //Cabecera
+            var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var empresas = await _context.Empresas_Contratistas.ToListAsync();
+
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
+            foreach (var item in usuarios)
+            {
+                usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario, item.Id_Rol, item.Nombres, item.Apellidos, item.Email));
+            }
+            //Detalle
+            var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
+            var tiposCondicion_domain = new List<Domain.ValueObjects.Tipo_Condicion>();
+            foreach (var item in tiposCondicion)
+            {
+                tiposCondicion_domain.Add(new Domain.ValueObjects.Tipo_Condicion(item.Id_Tipo_Condicion, item.Descripcion,item.Grupo));
+            }
+
+
+            var output = new InspeccionCabecera();
+            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabecera.Codigo;
+            output.Objetivo = cabecera.Objetivo;
+            output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Ejecutora)).Descripcion;
+            output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabecera.Id_Empresa_Contratista)).Razon_Social;
+            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia_EPCM)).Descripcion;
+            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabecera.Id_Empresa_Contratista_EPCM)).Razon_Social;
+            output.LugarInspec = cabecera.Lugar_Inspeccionado;
+            output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Lugar));
+            output.FechaInspec = cabecera.Fecha_Inspeccion;
+            output.Inspectores = cabecera.Inspectores;
+            output.Estado = cabecera.Estado;
+            
+            output.Observaciones = new List<InspeccionDetalle>();
+            foreach(var observacion in observaciones)
+            {
+                var obs = new InspeccionDetalle();
+                obs.Id_Inspeccion_Cabecera = idCabecera;
+                obs.Id_Inspeccion_Detalle = observacion.Id_Inspeccion_Detalle;
+                obs.Tipo_Observacion = observacion.Tipo_Observacion;
+                obs.Descripcion_Condicion = observacion.Descripcion_Condicion;
+                obs.Tipo_Condicion = tiposCondicion_domain.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(observacion.Id_Tipo_Condicion));
+                obs.Nivel_Riesgo_Ambiental = observacion.Nivel_Riesgo_Ambiental;
+                obs.Descripcion_Accion = observacion.Descripcion_Accion;
+                obs.Responsable_Marcobre = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre));
+                obs.Responsable_Contratista = observacion.Responsable_Contratista;
+                obs.Fecha_Programada = observacion.Fecha_Programada;
+                obs.Comentario_Inspeccion = observacion.Comentario_Inspeccion;
+                obs.Fecha_Cierre = observacion.Fecha_Cierre;
+                obs.Comentario_MA = observacion.Comentario_MA;
+                obs.Fecha_Verificacion_MA = observacion.Fecha_Verificacion_MA;
+                obs.Estado = observacion.Estado;
+
+                output.Observaciones.Add(obs);
+            }
+
             return output;
         }
     }

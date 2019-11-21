@@ -110,9 +110,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
         }
         public async Task<IActionResult> NotificarInspección(int IdCabecera)
         {
-            /*
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
-
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", GetTemplate("NuevaObservacion"));
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
@@ -166,7 +164,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
-                    await mail.SendMailAsync(msg);
+                    //await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();
@@ -175,7 +173,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 {
                     Console.WriteLine(ex.Message);
                 }
-            }*/
+            }
             return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdCabecera });
         }
         private string GetTemplate(string accion)

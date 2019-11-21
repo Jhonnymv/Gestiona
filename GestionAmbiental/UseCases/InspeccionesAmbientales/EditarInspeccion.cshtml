@@ -134,11 +134,12 @@
         }
 
     <div class="buttons d-flex justify-content-end">
+        <a type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
         <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
         <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>        
         @if (ViewBag.nObservacioness > 0)
         {   <button id="guardar_estado" type="submit" class="btn btn-primary mr-2">Guardar Estado</button>
-            <button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>
+            <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary">Finalizar Registro</button>
         }
         else
         {
@@ -149,7 +150,23 @@
         <input type="hidden" asp-for="Estado" />
     </form>
 </div>
-
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">            
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Notificando a Responsables</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- Modal Ampliar Fecha-->
 <div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
      aria-hidden="true" style="display: none;">
@@ -261,6 +278,17 @@
         function ampliarInspeccion(idObservacion) {
             $("#modal_ampliacion").modal("show");
             $("#idObserv").val(idObservacion);
+        }
+        function FinalizarRegistro() {
+            $("#Modal_Enviando_Correo").modal('show')
+            $.ajax({
+                type: "POST",
+                data: $('#form_nuevaInspeccion').serialize(),
+                url: "/Inspecciones/EditarInspeccion",
+                contentType: "application/json"
+            }).success(function () {
+                
+            });
         }
     </script>
 }

@@ -95,7 +95,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
                     filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance+"%;\" aria-valuemin=\"0\" aria-valuemax=\"100\">"+ avance + "%</div></div></td>";
+                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance+ "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
             }
