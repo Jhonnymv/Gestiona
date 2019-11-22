@@ -67,7 +67,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo);
+            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo,User.Identity.Name);
             var filasTabla = "";
             if (datosTabla.Count > 0)
             {
@@ -109,7 +109,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var cabecera = await _consultarCabecera.Execute(IdCabecera);
                 ViewBag.Cabecera = cabecera;
                 var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
+                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera,User.Identity.Name);
                 foreach (var observacion in observaciones)
                 {
                     if (!observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
@@ -151,8 +151,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                         filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
-                            observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))
+                        if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                            observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))&& observacion.PermisosImplementar)
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
                         else if(observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()))
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";

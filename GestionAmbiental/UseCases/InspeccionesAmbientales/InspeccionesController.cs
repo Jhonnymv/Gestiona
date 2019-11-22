@@ -203,10 +203,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var asesoresMA = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var asesoresMA = selectItemsResumen.Usuarios.Where(x=>x.Id_Rol.Equals((int)InspeccionRol.Verificador)).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var asesoresSeguridad = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.Id_Rol.Equals((int)InspeccionRol.Verificador)).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.TiposActoMA = tiposActoMA;

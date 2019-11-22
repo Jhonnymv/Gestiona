@@ -10,7 +10,7 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     {
         Task<List<InspeccionCabecera>> GetInspeccionCabecera(int pagina, int fpp, DateTime fecha, int gerencia, string codigo);
         Task<InspeccionCabecera> GetInspeccionCabecera(int idCabecera);
-        Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo);
+        Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,int id_usuario);
         Task<InspeccionCabecera> GetInspeccionCabeceraImplementacion(int idCabecera);
         Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo);
         Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera);

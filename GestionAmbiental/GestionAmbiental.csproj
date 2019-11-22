@@ -6,11 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\MailTemplates\NuevaObservacion.html" />
-  </ItemGroup>
-
-
-  <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
@@ -29,21 +24,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
   </ItemGroup>
 
-
   <ItemGroup>
     <ProjectReference Include="..\GestionAmbiental.Application\GestionAmbiental.Application.csproj" />
     <ProjectReference Include="..\GestionAmbiental.Domain\GestionAmbiental.Domain.csproj" />
     <ProjectReference Include="..\GestionAmbiental.Infrastructure\GestionAmbiental.Infrastructure.csproj" />
   </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="logs\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <None Include="wwwroot\MailTemplates\NuevaObservacion.html" />
-  </ItemGroup>
-
+  
 </Project>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 
 namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
 {
@@ -43,6 +45,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var gerencias_EPCM = await _getItemsReadOnlyRepository.GetGerenciasEPCM();
             var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
+            usuarios = usuarios.Where(x => x.Id_Rol.Equals((int)InspeccionRol.Inspector)).ToList();
             var output = new ItemsSelectResumen();
             output.EmpContratMarcobre = empresa_Contratistas;
             output.EmpContratEPCM = empresa_Contratistas_EPCM;

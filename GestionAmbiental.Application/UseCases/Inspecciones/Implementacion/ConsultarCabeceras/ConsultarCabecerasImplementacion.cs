@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Inspecciones;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,19 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.Cons
     public class ConsultarCabecerasImplementacion : IConsultarCabecerasImplementacion
     {
         private readonly ICabeceraInspeccionReadOnlyRepository _cabeceraInspeccionReadOnlyRepository;
-        public ConsultarCabecerasImplementacion(ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository)
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuariosReadOnlyRepository;
+        public ConsultarCabecerasImplementacion(
+            ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository,
+            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepositor
+            )
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
+            _gestorUsuariosReadOnlyRepository = gestorUsuarioReadOnlyRepositor;
         }
-        public async Task<List<InspeccionCabecera>> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,string usuario_red)
         {
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(pagina, fpp, fecha, gerencia, codigo);
+            var usuario = await _gestorUsuariosReadOnlyRepository.GetUsuario(usuario_red);
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(pagina, fpp, fecha, gerencia, codigo,usuario.Id_Usuario);
             return cabeceras;
         }
     }

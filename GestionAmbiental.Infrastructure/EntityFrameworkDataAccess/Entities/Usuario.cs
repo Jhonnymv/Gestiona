@@ -18,6 +18,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public string Nombres { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Apellidos { get; set; }
+        [Column(TypeName = "varchar(15)")]
+        public string usuario_red { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Email { get; set; }
         [Column(TypeName = "int")]

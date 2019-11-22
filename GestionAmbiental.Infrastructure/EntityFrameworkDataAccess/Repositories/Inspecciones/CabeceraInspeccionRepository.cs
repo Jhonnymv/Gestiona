@@ -91,10 +91,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,int id_usuario)
         {
+            var observaciones_usuario = await _context.Inspecciones_Detalle.Where(o=>o.Id_Responsable_Marcobre.Equals(id_usuario)).ToListAsync();
+
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
+                observaciones_usuario.Select(x=>x.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera) &&
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)

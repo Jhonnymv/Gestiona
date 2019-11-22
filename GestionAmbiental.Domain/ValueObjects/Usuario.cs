@@ -8,9 +8,11 @@ namespace GestionAmbiental.Domain.ValueObjects
     {
         public int Id_Usuario { get; set; }
         public int Id_Rol { get; set; }
+        public string usuario_red { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string Email { get; set; }
+        public int? Id_Superior { get; set; }
 
         public Usuario(int id_Usuario, int id_Rol, string nombres, string apellidos, string email)
         {
