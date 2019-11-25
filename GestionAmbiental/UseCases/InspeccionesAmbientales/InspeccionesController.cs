@@ -117,6 +117,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            gerenciasEjecutorasMC.RemoveAt(1);
 
             var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -200,6 +201,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
             tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            var tiposActoSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposActoSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposCondicionSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposCondicionSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
@@ -211,6 +218,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             ViewBag.TiposActoMA = tiposActoMA;
             ViewBag.TiposCondicionMA = tiposCondicionMA;
+            ViewBag.TiposActoSEG = tiposActoSEG;
+            ViewBag.TiposCondicionSEG = tiposCondicionSEG;
+
             ViewBag.Responsables = responsables;
             ViewBag.idCabecera = IdCabecera;
 
@@ -264,6 +274,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            gerenciasEjecutorasMC.RemoveAt(1);
 
             var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -307,6 +318,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                         case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                         case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                         case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
+                        case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                         default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
                     }
                     filaObservacion += "<td>" + observacion.Descripcion_Accion + "</td>";

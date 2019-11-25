@@ -109,8 +109,9 @@
             </div>
         }
 
-        <div class="buttons d-flex justify-content-end">
-            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
-        </div>
+    <div class="buttons d-flex justify-content-end">
+        <a id="descargar" type="button" class="btn btn-danger mr-2" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@ViewBag.Cabecera.IdCabecera">Descargar en Excel</a>
+        <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+    </div>
     </form>
 </div>

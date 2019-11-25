@@ -23,8 +23,8 @@
                     <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
                     <select class="form-control" asp-for="TipoInspeccion">
                         <option value="">-- SELECCIONE --</option>
-                        <option value="Observaciones Medioambientales">Observaciones Medioambientales</option>
-                        <option value="Observaciones de Seguridad">Observaciones de Seguridad</option>
+                        <option value="Observacion Medioambiental">Observación Medioambiental</option>
+                        <option value="Observacion de Seguridad">Observación de Seguridad</option>
                     </select>
                 </div>
             </div>
@@ -49,8 +49,8 @@
                         <option value="">-- SELECCIONE --</option>
                         <option class="OpcMedioAmbiente" value="Acto Subestándar" style="display:none">Acto Subestándar</option>
                         <option class="OpcMedioAmbiente" value="Condición Subestándar" style="display:none">Condición Subestándar</option>
-                        <option class="OpcSeguridad" value="Opciones seguridad" style="display:none">Opciones seguridad</option>
-                        <option class="OpcSeguridad" value="Opciones seguridad" style="display:none">Opciones seguridad</option>
+                        <option class="OpcSeguridad" value="Acto Subestándar" style="display:none">Acto Subestándar</option>
+                        <option class="OpcSeguridad" value="Condición Subestándar" style="display:none">Condición Subestándar</option>
                     </select>
                 </div>
             </div>
@@ -66,6 +66,8 @@
                     </select>
                     <select class="form-control MA-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoMA" style="display:none"></select>
                     <select class="form-control MA-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionMA" style="display:none"></select>
+                    <select class="form-control SEG-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoSEG" style="display:none"></select>
+                    <select class="form-control SEG-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionSEG" style="display:none"></select>
                 </div>
             </div>
             <div class="row mb-2">
@@ -150,11 +152,14 @@
                 case "Tolerable": $("#NiveRiesgo").css("background-color", "green"); $("#NiveRiesgo").css("color", "white"); break;
                 case "Alerta": $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black"); break;
                 case "No Aceptable": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
+                case "Bajo": $("#NiveRiesgo").css("background-color", "green"); $("#NiveRiesgo").css("color", "white"); break;
+                case "Medio": $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black"); break;
+                case "Alto": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
                 default: $("#NiveRiesgo").css("background-color", "white"); $("#NiveRiesgo").css("color", "black"); break;
             }
         });
         $("#TipoInspeccion").on('change', function () {
-            if ($("#TipoInspeccion").val() == "Observaciones Medioambientales") {
+            if ($("#TipoInspeccion").val() == "Observacion Medioambiental") {
                 $(".OpcSeguridad").hide();
                 $(".OpcMedioAmbiente").show();
                 /*
@@ -169,7 +174,7 @@
                 $(".AsesorSeguridad").prop('disabled', 'disabled');
                 //reiniciar condicion
                 $("#CondicionIdentificada").val("");
-            } else if ($("#TipoInspeccion").val() == "Observaciones de Seguridad") {
+            } else if ($("#TipoInspeccion").val() == "Observacion de Seguridad") {
                 $(".OpcMedioAmbiente").hide();
                 $(".OpcSeguridad").show();
                 //Mostrar asesores seguridad                
@@ -205,20 +210,34 @@
         $("#CondicionIdentificada").on('change', function () {
             var selectedOption = $("#CondicionIdentificada option:selected").val();
             console.log(selectedOption);
-            if (selectedOption == "Acto Subestándar") {
+            if ($("#TipoInspeccion").val() == "Observacion Medioambiental" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").show();
                 $(".MA-Acto").prop('disabled', false);
                 $(".MA-Condicion").hide();
                 $(".MA-Condicion").prop('disabled', 'disabled');
-            } else if (selectedOption == "Condición Subestándar") {
+            } else if ($("#TipoInspeccion").val() == "Observacion Medioambiental" && selectedOption == "Condición Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").hide();
                 $(".MA-Acto").prop('disabled', 'disabled');
                 $(".MA-Condicion").show();
                 $(".MA-Condicion").prop('disabled', false);
+            }else if ($("#TipoInspeccion").val() == "Observacion de Seguridad" && selectedOption == "Acto Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".SEG-Acto").show();
+                $(".SEG-Acto").prop('disabled', false);
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', 'disabled');
+            }else if ($("#TipoInspeccion").val() == "Observacion de Seguridad" && selectedOption == "Condición Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', 'disabled');
+                $(".SEG-Condicion").show();
+                $(".SEG-Condicion").prop('disabled', false);
             } else {
                 $(".Vacio").show();
                 $(".Vacio").prop('disabled', false);
@@ -227,6 +246,10 @@
                 $(".MA-Condicion").hide();
                 $(".MA-Acto").prop('disabled', 'disabled');
                 $(".MA-Condicion").prop('disabled', 'disabled');
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', 'disabled');
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', 'disabled');
                 $("#TiposActoMA").val("");
                 $("#TiposCondicionMA").val("");
             }

@@ -134,7 +134,7 @@
         }
 
     <div class="buttons d-flex justify-content-end">
-        <a type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
+        <a id="descargar" type="button" class="btn btn-danger mr-2" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
         <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
         <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>        
         @if (ViewBag.nObservacioness > 0)
@@ -202,6 +202,7 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
+            console.log('@Model.Estado');
            if ('@Model.Estado' != "Pendiente") {
                 //hide buttons
                 $("#nueva_obs").hide();
@@ -223,6 +224,7 @@
                 $('#Objetivo').prop('readonly', 'readonly');
             } else {
                 $("#volver").hide();
+                $("#descargar").hide();
             }
 
     });
