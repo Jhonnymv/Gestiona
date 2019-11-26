@@ -37,9 +37,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in cabeceras)
             {
                 var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_Ejecutora)).FirstOrDefault();
-                var gerEjectEPCM = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_EPCM)).FirstOrDefault();
                 var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista)).FirstOrDefault();
-                var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista_EPCM)).FirstOrDefault();
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
                 var nObsImplementadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Implementado.ToString())).Count();
                 var nObsAprobadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString())).Count();
@@ -50,8 +48,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabecera.Codigo = item.Codigo;
                 cabecera.GerenEjecMar = gerEjectMar.Descripcion;
                 cabecera.EmpContratMarc = empContMar.Razon_Social;
-                cabecera.GerenEjecEPCM = gerEjectEPCM.Descripcion;
-                cabecera.EmpContratEPCM = empContEPCM.Razon_Social;
                 cabecera.LugarInspec = item.Lugar_Inspeccionado;
                 cabecera.FechaInspec = item.Fecha_Inspeccion;
                 cabecera.NObservaciones = nObservaciones;
@@ -75,17 +71,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
             var output = new InspeccionCabecera();
             output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
+            output.Id_Registrado_Por = cabeccera.Id_Registrado_Por;
             output.Codigo = cabeccera.Codigo;
             output.idGerenciaEjecMar = cabeccera.Id_Gerencia_Ejecutora;
             output.idEmpContratMarc = cabeccera.Id_Empresa_Contratista;
-            output.idGerencEjectEPCM = cabeccera.Id_Gerencia_EPCM;
-            output.idEmpContratEPCM = cabeccera.Id_Empresa_Contratista_EPCM;
+            output.Tipo_Inspeccion = cabeccera.Tipo_Inspeccion;
             output.LugarInspec = cabeccera.Lugar_Inspeccionado;
             output.FechaInspec = cabeccera.Fecha_Inspeccion;
             output.NObservaciones = observaciones.Count;
             output.Estado = cabeccera.Estado;
             output.idResponsableLugar = cabeccera.Id_Responsable_Lugar;
             output.Objetivo = cabeccera.Objetivo;
+            output.Responsable_Inspeccion = cabeccera.Responsable_Inspeccion;
             output.Inspectores = cabeccera.Inspectores;
 
             return output;
@@ -93,11 +90,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,int id_usuario)
         {
-            var observaciones_usuario = await _context.Inspecciones_Detalle.Where(o=>o.Id_Responsable_Marcobre.Equals(id_usuario)).ToListAsync();
+            //var observaciones_usuario = await _context.Inspecciones_Detalle.Where(o=>o.Id_Responsable_Marcobre.Equals(id_usuario)).ToListAsync();
 
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
-                observaciones_usuario.Select(x=>x.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera) &&
+            //    observaciones_usuario.Select(x=>x.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera) &&
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
@@ -113,14 +110,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in cabeceras)
             {
                 var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_Ejecutora)).FirstOrDefault();
-                var gerEjectEPCM = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_EPCM)).FirstOrDefault();
                 var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista)).FirstOrDefault();
-                var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista_EPCM)).FirstOrDefault();
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
 
                 TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
-                    empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
-                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+                    empContMar.Razon_Social, item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
             }
             return TablaResumen;
         }
@@ -142,8 +136,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Objetivo = cabeccera.Objetivo;
             output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion;
             output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social;
-            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion;
-            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social;
             output.LugarInspec = cabeccera.Lugar_Inspeccionado;
             output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             output.FechaInspec = cabeccera.Fecha_Inspeccion;
@@ -171,14 +163,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in cabeceras)
             {
                 var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_Ejecutora)).FirstOrDefault();
-                var gerEjectEPCM = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia_EPCM)).FirstOrDefault();
                 var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista)).FirstOrDefault();
-                var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(item.Id_Empresa_Contratista_EPCM)).FirstOrDefault();
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
 
                 TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
-                    empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
-                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+                    empContMar.Razon_Social, item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));
             }
 
             return TablaResumen;
@@ -204,8 +193,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Objetivo = cabeccera.Objetivo;
             output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).Descripcion;
             output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).Razon_Social;
-            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).Descripcion;
-            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).Razon_Social;
             output.LugarInspec = cabeccera.Lugar_Inspeccionado;
             output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             output.FechaInspec = cabeccera.Fecha_Inspeccion;
@@ -243,8 +230,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Objetivo = cabecera.Objetivo;
             output.GerenEjecMar = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Ejecutora)).Descripcion;
             output.EmpContratMarc = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabecera.Id_Empresa_Contratista)).Razon_Social;
-            output.GerenEjecEPCM = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia_EPCM)).Descripcion;
-            output.EmpContratEPCM = empresas.FirstOrDefault(x => x.Id_Empresa_Contratista.Equals(cabecera.Id_Empresa_Contratista_EPCM)).Razon_Social;
             output.LugarInspec = cabecera.Lugar_Inspeccionado;
             output.Responsable_Lugar = usuarios_domain.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Lugar));
             output.FechaInspec = cabecera.Fecha_Inspeccion;

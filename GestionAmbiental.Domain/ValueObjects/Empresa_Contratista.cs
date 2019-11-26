@@ -8,13 +8,11 @@ namespace GestionAmbiental.Domain.ValueObjects
     {
         public int Id_Empresa_Contratista { get; set; }
         public string Razon_Social { get; set; }
-        public int EPCM { get; set; }
 
-        public Empresa_Contratista(int id_Empresa_Contratista, string razon_Social, int ePCM)
+        public Empresa_Contratista(int id_Empresa_Contratista, string razon_Social)
         {
             Id_Empresa_Contratista = id_Empresa_Contratista;
             Razon_Social = razon_Social;
-            EPCM = ePCM;
         }
     }
 }

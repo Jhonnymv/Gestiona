@@ -13,32 +13,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         public int Id_Inspeccion_Cabecera { get; set; }
         [DisplayName("Código")]
         public string Codigo { get; set; }
-        [DisplayName("Área")]
-        public string Area { get; set; }
-        [DisplayName("Gerencia Marcobre:")]
+        [DisplayName("Área Ejecutora:")]
         [Range(1,99,ErrorMessage ="Debe seleccionar una opcción")]
         public int Id_Gerencia_Ejecutora { get; set; }
-        [DisplayName("Gerencia EPCM:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
-        public int Id_Gerencia_EPCM { get; set; }
-        [DisplayName("Empresa Contratista Marcobre:")]
+        [DisplayName("Empresa (inspeccionada):")]
         [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Empresa_Contratista { get; set; }
-        [DisplayName("Empresa Contratista EPCM:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
-        public int Id_Empresa_Contratista_EPCM { get; set; }
         [DisplayName("Fecha:")]
         [Required(ErrorMessage ="Debe ingresar una fecha")]
         public string Fecha_Inspeccion { get; set; }
         [DisplayName("Hora (24h):")]
         [Required(ErrorMessage = "Debe ingresar una hora")]
         public string Hora_Inspeccion { get; set; }
-        [DisplayName("Lugar Inspeccionado:")]
+        [DisplayName("Área Inspeccionada:")]
         public string Lugar_Inspeccionado { get; set; }
-        [DisplayName("Responsable Lugar Inspeccionado:")]
+        [DisplayName("Tipo de Inspección:")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
+        public string Tipo_Inspeccion { get; set; }
+        [DisplayName("Responsable del Área Inspeccionada:")]
         [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Responsable_Lugar { get; set; }
-        [DisplayName("Inspector(es):")]
+        [DisplayName("Responsable de la Inspección:")]
+        public string Responsable_Inspeccion { get; set; }
+        [DisplayName("Participantes de la Inspección:")]
         public string Inspectores { get; set; }
         [DisplayName("Objetivo de la Inspección:")]
         public string Objetivo { get; set; }

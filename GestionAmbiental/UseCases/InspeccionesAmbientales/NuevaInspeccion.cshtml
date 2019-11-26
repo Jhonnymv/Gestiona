@@ -15,86 +15,83 @@
         <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
 
             <div class="row mb-2">
-                <div class="col-md-3">
+                <div class="col-lg-2">
                     <label asp-for="Id_Gerencia_Ejecutora"></label>
                 </div>
 
-                <div class="col-md-3">
+                <div class="col-lg-4">
                     <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
                     <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-2">
                     <label asp-for="Id_Empresa_Contratista"></label>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-4">
                     <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
                     <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
                     </select>
                 </div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Id_Gerencia_EPCM"></label>
-                </div>
-
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Gerencia_EPCM"></span>
-                    <select class="form-control" asp-items="@ViewBag.GerenciaEPCM" asp-for="Id_Gerencia_EPCM">
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label asp-for="Id_Empresa_Contratista_EPCM"></label>
-                </div>
-                <div class="col-md-3">
-                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista_EPCM"></span>
-                    <select class="form-control" asp-items="@ViewBag.EmpresasEPCM" asp-for="Id_Empresa_Contratista_EPCM">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
+                <div class="col-lg-2">
                     <label asp-for="Lugar_Inspeccionado"></label>
                 </div>
-                <div class="col-md-3">
+                <div class="col-lg-4">
                     <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
                 </div>
-                <div class="col-md-1">
+
+                <div class="col-lg-2">
+                    <label asp-for="Tipo_Inspeccion"></label>
+                </div>
+                <div class="col-lg-4">
+                    <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
+                    <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
+                </div>
+
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Id_Responsable_Lugar"></label>
+                </div>
+                <div class="col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
+                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
+                </div>
+                <div class="col-lg-1">
                     <label asp-for="Hora_Inspeccion"></label>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2">
                     <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
                     <input type="time" class="form-control" asp-for="Hora_Inspeccion">
                 </div>
-                <div class="col-md-1">
+                <div class="col-lg-1">
                     <label asp-for="Fecha_Inspeccion"></label>
                 </div>
-                <div class="col-md-2">
+                <div class="col-lg-2">
                     <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
                     <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
                 </div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-3">
-                    <label asp-for="Id_Responsable_Lugar"></label>
+                <div class="col-lg-2">
+                    <label asp-for="Responsable_Inspeccion"></label>
                 </div>
-                <div class="col-md-9">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
+                <div class="col-lg-4">
+                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-3">
+                <div class="col-lg-2">
                     <label asp-for="Inspectores"></label>
                 </div>
-                <div class="col-md-9">
+                <div class="col-lg-4">
                     <input type="text" class="form-control" asp-for="Inspectores">
                 </div>
             </div>
             <div class="row mb-2">
-                <div class="col-md-3">
+                <div class="col-lg-2">
                     <label asp-for="Objetivo"></label>
                 </div>
-                <div class="col-md-9">
+                <div class="col-lg-10">
                     <input type="text" class="form-control" asp-for="Objetivo">
                 </div>
             </div>
@@ -130,11 +127,11 @@
                 </div>
             }
 
-        <div class="buttons d-flex justify-content-end">
-            <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-            @*<button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>*@
-        </div>
+            <div class="buttons d-flex justify-content-end">
+                <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                @*<button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>*@
+            </div>
             <input type="hidden" asp-for="opcion" />
         </form>
     </div>

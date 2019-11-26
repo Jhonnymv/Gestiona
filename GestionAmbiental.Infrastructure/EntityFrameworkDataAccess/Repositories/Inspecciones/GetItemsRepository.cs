@@ -29,17 +29,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerenciasDomain = new List<Domain.ValueObjects.Gerencia>();
             foreach(var gerencia in gerencias)
             {
-                gerenciasDomain.Add(new Domain.ValueObjects.Gerencia(gerencia.Id_Gerencia, gerencia.Descripcion, gerencia.Email));
+                gerenciasDomain.Add(new Domain.ValueObjects.Gerencia(gerencia.Id_Gerencia, gerencia.Descripcion));
             }
             var empresasContratistaDomain = new List<Domain.ValueObjects.Empresa_Contratista>();
-            var empresasEPCMDomain = new List<Domain.ValueObjects.Empresa_Contratista>();
             foreach (var empresa in empresas)
             {
-                if(empresa.EPCM == 0)
-                    empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa_Contratista(empresa.Id_Empresa_Contratista, empresa.Razon_Social, empresa.EPCM));
-                else
-                    empresasEPCMDomain.Add(new Domain.ValueObjects.Empresa_Contratista(empresa.Id_Empresa_Contratista, empresa.Razon_Social, empresa.EPCM));
-
+                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa_Contratista(empresa.Id_Empresa_Contratista, empresa.Razon_Social));
             }
             var tiposCondicionDomain = new List<Domain.ValueObjects.Tipo_Condicion>();
             foreach (var tipo in tiposCondicion)
@@ -47,52 +42,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 tiposCondicionDomain.Add(new Domain.ValueObjects.Tipo_Condicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
             }
             items.GerenciaEjecutora = gerenciasDomain;
-            items.GerenciasEPCM = gerenciasDomain;
             items.EmpContratMarcobre = empresasContratistaDomain;
-            items.EmpContratEPCM = empresasEPCMDomain;
             items.TipoCondicion = tiposCondicionDomain;
             return items;
         }
         public async Task<List<Empresa_Contratista>> GetEmpresaContratistas()
         {
-            var empresas = await _context.Empresas_Contratistas.Where(x => x.EPCM.Equals(0)).ToListAsync();
+            var empresas = await _context.Empresas_Contratistas.ToListAsync();
             var output = new List<Empresa_Contratista>();
             foreach(var item in empresas)
             {
-                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social, item.EPCM));
+                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social));
             }
             return output;
         }
-
-        public async Task<List<Empresa_Contratista>> GetEmpresaContratistasEPCM()
-        {
-            var empresas = await _context.Empresas_Contratistas.Where(x=>x.EPCM.Equals(1)).ToListAsync();
-            var output = new List<Empresa_Contratista>();
-            foreach (var item in empresas)
-            {
-                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social, item.EPCM));
-            }
-            return output;
-        }
-
         public async Task<List<Gerencia>> GetGerencias()
         {
             var gerencias = await _context.Gerencias.ToListAsync();
             var output = new List<Gerencia>();
             foreach (var item in gerencias)
             {
-                output.Add(new Gerencia(item.Id_Gerencia,item.Descripcion,item.Email));
-            }
-            return output;
-        }
-
-        public async Task<List<Gerencia>> GetGerenciasEPCM()
-        {
-            var gerencias = await _context.Gerencias.ToListAsync();
-            var output = new List<Gerencia>();
-            foreach (var item in gerencias)
-            {
-                output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion, item.Email));
+                output.Add(new Gerencia(item.Id_Gerencia,item.Descripcion));
             }
             return output;
         }

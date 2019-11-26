@@ -47,10 +47,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             sheet.GetRow(5).GetCell(3).SetCellValue(cabecera.GerenEjecMar);
             //->EMPRESA CONTRATISTA:   
             sheet.GetRow(5).GetCell(8).SetCellValue(cabecera.EmpContratMarc);
-            //->ÁREA EPCM *:
-            sheet.GetRow(7).GetCell(3).SetCellValue(cabecera.GerenEjecEPCM);
-            //->EMPRESA CONTRATISTA EPCM *:   
-            sheet.GetRow(7).GetCell(8).SetCellValue(cabecera.EmpContratEPCM);
             //->LUGAR INSPECCIONADO :  
             sheet.GetRow(9).GetCell(3).SetCellValue(cabecera.LugarInspec);
             //->HORA:

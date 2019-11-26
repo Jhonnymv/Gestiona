@@ -90,8 +90,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + fila.IdCabecera + "\">"+fila.Codigo+"</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
-                    filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
-                    filasTabla += "<td>" + fila.EmpContratEPCM + "</td>";
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
                     filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
@@ -118,20 +116,18 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             gerenciasEjecutorasMC.RemoveAt(1);
-
-            var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-            gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
+            
             var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
-            empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
-            empresasEPCM.Insert(0, new SelectListItem("No Aplica", "1"));
-            empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
+                        
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " "+ g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposInspeccion = new List<SelectListItem>();
+            tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
+            tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
+            tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
+            tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
             var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             if (idCabecera != 0)
@@ -167,11 +163,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             }
 
             ViewBag.GerenciaMC = gerenciasEjecutorasMC;
-            ViewBag.GerenciaEPCM = gerenciasEPCM;
             ViewBag.EmpresasMC = empresasMC;
-            ViewBag.EmpresasEPCM = empresasEPCM;
             ViewBag.Responsables = responsables;
-
+            ViewBag.Tipo_Inspeccion = tiposInspeccion;
             return View(new NuevaInspeccionModel());
         }
         [HttpPost]
@@ -181,9 +175,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             if (ModelState.IsValid)
             {
                 int idCabecera = await _registrarInspeccionCabecera.Execute(
-                model.Objetivo, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Id_Gerencia_EPCM,
-                model.Id_Empresa_Contratista_EPCM, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
-                model.Id_Responsable_Lugar, model.Inspectores,model.opcion);
+                model.Objetivo,User.Identity.Name, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
+                model.Tipo_Inspeccion, model.Id_Responsable_Lugar,model.Responsable_Inspeccion, model.Inspectores,model.opcion);
                 if(model.opcion.Equals("Observacion"))
                     return RedirectToAction("NuevaObservacion", new { IdCabecera =  idCabecera});
             }
@@ -276,19 +269,18 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             gerenciasEjecutorasMC.RemoveAt(1);
 
-            var gerenciasEPCM = selectItemsResumen.GerenciasEPCM.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-            gerenciasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
             var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
             empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var empresasEPCM = selectItemsResumen.EmpContratEPCM.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
-            empresasEPCM.Insert(0, new SelectListItem("No Aplica", "1"));
-            empresasEPCM.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
             var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposInspeccion = new List<SelectListItem>();
+            tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
+            tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
+            tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
+            tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
             if (IdCabecera != 0)
             {
@@ -339,11 +331,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
 
             ViewBag.GerenciaMC = gerenciasEjecutorasMC;
-            ViewBag.GerenciaEPCM = gerenciasEPCM;
             ViewBag.EmpresasMC = empresasMC;
-            ViewBag.EmpresasEPCM = empresasEPCM;
             ViewBag.Responsables = responsables;
-
+            ViewBag.Tipo_Inspeccion = tiposInspeccion;
             var cabecera = await _consultarCabecera.Execute(IdCabecera);
             var model = new NuevaInspeccionModel();
 
@@ -351,10 +341,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             {
                 model.Id_Inspeccion_Cabecera = IdCabecera;
                 model.Codigo = cabecera.Codigo;
+                model.Responsable_Inspeccion = cabecera.Responsable_Inspeccion;
+                model.Tipo_Inspeccion = cabecera.Tipo_Inspeccion;
                 model.Id_Empresa_Contratista = cabecera.idEmpContratMarc;
-                model.Id_Empresa_Contratista_EPCM = cabecera.idEmpContratEPCM;
                 model.Id_Gerencia_Ejecutora = cabecera.idGerenciaEjecMar;
-                model.Id_Gerencia_EPCM = cabecera.idGerencEjectEPCM;
                 model.Lugar_Inspeccionado = cabecera.LugarInspec;
                 model.Id_Responsable_Lugar = cabecera.idResponsableLugar;
                 model.Fecha_Inspeccion = cabecera.FechaInspec.Year + "-" + (cabecera.FechaInspec.Month.ToString().Length>1? cabecera.FechaInspec.Month.ToString():"0"+ cabecera.FechaInspec.Month.ToString()) + "-" + (cabecera.FechaInspec.Day.ToString().Length > 1 ? cabecera.FechaInspec.Day.ToString() : "0" + cabecera.FechaInspec.Day.ToString());
@@ -378,8 +368,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Objetivo,
                     model.Id_Gerencia_Ejecutora,
                     model.Id_Empresa_Contratista,
-                    model.Id_Gerencia_EPCM,
-                    model.Id_Empresa_Contratista_EPCM,
                     model.Lugar_Inspeccionado,
                     model.Fecha_Inspeccion,
                     model.Hora_Inspeccion,

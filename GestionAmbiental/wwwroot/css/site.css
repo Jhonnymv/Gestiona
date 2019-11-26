@@ -112,7 +112,7 @@ td {
     text-align: center;
 }
 
-.table {
+.table{
     border: 1px solid #2e6793;
 }
 
@@ -183,9 +183,6 @@ td {
         border-color: #bebebe;
     }
 
-.modal-table-input {
-    width: 250px;
-}
 .progress{
     width: 100px;
 }

@@ -27,9 +27,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var usuarios = await _context.Usuarios.ToListAsync();
 
             var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(cabeccera.Id_Gerencia_Ejecutora)).FirstOrDefault().Descripcion;
-            var gerEjectEPCM = gerencias.Where(g => g.Id_Gerencia.Equals(cabeccera.Id_Gerencia_EPCM)).FirstOrDefault().Descripcion;
             var empContMar = empresas.Where(e => e.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista)).FirstOrDefault().Razon_Social;
-            var empContEPCM = empresas.Where(e => e.Id_Empresa_Contratista.Equals(cabeccera.Id_Empresa_Contratista_EPCM)).FirstOrDefault().Razon_Social;
            
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
@@ -43,8 +41,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Objetivo = cabeccera.Objetivo;
             output.GerenEjecMar = gerEjectMar;
             output.EmpContratMarc = empContMar;
-            output.GerenEjecEPCM = gerEjectEPCM;
-            output.EmpContratEPCM = empContEPCM;
             output.LugarInspec = cabeccera.Lugar_Inspeccionado;
             output.Responsable_Lugar = responsableLugarDomain;
             output.FechaInspec = cabeccera.Fecha_Inspeccion;

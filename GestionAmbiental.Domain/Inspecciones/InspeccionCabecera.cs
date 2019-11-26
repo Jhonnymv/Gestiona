@@ -9,15 +9,13 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public int IdCabecera { get; set; }
         public string Codigo { get; set; }
+        public int Id_Registrado_Por {get;set;}
         public string Objetivo { get; set; }
         public int idGerenciaEjecMar { get; set; }
         public string GerenEjecMar { get; set; }
         public int idEmpContratMarc { get; set; }
         public string EmpContratMarc { get; set; }
-        public int idGerencEjectEPCM { get; set; }
-        public string GerenEjecEPCM { get; set; }
-        public int idEmpContratEPCM { get; set; }
-        public string EmpContratEPCM { get; set; }
+        public string Tipo_Inspeccion { get; set; }
         public string LugarInspec { get; set; }
         public int idResponsableLugar { get; set; }
         public Usuario Responsable_Lugar { get; set; }
@@ -26,94 +24,24 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int NObsImplementadas { get; set; }
         public int NObsAprobadas { get; set; }
         public int NObsRechazadas { get; set; }
+        public string Responsable_Inspeccion { get; set; }
         public string Inspectores { get; set; }
         public string Estado { get; set; }
         public List<InspeccionDetalle> Observaciones { get; set; }
 
         public InspeccionCabecera(
             int idCabecera, string codigo, string gerenEjecMar,
-            string empContratMarc, string gerenEjecEPCM,
-            string empContratEPCM, string lugarInspec, DateTime fechaInspec,
+            string empContratMarc, string lugarInspec, DateTime fechaInspec,
             int nObservaciones, string estado)
         {
             IdCabecera = idCabecera;
             Codigo = codigo;
             GerenEjecMar = gerenEjecMar;
             EmpContratMarc = empContratMarc;
-            GerenEjecEPCM = gerenEjecEPCM;
-            EmpContratEPCM = empContratEPCM;
             LugarInspec = lugarInspec;
             FechaInspec = fechaInspec;
             NObservaciones = nObservaciones;
             Estado = estado;
-        }
-
-        public InspeccionCabecera(
-            int idCabecera,
-            string codigo,
-            string objetivo,
-            string gerenEjecMar,
-            string empContratMarc,
-            string gerenEjecEPCM,
-            string empContratEPCM,
-            string lugarInspec,
-            int idResponsableLugar,
-            DateTime fechaInspec,
-            int nObservaciones,
-            string inspectores,
-            string estado)
-        {
-            IdCabecera = idCabecera;
-            Codigo = codigo;
-            Objetivo = objetivo;
-            GerenEjecMar = gerenEjecMar;
-            EmpContratMarc = empContratMarc;
-            GerenEjecEPCM = gerenEjecEPCM;
-            EmpContratEPCM = empContratEPCM;
-            LugarInspec = lugarInspec;
-            this.idResponsableLugar = idResponsableLugar;
-            FechaInspec = fechaInspec;
-            NObservaciones = nObservaciones;
-            Inspectores = inspectores;
-            Estado = estado;
-        }
-
-        public InspeccionCabecera(
-            int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc,
-            int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec,
-            int nObservaciones, string estado, int idResponsableLug,string objetivo,string inspectores)
-        {
-            IdCabecera = idCabecera;
-            Codigo = codigo;
-            this.idGerenciaEjecMar = idGerenciaEjecMar;
-            this.idEmpContratMarc = idEmpContratMarc;
-            this.idGerencEjectEPCM = idGerencEjectEPCM;
-            this.idEmpContratEPCM = idEmpContratEPCM;
-            LugarInspec = lugarInspec;
-            FechaInspec = fechaInspec;
-            NObservaciones = nObservaciones;
-            Estado = estado;
-            idResponsableLugar = idResponsableLug;
-            Objetivo = objetivo;
-            Inspectores = inspectores;
-        }
-        public InspeccionCabecera(
-            int idCabecera, string codigo, int idGerenciaEjecMar, int idEmpContratMarc,
-            int idGerencEjectEPCM, int idEmpContratEPCM, string lugarInspec, DateTime fechaInspec,
-            string estado, int idResponsableLug, string objetivo, string inspectores)
-        {
-            IdCabecera = idCabecera;
-            Codigo = codigo;
-            this.idGerenciaEjecMar = idGerenciaEjecMar;
-            this.idEmpContratMarc = idEmpContratMarc;
-            this.idGerencEjectEPCM = idGerencEjectEPCM;
-            this.idEmpContratEPCM = idEmpContratEPCM;
-            LugarInspec = lugarInspec;
-            FechaInspec = fechaInspec;
-            Estado = estado;
-            idResponsableLugar = idResponsableLug;
-            Objetivo = objetivo;
-            Inspectores = inspectores;
         }
 
         public InspeccionCabecera(
@@ -122,8 +50,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             string objetivo,
             string gerenEjecMar, 
             string empContratMarc,
-            string gerenEjecEPCM, 
-            string empContratEPCM, 
             string lugarInspec,
             Usuario responsable_Lugar,
             DateTime fechaInspec, 
@@ -135,8 +61,6 @@ namespace GestionAmbiental.Domain.Inspecciones
             Objetivo = objetivo;
             GerenEjecMar = gerenEjecMar;
             EmpContratMarc = empContratMarc;
-            GerenEjecEPCM = gerenEjecEPCM;
-            EmpContratEPCM = empContratEPCM;
             LugarInspec = lugarInspec;
             Responsable_Lugar = responsable_Lugar;
             FechaInspec = fechaInspec;

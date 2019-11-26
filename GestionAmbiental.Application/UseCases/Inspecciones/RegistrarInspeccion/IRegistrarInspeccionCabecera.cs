@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.RegistrarInspeccion
 {
     public interface IRegistrarInspeccionCabecera
     {
-        Task<int> Execute(string objetivo, int gerenciaMarc, int empresaMarc, int gerenciaEPCM, int empresaEPCM, string lugar, string fechaInspeccion,string hora, int responsableLugar, string inspectores,string opcion);
+        Task<int> Execute(string objetivo, string usuario_red, int gerenciaMarc, int empresaMarc, string lugar, string fechaInspeccion,string hora,string tipoInspeccion, int responsableLugar,string responsableInspeccion, string inspectores,string opcion);
     }
 }

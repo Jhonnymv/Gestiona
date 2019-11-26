@@ -78,8 +78,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
-                    filasTabla += "<td>" + fila.GerenEjecEPCM + "</td>";
-                    filasTabla += "<td>" + fila.EmpContratEPCM + "</td>";
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
                     filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";

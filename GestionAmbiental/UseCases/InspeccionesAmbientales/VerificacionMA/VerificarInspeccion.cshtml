@@ -10,10 +10,7 @@
             <h2>Verificar Inspección</h2>
         </div>
     </div>
-    @*---------------------REVISAR UTILIDAD DEL FORM-------------------------------*@
 <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-
-
     <div class="row mb-2">
         <div class="col-md-3">
             <label>Gerencia Marcobre:</label>
@@ -27,20 +24,6 @@
         </div>
         <div class="col-md-3">
             <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratMarc" readonly="readonly" />
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-md-3">
-            <label>Gerencia EPCM:</label>
-        </div>
-        <div class="col-md-3">
-            <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecEPCM" readonly="readonly" />
-        </div>
-        <div class="col-md-3">
-            <label>Empresa Contratista EPCM:</label>
-        </div>
-        <div class="col-md-3">
-            <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratEPCM" readonly="readonly" />
         </div>
     </div>
     <div class="row mb-2">

@@ -22,8 +22,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             string objetivo,
             int gerenciaMarc,
             int empresaMarc,
-            int gerenciaEPCM,
-            int empresaEPCM,
             string lugar, 
             string fechaInspeccion,
             string hora,
@@ -35,9 +33,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             var cabecera = new NuevaInspeccionCabecera();
             cabecera.Id_Cabecera = idCabecera;
             cabecera.Id_Gerencia_Ejecutora = gerenciaMarc;
-            cabecera.Id_Gerencia_EPCM = gerenciaEPCM;
             cabecera.Id_Empresa_Contratista = empresaMarc;
-            cabecera.Id_Empresa_Contratista_EPCM = empresaEPCM;
             cabecera.Fecha_Inspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
             cabecera.Lugar_Inspeccionado = lugar;
             cabecera.Id_Responsable_Lugar = responsableLugar;

@@ -22,12 +22,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceraEntity = new Inspeccion_Cabecera
             {
                 Codigo = cabecera.Codigo,
+                Id_Registrado_Por = cabecera.Id_Registrado_Por,
                 Objetivo = cabecera.Objetivo,
                 Fecha_Inspeccion = cabecera.Fecha_Inspeccion,
-                Id_Empresa_Contratista = cabecera.Id_Empresa_Contratista!=0? cabecera.Id_Empresa_Contratista : 1,
-                Id_Empresa_Contratista_EPCM = cabecera.Id_Empresa_Contratista_EPCM != 0 ? cabecera.Id_Empresa_Contratista_EPCM : 1,
+                Id_Empresa_Contratista = cabecera.Id_Empresa_Contratista != 0 ? cabecera.Id_Empresa_Contratista : 1,
                 Id_Gerencia_Ejecutora = cabecera.Id_Gerencia_Ejecutora != 0 ? cabecera.Id_Gerencia_Ejecutora : 1,
-                Id_Gerencia_EPCM = cabecera.Id_Gerencia_EPCM != 0 ? cabecera.Id_Gerencia_EPCM : 1,
+                Responsable_Inspeccion = cabecera.Responsable_Inspeccion,
+                Tipo_Inspeccion = cabecera.Tipo_Inspeccion,
                 Lugar_Inspeccionado = cabecera.Lugar_Inspeccionado,
                 Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar,
                 Inspectores = cabecera.Inspectores,

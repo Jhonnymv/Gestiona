@@ -120,8 +120,6 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 var msgBody = string.Format(templateReaded,
                 info.GerenEjecMar,
                 info.EmpContratMarc,
-                info.GerenEjecEPCM,
-                info.EmpContratEPCM,
                 info.LugarInspec,
                 info.FechaInspec,
                 info.Responsable_Lugar.Nombres + " " + info.Responsable_Lugar.Apellidos,
