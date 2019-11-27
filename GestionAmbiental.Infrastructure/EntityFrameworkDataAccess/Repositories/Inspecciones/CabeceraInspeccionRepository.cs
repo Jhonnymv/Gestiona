@@ -55,6 +55,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabecera.NObsImplementadas = nObsImplementadas;
                 cabecera.NObsAprobadas = nObsAprobadas;
                 cabecera.NObsRechazadas = nObsRechazadas;
+                cabecera.Tipo_Inspeccion = item.Tipo_Inspeccion;
                 TablaResumen.Add(cabecera);
 
                 /*TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
@@ -142,6 +143,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.NObservaciones = observaciones.Count;
             output.Inspectores = cabeccera.Inspectores;
             output.Estado = cabeccera.Estado;
+            output.Tipo_Inspeccion = cabeccera.Tipo_Inspeccion;
+            output.Responsable_Inspeccion = cabeccera.Responsable_Inspeccion;
             return output;
         }
 
@@ -199,6 +202,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.NObservaciones = observaciones.Count;
             output.Inspectores = cabeccera.Inspectores;
             output.Estado = cabeccera.Estado;
+            output.Tipo_Inspeccion = cabeccera.Tipo_Inspeccion;
+            output.Responsable_Inspeccion = cabeccera.Responsable_Inspeccion;
             return output;
         }
         public async Task<InspeccionCabecera> GetInspeccionCabeceraDescarga(int idCabecera)
@@ -235,7 +240,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.FechaInspec = cabecera.Fecha_Inspeccion;
             output.Inspectores = cabecera.Inspectores;
             output.Estado = cabecera.Estado;
-            
+            output.Tipo_Inspeccion = cabecera.Tipo_Inspeccion;
+            output.Responsable_Inspeccion = cabecera.Responsable_Inspeccion;
+
             output.Observaciones = new List<InspeccionDetalle>();
             foreach(var observacion in observaciones)
             {

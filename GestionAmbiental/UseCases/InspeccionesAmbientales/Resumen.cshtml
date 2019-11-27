@@ -19,7 +19,7 @@
             <input type="date" class="form-control" id="fecha_filtro">
         </div>
         <div class="col-lg-1 mt-1">
-            <label>Gerencia Inspeccionada:</label>
+            <label>Área Ejecutora:</label>
         </div>
         <div class="col-lg-3 mt-1">
             <select id="gerenciaEjecutora_filtro" asp-items="@ViewBag.Filtro" class="form-control"></select>
@@ -48,7 +48,7 @@
                     <th>Código</th>
                     <th>Área Ejecutora</th>
                     <th>Empresa</th>
-                    <th>Lugar Inspeccionado</th>
+                    <th>Área Inspeccionada</th>
                     <th>Fecha de Inspección</th>
                     <th>N° Observaciones</th>
                     <th>Avance</th>
@@ -88,22 +88,6 @@
             filtrar();
 
         });
-        function enviar() {
-            $("#form_nuevaInspeccion").submit(function (e) {
-                e.preventDefault();
-            });
-        }
-        function EnviarInspeccion() {
-            $.ajax({
-                type: "POST",
-                url: "/Inspecciones/SubirArchivos",
-                data: listArchivos,
-                traditional: true,
-                success: (response) => {
-                    console.log("Success");
-                }
-            });
-        }
         function filtrar() {
             $.ajax({
                 type: "POST",

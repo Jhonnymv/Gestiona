@@ -10,17 +10,17 @@
             <h2>Implementar Inspección</h2>
         </div>
     </div>
-    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
+    <form class="form-group" id="form_nuevaInspeccion" asp-action="ImplementarInspeccion" asp-controller="InspeccionesImplementacion" method="post" enctype="multipart/form-data" autocomplete="off">
         <div class="row mb-2">
             <div class="col-md-3">
-                <label>Gerencia Marcobre:</label>
+                <label>Área Ejecutora:</label>
             </div>
 
             <div class="col-md-3">
                 <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenEjecMar" readonly="readonly" />
             </div>
             <div class="col-md-3">
-                <label>Empresa Contratista Marcobre:</label>
+                <label>Empresa:</label>
             </div>
             <div class="col-md-3">
                 <input type="text" class="form-control" value="@ViewBag.Cabecera.EmpContratMarc" readonly="readonly" />
@@ -29,10 +29,24 @@
         
         <div class="row mb-2">
             <div class="col-md-3">
-                <label>Lugar Inspeccionado:</label>
+                <label>Área Inspeccionada:</label>
             </div>
             <div class="col-md-3">
                 <input type="text" class="form-control" value="@ViewBag.Cabecera.LugarInspec" readonly="readonly" />
+            </div>
+            <div class="col-md-3">
+                <label>Tipo de Inspección:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.Tipo_Inspeccion" readonly="readonly" />
+            </div>            
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-3">
+                <label>Responsable del Área Inspeccionada:</label>
+            </div>
+            <div class="col-md-3">
+                <input type="text" class="form-control" value="@(ViewBag.Cabecera.Responsable_Lugar.Nombres+" "+ViewBag.Cabecera.Responsable_Lugar.Apellidos)" readonly="readonly">
             </div>
             <div class="col-md-3">
                 <label>Fecha de Inspección:</label>
@@ -43,20 +57,15 @@
         </div>
         <div class="row mb-2">
             <div class="col-md-3">
-                <label>Responsable del lugar:</label>
+                <label>Responsable de la Inspección:</label>
             </div>
             <div class="col-md-3">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.Responsable_Lugar.Nombres" readonly="readonly">
+                <input type="text" class="form-control" value="@ViewBag.Cabecera.Responsable_Inspeccion" readonly="readonly">
             </div>
             <div class="col-md-3">
-                <label>Responsable Medio Ambiente:</label>
+                <label>Participantes de la Inspección:</label>
             </div>
-        </div>
-        <div class="row mb-2">
             <div class="col-md-3">
-                <label>Inspectores:</label>
-            </div>
-            <div class="col-md-9">
                 <input type="text" class="form-control" value="@ViewBag.Cabecera.Inspectores" readonly="readonly">
             </div>
         </div>

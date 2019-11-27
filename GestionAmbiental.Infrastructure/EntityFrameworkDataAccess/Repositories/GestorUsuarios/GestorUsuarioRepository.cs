@@ -21,8 +21,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<InspeccionRol> GetRolUsuario(string usuario_red)
         {
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(x=>x.usuario_red.Equals(usuario_red));
-            if (usuario.Id_Rol.Equals((int)InspeccionRol.Verificador))
-                return InspeccionRol.Verificador;
+            if (usuario.Id_Rol.Equals((int)InspeccionRol.VerificadorMAP))
+                return InspeccionRol.VerificadorMAP;
+            else if (usuario.Id_Rol.Equals((int)InspeccionRol.VerificadorSSO))
+                return InspeccionRol.VerificadorSSO;
             else
                 return InspeccionRol.Inspector;
         }

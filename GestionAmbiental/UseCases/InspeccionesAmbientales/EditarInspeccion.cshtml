@@ -208,8 +208,6 @@
                 $("#cancelar").hide();
                 $("#volver").show();
                 //disable inputs
-                $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
-                $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
                 $('#Id_Gerencia_Ejecutora').prop('disabled', 'disabled');
                 $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
                 $('#Id_Responsable_Lugar').prop('disabled', 'disabled');
@@ -218,23 +216,16 @@
                 $('#Inspectores').prop('readonly', 'readonly');
                 $('#Hora_Inspeccion').prop('readonly', 'readonly');
                 $('#Fecha_Inspeccion').prop('readonly', 'readonly');
+                $('#Responsable_Inspeccion').prop('readonly', 'readonly');
                 $('#Objetivo').prop('readonly', 'readonly');
+                $('#Tipo_Inspeccion').prop('disabled', 'disabled');
+
             } else {
                 $("#volver").hide();
                 $("#descargar").hide();
             }
 
-    });
-        $("#Id_Empresa_Contratista").on('change', function () {
-            $("#Id_Gerencia_EPCM").val(1);
-            $('#Id_Gerencia_EPCM').prop('disabled', 'disabled');
-            $("#Id_Empresa_Contratista_EPCM").val(1);
-            $('#Id_Empresa_Contratista_EPCM').prop('disabled', 'disabled');
-        });
-        $("#Id_Gerencia_EPCM, #Id_Empresa_Contratista_EPCM").on('change', function () {
-            $("#Id_Empresa_Contratista").val(1);
-            $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
-        });
+    });        
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");
             habilitarSelect();
