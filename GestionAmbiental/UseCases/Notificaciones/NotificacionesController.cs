@@ -38,36 +38,39 @@ namespace GestionAmbiental.UseCases.Notificaciones
             var templateReaded = SourceReader.ReadToEnd();
 
             /*
-             Gerencia Inspeccionada Marcobre{0}
-             Empresa Contratista Marcobre{1}
-             Gerencia Inspeccionada EPCM{2}
-             Empresa Contratista EPCM{3}
-             Lugar Inspeccionado{4}
-             Fecha Inspección{5}
-             Responsable Lugar Inspeccionado{6}
-             Responsable Medio Ambiente{7}
-             Inspector(es){8}
-             Objetivo de la Inspección{9}
-             Acto / Condición Subestándar Identificada{10}
-             Tipo de Condición / Acto Subestándar{11}
-             Nivel de Riesgo del Aspecto Ambiental{12}
-             Acción Preventiva / Correctiva Tomada{13}
-             Responsable Marcobre{14}
-             Responsable Contratista{15}
-             Fecha Programada{16}
+             Área Ejecutora{0}
+             Empresa{1}
+             Área Inspeccionada{2}
+             Tipo Inspección{3}
+             Fecha Inspección{4}
+             Responsable Lugar Inspeccionado{5}
+             Responsable de la inspección{6}
+             Participantes {7}
+             Objetivo de la Inspección{8}
+
+             TipoInspeccion{9}
+             Asesor SSO/MAP{10}
+             Acto / Condición Subestándar Identificada{11}
+             Tipo de Condición / Acto Subestándar{12}
+             Nivel de Riesgo del Aspecto Ambiental{13}
+             Acción Preventiva / Correctiva Tomada{14}
+             Responsable Marcobre{15}
+             Responsable Contratista{16}
+             Fecha Programada{17}
              */
 
             var msgBody = string.Format(templateReaded,
-                info.Gerencia_Inspeccionada_Marcobre,
-                info.Empresa_Contratista_Marcobre,
-                info.Gerencia_Inspeccionada_EPCM,
-                info.Empresa_Contratista_EPCM,
-                info.Lugar_Inspeccionado,
+                info.Area_Ejecutora,
+                info.Empresa,
+                info.Area_Inspeccionada,
+                info.Tipo_Inspeccion,
                 info.Fecha_Inspeccion,
                 info.Responsable_Lugar,
-                info.Responsable_MA,
-                info.Inspectores,
+                info.ResponsableInspeccion,
+                info.Participantes,
                 info.Objetivo,
+                info.Tipo_Observacion,
+                info.Asesor_SSO_MAP,
                 info.Descripcion_Condicion,
                 info.Tipo_Condicion,
                 info.Nivel_Riesgo_Ambiental,
@@ -110,6 +113,27 @@ namespace GestionAmbiental.UseCases.Notificaciones
         }
         public async Task<IActionResult> NotificarInspección(int IdCabecera)
         {
+            /*
+            Área Ejecutora{0}
+            Empresa{1}
+            Área Inspeccionada{2}
+            Tipo Inspección{3}
+            Fecha Inspección{4}
+            Responsable Lugar Inspeccionado{5}
+            Responsable de la inspección{6}
+            Participantes {7}
+            Objetivo de la Inspección{8}
+
+            TipoInspeccion{9}
+            Asesor SSO/MAP{10}
+            Acto / Condición Subestándar Identificada{11}
+            Tipo de Condición / Acto Subestándar{12}
+            Nivel de Riesgo del Aspecto Ambiental{13}
+            Acción Preventiva / Correctiva Tomada{14}
+            Responsable Marcobre{15}
+            Responsable Contratista{16}
+            Fecha Programada{17}
+            */
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", GetTemplate("NuevaObservacion"));
             StreamReader SourceReader = System.IO.File.OpenText(template);
@@ -121,17 +145,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.GerenEjecMar,
                 info.EmpContratMarc,
                 info.LugarInspec,
+                info.Tipo_Inspeccion,
                 info.FechaInspec,
-                info.Responsable_Lugar.Nombres + " " + info.Responsable_Lugar.Apellidos,
+                info.Responsable_Lugar.Nombres+" "+info.Responsable_Lugar.Apellidos,
+                info.Responsable_Inspeccion,
                 info.Inspectores,
                 info.Objetivo,
+                observacion.Tipo_Observacion,
+                observacion.Responsable_MA.Nombres+" "+ observacion.Responsable_MA.Apellidos,
                 observacion.Descripcion_Condicion,
                 observacion.Tipo_Condicion.Descripcion,
                 observacion.Nivel_Riesgo_Ambiental,
                 observacion.Descripcion_Accion,
-                observacion.Responsable_Marcobre.Nombres+" " + observacion.Responsable_Marcobre.Apellidos,
+                observacion.Responsable_Marcobre.Nombres+ " "+ observacion.Responsable_Marcobre.Apellidos,
                 observacion.Responsable_Contratista,
-                observacion.Fecha_Programada.ToShortDateString());
+                observacion.Fecha_Programada.ToShortDateString()
+                );
 
                 var evidencias_condicion = JArray.Parse(observacion.Evidencia_Condicion);
                 var listEvidencias_condicion = new List<string>();
@@ -162,7 +191,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
-                    //await mail.SendMailAsync(msg);
+                    await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();

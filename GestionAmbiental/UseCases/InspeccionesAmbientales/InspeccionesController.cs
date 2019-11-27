@@ -254,8 +254,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                             model.ResponsableMarc,
                             model.ResponsableCont,
                             model.FechaProgramada);
-
-                return RedirectToAction("NotificarNuevaObservacionAsignada", "Notificaciones", new { IdObservacion = idObservacion });
+                return RedirectToActionPermanent("EditarInspeccion", new { IdCabecera = model.idCabecera});
             }
             else
                 return RedirectToAction("NuevaObservacion", model);            

@@ -30,18 +30,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Lugar));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
 
-            var output = new InspeccionCabecera(
-                cabeccera.Id_Inspeccion_Cabecera,
-                cabeccera.Codigo,
-                cabeccera.Objetivo,
-                gerEjectMar,
-                empContMar,
-                cabeccera.Lugar_Inspeccionado,
-                responsableLugarDomain,
-                cabeccera.Fecha_Inspeccion,
-                cabeccera.Inspectores,
-                cabeccera.Estado
-               );
+            var output = new InspeccionCabecera();
+            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
+            output.EmpContratMarc = empContMar;
+            output.GerenEjecMar = gerEjectMar;
+            output.Tipo_Inspeccion = cabeccera.Tipo_Inspeccion;
+            output.LugarInspec = cabeccera.Lugar_Inspeccionado;
+            output.Responsable_Lugar = responsableLugarDomain;
+            output.Responsable_Inspeccion = cabeccera.Responsable_Inspeccion;
+            output.Inspectores = cabeccera.Inspectores;
+            output.FechaInspec = cabeccera.Fecha_Inspeccion;
+            output.Objetivo = cabeccera.Objetivo;
+            
             return output;
         }
     }

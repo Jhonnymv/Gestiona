@@ -23,15 +23,15 @@
                     <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
                     <select class="form-control" asp-for="TipoInspeccion">
                         <option value="">-- SELECCIONE --</option>
-                        <option value="Observacion Medioambiental">Observación Medioambiental</option>
-                        <option value="Observacion de Seguridad">Observación de Seguridad</option>
+                        <option value="MAP">MAP</option>
+                        <option value="SSO">SSO</option>
                     </select>
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col-md-4">
-                    <label class="AsesorMedioAmbiente" style="display:none">Asesor de Medio Ambiente:</label>
-                    <label class="AsesorSeguridad" style="display:none">Asesor de Seguridad:</label>
+                    <label class="AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
+                    <label class="AsesorSeguridad" style="display:none">Asesor SSO:</label>
                 </div>
                 <div class="col-md-8">
                     <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
@@ -159,7 +159,7 @@
             }
         });
         $("#TipoInspeccion").on('change', function () {
-            if ($("#TipoInspeccion").val() == "Observacion Medioambiental") {
+            if ($("#TipoInspeccion").val() == "MAP") {
                 $(".OpcSeguridad").hide();
                 $(".OpcMedioAmbiente").show();
                 /*
@@ -174,7 +174,7 @@
                 $(".AsesorSeguridad").prop('disabled', 'disabled');
                 //reiniciar condicion
                 $("#CondicionIdentificada").val("");
-            } else if ($("#TipoInspeccion").val() == "Observacion de Seguridad") {
+            } else if ($("#TipoInspeccion").val() == "SSO") {
                 $(".OpcMedioAmbiente").hide();
                 $(".OpcSeguridad").show();
                 //Mostrar asesores seguridad                
@@ -204,34 +204,38 @@
             $(".MA-Condicion").hide();
             $(".MA-Acto").prop('disabled', 'disabled');
             $(".MA-Condicion").prop('disabled', 'disabled');
+            $(".SEG-Acto").hide();
+            $(".SEG-Condicion").hide();
+            $(".SEG-Acto").prop('disabled', 'disabled');
+            $(".SEG-Condicion").prop('disabled', 'disabled');
             $("#TiposActoMA").val("");
             $("#TiposCondicionMA").val("");
         });
         $("#CondicionIdentificada").on('change', function () {
             var selectedOption = $("#CondicionIdentificada option:selected").val();
             console.log(selectedOption);
-            if ($("#TipoInspeccion").val() == "Observacion Medioambiental" && selectedOption == "Acto Subestándar") {
+            if ($("#TipoInspeccion").val() == "MAP" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").show();
                 $(".MA-Acto").prop('disabled', false);
                 $(".MA-Condicion").hide();
                 $(".MA-Condicion").prop('disabled', 'disabled');
-            } else if ($("#TipoInspeccion").val() == "Observacion Medioambiental" && selectedOption == "Condición Subestándar") {
+            } else if ($("#TipoInspeccion").val() == "MAP" && selectedOption == "Condición Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").hide();
                 $(".MA-Acto").prop('disabled', 'disabled');
                 $(".MA-Condicion").show();
                 $(".MA-Condicion").prop('disabled', false);
-            }else if ($("#TipoInspeccion").val() == "Observacion de Seguridad" && selectedOption == "Acto Subestándar") {
+            }else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".SEG-Acto").show();
                 $(".SEG-Acto").prop('disabled', false);
                 $(".SEG-Condicion").hide();
                 $(".SEG-Condicion").prop('disabled', 'disabled');
-            }else if ($("#TipoInspeccion").val() == "Observacion de Seguridad" && selectedOption == "Condición Subestándar") {
+            }else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Condición Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".SEG-Acto").hide();

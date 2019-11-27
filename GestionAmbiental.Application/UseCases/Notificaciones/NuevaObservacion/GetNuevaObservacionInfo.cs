@@ -37,12 +37,10 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
             output.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
             output.Id_Inspeccion_Detalle = observacion.Id_Inspeccion_Detalle;
             output.Codigo = cabecera.Codigo;
-            output.Gerencia_Inspeccionada_Marcobre = cabecera.GerenEjecMar;
-            output.Empresa_Contratista_Marcobre = cabecera.EmpContratMarc;
-            output.Lugar_Inspeccionado = cabecera.LugarInspec;
+            output.Area_Inspeccionada = cabecera.LugarInspec;
             output.Fecha_Inspeccion = cabecera.FechaInspec.ToString();
             output.Responsable_Lugar = cabecera.Responsable_Lugar.Nombres +" " + cabecera.Responsable_Lugar.Apellidos;
-            output.Inspectores = cabecera.Inspectores;
+            output.Participantes = cabecera.Inspectores;
             output.Objetivo = cabecera.Objetivo;
             output.Descripcion_Condicion = observacion.Descripcion_Condicion;
             output.Tipo_Condicion = observacion.Tipo_Condicion.Descripcion;

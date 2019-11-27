@@ -24,7 +24,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         public int TipoCondicion { get; set; }
         [DisplayName("Evidencia:")]
         public List<IFormFile> Evidencias { get; set; }
-        [DisplayName("Nivel de Riesgo del Aspecto Ambiental:")]
+        [DisplayName("Nivel de Riesgo:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
