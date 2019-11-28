@@ -242,6 +242,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Estado = cabecera.Estado;
             output.Tipo_Inspeccion = cabecera.Tipo_Inspeccion;
             output.Responsable_Inspeccion = cabecera.Responsable_Inspeccion;
+            
 
             output.Observaciones = new List<InspeccionDetalle>();
             foreach(var observacion in observaciones)
@@ -262,7 +263,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 obs.Comentario_MA = observacion.Comentario_MA;
                 obs.Fecha_Verificacion_MA = observacion.Fecha_Verificacion_MA;
                 obs.Estado = observacion.Estado;
-
+                obs.Evidencia_Inspeccion = observacion.Evidencia_Inspeccion;
+                obs.Evidencia_Condicion = observacion.Evidencia_Condicion;
                 output.Observaciones.Add(obs);
             }
 

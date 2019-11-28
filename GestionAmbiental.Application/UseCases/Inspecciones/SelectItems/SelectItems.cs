@@ -39,7 +39,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var empresa_Contratistas = await _getItemsReadOnlyRepository.GetEmpresaContratistas();
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
-            usuarios = usuarios.Where(x => x.Id_Rol.Equals((int)InspeccionRol.Inspector)).ToList();
             var output = new ItemsSelectResumen();
             output.EmpContratMarcobre = empresa_Contratistas;
             output.GerenciaEjecutora = gerencias;
