@@ -150,8 +150,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                     filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
-                    if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
-                        observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString())) &&
+                    if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
                         observacion.PermisosImplementar)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
                     else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
@@ -159,6 +158,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
                     else if (observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
                         filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td>";
+                    else if (observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))
+                        filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar Rechazado" + "</a></td>";
                     else
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
                     filaObservacion += "</tr>";
@@ -174,16 +175,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             ViewBag.IdObservacion = IdObservacion;
             var observacion = await _consultarDetalleImplementacion.Execute(IdObservacion);
             var model = new LevantarObservacionModel();
-            model.TipoInspeccion = observacion.Tipo_Observacion;
-            model.Asesor_MA_Seguridad = observacion.Responsable_MA.Nombres+" "+observacion.Responsable_MA.Apellidos;
+            model.TipoInspeccion = observacion.Tipo_Inspeccion;
+            model.Asesor_MA_Seguridad = observacion.Asesor_MA_Seguridad;
             model.idObservacion = observacion.Id_Inspeccion_Detalle;
             model.idCabecera = observacion.Id_Inspeccion_Cabecera;
             model.CondicionIdentificada = observacion.Descripcion_Condicion;
-            model.TipoCondicion = observacion.Tipo_Condicion.Descripcion;
+            model.TipoCondicion = observacion.Tipo_Condicion;
             model.Evidencias = observacion.Evidencia_Condicion;
             model.NiveRiesgo = observacion.Nivel_Riesgo_Ambiental;
             model.AccionTomada = observacion.Descripcion_Accion;
-            model.ResponsableMarc = observacion.Responsable_Marcobre.Nombres+" "+observacion.Responsable_Marcobre.Apellidos;
+            model.ResponsableMarc = observacion.Responsable_Marcobre;
             model.ResponsableCont = observacion.Responsable_Contratista;
             model.FechaProgramada = observacion.Fecha_Programada.ToShortDateString();
 

@@ -48,7 +48,7 @@
                 <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
                 <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
             </div>
-            
+
         </div>
         <div class="row mb-2">
             <div class="col-lg-2">
@@ -57,7 +57,7 @@
             <div class="col-lg-4">
                 <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                 <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
-            </div>       
+            </div>
             <div class="col-lg-1">
                 <label asp-for="Hora_Inspeccion"></label>
             </div>
@@ -80,7 +80,7 @@
             <div class="col-lg-4">
                 <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
                 <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
-            </div>            
+            </div>
             <div class="col-lg-2">
                 <label asp-for="Inspectores"></label>
             </div>
@@ -96,11 +96,15 @@
                 <input type="text" class="form-control" asp-for="Objetivo">
             </div>
         </div>
-        <div class="row mb-2">
-            <div class="col-lg-12">
-                <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+        @if (Model.Estado.Equals("Pendiente"))
+        {
+            <div class="row mb-2">
+                <div class="col-lg-12">
+                    <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+                </div>
             </div>
-        </div>
+        }
+
         @if (ViewBag.nObservacioness > 0)
         {
             @*style="visibility:hidden;display:none"*@
@@ -130,19 +134,22 @@
             </div>
         }
 
-        <div class="buttons d-flex justify-content-end">
-            <a id="descargar" type="button" class="btn btn-danger mr-2" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
-            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+    <div class="buttons d-flex justify-content-end">
+        @if (Model.Estado.Equals("Registrado"))
+        {
+            <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+            <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
+        }
+        @if (Model.Estado.Equals("Pendiente"))
+        {
             <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
             @if (ViewBag.nObservacioness > 0)
-            {<button id="guardar_estado" type="submit" class="btn btn-primary mr-2">Guardar Estado</button>
-                <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary">Finalizar Registro</button>
-            }
-            else
             {
-                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
             }
-        </div>
+        }
+    </div>
         <input type="hidden" asp-for="opcion" />
         <input type="hidden" asp-for="Estado" />
     </form>
@@ -200,13 +207,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             console.log('@Model.Estado');
-           if ('@Model.Estado' != "Pendiente") {
-                //hide buttons
-                $("#nueva_obs").hide();
-                $("#guardar_estado").hide();
-                $("#guardar").hide();
-                $("#cancelar").hide();
-                $("#volver").show();
+           if ('@Model.Estado' != "Pendiente") {                
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', 'disabled');
                 $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
@@ -220,29 +221,18 @@
                 $('#Objetivo').prop('readonly', 'readonly');
                 $('#Tipo_Inspeccion').prop('disabled', 'disabled');
 
-            } else {
-                $("#volver").hide();
-                $("#descargar").hide();
-            }
+            } 
 
     });        
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");
-            habilitarSelect();
         });
         $("#guardar_estado").click(function () {
             $("#opcion").val("GuardarEstado");
-            habilitarSelect();
         });
         $("#nueva_obs").click(function () {
             $("#opcion").val("Observacion");
-            habilitarSelect();
         });
-        function habilitarSelect() {
-            $('#Id_Gerencia_EPCM').prop('disabled', false);
-            $('#Id_Empresa_Contratista_EPCM').prop('disabled', false);
-            $('#Id_Empresa_Contratista').prop('disabled', false);
-        }
         function EnviarNuevaFecha() {
             var fecha = $("#nuevaFecha").val();
             var idObservacion = $("#idObserv").val();

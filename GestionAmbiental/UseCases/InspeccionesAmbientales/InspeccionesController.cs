@@ -372,8 +372,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Hora_Inspeccion,
                     model.Id_Responsable_Lugar,
                     model.Inspectores,
-                    model.opcion
-                    );
+                    model.opcion);
                     if (model.opcion.Equals("Observacion"))
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                     else if (model.opcion.Equals("Guardar"))

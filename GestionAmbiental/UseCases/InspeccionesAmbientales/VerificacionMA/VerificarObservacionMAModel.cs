@@ -35,8 +35,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         [DisplayName("Comentario Implementación:")]
         public string ComentarioImplementacion { get; set; }
         [DisplayName("Comentario Verificación:")]
-        public string ComentarioVerificacion { get; set; }
-        [DisplayName("Comentario Verificación Medio Ambiente:")]
         public string ComentarioVerificacionMA { get; set; }
         public string Accion { get; set; }
     }

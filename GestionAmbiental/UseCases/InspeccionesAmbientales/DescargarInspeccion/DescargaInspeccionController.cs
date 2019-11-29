@@ -94,20 +94,46 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 row.CreateCell(10);
                 row.GetCell(10).CellStyle = customCellStyle;
 
+                ImageProperties evidencia_condicion = new ImageProperties();
+                ImageProperties evidencia_inspeccion = new ImageProperties();
+
                 if (observacion.Evidencia_Condicion != "[]" && observacion.Evidencia_Condicion != null)
                 {
-                    var newRowHeight = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Condicion, fila, 4, rowHeight, imageIndex);
-                    rowHeight = rowHeight > newRowHeight ? rowHeight : newRowHeight;
+                    evidencia_condicion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Condicion, fila, 4, rowHeight, imageIndex);
+                    rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                     imageIndex++;
                 }
                 if (observacion.Evidencia_Inspeccion != "[]" && observacion.Evidencia_Inspeccion != null)
                 {
-                    var newRowHeight = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Inspeccion, fila, 10, rowHeight, imageIndex);
-                    rowHeight = rowHeight > newRowHeight ? rowHeight : newRowHeight;
+                    evidencia_inspeccion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Inspeccion, fila, 10, rowHeight, imageIndex);
+                    rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                     imageIndex++;
                 }
                 //adaptar el tamaño de la fila al mayor determinado por la imagen
                 row.Height = rowHeight;
+                //rezise images
+                if( evidencia_condicion.extension != ".jpg" &&
+                    evidencia_condicion.extension != ".png" &&
+                    evidencia_condicion.extension != ".jpge"&&
+                    evidencia_condicion.extension != ".JPG" &&
+                    evidencia_condicion.extension != ".PNG" &&
+                    evidencia_condicion.extension != ".JPGE"&&
+                    evidencia_condicion.extension != null &&
+                    evidencia_condicion.rowHeight !=0 &&
+                    evidencia_condicion.rowHeight < row.Height
+                    )
+                    evidencia_condicion.image.Resize(0.6, 0.2) ;
+
+                if (evidencia_inspeccion.extension != ".jpg" &&
+                    evidencia_inspeccion.extension != ".png" &&
+                    evidencia_inspeccion.extension != ".jpge"&&
+                    evidencia_inspeccion.extension != ".JPG" &&
+                    evidencia_inspeccion.extension != ".PNG" &&
+                    evidencia_inspeccion.extension != ".JPGE"&&
+                    evidencia_inspeccion.extension != null &&
+                    evidencia_inspeccion.rowHeight != 0 &&
+                    evidencia_inspeccion.rowHeight < row.Height)
+                    evidencia_inspeccion.image.Resize(0.6, 0.2);
 
                 //->Index
                 row.CreateCell(1).SetCellValue(obsIndex);
@@ -134,7 +160,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 row.CreateCell(9).SetCellValue(observacion.Fecha_Programada.ToShortDateString());
                 row.GetCell(9).CellStyle = customCellStyle;
 
-                row.CreateCell(11).SetCellValue(observacion.Fecha_Cierre.HasValue? observacion.Fecha_Cierre.Value.ToString("dd/MM/yyyy hh:mm tt"):"");
+                row.CreateCell(11).SetCellValue(observacion.Fecha_Cierre.HasValue? observacion.Fecha_Cierre.Value.ToString("dd/MM/yyyy HH:mm"):"");
                 row.GetCell(11).CellStyle = customCellStyle;
 
 
@@ -158,8 +184,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             return (image_height * cellWidth) / image_width;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private short AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex)
+        private ImageProperties AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex)
         {
+            var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
             foreach (var evidencia in evidenciasCondicion)
             {
@@ -187,6 +214,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     var image_dim = picture.GetImageDimension();
                     rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
                     picture.Resize(1.0);
+
+                    output.rowHeight = rowHeight;
+                    output.image = picture;
                 }
                 else
                 {
@@ -213,12 +243,25 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
                     var image_dim = picture.GetImageDimension();
                     rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
+                    if(rowHeight > 2360)
+                        picture.Resize(1.0,0.2);
+                    else
+                        picture.Resize(1.0);
 
-                    picture.Resize(1.0);
+                    output.rowHeight = rowHeight;
+                    output.image = picture;
                 }
+                output.extension = extension;
             }
             
-            return rowHeight;
+           
+            return output;
+        }
+        private class ImageProperties
+        {
+            public short rowHeight { get; set; }
+            public IPicture image { get; set; }
+            public string extension { get; set; }
         }
     }
 }

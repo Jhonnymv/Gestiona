@@ -51,7 +51,17 @@
                     <label asp-for="Evidencias"></label>
                 </div>
                 <div class="col-md-8">
-
+                    @for (int i = 0; i < Model.Evidencias.Count; i++)
+                    {
+                        if (i == 0)
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia @(i + 1)</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">, Evidencia @(i + 1)</a>
+                        }
+                    }
                 </div>
             </div>
             <div class="row mb-2">
@@ -115,7 +125,7 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <a class="btn btn-secondary" style="color:white" asp-controller="InspeccionesImplementacion" asp-action="ImplementarInspeccion" asp-route-IdCabecera="@Model.idCabecera" data-dismiss="modal">Cancelar</a>
             <button type="submit" class="btn btn-primary">Agregar</button>
         </div>
     </form>

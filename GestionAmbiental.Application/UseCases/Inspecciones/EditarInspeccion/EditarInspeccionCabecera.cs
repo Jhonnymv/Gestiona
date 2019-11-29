@@ -39,7 +39,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             cabecera.Id_Responsable_Lugar = responsableLugar;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
-
             switch (opcion)
             {
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;

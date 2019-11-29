@@ -25,7 +25,7 @@ namespace GestionAmbiental.Controllers
         public async Task<IActionResult> Index()
         {
             var rol = await _getRolUsuario.Execute(User.Identity.Name.Split("\\")[1]);
-            var cache_value = _cache.Get<string>(CacheKeys.RolUsuario) != null ? _cache.Get<string>(CacheKeys.RolUsuario) : "";
+            var cache_value = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
             if (!cache_value.Equals(rol))
             {
                 // Set cache options.

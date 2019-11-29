@@ -22,7 +22,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         [DisplayName("Tipo de Condición/Acto Subestándar:")]
         public string TipoCondicion { get; set; }
         [DisplayName("Evidencia Acto/Condición Subestándar Identificada:")]
-        public string Evidencias { get; set; }
+        public List<string> Evidencias { get; set; }
         [DisplayName("Nivel de Riesgo:")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]

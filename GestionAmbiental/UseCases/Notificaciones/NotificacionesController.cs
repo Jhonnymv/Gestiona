@@ -91,7 +91,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMsg.Subject = "Nueva Observacion Asignada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
-                MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Control - Marcobre");
+                MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Gestión Ambiental");
                 MyMsg.BodyEncoding = Encoding.UTF8;
                 MyMsg.Body = msgBody;
                 foreach(var evidencia in info.Evidencia_Condicion)
