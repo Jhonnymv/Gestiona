@@ -10,6 +10,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarC
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.VerificarObservacion;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -24,13 +25,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IConsultarDetallesVerificacion _consultarDetalleVerificacion;
         private readonly IVerificarObservacionMA _verificarObservacion;
 
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         public InspeccionesVerificacionMAController(
             ISelectItems selectItems,
             IConsultarCabecerasVerificacion consultarCabecerasVerificacion, 
             IConsultarCabeceraVerificacion consultarCabeceraVerificacion, 
             IConsultarInspeccionDetalle consultarInspeccionDetalle, 
             IConsultarDetallesVerificacion consultarDetalleVerificacion,
-            IVerificarObservacionMA verificarObservacion)
+            IVerificarObservacionMA verificarObservacion,
+            IHostingEnvironment hostingEnvironment)
         {
             _selectItems = selectItems;
             _consultarCabecerasVerificacion = consultarCabecerasVerificacion;
@@ -38,6 +42,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             _consultarInspeccionDetalle = consultarInspeccionDetalle;
             _consultarDetalleVerificacion = consultarDetalleVerificacion;
             _verificarObservacion = verificarObservacion;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<IActionResult> Resumen()
@@ -101,17 +106,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var cabecera = await _consultarCabeceraVerificacion.Execute(IdCabecera);
                 ViewBag.Cabecera = cabecera;
                 var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera);
+                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera,User.Identity.Name);
                 foreach (var observacion in observaciones)
                 {
-                    if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
-                    {
-                        var evidencia = "";
-                        var evidencia_implementacion = "";
+                    //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
+                    //{
+                        var evidencia = "<label style=\"width:110px\">";
+                        var evidencia_implementacion = "<label style=\"width:110px\">";
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia = "<label style=\"width:110px\"><a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
                             else
                                 evidencia += "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
@@ -119,7 +124,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia_implementacion = "<label style=\"width:110px\"><a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
                             else
                                 evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
@@ -147,11 +152,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.Comentario_Inspeccion + "</td>";
+                    if (observacion.Evidencia_Inspeccion.Count!=0)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Verificar" + "</a></td>";
-                        filaObservacion += "</tr>";
+                    else
+                        filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Verificar" + "</button></td>";
+                    filaObservacion += "</tr>";
                     }
-                }
-                ViewBag.NObservaciones = observaciones.Where(x=>x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList().Count;
+                //}
+                ViewBag.NObservaciones = observaciones.ToList().Count;
                 ViewBag.ContenidoTabla = filaObservacion;
             }
             return View();
@@ -163,6 +171,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             var model = new VerificarObservacionMAModel();
             model.idObservacion = observacion.Id_Inspeccion_Detalle;
             model.idCabecera = observacion.Id_Inspeccion_Cabecera;
+            model.TipoInspeccion = observacion.Tipo_Inspeccion;
+            model.Asesor_MA_Seguridad = observacion.Asesor_MA_Seguridad;
             model.CondicionIdentificada = observacion.Descripcion_Condicion;
             model.TipoCondicion = observacion.Tipo_Condicion;
             model.Evidencias = observacion.Evidencia_Condicion;

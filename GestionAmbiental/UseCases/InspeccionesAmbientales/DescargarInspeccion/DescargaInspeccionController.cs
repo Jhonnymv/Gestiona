@@ -58,12 +58,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             sheet.GetRow(7).GetCell(11).SetCellValue(cabecera.FechaInspec.Date.ToShortDateString());
             //->RESPONSABLE DEL ÁREA INSPECCIONADA:	
             sheet.GetRow(9).GetCell(3).SetCellValue(cabecera.Responsable_Lugar.Nombres + " " + cabecera.Responsable_Lugar.Apellidos);
+            //->RESPONSABLE DE LA INSPECCION:	
+            sheet.GetRow(9).GetCell(8).SetCellValue(cabecera.Responsable_Inspeccion);
             //->PARTICIPANTES DE LA INSPECCION :  
             sheet.GetRow(11).GetCell(3).SetCellValue(cabecera.Inspectores);
             //->OBJETIVO DE LA INSPECCIÓN: 	
             sheet.GetRow(13).GetCell(3).SetCellValue(cabecera.Objetivo);
 
-            //->Fila observaciones formato
+            //->Fila observaciones en el formato
             int fila = 16;
             //->Cell Style
             HSSFCellStyle customCellStyle = (HSSFCellStyle)templateWorkbook.CreateCellStyle();
@@ -73,145 +75,41 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             customCellStyle.BorderBottom = BorderStyle.Thin;
             customCellStyle.BorderLeft = BorderStyle.Thin;
             customCellStyle.BorderRight = BorderStyle.Thin;
+            customCellStyle.Alignment = HorizontalAlignment.Center;
             
 
-            //the index of the picture in the workbook collection of pictures
+            //índice de la primera imagen a insertar en la colección de images del workbook
             int imageIndex = 2;
             //indice de observacion
             int obsIndex = 1;
+
             foreach (var observacion in cabecera.Observaciones)
             {
+                short rowHeight = 850;
                 IRow row = sheet.CreateRow(fila);
+                //Evidencia condición
                 row.CreateCell(4);
                 row.GetCell(4).CellStyle = customCellStyle;
+                //Evidencia implementación
                 row.CreateCell(10);
                 row.GetCell(10).CellStyle = customCellStyle;
 
                 if (observacion.Evidencia_Condicion != "[]" && observacion.Evidencia_Condicion != null)
                 {
-                    var evidenciasCondicion = JArray.Parse(observacion.Evidencia_Condicion);
-                    foreach (var evidencia in evidenciasCondicion)
-                    {
-                        var extension = Path.GetExtension((string)evidencia);
-                        if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge"))
-                        {
-                            byte[] bytes = System.IO.File.ReadAllBytes((string)evidencia);
-                            PictureType pType;
-                            if (extension.Equals(".jpg") || extension.Equals(".jpge"))
-                                pType = PictureType.JPEG;
-                            else {
-                                pType = PictureType.PNG;
-                            }
-
-                            templateWorkbook.AddPicture(bytes, pType);
-
-                            IDrawing drawing = sheet.CreateDrawingPatriarch();
-                            IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                            anchor.Dx1 = 0;
-                            anchor.Dy1 = 0;
-                            anchor.Col1 = 4;
-                            anchor.Row1 = fila;
-                            IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-                            var image_dim = picture.GetImageDimension();
-
-                            row.Height =(short) (GetRowHeight(image_dim.Width,image_dim.Height)*612);
-                            picture.Resize(1.0);
-                            imageIndex++;
-                        }
-                        else
-                        {
-                            var pType = PictureType.PNG;
-                            byte[] bytes;
-                            switch (Path.GetExtension((string)evidencia))
-                            {
-                                case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
-                                case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                                case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                                case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png")); break;
-                            }
-                            templateWorkbook.AddPicture(bytes, pType);
-
-                            IDrawing drawing = sheet.CreateDrawingPatriarch();
-                            IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                            anchor.Dx1 = 0;
-                            anchor.Dy1 = 0;
-                            anchor.Col1 = 4;
-                            anchor.Row1 = fila;
-                            IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-                            var image_dim = picture.GetImageDimension();
-
-                            row.Height = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
-                            picture.Resize(1.0);
-                            imageIndex++;
-                        }
-                    }
+                    var newRowHeight = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Condicion, fila, 4, rowHeight, imageIndex);
+                    rowHeight = rowHeight > newRowHeight ? rowHeight : newRowHeight;
+                    imageIndex++;
                 }
                 if (observacion.Evidencia_Inspeccion != "[]" && observacion.Evidencia_Inspeccion != null)
                 {
-                    var evidenciasImple = JArray.Parse(observacion.Evidencia_Inspeccion);
-                    foreach (var evidencia in evidenciasImple)
-                    {
-                        var extension = Path.GetExtension((string)evidencia);
-                        if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge"))
-                        {
-                            byte[] bytes = System.IO.File.ReadAllBytes((string)evidencia);
-                            PictureType pType;
-                            if (extension.Equals(".jpg") || extension.Equals(".jpge"))
-                                pType = PictureType.JPEG;
-                            else
-                            {
-                                pType = PictureType.PNG;
-                            }
-
-                            templateWorkbook.AddPicture(bytes, pType);
-
-                            IDrawing drawing = sheet.CreateDrawingPatriarch();
-                            IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                            anchor.Dx1 = 0;
-                            anchor.Dy1 = 0;
-                            anchor.Col1 = 10;
-                            anchor.Row1 = fila;
-                            IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-                            var image_dim = picture.GetImageDimension();
-
-                            row.Height = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
-                            picture.Resize(1.0);
-                            imageIndex++;
-                        }
-                        else
-                        {
-                            var pType = PictureType.PNG;
-                            byte[] bytes;
-                            switch (Path.GetExtension((string)evidencia))
-                            {
-                                case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons","pdf.png")) ; ; break;
-                                case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                                case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                                case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                                default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png"));break;
-                            }
-                            templateWorkbook.AddPicture(bytes, pType);
-
-                            IDrawing drawing = sheet.CreateDrawingPatriarch();
-                            IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                            anchor.Dx1 = 0;
-                            anchor.Dy1 = 0;
-                            anchor.Col1 = 10;
-                            anchor.Row1 = fila;
-                            IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-                            var image_dim = picture.GetImageDimension();
-
-                            row.Height = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
-                            picture.Resize(1.0);
-                            imageIndex++;
-                        }
-                    }
+                    var newRowHeight = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Inspeccion, fila, 10, rowHeight, imageIndex);
+                    rowHeight = rowHeight > newRowHeight ? rowHeight : newRowHeight;
+                    imageIndex++;
                 }
+                //adaptar el tamaño de la fila al mayor determinado por la imagen
+                row.Height = rowHeight;
+
+                //->Index
                 row.CreateCell(1).SetCellValue(obsIndex);
                 row.GetCell(1).CellStyle = customCellStyle;
                 //->TIPO OBSERVACION
@@ -236,8 +134,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 row.CreateCell(9).SetCellValue(observacion.Fecha_Programada.ToShortDateString());
                 row.GetCell(9).CellStyle = customCellStyle;
 
-                row.CreateCell(11);
+                row.CreateCell(11).SetCellValue(observacion.Fecha_Cierre.HasValue? observacion.Fecha_Cierre.Value.ToString("dd/MM/yyyy hh:mm tt"):"");
                 row.GetCell(11).CellStyle = customCellStyle;
+
 
                 obsIndex++;
                 fila++;
@@ -252,37 +151,74 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             //ExportDataTableToExcel(ms, "EventExpenseReport.xls");
             ms.Position = 0;
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);     
-        }
-        private string GetContentType(string path)
-        {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
-        }
-
-        private Dictionary<string, string> GetMimeTypes()
-        {
-            return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"},
-                {".ppt", "application/vnd.ms-powerpoint" },
-                {".pptx", "application/vnd.ms-powerpoint" }
-            };
-        }
+        }        
         private double GetRowHeight(int image_width, int image_height)
         {
             double cellWidth = 7.16;//cm
             return (image_height * cellWidth) / image_width;
+        }
+        //Retorna el tamaño de la fila para la imagen agregada
+        private short AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex)
+        {
+            var evidenciasCondicion = JArray.Parse(path);
+            foreach (var evidencia in evidenciasCondicion)
+            {
+                var extension = Path.GetExtension((string)evidencia);
+                if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
+                {
+                    byte[] bytes = System.IO.File.ReadAllBytes((string)evidencia);
+                    PictureType pType;
+                    if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
+                        pType = PictureType.JPEG;
+                    else
+                    {
+                        pType = PictureType.PNG;
+                    }
+
+                    templateWorkbook.AddPicture(bytes, pType);
+
+                    IDrawing drawing = sheet.CreateDrawingPatriarch();
+                    IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
+                    anchor.Dx1 = 1;
+                    anchor.Dy1 = 1;
+                    anchor.Col1 = column;
+                    anchor.Row1 = row;
+                    IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+                    var image_dim = picture.GetImageDimension();
+                    rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
+                    picture.Resize(1.0);
+                }
+                else
+                {
+                    var pType = PictureType.PNG;
+                    byte[] bytes;
+                    switch (Path.GetExtension((string)evidencia))
+                    {
+                        case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
+                        case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                        case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                        case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                        case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                        case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                        default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png")); break;
+                    }
+                    templateWorkbook.AddPicture(bytes, pType);
+
+                    IDrawing drawing = sheet.CreateDrawingPatriarch();
+                    IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
+                    anchor.Dx1 = 1;
+                    anchor.Dy1 = 1;
+                    anchor.Col1 = column;
+                    anchor.Row1 = row;
+                    IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+                    var image_dim = picture.GetImageDimension();
+                    rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
+
+                    picture.Resize(1.0);
+                }
+            }
+            
+            return rowHeight;
         }
     }
 }

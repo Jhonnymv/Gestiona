@@ -42,27 +42,26 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             Tipo_Condicion = detalle.Tipo_Condicion.Descripcion;
 
             var evidencias = JArray.Parse(detalle.Evidencia_Condicion);
-            var listEvidencias = new List<string>();
+            Evidencia_Condicion = new List<string>();
             foreach (var evidencia in evidencias)
             {
-                listEvidencias.Add((string)evidencia);
+                Evidencia_Condicion.Add((string)evidencia);
             }
-            Evidencia_Condicion = listEvidencias;
             Nivel_Riesgo_Ambiental = detalle.Nivel_Riesgo_Ambiental;
             Descripcion_Accion = detalle.Descripcion_Accion;
             Responsable_Marcobre = detalle.Responsable_Marcobre.Nombres + " " + detalle.Responsable_Marcobre.Apellidos;
             Responsable_Contratista = detalle.Responsable_Contratista;
             Fecha_Programada = detalle.Fecha_Programada;
 
+            Evidencia_Inspeccion = new List<string>();
             if (detalle.Evidencia_Inspeccion != null)
             {
                 var evidencias_inspeccion = JArray.Parse(detalle.Evidencia_Inspeccion);
-                var listEvidencias_inspeccion = new List<string>();
+               
                 foreach (var evidencia in evidencias_inspeccion)
                 {
-                    listEvidencias_inspeccion.Add((string)evidencia);
+                    Evidencia_Inspeccion.Add((string)evidencia);
                 }
-                Evidencia_Inspeccion = listEvidencias_inspeccion;
             }
             Comentario_Inspeccion = detalle.Comentario_Inspeccion != null ? detalle.Comentario_Inspeccion : "";
             Fecha_Cierre = detalle.Fecha_Cierre;

@@ -30,7 +30,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public InspeccionesImplementacionController(
-            ISelectItems selectItems, 
+            ISelectItems selectItems,
             IConsultarCabecerasImplementacion consultarCabeceras,
             IConsultarCabeceraImplementacion consultarCabecera,
             IConsultarInspeccionDetalle consultarInspeccionDetalle,
@@ -67,7 +67,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo,User.Identity.Name);
+            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo, User.Identity.Name);
             var filasTabla = "";
             if (datosTabla.Count > 0)
             {
@@ -80,8 +80,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
                         case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                         default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }*/                 
-                    filasTabla += "<td><a href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + fila.IdCabecera.ToString()+"\">" + fila.Codigo + "</a></td>";
+                    }*/
+                    filasTabla += "<td><a href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
                     filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
                     filasTabla += "<td>" + fila.LugarInspec + "</td>";
@@ -107,7 +107,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var cabecera = await _consultarCabecera.Execute(IdCabecera);
                 ViewBag.Cabecera = cabecera;
                 var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera,User.Identity.Name);
+                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera, User.Identity.Name);
                 foreach (var observacion in observaciones)
                 {
                     var evidencia = "";
@@ -128,7 +128,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                             else
                                 evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
                         }
-                    }                        
+                    }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
                     filaObservacion += "<td>" + observacion.Tipo_Inspeccion + "</td>";
@@ -144,25 +144,25 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                         case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
                         case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                        default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>";break;
+                        default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
                     }
                     filaObservacion += "<td><label style=\"width:200px\">" + observacion.Descripcion_Accion + "</label></td>";
                     filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
                     filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                     filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                     if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
-                        observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))&& 
+                        observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString())) &&
                         observacion.PermisosImplementar)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
-                    else if(observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
+                    else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                         observacion.PermisosImplementar)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
-                    else if(observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
+                    else if (observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
                         filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td>";
                     else
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
                     filaObservacion += "</tr>";
-                    
+
                 }
                 ViewBag.ContenidoTabla = filaObservacion;
                 ViewBag.NObservaciones = observaciones.Count;
@@ -174,6 +174,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             ViewBag.IdObservacion = IdObservacion;
             var observacion = await _consultarDetalleImplementacion.Execute(IdObservacion);
             var model = new LevantarObservacionModel();
+            model.TipoInspeccion = observacion.Tipo_Observacion;
+            model.Asesor_MA_Seguridad = observacion.Responsable_MA.Nombres+" "+observacion.Responsable_MA.Apellidos;
             model.idObservacion = observacion.Id_Inspeccion_Detalle;
             model.idCabecera = observacion.Id_Inspeccion_Cabecera;
             model.CondicionIdentificada = observacion.Descripcion_Condicion;
