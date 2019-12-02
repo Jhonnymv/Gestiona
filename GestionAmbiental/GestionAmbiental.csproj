@@ -29,9 +29,5 @@
     <ProjectReference Include="..\GestionAmbiental.Domain\GestionAmbiental.Domain.csproj" />
     <ProjectReference Include="..\GestionAmbiental.Infrastructure\GestionAmbiental.Infrastructure.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Views\Reportes\" />
-  </ItemGroup>
   
 </Project>

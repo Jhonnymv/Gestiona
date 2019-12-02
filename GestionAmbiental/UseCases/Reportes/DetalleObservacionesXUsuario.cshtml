@@ -1,0 +1,48 @@
+﻿
+@{
+    ViewData["Title"] = "DetalleObservacionesXUsuario";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<h2>Detalle de observaciones por usuario</h2>
+<div class="row mb-2">
+    <div class="col-md">
+        <table class="table">
+            <thead class="thead-mcolor">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Pendientes</th>
+                    <th>Implementadas</th>
+                    <th>Aprobadas</th>
+                    <th>Rechazadas</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in ViewBag.DataTable)
+                {
+                    <tr>
+                        <td>
+                            @(item.usuario.Nombres + " " + item.usuario.Apellidos)
+                        </td>
+                        <td>
+                            @item.pendientes
+                        </td>
+                        <td>
+                            @item.implementadas
+                        </td>
+                        <td>
+                            @item.aprobadas
+                        </td>
+                        <td>
+                            @item.rechazadas
+                        </td>
+                        <td>
+                            @(item.pendientes + item.implementadas + item.aprobadas + item.rechazadas)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

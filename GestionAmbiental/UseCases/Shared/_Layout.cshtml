@@ -13,15 +13,15 @@
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light border-bottom box-shadow mb-3">
-            <a class="navbar-brand">
-                <a asp-action="Index" asp-controller="Home"><img src="~/img/logo-marcobre-blanco-blanco.png" id="logo_marcobre" /></a>
+            <a class="navbar-brand" asp-action="Index" asp-controller="Home">
+                <img src="~/img/logo-marcobre-blanco-blanco.png" id="logo_marcobre" />
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,7 +33,7 @@
                         <a class="nav-link text-white">Residuos Sólidos</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-white"  id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
+                        <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
                             <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones Registradas</a>
                             <a class="dropdown-item" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Pendientes de Implementación</a>
@@ -47,7 +47,7 @@
                         <a class="nav-link text-white">Condición Sub-Estándar</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" asp-controller="Reportes" asp-action="ObservacionesXUsuario">Reportes</a>
+                        <a class="nav-link text-white" asp-controller="Reportes" asp-action="DetalleObservacionesXUsuario">Reportes</a>
                     </li>
                 </ul>
             </div>
@@ -59,21 +59,21 @@
         </main>
     </div>
     @*
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - GestionAmbiental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-        *@
-<environment include="Development">
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="~/lib/charts/Chart.bundle.js"></script>
-    <script src="~/lib/charts/Chart.bundle.min.js"></script>
-    <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
-</environment>
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2019 - GestionAmbiental - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    *@
+    <environment include="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        <script src="~/lib/charts/Chart.bundle.js"></script>
+        <script src="~/lib/charts/Chart.bundle.min.js"></script>
+        <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
+    </environment>
     <environment exclude="Development">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"

@@ -10,7 +10,7 @@
 
 }
 
-<h1>@Model.titulo</h1>
+<h2>@Model.titulo</h2>
 <div class="box-body">
 
     <div class="chart-container">
@@ -55,8 +55,7 @@
                         'rgba(255, 0, 255)'
                     ],
                     borderWidth: 1,
-                    data: @Html.Raw(YValues)
-                    }]
+                    data: @Html.Raw(YValues)}]
             };
         var options = {
             maintainAspectRatio: false,

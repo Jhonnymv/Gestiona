@@ -12,11 +12,15 @@ namespace GestionAmbiental.UseCases.Reportes
     {
         private readonly IGetObservacionesMAPvsSSO _getInspeccionesMAPvsSSO;
         private readonly IGetObservacionesXUsuario _getObservacionesXUsuario;
+        private readonly IGetObservacionesXEstado _getObservacionesXEstado;
+        private readonly IGetResumenObservacionesXUsuario _getResumenObservacionesXUsuario;
 
-        public ReportesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario)
+        public ReportesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario, IGetObservacionesXEstado getObservacionesXEstado, IGetResumenObservacionesXUsuario getResumenObservacionesXUsuario)
         {
             _getInspeccionesMAPvsSSO = getInspeccionesMAPvsSSO;
             _getObservacionesXUsuario = getObservacionesXUsuario;
+            _getObservacionesXEstado = getObservacionesXEstado;
+            _getResumenObservacionesXUsuario = getResumenObservacionesXUsuario;
         }
 
         public async Task<IActionResult> MAPvsSSO()
@@ -37,6 +41,21 @@ namespace GestionAmbiental.UseCases.Reportes
             model.data = data;
 
             return View(model);
+        }
+        public async Task<IActionResult> ObservacionesXEstado()
+        {
+            var data = await _getObservacionesXEstado.Execute();
+            var model = new ReportesModel();
+            model.titulo = "Estado de Observaciones";
+            model.data = data;
+
+            return View(model);
+        }
+        public async Task<IActionResult> DetalleObservacionesXUsuario()
+        {
+            var data = await _getResumenObservacionesXUsuario.Execute("");
+            ViewBag.DataTable = data;
+            return View();
         }
     }
 }

@@ -168,9 +168,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                         observacion.Permisos)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
-                    else if (observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
+                    else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
                         filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td>";
-                    else if (observacion.Estado.Equals(EstadosInspeccion.RechazadoMA.ToString()))
+                    else if (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar Rechazado" + "</a></td>";
                     else
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
