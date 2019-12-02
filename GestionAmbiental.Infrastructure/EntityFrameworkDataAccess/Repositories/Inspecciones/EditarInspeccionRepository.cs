@@ -1,7 +1,9 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera)
+        public async Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera, int idUsuario)
         {
             var cabeceraEntity = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Cabecera));
 
@@ -35,9 +37,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Inspecciones_Cabecera.Update(cabeceraEntity);
             await _context.SaveChangesAsync();
 
+            var log = new Log_Inspeccion();            
+            var bkp = JsonConvert.SerializeObject(cabeceraEntity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = cabecera.Id_Cabecera;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.UPDATE.ToString();
+
+            _context.Log_Inspecciones.Add(log);
+            await _context.SaveChangesAsync();
+
         }
 
-        public async Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle)
+        public async Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle, int idUsuario)
         {
             var detalleEntity = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(detalle.Id_Inspeccion_Detalle));
 
@@ -45,6 +58,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Estado = detalle.Estado;
 
             _context.Inspecciones_Detalle.Update(detalleEntity);
+            await _context.SaveChangesAsync();
+
+            var log = new Log_Inspeccion();
+            var bkp = JsonConvert.SerializeObject(detalle);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = detalle.Id_Inspeccion_Cabecera;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.UPDATE.ToString();
+
+            _context.Log_Inspecciones.Add(log);
             await _context.SaveChangesAsync();
         }
     }

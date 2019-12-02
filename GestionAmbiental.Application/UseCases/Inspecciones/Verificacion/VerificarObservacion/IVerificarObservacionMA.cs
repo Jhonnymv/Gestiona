@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Verifi
 {
     public interface IVerificarObservacionMA
     {
-        Task Execute(int IdObservacion, string Comentario, string Estado);
+        Task Execute(int IdObservacion, string Comentario, string Estado,string usuario_red);
     }
 }

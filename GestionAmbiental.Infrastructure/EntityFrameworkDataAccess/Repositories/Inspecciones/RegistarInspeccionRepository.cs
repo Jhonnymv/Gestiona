@@ -1,6 +1,8 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -38,12 +40,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Inspecciones_Cabecera.Add(cabeceraEntity);
 
             await _context.SaveChangesAsync();
-            
+
+            var log = new Log_Inspeccion();
+            var bkp = JsonConvert.SerializeObject(cabeceraEntity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = cabeceraEntity.Id_Inspeccion_Cabecera;
+            log.Id_Usuario = cabeceraEntity.Id_Registrado_Por;
+            log.Tipo = TipoAccion.CREATE.ToString();
+
+            _context.Log_Inspecciones.Add(log);
+            await _context.SaveChangesAsync();
+
 
             return cabeceraEntity.Id_Inspeccion_Cabecera;
         }
 
-        public async Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle)
+        public async Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle,int Id_Usuario)
         {
            var detalleEntity = new Inspeccion_Detalle
                 {
@@ -65,6 +78,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 };
                 _context.Inspecciones_Detalle.Add(detalleEntity);
                 await _context.SaveChangesAsync();
+
+            var log = new Log_Inspeccion();
+            var bkp = JsonConvert.SerializeObject(detalleEntity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = detalleEntity.Id_Inspeccion_Cabecera;
+            log.Id_Usuario = Id_Usuario;
+            log.Tipo = TipoAccion.CREATE.ToString();
+
+            _context.Log_Inspecciones.Add(log);
+            await _context.SaveChangesAsync();
+
             return detalleEntity.Id_Inspeccion_Detalle;
         }
     }

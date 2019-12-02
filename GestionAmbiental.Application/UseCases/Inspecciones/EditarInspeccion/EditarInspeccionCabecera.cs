@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using System;
@@ -11,10 +12,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
     public class EditarInspeccionCabecera : IEditarInspeccionCabecera
     {
         private readonly IEditarInspeccionReadOnlyRepository _editarInspeccionReadonlyRepository;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public EditarInspeccionCabecera(IEditarInspeccionReadOnlyRepository editarInspeccionReadonlyRepository)
+        public EditarInspeccionCabecera(
+            IEditarInspeccionReadOnlyRepository editarInspeccionReadonlyRepository,
+            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _editarInspeccionReadonlyRepository = editarInspeccionReadonlyRepository ?? throw new ArgumentNullException(nameof(editarInspeccionReadonlyRepository));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
         public async Task Execute(
@@ -27,7 +32,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             string hora,
             int responsableLugar,
             string inspectores,
-            string opcion)
+            string opcion,
+            string usuario_red)
         {
             
             var cabecera = new NuevaInspeccionCabecera();
@@ -39,6 +45,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
             cabecera.Id_Responsable_Lugar = responsableLugar;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
+
+            var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
+
             switch (opcion)
             {
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
@@ -46,7 +55,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.EditarInspeccion
                 case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
             }
 
-            await _editarInspeccionReadonlyRepository.EditarInspeccionCabecera(cabecera);
+            await _editarInspeccionReadonlyRepository.EditarInspeccionCabecera(cabecera, Id_Usuario);
         }
     }
 }

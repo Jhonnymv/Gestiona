@@ -253,7 +253,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                             model.AccionTomada,
                             model.ResponsableMarc,
                             model.ResponsableCont,
-                            model.FechaProgramada);
+                            model.FechaProgramada,
+                            User.Identity.Name);
                 return RedirectToActionPermanent("EditarInspeccion", new { IdCabecera = model.idCabecera});
             }
             else
@@ -372,7 +373,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     model.Hora_Inspeccion,
                     model.Id_Responsable_Lugar,
                     model.Inspectores,
-                    model.opcion);
+                    model.opcion,
+                    User.Identity.Name);
                     if (model.opcion.Equals("Observacion"))
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                     else if (model.opcion.Equals("Guardar"))
@@ -384,7 +386,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [HttpPost]
         public async Task<IActionResult> AmpliarFechaObservacion(int idCabecera, int idObservacion, string fecha)
         {
-            await _ampliarFechaObservacion.Execute(idObservacion, fecha);
+            await _ampliarFechaObservacion.Execute(idObservacion, fecha,User.Identity.Name);
             return RedirectToAction("EditarInspeccion", new { IdCabecera = idCabecera });
         }
         private string CreateUniqueFileName(int nFile)

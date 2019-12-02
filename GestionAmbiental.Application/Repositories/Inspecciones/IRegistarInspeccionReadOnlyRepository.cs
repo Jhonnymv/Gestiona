@@ -9,6 +9,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     public interface IRegistarInspeccionReadOnlyRepository
     {
         Task<int> RegistrarInspeccionCabecera(NuevaInspeccionCabecera cabecera);
-        Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle);
+        Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle,int Id_Usuario);
     }
 }

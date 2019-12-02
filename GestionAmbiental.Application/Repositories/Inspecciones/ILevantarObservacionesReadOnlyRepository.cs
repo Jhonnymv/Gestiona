@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
 {
     public interface ILevantarObservacionesReadOnlyRepository
     {
-        Task LevantarObservacion(NuevaInspeccionDetalle nuevaInspeccionDetalle);
+        Task LevantarObservacion(NuevaInspeccionDetalle nuevaInspeccionDetalle, int Id_Usuario);
     }
 }

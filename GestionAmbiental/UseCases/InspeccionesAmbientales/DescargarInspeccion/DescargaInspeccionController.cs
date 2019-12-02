@@ -79,7 +79,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             
 
             //índice de la primera imagen a insertar en la colección de images del workbook
-            int imageIndex = 2;
+            int imageIndex = 3;
             //indice de observacion
             int obsIndex = 1;
 
@@ -176,7 +176,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             // Send the memory stream to the browser
             //ExportDataTableToExcel(ms, "EventExpenseReport.xls");
             ms.Position = 0;
-            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", sFileName);     
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-"+DateTime.Now.ToString("ddMMyyyyHHmmss")+".xls");     
+            //return File(ms, "application/vnd.ms-excel", "ReporteInspección.xlsx");
         }        
         private double GetRowHeight(int image_width, int image_height)
         {

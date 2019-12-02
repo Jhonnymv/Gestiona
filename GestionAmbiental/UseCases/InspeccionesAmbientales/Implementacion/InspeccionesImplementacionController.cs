@@ -151,10 +151,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
                     filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                     if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
-                        observacion.PermisosImplementar)
+                        observacion.Permisos)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
                     else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
-                        observacion.PermisosImplementar)
+                        observacion.Permisos)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
                     else if (observacion.Estado.Equals(EstadosInspeccion.AprobadoMA.ToString()))
                         filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td>";
@@ -210,7 +210,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         evidencias.Add(filepath);
                     }
                 }
-                await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario);
+                await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario,User.Identity.Name);
             }
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = model.idCabecera });
         }

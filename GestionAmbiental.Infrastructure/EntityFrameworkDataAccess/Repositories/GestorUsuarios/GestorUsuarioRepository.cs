@@ -17,7 +17,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
         public async Task<InspeccionRol> GetRolUsuario(string usuario_red)
         {
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(x=>x.usuario_red.Equals(usuario_red));
@@ -42,5 +41,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Id_Superior = usuario.Id_Superior;
             return output;
         }
+        public async Task<int> GetIdUsuario(string usuario_red)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => usuario_red.Equals(Util.GetDomain() + x.usuario_red));
+            return usuario.Id_Usuario;
+        }
+
     }
 }

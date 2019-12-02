@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
 {
     public interface IAmpliarFechaObservacion
     {
-        Task Execute(int idObservacion, string nuevaFecha);
+        Task Execute(int idObservacion, string nuevaFecha, string usuario_red);
     }
 }

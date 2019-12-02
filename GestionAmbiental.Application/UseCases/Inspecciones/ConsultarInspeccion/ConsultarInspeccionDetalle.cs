@@ -35,6 +35,20 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion
             }
             return output;
         }
+        public async Task<List<InspeccionDetalleOutput>> ExecuteVerificacion(int idCabecera, string usuario_red)
+        {
+            var output = new List<InspeccionDetalleOutput>();
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
+            var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
+            foreach (var item in observaciones)
+            {
+                if (usuario.Id_Usuario.Equals(item.Responsable_MA.Id_Usuario))
+                    output.Add(new InspeccionDetalleOutput(item, true));
+                else
+                    output.Add(new InspeccionDetalleOutput(item, false));
+            }
+            return output;
+        }
         public async Task<List<InspeccionDetalleOutput>> Execute(int idCabecera)
         {
             var output = new List<InspeccionDetalleOutput>();

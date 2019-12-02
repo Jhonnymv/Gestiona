@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.Impl
 {
     public interface IImplementarObservacion
     {
-        Task Execute(int IdObservacion,List<string> Evidencia_Inspeccion, string Comentario);
+        Task Execute(int IdObservacion,List<string> Evidencia_Inspeccion, string Comentario,string usuario_red);
     }
 }

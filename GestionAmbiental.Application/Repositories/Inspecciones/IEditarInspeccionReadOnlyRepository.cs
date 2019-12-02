@@ -8,7 +8,7 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
 {
     public interface IEditarInspeccionReadOnlyRepository
     {
-        Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera);
-        Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle);
+        Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera,int idUsuario);
+        Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle, int idUsuario);
     }
 }

@@ -30,7 +30,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public DateTime? Fecha_Verificacion_MA { get; set; }
         public string Comentario_MA { get; set; }
         public string Estado { get; set; }
-        public bool PermisosImplementar { get; set; }
+        public bool Permisos { get; set; }
 
         public InspeccionDetalleOutput(InspeccionDetalle detalle,bool permisosImplentar)
         {
@@ -69,7 +69,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             Comentario_MA = detalle.Comentario_MA != null ? detalle.Comentario_MA : "";
 
             Estado = detalle.Estado;
-            PermisosImplementar = permisosImplentar;
+            Permisos = permisosImplentar;
         }
         public InspeccionDetalleOutput(InspeccionDetalle detalle)
         {

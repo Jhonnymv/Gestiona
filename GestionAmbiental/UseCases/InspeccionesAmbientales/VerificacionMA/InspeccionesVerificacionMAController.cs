@@ -106,7 +106,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var cabecera = await _consultarCabeceraVerificacion.Execute(IdCabecera);
                 ViewBag.Cabecera = cabecera;
                 var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.Execute(IdCabecera,User.Identity.Name);
+                var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdCabecera,User.Identity.Name);
                 foreach (var observacion in observaciones)
                 {
                     //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
@@ -152,7 +152,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.Comentario_Inspeccion + "</td>";
-                    if (observacion.Evidencia_Inspeccion.Count!=0 && observacion.Estado!=EstadosInspeccion.AprobadoMA.ToString() && observacion.Estado != EstadosInspeccion.RechazadoMA.ToString())
+                    if (observacion.Evidencia_Inspeccion.Count!=0 && observacion.Estado!=EstadosInspeccion.AprobadoMA.ToString() && observacion.Estado != EstadosInspeccion.RechazadoMA.ToString() && observacion.Permisos)
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Verificar" + "</a></td>";
                     else
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Verificar" + "</button></td>";
@@ -192,9 +192,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             if (ModelState.IsValid)
             {
                 if (model.Accion.Equals("Rechazar"))
-                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.RechazadoMA.ToString());
+                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.RechazadoMA.ToString(),User.Identity.Name);
                 else
-                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.AprobadoMA.ToString());
+                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.AprobadoMA.ToString(), User.Identity.Name);
             }
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });
         }

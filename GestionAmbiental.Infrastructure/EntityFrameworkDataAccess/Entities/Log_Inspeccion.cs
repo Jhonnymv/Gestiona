@@ -14,6 +14,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Log_Inspeccion { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha { get; set; }
+        [Column(TypeName = "varchar(6)")]
+        public string Tipo { get; set; }
+        [Column(TypeName = "int")]
+        public int Id_Usuario { get; set; }
         [Column(TypeName = "text")]
         public string Bkp { get; set; }
         [Column(TypeName = "int")]

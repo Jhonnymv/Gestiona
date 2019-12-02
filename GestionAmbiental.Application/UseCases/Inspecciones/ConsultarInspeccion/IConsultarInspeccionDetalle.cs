@@ -9,7 +9,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion
     public interface IConsultarInspeccionDetalle
     {
         Task<List<InspeccionDetalleOutput>> Execute(int idCabecera,string usuario_red);
-
+        Task<List<InspeccionDetalleOutput>> ExecuteVerificacion(int idCabecera, string usuario_red);
         Task<List<InspeccionDetalleOutput>> Execute(int idCabecera);
     }
 }
