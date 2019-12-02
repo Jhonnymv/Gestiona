@@ -8,7 +8,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarCabeceras
 {
     public interface IConsultarCabeceras
     {
-        Task<List<InspeccionCabecera>> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo);
+        Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo);
 
     }
 }

@@ -186,3 +186,12 @@ td {
 .progress{
     width: 100px;
 }
+
+/*Pagintion style*/
+.page-item.active .page-link {
+    background-color: #2e6793;
+    border-color: #2e6793;
+}
+.page-link {
+    color: #2e6793
+}

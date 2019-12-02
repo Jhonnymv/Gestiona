@@ -19,14 +19,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fecha, int gerencia, string codigo)
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia_Ejecutora.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia_Ejecutora)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                )
+                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo))
                 .OrderByDescending(x=>x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
@@ -89,7 +88,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,int id_usuario)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fecha, int gerencia, string codigo,int id_usuario)
         {
             //var observaciones_usuario = await _context.Inspecciones_Detalle.Where(o=>o.Id_Responsable_Marcobre.Equals(id_usuario)).ToListAsync();
 
@@ -148,7 +147,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fecha, int gerencia, string codigo)
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>

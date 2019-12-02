@@ -58,7 +58,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
             return View();
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
         {
             DateTime fecha;
             if (filtroFecha != null)
@@ -67,11 +67,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo, User.Identity.Name);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo, User.Identity.Name);
             var filasTabla = "";
-            if (datosTabla.Count > 0)
+            var paginador = "";
+            int nPaginas = datosTabla.nCabeceras % rpp != 0 ? (datosTabla.nCabeceras / rpp) + 1 : datosTabla.nCabeceras / rpp;
+            if (datosTabla.nCabeceras > 0)
             {
-                foreach (var fila in datosTabla)
+                foreach (var fila in datosTabla.cabeceras)
                 {
 
                     filasTabla += "<tr>";
@@ -89,6 +91,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
                     filasTabla += "</tr>";
                 }
+                paginador += "<ul class=\"pagination\">";
+                for (int i = 1; i <= nPaginas; i++)
+                {
+                    if (i == pagina)
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    else
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                }
+                paginador += "</ul>";
             }
             else
             {
@@ -96,7 +107,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             dynamic response = new
             {
-                Data = filasTabla
+                Data = filasTabla,
+                Paginador = paginador
             };
             return Ok(response);
         }

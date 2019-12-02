@@ -30,7 +30,7 @@
             <input type="text" class="form-control" id="codigo_filtro">
         </div>
         <div class="col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar()">Filtrar</button>
+            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
         </div>
     </div>
 </form>
@@ -52,10 +52,13 @@
         </table>
     </div>
 </div>
-
-@section scripts{ 
-<script>
-    $(document).ready(function () {
+<div class="row mb-2 justify-content-center">
+    <nav id="paginado" aria-label="pagination">
+    </nav>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
             nObservaciones = 0;
 
             $("#div_tabla_modal_inspecciones").css("visibility", "hidden");
@@ -77,14 +80,16 @@
                 guardar()
             });
 
-            filtrar();
+            filtrar(1);
 
-    });
-    function filtrar() {
+        });
+        function filtrar(pag) {
             $.ajax({
                 type: "POST",
                 url: "/InspeccionesImplementacion/GetTablaResumenFiltrada",
                 data: {
+                    "pagina": pag,
+                    "rpp":10,
                     "filtroFecha": $('#fecha_filtro').val(),
                     "filtroGerencia": $('#gerenciaEjecutora_filtro').val(),
                     "filtroCodigo": $('#codigo_filtro').val()
@@ -93,13 +98,13 @@
                 success: (response) => {
                     $('#tabla_resumen_inspecciones tbody').empty()
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    /*$('#paginado').html(response.paginador)
-                    $('#nRegistros').html(response.nRegistros)*/
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
                 }
             });
-    }
-    function abrir(id) {
-        $.ajax({
+        }
+        function abrir(id) {
+            $.ajax({
                 type: "POST",
                 url: "/InspeccionesImplementacion/ImplementarInspeccion",
                 data: {
@@ -109,10 +114,10 @@
                 success: (response) => {
                     $('#tabla_resumen_inspecciones tbody').empty()
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    /*$('#paginado').html(response.paginador)
-                    $('#nRegistros').html(response.nRegistros)*/
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
                 }
             });
-    }
-</script>
+        }
+    </script>
 }

@@ -63,7 +63,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             return View();
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo,int pagina,int rpp)
         {
             DateTime fecha;
             if (filtroFecha != null)
@@ -72,11 +72,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(1, 1, fecha, filtroGerencia, filtroCodigo);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
             var filasTabla = "";
-            if (datosTabla.Count > 0)
+            var paginador = "";
+            int nPaginas = datosTabla.nCabeceras%rpp!=0 ? (datosTabla.nCabeceras/rpp)+1 : datosTabla.nCabeceras/rpp;
+            if (datosTabla.nCabeceras > 0)
             {
-                foreach (var fila in datosTabla)
+                foreach (var fila in datosTabla.cabeceras)
                 {
 
                     filasTabla += "<tr>";
@@ -96,14 +98,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
                     filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance+ "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
+                
+                paginador += "<ul class=\"pagination\">";
+                for (int i = 1; i <= nPaginas; i++)
+                {
+                    if (i == pagina)
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    else
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar("+ i +")\">" + i + "</a></li>";
+                }
+                paginador += "</ul>";
+
             }
             else
             {
                 filasTabla = "Sin datos";
             }
+            
+            
+
             dynamic response = new
             {
-                Data = filasTabla
+                Data = filasTabla,
+                Paginador = paginador
             };
             return Ok(response);
         }
