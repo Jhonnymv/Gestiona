@@ -195,3 +195,40 @@ td {
 .page-link {
     color: #2e6793
 }
+/*Estilos para cards de reportes*/
+.text-pendiente {
+    color: #2e6793;
+}
+.border-left-pendiente {
+    border-left: .25rem solid #2e6793 !important;
+}
+.text-implementado {
+    color: #954091;
+}
+.border-left-implementado {
+    border-left: .25rem solid #954091 !important;
+}
+.text-aprobado {
+    color: #1cc88a;
+}
+.border-left-aprobado {
+    border-left: .25rem solid #1cc88a !important;
+}
+.text-rechazado {
+    color: #ed4c4c;
+}
+.border-left-rechazado {
+    border-left: .25rem solid #ed4c4c !important;
+}
+.text-vencido {
+    color: #f6c23e;
+}
+.border-left-vencido {
+    border-left: .25rem solid #f6c23e !important;
+}
+.text-total {
+    color: #36b9cc;
+}
+.border-left-total {
+    border-left: .25rem solid #36b9cc !important;
+}

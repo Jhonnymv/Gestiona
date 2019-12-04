@@ -1,0 +1,233 @@
+﻿@using System.Linq;
+@model GestionAmbiental.UseCases.Reportes.ReportesModel
+
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+
+    var XLabels = Newtonsoft.Json.JsonConvert.SerializeObject(Model.data.Select(x => x.Nombre).ToList());
+    var YValues = Newtonsoft.Json.JsonConvert.SerializeObject(Model.data.Select(x => x.Valor).ToList());
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Reporte Inspecciones</h2>
+    </div>
+</div>
+@*Pendientes - Implementados - Aprobados - Rechazados - Vencidos - Totales*@
+<div class="row mb-2">
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-pendiente shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[0]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-implementado shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Implementadas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[1]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-aprobado shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[4]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-rechazado shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[5]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-vencido shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[2]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-md-2 mb-2">
+        <div class="card border-left-total shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[3]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            @*<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 18px, 0px);">
+                    <div class="dropdown-header">Dropdown Header:</div>
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                </div>
+            </div>
+        </div>*@
+            <!-- Card Body -->
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de inspecciones de los últimos 30 días</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                    <canvas id="chart" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <a class="nav-link text-dark" asp-controller="Reportes" asp-action="MAPvsSSO">MAPvsSSO</a>
+    <br />
+    <a class="nav-link text-dark" asp-controller="Reportes" asp-action="ObservacionesXUsuario">ObservacionesXUsuario</a>
+    <br />
+    <a class="nav-link text-dark" asp-controller="Reportes" asp-action="ObservacionesXEstado">ObservacionesXEstado</a>
+    <br />
+    <a class="nav-link text-dark" asp-controller="Reportes" asp-action="DetalleObservacionesXUsuario">DetalleObservacionesXUsuario</a>
+</div>
+@*
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Observaciones x Usuario</h6>
+            </div>
+            <div class="card-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+*@
+@section scripts{
+    <script type="text/javascript">
+        @*
+    $(document).ready(function () {
+        var chartName = "chart";
+        var ctx = document.getElementById(chartName).getContext('2d');
+        var data = {
+                labels: @Html.Raw(XLabels),
+            datasets: [{
+                backgroundColor: "#2e6793",
+                borderWidth: 1,
+                data: @Html.Raw(YValues)}]
+            };
+        var options = {
+            maintainAspectRatio: false,
+            legend: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false,
+                            color: "#1cc88a"
+                    }
+                }],
+                xAxes: [{
+                        ticks: {
+                            min: 0,
+                            beginAtZero: true
+                        },
+                        gridLines: {
+                            display: false
+                        }
+                    }]
+                },
+            plugins: {
+                datalabels: {
+                    color: 'black',
+                    defaultFontSize: 15
+                }
+            }
+        };
+        var myChart = new  Chart(ctx, {
+                options: options,
+                data: data,
+                type:'bar'
+            });
+    });*@
+        new Chart(
+            document.getElementById("chart"),
+            {
+                "type": "bar",
+                "data": {
+                    "labels": @Html.Raw(XLabels),
+                    "datasets": [{
+                        "label": "# Inspecciones Registradas",
+                        "data": @Html.Raw(YValues),
+                        "fill": false,
+                        "backgroundColor":"rgb(46, 103, 147)",
+                        "borderColor": "rgb(46, 103, 147)",
+                        "lineTension": 0.1
+                    }]
+                },
+                "options": {
+                    "legend": {
+                        "labels": {
+                            // This more specific font property overrides the global property
+                            fontColor: 'black'
+                        }
+                    },
+                    "plugins": {
+                        datalabels: {
+                            color: 'white',
+                            defaultFontSize: 15
+                        }
+                    }
+                }
+            });
+    </script>
+}
+

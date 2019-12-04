@@ -109,8 +109,11 @@
                     <label asp-for="EvidenciasInspeccion"></label>
                 </div>
                 <div class="col-md-8">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
                     <label class="btn btn-primary" for="EvidenciasInspeccion">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="EvidenciasInspeccion">
+                    <input type="file" style="visibility:hidden; display:none" asp-for="EvidenciasInspeccion" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
                     <label id="files_name">0 Archivos</label>
                 </div>
             </div>
@@ -126,15 +129,52 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-secondary" style="color:white" asp-controller="InspeccionesImplementacion" asp-action="ImplementarInspeccion" asp-route-IdCabecera="@Model.idCabecera" data-dismiss="modal">Cancelar</a>
-            <button type="submit" class="btn btn-primary">Implementar</button>
+            <button type="submit" class="btn btn-primary" onclick="guardar()">Implementar</button>
         </div>
     </form>
 </div>
 @section scripts{
     <script>
         $("#EvidenciasInspeccion").change(function () {
-            var filesname = this.files.length + " Archivos";
-            $("#files_name").text(filesname);
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#EvidenciasInspeccion").data('max-size');
+            if ($("#EvidenciasInspeccion").get(0).files.length) {
+                var fileSize = $("#EvidenciasInspeccion").get(0).files[0].size; // in bytes
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 20MB<br/>");
+                }
+            }
+            //Validacion del tipo de archivo
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'jpge':
+                case 'png':
+                case 'xls':
+                case 'xlsx':
+                case 'doc':
+                case 'docx':
+                case 'pdf':
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    break;
+                default:
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+                    //$("#modal_archivo").modal('show');
+            }
         });
+        function guardar() {
+            if ($("#EvidenciasInspeccion").get(0).files.length === 0) {
+                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+                return false;
+            }
+            return true;
+        }
     </script>
 }

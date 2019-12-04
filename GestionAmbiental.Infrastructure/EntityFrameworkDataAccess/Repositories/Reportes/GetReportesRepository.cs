@@ -85,5 +85,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<List<Dimension>> GetInspeccionesDiarias()
+        {
+            var output = new List<Dimension>();
+            var ndias = 30;
+            var inspecciones = await _context.Inspecciones_Cabecera
+                .Where(x => x.Fecha_Inspeccion > DateTime.Now.AddDays(-ndias) && x.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
+                .OrderBy(x => x.Fecha_Inspeccion)
+                .ToListAsync();
+
+            var inspecciones_diarias = inspecciones.Select(x => x.Fecha_Inspeccion).GroupBy(y => y.Date).ToList();
+
+            var list_dias = new List<Dimension>();
+            var list_inspecciones = new List<Dimension>();
+            for (int i = ndias; i >= 0; i--)
+            {
+                list_dias.Add(new Dimension(DateTime.Now.AddDays(-i).ToString("dd MMMM"), 0,i));
+            }
+            foreach(var item in inspecciones_diarias)
+            {
+                list_inspecciones.Add(new Dimension(item.Key.ToString("dd MMMM"), item.Count(),(int)(DateTime.Now-item.Key).TotalDays));
+            }
+            var distinct = list_dias.Where(x => !list_inspecciones.Select(y=>y.Nombre).ToList().Contains(x.Nombre)).ToList();
+
+            output = distinct.Union(list_inspecciones).Where(x=>x.Index>=0).OrderByDescending(x => x.Index).ToList();
+
+            //var union = distinct.Union(output).OrderBy(x=>x.Nombre).ToList();
+            return output;
+        }
     }
 }

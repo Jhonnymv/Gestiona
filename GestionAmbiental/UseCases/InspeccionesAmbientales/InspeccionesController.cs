@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         {
             var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             filtroGerencias.Insert(0, new SelectListItem("No Aplica", "1"));
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
@@ -130,14 +130,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             
             var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
 
-            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             gerenciasEjecutorasMC.RemoveAt(1);
             
-            var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            var empresasMC = selectItemsResumen.EmpContratMarcobre.OrderBy(x=>x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                         
-            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " "+ g.Apellidos }).ToList();
+            var responsables = selectItemsResumen.Usuarios.OrderBy(x=>x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " "+ g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var tiposInspeccion = new List<SelectListItem>();
@@ -205,25 +205,25 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
 
             var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
-            var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x=>x.Grupo.Equals(TiposCondicion.ASA.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x =>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
             tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
             tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var tiposActoSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            var tiposActoSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
             tiposActoSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var tiposCondicionSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
+            var tiposCondicionSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Condicion.ToString(), Text = g.Descripcion }).ToList();
             tiposCondicionSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var responsables = selectItemsResumen.Usuarios.OrderBy(x=>x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var asesoresMA = selectItemsResumen.Usuarios.Where(x=>x.Id_Rol.Equals((int)InspeccionRol.VerificadorMAP)).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var asesoresMA = selectItemsResumen.Usuarios.Where(x=>x.Id_Rol.Equals((int)InspeccionRol.VerificadorMAP)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.Id_Rol.Equals((int)InspeccionRol.VerificadorSSO)).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.Id_Rol.Equals((int)InspeccionRol.VerificadorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.TiposActoMA = tiposActoMA;
@@ -282,15 +282,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
             //var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
-            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
             gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             gerenciasEjecutorasMC.RemoveAt(1);
 
-            var empresasMC = selectItemsResumen.EmpContratMarcobre.Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
+            var empresasMC = selectItemsResumen.EmpContratMarcobre.OrderBy(x=>x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_Empresa_Contratista.ToString(), Text = g.Razon_Social }).ToList();
             empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
             empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var responsables = selectItemsResumen.Usuarios.Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            var responsables = selectItemsResumen.Usuarios.OrderBy(x=>x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Usuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             var tiposInspeccion = new List<SelectListItem>();
@@ -413,16 +413,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         }
         public async Task<IActionResult> Download(string path)
         {
-            if (path == null)
-                return Content("No se encontró el archivo");
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
+            try
             {
-                await stream.CopyToAsync(memory);
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+                return File(memory, GetContentType(path), Path.GetFileName(path));
             }
-            memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
+            catch (Exception e)
+            {
+                return Content("No se encontró el archivo");
+            }
         }
         private string GetContentType(string path)
         {

@@ -75,8 +75,11 @@
                     <label asp-for="Evidencias"></label>
                 </div>
                 <div class="col-md-8">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
                     <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias">
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
                     <label id="files_name">0 Archivos</label>
                 </div>
             </div>
@@ -104,6 +107,7 @@
                     <label asp-for="AccionTomada"></label>
                 </div>
                 <div class="col-md-8">
+                    <span class="text-danger" asp-validation-for="AccionTomada"></span>
                     <input type="text" class="form-control" asp-for="AccionTomada" />
                 </div>
             </div>
@@ -121,6 +125,7 @@
                     <label asp-for="ResponsableCont"></label>
                 </div>
                 <div class="col-md-8">
+                    <span class="text-danger" asp-validation-for="ResponsableCont"></span>
                     <input type="text" class="form-control" asp-for="ResponsableCont" />
                 </div>
             </div>
@@ -136,7 +141,6 @@
         </div>
         <div class="modal-footer">
             <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="EditarInspeccion" asp-route-IdCabecera="@ViewBag.idCabecera">Cancelar</a>
-            @*<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>*@
             <button type="submit" class="btn btn-primary" onclick="guardar()">Agregar</button>
         </div>
     </form>
@@ -144,8 +148,38 @@
 @section scripts{
     <script>
         $("#Evidencias").change(function () {
-            var filesname = this.files.length + " Archivos";
-            $("#files_name").text(filesname);
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Evidencias").data('max-size');
+            if ($("#Evidencias").get(0).files.length) {
+                var fileSize = $("#Evidencias").get(0).files[0].size; // in bytes
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 20MB<br/>");
+                }
+            }
+            //Validacion del tipo de archivo
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'jpge':
+                case 'png':
+                case 'xls':
+                case 'xlsx':
+                case 'doc':
+                case 'docx':
+                case 'pdf':
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    break;
+                default:
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+                    //$("#modal_archivo").modal('show');
+            }
         });
         $("#NiveRiesgo").change(function () {
             switch ($("#NiveRiesgo").val()) {
@@ -177,7 +211,7 @@
             } else if ($("#TipoInspeccion").val() == "SSO") {
                 $(".OpcMedioAmbiente").hide();
                 $(".OpcSeguridad").show();
-                //Mostrar asesores seguridad                
+                //Mostrar asesores seguridad
                 $(".AsesorMedioAmbiente").hide();
                 $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
                 $(".AsesorSeguridad").show();
@@ -213,7 +247,6 @@
         });
         $("#CondicionIdentificada").on('change', function () {
             var selectedOption = $("#CondicionIdentificada option:selected").val();
-            console.log(selectedOption);
             if ($("#TipoInspeccion").val() == "MAP" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
@@ -228,14 +261,14 @@
                 $(".MA-Acto").prop('disabled', 'disabled');
                 $(".MA-Condicion").show();
                 $(".MA-Condicion").prop('disabled', false);
-            }else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Acto Subestándar") {
+            } else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".SEG-Acto").show();
                 $(".SEG-Acto").prop('disabled', false);
                 $(".SEG-Condicion").hide();
                 $(".SEG-Condicion").prop('disabled', 'disabled');
-            }else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Condición Subestándar") {
+            } else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Condición Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".SEG-Acto").hide();
@@ -258,5 +291,12 @@
                 $("#TiposCondicionMA").val("");
             }
         });
+        function guardar() {
+            if ($("#Evidencias").get(0).files.length === 0) {
+                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+                return false;
+            }
+            return true;
+        }
     </script>
 }

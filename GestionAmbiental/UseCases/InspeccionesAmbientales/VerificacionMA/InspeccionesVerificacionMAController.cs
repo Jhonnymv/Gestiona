@@ -49,7 +49,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         {
             var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
 
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
@@ -211,16 +211,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         }
         public async Task<IActionResult> Download(string path)
         {
-            if (path == null)
-                return Content("No se encontró el archivo");
-
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(path, FileMode.Open))
+            try
             {
-                await stream.CopyToAsync(memory);
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(path, FileMode.Open))
+                {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+                return File(memory, GetContentType(path), Path.GetFileName(path));
             }
-            memory.Position = 0;
-            return File(memory, GetContentType(path), Path.GetFileName(path));
+            catch (Exception e)
+            {
+                return Content("No se encontró el archivo");
+            }
         }
         private string GetContentType(string path)
         {

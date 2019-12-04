@@ -13,5 +13,6 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Dimension>> GetObservacionesXUsuario();
         Task<List<Dimension>> GetObservacionesXEstado();
         Task<List<ObservacionesUsuario>> GetResumenObservacionesXUsuario(string filtro);
+        Task<List<Dimension>> GetInspeccionesDiarias();
     }
 }

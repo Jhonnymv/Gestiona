@@ -19,14 +19,14 @@
                     <label asp-for="Id_Gerencia_Ejecutora"></label>
                 </div>
 
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
                     <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
                 </div>
                 <div class="col-lg-2">
                     <label asp-for="Id_Empresa_Contratista"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
                     <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
                     </select>
@@ -36,14 +36,15 @@
                 <div class="col-lg-2">
                     <label asp-for="Lugar_Inspeccionado"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
+                    <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
                     <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
                 </div>
 
                 <div class="col-lg-2">
                     <label asp-for="Tipo_Inspeccion"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
                     <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
                 </div>
@@ -53,11 +54,11 @@
                 <div class="col-lg-2">
                     <label asp-for="Id_Responsable_Lugar"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                     <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
                 </div>
-                <div class="col-lg-1">
+                <div class="col-lg-2">
                     <label asp-for="Hora_Inspeccion"></label>
                 </div>
                 <div class="col-lg-2">
@@ -76,14 +77,15 @@
                 <div class="col-lg-2">
                     <label asp-for="Responsable_Inspeccion"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
                     <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
                 </div>
                 <div class="col-lg-2">
                     <label asp-for="Inspectores"></label>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-5">
+                    <span class="text-danger" asp-validation-for="Inspectores"></span>
                     <input type="text" class="form-control" asp-for="Inspectores">
                 </div>
             </div>
@@ -92,6 +94,7 @@
                     <label asp-for="Objetivo"></label>
                 </div>
                 <div class="col-lg-10">
+                    <span class="text-danger" asp-validation-for="Objetivo"></span>
                     <input type="text" class="form-control" asp-for="Objetivo">
                 </div>
             </div>
@@ -100,9 +103,9 @@
                     <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
                 </div>
             </div>
+            @*
             @if (ViewBag.nObservacioness > 0)
             {
-                @*style="visibility:hidden;display:none"*@
                 <div class="row mb-2" id="div_tabla_observaciones">
                     <div class="col-md-12">
                         <table class="table table-modal" id="tabla_observaciones">
@@ -111,7 +114,7 @@
                                     <th>Acto/Condición Subestándar Identificada</th>
                                     <th>Tipo de Condición/Acto Subestándar</th>
                                     <th>Evidencia</th>
-                                    <th>Nivel de Riesgo del Aspecto Ambiental</th>
+                                    <th>Nivel de Riesgo</th>
                                     <th>Acción Preventiva / Correctiva Tomada</th>
                                     <th>Responsable Marcobre</th>
                                     <th>Responsable Contratista</th>
@@ -126,7 +129,7 @@
                     </div>
                 </div>
             }
-
+            *@
             <div class="buttons d-flex justify-content-end">
                 <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
                 <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>

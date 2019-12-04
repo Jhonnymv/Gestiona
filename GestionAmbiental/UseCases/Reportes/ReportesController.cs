@@ -14,15 +14,32 @@ namespace GestionAmbiental.UseCases.Reportes
         private readonly IGetObservacionesXUsuario _getObservacionesXUsuario;
         private readonly IGetObservacionesXEstado _getObservacionesXEstado;
         private readonly IGetResumenObservacionesXUsuario _getResumenObservacionesXUsuario;
+        private readonly IGetInspeccionesDiarias _getInspeccionesDiarias;
 
-        public ReportesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario, IGetObservacionesXEstado getObservacionesXEstado, IGetResumenObservacionesXUsuario getResumenObservacionesXUsuario)
+        public ReportesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario, IGetObservacionesXEstado getObservacionesXEstado, IGetResumenObservacionesXUsuario getResumenObservacionesXUsuario, IGetInspeccionesDiarias getInspeccionesDiarias)
         {
             _getInspeccionesMAPvsSSO = getInspeccionesMAPvsSSO;
             _getObservacionesXUsuario = getObservacionesXUsuario;
             _getObservacionesXEstado = getObservacionesXEstado;
             _getResumenObservacionesXUsuario = getResumenObservacionesXUsuario;
+            _getInspeccionesDiarias = getInspeccionesDiarias;
         }
 
+        public async Task<IActionResult> Resumen()
+        {
+            var nObservaciones = await _getObservacionesXEstado.Execute();
+            var inspecciones = await _getInspeccionesDiarias.Execute();
+
+            ViewBag.nObservaciones = nObservaciones.Select(x => x.Valor).ToList();
+
+
+            var model = new ReportesModel();
+
+            model.titulo = "titulo";
+            model.data = inspecciones;
+
+            return View(model);
+        }
         public async Task<IActionResult> MAPvsSSO()
         {
             var data = await _getInspeccionesMAPvsSSO.Execute();

@@ -23,16 +23,19 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public int TipoCondicion { get; set; }
         [DisplayName("Evidencia:")]
+        [Required(ErrorMessage = "Debe ingresar una evidencia")]
         public List<IFormFile> Evidencias { get; set; }
         [DisplayName("Nivel de Riesgo:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string AccionTomada { get; set; }
         [DisplayName("Responsable Marcobre:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista:")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string ResponsableCont { get; set; }
         [DisplayName("Fecha Programada:")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
