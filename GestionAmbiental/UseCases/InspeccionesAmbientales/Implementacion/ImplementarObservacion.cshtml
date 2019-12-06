@@ -10,7 +10,7 @@
             <h2>Implementar Observación</h2>
         </div>
     </div>
-    <form class="form-group" id="form_nuevaInspeccion" asp-action="ImplementarObservacion" asp-controller="InspeccionesImplementacion" method="post" enctype="multipart/form-data" autocomplete="off">
+    <form class="form-group" id="form_implementaObservacion" asp-action="ImplementarObservacion" asp-controller="InspeccionesImplementacion" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="idObservacion"/>
         <input type="hidden" asp-for="idCabecera"/>
         <div class="modal-body">
@@ -129,7 +129,7 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-secondary" style="color:white" asp-controller="InspeccionesImplementacion" asp-action="ImplementarInspeccion" asp-route-IdCabecera="@Model.idCabecera" data-dismiss="modal">Cancelar</a>
-            <button type="submit" class="btn btn-primary" onclick="guardar()">Implementar</button>
+            <button type="button" class="btn btn-primary" onclick="guardar()">Implementar</button>
         </div>
     </form>
 </div>
@@ -174,6 +174,7 @@
                 $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
                 return false;
             }
+            $("#form_implementaObservacion").submit();
             return true;
         }
     </script>

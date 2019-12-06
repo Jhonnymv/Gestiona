@@ -177,6 +177,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     msg.Priority = MailPriority.Normal;
                     mail.EnableSsl = true;
                     msg.To.Add(new MailAddress(observacion.Responsable_Marcobre.Email));
+                    msg.To.Add(new MailAddress(observacion.Responsable_MA.Email));
                     msg.Subject = "Nueva Observacion Asignada";
                     msg.SubjectEncoding = Encoding.UTF8;
                     msg.IsBodyHtml = true;
@@ -191,7 +192,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
-                    //await mail.SendMailAsync(msg);
+                    await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();

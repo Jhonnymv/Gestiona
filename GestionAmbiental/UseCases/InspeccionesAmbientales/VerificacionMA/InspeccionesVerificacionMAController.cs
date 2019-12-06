@@ -4,7 +4,7 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
+using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarDetalles;
@@ -127,9 +127,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
                             else
-                                evidencia += "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                                evidencia += "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia</a>";
                         }
                         evidencia += "</label>";
                         for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)

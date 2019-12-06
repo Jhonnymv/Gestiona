@@ -100,17 +100,137 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var list_inspecciones = new List<Dimension>();
             for (int i = ndias; i >= 0; i--)
             {
-                list_dias.Add(new Dimension(DateTime.Now.AddDays(-i).ToString("dd MMMM"), 0,i));
+                list_dias.Add(new Dimension(DateTime.Now.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0,i));
             }
             foreach(var item in inspecciones_diarias)
             {
-                list_inspecciones.Add(new Dimension(item.Key.ToString("dd MMMM"), item.Count(),(int)(DateTime.Now-item.Key).TotalDays));
+                list_inspecciones.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0,6), item.Count(),(int)(DateTime.Now-item.Key).TotalDays));
             }
             var distinct = list_dias.Where(x => !list_inspecciones.Select(y=>y.Nombre).ToList().Contains(x.Nombre)).ToList();
 
             output = distinct.Union(list_inspecciones).Where(x=>x.Index>=0).OrderByDescending(x => x.Index).ToList();
 
             //var union = distinct.Union(output).OrderBy(x=>x.Nombre).ToList();
+            return output;
+        }
+        public async Task<List<Dimension>> GetObservacionesNivelRiesgoMAP()
+        {
+            var map = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).GroupBy(x=>x.Nivel_Riesgo_Ambiental).ToListAsync();
+            var output = new List<Dimension>();
+            if (map.Count == 3)
+                foreach (var item in map)
+                {
+                    switch (item.Key)
+                    {
+                        case "Tolerable": output.Add(new Dimension(item.Key, item.Count(), 0)); break;
+                        case "Alerta": output.Add(new Dimension(item.Key, item.Count(), 1)); break;
+                        case "No Aceptable": output.Add(new Dimension(item.Key, item.Count(), 2)); break;
+                    }
+                }
+            else
+            {
+                output.Add(new Dimension("Tolerable", 0, 0));
+                output.Add(new Dimension("Alerta", 0, 1));
+                output.Add(new Dimension("No Aceptable", 0, 2));
+                foreach (var item in map)
+                {
+                    switch (item.Key)
+                    {
+                        case "Tolerable": output.FirstOrDefault(x=>x.Nombre.Equals("Tolerable")).Valor=item.Count(); break;
+                        case "Alerta": output.FirstOrDefault(x => x.Nombre.Equals("Alerta")).Valor = item.Count(); break;
+                        case "No Aceptable": output.FirstOrDefault(x => x.Nombre.Equals("No Aceptable")).Valor = item.Count(); break;
+                    }
+                }
+            }
+            return output;
+        }
+        public async Task<List<Dimension>> GetObservacionesNivelRiesgoSSO()
+        {
+            var sso = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToListAsync();
+            var output = new List<Dimension>();
+            if (sso.Count == 3)
+                foreach (var item in sso)
+                {
+                    switch (item.Key)
+                    {
+                        case "Bajo": output.Add(new Dimension(item.Key, item.Count(), 3)); break;
+                        case "Medio": output.Add(new Dimension(item.Key, item.Count(), 4)); break;
+                        case "Alto": output.Add(new Dimension(item.Key, item.Count(), 5)); break;
+                    }
+                }
+            else
+            {
+                output.Add(new Dimension("Bajo", 0, 3));
+                output.Add(new Dimension("Medio", 0, 4));
+                output.Add(new Dimension("Alto", 0, 5));
+                foreach (var item in sso)
+                {
+                    switch (item.Key)
+                    {
+                        case "Bajo": output.FirstOrDefault(x => x.Nombre.Equals("Bajo")).Valor = item.Count(); break;
+                        case "Medio": output.FirstOrDefault(x => x.Nombre.Equals("Medio")).Valor = item.Count(); break;
+                        case "Alto": output.FirstOrDefault(x => x.Nombre.Equals("Alto")).Valor = item.Count(); break;
+                    }
+                }
+            }
+            return output;
+        }
+
+        public async Task<List<Dimension>> GetObservacionesTipoInspeccionMAP()
+        {
+            var map = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).GroupBy(x => x.Descripcion_Condicion).ToListAsync();
+            var output = new List<Dimension>();
+            if (map.Count == 2)
+                foreach (var item in map)
+                {
+                    switch (item.Key)
+                    {
+                        case "Condición Subestándar": output.Add(new Dimension(item.Key, item.Count(), 1)); break;
+                        case "Acto Subestándar": output.Add(new Dimension(item.Key, item.Count(), 2)); break;
+                    }
+                }
+            else
+            {
+                output.Add(new Dimension("Condición Subestándar", 0, 1));
+                output.Add(new Dimension("Acto Subestándar", 0, 2));
+                foreach (var item in map)
+                {
+                    switch (item.Key)
+                    {
+                        case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
+                        case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                    }
+                }
+            }
+            return output;
+        }
+
+        public async Task<List<Dimension>> GetObservacionesTipoInspeccionSSO()
+        {
+            var sso = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).GroupBy(x => x.Descripcion_Condicion).ToListAsync();
+            var output = new List<Dimension>();
+            if (sso.Count == 2)
+                foreach (var item in sso)
+                {
+                    switch (item.Key)
+                    {
+                        case "Condición Subestándar": output.Add(new Dimension(item.Key, item.Count(), 1)); break;
+                        case "Acto Subestándar": output.Add(new Dimension(item.Key, item.Count(), 2)); break;
+                    }
+                }
+            else
+            {
+                output.Add(new Dimension("Condición Subestándar", 0, 1));
+                output.Add(new Dimension("Acto Subestándar", 0, 2));
+                foreach (var item in sso)
+                {
+                    switch (item.Key)
+                    {
+                        case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
+                        case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                    }
+                }
+            }
             return output;
         }
     }

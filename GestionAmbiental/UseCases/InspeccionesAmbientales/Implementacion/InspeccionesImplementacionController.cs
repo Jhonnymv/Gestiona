@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
-using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ImplementarObservacion;
+using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
@@ -136,9 +136,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
                         {
                             if (i == 0)
-                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
+                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
                             else
-                                evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                                evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia</a>";
                         }
                     }
                     filaObservacion += "<tr>";
