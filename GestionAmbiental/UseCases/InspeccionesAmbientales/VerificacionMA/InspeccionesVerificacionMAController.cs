@@ -122,22 +122,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 {
                     //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
                     //{
-                        var evidencia = "<label style=\"width:110px\">";
-                        var evidencia_implementacion = "<label style=\"width:110px\">";
-                        for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                        {
-                            if (i == 0)
-                                evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
-                            else
-                                evidencia += "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia</a>";
-                        }
-                        evidencia += "</label>";
-                        for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
-                        {
-                            if (i == 0)
-                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia " + (i + 1) + "</a>";
-                            else
-                                evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia " + (i + 1) + "</a>";
+                    var evidencia = "<label style=\"width:110px\">";
+                    var evidencia_implementacion = "<label style=\"width:110px\">";
+                    for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
+                        evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
+                    evidencia += "</label>";
+                    for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
+                    {
+                        evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
@@ -202,8 +194,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         {
             if (ModelState.IsValid)
             {
-                if (model.Accion.Equals("Rechazar"))
-                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(),User.Identity.Name);
+                if (model.Accion.Equals("Rechazar")) {
+                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), User.Identity.Name);
+                    return RedirectToAction("NotificarObservacionRechazada","Notificaciones", new { IdObservacion = model.idObservacion });
+                }
                 else
                     await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Aprobado.ToString(), User.Identity.Name);
             }

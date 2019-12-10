@@ -162,9 +162,15 @@
             //Validacion del tipo de archivo
             var ext = this.value.match(/\.([^\.]+)$/)[1];
             switch (ext) {
+                //iphone photo extension
+                case 'HEIC':
+                case 'heic':
                 case 'jpg':
-                case 'jpge':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
                 case 'png':
+                case 'PNG':
                 case 'xls':
                 case 'xlsx':
                 case 'doc':

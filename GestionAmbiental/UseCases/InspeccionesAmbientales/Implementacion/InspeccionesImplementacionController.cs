@@ -125,21 +125,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     var evidencia = "";
                     var evidencia_implementacion = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                    {
-                        if (i == 0)
-                            evidencia = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia " + (i + 1) + "</a>";
-                        else
-                            evidencia += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
-                    }
+                        evidencia = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
+                       
                     if (observacion.Evidencia_Inspeccion != null)
                     {
                         for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
-                        {
-                            if (i == 0)
-                                evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
-                            else
-                                evidencia_implementacion += "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">, Evidencia</a>";
-                        }
+                            evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";

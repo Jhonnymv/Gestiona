@@ -53,14 +53,8 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.Evidencias.Count; i++)
                     {
-                        if (i == 0)
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia @(i + 1)</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">, Evidencia @(i + 1)</a>
-                        }
+                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia</a>
+                        
                     }
                 </div>
             </div>
@@ -167,9 +161,15 @@
             //Validacion del tipo de archivo
             var ext = this.value.match(/\.([^\.]+)$/)[1];
             switch (ext) {
+                //iphone photo extension
+                case 'HEIC':
+                case 'heic':
                 case 'jpg':
-                case 'jpge':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
                 case 'png':
+                case 'PNG':
                 case 'xls':
                 case 'xlsx':
                 case 'doc':

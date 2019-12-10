@@ -53,14 +53,7 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.Evidencias.Count; i++)
                     {
-                        if (i == 0)
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia @(i + 1)</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">, Evidencia @(i + 1)</a>
-                        }
+                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia</a>                        
                     }
                 </div>
             </div>
@@ -111,14 +104,7 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.EvidenciasInspeccion.Count; i++)
                     {
-                        if (i == 0)
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">Evidencia @(i + 1)</a>
-                        }
-                        else
-                        {
-                            <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">, Evidencia @(i + 1)</a>
-                        }
+                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">Evidencia </a>
                     }
                 </div>
             </div>
