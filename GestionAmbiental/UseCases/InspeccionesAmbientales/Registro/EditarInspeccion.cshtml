@@ -16,6 +16,11 @@
 
         <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
         <div class="row mb-2">
+            <div class="col-lg-5">
+                <img src="~/img/datos_empleador_marcobre.png" />
+            </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-lg-2">
                 <label asp-for="Id_Gerencia_Ejecutora"></label>
             </div>
@@ -137,22 +142,22 @@
             </div>
         }
 
-    <div class="buttons d-flex justify-content-end">
-        @if (Model.Estado.Equals("Registrado"))
-        {
-            <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
-            <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
-        }
-        @if (Model.Estado.Equals("Pendiente"))
-        {
-            <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-            @if (ViewBag.nObservacioness > 0)
+        <div class="buttons d-flex justify-content-end">
+            @if (Model.Estado.Equals("Registrado"))
             {
-                <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
+                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+                <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
             }
-        }
-    </div>
+            @if (Model.Estado.Equals("Pendiente"))
+            {
+                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                @if (ViewBag.nObservacioness > 0)
+                {
+                    <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
+                }
+            }
+        </div>
         <input type="hidden" asp-for="opcion" />
         <input type="hidden" asp-for="Estado" />
     </form>

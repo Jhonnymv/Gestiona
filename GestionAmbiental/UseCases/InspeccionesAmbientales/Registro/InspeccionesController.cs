@@ -57,7 +57,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
             var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
-            filtroGerencias.Insert(0, new SelectListItem("No Aplica", "1"));
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.Filtro = filtroGerencias;

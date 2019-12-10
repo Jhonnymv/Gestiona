@@ -164,17 +164,34 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
                     if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
                         observacion.Permisos)
+                    {
+                        filaObservacion += "<td><span class=\"badge badge-secondary\">Pendiente</span></td>";
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
+                    }
+
                     else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                         observacion.Permisos)
+                    {
+                        filaObservacion += "<td><span class=\"badge badge-warning\">Vencido</span></td>";
                         filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Solicitar Ampliación" + "</a></td>";
-                    else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
-                        filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td>";
+                    }else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
+                        filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td><td></td>";
                     else if (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
-                        filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar Rechazado" + "</a></td>";
-                    else
+                    {
+                        filaObservacion += "<td><span class=\"badge badge-danger\">Rechazado</span></td>";
+                        filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Implementar" + "</a></td>";
+                    }
+                    else if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
+                    {
+                        filaObservacion += "<td><span class=\"badge badge-info\">Implementado</span></td>";
                         filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
-                    filaObservacion += "</tr>";
+                    }
+                    else
+                    {
+                        filaObservacion += "<td><span class=\"badge badge-secondary\">Pendiente</span></td>";
+                        filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Implementar" + "</button></td>";
+                    }
+                        filaObservacion += "</tr>";
 
                 }
                 ViewBag.ContenidoTabla = filaObservacion;
@@ -223,6 +240,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     }
                 }
                 await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario,User.Identity.Name);
+                return RedirectToAction("NotificarImplementacionObservacion", "Notificaciones", new { IdObservacion = model.idObservacion });
             }
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = model.idCabecera });
         }

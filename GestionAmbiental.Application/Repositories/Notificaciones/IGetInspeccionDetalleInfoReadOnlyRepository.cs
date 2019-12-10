@@ -9,5 +9,6 @@ namespace GestionAmbiental.Application.Repositories.Notificaciones
     public interface IGetInspeccionDetalleInfoReadOnlyRepository
     {
         Task<InspeccionDetalle> GetInspeccionDetalle(int IdObservacion);
+        Task<InspeccionDetalle> GetInspeccionDetalleImplementacion(int IdObservacion);        
     }
 }
