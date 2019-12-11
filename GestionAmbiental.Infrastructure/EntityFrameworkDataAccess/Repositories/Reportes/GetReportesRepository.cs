@@ -233,5 +233,109 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<DetalleObservacionXEstado>> GetDetalleObservacionXEstados(EstadosInspeccion estado)
+        {
+            var output = new List<DetalleObservacionXEstado>();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Estado.Equals(estado.ToString())).ToListAsync();
+            var inspecciones = await _context.Inspecciones_Cabecera.Where(x => observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            foreach (var observacion in observaciones)
+            {
+                var item = new DetalleObservacionXEstado();
+                var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_MA));
+                var responsable_marcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre));
+                var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(observacion.Id_Tipo_Condicion));
+
+                item.Id_Inspeccion_Cabecera = observacion.Id_Inspeccion_Cabecera;
+                item.Codigo = inspecciones.FirstOrDefault(x => x.Id_Inspeccion_Cabecera.Equals(observacion.Id_Inspeccion_Cabecera)).Codigo;
+
+                item.Tipo_Observacion = observacion.Tipo_Observacion;
+                item.Asesor_MAP_SSO = asesor.Nombres.ToString() + " " + asesor.Apellidos.ToString();
+                item.Descripcion_Condicion = observacion.Descripcion_Condicion;
+                item.Tipo_Condicion = tipo_condicion.Descripcion;
+                item.Nivel_Riesgo = observacion.Nivel_Riesgo_Ambiental;
+                item.Descripcion_Accion = observacion.Descripcion_Accion;
+                item.Responsable_Marcobre = responsable_marcobre.Nombres + " " + responsable_marcobre.Apellidos;
+                item.Responsable_Contratista = observacion.Responsable_Contratista;
+                item.Fecha_Programada = observacion.Fecha_Programada;
+
+                output.Add(item);
+            }
+            return output;
+        }
+        public async Task<List<List<Dimension>>> GetObservacionesMAPXTipoCondicion()
+        {
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+
+            var output = new List<List<Dimension>>();
+
+            var tolerables = new List<Dimension>();
+            var alerta = new List<Dimension>();
+            var no_aceptable = new List<Dimension>();
+
+            //tolerables
+            foreach(var item in agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                tolerables.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            //alerta
+            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alerta")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                alerta.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            //no aceptable
+            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("No Aceptable")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                no_aceptable.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            output.Add(tolerables);
+            output.Add(alerta);
+            output.Add(no_aceptable);
+
+            return output;
+
+        }
+        public async Task<List<List<Dimension>>> GetObservacionesSSOXTipoCondicion()
+        {
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+
+            var output = new List<List<Dimension>>();
+
+            var bajo = new List<Dimension>();
+            var medio = new List<Dimension>();
+            var alto = new List<Dimension>();
+
+            //bajo
+            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Bajo")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                bajo.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            //medio
+            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Medio")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                medio.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            //alto
+            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alto")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+            {
+                alto.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+            }
+            output.Add(bajo);
+            output.Add(medio);
+            output.Add(alto);
+
+            return output;
+
+        }
     }
 }

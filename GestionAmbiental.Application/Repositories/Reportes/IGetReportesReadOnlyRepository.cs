@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Domain.Reportes;
+﻿using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.Reportes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +19,8 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Dimension>> GetObservacionesNivelRiesgoSSO();
         Task<List<Dimension>> GetObservacionesTipoInspeccionMAP();
         Task<List<Dimension>> GetObservacionesTipoInspeccionSSO();
+        Task<List<DetalleObservacionXEstado>> GetDetalleObservacionXEstados(EstadosInspeccion estado);
+        Task<List<List<Dimension>>> GetObservacionesMAPXTipoCondicion();
+        Task<List<List<Dimension>>> GetObservacionesSSOXTipoCondicion();
     }
 }

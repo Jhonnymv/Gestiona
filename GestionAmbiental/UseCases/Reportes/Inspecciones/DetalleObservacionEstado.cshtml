@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewData["Title"] = "Detalle Observacion X Estado";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>@ViewBag.nObservaciones Observaciones en estado "@ViewBag.Estado" </h2>
+    </div>
+</div>
+
+<div>
+    @if (ViewBag.NObservaciones != 0)
+    {
+        <div class="row mb-2" id="div_tabla_observaciones">
+            <div class="col-md-12">
+                <table class="table table-modal" id="tabla_observaciones">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código de inspección</th>
+                            <th>Tipo de Observación</th>
+                            <th>Asesor MAP/SSO</th>
+                            <th>Acto/Condición Subestándar Identificada</th>
+                            <th>Tipo de Condición/Acto Subestándar</th>
+                            <th>Nivel de Riesgo</th>
+                            <th>Acción Preventiva / Correctiva Tomada</th>
+                            <th>Responsable Marcobre</th>
+                            <th>Responsable Contratista</th>
+                            <th>Fecha Programada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Data)
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("EditarInspeccion","Inspecciones", new { IdCabecera = item.Id_Inspeccion_Cabecera })">@item.Codigo</a>
+                                </td>
+                                <td>@item.Tipo_Observacion</td>
+                                <td>@item.Asesor_MAP_SSO</td>
+                                <td>@item.Descripcion_Condicion</td>
+                                <td>@item.Tipo_Condicion</td>
+                                <td>@item.Nivel_Riesgo</td>
+                                <td>@item.Descripcion_Accion</td>
+                                <td>@item.Responsable_Marcobre</td>
+                                <td>@item.Responsable_Contratista</td>
+                                <td>@item.Fecha_Programada.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h4>No se encontraron observaciones</h4>
+    }
+</div>

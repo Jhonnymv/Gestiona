@@ -177,11 +177,10 @@ td {
     padding: 5px;
     border-radius: 25px;
 }
-
-    .modal-table-icon:hover {
+.modal-table-icon:hover {
         background-color: #bebebe;
         border-color: #bebebe;
-    }
+}
 
 .progress{
     width: 100px;
@@ -231,4 +230,7 @@ td {
 }
 .border-left-total {
     border-left: .25rem solid #36b9cc !important;
+}
+.click-option:hover {
+    background-color: rgba(190, 190, 190, 0.5);
 }

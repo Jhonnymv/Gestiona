@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalleObservacionesXEstado;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesMAPXTipoCondicion;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesSSOXTipoCondicion;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,8 +22,11 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetObservacionesXNivelRiesgoSSO _getObservacionesXNivelRiesgoSSO;
         private readonly IGetObservacionesXActoCondicionMAP _getObservacionesXActoCondicionMAP;
         private readonly IGetObservacionesXActoCondicionSSO _getObservacionesXActoCondicionSSO;
+        private readonly IGetDetalleObservacionesXEstado _getDetalleObservacionesXEstado;
+        private readonly IGetObservacionesMAPXTipoCondicion _getObservacionesMAPXTipoCondicion;
+        private readonly IGetObservacionesSSOXTipoCondicion _getObservacionesSSOXTipoCondicion;
 
-        public ReportesInspeccionesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario, IGetObservacionesXEstado getObservacionesXEstado, IGetResumenObservacionesXUsuario getResumenObservacionesXUsuario, IGetInspeccionesDiarias getInspeccionesDiarias, IGetObservacionesXNivelRiesgoMAP getObservacionesXNivelRiesgoMAP, IGetObservacionesXNivelRiesgoSSO getObservacionesXNivelRiesgoSSO, IGetObservacionesXActoCondicionMAP getObservacionesXActoCondicionMAP, IGetObservacionesXActoCondicionSSO getObservacionesXActoCondicionSSO)
+        public ReportesInspeccionesController(IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, IGetObservacionesXUsuario getObservacionesXUsuario, IGetObservacionesXEstado getObservacionesXEstado, IGetResumenObservacionesXUsuario getResumenObservacionesXUsuario, IGetInspeccionesDiarias getInspeccionesDiarias, IGetObservacionesXNivelRiesgoMAP getObservacionesXNivelRiesgoMAP, IGetObservacionesXNivelRiesgoSSO getObservacionesXNivelRiesgoSSO, IGetObservacionesXActoCondicionMAP getObservacionesXActoCondicionMAP, IGetObservacionesXActoCondicionSSO getObservacionesXActoCondicionSSO, IGetDetalleObservacionesXEstado getDetalleObservacionesXEstado, IGetObservacionesMAPXTipoCondicion getObservacionesMAPXTipoCondicion, IGetObservacionesSSOXTipoCondicion getObservacionesSSOXTipoCondicion)
         {
             _getInspeccionesMAPvsSSO = getInspeccionesMAPvsSSO;
             _getObservacionesXUsuario = getObservacionesXUsuario;
@@ -31,6 +37,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getObservacionesXNivelRiesgoSSO = getObservacionesXNivelRiesgoSSO;
             _getObservacionesXActoCondicionMAP = getObservacionesXActoCondicionMAP;
             _getObservacionesXActoCondicionSSO = getObservacionesXActoCondicionSSO;
+            _getDetalleObservacionesXEstado = getDetalleObservacionesXEstado;
+            _getObservacionesMAPXTipoCondicion = getObservacionesMAPXTipoCondicion;
+            _getObservacionesSSOXTipoCondicion = getObservacionesSSOXTipoCondicion;
         }
 
         public async Task<IActionResult> Resumen()
@@ -46,9 +55,8 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
 
             ViewBag.nObservaciones = nObservaciones.Select(x => x.Valor).ToList();
 
-
             var model = new List<ReportesModel>();
-            model.Add(new ReportesModel("Cantidad de inspecciones de los últimos 30 días", inspecciones_diarias));
+            model.Add(new ReportesModel("#Inspecciones registradas en los últimos 30 días", inspecciones_diarias));
             model.Add(new ReportesModel("Cantidad de Observaciones MAP vs SSO", map_vs_sso));
             model.Add(new ReportesModel("Cantidad de Observaciones MAP por Nivel de Riesgo", MAP_x_nivel_riesgo));
             model.Add(new ReportesModel("Cantidad de Observaciones SSO por Nivel de Riesgo", SSO_x_nivel_riesgo));
@@ -57,6 +65,35 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
 
             return View(model);
         }
+        public async Task<IActionResult> DetalleObservacionEstado(string estado)
+        {
+            var data = await _getDetalleObservacionesXEstado.Execute(estado);
+            ViewBag.Data = data;
+            ViewBag.nObservaciones = data.Count;
+            ViewBag.Estado = estado;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetObservacionesMAPXTipoCondicion()
+        {
+            var data = await _getObservacionesMAPXTipoCondicion.Execute();
+            dynamic response = new
+            {
+                Data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetObservacionesSSOXTipoCondicion()
+        {
+            var data = await _getObservacionesSSOXTipoCondicion.Execute();
+            dynamic response = new
+            {
+                Data = data
+            };
+            return Ok(response);
+        }
+
         /*public async Task<IActionResult> MAPvsSSO()
         {
             var data = await _getInspeccionesMAPvsSSO.Execute();

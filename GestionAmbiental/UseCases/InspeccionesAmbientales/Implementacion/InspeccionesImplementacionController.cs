@@ -237,7 +237,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> SolicitarAmpliacion(int IdObservacion)
         {
-            
             //notificar
 
             var response = "";
@@ -258,7 +257,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 }
                 memory.Position = 0;
                 return File(memory, GetContentType(path), Path.GetFileName(path));
-            } catch(Exception e) {
+            } catch(Exception) {
                 return Content("No se encontró el archivo");
             }
         }

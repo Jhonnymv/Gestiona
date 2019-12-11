@@ -16,12 +16,13 @@
 
     var Xobs_x_nivel_riesgoSSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[3].data.Select(x => x.Nombre).ToList());
     var Yobs_x_nivel_riesgoSSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[3].data.Select(x => x.Valor).ToList());
-    
-    var Xobs_x_tipo_SSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[4].data.Select(x => x.Nombre).ToList());
-    var Yobs_x_tipo_SSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[4].data.Select(x => x.Valor).ToList());
-    
-    var Xobs_x_tipo_MAP = Newtonsoft.Json.JsonConvert.SerializeObject(Model[5].data.Select(x => x.Nombre).ToList());
-    var Yobs_x_tipo_MAP = Newtonsoft.Json.JsonConvert.SerializeObject(Model[5].data.Select(x => x.Valor).ToList());
+
+    var Xobs_x_tipo_MAP = Newtonsoft.Json.JsonConvert.SerializeObject(Model[4].data.Select(x => x.Nombre).ToList());
+    var Yobs_x_tipo_MAP = Newtonsoft.Json.JsonConvert.SerializeObject(Model[4].data.Select(x => x.Valor).ToList());
+
+    var Xobs_x_tipo_SSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[5].data.Select(x => x.Nombre).ToList());
+    var Yobs_x_tipo_SSO = Newtonsoft.Json.JsonConvert.SerializeObject(Model[5].data.Select(x => x.Valor).ToList());
+
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
@@ -32,7 +33,7 @@
 <div class="row mb-2">
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-pendiente shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Registrado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes</div>
@@ -44,7 +45,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-implementado shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Implementado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Implementadas</div>
@@ -56,7 +57,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-aprobado shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Aprobado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
@@ -68,7 +69,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-rechazado shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Rechazado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
@@ -80,7 +81,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-vencido shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Vencido')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
@@ -92,7 +93,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-total shadow h-100">
-            <div class="card-body">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Ampliado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
@@ -105,79 +106,19 @@
 </div>
 <div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <!-- Card Header - Dropdown -->
-            @*<div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                    <div class="dropdown no-arrow">
-                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 18px, 0px);">
-                            <div class="dropdown-header">Dropdown Header:</div>
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </div>
-                </div>*@
-            <!-- Card Body -->
+        <div class="card shadow mb-4">           
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">@Model[0].titulo</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area">
                     <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="chart" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                    <canvas id="chart_inspecciones_30_dias" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@*
-<div class="row mb-2">
-    <div class="col-xl-4 col-lg-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">@Model[1].titulo</h6>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="chart2" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-lg-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Observaciones por Nivel de Riesgo MAP</h6>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="chart3" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-4 col-lg-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Observaciones por Nivel de Riesgo SSO</h6>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                    <canvas id="chart4" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-*@
 <div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
@@ -188,20 +129,20 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Observaciones por Nivel de Riesgo</h6>
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <div class="chart-area click-option" onclick="ObservacionsMAPXTipoCondicion()">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_MAP_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
                     </div>
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Observaciones por Actos y Condiciones Subestándar</h6>
                         <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_MAP_Tipo_Obs" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -216,7 +157,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Observaciones por Nivel de Riesgo</h6>
-                        <div class="chart-area">
+                        <div class="chart-area click-option" onclick="ObservacionsSSOXTipoCondicion()">
                             <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
@@ -234,11 +175,121 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Detalles MAP-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Detalle de observaciones MAP según nivel de riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo Tolerable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Tolerable" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo Alerta</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Alerta" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo No Aceptable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_No_Aceptable" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Detalles SSO-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Detalle de observaciones SSO según nivel de riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo Bajo</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Tolerable" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo Medio</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Alerta" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tipo de Condición de Nivel de Riesgo Alto</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_No_Aceptable" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script type="text/javascript">
-
         new Chart(
-            document.getElementById("chart"),
+            document.getElementById("chart_inspecciones_30_dias"),
             {
                 "type": "bar",
                 "data": {
@@ -267,7 +318,7 @@
                     }
                 }
             });
-            
+
         new Chart(
             document.getElementById("chart_MAP_Nivel_Riesgo"),
             {
@@ -310,7 +361,7 @@
                     "datasets": [{
                         "label": "# Inspecciones Registradas",
                         "data": @Html.Raw(Yobs_x_nivel_riesgoSSO),
-                        "backgroundColor": [                            
+                        "backgroundColor": [
                             '#3DFE8E',
                             '#FEC63D',
                             '#FE3D3D'
@@ -344,9 +395,8 @@
                         "label": "# Inspecciones Registradas",
                         "data": @Html.Raw(Yobs_x_tipo_MAP),
                         "backgroundColor": [
-                            '#3DFE8E',
-                            '#FEC63D',
-                            '#FE3D3D'
+                            '#ed4c4c',
+                            '#36b9cc'
                         ],
                         "lineTension": 0.1
                     }]
@@ -376,10 +426,9 @@
                     "datasets": [{
                         "label": "# Inspecciones Registradas",
                         "data": @Html.Raw(Yobs_x_tipo_SSO),
-                        "backgroundColor": [                            
-                            '#3DFE8E',
-                            '#FEC63D',
-                            '#FE3D3D'
+                        "backgroundColor": [
+                            '#ed4c4c',
+                            '#36b9cc'
                         ],
                         "lineTension": 0.1
                     }]
@@ -400,6 +449,204 @@
                 }
             }
         );
+        function ObsDetalleEstado(estado) {
+            window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")"+"?estado="+estado);
+            /*$.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/DetalleObservacionEstado",
+                data: {
+                    //"pagina": pag,
+                    //"rpp":10,
+                    "estado": estado
+                },
+                traditional: true,
+                success: (response) => {
+                }
+            });*/
+        }
+
+        function ObservacionsMAPXTipoCondicion() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/GetObservacionesMAPXTipoCondicion",
+                traditional: true,
+                success: (response) => {
+                    var Xtolerables = response.data[0].map(a => a.nombre);
+                    var Ytolerables = response.data[0].map(a => a.valor);
+                    console.log(Xtolerables);
+                    console.log(Ytolerables);
+                    //chart_MAP_Nivel_Riesgo_Tolerable
+                    new Chart(document.getElementById("chart_MAP_Nivel_Riesgo_Tolerable"),
+                        {
+                            "type": "horizontalBar",
+                            "data": {
+                                "labels": Xtolerables,
+                                "datasets": [{
+                                    "label": "#Observaciones",
+                                    "data": Ytolerables,
+                                    "fill": false,
+                                    "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                                    "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                                    "borderWidth": 1
+                                }]
+                            },
+                            "options": {
+                                "scales": {
+                                    "xAxes": [{
+                                        "ticks": {
+                                            "beginAtZero": true
+                                        }
+                                    }]
+                                },
+                                "plugins": {
+                                    "datalabels": {
+                                        "anchor": "center",
+                                        "color": "black",
+                                        "defaultFontSize": 15
+                                    }
+                                }
+                            }
+                        });
+
+
+                    var Xalertas = JSON.stringify(response.data[1].map(a => a.nombre));
+                    var Yalertas = JSON.stringify(response.data[1].map(a => a.valor));
+
+                    var Xno_aceptables = JSON.stringify(response.data[2].map(a => a.nombre));
+                    var Yno_aceptables = JSON.stringify(response.data[2].map(a => a.valor));
+
+                    $("#Modal_Nivel_Riesgo_MAP").modal("show");
+                }
+            });
+        }
+    </script>
+    <script>
+        function ObservacionsMAPXTipoCondicion() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/GetObservacionesMAPXTipoCondicion",
+                traditional: true,
+                success: (response) => {
+                    var Xtolerables = response.data[0].map(a => a.nombre);
+                    var Ytolerables = response.data[0].map(a => a.valor);
+                    console.log(Xtolerables);
+                    console.log(Ytolerables);
+                    //chart_MAP_Nivel_Riesgo_Tolerable
+                    fillchart_MAP_Nivel_Riesgo(Xtolerables, Ytolerables, "chart_MAP_Nivel_Riesgo_Tolerable");
+
+
+                    var Xalertas = response.data[1].map(a => a.nombre);
+                    var Yalertas = response.data[1].map(a => a.valor);
+
+                    fillchart_MAP_Nivel_Riesgo(Xalertas, Yalertas, "chart_MAP_Nivel_Riesgo_Alerta");
+
+                    var Xno_aceptables = response.data[2].map(a => a.nombre);
+                    var Yno_aceptables = response.data[2].map(a => a.valor);
+
+                    fillchart_MAP_Nivel_Riesgo(Xno_aceptables, Yno_aceptables, "chart_MAP_Nivel_Riesgo_No_Aceptable");
+
+                    $("#Modal_Nivel_Riesgo_MAP").modal("show");
+                }
+            });
+        }
+        function fillchart_MAP_Nivel_Riesgo(X, Y, nchart) {
+            new Chart(document.getElementById(nchart),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": X,
+                        "datasets": [{
+                            "label": "#Observaciones",
+                            "data": Y,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+    </script>
+    <script>
+        function ObservacionsSSOXTipoCondicion() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/GetObservacionesSSOXTipoCondicion",
+                traditional: true,
+                success: (response) => {
+                    var Xtolerables = response.data[0].map(a => a.nombre);
+                    var Ytolerables = response.data[0].map(a => a.valor);
+                    console.log(Xtolerables);
+                    console.log(Ytolerables);
+                    //chart_SSO_Nivel_Riesgo_Tolerable
+                    fillchart_SSO_Nivel_Riesgo(Xtolerables, Ytolerables, "chart_SSO_Nivel_Riesgo_Tolerable");
+
+
+                    var Xalertas = response.data[1].map(a => a.nombre);
+                    var Yalertas = response.data[1].map(a => a.valor);
+
+                    fillchart_SSO_Nivel_Riesgo(Xalertas, Yalertas, "chart_SSO_Nivel_Riesgo_Alerta");
+
+                    var Xno_aceptables = response.data[2].map(a => a.nombre);
+                    var Yno_aceptables = response.data[2].map(a => a.valor);
+
+                    fillchart_SSO_Nivel_Riesgo(Xno_aceptables, Yno_aceptables, "chart_SSO_Nivel_Riesgo_No_Aceptable");
+
+                    $("#Modal_Nivel_Riesgo_SSO").modal("show");
+                }
+            });
+        }
+        function fillchart_SSO_Nivel_Riesgo(X, Y, nchart) {
+            new Chart(document.getElementById(nchart),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": X,
+                        "datasets": [{
+                            "label": "#Observaciones",
+                            "data": Y,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
     </script>
 }
 
