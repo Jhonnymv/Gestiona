@@ -4,6 +4,7 @@ using System.Data.SqlTypes;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
@@ -31,6 +32,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
         private readonly IEditarInspeccionCabecera _editarInspeccionCabecera;
         private readonly IAmpliarFechaObservacion _ampliarFechaObservacion;
+
+        private const string CarpetaEvidencias = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
         public InspeccionesController(
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
@@ -60,7 +63,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.Filtro = filtroGerencias;
-
             return View();
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo,int pagina,int rpp)
@@ -247,44 +249,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var evidencias = new List<string>();
                 if (model.Evidencias != null)
                 {
-                    // full path to file in temp location: var filePath = Path.GetTempFileName();
-                    /*var tempPath = Path.GetTempPath();
-                    var filePath = tempPath + "/submission/";
-                    var archiveFile = tempPath + "/zip/archive.zip";
-                    var archivePath = tempPath + "/zip/";
-                    if (Directory.Exists(filePath))
-                    {
-                        Directory.Delete(filePath, true);
-                    }
-                    if (Directory.Exists(archivePath))
-                    {
-                        Directory.Delete(archivePath, true);
-                    }
-
-                    Directory.CreateDirectory(filePath);
-                    Directory.CreateDirectory(archivePath);
-
-                    foreach (var formFile in model.Evidencias)
-                    {
-                        var fileName = filePath + formFile.FileName;
-                        if (formFile.Length > 0)
-                        {
-                            using (var stream = new FileStream(fileName, FileMode.Create))
-                            {
-                                await formFile.CopyToAsync(stream);
-                            }
-                        }
-                    }
-                    ZipFile.CreateFromDirectory(filePath, archiveFile);*/
                     for (int i = 0; i < model.Evidencias.Count; i++)
-                    {
-                        var fileExtension = Path.GetExtension(model.Evidencias[i].FileName);
-                        var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, "InspeccionesAmbientales", "EvidenciasRegistro", fileName);
-                        var file = new FileStream(filepath, FileMode.Create);
-                        await model.Evidencias[i].CopyToAsync(file);
-                        file.Close();
-                        evidencias.Add(filepath);
+                    {                       
+                        var newfileName = CreateUniqueFileName(i + 1)+".zip";
+                        var filePath = UploadZipFile(model.Evidencias[i], newfileName);
+                        evidencias.Add(filePath);
                     }
                 }
                 var idObservacion = await _registrarInspeccionObservacion.Execute(
@@ -307,7 +276,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<IActionResult> EditarInspeccion(int IdCabecera)
         {
-            //var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
             var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
             var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -339,9 +307,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
                     {
                       if (i == 0)
-                            evidencia = evidencia+"<a href=\"/Inspecciones/Download?path="+ observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
+                            evidencia = evidencia+ "<a href=\"/Inspecciones/Download?fileName=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
                         else
-                            evidencia = evidencia+"<a href=\"/Inspecciones/Download?path=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia</a>";
+                            evidencia = evidencia+ "<a href=\"/Inspecciones/Download?fileName=" + observacion.Evidencia_Condicion[i] + "\">, Evidencia</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -398,7 +366,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 model.Inspectores = cabecera.Inspectores;
                 model.Estado = cabecera.Estado;                
             }
-            //TempData["idCabecera"] = IdCabecera;
             return View(model);
         }
         [HttpPost]
@@ -436,25 +403,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
+            var fileName = "Evidencia__Registro_Observacion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             return fileName;
-        }
-        public async Task<IActionResult> Download(string path)
-        {
-            try
-            {
-                var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
-                {
-                    await stream.CopyToAsync(memory);
-                }
-                memory.Position = 0;
-                return File(memory, GetContentType(path), Path.GetFileName(path));
-            }
-            catch (Exception e)
-            {
-                return Content("No se encontró el archivo");
-            }
         }
         private string GetContentType(string path)
         {
@@ -462,7 +412,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             var ext = Path.GetExtension(path).ToLowerInvariant();
             return types[ext];
         }
-
         private Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
@@ -477,8 +426,94 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
-                {".csv", "text/csv"}
+                {".csv", "text/csv"},
+                {".zip","application/zip" }
             };
+        }       
+        public IActionResult Download(string fileName)
+        {
+            try
+            {
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidencias + fileName);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                /* Establish Return Communication with the FTP Server */
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                var ftpStream = ftpResponse.GetResponseStream();
+
+
+                return File(ftpStream, GetContentType(fileName),Path.GetFileName(fileName));
+            }
+            catch (Exception)
+            {
+                return Content("No se encontró el archivo");
+            }
+        }
+        public string UploadFTPFile(string path, string newFileName)
+        {            
+            FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidencias + newFileName);
+
+            ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+            ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+            ftpRequest.UseBinary = true;
+            ftpRequest.UsePassive = true;
+            ftpRequest.KeepAlive = true;
+
+            using (FileStream fs = System.IO.File.OpenRead(path))
+            {
+
+                byte[] buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                fs.Close();
+                Stream requestStream = ftpRequest.GetRequestStream();
+                requestStream.WriteAsync(buffer, 0, buffer.Length);
+                requestStream.FlushAsync();
+                requestStream.Close();
+            }
+            return newFileName;
+        }
+        public string UploadZipFile(IFormFile file,string newFileName)
+        {
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath+"SGA-Marcobre/";
+            if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission/"+User.Identity.Name.Split("\\")[1]+"/";
+            var archiveFile = SGATempPath + "zip/"+ User.Identity.Name.Split("\\")[1] + "/archive.zip";
+            var archivePath = SGATempPath + "zip/"+ User.Identity.Name.Split("\\")[1] + "/";
+
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath, true);
+            }
+            if (Directory.Exists(archivePath))
+            {
+                Directory.Delete(archivePath, true);
+            }
+
+            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(archivePath);
+
+            var fileName = filePath + file.FileName;
+            if (file.Length > 0)
+            {
+                var stream = new FileStream(fileName, FileMode.Create);           
+                //CopyToAsync corrompe los archivos
+                file.CopyTo(stream);
+                stream.Close();
+            }
+            ZipFile.CreateFromDirectory(filePath, archiveFile);
+            return UploadFTPFile(archiveFile, newFileName);
         }
     }
 }

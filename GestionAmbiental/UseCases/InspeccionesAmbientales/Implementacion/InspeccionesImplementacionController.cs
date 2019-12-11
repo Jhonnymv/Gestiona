@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarCabeceras;
@@ -12,6 +14,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspe
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -29,6 +32,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
+        private const string CarpetaEvidencias = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
         public InspeccionesImplementacionController(
             ISelectItems selectItems,
             IConsultarCabecerasImplementacion consultarCabeceras,
@@ -125,12 +129,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     var evidencia = "";
                     var evidencia_implementacion = "";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                        evidencia = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
+                        evidencia = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
                        
                     if (observacion.Evidencia_Inspeccion != null)
                     {
                         for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
-                            evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
+                            evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
                     }
                     filaObservacion += "<tr>";
                     filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
@@ -220,14 +224,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {
                     for (int i = 0; i < model.EvidenciasInspeccion.Count; i++)
                     {
-                        //TODO agregar extension al archivo
-                        var fileExtension = Path.GetExtension(model.EvidenciasInspeccion[i].FileName);
-                        var fileName = CreateUniqueFileName(i + 1) + fileExtension;
-                        var filepath = Path.Combine(_hostingEnvironment.WebRootPath, "InspeccionesAmbientales", "EvidenciasImplementacion", fileName);
-                        var file = new FileStream(filepath, FileMode.Create);
-                        await model.EvidenciasInspeccion[i].CopyToAsync(file);
-                        file.Close();
-                        evidencias.Add(filepath);
+                        var newfileName = CreateUniqueFileName(i + 1) + ".zip";
+                        var filePath = UploadZipFile(model.EvidenciasInspeccion[i], newfileName);
+                        evidencias.Add(filePath);
                     }
                 }
                 await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario,User.Identity.Name);
@@ -246,20 +245,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         {
             var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
             return fileName;
-        }
-        public async Task<IActionResult> Download(string path)
-        {
-            try{
-                var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
-                {
-                    await stream.CopyToAsync(memory);
-                }
-                memory.Position = 0;
-                return File(memory, GetContentType(path), Path.GetFileName(path));
-            } catch(Exception) {
-                return Content("No se encontró el archivo");
-            }
         }
         private string GetContentType(string path)
         {
@@ -286,6 +271,92 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {".ppt", "application/vnd.ms-powerpoint" },
                 {".pptx", "application/vnd.ms-powerpoint" }
             };
+        }
+
+        public IActionResult Download(string fileName)
+        {
+            try
+            {
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidencias + fileName);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                /* Establish Return Communication with the FTP Server */
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                var ftpStream = ftpResponse.GetResponseStream();
+
+
+                return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
+            }
+            catch (Exception)
+            {
+                return Content("No se encontró el archivo");
+            }
+        }
+        public string UploadFTPFile(string path, string newFileName)
+        {
+            FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidencias + newFileName);
+
+            ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+            ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+            ftpRequest.UseBinary = true;
+            ftpRequest.UsePassive = true;
+            ftpRequest.KeepAlive = true;
+
+            using (FileStream fs = System.IO.File.OpenRead(path))
+            {
+
+                byte[] buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                fs.Close();
+                Stream requestStream = ftpRequest.GetRequestStream();
+                requestStream.WriteAsync(buffer, 0, buffer.Length);
+                requestStream.FlushAsync();
+                requestStream.Close();
+            }
+            return newFileName;
+        }
+        public string UploadZipFile(IFormFile file, string newFileName)
+        {
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath + "SGA-Marcobre/";
+            if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
+            var archiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/archive.zip";
+            var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath, true);
+            }
+            if (Directory.Exists(archivePath))
+            {
+                Directory.Delete(archivePath, true);
+            }
+
+            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(archivePath);
+
+            var fileName = filePath + file.FileName;
+            if (file.Length > 0)
+            {
+                var stream = new FileStream(fileName, FileMode.Create);
+                //CopyToAsync corrompe los archivos
+                file.CopyTo(stream);
+                stream.Close();
+            }
+            ZipFile.CreateFromDirectory(filePath, archiveFile);
+            return UploadFTPFile(archiveFile, newFileName);
         }
     }
 }

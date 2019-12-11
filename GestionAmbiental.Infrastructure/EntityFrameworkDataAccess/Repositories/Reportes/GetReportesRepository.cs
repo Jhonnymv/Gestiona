@@ -115,7 +115,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesNivelRiesgoMAP()
         {
-            var map = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).GroupBy(x=>x.Nivel_Riesgo_Ambiental).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x => 
+            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            &&  observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                .Select(x=>x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+            var map = observaciones.Where(x=>id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+
             var output = new List<Dimension>();
             if (map.Count == 3)
                 foreach (var item in map)
@@ -146,8 +153,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesNivelRiesgoSSO()
         {
-            var sso = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToListAsync();
-            var output = new List<Dimension>();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
+            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                .Select(x => x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+
+            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList(); var output = new List<Dimension>();
             if (sso.Count == 3)
                 foreach (var item in sso)
                 {
