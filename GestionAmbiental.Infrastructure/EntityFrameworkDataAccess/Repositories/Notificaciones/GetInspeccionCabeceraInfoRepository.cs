@@ -31,6 +31,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
 
             var output = new InspeccionCabecera();
+            output.Codigo = cabeccera.Codigo;
             output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
             output.EmpContratMarc = empContMar;
             output.GerenEjecMar = gerEjectMar;

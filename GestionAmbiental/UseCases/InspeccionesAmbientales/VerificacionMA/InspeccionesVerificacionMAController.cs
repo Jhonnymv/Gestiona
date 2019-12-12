@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
@@ -26,6 +27,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IVerificarObservacionMA _verificarObservacion;
 
         private readonly IHostingEnvironment _hostingEnvironment;
+
+        private const string CarpetaEvidenciasCondicion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
+        private const string CarpetaEvidenciasImplementacion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
 
         public InspeccionesVerificacionMAController(
             ISelectItems selectItems,
@@ -125,11 +129,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     var evidencia = "<label style=\"width:110px\">";
                     var evidencia_implementacion = "<label style=\"width:110px\">";
                     for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                        evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?path=" + observacion.Evidencia_Condicion[i] + "\">Evidencia</a>";
+                        evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?fileName=" + observacion.Evidencia_Condicion[i] + "&tipo=condicion\">Evidencia</a>";
                     evidencia += "</label>";
                     for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
                     {
-                        evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?path=" + observacion.Evidencia_Inspeccion[i] + "\">Evidencia</a>";
+                        evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.Evidencia_Inspeccion[i] + "&tipo=implementacion\">Evidencia</a>";
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
@@ -203,21 +207,35 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });
         }
-        public async Task<IActionResult> Download(string path)
+        public IActionResult Download(string fileName, string tipo)
         {
             try
             {
-                var memory = new MemoryStream();
-                using (var stream = new FileStream(path, FileMode.Open))
-                {
-                    await stream.CopyToAsync(memory);
-                }
-                memory.Position = 0;
-                return File(memory, GetContentType(path), Path.GetFileName(path));
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest;
+                if (tipo == "condicion")
+                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + fileName);
+                else
+                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + fileName);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                /* Establish Return Communication with the FTP Server */
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                var ftpStream = ftpResponse.GetResponseStream();
+
+
+                return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                return Content("No se encontró el archivo");
+                return Content("No se encontró el archivo: ");
             }
         }
         private string GetContentType(string path)
@@ -242,8 +260,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
                 {".csv", "text/csv"},
-                {".ppt", "application/vnd.ms-powerpoint" },
-                {".pptx", "application/vnd.ms-powerpoint" }
+                {".zip","application/zip" }
             };
         }
     }

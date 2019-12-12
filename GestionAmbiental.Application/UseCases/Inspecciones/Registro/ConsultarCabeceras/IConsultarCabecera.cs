@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
 {
     public interface IConsultarCabecera
     {
-        Task<InspeccionCabecera> Execute(int idCabecera);
+        Task<InspeccionCabecera> Execute(int idCabecera,string usuario_red);
     }
 }

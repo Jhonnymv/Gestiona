@@ -268,8 +268,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {".jpeg", "image/jpeg"},
                 {".gif", "image/gif"},
                 {".csv", "text/csv"},
-                {".ppt", "application/vnd.ms-powerpoint" },
-                {".pptx", "application/vnd.ms-powerpoint" }
+                {".zip","application/zip" }
             };
         }
 

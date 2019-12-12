@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccionDescarga;
 using Microsoft.AspNetCore.Hosting;
@@ -17,6 +19,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
 
+
+        private const string CarpetaEvidenciasCondicion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
+        private const string CarpetaEvidenciasImplementacion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
         public DescargaInspeccionController(IHostingEnvironment hostingEnvironment,
             IConsultarInspeccionDescarga consultarInspeccionDescarga)
         {
@@ -99,13 +104,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 if (observacion.Evidencia_Condicion != "[]" && observacion.Evidencia_Condicion != null)
                 {
-                    evidencia_condicion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Condicion, fila, 4, rowHeight, imageIndex);
+                    evidencia_condicion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Condicion, fila, 4, rowHeight, imageIndex,"condicion");
                     rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                     imageIndex++;
                 }
                 if (observacion.Evidencia_Inspeccion != "[]" && observacion.Evidencia_Inspeccion != null)
                 {
-                    evidencia_inspeccion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Inspeccion, fila, 10, rowHeight, imageIndex);
+                    evidencia_inspeccion = AddImageToCell(templateWorkbook, sheet, observacion.Evidencia_Inspeccion, fila, 10, rowHeight, imageIndex, "inspeccion");
                     rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                     imageIndex++;
                 }
@@ -185,16 +190,74 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             return (image_height * cellWidth) / image_width;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private ImageProperties AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex)
+        private ImageProperties AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
         {
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
+            FtpWebRequest ftpRequest;
             foreach (var evidencia in evidenciasCondicion)
             {
-                var extension = Path.GetExtension((string)evidencia);
+                //1. Vaciar carpeta temporal del usuario 
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre\\";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                var archiveFile = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\archive.zip";
+                var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                //2. Descargar .zip de ftp y guardar en carpeta temporal zip
+                if (tipoEvidencia == "condicion")
+                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + evidencia);
+                else
+                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + evidencia);
+
+                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                var ftpStream = ftpResponse.GetResponseStream();
+                var fileStream = System.IO.File.Create(archiveFile);
+                ftpStream.CopyTo(fileStream);
+                ftpStream.Close();
+                fileStream.Close();
+
+                //3. descomprimir en carpeta temporal submission
+                if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                    filePath += Path.DirectorySeparatorChar;
+
+                using (ZipArchive archive = ZipFile.OpenRead(archiveFile))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                        if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                                entry.ExtractToFile(filePath);
+                    }
+                }
+                //4. validar extension y cargar en una celda
+                var extension = Path.GetExtension(filePath);
                 if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
                 {
-                    byte[] bytes = System.IO.File.ReadAllBytes((string)evidencia);
+                    
+                    
+
+                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     PictureType pType;
                     if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
                         pType = PictureType.JPEG;
@@ -223,7 +286,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 {
                     var pType = PictureType.PNG;
                     byte[] bytes;
-                    switch (Path.GetExtension((string)evidencia))
+                    switch (Path.GetExtension(filePath))
                     {
                         case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
                         case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
@@ -253,8 +316,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     output.image = picture;
                 }
                 output.extension = extension;
-            }
-            
+            }            
            
             return output;
         }
@@ -263,6 +325,31 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public short rowHeight { get; set; }
             public IPicture image { get; set; }
             public string extension { get; set; }
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"},
+                {".zip","application/zip" }
+            };
         }
     }
 }

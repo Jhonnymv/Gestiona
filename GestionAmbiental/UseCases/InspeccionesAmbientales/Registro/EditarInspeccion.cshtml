@@ -214,8 +214,8 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            console.log('@Model.Estado');
-           if ('@Model.Estado' != "Pendiente") {                
+            console.log(@(ViewBag.Permiso.ToString().ToLower()));
+           if ('@Model.Estado' != "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', 'disabled');
                 $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
@@ -228,10 +228,9 @@
                 $('#Responsable_Inspeccion').prop('readonly', 'readonly');
                 $('#Objetivo').prop('readonly', 'readonly');
                 $('#Tipo_Inspeccion').prop('disabled', 'disabled');
+            }
 
-            } 
-
-    });        
+    });
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");
         });
@@ -275,7 +274,7 @@
                 url: "/Inspecciones/EditarInspeccion",
                 contentType: "application/json"
             }).success(function () {
-                
+
             });
         }
     </script>

@@ -160,7 +160,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
 
-            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList(); var output = new List<Dimension>();
+            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+
+            var output = new List<Dimension>();
             if (sso.Count == 3)
                 foreach (var item in sso)
                 {
@@ -191,7 +193,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionMAP()
         {
-            var map = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).GroupBy(x => x.Descripcion_Condicion).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
+            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                .Select(x => x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+
+            var map = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Descripcion_Condicion).ToList();
             var output = new List<Dimension>();
             if (map.Count == 2)
                 foreach (var item in map)
@@ -220,7 +229,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionSSO()
         {
-            var sso = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).GroupBy(x => x.Descripcion_Condicion).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
+            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                .Select(x => x.Id_Inspeccion_Cabecera)
+                .ToListAsync();
+
+            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Descripcion_Condicion).ToList();
             var output = new List<Dimension>();
             if (sso.Count == 2)
                 foreach (var item in sso)
@@ -293,20 +309,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var no_aceptable = new List<Dimension>();
 
             //tolerables
-            foreach(var item in agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                tolerables.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")).GroupBy(y => y.Id_Tipo_Condicion))
+                {                    
+                    tolerables.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             //alerta
-            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alerta")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                alerta.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("Alerta")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alerta")).GroupBy(y => y.Id_Tipo_Condicion))
+                {
+                    alerta.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             //no aceptable
-            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("No Aceptable")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                no_aceptable.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("No Aceptable")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("No Aceptable")).GroupBy(y => y.Id_Tipo_Condicion))
+                {
+                    if (agrupado.Count != 0)
+                        no_aceptable.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             output.Add(tolerables);
             output.Add(alerta);
             output.Add(no_aceptable);
@@ -329,20 +349,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var alto = new List<Dimension>();
 
             //bajo
-            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Bajo")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                bajo.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("Bajo")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Bajo")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+                {
+                    bajo.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             //medio
-            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Medio")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                medio.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("Medio")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Medio")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+                {
+                    medio.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             //alto
-            foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alto")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
-            {
-                alto.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
-            }
+            if (agrupado.FirstOrDefault(x => x.Key.Equals("Alto")) != null)
+                foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Alto")).GroupBy(y => y.Id_Tipo_Condicion).ToList())
+                {
+                    alto.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
+                }
             output.Add(bajo);
             output.Add(medio);
             output.Add(alto);

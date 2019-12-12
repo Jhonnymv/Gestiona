@@ -347,7 +347,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             ViewBag.EmpresasMC = empresasMC;
             ViewBag.Responsables = responsables;
             ViewBag.Tipo_Inspeccion = tiposInspeccion;
-            var cabecera = await _consultarCabecera.Execute(IdCabecera);
+
+            var cabecera = await _consultarCabecera.Execute(IdCabecera,User.Identity.Name);
             var model = new NuevaInspeccionModel();
 
             if (cabecera != null)
@@ -366,6 +367,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 model.Inspectores = cabecera.Inspectores;
                 model.Estado = cabecera.Estado;                
             }
+
+            ViewBag.Permiso = cabecera.Permiso;
             return View(model);
         }
         [HttpPost]
@@ -452,9 +455,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 return File(ftpStream, GetContentType(fileName),Path.GetFileName(fileName));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return Content("No se encontró el archivo");
+                return Content("No se encontró el archivo: "+e.Message);
             }
         }
         public string UploadFTPFile(string path, string newFileName)

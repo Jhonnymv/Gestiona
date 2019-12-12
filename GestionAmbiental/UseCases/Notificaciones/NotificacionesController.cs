@@ -52,6 +52,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
             Responsable Marcobre{15}
             Responsable Contratista{16}
             Fecha Programada{17}
+            Codigo {18}
+            Id_Cabecera{19}
             */
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates","NuevaObservacion.html");
@@ -78,7 +80,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 observacion.Descripcion_Accion,
                 observacion.Responsable_Marcobre.Nombres+ " "+ observacion.Responsable_Marcobre.Apellidos,
                 observacion.Responsable_Contratista,
-                observacion.Fecha_Programada.ToShortDateString()
+                observacion.Fecha_Programada.ToShortDateString(),
+                info.Codigo,
+                IdCabecera
                 );
 
                 var evidencias_condicion = JArray.Parse(observacion.Evidencia_Condicion);
@@ -103,10 +107,10 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     msg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Control - Marcobre");
                     msg.BodyEncoding = Encoding.UTF8;
                     msg.Body = msgBody;
-                    foreach (var evidencia in listEvidencias_condicion)
+                    /*foreach (var evidencia in listEvidencias_condicion)
                     {
                         msg.Attachments.Add(new Attachment(evidencia));
-                    }
+                    }*/
                     mail.UseDefaultCredentials = false;
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                     mail.Credentials = MyCredentials;
@@ -151,6 +155,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
                         Fecha Programada{17}
                         Comentario de la Implementación{18}
                         Fecha Implementación {19}
+                        Codigo {20}
+                        Id_Cabecera{21}
                         */
             var msgBody = string.Format(templateReaded,
                 info.Area_Ejecutora,
@@ -172,7 +178,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.Responsable_Contratista,
                 info.Fecha_Programada.ToShortDateString(),
                 info.Comentario_Implementacion,
-                info.Fecha_Cierre
+                info.Fecha_Cierre,
+                info.Codigo,
+                info.Id_Inspeccion_Cabecera
                 );
             try
             {
@@ -188,14 +196,14 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Gestión Ambiental");
                 MyMsg.BodyEncoding = Encoding.UTF8;
                 MyMsg.Body = msgBody;
-                foreach (var evidencia in info.Evidencia_Condicion)
+                /*foreach (var evidencia in info.Evidencia_Condicion)
                 {
                     MyMsg.Attachments.Add(new Attachment(evidencia));
                 }
                 foreach (var evidencia in info.Evidencia_Implementacion)
                 {
                     MyMsg.Attachments.Add(new Attachment(evidencia));
-                }
+                }*/
                 MyMail.UseDefaultCredentials = false;
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;
@@ -239,6 +247,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
                         Fecha Implementación {19}                        
                         Comentario de la Verificación{20}
                         Fecha Verificación {21}
+                        Codigo {22}
+                        Id_Cabecera{23}
                         */
             var msgBody = string.Format(templateReaded,
                 info.Area_Ejecutora,
@@ -262,7 +272,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.Comentario_Implementacion,
                 info.Fecha_Cierre,
                 info.Comentario_Verificacion,
-                info.Fecha_Verificacion
+                info.Fecha_Verificacion,
+                info.Codigo,
+                info.Id_Inspeccion_Cabecera
                 );
             try
             {
@@ -272,20 +284,20 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMsg.Priority = MailPriority.Normal;
                 MyMail.EnableSsl = true;
                 MyMsg.To.Add(new MailAddress(info.Email_Responsable_Marcobre));
-                MyMsg.Subject = "Observación Implementada";
+                MyMsg.Subject = "Observación Rechazada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
                 MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Gestión Ambiental");
                 MyMsg.BodyEncoding = Encoding.UTF8;
                 MyMsg.Body = msgBody;
-                foreach (var evidencia in info.Evidencia_Condicion)
+                /*foreach (var evidencia in info.Evidencia_Condicion)
                 {
                     MyMsg.Attachments.Add(new Attachment(evidencia));
                 }
                 foreach (var evidencia in info.Evidencia_Implementacion)
                 {
                     MyMsg.Attachments.Add(new Attachment(evidencia));
-                }
+                }*/
                 MyMail.UseDefaultCredentials = false;
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;

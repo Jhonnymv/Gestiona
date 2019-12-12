@@ -28,6 +28,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string Inspectores { get; set; }
         public string Estado { get; set; }
         public List<InspeccionDetalle> Observaciones { get; set; }
+        public bool Permiso { get; set; }
 
         public InspeccionCabecera(
             int idCabecera, string codigo, string gerenEjecMar,

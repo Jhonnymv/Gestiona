@@ -24,6 +24,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechaz
             var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.Id_Inspeccion_Cabecera);
 
             var output = new ObservacionRechazadaOutput();
+            output.Codigo = cabecera.Codigo;
             output.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
             output.Id_Inspeccion_Detalle = observacion.Id_Inspeccion_Detalle;
             output.Area_Ejecutora = cabecera.GerenEjecMar;

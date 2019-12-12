@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Inspecciones;
 
@@ -10,14 +11,22 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
     public class ConsultarCabecera : IConsultarCabecera
     {
         private readonly ICabeceraInspeccionReadOnlyRepository _cabeceraInspeccionReadOnlyRepository;
-        public ConsultarCabecera(ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository)
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
+        public ConsultarCabecera(ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
-        }
-        public async Task<InspeccionCabecera> Execute(int idCabecera)
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository;
+    }
+        public async Task<InspeccionCabecera> Execute(int idCabecera,string usuario_red)
         {
             var output = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(idCabecera);
-            return output;
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
+            if (usuario.Id_Usuario.Equals(output.Id_Registrado_Por))
+                output.Permiso = true;
+            else
+                output.Permiso = false;
+
+                return output;
         }
     }
 }
