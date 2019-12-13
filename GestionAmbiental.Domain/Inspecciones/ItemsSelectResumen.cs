@@ -9,9 +9,9 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public List<Gerencia> GerenciaEjecutora { get; set; }
         public List<Gerencia> GerenciasEPCM { get; set; }
-        public List<Empresa_Contratista> EmpContratMarcobre { get; set; }
-        public List<Empresa_Contratista> EmpContratEPCM { get; set; }
-        public List<Tipo_Condicion> TipoCondicion { get; set; }
+        public List<Empresa> EmpContratMarcobre { get; set; }
+        public List<Empresa> EmpContratEPCM { get; set; }
+        public List<TipoCondicion> TipoCondicion { get; set; }
         public List<Usuario> Usuarios { get; set; }
     }
 }

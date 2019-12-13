@@ -6,7 +6,7 @@ namespace GestionAmbiental.Domain.Enum
     public enum InspeccionRol
     {
         Inspector = 1,
-        VerificadorMAP = 2,
-        VerificadorSSO = 3
+        AsesorMAP = 2,
+        AsesorSSO = 3
     }
 }

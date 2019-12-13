@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios
             _gestorUsuariosReadOnlyRepository = gestorUsuariosReadOnlyRepository;
         }
 
-        public async Task<InspeccionRol> Execute(string usuario_red)
+        public async Task<InspeccionRol?> Execute(string usuario_red)
         {
             return await _gestorUsuariosReadOnlyRepository.GetRolUsuario(usuario_red);
         }

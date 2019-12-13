@@ -25,14 +25,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
         {
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var cabecera = new NuevaInspeccionCabecera();
-            cabecera.Id_Gerencia_Ejecutora = gerenciaMarc;
-            cabecera.Id_Registrado_Por = usuario.Id_Usuario;
-            cabecera.Id_Empresa_Contratista = empresaMarc;
-            cabecera.Fecha_Inspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
-            cabecera.Lugar_Inspeccionado = lugar;
-            cabecera.Tipo_Inspeccion = tipoInspeccion;
-            cabecera.Id_Responsable_Lugar = responsableLugar;
-            cabecera.Responsable_Inspeccion = responsableInspeccion;
+            cabecera.IdGerencia = gerenciaMarc;
+            cabecera.IdRegistradoPor = usuario.IdUsuario;
+            cabecera.IdEmpresa = empresaMarc;
+            cabecera.FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
+            cabecera.LugarInspeccionado = lugar;
+            cabecera.TipoInspeccion = tipoInspeccion;
+            cabecera.IdResponsableArea = responsableLugar;
+            cabecera.ResponsableInspeccion = responsableInspeccion;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
             switch (opcion)

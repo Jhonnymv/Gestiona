@@ -24,10 +24,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.Cons
         public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo,string usuario_red)
         {
             var usuario = await _gestorUsuariosReadOnlyRepository.GetUsuario(usuario_red);
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(fecha, gerencia, codigo,usuario.Id_Usuario);
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(fecha, gerencia, codigo,usuario.IdUsuario);
             var output = new InspeccionesCabeceraOutput();
-            output.nCabeceras = cabeceras.Count;
-            output.cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
+            output.NCabeceras = cabeceras.Count;
+            output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
             return output;
         }
     }

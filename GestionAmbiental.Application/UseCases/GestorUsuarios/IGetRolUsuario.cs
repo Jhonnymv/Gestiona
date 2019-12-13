@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios
 {
     public interface IGetRolUsuario
     {
-        Task<InspeccionRol> Execute(string usuario_red);
+        Task<InspeccionRol?> Execute(string usuario_red);
     }
 }

@@ -22,10 +22,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task VerificarObservacionMA(NuevaInspeccionDetalle nuevaInspeccionDetalle,int Id_Usuario)
         {
-            var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.Id_Inspeccion_Detalle));
-            detalle.Comentario_MA = nuevaInspeccionDetalle.Comentario_MA;
+            var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.IdInspeccionDetalle));
+            detalle.Comentario_Verificacion = nuevaInspeccionDetalle.ComentarioVerificacion;
             detalle.Estado = nuevaInspeccionDetalle.Estado;
-            detalle.Fecha_Verificacion_MA = DateTime.Now;
+            detalle.Fecha_Verificacion = DateTime.Now;
             _context.Inspecciones_Detalle.Update(detalle);
             await _context.SaveChangesAsync();
 

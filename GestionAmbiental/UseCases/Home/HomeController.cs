@@ -25,20 +25,26 @@ namespace GestionAmbiental.Controllers
         public async Task<IActionResult> Index()
         {
             var rol = await _getRolUsuario.Execute(User.Identity.Name.Split("\\")[1]);
-            var cache_value = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
-            if (!cache_value.Equals(rol))
+            if (!rol.HasValue)
+                return RedirectToAction("NoAutorizado");
+            else
             {
-                // Set cache options.
-                var cacheEntryOptions = new MemoryCacheEntryOptions()
-                    // Keep in cache for this time, reset time if accessed.
-                    .SetSlidingExpiration(TimeSpan.FromDays(1));
+                var cache_value = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
+                if (!cache_value.Equals(rol))
+                {
+                    // Set cache options.
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        // Keep in cache for this time, reset time if accessed.
+                        .SetSlidingExpiration(TimeSpan.FromDays(1));
 
-                // Save data in cache.
-                _cache.Set(CacheKeys.RolUsuario, rol, cacheEntryOptions);
-            }
-            ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
+                    // Save data in cache.
+                    _cache.Set(CacheKeys.RolUsuario, rol, cacheEntryOptions);
+                }
 
-            return View();
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
+
+                return View();
+            }            
         }
 
         public IActionResult Privacy()
@@ -51,6 +57,10 @@ namespace GestionAmbiental.Controllers
         {
             return View();
             //return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public IActionResult NoAutorizado()
+        {
+            return View();
         }
     }
 }

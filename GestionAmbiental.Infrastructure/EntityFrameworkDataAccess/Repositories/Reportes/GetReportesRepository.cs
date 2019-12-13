@@ -121,7 +121,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             &&  observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .Select(x=>x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
-            var map = observaciones.Where(x=>id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+            var map = observaciones.Where(x=>id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo).ToList();
 
             var output = new List<Dimension>();
             if (map.Count == 3)
@@ -160,7 +160,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
 
-            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+            var sso = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo).ToList();
 
             var output = new List<Dimension>();
             if (sso.Count == 3)
@@ -273,22 +273,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var observacion in observaciones)
             {
                 var item = new DetalleObservacionXEstado();
-                var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_MA));
+                var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Asesor));
                 var responsable_marcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre));
                 var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(observacion.Id_Tipo_Condicion));
 
-                item.Id_Inspeccion_Cabecera = observacion.Id_Inspeccion_Cabecera;
+                item.IdInspeccionCabecera = observacion.Id_Inspeccion_Cabecera;
                 item.Codigo = inspecciones.FirstOrDefault(x => x.Id_Inspeccion_Cabecera.Equals(observacion.Id_Inspeccion_Cabecera)).Codigo;
 
-                item.Tipo_Observacion = observacion.Tipo_Observacion;
-                item.Asesor_MAP_SSO = asesor.Nombres.ToString() + " " + asesor.Apellidos.ToString();
-                item.Descripcion_Condicion = observacion.Descripcion_Condicion;
-                item.Tipo_Condicion = tipo_condicion.Descripcion;
-                item.Nivel_Riesgo = observacion.Nivel_Riesgo_Ambiental;
-                item.Descripcion_Accion = observacion.Descripcion_Accion;
-                item.Responsable_Marcobre = responsable_marcobre.Nombres + " " + responsable_marcobre.Apellidos;
-                item.Responsable_Contratista = observacion.Responsable_Contratista;
-                item.Fecha_Programada = observacion.Fecha_Programada;
+                item.TipoObservacion = observacion.Tipo_Observacion;
+                item.Asesor = asesor.Nombres.ToString() + " " + asesor.Apellidos.ToString();
+                item.DescripcionCondicion = observacion.Descripcion_Condicion;
+                item.TipoCondicion = tipo_condicion.Descripcion;
+                item.NivelRiesgo = observacion.Nivel_Riesgo;
+                item.DescripcionAccion = observacion.Descripcion_Accion;
+                item.ResponsableMarcobre = responsable_marcobre.Nombres + " " + responsable_marcobre.Apellidos;
+                item.ResponsableContratista = observacion.Responsable_Contratista;
+                item.FechaProgramada = observacion.Fecha_Programada;
 
                 output.Add(item);
             }
@@ -300,7 +300,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 
-            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo).ToList();
 
             var output = new List<List<Dimension>>();
 
@@ -340,7 +340,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 
-            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo_Ambiental).ToList();
+            var agrupado = observaciones.GroupBy(x => x.Nivel_Riesgo).ToList();
 
             var output = new List<List<Dimension>>();
 

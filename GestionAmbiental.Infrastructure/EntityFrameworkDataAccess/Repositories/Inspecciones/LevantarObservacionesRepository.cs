@@ -21,9 +21,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task LevantarObservacion(NuevaInspeccionDetalle nuevaInspeccionDetalle,int Id_Usuario)
         {
-            var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.Id_Inspeccion_Detalle));
-            detalle.Evidencia_Inspeccion = nuevaInspeccionDetalle.Evidencia_Inspeccion;
-            detalle.Comentario_Inspeccion = nuevaInspeccionDetalle.Comentario_Inspeccion;
+            var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.IdInspeccionDetalle));
+            detalle.Evidencia_Implementacion = nuevaInspeccionDetalle.EvidenciaImplementacion;
+            detalle.Comentario_Implementacion = nuevaInspeccionDetalle.ComentarioImplementacion;
             detalle.Estado = "Implementado";
             detalle.Fecha_Cierre = DateTime.Now;
             _context.Inspecciones_Detalle.Update(detalle);

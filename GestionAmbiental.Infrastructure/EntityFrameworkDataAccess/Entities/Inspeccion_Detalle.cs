@@ -14,8 +14,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Inspeccion_Detalle { get; set; }
         [Column(TypeName = "int")]
         public int Id_Inspeccion_Cabecera { get; set; }
-        [Column(TypeName = "varchar(15)")]
+        [Column(TypeName = "varchar(35)")]
         public string Tipo_Observacion { get; set; }
+        [Column(TypeName = "int")]
+        public int Id_Asesor { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Condicion { get; set; }
         [Column(TypeName = "int")]
@@ -23,7 +25,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "text")]
         public string Evidencia_Condicion { get; set; }
         [Column(TypeName = "varchar(10)")]
-        public string Nivel_Riesgo_Ambiental { get; set; }
+        public string Nivel_Riesgo { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Accion { get; set; }
         [Column(TypeName = "int")]
@@ -33,17 +35,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Programada { get; set; }
         [Column(TypeName = "text")]
-        public string Evidencia_Inspeccion { get; set; }
+        public string Evidencia_Implementacion { get; set; }
         [Column(TypeName = "varchar(250)")]
-        public string Comentario_Inspeccion { get; set; }
+        public string Comentario_Implementacion { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Cierre { get; set; }
-        [Column(TypeName = "int")]
-        public int Id_Responsable_MA { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? Fecha_Verificacion_MA{ get; set; }
+        public DateTime? Fecha_Verificacion{ get; set; }
         [Column(TypeName = "varchar(250)")]
-        public string Comentario_MA { get; set; }
+        public string Comentario_Verificacion { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
 

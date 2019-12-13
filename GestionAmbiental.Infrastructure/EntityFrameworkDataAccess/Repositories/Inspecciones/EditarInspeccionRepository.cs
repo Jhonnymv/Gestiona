@@ -22,16 +22,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera, int idUsuario)
         {
-            var cabeceraEntity = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Cabecera));
+            var cabeceraEntity = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Cabecera.Equals(cabecera.IdCabecera));
 
             cabeceraEntity.Codigo = cabecera.Codigo;
             cabeceraEntity.Objetivo = cabecera.Objetivo;
-            cabeceraEntity.Fecha_Inspeccion = cabecera.Fecha_Inspeccion;
-            cabeceraEntity.Id_Empresa_Contratista = cabecera.Id_Empresa_Contratista != 0 ? cabecera.Id_Empresa_Contratista: 1;
-            cabeceraEntity.Id_Gerencia_Ejecutora = cabecera.Id_Gerencia_Ejecutora != 0 ? cabecera.Id_Gerencia_Ejecutora : 1;
-            cabeceraEntity.Lugar_Inspeccionado = cabecera.Lugar_Inspeccionado;
-            cabeceraEntity.Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar;
-            cabeceraEntity.Inspectores = cabecera.Inspectores;
+            cabeceraEntity.Fecha_Inspeccion = cabecera.FechaInspeccion;
+            cabeceraEntity.Id_Empresa = cabecera.IdEmpresa != 0 ? cabecera.IdEmpresa: 1;
+            cabeceraEntity.Id_Gerencia = cabecera.IdGerencia != 0 ? cabecera.IdGerencia : 1;
+            cabeceraEntity.Area_Inspeccionada = cabecera.LugarInspeccionado;
+            cabeceraEntity.Id_Responsable_Area = cabecera.IdResponsableArea;
+            cabeceraEntity.Participantes = cabecera.Inspectores;
             cabeceraEntity.Estado = cabecera.Estado;
 
             _context.Inspecciones_Cabecera.Update(cabeceraEntity);
@@ -41,7 +41,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var bkp = JsonConvert.SerializeObject(cabeceraEntity);
             log.Bkp = bkp;
             log.Fecha = DateTime.Now;
-            log.Id_Inspeccion_Cabecera = cabecera.Id_Cabecera;
+            log.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
             log.Id_Usuario = idUsuario;
             log.Tipo = TipoAccion.UPDATE.ToString();
 
@@ -52,9 +52,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle, int idUsuario)
         {
-            var detalleEntity = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(detalle.Id_Inspeccion_Detalle));
+            var detalleEntity = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(detalle.IdInspeccionDetalle));
 
-            detalleEntity.Fecha_Programada = detalle.Fecha_Programada;
+            detalleEntity.Fecha_Programada = detalle.FechaProgramada;
             detalleEntity.Estado = detalle.Estado;
 
             _context.Inspecciones_Detalle.Update(detalleEntity);
@@ -64,7 +64,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var bkp = JsonConvert.SerializeObject(detalle);
             log.Bkp = bkp;
             log.Fecha = DateTime.Now;
-            log.Id_Inspeccion_Cabecera = detalle.Id_Inspeccion_Cabecera;
+            log.Id_Inspeccion_Cabecera = detalle.IdInspeccionCabecera;
             log.Id_Usuario = idUsuario;
             log.Tipo = TipoAccion.UPDATE.ToString();
 

@@ -10,7 +10,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public Context(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Entities.Empresa_Contratista> Empresas_Contratistas { get; set; }
+        public DbSet<Entities.Empresa> Empresas { get; set; }
         public DbSet<Entities.Gerencia> Gerencias { get; set; }
         public DbSet<Entities.Inspeccion_Cabecera> Inspecciones_Cabecera { get; set; }
         public DbSet<Entities.Inspeccion_Detalle> Inspecciones_Detalle { get; set; }
@@ -22,8 +22,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Entities.Empresa_Contratista>()
-               .ToTable("Tb_Empresa_Contratista");
+            modelBuilder.Entity<Entities.Empresa>()
+               .ToTable("Tb_Empresa");
             modelBuilder.Entity<Entities.Gerencia>()
                 .ToTable("Tb_Gerencia");
             modelBuilder.Entity<Entities.Inspeccion_Cabecera>()

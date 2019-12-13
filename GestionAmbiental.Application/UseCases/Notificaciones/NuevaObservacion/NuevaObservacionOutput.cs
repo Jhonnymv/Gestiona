@@ -27,29 +27,29 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
              Responsable Contratista{16}
              Fecha Programada{17}
              */
-        public int Id_Inspeccion_Cabecera { get; set; }
-        public int Id_Inspeccion_Detalle { get; set; }
+        public int IdInspeccionCabecera { get; set; }
+        public int IdInspeccionDetalle { get; set; }
         public string Codigo { get; set; }
-        public string Area_Ejecutora { get; set; }
+        public string AreaEjecutora { get; set; }
         public string Empresa { get; set; }
-        public string Area_Inspeccionada { get; set; }
-        public string Tipo_Inspeccion { get; set; }
-        public string Fecha_Inspeccion { get; set; }
-        public string Responsable_Lugar { get; set; }
+        public string AreaInspeccionada { get; set; }
+        public string TipoInspeccion { get; set; }
+        public string FechaInspeccion { get; set; }
+        public string ResponsableLugar { get; set; }
         public string ResponsableInspeccion { get; set; }
         public string Participantes { get; set; }
         public string Objetivo { get; set; }
-        public string Tipo_Observacion { get; set; }
-        public string Asesor_SSO_MAP { get; set; }
-        public string Descripcion_Condicion { get; set; }
-        public string Tipo_Condicion { get; set; }
-        public List<string> Evidencia_Condicion { get; set; }
-        public string Nivel_Riesgo_Ambiental { get; set; }
-        public string Descripcion_Accion { get; set; }
-        public string Responsable_Marcobre { get; set; }
-        public string Email_Responsable_Marcobre { get; set; }
-        public string Responsable_Contratista { get; set; }
-        public DateTime Fecha_Programada { get; set; }
+        public string TipoObservacion { get; set; }
+        public string Asesor { get; set; }
+        public string DescripcionCondicion { get; set; }
+        public string TipoCondicion { get; set; }
+        public List<string> EvidenciaCondicion { get; set; }
+        public string NivelRiesgo { get; set; }
+        public string DescripcionAccion { get; set; }
+        public string ResponsableMarcobre { get; set; }
+        public string EmailResponsableMarcobre { get; set; }
+        public string ResponsableContratista { get; set; }
+        public DateTime FechaProgramada { get; set; }
         public string Estado { get; set; }
     }
 }

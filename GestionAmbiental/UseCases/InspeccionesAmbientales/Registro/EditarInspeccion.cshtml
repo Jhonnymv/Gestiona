@@ -17,7 +17,7 @@
         <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
         <div class="row mb-2">
             <div class="col-lg-5">
-                <img src="~/img/datos_empleador_marcobre.png" style="width:inherit;" />
+                <img src="~/img/datos_empleador_marcobre.png" style="width:inherit;"/>
             </div>
         </div>
         <div class="row mb-2">
@@ -27,14 +27,14 @@
 
             <div class="col-lg-3">
                 <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
-                <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
+                <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora" disabled></select>
             </div>
             <div class="col-lg-2">
                 <label asp-for="Id_Empresa_Contratista"></label>
             </div>
             <div class="col-lg-5">
                 <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
-                <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
+                <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista" disabled>
                 </select>
             </div>
         </div>
@@ -44,7 +44,7 @@
             </div>
             <div class="col-lg-3">
                 <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
-                <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
+                <input type="text" class="form-control" asp-for="Lugar_Inspeccionado" disabled>
             </div>
 
             <div class="col-lg-2">
@@ -52,7 +52,7 @@
             </div>
             <div class="col-lg-5">
                 <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
-                <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
+                <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion" disabled></select>
             </div>
 
         </div>
@@ -62,21 +62,21 @@
             </div>
             <div class="col-lg-3">
                 <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
-                <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
+                <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar" disabled></select>
             </div>
             <div class="col-lg-2">
                 <label asp-for="Hora_Inspeccion"></label>
             </div>
             <div class="col-lg-2">
                 <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
-                <input type="time" class="form-control" asp-for="Hora_Inspeccion">
+                <input type="time" class="form-control" asp-for="Hora_Inspeccion" disabled>
             </div>
             <div class="col-lg-1">
                 <label asp-for="Fecha_Inspeccion"></label>
             </div>
             <div class="col-lg-2">
                 <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
-                <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
+                <input type="date" class="form-control" asp-for="Fecha_Inspeccion" disabled>
             </div>
         </div>
         <div class="row mb-2">
@@ -85,14 +85,14 @@
             </div>
             <div class="col-lg-3">
                 <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
+                <input type="text" class="form-control" asp-for="Responsable_Inspeccion" disabled>
             </div>
             <div class="col-lg-2">
                 <label asp-for="Inspectores"></label>
             </div>
             <div class="col-lg-5">
                 <span class="text-danger" asp-validation-for="Inspectores"></span>
-                <input type="text" class="form-control" asp-for="Inspectores">
+                <input type="text" class="form-control" asp-for="Inspectores" disabled>
             </div>
         </div>
         <div class="row mb-2">
@@ -101,7 +101,7 @@
             </div>
             <div class="col-lg-10">
                 <span class="text-danger" asp-validation-for="Objetivo"></span>
-                <input type="text" class="form-control" asp-for="Objetivo">
+                <input type="text" class="form-control" asp-for="Objetivo" disabled>
             </div>
         </div>
         @if (Model.Estado.Equals("Pendiente"))
@@ -215,19 +215,21 @@
     <script type="text/javascript">
         $(document).ready(function () {
             console.log(@(ViewBag.Permiso.ToString().ToLower()));
-           if ('@Model.Estado' != "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
+            console.log('@Model.Estado');
+           
+           if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
                 //disable inputs
-                $('#Id_Gerencia_Ejecutora').prop('disabled', 'disabled');
-                $('#Id_Empresa_Contratista').prop('disabled', 'disabled');
-                $('#Id_Responsable_Lugar').prop('disabled', 'disabled');
-                $('#Id_Responsable_MA').prop('disabled', 'disabled');
-                $('#Lugar_Inspeccionado').prop('readonly', 'readonly');
-                $('#Inspectores').prop('readonly', 'readonly');
-                $('#Hora_Inspeccion').prop('readonly', 'readonly');
-                $('#Fecha_Inspeccion').prop('readonly', 'readonly');
-                $('#Responsable_Inspeccion').prop('readonly', 'readonly');
-                $('#Objetivo').prop('readonly', 'readonly');
-                $('#Tipo_Inspeccion').prop('disabled', 'disabled');
+                $('#Id_Gerencia_Ejecutora').prop('disabled', false);
+                $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Responsable_Lugar').prop('disabled', false);
+                $('#Id_Responsable_MA').prop('disabled', false);
+                $('#Lugar_Inspeccionado').prop('disabled', false);
+                $('#Inspectores').prop('disabled', false);
+                $('#Hora_Inspeccion').prop('disabled', false);
+                $('#Fecha_Inspeccion').prop('disabled', false);
+                $('#Responsable_Inspeccion').prop('disabled', false);
+                $('#Objetivo').prop('disabled', false);
+                $('#Tipo_Inspeccion').prop('disabled', false);
             }
 
     });

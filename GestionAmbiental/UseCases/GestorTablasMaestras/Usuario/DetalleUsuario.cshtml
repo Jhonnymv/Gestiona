@@ -1,0 +1,132 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Usuario.UsuarioModel
+@{
+    ViewData["Title"] = "DetalleUsuario";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Información de Usuario</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorUsuarios" asp-action="EditarUsuario">
+            <input type="hidden" asp-for="IdUsuario">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Nombres"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Nombres"></span>
+                    <input type="text" class="form-control" asp-for="Nombres" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Apellidos"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Apellidos"></span>
+                    <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="IdRol"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="IdRol"></span>
+                    <select class="form-control" asp-items="@ViewBag.Roles" asp-for="IdRol" disabled>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="UsuarioRed"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="UsuarioRed"></span>
+                    <input type="text" class="form-control" asp-for="UsuarioRed" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                    <input type="text" class="form-control" asp-for="Email" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="IdSuperior"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="IdSuperior"></span>
+                    <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="IdSuperior" disabled>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estado"></span>
+                    <select class="form-control" asp-for="Estado" disabled>
+                        <option value="ACT">Activo</option>
+                        <option value="INA">Inactivo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorUsuarios" asp-action="Usuarios" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{ 
+<script>
+    $("#btnEditar").on('click',function(){
+        $("#bntsEditar").show();
+        $("#bntsDetalle").hide();
+        $("#btnVolver").prop('disabled', true);
+        $("#btnEditar").prop('disabled', true);        
+        $("#btnCancelar").prop('disabled', false);
+        $("#btnGuardar").prop('disabled', false);
+        //Habilitar inputs
+        $("#Nombres").prop('disabled', false);
+        $("#Apellidos").prop('disabled', false);
+        $("#IdRol").prop('disabled', false);
+        $("#UsuarioRed").prop('disabled', false);
+        $("#Email").prop('disabled', false);
+        $("#IdSuperior").prop('disabled', false);
+        $("#Estado").prop('disabled', false);
+
+    });
+    
+    $("#btnCancelar").on('click',function(){
+        $("#bntsEditar").hide();
+        $("#bntsDetalle").show();
+        $("#btnVolver").prop('disabled', false);
+        $("#btnEditar").prop('disabled', false);        
+        $("#btnCancelar").prop('disabled', true);
+        $("#btnGuardar").prop('disabled', true);
+        //Deshabilitar inputs        
+        $("#Nombres").prop('disabled', true);
+        $("#Apellidos").prop('disabled', true);
+        $("#IdRol").prop('disabled', true);
+        $("#UsuarioRed").prop('disabled', true);
+        $("#Email").prop('disabled', true);
+        $("#IdSuperior").prop('disabled', true);
+        $("#Estado").prop('disabled', true);
+    });
+</script>
+}

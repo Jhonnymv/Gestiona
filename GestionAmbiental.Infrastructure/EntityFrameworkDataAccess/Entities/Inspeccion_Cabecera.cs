@@ -18,21 +18,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "int")]
         public int Id_Registrado_Por { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Gerencia_Ejecutora { get; set; }
+        public int Id_Gerencia { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Empresa_Contratista { get; set; }
+        public int Id_Empresa { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Inspeccion { get; set; }
         [Column(TypeName = "varchar(100)")]
-        public string Lugar_Inspeccionado { get; set; }
+        public string Area_Inspeccionada { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Tipo_Inspeccion { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Responsable_Lugar { get; set; }
+        public int Id_Responsable_Area { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Responsable_Inspeccion { get; set; }
         [Column(TypeName = "varchar(250)")]
-        public string Inspectores { get; set; }
+        public string Participantes { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Objetivo { get; set; }
         [Column(TypeName = "varchar(15)")]

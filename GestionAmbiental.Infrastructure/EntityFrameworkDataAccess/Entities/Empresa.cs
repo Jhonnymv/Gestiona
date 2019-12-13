@@ -7,11 +7,11 @@ using System.Text;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
 {
-    [Table("Tb_Empresa_Contratista")]
-    public class Empresa_Contratista
+    [Table("Tb_Empresa")]
+    public class Empresa
     {
         [Key]
-        public int Id_Empresa_Contratista { get; set; }
+        public int Id_Empresa { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Razon_Social { get; set; }
     }

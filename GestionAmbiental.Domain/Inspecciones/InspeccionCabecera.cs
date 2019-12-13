@@ -9,23 +9,23 @@ namespace GestionAmbiental.Domain.Inspecciones
     {
         public int IdCabecera { get; set; }
         public string Codigo { get; set; }
-        public int Id_Registrado_Por {get;set;}
+        public int IdRegistradoPor {get;set;}
         public string Objetivo { get; set; }
-        public int idGerenciaEjecMar { get; set; }
-        public string GerenEjecMar { get; set; }
-        public int idEmpContratMarc { get; set; }
-        public string EmpContratMarc { get; set; }
-        public string Tipo_Inspeccion { get; set; }
-        public string LugarInspec { get; set; }
-        public int idResponsableLugar { get; set; }
-        public Usuario Responsable_Lugar { get; set; }
-        public DateTime FechaInspec { get; set; }
+        public int IdGerencia { get; set; }
+        public string Gerencia { get; set; }
+        public int IdEmpresa { get; set; }
+        public string Empresa { get; set; }
+        public string TipoInspeccion { get; set; }
+        public string AreaInspeccionada { get; set; }
+        public int IdResponsableArea { get; set; }
+        public Usuario ResponsableArea { get; set; }
+        public DateTime FechaInspeccion { get; set; }
         public int NObservaciones { get; set; }
         public int NObsImplementadas { get; set; }
         public int NObsAprobadas { get; set; }
         public int NObsRechazadas { get; set; }
-        public string Responsable_Inspeccion { get; set; }
-        public string Inspectores { get; set; }
+        public string ResponsableInspeccion { get; set; }
+        public string Participantes { get; set; }
         public string Estado { get; set; }
         public List<InspeccionDetalle> Observaciones { get; set; }
         public bool Permiso { get; set; }
@@ -37,10 +37,10 @@ namespace GestionAmbiental.Domain.Inspecciones
         {
             IdCabecera = idCabecera;
             Codigo = codigo;
-            GerenEjecMar = gerenEjecMar;
-            EmpContratMarc = empContratMarc;
-            LugarInspec = lugarInspec;
-            FechaInspec = fechaInspec;
+            Gerencia = gerenEjecMar;
+            Empresa = empContratMarc;
+            AreaInspeccionada = lugarInspec;
+            FechaInspeccion = fechaInspec;
             NObservaciones = nObservaciones;
             Estado = estado;
         }
@@ -60,15 +60,14 @@ namespace GestionAmbiental.Domain.Inspecciones
             IdCabecera = idCabecera;
             Codigo = codigo;
             Objetivo = objetivo;
-            GerenEjecMar = gerenEjecMar;
-            EmpContratMarc = empContratMarc;
-            LugarInspec = lugarInspec;
-            Responsable_Lugar = responsable_Lugar;
-            FechaInspec = fechaInspec;
-            Inspectores = inspectores;
+            Gerencia = gerenEjecMar;
+            Empresa = empContratMarc;
+            AreaInspeccionada = lugarInspec;
+            ResponsableArea = responsable_Lugar;
+            FechaInspeccion = fechaInspec;
+            Participantes = inspectores;
             Estado = estado;
         }
-
         public InspeccionCabecera()
         {
         }

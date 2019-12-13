@@ -14,11 +14,13 @@ using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
 {
     public class InspeccionesVerificacionMAController : Controller
     {
+        private IMemoryCache _cache;
         private readonly ISelectItems _selectItems;
         private readonly IConsultarCabecerasVerificacion _consultarCabecerasVerificacion;
         private readonly IConsultarCabeceraVerificacion _consultarCabeceraVerificacion;
@@ -32,6 +34,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private const string CarpetaEvidenciasImplementacion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
 
         public InspeccionesVerificacionMAController(
+            IMemoryCache cache,
             ISelectItems selectItems,
             IConsultarCabecerasVerificacion consultarCabecerasVerificacion, 
             IConsultarCabeceraVerificacion consultarCabeceraVerificacion, 
@@ -40,6 +43,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             IVerificarObservacionMA verificarObservacion,
             IHostingEnvironment hostingEnvironment)
         {
+            _cache = cache;
             _selectItems = selectItems;
             _consultarCabecerasVerificacion = consultarCabecerasVerificacion;
             _consultarCabeceraVerificacion = consultarCabeceraVerificacion;
@@ -51,147 +55,175 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
 
         public async Task<IActionResult> Resumen()
         {
-            var selectItemsResumen = await _selectItems.ItemVistaResumen();
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-            var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Gerencia.ToString(), Text = g.Descripcion }).ToList();
+                var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
 
-            filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            ViewBag.Filtro = filtroGerencias;
+                ViewBag.Filtro = filtroGerencias;
 
-            return View();
+                return View();
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
         {
-            DateTime fecha;
-            if (filtroFecha != null)
-                fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
             else
-                fecha = (DateTime)SqlDateTime.MinValue;
+            {
+                DateTime fecha;
+                if (filtroFecha != null)
+                    fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
+                else
+                    fecha = (DateTime)SqlDateTime.MinValue;
 
-            filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabecerasVerificacion.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
-            var filasTabla = "";
-            var paginador = "";
-            int nPaginas = datosTabla.nCabeceras % rpp != 0 ? (datosTabla.nCabeceras / rpp) + 1 : datosTabla.nCabeceras / rpp;
-            if (datosTabla.nCabeceras > 0)
-            {
-                foreach (var fila in datosTabla.cabeceras)
+                filtroCodigo = filtroCodigo ?? "";
+                var datosTabla = await _consultarCabecerasVerificacion.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
+                var filasTabla = "";
+                var paginador = "";
+                int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
+                if (datosTabla.NCabeceras > 0)
                 {
-                    filasTabla += "<tr>";
-                    /*switch (fila.Estado)
+                    foreach (var fila in datosTabla.Cabeceras)
                     {
-                        case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
-                        case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
-                        default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }*/
-                    filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
-                    filasTabla += "<td>" + fila.GerenEjecMar + "</td>";
-                    filasTabla += "<td>" + fila.EmpContratMarc + "</td>";
-                    filasTabla += "<td>" + fila.LugarInspec + "</td>";
-                    filasTabla += "<td>" + fila.FechaInspec.ToString() + "</td>";
-                    filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "</tr>";
+                        filasTabla += "<tr>";
+                        /*switch (fila.Estado)
+                        {
+                            case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
+                            case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
+                            default: filasTabla += "<td class=\"alert-column\"></td>"; break;
+                        }*/
+                        filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
+                        filasTabla += "<td>" + fila.Gerencia + "</td>";
+                        filasTabla += "<td>" + fila.Empresa + "</td>";
+                        filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
+                        filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
+                        filasTabla += "<td>" + fila.NObservaciones + "</td>";
+                        filasTabla += "</tr>";
+                    }
+                    paginador += "<ul class=\"pagination\">";
+                    for (int i = 1; i <= nPaginas; i++)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    }
+                    paginador += "</ul>";
                 }
-                paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                else
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    filasTabla = "Sin datos";
                 }
-                paginador += "</ul>";
+                dynamic response = new
+                {
+                    Data = filasTabla,
+                    Paginador = paginador
+                };
+                return Ok(response);
             }
-            else
-            {
-                filasTabla = "Sin datos";
-            }
-            dynamic response = new
-            {
-                Data = filasTabla,
-                Paginador = paginador
-            };
-            return Ok(response);
         }
         public async Task<IActionResult> VerificarInspeccion(int IdCabecera)
         {
-            if (IdCabecera != 0)
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
             {
-                var cabecera = await _consultarCabeceraVerificacion.Execute(IdCabecera);
-                ViewBag.Cabecera = cabecera;
-                var filaObservacion = "";
-                var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdCabecera,User.Identity.Name);
-                foreach (var observacion in observaciones)
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                if (IdCabecera != 0)
                 {
-                    //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
-                    //{
-                    var evidencia = "<label style=\"width:110px\">";
-                    var evidencia_implementacion = "<label style=\"width:110px\">";
-                    for (int i = 0; i < observacion.Evidencia_Condicion.Count; i++)
-                        evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?fileName=" + observacion.Evidencia_Condicion[i] + "&tipo=condicion\">Evidencia</a>";
-                    evidencia += "</label>";
-                    for (int i = 0; i < observacion.Evidencia_Inspeccion.Count; i++)
+                    var cabecera = await _consultarCabeceraVerificacion.Execute(IdCabecera);
+                    ViewBag.Cabecera = cabecera;
+                    var filaObservacion = "";
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdCabecera, User.Identity.Name);
+                    foreach (var observacion in observaciones)
                     {
-                        evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.Evidencia_Inspeccion[i] + "&tipo=implementacion\">Evidencia</a>";
+                        //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
+                        //{
+                        var evidencia = "<label style=\"width:110px\">";
+                        var evidencia_implementacion = "<label style=\"width:110px\">";
+                        for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
+                            evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
+                        evidencia += "</label>";
+                        for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
+                        {
+                            evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.EvidenciaImplementacion[i] + "&tipo=implementacion\">Evidencia</a>";
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
-                        filaObservacion += "<td style=\"display: none; \">" + observacion.Id_Inspeccion_Detalle + "</td>";
-                        filaObservacion += "<td>" + observacion.Tipo_Inspeccion + "</td>";
-                        filaObservacion += "<td>" + observacion.Asesor_MA_Seguridad + "</td>";
-                        filaObservacion += "<td>" + observacion.Descripcion_Condicion + "</td>";
-                        filaObservacion += "<td><label style=\"width:250px\">" + observacion.Tipo_Condicion + "</label></td>";
+                        filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
+                        filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
+                        filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
+                        filaObservacion += "<td><label style=\"width:250px\">" + observacion.TipoCondicion + "</label></td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
-                        switch (observacion.Nivel_Riesgo_Ambiental)
+                        switch (observacion.NivelRiesgo)
                         {
-                            case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.Nivel_Riesgo_Ambiental + "</span></td>"; break;
-                            default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.Nivel_Riesgo_Ambiental + "</span>"; break;
+                            case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.NivelRiesgo + "</span>"; break;
                         }
-                        filaObservacion += "<td><label style=\"width:200px\">" + observacion.Descripcion_Accion + "</label></td>";
-                        filaObservacion += "<td>" + observacion.Responsable_Marcobre + "</td>";
-                        filaObservacion += "<td>" + observacion.Responsable_Contratista + "</td>";
-                        filaObservacion += "<td>" + observacion.Fecha_Programada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td><label style=\"width:200px\">" + observacion.DescripcionAccion + "</label></td>";
+                        filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
+                        filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
+                        filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
-                        filaObservacion += "<td>" + observacion.Comentario_Inspeccion + "</td>";
-                    if (observacion.Evidencia_Inspeccion.Count!=0 && observacion.Estado!=EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
-                        filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.Id_Inspeccion_Detalle.ToString() + "\">" + "Verificar" + "</a></td>";
-                    else
-                        filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + observacion.Id_Inspeccion_Cabecera.ToString() + "\" disabled>" + "Verificar" + "</button></td>";
-                    filaObservacion += "</tr>";
+                        filaObservacion += "<td>" + observacion.ComentarioImplementacion + "</td>";
+                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.IdInspeccionDetalle.ToString() + "\">" + "Verificar" + "</a></td>";
+                        else
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + observacion.IdInspeccionCabecera.ToString() + "\" disabled>" + "Verificar" + "</button></td>";
+                        filaObservacion += "</tr>";
                     }
-                //}
-                ViewBag.NObservaciones = observaciones.ToList().Count;
-                ViewBag.ContenidoTabla = filaObservacion;
+                    //}
+                    ViewBag.NObservaciones = observaciones.ToList().Count;
+                    ViewBag.ContenidoTabla = filaObservacion;
+                }
+                return View();
             }
-            return View();
         }
         public async Task<IActionResult> VerificarObservacion(int IdObservacion)
         {
-            ViewBag.IdObservacion = IdObservacion;
-            var observacion = await _consultarDetalleVerificacion.Execute(IdObservacion);
-            var model = new VerificarObservacionMAModel();
-            model.idObservacion = observacion.Id_Inspeccion_Detalle;
-            model.idCabecera = observacion.Id_Inspeccion_Cabecera;
-            model.TipoInspeccion = observacion.Tipo_Inspeccion;
-            model.Asesor_MA_Seguridad = observacion.Asesor_MA_Seguridad;
-            model.CondicionIdentificada = observacion.Descripcion_Condicion;
-            model.TipoCondicion = observacion.Tipo_Condicion;
-            model.Evidencias = observacion.Evidencia_Condicion;
-            model.NiveRiesgo = observacion.Nivel_Riesgo_Ambiental;
-            model.AccionTomada = observacion.Descripcion_Accion;
-            model.ResponsableMarc = observacion.Responsable_Marcobre;
-            model.ResponsableCont = observacion.Responsable_Contratista;
-            model.FechaProgramada = observacion.Fecha_Programada.ToShortDateString();
-            model.EvidenciasInspeccion = observacion.Evidencia_Inspeccion;
-            model.ComentarioImplementacion = observacion.Comentario_Inspeccion;
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                ViewBag.IdObservacion = IdObservacion;
+                var observacion = await _consultarDetalleVerificacion.Execute(IdObservacion);
+                var model = new VerificarObservacionMAModel();
+                model.idObservacion = observacion.IdInspeccionDetalle;
+                model.idCabecera = observacion.IdInspeccionCabecera;
+                model.TipoInspeccion = observacion.TipoInspeccion;
+                model.Asesor_MA_Seguridad = observacion.AsesorMASeguridad;
+                model.CondicionIdentificada = observacion.DescripcionCondicion;
+                model.TipoCondicion = observacion.TipoCondicion;
+                model.Evidencias = observacion.EvidenciaCondicion;
+                model.NiveRiesgo = observacion.NivelRiesgo;
+                model.AccionTomada = observacion.DescripcionAccion;
+                model.ResponsableMarc = observacion.ResponsableMarcobre;
+                model.ResponsableCont = observacion.ResponsableContratista;
+                model.FechaProgramada = observacion.FechaProgramada.ToShortDateString();
+                model.EvidenciasInspeccion = observacion.EvidenciaImplementacion;
+                model.ComentarioImplementacion = observacion.ComentarioImplementacion;
 
-            return View(model);
+                return View(model);
+            }
         }
         [HttpPost]
         public async Task<IActionResult> VerificarObservacion(VerificarObservacionMAModel model)
@@ -209,33 +241,40 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         }
         public IActionResult Download(string fileName, string tipo)
         {
-            try
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
             {
-                /* Create an FTP Request */
-                FtpWebRequest ftpRequest;
-                if (tipo == "condicion")
-                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + fileName);
-                else
-                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + fileName);
-                /* Log in to the FTP Server with the User Name and Password Provided */
-                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
-                /* When in doubt, use these options */
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-                /* Specify the Type of FTP Request */
-                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                /* Establish Return Communication with the FTP Server */
-                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                /* Get the FTP Server's Response Stream */
-                var ftpStream = ftpResponse.GetResponseStream();
-
-
-                return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
+                return RedirectToAction("NoAutorizado", "Home");
             }
-            catch (Exception)
+            else
             {
-                return Content("No se encontró el archivo: ");
+                try
+                {
+                    /* Create an FTP Request */
+                    FtpWebRequest ftpRequest;
+                    if (tipo == "condicion")
+                        ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + fileName);
+                    else
+                        ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + fileName);
+                    /* Log in to the FTP Server with the User Name and Password Provided */
+                    ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                    /* When in doubt, use these options */
+                    ftpRequest.UseBinary = true;
+                    ftpRequest.UsePassive = true;
+                    ftpRequest.KeepAlive = true;
+                    /* Specify the Type of FTP Request */
+                    ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                    /* Establish Return Communication with the FTP Server */
+                    var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                    /* Get the FTP Server's Response Stream */
+                    var ftpStream = ftpResponse.GetResponseStream();
+
+
+                    return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
+                }
+                catch (Exception)
+                {
+                    return Content("No se encontró el archivo: ");
+                }
             }
         }
         private string GetContentType(string path)

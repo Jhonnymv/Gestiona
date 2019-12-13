@@ -5,7 +5,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
 {
     public class InspeccionesCabeceraOutput
     {
-        public List<InspeccionCabecera> cabeceras { get; set; }
-        public int nCabeceras { get; set; }
+        public List<InspeccionCabecera> Cabeceras { get; set; }
+        public int NCabeceras { get; set; }
     }
 }

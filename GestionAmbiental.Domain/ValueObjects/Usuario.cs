@@ -6,21 +6,34 @@ namespace GestionAmbiental.Domain.ValueObjects
 {
     public class Usuario
     {
-        public int Id_Usuario { get; set; }
-        public int Id_Rol { get; set; }
-        public string usuario_red { get; set; }
+        public int IdUsuario { get; set; }
+        public int IdRol { get; set; }
+        public string UsuarioRed { get; set; }
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string Email { get; set; }
-        public int? Id_Superior { get; set; }
+        public int? IdSuperior { get; set; }
+        public string Estado { get; set; }
 
         public Usuario(int id_Usuario, int id_Rol, string nombres, string apellidos, string email)
         {
-            Id_Usuario = id_Usuario;
-            Id_Rol = id_Rol;
+            IdUsuario = id_Usuario;
+            IdRol = id_Rol;
             Nombres = nombres;
             Apellidos = apellidos;
             Email = email;
+        }
+
+        public Usuario(int idUsuario, int idRol, string usuarioRed, string nombres, string apellidos, string email, int? idSuperior, string estado)
+        {
+            IdUsuario = idUsuario;
+            IdRol = idRol;
+            Nombres = nombres;
+            Apellidos = apellidos;
+            Email = email;
+            UsuarioRed = usuarioRed;
+            IdSuperior = idSuperior;
+            Estado = estado;
         }
 
         public Usuario()

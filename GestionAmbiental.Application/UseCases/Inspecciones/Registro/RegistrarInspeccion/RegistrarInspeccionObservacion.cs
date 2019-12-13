@@ -29,17 +29,17 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
 
             var detalle = new NuevaInspeccionDetalle
             {
-                Id_Inspeccion_Cabecera = Id_Inspeccion_Cabecera,
-                Tipo_Inspeccion = Tipo_Inspeccion,
-                Id_Asesor_MA_Seguridad = Asesor_MA_Seguridad,
-                Descripcion_Condicion = Descripcion_Condicion,
-                Id_Tipo_Condicion = Id_Tipo_Condicion,
-                Nivel_Riesgo_Ambiental = Nivel_Riesgo_Ambiental,
-                Evidencia_Condicion = evidencia,
-                Descripcion_Accion = Descripcion_Accion,
-                Id_Responsable_Marcobre = Id_Responsable_Marcobre,
-                Responsable_Contratista = Responsable_Contratista,
-                Fecha_Programada = Convert.ToDateTime(Fecha_Programada)
+                IdInspeccionCabecera = Id_Inspeccion_Cabecera,
+                TipoInspeccion = Tipo_Inspeccion,
+                IdAsesorMASeguridad = Asesor_MA_Seguridad,
+                DescripcionCondicion = Descripcion_Condicion,
+                IdTipoCondicion = Id_Tipo_Condicion,
+                NivelRiesgo = Nivel_Riesgo_Ambiental,
+                EvidenciaCondicion = evidencia,
+                DescripcionAccion = Descripcion_Accion,
+                IdResponsableMarcobre = Id_Responsable_Marcobre,
+                ResponsableContratista = Responsable_Contratista,
+                FechaProgramada = Convert.ToDateTime(Fecha_Programada)
             };
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 

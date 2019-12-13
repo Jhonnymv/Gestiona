@@ -63,29 +63,29 @@ namespace GestionAmbiental.UseCases.Notificaciones
             foreach (var observacion in info.Observaciones)
             {
                 var msgBody = string.Format(templateReaded,
-                info.GerenEjecMar,
-                info.EmpContratMarc,
-                info.LugarInspec,
-                info.Tipo_Inspeccion,
-                info.FechaInspec,
-                info.Responsable_Lugar.Nombres+" "+info.Responsable_Lugar.Apellidos,
-                info.Responsable_Inspeccion,
-                info.Inspectores,
+                info.Gerencia,
+                info.Empresa,
+                info.AreaInspeccionada,
+                info.TipoInspeccion,
+                info.FechaInspeccion,
+                info.ResponsableArea.Nombres+" "+info.ResponsableArea.Apellidos,
+                info.ResponsableInspeccion,
+                info.Participantes,
                 info.Objetivo,
-                observacion.Tipo_Observacion,
-                observacion.Responsable_MA.Nombres+" "+ observacion.Responsable_MA.Apellidos,
-                observacion.Descripcion_Condicion,
-                observacion.Tipo_Condicion.Descripcion,
-                observacion.Nivel_Riesgo_Ambiental,
-                observacion.Descripcion_Accion,
-                observacion.Responsable_Marcobre.Nombres+ " "+ observacion.Responsable_Marcobre.Apellidos,
-                observacion.Responsable_Contratista,
-                observacion.Fecha_Programada.ToShortDateString(),
+                observacion.TipoObservacion,
+                observacion.Asesor.Nombres+" "+ observacion.Asesor.Apellidos,
+                observacion.DescripcionCondicion,
+                observacion.TipoCondicion.Descripcion,
+                observacion.NivelRiesgo,
+                observacion.DescripcionAccion,
+                observacion.ResponsableMarcobre.Nombres+ " "+ observacion.ResponsableMarcobre.Apellidos,
+                observacion.ResponsableContratista,
+                observacion.FechaProgramada.ToShortDateString(),
                 info.Codigo,
                 IdCabecera
                 );
 
-                var evidencias_condicion = JArray.Parse(observacion.Evidencia_Condicion);
+                var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);
                 var listEvidencias_condicion = new List<string>();
                 foreach (var evidencia in evidencias_condicion)
                 {
@@ -99,8 +99,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     mail.Host = "smtp.gmail.com";
                     msg.Priority = MailPriority.Normal;
                     mail.EnableSsl = true;
-                    msg.To.Add(new MailAddress(observacion.Responsable_Marcobre.Email));
-                    msg.To.Add(new MailAddress(observacion.Responsable_MA.Email));
+                    msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                    msg.To.Add(new MailAddress(observacion.Asesor.Email));
                     msg.Subject = "Nueva Observacion Asignada";
                     msg.SubjectEncoding = Encoding.UTF8;
                     msg.IsBodyHtml = true;
@@ -115,7 +115,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
-                    await mail.SendMailAsync(msg);
+                    //await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();
@@ -159,28 +159,28 @@ namespace GestionAmbiental.UseCases.Notificaciones
                         Id_Cabecera{21}
                         */
             var msgBody = string.Format(templateReaded,
-                info.Area_Ejecutora,
+                info.AreaEjecutora,
                 info.Empresa,
-                info.Area_Inspeccionada,
-                info.Tipo_Inspeccion,
-                info.Fecha_Inspeccion,
-                info.Responsable_Lugar,
+                info.AreaInspeccionada,
+                info.TipoInspeccion,
+                info.FechaInspeccion,
+                info.ResponsableLugar,
                 info.ResponsableInspeccion,
                 info.Participantes,
                 info.Objetivo,
-                info.Tipo_Observacion,
-                info.Asesor_SSO_MAP,
-                info.Descripcion_Condicion,
-                info.Tipo_Condicion,
-                info.Nivel_Riesgo_Ambiental,
-                info.Descripcion_Accion,
-                info.Responsable_Marcobre,
-                info.Responsable_Contratista,
-                info.Fecha_Programada.ToShortDateString(),
-                info.Comentario_Implementacion,
-                info.Fecha_Cierre,
+                info.TipoObservacion,
+                info.Asesor,
+                info.DescripcionCondicion,
+                info.TipoCondicion,
+                info.NivelRiesgo,
+                info.DescripcionAccion,
+                info.ResponsableMarcobre,
+                info.ResponsableContratista,
+                info.FechaProgramada.ToShortDateString(),
+                info.ComentarioImplementacion,
+                info.FechaCierre,
                 info.Codigo,
-                info.Id_Inspeccion_Cabecera
+                info.IdInspeccionCabecera
                 );
             try
             {
@@ -189,7 +189,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMail.Host = "smtp.gmail.com";
                 MyMsg.Priority = MailPriority.Normal;
                 MyMail.EnableSsl = true;
-                MyMsg.To.Add(new MailAddress(info.Email_Asesor_MAP_SSO));
+                MyMsg.To.Add(new MailAddress(info.EmailAsesor));
                 MyMsg.Subject = "Observación Implementada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
@@ -208,14 +208,14 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;
                 MyMail.EnableSsl = true;
-                await MyMail.SendMailAsync(MyMsg);
+                //await MyMail.SendMailAsync(MyMsg);
                 MyMsg.Attachments.Dispose();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = info.Id_Inspeccion_Cabecera });
+            return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = info.IdInspeccionCabecera });
         }
         public async Task<IActionResult> NotificarObservacionRechazada(int IdObservacion)
         {
@@ -251,30 +251,30 @@ namespace GestionAmbiental.UseCases.Notificaciones
                         Id_Cabecera{23}
                         */
             var msgBody = string.Format(templateReaded,
-                info.Area_Ejecutora,
+                info.AreaEjecutora,
                 info.Empresa,
-                info.Area_Inspeccionada,
-                info.Tipo_Inspeccion,
-                info.Fecha_Inspeccion,
-                info.Responsable_Lugar,
+                info.AreaInspeccionada,
+                info.TipoInspeccion,
+                info.FechaInspeccion,
+                info.ResponsableLugar,
                 info.ResponsableInspeccion,
                 info.Participantes,
                 info.Objetivo,
-                info.Tipo_Observacion,
-                info.Asesor_SSO_MAP,
-                info.Descripcion_Condicion,
-                info.Tipo_Condicion,
-                info.Nivel_Riesgo_Ambiental,
-                info.Descripcion_Accion,
-                info.Responsable_Marcobre,
-                info.Responsable_Contratista,
-                info.Fecha_Programada.ToShortDateString(),
-                info.Comentario_Implementacion,
-                info.Fecha_Cierre,
-                info.Comentario_Verificacion,
-                info.Fecha_Verificacion,
+                info.TipoObservacion,
+                info.Asesor,
+                info.DescripcionCondicion,
+                info.TipoCondicion,
+                info.NivelRiesgo,
+                info.DescripcionAccion,
+                info.ResponsableMarcobre,
+                info.ResponsableContratista,
+                info.FechaProgramada.ToShortDateString(),
+                info.ComentarioImplementacion,
+                info.FechaCierre,
+                info.ComentarioVerificacion,
+                info.FechaVerificacion,
                 info.Codigo,
-                info.Id_Inspeccion_Cabecera
+                info.IdInspeccionCabecera
                 );
             try
             {
@@ -283,7 +283,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMail.Host = "smtp.gmail.com";
                 MyMsg.Priority = MailPriority.Normal;
                 MyMail.EnableSsl = true;
-                MyMsg.To.Add(new MailAddress(info.Email_Responsable_Marcobre));
+                MyMsg.To.Add(new MailAddress(info.EmailResponsableMarcobre));
                 MyMsg.Subject = "Observación Rechazada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
@@ -301,14 +301,14 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMail.UseDefaultCredentials = false;
                 NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
                 MyMail.Credentials = MyCredentials;
-                await MyMail.SendMailAsync(MyMsg);
+                //await MyMail.SendMailAsync(MyMsg);
                 MyMsg.Attachments.Dispose();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = info.Id_Inspeccion_Cabecera });
+            return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = info.IdInspeccionCabecera });
         }
     }
 }

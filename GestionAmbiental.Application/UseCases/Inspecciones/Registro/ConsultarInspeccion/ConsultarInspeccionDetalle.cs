@@ -28,7 +28,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
             foreach (var item in observaciones)
             {
-                if (usuario.Id_Usuario.Equals(item.Responsable_Marcobre.Id_Usuario))
+                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
                     output.Add(new InspeccionDetalleOutput(item, true));
                 else
                     output.Add(new InspeccionDetalleOutput(item, false));
@@ -42,7 +42,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
             foreach (var item in observaciones)
             {
-                if (usuario.Id_Usuario.Equals(item.Responsable_MA.Id_Usuario))
+                if (usuario.IdUsuario.Equals(item.Asesor.IdUsuario))
                     output.Add(new InspeccionDetalleOutput(item, true));
                 else
                     output.Add(new InspeccionDetalleOutput(item, false));

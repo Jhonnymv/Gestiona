@@ -22,8 +22,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
         public async Task Execute(int idObservacion, string nuevaFecha,string usuario_red)
         {
             var observacion = new NuevaInspeccionDetalle();
-            observacion.Id_Inspeccion_Detalle = idObservacion;
-            observacion.Fecha_Programada = Convert.ToDateTime(nuevaFecha);
+            observacion.IdInspeccionDetalle = idObservacion;
+            observacion.FechaProgramada = Convert.ToDateTime(nuevaFecha);
             observacion.Estado = EstadosInspeccion.Ampliado.ToString();
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 

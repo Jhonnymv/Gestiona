@@ -35,17 +35,17 @@
                         {
                             <tr>
                                 <td>
-                                    <a href="@Url.Action("EditarInspeccion","Inspecciones", new { IdCabecera = item.Id_Inspeccion_Cabecera })">@item.Codigo</a>
+                                    <a href="@Url.Action("EditarInspeccion","Inspecciones", new { IdCabecera = item.IdInspeccionCabecera })">@item.Codigo</a>
                                 </td>
-                                <td>@item.Tipo_Observacion</td>
-                                <td>@item.Asesor_MAP_SSO</td>
-                                <td>@item.Descripcion_Condicion</td>
-                                <td>@item.Tipo_Condicion</td>
-                                <td>@item.Nivel_Riesgo</td>
-                                <td>@item.Descripcion_Accion</td>
-                                <td>@item.Responsable_Marcobre</td>
-                                <td>@item.Responsable_Contratista</td>
-                                <td>@item.Fecha_Programada.ToShortDateString()</td>
+                                <td>@item.TipoObservacion</td>
+                                <td>@item.Asesor</td>
+                                <td>@item.DescripcionCondicion</td>
+                                <td>@item.TipoCondicion</td>
+                                <td>@item.NivelRiesgo</td>
+                                <td>@item.DescripcionAccion</td>
+                                <td>@item.ResponsableMarcobre</td>
+                                <td>@item.ResponsableContratista</td>
+                                <td>@item.FechaProgramada.ToShortDateString()</td>
                             </tr>
                         }
                     </tbody>

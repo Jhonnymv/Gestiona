@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
         {
             var output = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(idCabecera);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
-            if (usuario.Id_Usuario.Equals(output.Id_Registrado_Por))
+            if (usuario.IdUsuario.Equals(output.IdRegistradoPor))
                 output.Permiso = true;
             else
                 output.Permiso = false;

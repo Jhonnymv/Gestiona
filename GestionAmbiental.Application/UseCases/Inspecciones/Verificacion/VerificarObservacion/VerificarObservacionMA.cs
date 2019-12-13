@@ -22,8 +22,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Verifi
         {
             var observacion = new NuevaInspeccionDetalle();
             observacion.Estado = Estado;
-            observacion.Id_Inspeccion_Detalle = IdObservacion;
-            observacion.Comentario_MA = Comentario;
+            observacion.IdInspeccionDetalle = IdObservacion;
+            observacion.ComentarioVerificacion = Comentario;
 
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 

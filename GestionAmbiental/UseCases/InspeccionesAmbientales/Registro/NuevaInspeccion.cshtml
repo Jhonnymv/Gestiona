@@ -107,37 +107,9 @@
                     <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
                 </div>
             </div>
-            @*
-        @if (ViewBag.nObservacioness > 0)
-        {
-            <div class="row mb-2" id="div_tabla_observaciones">
-                <div class="col-md-12">
-                    <table class="table table-modal" id="tabla_observaciones">
-                        <thead class="thead-mcolor">
-                            <tr>
-                                <th>Acto/Condición Subestándar Identificada</th>
-                                <th>Tipo de Condición/Acto Subestándar</th>
-                                <th>Evidencia</th>
-                                <th>Nivel de Riesgo</th>
-                                <th>Acción Preventiva / Correctiva Tomada</th>
-                                <th>Responsable Marcobre</th>
-                                <th>Responsable Contratista</th>
-                                <th>Fecha Programada</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @Html.Raw(ViewBag.ContenidoTabla)
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        }
-            *@
             <div class="buttons d-flex justify-content-end">
                 <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
                 <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-                @*<button id="guardar" type="submit" class="btn btn-primary">Finalizar Registro</button>*@
             </div>
             <input type="hidden" asp-for="opcion" />
         </form>

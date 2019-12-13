@@ -23,7 +23,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var items = new ItemsSelectResumen();
             var gerencias = await _context.Gerencias.ToListAsync();
-            var empresas = await _context.Empresas_Contratistas.ToListAsync();
+            var empresas = await _context.Empresas.ToListAsync();
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
             var gerenciasDomain = new List<Domain.ValueObjects.Gerencia>();
@@ -31,28 +31,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 gerenciasDomain.Add(new Domain.ValueObjects.Gerencia(gerencia.Id_Gerencia, gerencia.Descripcion));
             }
-            var empresasContratistaDomain = new List<Domain.ValueObjects.Empresa_Contratista>();
+            var empresasContratistaDomain = new List<Domain.ValueObjects.Empresa>();
             foreach (var empresa in empresas)
             {
-                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa_Contratista(empresa.Id_Empresa_Contratista, empresa.Razon_Social));
+                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa(empresa.Id_Empresa, empresa.Razon_Social));
             }
-            var tiposCondicionDomain = new List<Domain.ValueObjects.Tipo_Condicion>();
+            var tiposCondicionDomain = new List<Domain.ValueObjects.TipoCondicion>();
             foreach (var tipo in tiposCondicion)
             {
-                tiposCondicionDomain.Add(new Domain.ValueObjects.Tipo_Condicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
+                tiposCondicionDomain.Add(new Domain.ValueObjects.TipoCondicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
             }
             items.GerenciaEjecutora = gerenciasDomain;
             items.EmpContratMarcobre = empresasContratistaDomain;
             items.TipoCondicion = tiposCondicionDomain;
             return items;
         }
-        public async Task<List<Empresa_Contratista>> GetEmpresaContratistas()
+        public async Task<List<Empresa>> GetEmpresaContratistas()
         {
-            var empresas = await _context.Empresas_Contratistas.ToListAsync();
-            var output = new List<Empresa_Contratista>();
+            var empresas = await _context.Empresas.ToListAsync();
+            var output = new List<Empresa>();
             foreach(var item in empresas)
             {
-                output.Add(new Empresa_Contratista(item.Id_Empresa_Contratista, item.Razon_Social));
+                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
             }
             return output;
         }
@@ -67,13 +67,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<Tipo_Condicion>> GetTiposCondicion()
+        public async Task<List<TipoCondicion>> GetTiposCondicion()
         {
             var tipos = await _context.Tipos_Condicion.ToListAsync();
-            var output = new List<Tipo_Condicion>();
+            var output = new List<TipoCondicion>();
             foreach (var item in tipos)
             {
-                output.Add(new Tipo_Condicion(item.Id_Tipo_Condicion,item.Descripcion,item.Grupo));
+                output.Add(new TipoCondicion(item.Id_Tipo_Condicion,item.Descripcion,item.Grupo));
             }
             return output;
         }

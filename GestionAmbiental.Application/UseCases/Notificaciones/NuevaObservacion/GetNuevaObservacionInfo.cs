@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
         public async Task<NuevaObservacionOutput> Execute(int IdObservacion)
         {
             var observacion = await _getInspeccionDetalleInfoReadOnlyRepository.GetInspeccionDetalle(IdObservacion);
-            var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.Id_Inspeccion_Cabecera);
+            var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.IdInspeccionCabecera);
             /*
         public string Tipo_Condicion { get; set; }
         public List<string> Evidencia_Condicion { get; set; }
@@ -34,35 +34,35 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
              */
 
             var output = new NuevaObservacionOutput();
-            output.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
-            output.Id_Inspeccion_Detalle = observacion.Id_Inspeccion_Detalle;
+            output.IdInspeccionCabecera = cabecera.IdCabecera;
+            output.IdInspeccionDetalle = observacion.IdInspeccionDetalle;
             output.Codigo = cabecera.Codigo;
-            output.Area_Inspeccionada = cabecera.LugarInspec;
-            output.Fecha_Inspeccion = cabecera.FechaInspec.ToString();
-            output.Responsable_Lugar = cabecera.Responsable_Lugar.Nombres +" " + cabecera.Responsable_Lugar.Apellidos;
-            output.Participantes = cabecera.Inspectores;
+            output.AreaInspeccionada = cabecera.AreaInspeccionada;
+            output.FechaInspeccion = cabecera.FechaInspeccion.ToString();
+            output.ResponsableLugar = cabecera.ResponsableArea.Nombres +" " + cabecera.ResponsableArea.Apellidos;
+            output.Participantes = cabecera.Participantes;
             output.Objetivo = cabecera.Objetivo;
-            output.Descripcion_Condicion = observacion.Descripcion_Condicion;
-            output.Tipo_Condicion = observacion.Tipo_Condicion.Descripcion;
-            if (observacion.Evidencia_Condicion != null)
+            output.DescripcionCondicion = observacion.DescripcionCondicion;
+            output.TipoCondicion = observacion.TipoCondicion.Descripcion;
+            if (observacion.EvidenciaCondicion != null)
             {
-                var evidencias_condicion = JArray.Parse(observacion.Evidencia_Condicion);
+                var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);
                 var listEvidencias_condicion = new List<string>();
                 foreach (var evidencia in evidencias_condicion)
                 {
                     listEvidencias_condicion.Add((string)evidencia);
                 }
-                output.Evidencia_Condicion = listEvidencias_condicion;
+                output.EvidenciaCondicion = listEvidencias_condicion;
             }
-            output.Nivel_Riesgo_Ambiental = observacion.Nivel_Riesgo_Ambiental;
-            output.Descripcion_Accion = observacion.Descripcion_Accion;
-            output.Responsable_Marcobre = observacion.Responsable_Marcobre.Nombres+ " "+ observacion.Responsable_Marcobre.Apellidos;
-            output.Responsable_Contratista = observacion.Responsable_Contratista;
-            output.Fecha_Programada = observacion.Fecha_Programada;
+            output.NivelRiesgo = observacion.NivelRiesgo;
+            output.DescripcionAccion = observacion.DescripcionAccion;
+            output.ResponsableMarcobre = observacion.ResponsableMarcobre.Nombres+ " "+ observacion.ResponsableMarcobre.Apellidos;
+            output.ResponsableContratista = observacion.ResponsableContratista;
+            output.FechaProgramada = observacion.FechaProgramada;
             output.Estado = observacion.Estado;
 
             //emails
-            output.Email_Responsable_Marcobre = observacion.Responsable_Marcobre.Email;
+            output.EmailResponsableMarcobre = observacion.ResponsableMarcobre.Email;
 
             return output;
 

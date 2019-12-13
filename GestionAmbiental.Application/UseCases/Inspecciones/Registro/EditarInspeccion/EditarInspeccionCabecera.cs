@@ -37,12 +37,12 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
         {
 
             var cabecera = new NuevaInspeccionCabecera();
-            cabecera.Id_Cabecera = idCabecera;
-            cabecera.Id_Gerencia_Ejecutora = gerenciaMarc;
-            cabecera.Id_Empresa_Contratista = empresaMarc;
-            cabecera.Fecha_Inspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
-            cabecera.Lugar_Inspeccionado = lugar;
-            cabecera.Id_Responsable_Lugar = responsableLugar;
+            cabecera.IdCabecera = idCabecera;
+            cabecera.IdGerencia = gerenciaMarc;
+            cabecera.IdEmpresa = empresaMarc;
+            cabecera.FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
+            cabecera.LugarInspeccionado = lugar;
+            cabecera.IdResponsableArea = responsableLugar;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
 

@@ -21,8 +21,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Consul
         {
             var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraVerificacion(fecha, gerencia, codigo);
             var output = new InspeccionesCabeceraOutput();
-            output.nCabeceras = cabeceras.Count;
-            output.cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
+            output.NCabeceras = cabeceras.Count;
+            output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
             return output;
         }
     }

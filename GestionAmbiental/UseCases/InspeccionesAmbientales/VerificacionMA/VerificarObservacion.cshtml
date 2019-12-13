@@ -10,7 +10,7 @@
             <h2>Verificar Observación</h2>
         </div>
     </div>
-    <form class="form-group" id="form_nuevaInspeccion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
+    <form class="form-group" id="form_verificarObservacion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="idObservacion" />
         <input type="hidden" asp-for="idCabecera" />
         <div class="modal-body">
@@ -53,7 +53,7 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.Evidencias.Count; i++)
                     {
-                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia</a>                        
+                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia</a>
                     }
                 </div>
             </div>
@@ -133,6 +133,23 @@
         </div>
     </form>
 </div>
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Notificando a Responsables</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script>
         $("#EvidenciasInspeccion").change(function () {
@@ -140,7 +157,8 @@
             $("#files_name").text(filesname);
         });
         $("#rechazar").click(function () {
-            $("#Accion").val("Rechazar");
+            $("#Accion").val("Rechazar");          
+            $("#Modal_Enviando_Correo").modal('show');
         });
         $("#aprobar").click(function () {
             $("#Accion").val("Aprobar");

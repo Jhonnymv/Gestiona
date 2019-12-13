@@ -21,60 +21,60 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplem
         public async Task<ObservacionImplementadaOutput> Execute(int IdObservacion)
         {
             var observacion = await _getInspeccionDetalleInfoReadOnlyRepository.GetInspeccionDetalleImplementacion(IdObservacion);
-            var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.Id_Inspeccion_Cabecera);
+            var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.IdInspeccionCabecera);
 
             var output = new ObservacionImplementadaOutput();
             output.Codigo = cabecera.Codigo;
-            output.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
-            output.Id_Inspeccion_Detalle = observacion.Id_Inspeccion_Detalle;
-            output.Area_Ejecutora = cabecera.GerenEjecMar;
-            output.Empresa = cabecera.EmpContratMarc;
-            output.Area_Inspeccionada = cabecera.LugarInspec;
-            output.Tipo_Inspeccion = cabecera.Tipo_Inspeccion;
-            output.Fecha_Inspeccion = cabecera.FechaInspec.ToString();
-            output.Responsable_Lugar = cabecera.Responsable_Lugar.Nombres + " " + cabecera.Responsable_Lugar.Apellidos;
-            output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
-            output.Participantes = cabecera.Inspectores;
+            output.IdInspeccionCabecera = cabecera.IdCabecera;
+            output.IdInspeccionDetalle = observacion.IdInspeccionDetalle;
+            output.AreaEjecutora = cabecera.Gerencia;
+            output.Empresa = cabecera.Empresa;
+            output.AreaInspeccionada = cabecera.AreaInspeccionada;
+            output.TipoInspeccion = cabecera.TipoInspeccion;
+            output.FechaInspeccion = cabecera.FechaInspeccion.ToString();
+            output.ResponsableLugar = cabecera.ResponsableArea.Nombres + " " + cabecera.ResponsableArea.Apellidos;
+            output.ResponsableInspeccion = cabecera.ResponsableInspeccion;
+            output.Participantes = cabecera.Participantes;
             output.Objetivo = cabecera.Objetivo;
 
-            output.Tipo_Observacion = observacion.Tipo_Observacion;
-            output.Asesor_SSO_MAP = observacion.Responsable_MA.Nombres + " " + observacion.Responsable_MA.Apellidos;
-            output.Descripcion_Condicion = observacion.Descripcion_Condicion;
-            output.Tipo_Condicion = observacion.Tipo_Condicion.Descripcion;
-            output.Descripcion_Accion = observacion.Descripcion_Accion;
-            if (observacion.Evidencia_Condicion != null)
+            output.TipoObservacion = observacion.TipoObservacion;
+            output.Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos;
+            output.DescripcionCondicion = observacion.DescripcionCondicion;
+            output.TipoCondicion = observacion.TipoCondicion.Descripcion;
+            output.DescripcionAccion = observacion.DescripcionAccion;
+            if (observacion.EvidenciaCondicion != null)
             {
-                var evidencias_condicion = JArray.Parse(observacion.Evidencia_Condicion);
+                var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);
                 var listEvidencias_condicion = new List<string>();
                 foreach (var evidencia in evidencias_condicion)
                 {
                     listEvidencias_condicion.Add((string)evidencia);
                 }
-                output.Evidencia_Condicion = listEvidencias_condicion;
+                output.EvidenciaCondicion = listEvidencias_condicion;
             }
-            output.Nivel_Riesgo_Ambiental = observacion.Nivel_Riesgo_Ambiental;
-            output.Descripcion_Accion = observacion.Descripcion_Accion;
-            output.Responsable_Marcobre = observacion.Responsable_Marcobre.Nombres + " " + observacion.Responsable_Marcobre.Apellidos;
-            output.Responsable_Contratista = observacion.Responsable_Contratista;
-            output.Fecha_Programada = observacion.Fecha_Programada;
+            output.NivelRiesgo = observacion.NivelRiesgo;
+            output.DescripcionAccion = observacion.DescripcionAccion;
+            output.ResponsableMarcobre = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos;
+            output.ResponsableContratista = observacion.ResponsableContratista;
+            output.FechaProgramada = observacion.FechaProgramada;
             output.Estado = observacion.Estado;
 
-            output.Comentario_Implementacion = observacion.Comentario_Inspeccion;
-            output.Fecha_Cierre = observacion.Fecha_Cierre.Value.ToString("dd/MM/yyyy");
-            if (observacion.Evidencia_Inspeccion != null)
+            output.ComentarioImplementacion = observacion.ComentarioImplementacion;
+            output.FechaCierre = observacion.FechaCierre.Value.ToString("dd/MM/yyyy");
+            if (observacion.EvidenciaImplementacion != null)
             {
-                var evidencia_implementacion = JArray.Parse(observacion.Evidencia_Inspeccion);
+                var evidencia_implementacion = JArray.Parse(observacion.EvidenciaImplementacion);
                 var listEvidencias_implementacion = new List<string>();
                 foreach (var evidencia in evidencia_implementacion)
                 {
                     listEvidencias_implementacion.Add((string)evidencia);
                 }
-                output.Evidencia_Implementacion = listEvidencias_implementacion;
+                output.EvidenciaImplementacion = listEvidencias_implementacion;
             }
 
 
             //emails
-            output.Email_Asesor_MAP_SSO = observacion.Responsable_MA.Email;
+            output.EmailAsesor = observacion.Asesor.Email;
 
             return output;
         }

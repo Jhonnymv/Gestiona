@@ -10,9 +10,9 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     public interface IGetItemsReadOnlyRepository
     {
         Task<ItemsSelectResumen> GetItemsResumen();
-        Task<List<Empresa_Contratista>> GetEmpresaContratistas();
+        Task<List<Empresa>> GetEmpresaContratistas();
         Task<List<Gerencia>> GetGerencias();
-        Task<List<Tipo_Condicion>> GetTiposCondicion();
+        Task<List<TipoCondicion>> GetTiposCondicion();
         Task<List<Usuario>> GetUsuarios();
     }
 }

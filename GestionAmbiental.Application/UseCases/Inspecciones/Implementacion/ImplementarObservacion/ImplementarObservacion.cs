@@ -25,9 +25,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.Impl
         {
             var evidencia = JsonConvert.SerializeObject(Evidencia_Inspeccion);
             var observacion = new NuevaInspeccionDetalle();
-            observacion.Id_Inspeccion_Detalle = IdObservacion;
-            observacion.Evidencia_Inspeccion = evidencia;
-            observacion.Comentario_Inspeccion = Comentario;
+            observacion.IdInspeccionDetalle = IdObservacion;
+            observacion.EvidenciaImplementacion = evidencia;
+            observacion.ComentarioImplementacion = Comentario;
 
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
             

@@ -24,16 +24,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceraEntity = new Inspeccion_Cabecera
             {
                 Codigo = cabecera.Codigo,
-                Id_Registrado_Por = cabecera.Id_Registrado_Por,
+                Id_Registrado_Por = cabecera.IdRegistradoPor,
                 Objetivo = cabecera.Objetivo,
-                Fecha_Inspeccion = cabecera.Fecha_Inspeccion,
-                Id_Empresa_Contratista = cabecera.Id_Empresa_Contratista != 0 ? cabecera.Id_Empresa_Contratista : 1,
-                Id_Gerencia_Ejecutora = cabecera.Id_Gerencia_Ejecutora != 0 ? cabecera.Id_Gerencia_Ejecutora : 1,
-                Responsable_Inspeccion = cabecera.Responsable_Inspeccion,
-                Tipo_Inspeccion = cabecera.Tipo_Inspeccion,
-                Lugar_Inspeccionado = cabecera.Lugar_Inspeccionado,
-                Id_Responsable_Lugar = cabecera.Id_Responsable_Lugar,
-                Inspectores = cabecera.Inspectores,
+                Fecha_Inspeccion = cabecera.FechaInspeccion,
+                Id_Empresa = cabecera.IdEmpresa != 0 ? cabecera.IdEmpresa : 1,
+                Id_Gerencia = cabecera.IdGerencia != 0 ? cabecera.IdGerencia : 1,
+                Responsable_Inspeccion = cabecera.ResponsableInspeccion,
+                Tipo_Inspeccion = cabecera.TipoInspeccion,
+                Area_Inspeccionada = cabecera.LugarInspeccionado,
+                Id_Responsable_Area = cabecera.IdResponsableArea,
+                Participantes = cabecera.Inspectores,
                 Estado = cabecera.Estado
             };
 
@@ -60,21 +60,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
            var detalleEntity = new Inspeccion_Detalle
                 {
-                    Id_Inspeccion_Cabecera = detalle.Id_Inspeccion_Cabecera,
-                    Tipo_Observacion = detalle.Tipo_Inspeccion,
-                    Id_Responsable_MA = detalle.Id_Asesor_MA_Seguridad,
-                    Descripcion_Condicion = detalle.Descripcion_Condicion,
-                    Id_Tipo_Condicion = detalle.Id_Tipo_Condicion,
-                    Nivel_Riesgo_Ambiental = detalle.Nivel_Riesgo_Ambiental,
-                    Descripcion_Accion = detalle.Descripcion_Accion,
-                    Id_Responsable_Marcobre = detalle.Id_Responsable_Marcobre,
-                    Responsable_Contratista = detalle.Responsable_Contratista,
-                    Fecha_Programada = detalle.Fecha_Programada,
-                    Evidencia_Condicion = detalle.Evidencia_Condicion,
+                    Id_Inspeccion_Cabecera = detalle.IdInspeccionCabecera,
+                    Tipo_Observacion = detalle.TipoInspeccion,
+                    Id_Asesor = detalle.IdAsesorMASeguridad,
+                    Descripcion_Condicion = detalle.DescripcionCondicion,
+                    Id_Tipo_Condicion = detalle.IdTipoCondicion,
+                    Nivel_Riesgo = detalle.NivelRiesgo,
+                    Descripcion_Accion = detalle.DescripcionAccion,
+                    Id_Responsable_Marcobre = detalle.IdResponsableMarcobre,
+                    Responsable_Contratista = detalle.ResponsableContratista,
+                    Fecha_Programada = detalle.FechaProgramada,
+                    Evidencia_Condicion = detalle.EvidenciaCondicion,
                     Estado = "Registrado",
 
                     Fecha_Cierre = null,
-                    Fecha_Verificacion_MA = null,
+                    Fecha_Verificacion = null,
                 };
                 _context.Inspecciones_Detalle.Add(detalleEntity);
                 await _context.SaveChangesAsync();
