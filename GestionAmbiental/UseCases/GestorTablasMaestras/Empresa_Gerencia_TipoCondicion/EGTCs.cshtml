@@ -1,0 +1,226 @@
+﻿
+@{
+    ViewData["Title"] = "EGTIs";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row mb-2">
+                <div class="col-12 titulo-pagina">
+                    <h2>Empresas</h2>
+                </div>
+            </div>
+            <form autocomplete="off">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <label>Buscar:</label>
+                    </div>
+                    <div class="col-lg-7 col-md-6 col-sm-6 mt-1">
+                        <input type="text" class="form-control" id="filtro_empresas">
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <button type="button" class="btn btn-primary" onclick="filtrarEmpresas(1)">Filtrar</button>
+                    </div>
+                </div>
+                <div class="row mb-4 justify-content-center">
+                    <div class="col-12 mt-1">
+                        <a class="btn btn-primary float-right" asp-action="AgregarEmpresa" asp-controller="GestorEGTC">Nueva Empresa</a>
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-2 mb-2 justify-content-center">
+                <nav id="paginado_empresas" aria-label="pagination">
+                </nav>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <table class="table" id="tabla_empresas" style="display:inline-table">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Razón Social</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row mb-2">
+                <div class="col-12 titulo-pagina">
+                    <h2>Gerencias</h2>
+                </div>
+            </div>
+            <form autocomplete="off">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <label>Buscar:</label>
+                    </div>
+                    <div class="col-lg-7 col-md-6 col-sm-6 mt-1">
+                        <input type="text" class="form-control" id="filtro_gerencias">
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <button type="button" class="btn btn-primary" onclick="filtrarGerencias(1)">Filtrar</button>
+                    </div>
+                </div>
+                <div class="row mb-4 justify-content-center">
+                    <div class="col-12 mt-1">
+                        <a class="btn btn-primary float-right" asp-action="AgregarGerencia" asp-controller="GestorEGTC">Nueva Gerencia</a>
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-2 mb-2 justify-content-center">
+                <nav id="paginado_gerencias" aria-label="pagination">
+                </nav>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <table class="table" id="tabla_gerencias" style="display:inline-table">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Gerencia</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="row mb-2">
+                <div class="col-12 titulo-pagina">
+                    <h2>Acto/Condición Subestándar</h2>
+                </div>
+            </div>
+            <form autocomplete="off">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <label>Buscar:</label>
+                    </div>
+                    <div class="col-lg-7 col-md-6 col-sm-6 mt-1">
+                        <input type="text" class="form-control" id="filtro_tipos">
+                    </div>
+                    <div class="col-lg-2 col-md-3 col-sm-6 mt-1">
+                        <button type="button" class="btn btn-primary" onclick="filtrarTipos(1)">Filtrar</button>
+                    </div>
+                </div>
+                <div class="row mb-4 justify-content-center">
+                    <div class="col-12 mt-1">
+                        <a class="btn btn-primary float-right" asp-action="AgregarTipoCondicion" asp-controller="GestorEGTC">Nuevo Tipo Acto/Condición</a>
+                    </div>
+                </div>
+            </form>
+            <div class="row mt-2 mb-2 justify-content-center">
+                    <nav id="paginado_tipos" aria-label="pagination">
+                    </nav>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <table class="table" id="tabla_tipos" style="display:inline-table">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Tipo Acto/Condición Subestándar</th>
+                                <th>Clasificación</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*<div class="row mb-2 justify-content-center">
+            <div class="col-md">
+                <table class="table-gestores" id="tabla_usuarios">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Usuario de Red</th>
+                            <th>Email</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <nav id="paginado" aria-label="pagination">
+            </nav>
+        </div>*@
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            filtrarEmpresas(1);
+            filtrarGerencias(1);
+            filtrarTipos(1);
+        });
+        function filtrarEmpresas(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/Empresas",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro_empresas').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_empresas tbody').empty();
+                    $('#tabla_empresas tbody').html(response.data);
+                    $('#paginado_empresas').html(response.paginador);
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function filtrarGerencias(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/Gerencias",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro_gerencias').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_gerencias tbody').empty();
+                    $('#tabla_gerencias tbody').html(response.data);
+                    $('#paginado_gerencias').html(response.paginador);
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function filtrarTipos(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/TiposCondicion",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro_tipos').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_tipos tbody').empty();
+                    $('#tabla_tipos tbody').html(response.data);
+                    $('#paginado_tipos').html(response.paginador);
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+    </script>
+}
+

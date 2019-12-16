@@ -18,7 +18,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
                
-        public async Task AddEmpresa(Empresa empresa)
+        public async Task<int> AddEmpresa(Empresa empresa)
         {
             var empresaEntity = new Entities.Empresa
             {
@@ -26,9 +26,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             _context.Empresas.Add(empresaEntity);
             await _context.SaveChangesAsync();
+            return empresaEntity.Id_Empresa;
         }
                
-        public async Task AddGerencia(Gerencia gerencia)
+        public async Task<int> AddGerencia(Gerencia gerencia)
         {
             var gerenciaEntity = new Entities.Gerencia
             {
@@ -36,9 +37,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             _context.Gerencias.Add(gerenciaEntity);
             await _context.SaveChangesAsync();
+            return gerenciaEntity.Id_Gerencia;
         }
                
-        public async Task AddTipoCondicion(TipoCondicion tipoCondicion)
+        public async Task<int> AddTipoCondicion(TipoCondicion tipoCondicion)
         {
             var tipoCondicionEntity = new Entities.Tipo_Condicion
             {
@@ -47,6 +49,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             _context.Tipos_Condicion.Add(tipoCondicionEntity);
             await _context.SaveChangesAsync();
+            return tipoCondicionEntity.Id_Tipo_Condicion;
         }
                
         public async Task<int> AddUsuario(Usuario usuario)
@@ -77,9 +80,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;            
         }
                
-        public async Task<List<Empresa>> GetEmpresas()
+        public async Task<List<Empresa>> GetEmpresas(string filtro)
         {
-            var empresas = await _context.Empresas.ToListAsync();
+            var empresas = await _context.Empresas.Where(x=>x.Razon_Social.Contains(filtro == null ? x.Razon_Social : filtro)).OrderBy(x=>x.Razon_Social).ToListAsync();
+            
             var output = new List<Empresa>();
             foreach (var item in empresas)
                 output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
@@ -97,9 +101,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
                
-        public async Task<List<Gerencia>> GetGerencias()
+        public async Task<List<Gerencia>> GetGerencias(string filtro)
         {
-            var gerencias = await _context.Gerencias.ToListAsync();
+            var gerencias = await _context.Gerencias.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x=>x.Descripcion).ToListAsync();
             var output = new List<Gerencia>();
             foreach (var item in gerencias)
                 output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
@@ -118,9 +122,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
                
-        public async Task<List<TipoCondicion>> GetTiposCondicion()
+        public async Task<List<TipoCondicion>> GetTiposCondicion(string filtro)
         {
-            var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
+            var tiposCondicion = await _context.Tipos_Condicion.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro) || x.Grupo.Contains(filtro == null ? x.Grupo : filtro)).OrderBy(x=>x.Grupo).ToListAsync();
             var output = new List<TipoCondicion>();
             foreach (var item in tiposCondicion)
                 output.Add(new TipoCondicion(item.Id_Tipo_Condicion,item.Descripcion,item.Grupo));

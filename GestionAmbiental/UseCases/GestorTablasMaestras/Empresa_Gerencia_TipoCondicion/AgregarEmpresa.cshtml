@@ -1,0 +1,30 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCondicion.EmpresaModel
+@{
+    ViewData["Title"] = "AgregarEmpresa";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar Empresa</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarEmpresa">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="RazonSocial"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="RazonSocial"></span>
+                    <input type="text" class="form-control" asp-for="RazonSocial">
+                </div>
+            </div>            
+            <div class="row mt-2 justify-content-center">
+                <a asp-controller="GestorEGTC" asp-action="EGTCs" class="btn btn-secondary mr-2" id="btnCancelar">Cancelar</a>
+                <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
