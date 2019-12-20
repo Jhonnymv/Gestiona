@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
-using NPOI.HSSF.UserModel;
+using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
@@ -25,10 +25,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
         private readonly IGetInfo_SGA _info_SGA;
-
-
-        private const string CarpetaEvidenciasCondicion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
-        private const string CarpetaEvidenciasImplementacion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
         public DescargaInspeccionController(
             IMemoryCache cache, 
             IHostingEnvironment hostingEnvironment,
@@ -52,46 +48,47 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 var cabecera = await _consultarInspeccionDescarga.Execute(IdCabecera);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
-                string sFileName = @"FormatoInspección.xls";
+                string sFileName = @"JU-MAP-PRO-004.F01_Inspección_V00.xlsx";
                 string sFilePath = Path.Combine(sWebRootFolder, sFileName);
                 FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
 
                 // Load the template into a NPOI workbook
-                HSSFWorkbook templateWorkbook = new HSSFWorkbook(fs, true);
+                XSSFWorkbook templateWorkbook = new XSSFWorkbook(fs);
 
                 // Load the sheet you are going to use as a template into NPOI
-                ISheet sheet = templateWorkbook.GetSheet("Formato");
+                ISheet sheet = templateWorkbook.GetSheet("Inspección");
 
                 // Insert data into template
                 //->Codigo
-                sheet.GetRow(2).GetCell(4).SetCellValue(cabecera.Codigo);
+                //sheet.GetRow(2).GetCell(4).SetCellValue(cabecera.Codigo);
                 //->Fecha Aprobacion
                 //sheet.GetRow(3).GetCell(7).SetCellValue(cabecera.FechaInspec);
                 //->ÁREA EJECUTORA:
-                sheet.GetRow(5).GetCell(3).SetCellValue(cabecera.Gerencia);
-                //->EMPRESA:   
-                sheet.GetRow(5).GetCell(8).SetCellValue(cabecera.Empresa);
+                sheet.GetRow(11).GetCell(7).SetCellValue(cabecera.Gerencia);
                 //->LUGAR INSPECCIONADO
-                sheet.GetRow(7).GetCell(3).SetCellValue(cabecera.AreaInspeccionada);
+                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.AreaInspeccionada);
+                //->EMPRESA:   
+                sheet.GetRow(11).GetCell(24).SetCellValue(cabecera.Empresa);
                 //->TIPO DE INSPECCION
-                sheet.GetRow(7).GetCell(7).SetCellValue(cabecera.TipoInspeccion);
+                sheet.GetRow(13).GetCell(7).SetCellValue(cabecera.TipoInspeccion);
                 //->HORA
-                sheet.GetRow(7).GetCell(9).SetCellValue(cabecera.FechaInspeccion.Hour + ":" + cabecera.FechaInspeccion.Minute);
+                sheet.GetRow(13).GetCell(15).SetCellValue(cabecera.FechaInspeccion.Hour + ":" + cabecera.FechaInspeccion.Minute);
                 //->FECHA  
-                sheet.GetRow(7).GetCell(11).SetCellValue(cabecera.FechaInspeccion.Date.ToShortDateString());
-                //->RESPONSABLE DEL ÁREA INSPECCIONADA:	
-                sheet.GetRow(9).GetCell(3).SetCellValue(cabecera.ResponsableArea.Nombres + " " + cabecera.ResponsableArea.Apellidos);
-                //->RESPONSABLE DE LA INSPECCION:	
-                sheet.GetRow(9).GetCell(8).SetCellValue(cabecera.ResponsableInspeccion);
+                sheet.GetRow(13).GetCell(18).SetCellValue(cabecera.FechaInspeccion.Date.ToShortDateString());
                 //->PARTICIPANTES DE LA INSPECCION :  
-                sheet.GetRow(11).GetCell(3).SetCellValue(cabecera.Participantes);
+                sheet.GetRow(13).GetCell(24).SetCellValue(cabecera.Participantes);
+                //->RESPONSABLE DEL ÁREA INSPECCIONADA:	
+                sheet.GetRow(15).GetCell(7).SetCellValue(cabecera.ResponsableArea.Nombres + " " + cabecera.ResponsableArea.Apellidos);
+                //->RESPONSABLE DE LA INSPECCION:	
+                sheet.GetRow(15).GetCell(24).SetCellValue(cabecera.ResponsableInspeccion);
+                
                 //->OBJETIVO DE LA INSPECCIÓN: 	
-                sheet.GetRow(13).GetCell(3).SetCellValue(cabecera.Objetivo);
+                sheet.GetRow(17).GetCell(7).SetCellValue(cabecera.Objetivo);
 
                 //->Fila observaciones en el formato
-                int fila = 16;
+                int fila = 23;
                 //->Cell Style
-                HSSFCellStyle customCellStyle = (HSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFCellStyle customCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
                 customCellStyle.WrapText = true;
                 customCellStyle.VerticalAlignment = VerticalAlignment.Center;
                 customCellStyle.BorderTop = BorderStyle.Thin;
@@ -102,7 +99,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
 
                 //índice de la primera imagen a insertar en la colección de images del workbook
-                int imageIndex = 3;
+                int imageIndex = 4;
                 //indice de observacion
                 int obsIndex = 1;
 
@@ -111,11 +108,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     short rowHeight = 850;
                     IRow row = sheet.CreateRow(fila);
                     //Evidencia condición
-                    row.CreateCell(4);
-                    row.GetCell(4).CellStyle = customCellStyle;
-                    //Evidencia implementación
                     row.CreateCell(10);
                     row.GetCell(10).CellStyle = customCellStyle;
+                    //Evidencia implementación
+                    row.CreateCell(23);
+                    row.GetCell(23).CellStyle = customCellStyle;
 
                     ImageProperties evidencia_condicion = new ImageProperties();
                     ImageProperties evidencia_inspeccion = new ImageProperties();
@@ -168,28 +165,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.CreateCell(3).SetCellValue(observacion.DescripcionCondicion);
                     row.GetCell(3).CellStyle = customCellStyle;
                     //->Tipo de Condición / Acto Subestándar
-                    row.CreateCell(5).SetCellValue(observacion.TipoCondicion.Descripcion);
-                    row.GetCell(5).CellStyle = customCellStyle;
-                    //->Nivel de Riesgo del Aspecto Ambiental
-                    row.CreateCell(6).SetCellValue(observacion.NivelRiesgo);
-                    row.GetCell(6).CellStyle = customCellStyle;
+                    row.CreateCell(14).SetCellValue(observacion.TipoCondicion.Descripcion);
+                    row.GetCell(14).CellStyle = customCellStyle;
+                    //->Nivel de Riesgo
+                    row.CreateCell(17).SetCellValue(observacion.NivelRiesgo);
+                    row.GetCell(17).CellStyle = customCellStyle;
                     //->Acción Preventiva / Correctiva Tomada
-                    row.CreateCell(7).SetCellValue(observacion.DescripcionAccion);
-                    row.GetCell(7).CellStyle = customCellStyle;
+                    row.CreateCell(18).SetCellValue(observacion.DescripcionAccion);
+                    row.GetCell(18).CellStyle = customCellStyle;
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
-                    row.CreateCell(8).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
-                    row.GetCell(8).CellStyle = customCellStyle;
+                    row.CreateCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
+                    row.GetCell(23).CellStyle = customCellStyle;
                     //->Fecha Programada
-                    row.CreateCell(9).SetCellValue(observacion.FechaProgramada.ToShortDateString());
-                    row.GetCell(9).CellStyle = customCellStyle;
+                    row.CreateCell(24).SetCellValue(observacion.FechaProgramada.ToShortDateString());
+                    row.GetCell(24).CellStyle = customCellStyle;
 
-                    row.CreateCell(11).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
-                    row.GetCell(11).CellStyle = customCellStyle;
+                    row.CreateCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
+                    row.GetCell(29).CellStyle = customCellStyle;
 
 
                     obsIndex++;
                     fila++;
                 }
+
                 // Force formulas to update with new data we added
                 sheet.ForceFormulaRecalculation = true;
                 // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
@@ -199,7 +197,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 // Send the memory stream to the browser
                 //ExportDataTableToExcel(ms, "EventExpenseReport.xls");
                 ms.Position = 0;
-                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xls");
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }        
         private double GetRowHeight(int image_width, int image_height)
@@ -208,7 +206,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             return (image_height * cellWidth) / image_width;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private async Task<ImageProperties> AddImageToCellAsync(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
+        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
         {
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
