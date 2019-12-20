@@ -236,8 +236,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
-                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));                
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
                 var observacion = await _consultarDetalleImplementacion.Execute(IdDesencriptado);
+                var IdCabeceraEncriptado = _protector.Protect(observacion.IdInspeccionCabecera.ToString());
                 var model = new LevantarObservacionModel();
                 model.EncryptedId = IdObservacion;
                 model.TipoInspeccion = observacion.TipoInspeccion;
@@ -253,6 +254,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 model.ResponsableCont = observacion.ResponsableContratista;
                 model.FechaProgramada = observacion.FechaProgramada.ToShortDateString();
 
+                ViewBag.IdCabecera = IdCabeceraEncriptado;
                 return View(model);
             }
         }

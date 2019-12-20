@@ -26,7 +26,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo))
-                .OrderByDescending(x=>x.Id_Inspeccion_Cabecera)
+                .OrderByDescending(x=>x.Codigo)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -100,7 +100,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Estado.Equals(EstadosInspeccion.Registrado.ToString())
                 )
-                .OrderByDescending(x => x.Id_Inspeccion_Cabecera)
+                .OrderByDescending(x => x.Codigo)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -156,7 +156,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 )
-                .OrderByDescending(x => x.Id_Inspeccion_Cabecera)
+                .OrderByDescending(x => x.Codigo)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();

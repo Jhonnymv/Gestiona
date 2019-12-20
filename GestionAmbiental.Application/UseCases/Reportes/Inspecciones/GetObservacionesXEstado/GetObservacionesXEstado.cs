@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.Reportes;
 using GestionAmbiental.Domain.Reportes;
 
-namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones
+namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXEstado
 {
     public class GetObservacionesXEstado : IGetObservacionesXEstado
     {

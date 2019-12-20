@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones
+namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXNivelRiesgoSSO
 {
-    public interface IGetObservacionesMAPvsSSO
+    public interface IGetObservacionesXNivelRiesgoSSO
     {
         Task<List<Dimension>> Execute();
     }

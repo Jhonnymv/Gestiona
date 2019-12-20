@@ -271,6 +271,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 ViewBag.Responsables = responsables;
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
+                ViewBag.CabeceraEncriptada = IdCabecera;
                 ViewBag.idCabecera = IdDesencriptado;
 
                 ViewBag.AsesoresMA = asesoresMA;

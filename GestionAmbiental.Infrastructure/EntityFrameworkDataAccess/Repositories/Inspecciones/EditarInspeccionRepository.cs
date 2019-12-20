@@ -71,5 +71,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
            _context.Log_Inspecciones.Add(log);
            await _context.SaveChangesAsync();
         }
+        public async Task<string> GetUltimoCodigo()
+        {
+            var codigo = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).OrderBy(x=>x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            return codigo;
+        }
     }
 }

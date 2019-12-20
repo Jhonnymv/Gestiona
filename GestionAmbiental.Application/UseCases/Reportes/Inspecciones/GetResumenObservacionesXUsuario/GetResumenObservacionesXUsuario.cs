@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones
+namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetResumenObservacionesXUsuario
 {
     public class GetResumenObservacionesXUsuario : IGetResumenObservacionesXUsuario
     {

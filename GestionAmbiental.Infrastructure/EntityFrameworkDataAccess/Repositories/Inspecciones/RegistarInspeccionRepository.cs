@@ -2,9 +2,11 @@
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -91,6 +93,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return detalleEntity.Id_Inspeccion_Detalle;
-        }
+        }        
     }
 }

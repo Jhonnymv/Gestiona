@@ -26,6 +26,11 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
             }
             Tipo = info_SGA.Tipo;
         }
+
+        public Info_SGAOutput()
+        {
+        }
+
         public static class Cipher
         {
             public static string Encrypt(string plainText, string password)

@@ -7,6 +7,7 @@ namespace GestionAmbiental.Domain.Reportes
     public class DetalleObservacionXEstado
     {
         public int IdInspeccionCabecera { get; set; }
+        public string IdInspeccionCabeceraEncriptado { get; set; }
         public string Codigo { get; set; }
         public int IdInspeccionDetalle { get; set; }
         public string TipoObservacion { get; set; }

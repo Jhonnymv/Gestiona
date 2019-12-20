@@ -5,21 +5,20 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones
+namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesDiarias
 {
-    public class GetObservacionesXUsuario : IGetObservacionesXUsuario
+    public class GetInspeccionesDiarias : IGetInspeccionesDiarias
     {
         private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
 
-        public GetObservacionesXUsuario(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        public GetInspeccionesDiarias(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }
 
         public async Task<List<Dimension>> Execute()
         {
-            var data = await _getReportesReadOnlyRepository.GetObservacionesXUsuario();
-            return data;
+            return await _getReportesReadOnlyRepository.GetInspeccionesDiarias();
         }
     }
 }

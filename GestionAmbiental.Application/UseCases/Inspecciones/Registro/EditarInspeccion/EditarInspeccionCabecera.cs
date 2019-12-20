@@ -51,7 +51,17 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
             switch (opcion)
             {
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
-                case "Guardar": cabecera.Estado = EstadosInspeccion.Registrado.ToString(); cabecera.Codigo = "CODIGO"; break;
+                case "Guardar":
+                    cabecera.Estado = EstadosInspeccion.Registrado.ToString();
+                    var codigoAnterior = await _editarInspeccionReadonlyRepository.GetUltimoCodigo();
+                    if (codigoAnterior != null)
+                    {
+                        var correlativo = (Convert.ToInt32(codigoAnterior.Remove(0, 3))+1).ToString().PadLeft(5, '0');                        
+                        cabecera.Codigo = "IP-" +correlativo;
+                    }
+                    else
+                        cabecera.Codigo = "IP-00001";
+                    break;
                 case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
             }
 

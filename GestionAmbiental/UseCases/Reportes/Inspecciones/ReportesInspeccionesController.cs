@@ -2,12 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Reportes.Inspecciones;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalleObservacionesXEstado;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesDiarias;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesMAPvsSSO;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesMAPXTipoCondicion;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesSSOXTipoCondicion;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXActoCondicionMAP;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXActoCondicionSSO;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXEstado;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXNivelRiesgoMAP;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXNivelRiesgoSSO;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXUsuario;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetResumenObservacionesXUsuario;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -28,6 +37,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetDetalleObservacionesXEstado _getDetalleObservacionesXEstado;
         private readonly IGetObservacionesMAPXTipoCondicion _getObservacionesMAPXTipoCondicion;
         private readonly IGetObservacionesSSOXTipoCondicion _getObservacionesSSOXTipoCondicion;
+        private readonly IDataProtector _protector;
 
         public ReportesInspeccionesController(
             IMemoryCache cache, 
@@ -42,7 +52,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetObservacionesXActoCondicionSSO getObservacionesXActoCondicionSSO, 
             IGetDetalleObservacionesXEstado getDetalleObservacionesXEstado,
             IGetObservacionesMAPXTipoCondicion getObservacionesMAPXTipoCondicion,
-            IGetObservacionesSSOXTipoCondicion getObservacionesSSOXTipoCondicion)
+            IGetObservacionesSSOXTipoCondicion getObservacionesSSOXTipoCondicion,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _cache = cache;
             _getInspeccionesMAPvsSSO = getInspeccionesMAPvsSSO;
@@ -57,6 +69,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getDetalleObservacionesXEstado = getDetalleObservacionesXEstado;
             _getObservacionesMAPXTipoCondicion = getObservacionesMAPXTipoCondicion;
             _getObservacionesSSOXTipoCondicion = getObservacionesSSOXTipoCondicion;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
@@ -98,6 +111,10 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             else
             {
                 var data = await _getDetalleObservacionesXEstado.Execute(estado);
+                foreach(var item in data)
+                {
+                    item.IdInspeccionCabeceraEncriptado = _protector.Protect(item.IdInspeccionCabecera.ToString());
+                }
                 ViewBag.Data = data;
                 ViewBag.nObservaciones = data.Count;
                 ViewBag.Estado = estado;
@@ -139,40 +156,5 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                 return Ok(response);
             }
         }
-
-        /*public async Task<IActionResult> MAPvsSSO()
-        {
-            var data = await _getInspeccionesMAPvsSSO.Execute();
-            var model = new ReportesModel();
-
-            model.titulo = "Observaciones MAP vs SSO";
-            model.data = data; 
-
-            return View(model);
-        }
-        public async Task<IActionResult> ObservacionesXUsuario()
-        {
-            var data = await _getObservacionesXUsuario.Execute();
-            var model = new ReportesModel();
-            model.titulo = "Observaciones por Usuario";
-            model.data = data;
-
-            return View(model);
-        }
-        public async Task<IActionResult> ObservacionesXEstado()
-        {
-            var data = await _getObservacionesXEstado.Execute();
-            var model = new ReportesModel();
-            model.titulo = "Estado de Observaciones";
-            model.data = data;
-
-            return View(model);
-        }
-        public async Task<IActionResult> DetalleObservacionesXUsuario()
-        {
-            var data = await _getResumenObservacionesXUsuario.Execute("");
-            ViewBag.DataTable = data;
-            return View();
-        }*/
     }
 }

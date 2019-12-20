@@ -35,10 +35,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
             cabecera.ResponsableInspeccion = responsableInspeccion;
             cabecera.Inspectores = inspectores;
             cabecera.Objetivo = objetivo;
+
             switch (opcion)
             {
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
-                case "Guardar": cabecera.Estado = EstadosInspeccion.Registrado.ToString(); cabecera.Codigo = "CÓDIGO"; break;
+                case "Guardar": cabecera.Estado = EstadosInspeccion.Registrado.ToString(); cabecera.Codigo = "CODIGO";break;
                 case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
             }
 

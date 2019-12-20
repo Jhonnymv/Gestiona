@@ -4,7 +4,10 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccionDescarga;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +24,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         private IMemoryCache _cache;
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
+        private readonly IGetInfo_SGA _info_SGA;
 
 
         private const string CarpetaEvidenciasCondicion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
@@ -28,11 +32,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         public DescargaInspeccionController(
             IMemoryCache cache, 
             IHostingEnvironment hostingEnvironment,
-            IConsultarInspeccionDescarga consultarInspeccionDescarga)
+            IConsultarInspeccionDescarga consultarInspeccionDescarga,
+            IGetInfo_SGA info_SGA)
         {
             _cache = cache;
             _hostingEnvironment = hostingEnvironment;
             _consultarInspeccionDescarga = consultarInspeccionDescarga;
+            _info_SGA = info_SGA;
         }
 
         public async Task<IActionResult> DescargaInspeccion(int IdCabecera)
@@ -116,13 +122,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
-                        evidencia_condicion = AddImageToCell(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion");
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion");
                         rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                         imageIndex++;
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
-                        evidencia_inspeccion = AddImageToCell(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion");
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion");
                         rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                         imageIndex++;
                     }
@@ -202,7 +208,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             return (image_height * cellWidth) / image_width;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private ImageProperties AddImageToCell(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
+        private async Task<ImageProperties> AddImageToCellAsync(HSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
         {
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
@@ -232,12 +238,38 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 Directory.CreateDirectory(archivePath);
 
                 //2. Descargar .zip de ftp y guardar en carpeta temporal zip
+                string route = "", user = "", pass = "";
+                var serverInfo = new Info_SGAOutput();
                 if (tipoEvidencia == "condicion")
-                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + evidencia);
+                {
+                    serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
+                    foreach (var item in serverInfo.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "route": route = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
+                    }
+                }
                 else
-                    ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + evidencia);
+                {
+                    serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
+                    foreach (var item in serverInfo.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "route": route = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
+                    }
+                }
+                
 
-                ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+                ftpRequest = (FtpWebRequest)WebRequest.Create(route + evidencia);
+                ftpRequest.Credentials = new NetworkCredential(user,pass);
                 ftpRequest.UseBinary = true;
                 ftpRequest.UsePassive = true;
                 ftpRequest.KeepAlive = true;
@@ -248,12 +280,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 ftpStream.CopyTo(fileStream);
                 ftpStream.Close();
                 fileStream.Close();
-
-                //3. descomprimir en carpeta temporal submission
+                //3. Desencriptar archivo
+                await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
+                var pathDesencriptado = archivePath + "desencriptado.zip";
+                //4. descomprimir en carpeta temporal submission
                 if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                     filePath += Path.DirectorySeparatorChar;
 
-                using (ZipArchive archive = ZipFile.OpenRead(archiveFile))
+                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
                 {
                     foreach (ZipArchiveEntry entry in archive.Entries)
                     {
@@ -262,13 +296,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                                 entry.ExtractToFile(filePath);
                     }
                 }
-                //4. validar extension y cargar en una celda
+                //5. validar extension y cargar en una celda
                 var extension = Path.GetExtension(filePath);
                 if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
-                {
-                    
-                    
-
+                {                
                     byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     PictureType pType;
                     if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
@@ -344,7 +375,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             var ext = Path.GetExtension(path).ToLowerInvariant();
             return types[ext];
         }
-
         private Dictionary<string, string> GetMimeTypes()
         {
             return new Dictionary<string, string>
@@ -362,6 +392,40 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
+        }
+        private async Task DecryptFileAsync(string inputFile, string outputFile)
+        {
+            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
+
+            var key = new byte[32];
+            var IV = new byte[16];
+
+            foreach (var item in dataToEncrypt.Info)
+            {
+                switch (item.Key)
+                {
+                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
+                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
+                }
+            }
+            RijndaelManaged RMCrypto = new RijndaelManaged();
+
+            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
+
+            CryptoStream cs = new CryptoStream(fsCrypt,
+                RMCrypto.CreateDecryptor(key, IV),
+                CryptoStreamMode.Read);
+
+            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
+
+            int data;
+            while ((data = cs.ReadByte()) != -1)
+                fsOut.WriteByte((byte)data);
+
+            fsOut.Close();
+            cs.Close();
+            fsCrypt.Close();
+
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones
+namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXNivelRiesgoMAP
 {
-    public interface IGetInspeccionesDiarias
+    public interface IGetObservacionesXNivelRiesgoMAP
     {
         Task<List<Dimension>> Execute();
     }
