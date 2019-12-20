@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Configuration;
+using GestionAmbiental.UseCases;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -78,7 +79,7 @@ namespace GestionAmbiental
                 .AddMvc()
                 .AddFeatureFolders(new OdeToCode.AddFeatureFolders.FeatureFolderOptions()
                 { FeatureFolderName = "UseCases" });
-            
+            services.AddSingleton<DataProtectionPurpouseStrings>();
             //services.AddScoped<IConsultarCabeceras, ConsultarCabeceras>();
             //services.AddScoped<ISelectItems, SelectItems>();
             //services.AddScoped<IRegistrarInspeccion, RegistrarInspeccion>();

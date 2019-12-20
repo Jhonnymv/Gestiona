@@ -11,6 +11,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarC
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.ConsultarDetalles;
 using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.VerificarObservacion;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -27,6 +28,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
         private readonly IConsultarDetallesVerificacion _consultarDetalleVerificacion;
         private readonly IVerificarObservacionMA _verificarObservacion;
+        private readonly IDataProtector _protector;
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -41,7 +43,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             IConsultarInspeccionDetalle consultarInspeccionDetalle, 
             IConsultarDetallesVerificacion consultarDetalleVerificacion,
             IVerificarObservacionMA verificarObservacion,
-            IHostingEnvironment hostingEnvironment)
+            IHostingEnvironment hostingEnvironment,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _cache = cache;
             _selectItems = selectItems;
@@ -51,6 +55,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             _consultarDetalleVerificacion = consultarDetalleVerificacion;
             _verificarObservacion = verificarObservacion;
             _hostingEnvironment = hostingEnvironment;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
@@ -95,6 +100,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 {
                     foreach (var fila in datosTabla.Cabeceras)
                     {
+                        var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                         filasTabla += "<tr>";
                         /*switch (fila.Estado)
                         {
@@ -102,7 +108,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                             case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
                             default: filasTabla += "<td class=\"alert-column\"></td>"; break;
                         }*/
-                        filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + fila.IdCabecera.ToString() + "\">" + fila.Codigo + "</a></td>";
+                        filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         filasTabla += "<td>" + fila.Gerencia + "</td>";
                         filasTabla += "<td>" + fila.Empresa + "</td>";
                         filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
@@ -132,7 +138,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 return Ok(response);
             }
         }
-        public async Task<IActionResult> VerificarInspeccion(int IdCabecera)
+        public async Task<IActionResult> VerificarInspeccion(string IdCabecera)
         {
             if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
             {
@@ -140,20 +146,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
-                if (IdCabecera != 0)
+                if (IdCabecera.Length != 0)
                 {
-                    var cabecera = await _consultarCabeceraVerificacion.Execute(IdCabecera);
+                    int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
+                    var cabecera = await _consultarCabeceraVerificacion.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdCabecera, User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdDesencriptado, User.Identity.Name);
                     foreach (var observacion in observaciones)
                     {
+                        var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
                         //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
                         //{
                         var evidencia = "<label style=\"width:110px\">";
                         var evidencia_implementacion = "<label style=\"width:110px\">";
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
-                            evidencia = "<a href=\"/InspeccionesVerificacionMA/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
+                            evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
                         evidencia += "</label>";
                         for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
                         {
@@ -184,9 +192,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.ComentarioImplementacion + "</td>";
                         if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
-                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + observacion.IdInspeccionDetalle.ToString() + "\">" + "Verificar" + "</a></td>";
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Verificar" + "</a></td>";
                         else
-                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + observacion.IdInspeccionCabecera.ToString() + "\" disabled>" + "Verificar" + "</button></td>";
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdObsEncriptado + "\" disabled>" + "Verificar" + "</button></td>";
                         filaObservacion += "</tr>";
                     }
                     //}
@@ -196,7 +204,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 return View();
             }
         }
-        public async Task<IActionResult> VerificarObservacion(int IdObservacion)
+        public async Task<IActionResult> VerificarObservacion(string IdObservacion)
         {
             if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
             {
@@ -204,10 +212,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
-                ViewBag.IdObservacion = IdObservacion;
-                var observacion = await _consultarDetalleVerificacion.Execute(IdObservacion);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
+                var observacion = await _consultarDetalleVerificacion.Execute(IdDesencriptado);
                 var model = new VerificarObservacionMAModel();
                 model.idObservacion = observacion.IdInspeccionDetalle;
+                model.EncryptedId = IdObservacion;
                 model.idCabecera = observacion.IdInspeccionCabecera;
                 model.TipoInspeccion = observacion.TipoInspeccion;
                 model.Asesor_MA_Seguridad = observacion.AsesorMASeguridad;
@@ -232,75 +241,76 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             {
                 if (model.Accion.Equals("Rechazar")) {
                     await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), User.Identity.Name);
-                    return RedirectToAction("NotificarObservacionRechazada","Notificaciones", new { IdObservacion = model.idObservacion });
+                    return RedirectToAction("NotificarObservacionRechazada","Notificaciones", new { IdObservacion = model.EncryptedId });
                 }
                 else
                     await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Aprobado.ToString(), User.Identity.Name);
             }
-            return RedirectToAction("VerificarInspeccion", new { IdCabecera = model.idCabecera });
+            var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
+            return RedirectToAction("VerificarInspeccion", new { IdCabecera = IdEncriptado });
         }
-        public IActionResult Download(string fileName, string tipo)
-        {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
-            {
-                return RedirectToAction("NoAutorizado", "Home");
-            }
-            else
-            {
-                try
-                {
-                    /* Create an FTP Request */
-                    FtpWebRequest ftpRequest;
-                    if (tipo == "condicion")
-                        ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + fileName);
-                    else
-                        ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + fileName);
-                    /* Log in to the FTP Server with the User Name and Password Provided */
-                    ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
-                    /* When in doubt, use these options */
-                    ftpRequest.UseBinary = true;
-                    ftpRequest.UsePassive = true;
-                    ftpRequest.KeepAlive = true;
-                    /* Specify the Type of FTP Request */
-                    ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                    /* Establish Return Communication with the FTP Server */
-                    var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                    /* Get the FTP Server's Response Stream */
-                    var ftpStream = ftpResponse.GetResponseStream();
+        //public IActionResult Download(string fileName, string tipo)
+        //{
+        //    if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+        //    {
+        //        return RedirectToAction("NoAutorizado", "Home");
+        //    }
+        //    else
+        //    {
+        //        try
+        //        {
+        //            /* Create an FTP Request */
+        //            FtpWebRequest ftpRequest;
+        //            if (tipo == "condicion")
+        //                ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasCondicion + fileName);
+        //            else
+        //                ftpRequest = (FtpWebRequest)WebRequest.Create(CarpetaEvidenciasImplementacion + fileName);
+        //            /* Log in to the FTP Server with the User Name and Password Provided */
+        //            ftpRequest.Credentials = new NetworkCredential("SGA", "Pa$$W0rd");
+        //            /* When in doubt, use these options */
+        //            ftpRequest.UseBinary = true;
+        //            ftpRequest.UsePassive = true;
+        //            ftpRequest.KeepAlive = true;
+        //            /* Specify the Type of FTP Request */
+        //            ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+        //            /* Establish Return Communication with the FTP Server */
+        //            var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+        //            /* Get the FTP Server's Response Stream */
+        //            var ftpStream = ftpResponse.GetResponseStream();
 
 
-                    return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
-                }
-                catch (Exception)
-                {
-                    return Content("No se encontró el archivo: ");
-                }
-            }
-        }
-        private string GetContentType(string path)
-        {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
-        }
+        //            return File(ftpStream, GetContentType(fileName), Path.GetFileName(fileName));
+        //        }
+        //        catch (Exception)
+        //        {
+        //            return Content("No se encontró el archivo: ");
+        //        }
+        //    }
+        //}
+        //private string GetContentType(string path)
+        //{
+        //    var types = GetMimeTypes();
+        //    var ext = Path.GetExtension(path).ToLowerInvariant();
+        //    return types[ext];
+        //}
 
-        private Dictionary<string, string> GetMimeTypes()
-        {
-            return new Dictionary<string, string>
-            {
-                {".txt", "text/plain"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
-                {".png", "image/png"},
-                {".jpg", "image/jpeg"},
-                {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".csv", "text/csv"},
-                {".zip","application/zip" }
-            };
-        }
+        //private Dictionary<string, string> GetMimeTypes()
+        //{
+        //    return new Dictionary<string, string>
+        //    {
+        //        {".txt", "text/plain"},
+        //        {".pdf", "application/pdf"},
+        //        {".doc", "application/vnd.ms-word"},
+        //        {".docx", "application/vnd.ms-word"},
+        //        {".xls", "application/vnd.ms-excel"},
+        //        {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+        //        {".png", "image/png"},
+        //        {".jpg", "image/jpeg"},
+        //        {".jpeg", "image/jpeg"},
+        //        {".gif", "image/gif"},
+        //        {".csv", "text/csv"},
+        //        {".zip","application/zip" }
+        //    };
+        //}
     }
 }

@@ -6,10 +6,13 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaInspeccion;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplementada;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechazada;
+using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -22,13 +25,24 @@ namespace GestionAmbiental.UseCases.Notificaciones
         private readonly IGetNuevaInspeccionInfo _getNuevaInspeccionInfo;
         private readonly IGetObservacionImplementada _getObservacionImplementada;
         private readonly IGetObservacionRechazada _getObservacionRechazada;
+        private readonly IDataProtector _protector;
+        private readonly IGetInfo_SGA _info_SGA;
 
-        public NotificacionesController(IHostingEnvironment hostingEnvironment, IGetNuevaInspeccionInfo getNuevaInspeccionInfo, IGetObservacionImplementada getObservacionImplementada, IGetObservacionRechazada getObservacionRechazada)
+        public NotificacionesController(
+            IHostingEnvironment hostingEnvironment, 
+            IGetNuevaInspeccionInfo getNuevaInspeccionInfo, 
+            IGetObservacionImplementada getObservacionImplementada,
+            IGetObservacionRechazada getObservacionRechazada,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
+            IGetInfo_SGA info_SGA)
         {
             _hostingEnvironment = hostingEnvironment;
             _getNuevaInspeccionInfo = getNuevaInspeccionInfo;
             _getObservacionImplementada = getObservacionImplementada;
             _getObservacionRechazada = getObservacionRechazada;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
+            _info_SGA = info_SGA;
         }
         public async Task<IActionResult> NotificarInspección(int IdCabecera)
         {
@@ -104,15 +118,21 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     msg.Subject = "Nueva Observacion Asignada";
                     msg.SubjectEncoding = Encoding.UTF8;
                     msg.IsBodyHtml = true;
-                    msg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Control - Marcobre");
+                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                    string user = "", pass = "";
+                    foreach(var item in credenciales.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "user":user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
+                    }
+                    msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
                     msg.BodyEncoding = Encoding.UTF8;
                     msg.Body = msgBody;
-                    /*foreach (var evidencia in listEvidencias_condicion)
-                    {
-                        msg.Attachments.Add(new Attachment(evidencia));
-                    }*/
                     mail.UseDefaultCredentials = false;
-                    NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
+                    NetworkCredential MyCredentials = new NetworkCredential(user, pass);
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
                     //await mail.SendMailAsync(msg);
@@ -125,11 +145,13 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     Console.WriteLine(ex.Message);
                 }
             }
-            return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdCabecera });
+            var IdEncriptado = _protector.Protect(IdCabecera.ToString());
+            return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdEncriptado });
         }
-        public async Task<IActionResult> NotificarImplementacionObservacion(int IdObservacion)
+        public async Task<IActionResult> NotificarImplementacionObservacion(string IdObservacion)
         {
-            var info = await _getObservacionImplementada.Execute(IdObservacion);
+            var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
+            var info = await _getObservacionImplementada.Execute(IdObsDesencriptado);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates","ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
@@ -193,19 +215,23 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMsg.Subject = "Observación Implementada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
-                MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Gestión Ambiental");
+
+                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                string user = "", pass = "";
+                foreach (var item in credenciales.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+
+                MyMsg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
                 MyMsg.BodyEncoding = Encoding.UTF8;
                 MyMsg.Body = msgBody;
-                /*foreach (var evidencia in info.Evidencia_Condicion)
-                {
-                    MyMsg.Attachments.Add(new Attachment(evidencia));
-                }
-                foreach (var evidencia in info.Evidencia_Implementacion)
-                {
-                    MyMsg.Attachments.Add(new Attachment(evidencia));
-                }*/
                 MyMail.UseDefaultCredentials = false;
-                NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
+                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
                 MyMail.Credentials = MyCredentials;
                 MyMail.EnableSsl = true;
                 //await MyMail.SendMailAsync(MyMsg);
@@ -215,11 +241,13 @@ namespace GestionAmbiental.UseCases.Notificaciones
             {
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = info.IdInspeccionCabecera });
+            var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
+            return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = IdEncriptado });
         }
-        public async Task<IActionResult> NotificarObservacionRechazada(int IdObservacion)
+        public async Task<IActionResult> NotificarObservacionRechazada(string IdObservacion)
         {
-            var info = await _getObservacionRechazada.Execute(IdObservacion);
+            var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
+            var info = await _getObservacionRechazada.Execute(IdObsDesencriptado);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "ObservacionRechazada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
@@ -287,19 +315,23 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 MyMsg.Subject = "Observación Rechazada";
                 MyMsg.SubjectEncoding = Encoding.UTF8;
                 MyMsg.IsBodyHtml = true;
-                MyMsg.From = new MailAddress("kopruebasmail@gmail.com", @"Sistema de Gestión Ambiental");
+
+                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                string user = "", pass = "";
+                foreach (var item in credenciales.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+
+                MyMsg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
                 MyMsg.BodyEncoding = Encoding.UTF8;
                 MyMsg.Body = msgBody;
-                /*foreach (var evidencia in info.Evidencia_Condicion)
-                {
-                    MyMsg.Attachments.Add(new Attachment(evidencia));
-                }
-                foreach (var evidencia in info.Evidencia_Implementacion)
-                {
-                    MyMsg.Attachments.Add(new Attachment(evidencia));
-                }*/
                 MyMail.UseDefaultCredentials = false;
-                NetworkCredential MyCredentials = new NetworkCredential("kopruebasmail@gmail.com", "Wildones6!");
+                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
                 MyMail.Credentials = MyCredentials;
                 //await MyMail.SendMailAsync(MyMsg);
                 MyMsg.Attachments.Dispose();
@@ -308,7 +340,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
             {
                 Console.WriteLine(ex.Message);
             }
-            return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = info.IdInspeccionCabecera });
+            var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
+            return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = IdEncriptado });
         }
     }
 }

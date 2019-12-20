@@ -15,9 +15,10 @@
     <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
 
         <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
+        <input type="hidden" asp-for="EncryptedId" />
         <div class="row mb-2">
             <div class="col-lg-5">
-                <img src="~/img/datos_empleador_marcobre.png" style="width:inherit;"/>
+                <img src="~/img/datos_empleador_marcobre.png" style="width:inherit;" />
             </div>
         </div>
         <div class="row mb-2">
@@ -252,11 +253,12 @@
                     type: "POST",
                     url: "@(Url.Action("AmpliarFechaObservacion", "Inspecciones"))",
                     data: {
-                        "idCabecera": $("#Id_Inspeccion_Cabecera").val(),
+                        "idCabecera": $("#EncryptedId").val(),
                         "idObservacion": idObservacion,
                         "fecha": fecha
                     },
                     success: function (data) {
+                        console.log("Cambiado")
                         location.reload()
                     }
                 });

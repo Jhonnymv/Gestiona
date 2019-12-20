@@ -12,6 +12,7 @@
     </div>
     <form class="form-group" id="form_verificarObservacion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="idObservacion" />
+        <input type="hidden" asp-for="EncryptedId"/>
         <input type="hidden" asp-for="idCabecera" />
         <div class="modal-body">
             <div class="row mb-2">
@@ -53,7 +54,7 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.Evidencias.Count; i++)
                     {
-                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.Evidencias[i]">Evidencia</a>
+                        <a asp-controller="Inspecciones" asp-action="Download" asp-route-fileName="@Model.Evidencias[i]">Evidencia</a>
                     }
                 </div>
             </div>
@@ -104,7 +105,7 @@
                 <div class="col-md-8">
                     @for (int i = 0; i < Model.EvidenciasInspeccion.Count; i++)
                     {
-                        <a asp-controller="InspeccionesVerificacionMA" asp-action="Download" asp-route-path="@Model.EvidenciasInspeccion[i]">Evidencia </a>
+                        <a asp-controller="InspeccionesImplementacion" asp-action="Download" asp-route-fileName="@Model.EvidenciasInspeccion[i]">Evidencia </a>
                     }
                 </div>
             </div>

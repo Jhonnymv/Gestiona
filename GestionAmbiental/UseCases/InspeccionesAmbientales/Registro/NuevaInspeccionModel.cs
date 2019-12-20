@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
     public class NuevaInspeccionModel
     {
         public string opcion { get; set; }
+        [NotMapped]
+        public string EncryptedId { get; set; }
         public int Id_Inspeccion_Cabecera { get; set; }
         [DisplayName("Código")]
         public string Codigo { get; set; }

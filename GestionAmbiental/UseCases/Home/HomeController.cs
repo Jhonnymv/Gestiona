@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios;
+using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

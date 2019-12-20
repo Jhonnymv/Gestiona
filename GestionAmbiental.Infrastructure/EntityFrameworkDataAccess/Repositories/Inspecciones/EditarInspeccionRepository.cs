@@ -60,16 +60,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Inspecciones_Detalle.Update(detalleEntity);
             await _context.SaveChangesAsync();
 
-            var log = new Log_Inspeccion();
-            var bkp = JsonConvert.SerializeObject(detalle);
-            log.Bkp = bkp;
-            log.Fecha = DateTime.Now;
-            log.Id_Inspeccion_Cabecera = detalle.IdInspeccionCabecera;
-            log.Id_Usuario = idUsuario;
-            log.Tipo = TipoAccion.UPDATE.ToString();
+           var log = new Log_Inspeccion();
+           var bkp = JsonConvert.SerializeObject(detalleEntity);
+           log.Bkp = bkp;
+           log.Fecha = DateTime.Now;
+           log.Id_Inspeccion_Cabecera = detalleEntity.Id_Inspeccion_Cabecera;
+           log.Id_Usuario = idUsuario;
+           log.Tipo = TipoAccion.UPDATE.ToString();
 
-            _context.Log_Inspecciones.Add(log);
-            await _context.SaveChangesAsync();
+           _context.Log_Inspecciones.Add(log);
+           await _context.SaveChangesAsync();
         }
     }
 }

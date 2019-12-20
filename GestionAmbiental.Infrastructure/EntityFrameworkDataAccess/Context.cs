@@ -18,6 +18,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Entities.Tipo_Condicion> Tipos_Condicion { get; set; }
         public DbSet<Entities.Usuario> Usuarios { get; set; }
         public DbSet<Entities.Rol> Rol { get; set; }
+        public DbSet<Entities.Info_SGA> Info_SGAs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +39,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Usuario");
             modelBuilder.Entity<Entities.Rol>()
                 .ToTable("Tb_Rol");
+            modelBuilder.Entity<Entities.Info_SGA>()
+                .ToTable("Tb_Info_SGA");
         }
     }
 
