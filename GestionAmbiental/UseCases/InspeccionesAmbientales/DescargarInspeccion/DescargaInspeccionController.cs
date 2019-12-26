@@ -15,7 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json.Linq;
 using NPOI.XSSF.UserModel;
+using NPOI.XSSF.Util;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -107,85 +109,101 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 {
                     short rowHeight = 850;
                     IRow row = sheet.CreateRow(fila);
+
+                    //Aplicar cell style a una fila de observación
+                    for (int i = 0; i <= 30; i++)
+                    {
+                        row.CreateCell(i);
+                        row.GetCell(i).CellStyle = customCellStyle;
+                    }
+                    //Combinar celdas
+                    //Nro
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 0, 1));
+                    //Acto/Condición subestándar identificada
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 3, 8));
+                    //Fotografía de la condición subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 9, 13));
+                    //Tipo de Condición/Acto Subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 14, 16));
+                    //Acción preventiva/correctiva
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 18, 22));
+                    //Levantamiento de la Observación
+                    sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(fila, fila, 25, 28));
+                    //Fecha de cierre
+                    sheet.AddMergedRegion(new NPOI.SS.Util.CellRangeAddress(fila, fila, 29, 30));
                     //Evidencia condición
-                    row.CreateCell(10);
-                    row.GetCell(10).CellStyle = customCellStyle;
+                    row.GetCell(9).CellStyle = customCellStyle;
                     //Evidencia implementación
-                    row.CreateCell(23);
-                    row.GetCell(23).CellStyle = customCellStyle;
+                    row.GetCell(25).CellStyle = customCellStyle;
 
                     ImageProperties evidencia_condicion = new ImageProperties();
                     ImageProperties evidencia_inspeccion = new ImageProperties();
 
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
-                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion");
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 9, rowHeight, imageIndex, "condicion");
                         rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                         imageIndex++;
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
-                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion");
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 25, rowHeight, imageIndex, "inspeccion");
                         rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                         imageIndex++;
                     }
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     row.Height = rowHeight;
                     //rezise images
-                    if (evidencia_condicion.extension != ".jpg" &&
-                        evidencia_condicion.extension != ".png" &&
-                        evidencia_condicion.extension != ".jpge" &&
-                        evidencia_condicion.extension != ".JPG" &&
-                        evidencia_condicion.extension != ".PNG" &&
-                        evidencia_condicion.extension != ".JPGE" &&
-                        evidencia_condicion.extension != null &&
-                        evidencia_condicion.rowHeight != 0 &&
-                        evidencia_condicion.rowHeight < row.Height
-                        )
-                        evidencia_condicion.image.Resize(0.6, 0.2);
 
-                    if (evidencia_inspeccion.extension != ".jpg" &&
-                        evidencia_inspeccion.extension != ".png" &&
-                        evidencia_inspeccion.extension != ".jpge" &&
-                        evidencia_inspeccion.extension != ".JPG" &&
-                        evidencia_inspeccion.extension != ".PNG" &&
-                        evidencia_inspeccion.extension != ".JPGE" &&
+                    if ((evidencia_condicion.extension == ".jpg" ||
+                        evidencia_condicion.extension == ".png" ||
+                        evidencia_condicion.extension == ".jpge" ||
+                        evidencia_condicion.extension == ".JPG" ||
+                        evidencia_condicion.extension == ".PNG" ||
+                        evidencia_condicion.extension == ".JPGE" &&
+                        evidencia_condicion.extension != null) &&
+                        evidencia_condicion.rowHeight != 0 &&
+                        evidencia_condicion.rowHeight < row.Height)
+                    {
+                        evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                    }
+
+                    if ((evidencia_inspeccion.extension == ".jpg" ||
+                        evidencia_inspeccion.extension == ".png" ||
+                        evidencia_inspeccion.extension == ".jpge" || 
+                        evidencia_inspeccion.extension == ".JPG" ||
+                        evidencia_inspeccion.extension == ".PNG" ||
+                        evidencia_inspeccion.extension == ".JPGE") &&
                         evidencia_inspeccion.extension != null &&
                         evidencia_inspeccion.rowHeight != 0 &&
                         evidencia_inspeccion.rowHeight < row.Height)
-                        evidencia_inspeccion.image.Resize(0.6, 0.2);
+                    {
+                        evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+                    }
 
                     //->Index
-                    row.CreateCell(1).SetCellValue(obsIndex);
-                    row.GetCell(1).CellStyle = customCellStyle;
+                    row.GetCell(0).SetCellValue(obsIndex);
                     //->TIPO OBSERVACION
-                    row.CreateCell(2).SetCellValue(observacion.TipoObservacion);
-                    row.GetCell(2).CellStyle = customCellStyle;
+                    row.GetCell(2).SetCellValue(observacion.TipoObservacion);
                     //->Acto/Condición Subestándar Identificada
-                    row.CreateCell(3).SetCellValue(observacion.DescripcionCondicion);
-                    row.GetCell(3).CellStyle = customCellStyle;
+                    row.GetCell(3).SetCellValue(observacion.DescripcionCondicion);
                     //->Tipo de Condición / Acto Subestándar
-                    row.CreateCell(14).SetCellValue(observacion.TipoCondicion.Descripcion);
-                    row.GetCell(14).CellStyle = customCellStyle;
+                    row.GetCell(14).SetCellValue(observacion.TipoCondicion.Descripcion);
                     //->Nivel de Riesgo
-                    row.CreateCell(17).SetCellValue(observacion.NivelRiesgo);
-                    row.GetCell(17).CellStyle = customCellStyle;
+                    row.GetCell(17).SetCellValue(observacion.NivelRiesgo);
                     //->Acción Preventiva / Correctiva Tomada
-                    row.CreateCell(18).SetCellValue(observacion.DescripcionAccion);
-                    row.GetCell(18).CellStyle = customCellStyle;
+                    row.GetCell(18).SetCellValue(observacion.DescripcionAccion);
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
-                    row.CreateCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
-                    row.GetCell(23).CellStyle = customCellStyle;
+                    row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
                     //->Fecha Programada
-                    row.CreateCell(24).SetCellValue(observacion.FechaProgramada.ToShortDateString());
-                    row.GetCell(24).CellStyle = customCellStyle;
+                    row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToShortDateString());
 
-                    row.CreateCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
-                    row.GetCell(29).CellStyle = customCellStyle;
-
-
+                    row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
+                    
+                    
                     obsIndex++;
                     fila++;
+
                 }
 
                 // Force formulas to update with new data we added
@@ -200,10 +218,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }        
-        private double GetRowHeight(int image_width, int image_height)
+        private double GetRowHeight(int image_width, int image_height, double cellWidth)
         {
-            double cellWidth = 7.16;//cm
-            return (image_height * cellWidth) / image_width;
+            //double cellWidth = 7.16;//cm
+            return ((image_height * cellWidth) / image_width)/3;
         }
         //Retorna el tamaño de la fila para la imagen agregada
         private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
@@ -213,6 +231,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             FtpWebRequest ftpRequest;
             foreach (var evidencia in evidenciasCondicion)
             {
+                var imgNCol = 0;
+
                 //1. Vaciar carpeta temporal del usuario 
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre\\";
@@ -240,6 +260,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 var serverInfo = new Info_SGAOutput();
                 if (tipoEvidencia == "condicion")
                 {
+                    imgNCol = 5;
                     serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
                     foreach (var item in serverInfo.Info)
                     {
@@ -253,6 +274,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 else
                 {
+                    imgNCol = 4;
                     serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
                     foreach (var item in serverInfo.Info)
                     {
@@ -264,10 +286,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         }
                     }
                 }
-                
 
                 ftpRequest = (FtpWebRequest)WebRequest.Create(route + evidencia);
-                ftpRequest.Credentials = new NetworkCredential(user,pass);
+                ftpRequest.Credentials = new NetworkCredential(user, pass);
                 ftpRequest.UseBinary = true;
                 ftpRequest.UsePassive = true;
                 ftpRequest.KeepAlive = true;
@@ -309,15 +330,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     templateWorkbook.AddPicture(bytes, pType);
 
-                    IDrawing drawing = sheet.CreateDrawingPatriarch();
-                    IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                    anchor.Dx1 = 1;
-                    anchor.Dy1 = 1;
+                    XSSFClientAnchor anchor = new XSSFClientAnchor();
                     anchor.Col1 = column;
                     anchor.Row1 = row;
+                    anchor.Col2 = column + imgNCol;
+
+                    IDrawing drawing = sheet.CreateDrawingPatriarch();
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+
                     var image_dim = picture.GetImageDimension();
-                    rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
+                    var mergedCellWidth = 0.0;
+                    for(int i = column; i <= column + imgNCol; i++)
+                    {
+                        mergedCellWidth += sheet.GetColumnWidth(i);
+                    }
+                    
+                    rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
                     picture.Resize(1.0);
 
                     output.rowHeight = rowHeight;
@@ -339,19 +367,21 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     }
                     templateWorkbook.AddPicture(bytes, pType);
 
-                    IDrawing drawing = sheet.CreateDrawingPatriarch();
-                    IClientAnchor anchor = templateWorkbook.GetCreationHelper().CreateClientAnchor();
-                    anchor.Dx1 = 1;
-                    anchor.Dy1 = 1;
+                    XSSFClientAnchor anchor = new XSSFClientAnchor();
                     anchor.Col1 = column;
                     anchor.Row1 = row;
+                    anchor.Col2 = column + imgNCol;
+
+                    IDrawing drawing = sheet.CreateDrawingPatriarch();
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
                     var image_dim = picture.GetImageDimension();
-                    rowHeight = (short)(GetRowHeight(image_dim.Width, image_dim.Height) * 612);
-                    if(rowHeight > 2360)
-                        picture.Resize(1.0,0.2);
-                    else
-                        picture.Resize(1.0);
+                    var mergedCellWidth = 0.0;
+                    for (int i = column; i <= column + imgNCol; i++)
+                    {
+                        mergedCellWidth += sheet.GetColumnWidthInPixels(i);
+                    }
+                    rowHeight = 2000;
+                    picture.Resize(1.0);
 
                     output.rowHeight = rowHeight;
                     output.image = picture;

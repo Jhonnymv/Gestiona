@@ -312,7 +312,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 return RedirectToActionPermanent("EditarInspeccion", new { IdCabecera = IdEncriptado });
             }
             else
-                return RedirectToAction("NuevaObservacion", model);            
+            {
+                var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
+                return RedirectToAction("NuevaObservacion", new { IdCabecera = IdEncriptado });
+
+            }
         }
         public async Task<IActionResult> EditarInspeccion(string IdCabecera)
         {

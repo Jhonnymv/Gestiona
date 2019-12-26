@@ -47,10 +47,8 @@
                     <span class="text-danger" asp-validation-for="CondicionIdentificada"></span>
                     <select class="form-control" asp-for="CondicionIdentificada">
                         <option value="">-- SELECCIONE --</option>
-                        <option class="OpcMedioAmbiente" value="Acto Subestándar" style="display:none">Acto Subestándar</option>
-                        <option class="OpcMedioAmbiente" value="Condición Subestándar" style="display:none">Condición Subestándar</option>
-                        <option class="OpcSeguridad" value="Acto Subestándar" style="display:none">Acto Subestándar</option>
-                        <option class="OpcSeguridad" value="Condición Subestándar" style="display:none">Condición Subestándar</option>
+                        <option value="Acto Subestándar">Acto Subestándar</option>
+                        <option value="Condición Subestándar">Condición Subestándar</option>
                     </select>
                 </div>
             </div>
@@ -89,17 +87,24 @@
                 </div>
                 <div class="col-md-8">
                     <span class="text-danger" asp-validation-for="NiveRiesgo"></span>
-                    <select class="form-control" asp-for="NiveRiesgo">
+                    <select class="form-control Vacio_NR" asp-for="NiveRiesgo">
+                        <option value="" style="background-color:white;color:black;">-- SELECCIONE --</option>
+                    </select>@*
+                    <select class="form-control OpcMedioAmbiente" asp-for="NiveRiesgo"  style="display:none">
                         <option value="" style="background-color:white">-- SELECCIONE --</option>
                         <option value="No Aplica" style="background-color:white">No Aplica</option>
-                        <option class="OpcMedioAmbiente" value="Tolerable" style="background-color:green; color:white; display:none">Tolerable</option>
-                        <option class="OpcMedioAmbiente" value="Alerta" style="background-color:yellow; display:none">Alerta</option>
-                        <option class="OpcMedioAmbiente" value="No Aceptable" style="background-color:red; color:white; display:none">No Aceptable</option>
-
-                        <option class="OpcSeguridad" value="Bajo" style="background-color:green; color:white; display:none">Bajo</option>
-                        <option class="OpcSeguridad" value="Medio" style="background-color:yellow; display:none">Medio</option>
-                        <option class="OpcSeguridad" value="Alto" style="background-color:red; color:white; display:none">Alto</option>
+                        <option value="Tolerable" style="background-color:green;color:white;">Tolerable</option>
+                        <option value="Alerta" style="background-color:yellow;">Alerta</option>
+                        <option value="No Aceptable" style="background-color:red;color:white;">No Aceptable</option>
                     </select>
+                    <select class="form-control OpcSeguridad" asp-for="NiveRiesgo" style="display:none">
+                        <option value="" style="background-color:white">-- SELECCIONE --</option>
+                        <option value="No Aplica" style="background-color:white">No Aplica</option>
+                        <option value="Bajo" style="background-color:green;color:white;">Bajo</option>
+                        <option value="Medio" style="background-color:yellow;">Medio</option>
+                        <option value="Alto" style="background-color:red;color:white;">Alto</option>
+                    </select>
+                                 *@
                 </div>
             </div>
             <div class="row mb-2">
@@ -184,36 +189,61 @@
                     //$("#modal_archivo").modal('show');
             }
         });
-        $("#NiveRiesgo").change(function () {
+        $("#NiveRiesgo").on('change',function () { 
+            console.log("NR"+$("#NiveRiesgo").val())
             switch ($("#NiveRiesgo").val()) {
-                case "Tolerable": $("#NiveRiesgo").css("background-color", "green"); $("#NiveRiesgo").css("color", "white"); break;
-                case "Alerta": $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black"); break;
+                case "Tolerable":
+                    $("#NiveRiesgo").css("background-color", "green");
+                    $("#NiveRiesgo").css("color", "white");
+                   // $("#NiveRiesgo option[value='No Aplica'],#NiveRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
+                    break;
+                case "Alerta":
+                    $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black");
+                    break;
                 case "No Aceptable": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
                 case "Bajo": $("#NiveRiesgo").css("background-color", "green"); $("#NiveRiesgo").css("color", "white"); break;
                 case "Medio": $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black"); break;
                 case "Alto": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
                 default: $("#NiveRiesgo").css("background-color", "white"); $("#NiveRiesgo").css("color", "black"); break;
             }
+            $("#NiveRiesgo option").css("color", "black")
         });
         $("#TipoInspeccion").on('change', function () {
             if ($("#TipoInspeccion").val() == "MAP") {
                 $(".OpcSeguridad").hide();
+                $(".OpcSeguridad").prop('disabled', 'disabled');
                 $(".OpcMedioAmbiente").show();
-                /*
-                 AsesorVacio
-                 AsesorMedioAmbiente
-                 AsesorSeguridad
-                 */
-                //Mostrar asesores mediambiente
+                $(".OpcMedioAmbiente").prop('disabled', false);
+                //$(".Vacio_NR").hide();
+                //$(".Vacio_NR").prop('disabled', 'disabled');
+                //Mostrar asesores
                 $(".AsesorMedioAmbiente").show();
                 $(".AsesorMedioAmbiente").prop('disabled', false);
                 $(".AsesorSeguridad").hide();
                 $(".AsesorSeguridad").prop('disabled', 'disabled');
                 //reiniciar condicion
                 $("#CondicionIdentificada").val("");
+                //Eliminar Niveles SSO                
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Bajo']").remove();
+                $("#NiveRiesgo option[value='Medio']").remove();
+                $("#NiveRiesgo option[value='Alto']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NiveRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NiveRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#NiveRiesgo').append(new Option("Tolerable", "Tolerable"));
+                $("#NiveRiesgo option[value='Tolerable']").css({"background-color": "green", "color": "white"});
+                $('#NiveRiesgo').append(new Option("Alerta", "Alerta"));
+                $("#NiveRiesgo option[value='Alerta']").css({"background-color": "yellow", "color": "black"});
+                $('#NiveRiesgo').append(new Option("No Aceptable", "No Aceptable"));
+                $("#NiveRiesgo option[value='No Aceptable']").css({"background-color": "red", "color": "white"});
             } else if ($("#TipoInspeccion").val() == "SSO") {
                 $(".OpcMedioAmbiente").hide();
-                $(".OpcSeguridad").show();
+                $(".OpcMedioAmbiente").prop('disabled',  'disabled');
+                $(".OpcSeguridad").show();                
+                $(".OpcSeguridad").prop('disabled',  false);
+                //$(".Vacio_NR").hide();
+                //$(".Vacio_NR").prop('disabled', 'disabled');
                 //Mostrar asesores seguridad
                 $(".AsesorMedioAmbiente").hide();
                 $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
@@ -221,9 +251,27 @@
                 $(".AsesorSeguridad").prop('disabled', false);
                 //reiniciar condicion
                 $("#CondicionIdentificada").val("");
+                //Eliminar Niveles MAP                
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Tolerable']").remove();
+                $("#NiveRiesgo option[value='Alerta']").remove();
+                $("#NiveRiesgo option[value='No Aceptable']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NiveRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NiveRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#NiveRiesgo').append(new Option("Bajo", "Bajo"));
+                $("#NiveRiesgo option[value='Bajo']").css({"background-color": "green", "color": "white"});
+                $('#NiveRiesgo').append(new Option("Medio", "Medio"));
+                $("#NiveRiesgo option[value='Medio']").css({"background-color": "yellow", "color": "black"});
+                $('#NiveRiesgo').append(new Option("Alto", "Alto"));
+                $("#NiveRiesgo option[value='Alto']").css({"background-color": "red", "color": "white"});
             } else {
                 $(".OpcMedioAmbiente").hide();
+                $(".OpcMedioAmbiente").prop('disabled',  'disabled');
                 $(".OpcSeguridad").hide();
+                $(".OpcSeguridad").prop('disabled',  'disabled');
+                $(".Vacio_NR").show();
+                $(".Vacio_NR").prop('disabled',  false);
                 //Ocultar asesores
                 $(".AsesorVacio").show();
                 $(".AsesorVacio").prop('disabled', false);
@@ -233,6 +281,16 @@
                 $(".AsesorSeguridad").prop('disabled', 'disabled');
                 //reiniciar condicion
                 $("#CondicionIdentificada").val("");
+                //Eliminar Niveles MAP                
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Tolerable']").remove();
+                $("#NiveRiesgo option[value='Alerta']").remove();
+                $("#NiveRiesgo option[value='No Aceptable']").remove();
+                //Eliminar Niveles SSO
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Bajo']").remove();
+                $("#NiveRiesgo option[value='Medio']").remove();
+                $("#NiveRiesgo option[value='Alto']").remove();
             }
             //reiniciar tipo condicion
             $(".Vacio").show();
@@ -247,6 +305,8 @@
             $(".SEG-Condicion").prop('disabled', 'disabled');
             $("#TiposActoMA").val("");
             $("#TiposCondicionMA").val("");
+            //reiniciar estilo de nivel de riesgo
+            $("#NiveRiesgo").css({"background-color": "white", "color": "black"});
         });
         $("#CondicionIdentificada").on('change', function () {
             var selectedOption = $("#CondicionIdentificada option:selected").val();
