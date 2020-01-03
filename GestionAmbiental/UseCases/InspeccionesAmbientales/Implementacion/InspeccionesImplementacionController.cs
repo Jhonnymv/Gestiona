@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.ConsultarDetalles;
@@ -74,6 +75,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -148,6 +150,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 if (IdCabecera.Length != 0)
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
@@ -196,12 +199,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Implementar" + "</a></td>";
                         }
 
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
+                        /*else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                             observacion.Permisos)
                         {
                             filaObservacion += "<td><span class=\"badge badge-warning\">Vencido</span></td>";
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + IdObsEncriptado + "\">" + "Solicitar Ampliación" + "</a></td>";
-                        }
+                        }*/
                         else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
                             filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td><td></td>";
                         else if (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
@@ -236,6 +239,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
                 var observacion = await _consultarDetalleImplementacion.Execute(IdDesencriptado);
                 var IdCabeceraEncriptado = _protector.Protect(observacion.IdInspeccionCabecera.ToString());
@@ -280,13 +284,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = IdEncriptado });
         }
-        public async Task<IActionResult> SolicitarAmpliacion(string IdObservacion)
+        /*public async Task<IActionResult> SolicitarAmpliacion(string IdObservacion)
         {
             //notificar
 
             var response = "";
             return Ok(response);
-        }
+        }*/
         private string CreateUniqueFileName(int nFile)
         {
             var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();

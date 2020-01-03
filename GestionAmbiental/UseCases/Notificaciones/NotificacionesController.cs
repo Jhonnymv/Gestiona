@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaInspeccion;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplementada;

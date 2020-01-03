@@ -80,6 +80,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var nObservaciones = await _getObservacionesXEstado.Execute();
                 var inspecciones_diarias = await _getInspeccionesDiarias.Execute();
                 var map_vs_sso = await _getInspeccionesMAPvsSSO.Execute();
@@ -110,6 +111,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var data = await _getDetalleObservacionesXEstado.Execute(estado);
                 foreach(var item in data)
                 {

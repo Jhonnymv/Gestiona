@@ -26,6 +26,10 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
             }
             Tipo = info_SGA.Tipo;
         }
+        public string GetEncryptedInfo(string infoToEncrypt)
+        {
+            return Cipher.Encrypt(infoToEncrypt, Key);
+        }
 
         public Info_SGAOutput()
         {

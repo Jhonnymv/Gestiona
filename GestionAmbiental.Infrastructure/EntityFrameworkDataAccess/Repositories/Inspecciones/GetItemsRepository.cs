@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using GestionAmbiental.Domain.Enum;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Inspecciones
 {
@@ -80,7 +81,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios = await _context.Usuarios.Where(x=>!x.Id_Rol.Equals((int)InspeccionRol.Admin)).ToListAsync();
             var output = new List<Usuario>();
             foreach (var item in usuarios)
             {

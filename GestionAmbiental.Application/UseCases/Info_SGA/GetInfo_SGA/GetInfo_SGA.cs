@@ -8,7 +8,7 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Runtime.InteropServices;
 
-namespace GestionAmbiental.Application.UseCases.Info_SGA
+namespace GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA
 {
     public class GetInfo_SGA : IGetInfo_SGA
     {
@@ -22,7 +22,7 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
         public async Task<Info_SGAOutput> Execute(Tipo_Info_SGA tipo)
         {
             var info = await _info_SGAReadOnlyRepository.GetInfo_SGA(tipo.ToString());
-                       
+
             var output = new Info_SGAOutput(info);
             return output;
         }

@@ -42,7 +42,7 @@ namespace GestionAmbiental.Controllers
                     _cache.Set(CacheKeys.RolUsuario, rol, cacheEntryOptions);
                 }
 
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
 
                 return View();
             }            

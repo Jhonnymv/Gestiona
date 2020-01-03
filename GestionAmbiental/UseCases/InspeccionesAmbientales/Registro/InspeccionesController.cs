@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using GestionAmbiental.Application.UseCases.Info_SGA;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspeccion;
@@ -78,6 +79,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -157,6 +159,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -241,6 +244,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -326,6 +330,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();

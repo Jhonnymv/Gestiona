@@ -18,6 +18,7 @@ using NPOI.XSSF.UserModel;
 using NPOI.XSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -47,6 +48,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var cabecera = await _consultarInspeccionDescarga.Execute(IdCabecera);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
@@ -336,15 +338,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     anchor.Col2 = column + imgNCol;
 
                     IDrawing drawing = sheet.CreateDrawingPatriarch();
+
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
 
                     var image_dim = picture.GetImageDimension();
                     var mergedCellWidth = 0.0;
-                    for(int i = column; i <= column + imgNCol; i++)
+                    for (int i = column; i <= column + imgNCol; i++)
                     {
                         mergedCellWidth += sheet.GetColumnWidth(i);
                     }
-                    
+
                     rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
                     picture.Resize(1.0);
 
@@ -373,6 +376,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     anchor.Col2 = column + imgNCol;
 
                     IDrawing drawing = sheet.CreateDrawingPatriarch();
+                    
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
                     var image_dim = picture.GetImageDimension();
                     var mergedCellWidth = 0.0;
@@ -384,7 +388,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     picture.Resize(1.0);
 
                     output.rowHeight = rowHeight;
-                    output.image = picture;
+                    output.image = picture;                   
                 }
                 output.extension = extension;
             }            

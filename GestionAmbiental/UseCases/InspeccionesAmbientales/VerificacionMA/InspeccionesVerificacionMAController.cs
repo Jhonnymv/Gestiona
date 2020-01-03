@@ -66,6 +66,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -85,6 +86,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 DateTime fecha;
                 if (filtroFecha != null)
                     fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
@@ -146,6 +148,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 if (IdCabecera.Length != 0)
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
@@ -212,6 +215,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
             else
             {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
                 var observacion = await _consultarDetalleVerificacion.Execute(IdDesencriptado);
                 var model = new VerificarObservacionMAModel();

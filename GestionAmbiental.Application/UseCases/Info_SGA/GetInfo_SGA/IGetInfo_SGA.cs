@@ -1,10 +1,7 @@
 ﻿using GestionAmbiental.Domain.Enum;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Info_SGA
+namespace GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA
 {
     public interface IGetInfo_SGA
     {

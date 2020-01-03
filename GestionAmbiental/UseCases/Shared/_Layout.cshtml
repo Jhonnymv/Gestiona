@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GestionAmbiental</title>
 
-    <environment include="Development">
+    <environment include="Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
-    <environment exclude="Development">
+    <environment exclude="Production">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
@@ -29,23 +29,33 @@
             </button>
             <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse justify-content-start">
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown dropleft">
-                        <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                            <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones</a>
-                            <a class="dropdown-item" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Obs. Pendientes de Implementación</a>
-                            <a class="dropdown-item" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
-                            <a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown dropleft">
-                        <a class="nav-link dropdown-toggle text-white" id="dropdown_tablas_maestras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown_tablas_maestras">
-                            <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
-                            <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Inspección</a>
-                        </div>
-                    </li>
-                </ul>
+                    @if (ViewBag.Rol == "AsesorSSO" ||ViewBag.Rol == "AsesorMAP" ||ViewBag.Rol == "Inspector")
+                    {
+                        <li class="nav-item dropdown dropleft">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                                    <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones</a>                                
+                                    <a class="dropdown-item" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Obs. Pendientes de Implementación</a>
+                                @if (ViewBag.Rol == "AsesorSSO" ||ViewBag.Rol == "AsesorMAP")
+                                {
+                                    <a class="dropdown-item" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
+                                    <a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes</a>
+                                    }
+                                </div>
+                        </li>}
+                        @if (ViewBag.Rol == "Admin")
+                        {
+                            <li class="nav-item dropdown dropleft">
+                                <a class="nav-link dropdown-toggle text-white" id="dropdown_tablas_maestras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown_tablas_maestras">
+                                    <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
+                                    <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Inspección</a>
+                                    <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
+                                </div>
+                            </li>
+                        }
+
+                    </ul>
             </div>
         </nav>
     </header>
@@ -61,7 +71,7 @@
             </div>
         </footer>
     *@
-    <environment include="Development">
+    <environment include="Production">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -70,7 +80,7 @@
         <script src="~/lib/charts/Chart.bundle.min.js"></script>
         <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
     </environment>
-    <environment exclude="Development">
+    <environment exclude="Production">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
