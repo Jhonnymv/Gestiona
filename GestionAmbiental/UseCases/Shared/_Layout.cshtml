@@ -29,33 +29,40 @@
             </button>
             <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse justify-content-start">
                 <ul class="navbar-nav">
-                    @if (ViewBag.Rol == "AsesorSSO" ||ViewBag.Rol == "AsesorMAP" ||ViewBag.Rol == "Inspector")
+                    @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
                     {
                         <li class="nav-item dropdown dropleft">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                                    <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones</a>                                
-                                    <a class="dropdown-item" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Obs. Pendientes de Implementación</a>
-                                @if (ViewBag.Rol == "AsesorSSO" ||ViewBag.Rol == "AsesorMAP")
+                                <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones</a>
+                                <a class="dropdown-item" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Obs. Pendientes de Implementación</a>
+                                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
                                 {
                                     <a class="dropdown-item" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
                                     <a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes</a>
-                                    }
-                                </div>
-                        </li>}
-                        @if (ViewBag.Rol == "Admin")
-                        {
-                            <li class="nav-item dropdown dropleft">
-                                <a class="nav-link dropdown-toggle text-white" id="dropdown_tablas_maestras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown_tablas_maestras">
-                                    <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
-                                    <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Inspección</a>
-                                    <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
-                                </div>
-                            </li>
-                        }
+                                }
+                            </div>
+                        </li>
+}
+                    @if (ViewBag.Rol == "Admin")
+                    {
+                        <li class="nav-item dropdown dropleft">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_tablas_maestras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_tablas_maestras">
+                                <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
+                                <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Inspección</a>
+                                <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
+                            </div>
+                        </li>
+                    }
+                    <li class="nav-item dropdown dropleft">
+                        <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes de Acto y Condición Subestándar</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                            <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a>
+                        </div>
+                    </li>
 
-                    </ul>
+                </ul>
             </div>
         </nav>
     </header>

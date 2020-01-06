@@ -35,7 +35,6 @@ namespace GestionAmbiental.Domain.ValueObjects
             IdSuperior = idSuperior;
             Estado = estado;
         }
-
         public Usuario()
         {
         }

@@ -59,26 +59,7 @@
 @section scripts{
     <script>
     $(document).ready(function () {
-            nObservaciones = 0;
-
-            $('#gerenciaEjecutora_filtro').change(function () {
-                filtroGerencia = $(this).children("option:selected").val();
-                console.log(filtroGerencia)
-            });
-            $('#codigo_filtro').bind("keyup change", function () {
-                filtroCodigo = $(this).val();
-                console.log(filtroCodigo)
-            });
-            $('#fecha_filtro').change(function () {
-                filtroFecha = $(this).val();
-                console.log(filtroFecha);
-            });
-            $("#btn_modalNuevaInspeccion").click(function () {
-                guardar()
-            });
-
             filtrar(1);
-
     });
     function filtrar(pag) {
             $.ajax({

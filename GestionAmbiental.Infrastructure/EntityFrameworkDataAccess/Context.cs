@@ -19,6 +19,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Entities.Usuario> Usuarios { get; set; }
         public DbSet<Entities.Rol> Rol { get; set; }
         public DbSet<Entities.Info_SGA> Info_SGAs { get; set; }
+        public DbSet<Entities.RAC> RACs { get; set; }
+        public DbSet<Entities.Log_RAC> Log_RACs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +43,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Rol");
             modelBuilder.Entity<Entities.Info_SGA>()
                 .ToTable("Tb_Info_SGA");
+            modelBuilder.Entity<Entities.RAC>()
+                .ToTable("Tb_RAC");
+            modelBuilder.Entity<Entities.Log_RAC>()
+                .ToTable("Tb_Log_RAC");
         }
     }
 
