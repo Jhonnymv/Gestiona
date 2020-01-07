@@ -4,19 +4,22 @@ using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.RAC.Registro;
+using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionAmbiental.UseCases.RAC.Registro
 {
     public class RegistroRACController : Controller
     {
         private readonly IConsultarRACs _consultarRACs;
-
-        public RegistroRACController(IConsultarRACs consultarRACs)
+        private readonly ISelectItems _selectItems;
+        public RegistroRACController(IConsultarRACs consultarRACs, ISelectItems selectItems)
         {
             _consultarRACs = consultarRACs ?? throw new ArgumentNullException(nameof(consultarRACs));
+            _selectItems = selectItems ?? throw new ArgumentNullException(nameof(selectItems));
         }
-
         public IActionResult Resumen()
         {
             return View();
@@ -75,6 +78,55 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 Paginador = paginador
             };
             return Ok(response);
+        }
+        public async Task<IActionResult> NuevoRAC()
+        {
+            var items = await _selectItems.Execute();
+
+            var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var empresas = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+            empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposActoMA = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposCondicionMA = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposActoSSO = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposActoSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var tiposCondicionSSO = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            tiposCondicionSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos }).ToList();
+            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var asesoresMAP = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            asesoresMAP.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var asesoresSSO = items.ItemsAsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            asesoresSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.Gerencias = gerencias;
+            ViewBag.Empresas = empresas;
+            ViewBag.Usuarios = usuarios;
+            ViewBag.AsesoresMAP = asesoresMAP;
+            ViewBag.AsesoresSSO = asesoresSSO;
+
+            ViewBag.ActoMA = tiposActoMA;
+            ViewBag.CondicionMA = tiposCondicionMA;
+            ViewBag.ActoSSO = tiposActoSSO;
+            ViewBag.CondicionSSO = tiposCondicionSSO;
+
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> NuevoRAC(NuevoRACModel model)
+        {
+            return View();
         }
     }
 }

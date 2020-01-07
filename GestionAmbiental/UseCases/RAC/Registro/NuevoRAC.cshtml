@@ -1,0 +1,412 @@
+﻿@model GestionAmbiental.UseCases.RAC.Registro.NuevoRACModel
+@{
+    ViewData["Title"] = "Nuevo Reporte de Acto y Condición Subestándar";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Nuevo Reporte de Acto y Condición Subestándar</h2>
+            </div>
+        </div>
+        <form class="form-group" id="form_nuevoRAC" asp-action="NuevoRAC" asp-controller="RegistroRAC" method="post" enctype="multipart/form-data" autocomplete="off">
+            <div class="row mb-2" style="background-color:#2e6793">
+                <div class="col-12" style="text-align:center">
+                    <h5 style="color:white;margin:4px;">DATOS DEL PERSONAL QUE REPORTA</h5>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label asp-for="Nombres_Apellidos"></label>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Nombres_Apellidos"></span>
+                    <input type="text" class="form-control" asp-for="Nombres_Apellidos" />
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label asp-for="Id_Gerencia"></label>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
+                    <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label asp-for="Id_Empresa"></label>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Empresa"></span>
+                    <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa"></select>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label asp-for="Otra_Empresa"></label>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Otra_Empresa"></span>
+                    <input type="text" class="form-control" asp-for="Otra_Empresa" />
+                </div>
+            </div>
+            <div class="row mb-2" style="background-color:#2e6793">
+                <div class="col-12" style="text-align:center">
+                    <h5 style="color:white;margin:4px;">DESCRIPCIÓN DE LA OBSERVACIÓN</h5>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Id_Empresa_Obs"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Empresa_Obs"></span>
+                    <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa_Obs"></select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Id_Gerencia_Obs"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Gerencia_Obs"></span>
+                    <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Obs"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Ubicacion"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Ubicacion"></span>
+                    <input type="text" class="form-control" asp-for="Ubicacion" />
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-1">
+                    <label asp-for="Fecha"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <span class="text-danger" asp-validation-for="Fecha"></span>
+                    <input type="date" class="form-control" asp-for="Fecha">
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-1">
+                    <label asp-for="Hora"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <span class="text-danger" asp-validation-for="Hora"></span>
+                    <input type="time" class="form-control" asp-for="Hora">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="SSO_MA"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <span class="text-danger" asp-validation-for="SSO_MA"></span>
+                    <select class="form-control" asp-for="SSO_MA">
+                        <option value="">--SELECCIONE--</option>
+                        <option value="SSO">SSO</option>
+                        <option value="MAP">MA</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Clasificacion"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <span class="text-danger" asp-validation-for="Clasificacion"></span>
+                    <select class="form-control" asp-for="Clasificacion">
+                        <option value="">-- SELECCIONE --</option>
+                        <option value="Acto Subestándar">Acto Subestándar</option>
+                        <option value="Condición Subestándar">Condición Subestándar</option>
+                    </select>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="NivelRiesgo"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <span class="text-danger" asp-validation-for="NivelRiesgo"></span>
+                    <select class="form-control" asp-for="NivelRiesgo">
+                        <option value="">--SELECCIONE--</option>
+                        <!--Agregar option por js-->
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Id_Tipo_Condicion"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-10">
+                    <span class="text-danger" asp-validation-for="Id_Tipo_Condicion"></span>
+                    <select class="form-control Vacio" asp-for="Id_Tipo_Condicion">
+                        <option class="Vacio" value="">--SELECCIONE--</option>
+                    </select>
+                    <select class="form-control MA-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoMA" style="display:none"></select>
+                    <select class="form-control MA-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionMA" style="display:none"></select>
+                    <select class="form-control SEG-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoSSO" style="display:none"></select>
+                    <select class="form-control SEG-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionSSO" style="display:none"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Descripcion_Acto_Cond"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-10">
+                    <span class="text-danger" asp-validation-for="Descripcion_Acto_Cond"></span>
+                    <textarea class="form-control" asp-for="Descripcion_Acto_Cond" rows="3" maxlength="250"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-2">
+                    <label asp-for="Medida_Control"></label>
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-10">
+                    <span class="text-danger" asp-validation-for="Medida_Control"></span>
+                    <textarea class="form-control" asp-for="Medida_Control" rows="3" maxlength="250"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-6 col-lg-2">
+                    <label asp-for="PAC"></label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <span class="text-danger" asp-validation-for="PAC"></span>
+                    <select class="form-control" asp-for="PAC">
+                        <option value="No">No</option>
+                        <option value="Si">Si</option>
+                    </select>
+                </div>
+                <hr class="mb-4 mt-4" />
+                <div class="col-sm-12 col-md-6 col-lg-2">
+                    <label asp-for="Id_Responsable_Cierre"></label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Responsable_Cierre"></span>
+                    <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Id_Responsable_Cierre">
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-6 col-lg-2">
+                    <label asp-for="Fecha_Cierre"></label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Fecha_Cierre"></span>
+                    <input type="date" class="form-control" asp-for="Fecha_Cierre">
+                </div>
+                <hr class="mb-4 mt-4" />
+                <div class="col-sm-12 col-md-6 col-lg-2">
+                    <label asp-for="Id_Supervisor"></label>
+                </div>
+                <div class="col-sm-12 col-md-6 col-lg-4">
+                    <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                    <select class="form-control AsesorTemporal"><option>--SELECCIONE--</option></select>
+                    <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMAP" asp-for="Id_Supervisor"  style="display:none"></select>
+                    <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor"  style="display:none"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-6 col-md-6 col-lg-2">
+                    <label asp-for="Evidencia_Obs"></label>
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-10">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Obs" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="Evidencia_Obs">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Obs" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
+                    <label id="files_name">0 Archivos</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                    <a class="btn btn-secondary" style="color:white" asp-controller="RegistroRAC" asp-action="Resumen" asp-route-IdCabecera="@ViewBag.IdCabecera" data-dismiss="modal">Cancelar</a>
+                    <button type="button" class="btn btn-primary" onclick="guardar()">Implementar</button>
+                
+            </div>
+        </form>
+    </div>
+@section Scripts{ 
+<script type="text/javascript">
+    $("#Evidencia_Obs").change(function () {
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Evidencia_Obs").data('max-size');
+            if ($("#Evidencia_Obs").get(0).files.length) {
+                var fileSize = $("#Evidencia_Obs").get(0).files[0].size; // in bytes
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 20MB<br/>");
+                }
+            }
+            //Validacion del tipo de archivo
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
+                case 'png':
+                case 'PNG':
+                case 'xls':
+                case 'xlsx':
+                case 'doc':
+                case 'docx':
+                case 'pdf':
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    break;
+                default:
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+            }
+    });
+    $("#SSO_MA").on('change', function () {
+        if ($("#SSO_MA").val() == "MAP") {
+            //Ocultar Temporal
+            $(".AsesorTemporal").hide();
+            $(".AsesorTemporal").prop('disabled','disabled')
+                //Mostrar asesores
+                $(".AsesorMedioAmbiente").show();
+                $(".AsesorMedioAmbiente").prop('disabled', false);
+                $(".AsesorSeguridad").hide();
+            $(".AsesorSeguridad").prop('disabled', 'disabled');
+                //reiniciar clasificacion
+            $("#Clasificacion").val("");
+                //reiniciar condicion
+                $("#Id_Tipo_Condicion").val("");
+                //Eliminar Niveles SSO                
+                $("#NivelRiesgo option[value='No Aplica']").remove();
+                $("#NivelRiesgo option[value='Bajo']").remove();
+                $("#NivelRiesgo option[value='Medio']").remove();
+                $("#NivelRiesgo option[value='Alto']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#NivelRiesgo').append(new Option("Tolerable", "Tolerable"));
+                $("#NivelRiesgo option[value='Tolerable']").css({"background-color": "green", "color": "white"});
+                $('#NivelRiesgo').append(new Option("Alerta", "Alerta"));
+                $("#NivelRiesgo option[value='Alerta']").css({"background-color": "yellow", "color": "black"});
+                $('#NivelRiesgo').append(new Option("No Aceptable", "No Aceptable"));
+                $("#NivelRiesgo option[value='No Aceptable']").css({"background-color": "red", "color": "white"});
+            } else if ($("#SSO_MA").val() == "SSO") {
+            //Ocultar Temporal
+            $(".AsesorTemporal").hide();
+            $(".AsesorTemporal").prop('disabked','disabled')
+                //Mostrar asesores seguridad
+                $(".AsesorMedioAmbiente").hide();
+                $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
+                $(".AsesorSeguridad").show();
+                $(".AsesorSeguridad").prop('disabled', false);
+                //reiniciar clasificacion
+            $("#Clasificacion").val("");
+                //reiniciar condicion
+                $("#Id_Tipo_Condicion").val("");
+                //Eliminar Niveles MAP                
+                $("#NivelRiesgo option[value='No Aplica']").remove();
+                $("#NivelRiesgo option[value='Tolerable']").remove();
+                $("#NivelRiesgo option[value='Alerta']").remove();
+                $("#NivelRiesgo option[value='No Aceptable']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#NivelRiesgo').append(new Option("Bajo", "Bajo"));
+                $("#NivelRiesgo option[value='Bajo']").css({"background-color": "green", "color": "white"});
+                $('#NivelRiesgo').append(new Option("Medio", "Medio"));
+                $("#NivelRiesgo option[value='Medio']").css({"background-color": "yellow", "color": "black"});
+                $('#NivelRiesgo').append(new Option("Alto", "Alto"));
+                $("#NivelRiesgo option[value='Alto']").css({"background-color": "red", "color": "white"});
+            } else {
+                $(".OpcMedioAmbiente").hide();
+                $(".OpcMedioAmbiente").prop('disabled',  'disabled');
+                $(".OpcSeguridad").hide();
+                $(".OpcSeguridad").prop('disabled',  'disabled');
+                $(".Vacio_NR").show();
+                $(".Vacio_NR").prop('disabled',  false);
+                //Ocultar asesores
+                $(".AsesorVacio").show();
+                $(".AsesorVacio").prop('disabled', false);
+                $(".AsesorMedioAmbiente").hide();
+                $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
+                $(".AsesorSeguridad").hide();
+                $(".AsesorSeguridad").prop('disabled', 'disabled');
+                //reiniciar condicion
+                $("#Id_Tipo_Condicion").val("");
+                //Eliminar Niveles MAP                
+                $("#NivelRiesgo option[value='No Aplica']").remove();
+                $("#NivelRiesgo option[value='Tolerable']").remove();
+                $("#NivelRiesgo option[value='Alerta']").remove();
+                $("#NivelRiesgo option[value='No Aceptable']").remove();
+                //Eliminar Niveles SSO
+                $("#NivelRiesgo option[value='No Aplica']").remove();
+                $("#NivelRiesgo option[value='Bajo']").remove();
+                $("#NivelRiesgo option[value='Medio']").remove();
+                $("#NivelRiesgo option[value='Alto']").remove();
+            }
+            //reiniciar tipo condicion
+            $(".Vacio").show();
+            $(".Vacio").prop('disabled', false);
+            $(".MA-Acto").hide();
+            $(".MA-Condicion").hide();
+            $(".MA-Acto").prop('disabled', 'disabled');
+            $(".MA-Condicion").prop('disabled', 'disabled');
+            $(".SEG-Acto").hide();
+            $(".SEG-Condicion").hide();
+            $(".SEG-Acto").prop('disabled', 'disabled');
+            $(".SEG-Condicion").prop('disabled', 'disabled');
+            $("#TiposActoMA").val("");
+            $("#TiposCondicionMA").val("");
+            //reiniciar estilo de nivel de riesgo
+            $("#NivelRiesgo").css({"background-color": "white", "color": "black"});
+    });
+    $("#Clasificacion").on('change', function () {
+            var selectedOption = $("#Clasificacion option:selected").val();
+            if ($("#SSO_MA").val() == "MAP" && selectedOption == "Acto Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".MA-Acto").show();
+                $(".MA-Acto").prop('disabled', false);
+                $(".MA-Condicion").hide();
+                $(".MA-Condicion").prop('disabled', 'disabled');
+            } else if ($("#SSO_MA").val() == "MAP" && selectedOption == "Condición Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".MA-Acto").hide();
+                $(".MA-Acto").prop('disabled', 'disabled');
+                $(".MA-Condicion").show();
+                $(".MA-Condicion").prop('disabled', false);
+            } else if ($("#SSO_MA").val() == "SSO" && selectedOption == "Acto Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".SEG-Acto").show();
+                $(".SEG-Acto").prop('disabled', false);
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', 'disabled');
+            } else if ($("#SSO_MA").val() == "SSO" && selectedOption == "Condición Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', 'disabled');
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', 'disabled');
+                $(".SEG-Condicion").show();
+                $(".SEG-Condicion").prop('disabled', false);
+            } else {
+                $(".Vacio").show();
+                $(".Vacio").prop('disabled', false);
+                $(".Vacio").val("");
+                $(".MA-Acto").hide();
+                $(".MA-Condicion").hide();
+                $(".MA-Acto").prop('disabled', 'disabled');
+                $(".MA-Condicion").prop('disabled', 'disabled');
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', 'disabled');
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', 'disabled');
+                $("#TiposActoMA").val("");
+                $("#TiposCondicionMA").val("");
+            }
+    });
+    function guardar() {
+            if ($("#Evidencia_Obs").get(0).files.length === 0) {
+                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+                return false;
+            }
+            $("#form_nuevoRAC").submit();
+            return true;
+        }
+</script>
+}
