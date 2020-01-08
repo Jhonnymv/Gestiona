@@ -11,7 +11,7 @@
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorUsuarios" asp-action="EditarUsuario">
+        <form id="formUsuario" autocomplete="off" asp-controller="GestorUsuarios" asp-action="EditarUsuario">
             <input type="hidden" asp-for="IdUsuario">
             <div class="row mb-2">
                 <div class="col-lg-4">
@@ -109,7 +109,6 @@
         $("#Email").prop('disabled', false);
         $("#IdSuperior").prop('disabled', false);
         $("#Estado").prop('disabled', false);
-
     });
     
     $("#btnCancelar").on('click',function(){

@@ -1,4 +1,6 @@
-﻿using GestionAmbiental.Application.Repositories.RAC;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.RAC;
+using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,22 +11,25 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC
     public class RegistrarRAC : IRegistrarRAC
     {
         private readonly IRegistrarRACReadOnlyRepository _registrarRACReadOnlyRepository;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public RegistrarRAC(IRegistrarRACReadOnlyRepository registrarRACReadOnlyRepository)
+        public RegistrarRAC(IRegistrarRACReadOnlyRepository registrarRACReadOnlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _registrarRACReadOnlyRepository = registrarRACReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarRACReadOnlyRepository));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task<int> Execute(
-            string codigo, string nombres_apellidos, int gerencia, int empresa,
+        public async Task<int> Execute(string nombres_apellidos, int gerencia, int empresa,
             string otra_emp, int empresa_obs, int gerencia_obs, string ubicacion,
             string fecha, string hora, string sso_ma, string clasificacion,
             string nivel_riesgo, int tipo_condicion, string descripcion, string medida,
-            string pac, int responsable_cierre, int supervisor, string evidencia)
+            string pac, int responsable_cierre, string fecha_cierre, int supervisor, string evidencia,string usuario_red)
         {
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var reporte = new Domain.RAC.RAC
             {
-                Codigo = codigo,
+                Id_Registrado_Por = usuario.IdUsuario,
+                Codigo = "CODIGO",
                 Nombres_Apellidos = nombres_apellidos,
                 Id_Gerencia = gerencia,
                 Id_Empresa = empresa,
@@ -41,8 +46,10 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC
                 Medida_Control = medida,
                 PAC = pac,
                 Id_Responsable_Cierre = responsable_cierre,
+                Fecha_Cierre = Convert.ToDateTime(fecha_cierre),
                 Id_Supervisor = supervisor,
-                Evidencia_Obs = evidencia
+                Evidencia_Obs = evidencia,
+                Estado = EstadosRAC.Registrado.ToString()
             };
             return await _registrarRACReadOnlyRepository.RegistrarRAC(reporte);
         }

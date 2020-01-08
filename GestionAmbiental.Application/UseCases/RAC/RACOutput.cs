@@ -45,14 +45,14 @@ namespace GestionAmbiental.Application.UseCases.RAC
             Nombres_Apellidos = rac.Nombres_Apellidos;
             Id_Registrado_Por = rac.Id_Registrado_Por;
             Id_Gerencia = rac.Id_Gerencia;
-            Gerencia = rac.Gerencia.Descripcion;
+            Gerencia = rac.Gerencia!=null? rac.Gerencia.Descripcion : "";
             Id_Empresa = rac.Id_Empresa;
-            Empresa = rac.Empresa.RazonSocial;
+            Empresa = rac.Empresa != null ? rac.Empresa.RazonSocial : "";
             Otra_Empresa = rac.Otra_Empresa ?? "";
             Id_Empresa_Obs = rac.Id_Empresa_Obs;
-            Empresa_Ob = rac.Empresa_Ob.RazonSocial;
+            Empresa_Ob = rac.Empresa_Ob != null ? rac.Empresa_Ob.RazonSocial : "";
             Id_Gerencia_Obs = rac.Id_Gerencia_Obs;
-            Gerencia_Obs = rac.Gerencia_Obs.Descripcion;
+            Gerencia_Obs = rac.Gerencia_Obs != null ? rac.Gerencia_Obs.Descripcion : "";
             Ubicacion = rac.Ubicacion;
             Fecha = rac.Fecha;
             SSO_MA = rac.SSO_MA;

@@ -19,12 +19,19 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro
             var registros = await _RACReadOnlyRepository.GetRACs(fecha, codigo);
             var output = new RACsOutput
             {
+                Registros = new List<RACOutput>(),
                 NRegistros = registros.Count
             };
             registros = registros.Skip((pagina - 1) * fpp).Take(fpp).ToList();
             foreach (var item in registros)
             {
-                output.Registros.Add(new RACOutput(item));
+                try
+                {
+                    output.Registros.Add(new RACOutput(item));
+                }catch(Exception e)
+                {
+
+                }
             }
             return output;
         }

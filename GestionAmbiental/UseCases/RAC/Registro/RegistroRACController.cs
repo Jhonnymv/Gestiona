@@ -1,24 +1,51 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.RAC.Registro;
+using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GestionAmbiental.UseCases.RAC.Registro
 {
     public class RegistroRACController : Controller
     {
+        private IMemoryCache _cache;
+
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
-        public RegistroRACController(IConsultarRACs consultarRACs, ISelectItems selectItems)
+        private readonly IRegistrarRAC _registrarRAC;
+
+        private readonly IDataProtector _protector;
+        private readonly IGetInfo_SGA _info_SGA;
+        public RegistroRACController(
+            IMemoryCache cache,
+            IConsultarRACs consultarRACs, 
+            ISelectItems selectItems,
+            IRegistrarRAC registrarRAC,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
+            IGetInfo_SGA info_SGA)
         {
-            _consultarRACs = consultarRACs ?? throw new ArgumentNullException(nameof(consultarRACs));
-            _selectItems = selectItems ?? throw new ArgumentNullException(nameof(selectItems));
+            _cache = cache;
+            _consultarRACs = consultarRACs;
+            _selectItems = selectItems;
+            _registrarRAC = registrarRAC;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
+            _info_SGA = info_SGA;
         }
         public IActionResult Resumen()
         {
@@ -126,7 +153,334 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         [HttpPost]
         public async Task<IActionResult> NuevoRAC(NuevoRACModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var filePath = "";
+                if (model.Evidencia_Obs != null)
+                {
+                        var newfileName = CreateUniqueFileName(1) + ".zip";
+                        filePath = await UploadZipFileAsync(model.Evidencia_Obs, newfileName);                    
+                }
+                await _registrarRAC.Execute(
+                    model.Nombres_Apellidos,
+                    model.Id_Gerencia,
+                    model.Id_Empresa,
+                    model.Otra_Empresa,
+                    model.Id_Empresa_Obs,
+                    model.Id_Gerencia_Obs,
+                    model.Ubicacion,
+                    model.Fecha,
+                    model.Hora,
+                    model.SSO_MA,
+                    model.Clasificacion,
+                    model.NivelRiesgo,
+                    model.Id_Tipo_Condicion,
+                    model.Descripcion_Acto_Cond,
+                    model.Medida_Control,
+                    model.PAC,
+                    model.Id_Responsable_Cierre,
+                    model.Fecha_Cierre,
+                    model.Id_Supervisor,
+                    filePath,
+                    User.Identity.Name);
+                //Notificar
+                return RedirectToAction("NuevoRAC");
+            }
+            else
+                return RedirectToAction("NuevoRAC");
+        }
+        public async Task<IActionResult> EditarRAC(int IdRAC)
+        {
             return View();
+        }
+        private string CreateUniqueFileName(int nFile)
+        {
+            var fileName = "Evidencia__Registro_RAC_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            return fileName;
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".csv", "text/csv"},
+                {".zip","application/zip" }
+            };
+        }
+        public async Task<IActionResult> Download(string fileName)
+        {
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                try
+                {
+                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                    var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado.zip";
+                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                    return File(stream, GetContentType(decryptedFileName), fileName);
+                }
+                catch (Exception e)
+                {
+                    return Content("No se encontró el archivo: " + e.Message);
+                }
+            }
+        }
+        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
+        {
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            {
+                return "No Autorizado";
+            }
+            else
+            {
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+                string route = "", user = "", pass = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "route": route = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + newFileName);
+
+                ftpRequest.Credentials = new NetworkCredential(user, pass);
+                ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+
+                using (FileStream fs = System.IO.File.OpenRead(path))
+                {
+
+                    byte[] buffer = new byte[fs.Length];
+                    fs.Read(buffer, 0, buffer.Length);
+                    fs.Close();
+                    Stream requestStream = ftpRequest.GetRequestStream();
+                    await requestStream.WriteAsync(buffer, 0, buffer.Length);
+                    await requestStream.FlushAsync();
+                    requestStream.Close();
+                }
+                return newFileName;
+            }
+        }
+        public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
+        {
+            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            {
+                return "No Autorizado";
+            }
+            else
+            {
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
+                var archiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/archive.zip";
+                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                var fileName = filePath + file.FileName;
+                if (file.Length > 0)
+                {
+                    var stream = new FileStream(fileName, FileMode.Create);
+                    //CopyToAsync corrompe los archivos
+                    file.CopyTo(stream);
+                    stream.Close();
+                }
+                ZipFile.CreateFromDirectory(filePath, archiveFile);
+
+                var encryptedArchiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/encriptado.zip";
+                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
+                //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
+
+                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+            }
+        }
+        public async Task<string> DownloadFTPFileAsync(string fileName)
+        {
+            try
+            {
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+                string route = "", user = "", pass = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "route": route = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential(user, pass);
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                /* Establish Return Communication with the FTP Server */
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                var ftpStream = ftpResponse.GetResponseStream();
+
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
+                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                ftpStream.CopyTo(fileStream);
+                fileStream.Close();
+
+                return downloadedFilePath;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+        private async Task EncryptFileAsync(string inputFile, string outputFile)
+        {
+            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
+
+            var key = new byte[32];
+            var IV = new byte[16];
+
+            foreach (var item in dataToEncrypt.Info)
+            {
+                switch (item.Key)
+                {
+                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
+                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
+                }
+            }
+
+            string cryptFile = outputFile;
+            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
+
+            RijndaelManaged RMCrypto = new RijndaelManaged();
+
+            CryptoStream cs = new CryptoStream(fsCrypt,
+                RMCrypto.CreateEncryptor(key, IV),
+                CryptoStreamMode.Write);
+
+            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
+
+            int data;
+            while ((data = fsIn.ReadByte()) != -1)
+                cs.WriteByte((byte)data);
+
+
+            fsIn.Close();
+            cs.Close();
+            fsCrypt.Close();
+        }
+        private async Task DecryptFileAsync(string inputFile, string outputFile)
+        {
+            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
+
+            var key = new byte[32];
+            var IV = new byte[16];
+
+            foreach (var item in dataToEncrypt.Info)
+            {
+                switch (item.Key)
+                {
+                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
+                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
+                }
+            }
+            RijndaelManaged RMCrypto = new RijndaelManaged();
+
+            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
+
+            CryptoStream cs = new CryptoStream(fsCrypt,
+                RMCrypto.CreateDecryptor(key, IV),
+                CryptoStreamMode.Read);
+
+            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
+
+            int data;
+            while ((data = cs.ReadByte()) != -1)
+                fsOut.WriteByte((byte)data);
+
+            fsOut.Close();
+            cs.Close();
+            fsCrypt.Close();
+
         }
     }
 }

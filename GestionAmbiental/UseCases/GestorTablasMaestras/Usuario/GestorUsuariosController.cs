@@ -118,7 +118,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 new SelectListItem("--SELECCIONE--", "0", true),
                 new SelectListItem(InspeccionRol.Inspector.ToString(), ((int)InspeccionRol.Inspector).ToString(), false),
                 new SelectListItem(InspeccionRol.AsesorMAP.ToString(), ((int)InspeccionRol.AsesorMAP).ToString(), false),
-                new SelectListItem(InspeccionRol.AsesorSSO.ToString(), ((int)InspeccionRol.AsesorSSO).ToString(), false)
+                new SelectListItem(InspeccionRol.AsesorSSO.ToString(), ((int)InspeccionRol.AsesorSSO).ToString(), false),
+                new SelectListItem(InspeccionRol.Admin.ToString(), ((int)InspeccionRol.Admin).ToString(), false)
             };
                 var listUsuarios = new List<SelectListItem>();
                 listUsuarios.Add(new SelectListItem("Ninguno", "0", true));
@@ -161,7 +162,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 new SelectListItem("--SELECCIONE--", "0", true),
                 new SelectListItem(InspeccionRol.Inspector.ToString(), ((int)InspeccionRol.Inspector).ToString(), false),
                 new SelectListItem(InspeccionRol.AsesorMAP.ToString(), ((int)InspeccionRol.AsesorMAP).ToString(), false),
-                new SelectListItem(InspeccionRol.AsesorSSO.ToString(), ((int)InspeccionRol.AsesorSSO).ToString(), false)
+                new SelectListItem(InspeccionRol.AsesorSSO.ToString(), ((int)InspeccionRol.AsesorSSO).ToString(), false),
+                new SelectListItem(InspeccionRol.Admin.ToString(), ((int)InspeccionRol.Admin).ToString(), false)
                 };
                 var listUsuarios = new List<SelectListItem>();
                 listUsuarios.Add(new SelectListItem("Ninguno", "0", true));

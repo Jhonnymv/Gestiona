@@ -76,6 +76,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Domain.RAC.RAC>();
             foreach (var item in registros)
             {
+                var empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa));
+                var gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia));
                 var empresa_obs = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa_Obs));
                 var gerencia_obs = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Obs));
                 var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
@@ -84,10 +86,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new Domain.RAC.RAC
                 {
                     Id_RAC = item.Id_RAC,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
                     Codigo = item.Codigo,
                     Nombres_Apellidos = item.Nombres_Apellidos,
                     Id_Gerencia = item.Id_Gerencia,
+                    Gerencia = new Gerencia(gerencia.Id_Gerencia,gerencia.Descripcion),
                     Id_Empresa = item.Id_Empresa,
+                    Empresa = new Empresa(empresa.Id_Empresa,empresa.Razon_Social),
                     Otra_Empresa = item.Otra_Empresa,
                     Id_Empresa_Obs = item.Id_Empresa_Obs,
                     Empresa_Ob = new Empresa(empresa_obs.Id_Empresa, empresa_obs.Razon_Social),
@@ -109,7 +114,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Id_Supervisor = item.Id_Supervisor,
                     Supervisor = new Usuario(supervisor.Id_Usuario, supervisor.Id_Rol, supervisor.usuario_red, supervisor.Nombres, supervisor.Apellidos, supervisor.Email, supervisor.Id_Superior, supervisor.Estado),
                     Evidencia_Obs = item.Evidencia_Obs,
-                    Evidencia_Cierre = item.Evidencia_Cierre
+                    Evidencia_Cierre = item.Evidencia_Cierre,
+                    Estado = item.Estado
                 });
             }
             return output;
