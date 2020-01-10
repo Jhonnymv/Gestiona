@@ -1,0 +1,247 @@
+﻿@using GestionAmbiental.Domain.Enum
+@model GestionAmbiental.UseCases.RAC.Verificacion.VerificarRACModel
+@{
+    ViewData["Title"] = "Implementar Reporte de Acto y Condición Subestándar";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Verificar Reporte de Acto y Condición Subestándar</h2>
+        </div>
+    </div>
+    <form class="form-group" id="form_verificarRAC" asp-action="VerificarRAC" asp-controller="VerificacionRAC" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DEL PERSONAL QUE REPORTA</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <input type="hidden" asp-for="Id_RAC" />
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Nombres_Apellidos"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <input type="text" class="form-control" asp-for="Nombres_Apellidos" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Gerencia"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <input type="text" class="form-control" asp-for="Gerencia" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Empresa"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <input type="text" class="form-control" asp-for="Empresa" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Otra_Empresa"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <input type="text" class="form-control" asp-for="Otra_Empresa" disabled />
+            </div>
+        </div>
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DESCRIPCIÓN DE LA OBSERVACIÓN</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Empresa_Obs"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <input type="text" class="form-control" asp-for="Empresa_Obs" disabled />
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Gerencia_Obs"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <input type="text" class="form-control" asp-for="Gerencia_Obs" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Ubicacion"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <input type="text" class="form-control" asp-for="Ubicacion" disabled />
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-1">
+                <label asp-for="Fecha"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <input type="text" class="form-control" asp-for="Fecha" disabled />
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-1">
+                <label asp-for="Hora"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <input type="text" class="form-control" asp-for="Hora" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="SSO_MA"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <input type="text" class="form-control" asp-for="SSO_MA" disabled />
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Clasificacion"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <input type="text" class="form-control" asp-for="Clasificacion" disabled />
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="NivelRiesgo"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <input type="text" class="form-control" asp-for="NivelRiesgo" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Tipo_Condicion"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-10">
+                <input type="text" class="form-control" asp-for="Tipo_Condicion" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Descripcion_Acto_Cond"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-10">
+                <textarea class="form-control" asp-for="Descripcion_Acto_Cond" rows="3" maxlength="250" disabled></textarea>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Medida_Control"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-10">
+                <textarea class="form-control" asp-for="Medida_Control" rows="3" maxlength="250" disabled></textarea>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-6 col-lg-2">
+                <label asp-for="PAC"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <input type="text" class="form-control" asp-for="PAC" disabled />
+            </div>
+            <hr class="mb-4 mt-4" />
+            <div class="col-sm-12 col-md-6 col-lg-2">
+                <label asp-for="Responsable_Cierre"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <input type="text" class="form-control" asp-for="Responsable_Cierre" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-6 col-lg-2">
+                <label asp-for="Fecha_Cierre"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <input type="text" class="form-control" asp-for="Fecha_Cierre" disabled />
+            </div>
+            <hr class="mb-4 mt-4" />
+            <div class="col-sm-12 col-md-6 col-lg-2">
+                <label asp-for="Supervisor"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <input type="text" class="form-control" asp-for="Supervisor" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-6 col-md-6 col-lg-2">
+                <label asp-for="Evidencia_Obs"></label>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4">
+                <a asp-action="Download" asp-controller="RegistroRAC" asp-route-fileName="@Model.Evidencia_Obs">Evidencia de la Observación</a>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-2">
+                <label asp-for="Evidencia_Cierre"></label>
+            </div>
+            <div class="col-sm-6 col-md-6 col-lg-4">
+                <a asp-action="Download" asp-controller="ImplementacionRAC" asp-route-fileName="@Model.Evidencia_Cierre">Evidencia del levantamiento de la Observación</a>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Comentario_Cierre"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250" disabled></textarea>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-2">
+                <label asp-for="Comentario_Verificacion"></label>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()))
+                {
+                    <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250"></textarea>
+                }
+                else
+                {
+                    <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250" disabled></textarea>
+                }
+            </div>
+        </div>
+        <input type="hidden" asp-for="Opcion" />
+    </form>
+    <div class="row mb-2">
+        <div class="col-12">
+            @if (Model.Estado.Equals(EstadosRAC.Aprobado.ToString()))
+            {
+                <div class="alert alert-success" role="alert" style="text-align:center;">Aprobado</div>
+            }
+            else if(Model.Estado.Equals(EstadosRAC.Rechazado.ToString()))
+            {
+                <div class="alert alert-danger" role="alert" style="text-align:center;">Rechazado</div>
+            }
+        </div>
+    </div>
+    <div class="modal-footer">
+        <a class="btn btn-secondary" style="color:white" asp-controller="VerificacionRAC" asp-action="Resumen">Cancelar</a>
+        @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()))
+        {
+            <button type="button" class="btn btn-danger" onclick="rechazar()">Rechazar</button>
+            <button type="button" class="btn btn-success" onclick="aprobar()">Aprobar</button>
+        }
+    </div>
+
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            switch ($("#NivelRiesgo").val()) {
+                case "Tolerable": $("#NivelRiesgo").css("background-color", "green"); $("#NivelRiesgo").css("color", "white"); break;
+                case "Alerta": $("#NivelRiesgo").css("background-color", "yellow"); $("#NivelRiesgo").css("color", "black"); break;
+                case "No Aceptable": $("#NivelRiesgo").css("background-color", "red"); $("#NivelRiesgo").css("color", "white"); break;
+                case "Bajo": $("#NivelRiesgo").css("background-color", "green"); $("#NivelRiesgo").css("color", "white"); break;
+                case "Medio": $("#NivelRiesgo").css("background-color", "yellow"); $("#NivelRiesgo").css("color", "black"); break;
+                case "Alto": $("#NivelRiesgo").css("background-color", "red"); $("#NivelRiesgo").css("color", "white"); break;
+                default: $("#NivelRiesgo").css("background-color", "white"); $("#NivelRiesgo").css("color", "black"); break;
+            }
+            $("#NiveRiesgo option").css("color", "black")
+        });
+        function rechazar() {
+            $("#Opcion").val("Rechazar");
+            console.log($("#Opcion").val())
+            $("#form_verificarRAC").submit();
+        }
+        function aprobar() {
+            $("#Opcion").val("Aprobar");
+            console.log($("#Opcion").val())
+            $("#form_verificarRAC").submit();
+        }
+    </script>
+}
+

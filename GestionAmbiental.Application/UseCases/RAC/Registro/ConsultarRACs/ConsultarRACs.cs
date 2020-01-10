@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.RAC.Registro
+namespace GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs
 {
     public class ConsultarRACs : IConsultarRACs
     {
@@ -25,13 +25,7 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro
             registros = registros.Skip((pagina - 1) * fpp).Take(fpp).ToList();
             foreach (var item in registros)
             {
-                try
-                {
-                    output.Registros.Add(new RACOutput(item));
-                }catch(Exception e)
-                {
-
-                }
+                output.Registros.Add(new RACOutput(item));
             }
             return output;
         }

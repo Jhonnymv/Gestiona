@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.RAC.Registro
+namespace GestionAmbiental.Application.UseCases.RAC.Implementacion.ConsultarRACs
 {
     public interface IConsultarRACs
     {

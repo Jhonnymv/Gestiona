@@ -21,7 +21,7 @@
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-4">
                     <span class="text-danger" asp-validation-for="Nombres_Apellidos"></span>
-                    <input type="text" class="form-control" asp-for="Nombres_Apellidos" />
+                    <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.NombreUsuario" disabled/>
                 </div>
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <label asp-for="Id_Gerencia"></label>
@@ -43,8 +43,10 @@
                     <label asp-for="Otra_Empresa"></label>
                 </div>
                 <div class="col-sm-12 col-md-4 col-lg-4">
-                    <span class="text-danger" asp-validation-for="Otra_Empresa"></span>
-                    <input type="text" class="form-control" asp-for="Otra_Empresa" />
+                    <span class="text-danger field-validation-error" data-valmsg-for="Otra_Empresa" data-valmsg-replace="true">
+                        <span id="danger_empresa" class=""></span>
+                    </span>
+                    <input type="text" class="form-control" asp-for="Otra_Empresa" disabled />
                 </div>
             </div>
             <div class="row mb-2" style="background-color:#2e6793">
@@ -120,7 +122,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-2">
                     <span class="text-danger" asp-validation-for="NivelRiesgo"></span>
                     <select class="form-control" asp-for="NivelRiesgo">
-                        <option value="">--SELECCIONE--</option>
+                        <option value="" style="background-color:white; color:black;">--SELECCIONE--</option>
                         <!--Agregar option por js-->
                     </select>
                 </div>
@@ -193,9 +195,9 @@
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
-                    <select class="form-control AsesorTemporal"><option>--SELECCIONE--</option></select>
-                    <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMAP" asp-for="Id_Supervisor"  style="display:none"></select>
-                    <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor"  style="display:none"></select>
+                    <select class="form-control AsesorTemporal" asp-for="Id_Supervisor"><option value="0">--SELECCIONE--</option></select>
+                    <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMAP" asp-for="Id_Supervisor"  style="display:none" disabled></select>
+                    <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor"  style="display:none" disabled></select>
                 </div>
             </div>
             <div class="row mb-2">
@@ -212,8 +214,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                    <a class="btn btn-secondary" style="color:white" asp-controller="RegistroRAC" asp-action="Resumen" asp-route-IdCabecera="@ViewBag.IdCabecera" data-dismiss="modal">Cancelar</a>
-                    <button type="button" class="btn btn-primary" onclick="guardar()">Implementar</button>
+                    <a class="btn btn-secondary" style="color:white" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
+                    <button type="button" class="btn btn-primary" onclick="guardar()">Registrar</button>
                 
             </div>
         </form>
@@ -287,7 +289,7 @@
             } else if ($("#SSO_MA").val() == "SSO") {
             //Ocultar Temporal
             $(".AsesorTemporal").hide();
-            $(".AsesorTemporal").prop('disabked','disabled')
+            $(".AsesorTemporal").prop('disabled','disabled')
                 //Mostrar asesores seguridad
                 $(".AsesorMedioAmbiente").hide();
                 $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
@@ -400,13 +402,41 @@
                 $("#TiposCondicionMA").val("");
             }
     });
-    function guardar() {
-            if ($("#Evidencia_Obs").get(0).files.length === 0) {
-                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
-                return false;
-            }
-            $("#form_nuevoRAC").submit();
-            return true;
+    $("#NivelRiesgo").on('change', function () {
+        switch ($("#NivelRiesgo").val()) {
+            case "Tolerable": $("#NivelRiesgo").css("background-color", "green");$("#NivelRiesgo").css("color", "white"); break;
+            case "Alerta": $("#NivelRiesgo").css("background-color", "yellow"); $("#NivelRiesgo").css("color", "black"); break;
+            case "No Aceptable": $("#NivelRiesgo").css("background-color", "red"); $("#NivelRiesgo").css("color", "white"); break;
+            case "Bajo": $("#NivelRiesgo").css("background-color", "green"); $("#NivelRiesgo").css("color", "white"); break;
+            case "Medio": $("#NivelRiesgo").css("background-color", "yellow"); $("#NivelRiesgo").css("color", "black"); break;
+            case "Alto": $("#NivelRiesgo").css("background-color", "red"); $("#NivelRiesgo").css("color", "white"); break;
+            default: $("#NivelRiesgo").css("background-color", "white"); $("#NivelRiesgo").css("color", "black"); break;
         }
+        $("#NiveRiesgo option").css("color", "black")
+    });
+    $("#Id_Empresa").on('change', function () {
+        //Empresa != OTROS
+        if ($("#Id_Empresa").val() != "33")
+            $("#Otra_Empresa").prop('disabled', true);
+        else            
+            $("#Otra_Empresa").prop('disabled', false);
+    });
+    function guardar() {
+        if ($("#Evidencia_Obs").get(0).files.length === 0) {
+            $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+            return false;
+        }
+        if ($("#Id_Empresa").val() == "33" && $("#Otra_Empresa").val().length === 0) {
+            $("#danger_empresa").html("Debe completar este campo<br/>");
+            return false;
+        } else {
+            $("#danger_empresa").html("");
+        }
+        if ($("#Id_Empresa").val() == "33") 
+            $("#Otra_Empresa").prop('disabled', false);
+        $("#Nombres_Apellidos").prop('disabled', false);
+        $("#form_nuevoRAC").submit();
+        return true;
+    }
 </script>
 }

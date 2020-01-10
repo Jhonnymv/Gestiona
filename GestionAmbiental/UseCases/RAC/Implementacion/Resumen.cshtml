@@ -1,0 +1,87 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Reportes de Acto y Condición Subestándar - Resumen</h2>
+    </div>
+</div>
+
+<form autocomplete="off">
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-1 mt-1">
+            <label>Fecha de Inspección:</label>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <input type="date" class="form-control" id="fecha_filtro">
+        </div>
+        <div class="col-lg-1 mt-1">
+            <label>Buscar Código:</label>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <input type="text" class="form-control" id="codigo_filtro">
+        </div>
+        <div class="col-lg-1 mt-1">
+            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+        </div>
+    </div>
+</form>
+<div class="row mb-2 justify-content-center">
+    <div class="col-md">
+        <table class="table" id="tabla_resumen_inspecciones">
+            <thead class="thead-mcolor">
+                <tr>
+                    <th>Código</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>Empresa</th>
+                    <th>Empresa Observada</th>
+                    <th>Gerencia Observada</th>
+                    <th>SSO/MA</th>
+                    <th>Clasificación</th>
+                    <th>Nivel de Riesgo</th>
+                    <th>Tipo de Observación</th>
+                    <th>Responsable del levantamiento</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <nav id="paginado" aria-label="pagination">
+    </nav>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            filtrar(1);
+        });
+        function filtrar(pag) {           
+            $.ajax({
+                type: "POST",
+                url: "/ImplementacionRAC/GetTablaResumenFiltrada",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtroFecha": $('#fecha_filtro').val(),
+                    //"filtroGerencia": $('#gerenciaEjecutora_filtro').val(),
+                    "filtroCodigo": $('#codigo_filtro').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen_inspecciones tbody').empty()
+                    $('#tabla_resumen_inspecciones tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+    </script>
+}
+

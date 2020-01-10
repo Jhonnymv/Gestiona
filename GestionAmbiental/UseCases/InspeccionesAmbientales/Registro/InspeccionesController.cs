@@ -182,7 +182,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 if (idCabecera != 0)
                 {
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera);
+                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera,User.Identity.Name);
                     ViewBag.nObservacioness = observaciones.Count;
 
                     foreach (var observacion in observaciones)
@@ -354,7 +354,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado);
+                    var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado,User.Identity.Name);
                     ViewBag.nObservacioness = observaciones.Count;
 
                     foreach (var observacion in observaciones)
@@ -388,7 +388,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()))
+                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.Permisos)
                         {
                             filaObservacion += "<td><a class=\"btn btn-primary\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
                         }

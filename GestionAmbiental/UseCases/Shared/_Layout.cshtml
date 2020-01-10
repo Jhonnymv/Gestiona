@@ -7,7 +7,6 @@
 
     <environment include="Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/bootstrap-toggle/css/bootstrap2-toggle.min.css"/>
     </environment>
     <environment exclude="Production">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -15,7 +14,6 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
-        <link rel="stylesheet" href="~/lib/bootstrap-toggle/css/bootstrap2-toggle.min.css" />
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
@@ -61,6 +59,8 @@
                         <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes de Acto y Condición Subestándar</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
                             <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a>
+                            <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Reportes Pendientes de Implementación</a>
+                            <a class="dropdown-item" asp-controller="VerificacionRAC" asp-action="Resumen">Reportes Pendientes de Verificación</a>
                         </div>
                     </li>
 
@@ -88,7 +88,6 @@
         <script src="~/lib/charts/Chart.bundle.js"></script>
         <script src="~/lib/charts/Chart.bundle.min.js"></script>
         <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
-        <script src="~/lib/bootstrap-toggle/js/bootstrap2-toggle.min.js"></script>
     </environment>
     <environment exclude="Production">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
@@ -106,7 +105,6 @@
         <script src="~/lib/charts/Chart.bundle.js"></script>
         <script src="~/lib/charts/Chart.bundle.min.js"></script>
         <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
-        <script src="~/lib/bootstrap-toggle/js/bootstrap2-toggle.min.js"></script>
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 

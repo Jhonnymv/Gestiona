@@ -59,15 +59,15 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string PAC { get; set; }
         [DisplayName("Responsable de Marcobre del cierre de la observación:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Responsable_Cierre { get; set; }
         [DisplayName("Fecha de cierre programada:")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string Fecha_Cierre { get; set; }
         [DisplayName("Supervisor de SSO/MA (Marcobre) a notificar:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Supervisor { get; set; }
-        [DisplayName("Evidencia:")]
+        [DisplayName("Evidencia de la Observación:")]
         [Required(ErrorMessage = "Debe ingresar una evidencia")]
         public IFormFile Evidencia_Obs { get; set; }
     }

@@ -55,6 +55,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public string Evidencia_Obs { get; set; }
         [Column(TypeName = "text")]
         public string Evidencia_Cierre { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string Comentario_Cierre { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string Comentario_Verificacion { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }

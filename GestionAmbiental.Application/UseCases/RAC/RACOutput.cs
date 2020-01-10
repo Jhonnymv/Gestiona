@@ -36,6 +36,8 @@ namespace GestionAmbiental.Application.UseCases.RAC
         public string Supervisor { get; set; }
         public string Evidencia_Obs { get; set; }
         public string Evidencia_Cierre { get; set; }
+        public string Comentario_Cierre { get; set; }
+        public string Comentario_Verificacion { get; set; }
         public string Estado { get; set; }
         public bool Permiso { get; set; }
         public RACOutput(Domain.RAC.RAC rac)
@@ -69,7 +71,9 @@ namespace GestionAmbiental.Application.UseCases.RAC
             Id_Supervisor = rac.Id_Supervisor;
             Supervisor = rac.Supervisor.Nombres + " " + rac.Supervisor.Apellidos;
             Evidencia_Obs = rac.Evidencia_Obs;
-            Evidencia_Cierre = rac.Evidencia_Cierre;
+            Evidencia_Cierre = rac.Evidencia_Cierre ?? ""; ;
+            Comentario_Cierre = rac.Comentario_Cierre ?? "";
+            Comentario_Verificacion = rac.Comentario_Verificacion ?? "";
             Estado = rac.Estado;            
         }
     }

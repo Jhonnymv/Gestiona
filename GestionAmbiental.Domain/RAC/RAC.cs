@@ -37,6 +37,8 @@ namespace GestionAmbiental.Domain.RAC
         public Usuario Supervisor { get; set; }
         public string Evidencia_Obs { get; set; }
         public string Evidencia_Cierre { get; set; }
+        public string Comentario_Cierre { get; set; }
+        public string Comentario_Verificacion { get; set; }
         public string Estado { get; set; }
     }
 }

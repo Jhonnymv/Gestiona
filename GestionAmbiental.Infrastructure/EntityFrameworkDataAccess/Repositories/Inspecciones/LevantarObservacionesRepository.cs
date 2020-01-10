@@ -24,7 +24,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var detalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Detalle.Equals(nuevaInspeccionDetalle.IdInspeccionDetalle));
             detalle.Evidencia_Implementacion = nuevaInspeccionDetalle.EvidenciaImplementacion;
             detalle.Comentario_Implementacion = nuevaInspeccionDetalle.ComentarioImplementacion;
-            detalle.Estado = "Implementado";
+            detalle.Estado = EstadosInspeccion.Implementado.ToString();
             detalle.Fecha_Cierre = DateTime.Now;
             _context.Inspecciones_Detalle.Update(detalle);
             await _context.SaveChangesAsync();

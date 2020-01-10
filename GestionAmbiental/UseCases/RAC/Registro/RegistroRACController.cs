@@ -8,8 +8,12 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.RAC.Registro;
+using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
+using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
+using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Domain.Enum;
@@ -28,22 +32,28 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarRAC _registrarRAC;
+        private readonly IConsultarRAC _consultarRAC;
+        private readonly IGetUsuario _getUsuario;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public RegistroRACController(
             IMemoryCache cache,
-            IConsultarRACs consultarRACs, 
+            IConsultarRACs consultarRACs,
+            IConsultarRAC consultarRAC,
             ISelectItems selectItems,
             IRegistrarRAC registrarRAC,
+            IGetUsuario getUsuario,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
             _cache = cache;
             _consultarRACs = consultarRACs;
+            _consultarRAC = consultarRAC;
             _selectItems = selectItems;
             _registrarRAC = registrarRAC;
+            _getUsuario = getUsuario;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -71,14 +81,23 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"#\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+fila.Id_RAC+"\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Obs + "</td>";
                     filasTabla += "<td>" + fila.SSO_MA + "</td>";
                     filasTabla += "<td>" + fila.Clasificacion + "</td>";
-                    filasTabla += "<td>" + fila.NivelRiesgo + "</td>";
+                    switch (fila.NivelRiesgo)
+                    {
+                        case "Tolerable": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alerta": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "No Aceptable": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Bajo": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Medio": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alto": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        default: filasTabla += "<td><span class=\"badge badge-secondary\">" + fila.NivelRiesgo + "</span>"; break;
+                    }
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "</tr>";
@@ -109,6 +128,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         public async Task<IActionResult> NuevoRAC()
         {
             var items = await _selectItems.Execute();
+            var usuario = await _getUsuario.Execute(User.Identity.Name);
 
             var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
             gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -142,6 +162,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             ViewBag.Usuarios = usuarios;
             ViewBag.AsesoresMAP = asesoresMAP;
             ViewBag.AsesoresSSO = asesoresSSO;
+
+            ViewBag.NombreUsuario = usuario.Nombres + " " + usuario.Apellidos;
 
             ViewBag.ActoMA = tiposActoMA;
             ViewBag.CondicionMA = tiposCondicionMA;
@@ -184,14 +206,39 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     filePath,
                     User.Identity.Name);
                 //Notificar
-                return RedirectToAction("NuevoRAC");
+                return RedirectToAction("Resumen");
             }
             else
                 return RedirectToAction("NuevoRAC");
         }
-        public async Task<IActionResult> EditarRAC(int IdRAC)
+        public async Task<IActionResult> DetalleRAC(int IdRAC)
         {
-            return View();
+            var reporte = await _consultarRAC.Execute(IdRAC);
+            var model = new DetallerRACModel
+            {
+                Id_RAC = reporte.Id_RAC,
+                Nombres_Apellidos = reporte.Nombres_Apellidos,
+                Gerencia = reporte.Gerencia,
+                Empresa = reporte.Empresa,
+                Otra_Empresa = reporte.Otra_Empresa,
+                Empresa_Obs = reporte.Empresa_Ob,
+                Gerencia_Obs = reporte.Gerencia_Obs,
+                Ubicacion = reporte.Ubicacion,
+                Fecha = reporte.Fecha.ToString("dd/MM/yyyy"),
+                Hora = reporte.Fecha.ToString("HH:mm"),
+                SSO_MA = reporte.SSO_MA,
+                Clasificacion = reporte.Clasificacion,
+                NivelRiesgo = reporte.NivelRiesgo,
+                Tipo_Condicion = reporte.TipoCondicion,
+                Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
+                Medida_Control = reporte.Medida_Control,
+                PAC = reporte.PAC,
+                Responsable_Cierre = reporte.Responsable_Cierre,
+                Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
+                Supervisor = reporte.Supervisor,
+                Evidencia_Obs = reporte.Evidencia_Obs
+            };
+            return View(model);
         }
         private string CreateUniqueFileName(int nFile)
         {

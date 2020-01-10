@@ -192,19 +192,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
+                        if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString())) &&
                             observacion.Permisos)
                         {
                             filaObservacion += "<td><span class=\"badge badge-secondary\">Pendiente</span></td>";
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Implementar" + "</a></td>";
-                        }
-
-                        /*else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
+                        }else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                             observacion.Permisos)
                         {
                             filaObservacion += "<td><span class=\"badge badge-warning\">Vencido</span></td>";
-                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/SolicitarAmpliacion?IdObservacion=" + IdObsEncriptado + "\">" + "Solicitar Ampliación" + "</a></td>";
-                        }*/
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + IdCabecera + "\" disabled>" + "Implementar" + "</button></td>";
+                        }
                         else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
                             filaObservacion += "<td><span class=\"badge badge-success\">Aprobado</span></td><td></td>";
                         else if (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))

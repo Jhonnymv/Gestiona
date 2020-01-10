@@ -12,14 +12,17 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
     public class ConsultarInspeccionDetalle : IConsultarInspeccionDetalle
     {
         private readonly IDetalleInspeccionReadOnlyRepository _detalleInspeccionReadOnlyRepository;
+        private readonly ICabeceraInspeccionReadOnlyRepository _cabeceraInspeccionReadOnlyRepository;
         private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
         public ConsultarInspeccionDetalle(
             IDetalleInspeccionReadOnlyRepository detalleInspeccionReadOnlyRepository,
-            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
+            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository,
+            ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository)
         {
             _detalleInspeccionReadOnlyRepository = detalleInspeccionReadOnlyRepository;
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository;
+            _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
         public async Task<List<InspeccionDetalleOutput>> Execute(int idCabecera, string usuario_red)
         {
@@ -49,13 +52,18 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             }
             return output;
         }
-        public async Task<List<InspeccionDetalleOutput>> Execute(int idCabecera)
+        public async Task<List<InspeccionDetalleOutput>> ExecuteRegistro(int idCabecera,string usuario_red)
         {
             var output = new List<InspeccionDetalleOutput>();
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
+            var cabecera = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(idCabecera);
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             foreach (var item in observaciones)
             {
-                output.Add(new InspeccionDetalleOutput(item, false));
+                if (usuario.IdUsuario.Equals(cabecera.IdRegistradoPor))
+                    output.Add(new InspeccionDetalleOutput(item, true));
+                else
+                    output.Add(new InspeccionDetalleOutput(item, false));
             }
             return output;
         }

@@ -115,13 +115,18 @@ td {
 .table{
     border: 1px solid #2e6793;
 }
-
+@media screen and (max-width: 900px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}/*
 @media screen and (max-width: 740px) {
     table {
         display: block;
         overflow-x: auto;
     }
-}
+}*/
 .table-modal {
     display: block;
     overflow-x: auto;
