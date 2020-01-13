@@ -11,6 +11,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
     public class ImplementarRACModel
     {
         public int Id_RAC { get; set; }
+        public string IdEncriptado { get; set; }
         [DisplayName("Nombres y Apellidos:")]
         public string Nombres_Apellidos { get; set; }
         [DisplayName("Área de Marcobre:")]

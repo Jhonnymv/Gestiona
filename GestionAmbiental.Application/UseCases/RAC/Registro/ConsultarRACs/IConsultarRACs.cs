@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs
 {
     public interface IConsultarRACs
     {
-        Task<RACsOutput> Execute(int pagina, int fpp, DateTime fecha, string codigo);
+        Task<RACsOutput> Execute(int pagina, int fpp, DateTime fecha, string codigo,int filtroUsuario);
     }
 }

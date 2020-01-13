@@ -7,6 +7,7 @@ namespace GestionAmbiental.UseCases
 {
     public class DataProtectionPurpouseStrings
     {
-        public readonly string InspeccionIdRouteValue = "InspeccionIdRouteValue";
+        public readonly string InspeccionIdRouteValue = "InspeccionIdRouteValue"; 
+        public readonly string RACIdRouteValue = "RACIdRouteValue";
     }
 }

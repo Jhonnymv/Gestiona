@@ -28,7 +28,7 @@
             <label>Responsable de levantar la observación:</label>
         </div>
         <div class="col-lg-2 mt-1">
-            <select class="form-control" id="usuarios" asp-items="@ViewBag.Usuarios"></select>
+            <select class="form-control" id="usuario_filtro" asp-items="@ViewBag.Usuarios"></select>
         </div>
         <div class="col-lg-1 mt-1">
             <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
@@ -76,7 +76,7 @@
                     "pagina": pag,
                     "rpp": 10,
                     "filtroFecha": $('#fecha_filtro').val(),
-                    //"filtroGerencia": $('#gerenciaEjecutora_filtro').val(),
+                    "filtroUsuario": $('#usuario_filtro').val(),
                     "filtroCodigo": $('#codigo_filtro').val()
                 },
                 traditional: true,

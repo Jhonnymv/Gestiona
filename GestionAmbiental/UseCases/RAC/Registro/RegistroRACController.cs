@@ -54,7 +54,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _selectItems = selectItems;
             _registrarRAC = registrarRAC;
             _getUsuario = getUsuario;
-            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
         public async Task<IActionResult> Resumen()
@@ -65,7 +65,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             ViewBag.Usuarios = usuarios;
             return View();
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha,int filtroUsuario, string filtroCodigo, int pagina, int rpp)
         {
 
             DateTime fecha;
@@ -75,7 +75,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -83,9 +83,9 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             {
                 foreach (var fila in datosTabla.Registros)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+fila.Id_RAC+"\">" + fila.Codigo + "</a></label></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+IdEncriptado+"\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -187,7 +187,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                         var newfileName = CreateUniqueFileName(1) + ".zip";
                         filePath = await UploadZipFileAsync(model.Evidencia_Obs, newfileName);                    
                 }
-                await _registrarRAC.Execute(
+                var Id_RAC = await _registrarRAC.Execute(
                     model.Nombres_Apellidos,
                     model.Id_Gerencia,
                     model.Id_Empresa,
@@ -210,17 +210,19 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     filePath,
                     User.Identity.Name);
                 //Notificar
-                return RedirectToAction("Resumen");
+                return RedirectToAction("NotificarNuevoRAC","Notificaciones",new { IdRAC = Id_RAC });
             }
             else
                 return RedirectToAction("NuevoRAC");
         }
-        public async Task<IActionResult> DetalleRAC(int IdRAC)
+        public async Task<IActionResult> DetalleRAC(string IdRAC)
         {
-            var reporte = await _consultarRAC.Execute(IdRAC);
+            var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+            var reporte = await _consultarRAC.Execute(IdDescencriptado);
             var model = new DetallerRACModel
             {
                 Id_RAC = reporte.Id_RAC,
+                IdEncriptado = IdRAC,
                 Nombres_Apellidos = reporte.Nombres_Apellidos,
                 Gerencia = reporte.Gerencia,
                 Empresa = reporte.Empresa,

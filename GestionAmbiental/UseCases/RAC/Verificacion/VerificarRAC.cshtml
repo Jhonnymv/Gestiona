@@ -209,7 +209,7 @@
     </div>
     <div class="modal-footer">
         <a class="btn btn-secondary" style="color:white" asp-controller="VerificacionRAC" asp-action="Resumen">Cancelar</a>
-        <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.Id_RAC">Descargar Excel</a>
+        <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
         @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString())&&ViewBag.Permiso)
         {
             <button type="button" class="btn btn-danger" onclick="rechazar()">Rechazar</button>
@@ -234,6 +234,10 @@
             $("#NiveRiesgo option").css("color", "black")
         });
         function rechazar() {
+            if ($("#Comentario_Verificacion").val() == "") {
+                alert("Debe ingresar un comentario antes de rechazar");
+                return false;
+            }            
             $("#Opcion").val("Rechazar");
             $("#form_verificarRAC").submit();
         }

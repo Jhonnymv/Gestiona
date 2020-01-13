@@ -19,6 +19,7 @@ using NPOI.SS.Util;
 using System.Net;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using System.IO.Compression;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 {
@@ -29,15 +30,24 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
         private readonly IGetRACDescarga _getRACDescarga;
         private readonly IGetInfo_SGA _info_SGA;
 
-        public DescargarRACController(IMemoryCache cache, IHostingEnvironment hostingEnvironment, IGetRACDescarga getRACDescarga, IGetInfo_SGA info_SGA)
+        private readonly IDataProtector _protector;
+
+        public DescargarRACController(
+            IMemoryCache cache, 
+            IHostingEnvironment hostingEnvironment,
+            IGetRACDescarga getRACDescarga, 
+            IGetInfo_SGA info_SGA,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _cache = cache;
             _hostingEnvironment = hostingEnvironment;
             _getRACDescarga = getRACDescarga;
             _info_SGA = info_SGA;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
         }
 
-        public async Task<IActionResult> DescargaRAC(int IdRAC)
+        public async Task<IActionResult> DescargaRAC(string IdRAC)
         {
             if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
             {
@@ -46,7 +56,8 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
             else
             {
                 ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                var rac = await _getRACDescarga.Execute(IdRAC);
+                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+                var rac = await _getRACDescarga.Execute(IdDesencriptado);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "RAC");
                 string sFileName = @"Reporte de acto y condición subestándar-V00.xlsx";

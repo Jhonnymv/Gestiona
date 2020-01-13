@@ -266,7 +266,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var output = new List<DetalleObservacionXEstado>();
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Estado.Equals(estado.ToString())).ToListAsync();
-            var inspecciones = await _context.Inspecciones_Cabecera.Where(x => observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
+            var inspecciones = await _context.Inspecciones_Cabecera.Where(x => 
+            observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) 
+            && x.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
+                .ToListAsync();
+            observaciones = observaciones.Where(x => inspecciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
             var usuarios = await _context.Usuarios.ToListAsync();
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 

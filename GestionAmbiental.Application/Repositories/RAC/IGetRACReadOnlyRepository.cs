@@ -7,8 +7,9 @@ namespace GestionAmbiental.Application.Repositories.RAC
 {
     public interface IGetRACReadOnlyRepository
     {
-        Task<List<Domain.RAC.RAC>> GetRACs(DateTime fecha, string codigo);
+        Task<List<Domain.RAC.RAC>> GetRACs(DateTime fecha, string codigo,int id_Usuario);
+        Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fecha, string codigo, int id_Usuario);
         Task<Domain.RAC.RAC> GetRAC(int Id_RAC);
-        Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fecha, string codigo);
+        Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fecha, string codigo,int id_Usuario);
     }
 }

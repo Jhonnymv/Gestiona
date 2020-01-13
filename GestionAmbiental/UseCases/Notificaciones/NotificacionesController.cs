@@ -8,8 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.Notificaciones.ImplementacionRAC;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaInspeccion;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion;
+using GestionAmbiental.Application.UseCases.Notificaciones.NuevoRAC;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplementada;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechazada;
 using GestionAmbiental.Domain.Enum;
@@ -26,7 +28,10 @@ namespace GestionAmbiental.UseCases.Notificaciones
         private readonly IGetNuevaInspeccionInfo _getNuevaInspeccionInfo;
         private readonly IGetObservacionImplementada _getObservacionImplementada;
         private readonly IGetObservacionRechazada _getObservacionRechazada;
+        private readonly IGetNuevoRACInfo _getNuevoRACInfo;
+        private readonly IGetImplementacionRACInfo _getImplementacionRACInfo;
         private readonly IDataProtector _protector;
+        private readonly IDataProtector _protectorRAC;
         private readonly IGetInfo_SGA _info_SGA;
 
         public NotificacionesController(
@@ -34,6 +39,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
             IGetNuevaInspeccionInfo getNuevaInspeccionInfo, 
             IGetObservacionImplementada getObservacionImplementada,
             IGetObservacionRechazada getObservacionRechazada,
+            IGetNuevoRACInfo getNuevoRACInfo,
+            IGetImplementacionRACInfo getImplementacionRACInfo,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -42,7 +49,10 @@ namespace GestionAmbiental.UseCases.Notificaciones
             _getNuevaInspeccionInfo = getNuevaInspeccionInfo;
             _getObservacionImplementada = getObservacionImplementada;
             _getObservacionRechazada = getObservacionRechazada;
+            _getNuevoRACInfo = getNuevoRACInfo;
+            _getImplementacionRACInfo = getImplementacionRACInfo;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
+            _protectorRAC = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
         public async Task<IActionResult> NotificarInspección(int IdCabecera)
@@ -71,7 +81,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             Id_Cabecera{19}
             */
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
-            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates","NuevaObservacion.html");
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "NuevaObservacion.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
 
@@ -97,7 +107,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 observacion.ResponsableContratista,
                 observacion.FechaProgramada.ToShortDateString(),
                 info.Codigo,
-                IdCabecera
+                _protector.Protect(IdCabecera.ToString())
                 );
 
                 var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);
@@ -153,7 +163,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
         {
             var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
             var info = await _getObservacionImplementada.Execute(IdObsDesencriptado);
-            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates","ObservacionImplementada.html");
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
             /*
@@ -203,7 +213,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.ComentarioImplementacion,
                 info.FechaCierre,
                 info.Codigo,
-                info.IdInspeccionCabecera
+                _protector.Protect(info.IdInspeccionCabecera.ToString())
                 );
             try
             {
@@ -249,7 +259,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
         {
             var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
             var info = await _getObservacionRechazada.Execute(IdObsDesencriptado);
-            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "ObservacionRechazada.html");
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates","Inspecciones", "ObservacionRechazada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
             /*
@@ -303,7 +313,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.ComentarioVerificacion,
                 info.FechaVerificacion,
                 info.Codigo,
-                info.IdInspeccionCabecera
+                _protector.Protect(info.IdInspeccionCabecera.ToString())
                 );
             try
             {
@@ -343,6 +353,152 @@ namespace GestionAmbiental.UseCases.Notificaciones
             }
             var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
             return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = IdEncriptado });
+        }
+        public async Task<IActionResult> NotificarNuevoRAC(int IdRAC)
+        {
+            var info = await _getNuevoRACInfo.Execute(IdRAC);
+            var IdEncriptado = _protectorRAC.Protect(info.Id_RAC.ToString());
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "RAC", "NuevoRAC.html");
+            StreamReader SourceReader = System.IO.File.OpenText(template);
+            var templateReaded = SourceReader.ReadToEnd();
+
+                var msgBody = string.Format(templateReaded,
+                info.Nombres_Apellidos,
+                info.Gerencia,
+                info.Empresa,
+                info.Otra_Empresa,
+                info.Empresa_Ob,
+                info.Gerencia_Obs,
+                info.Ubicacion,
+                info.Fecha.ToString("dd/MM/yyyy"),
+                info.Fecha.ToString("HH:mm"),
+                info.SSO_MA,
+                info.Clasificacion,
+                info.NivelRiesgo,
+                info.TipoCondicion,
+                info.Descripcion_Acto_Cond,
+                info.Medida_Control,
+                info.PAC,
+                info.Responsable_Cierre,
+                info.Fecha_Cierre.ToString("dd/MM/yyyy"),
+                info.Supervisor,
+                info.Codigo,
+                IdEncriptado
+                );
+
+                var evidencias_condicion = info.Evidencia_Obs;                
+
+                try
+                {
+                    SmtpClient mail = new SmtpClient();
+                    MailMessage msg = new MailMessage();
+                    mail.Host = "smtp.gmail.com";
+                    msg.Priority = MailPriority.Normal;
+                    mail.EnableSsl = true;
+                    msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+                    msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
+                    msg.SubjectEncoding = Encoding.UTF8;
+                    msg.IsBodyHtml = true;
+                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                    string user = "", pass = "";
+                    foreach (var item in credenciales.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
+                    }
+                    msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+                    msg.BodyEncoding = Encoding.UTF8;
+                    msg.Body = msgBody;
+                    mail.UseDefaultCredentials = false;
+                    NetworkCredential MyCredentials = new NetworkCredential(user, pass);
+                    mail.Credentials = MyCredentials;
+                    mail.EnableSsl = true;
+                    await mail.SendMailAsync(msg);
+                    msg.Attachments.Dispose();
+                    mail.Dispose();
+                    msg.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            return RedirectToAction("ImplementarRAC", "ImplementacionRAC", new { IdRAC = IdEncriptado });
+        }
+        public async Task<IActionResult> NotificarImplementacionRAC(int IdRAC)
+        {
+            var info = await _getImplementacionRACInfo.Execute(IdRAC);
+            var IdEncriptado = _protectorRAC.Protect(info.Id_RAC.ToString());
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "RAC", "ImplementacionRAC.html");
+            StreamReader SourceReader = System.IO.File.OpenText(template);
+            var templateReaded = SourceReader.ReadToEnd();
+
+            var msgBody = string.Format(templateReaded,
+            info.Nombres_Apellidos,
+            info.Gerencia,
+            info.Empresa,
+            info.Otra_Empresa,
+            info.Empresa_Ob,
+            info.Gerencia_Obs,
+            info.Ubicacion,
+            info.Fecha.ToString("dd/MM/yyyy"),
+            info.Fecha.ToString("HH:mm"),
+            info.SSO_MA,
+            info.Clasificacion,
+            info.NivelRiesgo,
+            info.TipoCondicion,
+            info.Descripcion_Acto_Cond,
+            info.Medida_Control,
+            info.PAC,
+            info.Responsable_Cierre,
+            info.Fecha_Cierre.ToString("dd/MM/yyyy"),
+            info.Supervisor,
+            info.Codigo, 
+            IdEncriptado
+            );
+
+            var evidencias_condicion = info.Evidencia_Obs;
+
+            try
+            {
+                SmtpClient mail = new SmtpClient();
+                MailMessage msg = new MailMessage();
+                mail.Host = "smtp.gmail.com";
+                msg.Priority = MailPriority.Normal;
+                mail.EnableSsl = true;
+                msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+                msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
+                msg.SubjectEncoding = Encoding.UTF8;
+                msg.IsBodyHtml = true;
+                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                string user = "", pass = "";
+                foreach (var item in credenciales.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+                msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+                msg.BodyEncoding = Encoding.UTF8;
+                msg.Body = msgBody;
+                mail.UseDefaultCredentials = false;
+                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
+                mail.Credentials = MyCredentials;
+                mail.EnableSsl = true;
+                await mail.SendMailAsync(msg);
+                msg.Attachments.Dispose();
+                mail.Dispose();
+                msg.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return RedirectToAction("VerificarRAC", "VerificacionRAC", new { IdRAC = IdEncriptado });
         }
     }
 }

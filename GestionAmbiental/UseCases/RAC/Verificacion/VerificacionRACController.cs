@@ -9,6 +9,7 @@ using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.RechazarObservacion;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -22,12 +23,15 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
         private readonly IAprobarObservacion _aprobarObservacion;
         private readonly IRechazarObservacion _rechazarObservacion;
 
+        private readonly IDataProtector _protector;
         public VerificacionRACController(
             ISelectItems selectItems,
             IConsultarRAC consultarRAC,
             IConsultarRACs consultarRACs,
             IAprobarObservacion aprobarObservacion,
-            IRechazarObservacion rechazarObservacion
+            IRechazarObservacion rechazarObservacion, 
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings
             )
         {
             _selectItems = selectItems;
@@ -35,6 +39,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
             _consultarRACs = consultarRACs;
             _aprobarObservacion = aprobarObservacion;
             _rechazarObservacion = rechazarObservacion;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
@@ -45,7 +50,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
             ViewBag.Usuarios = usuarios;
             return View();
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo,int filtroUsuario, int pagina, int rpp)
         {
             DateTime fecha;
             if (filtroFecha != null)
@@ -54,7 +59,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -62,9 +67,9 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
             {
                 foreach (var fila in datosTabla.Registros)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/VerificacionRAC/VerificarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></label></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/VerificacionRAC/VerificarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -122,12 +127,14 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
             return Ok(response);
         }
 
-        public async Task<IActionResult> VerificarRAC(int IdRAC)
+        public async Task<IActionResult> VerificarRAC(string IdRAC)
         {
-            var reporte = await _consultarRAC.Execute(IdRAC,User.Identity.Name);
+            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+            var reporte = await _consultarRAC.Execute(IdDesencriptado, User.Identity.Name);
             var model = new VerificarRACModel
             {
                 Id_RAC = reporte.Id_RAC,
+                IdEncriptado = IdRAC,
                 Nombres_Apellidos = reporte.Nombres_Apellidos,
                 Gerencia = reporte.Gerencia,
                 Empresa = reporte.Empresa,

@@ -50,7 +50,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             _consultarRACs = consultarRACs;
             _consultarRAC = consultarRAC;
             _levantarObservacionRAC = levantarObservacionRAC;
-            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
 
@@ -62,7 +62,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             ViewBag.Usuarios = usuarios;
             return View();
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo,int filtroUsuario, int pagina, int rpp)
         {
 
             DateTime fecha;
@@ -72,7 +72,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -80,9 +80,9 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             {
                 foreach (var fila in datosTabla.Registros)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/ImplementacionRAC/ImplementarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></label></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/ImplementacionRAC/ImplementarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -139,12 +139,14 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             return Ok(response);
         }
 
-        public async Task<IActionResult> ImplementarRAC(int IdRAC)
+        public async Task<IActionResult> ImplementarRAC(string IdRAC)
         {
-            var reporte = await _consultarRAC.Execute(IdRAC,User.Identity.Name);
+            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+            var reporte = await _consultarRAC.Execute(IdDesencriptado, User.Identity.Name);
             var model = new ImplementarRACModel
             {
                 Id_RAC = reporte.Id_RAC,
+                IdEncriptado = IdRAC,
                 Nombres_Apellidos = reporte.Nombres_Apellidos,
                 Gerencia = reporte.Gerencia,
                 Empresa = reporte.Empresa,
@@ -184,7 +186,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     filePath = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName);
                 }
                 await _levantarObservacionRAC.Execute(model.Id_RAC, filePath,model.Comentario_Cierre, User.Identity.Name);
-                //    return RedirectToAction("NotificarImplementacionObservacion", "Notificaciones", new { IdObservacion = model.EncryptedId });
+                return RedirectToAction("NotificarImplementacionRAC", "Notificaciones", new { IdRAC = model.Id_RAC });
             }
             //var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarRAC", new { IdRAC = model.Id_RAC });

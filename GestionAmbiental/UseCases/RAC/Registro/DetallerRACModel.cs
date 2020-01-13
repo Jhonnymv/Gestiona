@@ -9,6 +9,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
     public class DetallerRACModel
     {
         public int Id_RAC { get; set; }
+        public string IdEncriptado { get; set; }
         [DisplayName("Nombres y Apellidos:")]
         public string Nombres_Apellidos { get; set; }
         [DisplayName("Área de Marcobre:")]

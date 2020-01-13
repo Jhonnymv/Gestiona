@@ -204,7 +204,7 @@
     </form>
     <div class="modal-footer">
         <a class="btn btn-secondary" style="color:white" asp-controller="ImplementacionRAC" asp-action="Resumen">Cancelar</a>
-        <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.Id_RAC">Descargar Excel</a>
+        <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
         @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
         {
             <button type="button" class="btn btn-primary" onclick="guardar()">Implementar</button>

@@ -14,9 +14,9 @@ namespace GestionAmbiental.Application.UseCases.RAC.Implementacion.ConsultarRACs
         {
             _RACReadOnlyRepository = rACReadOnlyRepository ?? throw new ArgumentNullException(nameof(rACReadOnlyRepository));
         }
-        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fecha, string codigo)
+        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fecha, string codigo,int filtroUsuario)
         {
-            var registros = await _RACReadOnlyRepository.GetRACs(fecha, codigo);
+            var registros = await _RACReadOnlyRepository.GetRACsImplementacion(fecha, codigo, filtroUsuario);
             var output = new RACsOutput
             {
                 Registros = new List<RACOutput>(),
