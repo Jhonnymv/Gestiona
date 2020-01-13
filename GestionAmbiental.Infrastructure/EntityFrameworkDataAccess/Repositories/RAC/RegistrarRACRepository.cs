@@ -1,6 +1,9 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
+using GestionAmbiental.Domain.Enum;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,6 +48,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.RACs.Add(racEntity);
             await _context.SaveChangesAsync();
             return racEntity.Id_RAC;
+        }
+        public async Task<string> GetUltimoCodigo()
+        {
+            var codigo = await _context.RACs.OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            return codigo;
         }
     }
 }

@@ -57,8 +57,12 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
         }
-        public IActionResult Resumen()
+        public async Task<IActionResult> Resumen()
         {
+            var items = await _selectItems.Execute();
+            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            ViewBag.Usuarios = usuarios;
             return View();
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
@@ -81,7 +85,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+fila.Id_RAC+"\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+fila.Id_RAC+"\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";

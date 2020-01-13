@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.Repositories.RAC
     public interface IRegistrarRACReadOnlyRepository
     {
         Task<int> RegistrarRAC(Domain.RAC.RAC nuevoRegistro);
+        Task<string> GetUltimoCodigo();
     }
 }

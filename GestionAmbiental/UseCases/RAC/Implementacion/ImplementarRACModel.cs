@@ -47,7 +47,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         public string Responsable_Cierre { get; set; }
         [DisplayName("Fecha de cierre programada:")]
         public string Fecha_Cierre { get; set; }
-        [DisplayName("Supervisor de SSO/MA (Marcobre) a notificar:")]
+        [DisplayName("Verificador de SSO/MA (Marcobre) a notificar:")]
         public string Supervisor { get; set; }
         [DisplayName("Evidencia de la Observación:")]
         public string Evidencia_Obs { get; set; }

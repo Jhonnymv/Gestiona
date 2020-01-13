@@ -25,6 +25,12 @@
             <input type="text" class="form-control" id="codigo_filtro">
         </div>
         <div class="col-lg-1 mt-1">
+            <label>Registrado Por:</label>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <select class="form-control" id="usuarios" asp-items="@ViewBag.Usuarios"></select>
+        </div>
+        <div class="col-lg-1 mt-1">
             <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
         </div>
     </div>

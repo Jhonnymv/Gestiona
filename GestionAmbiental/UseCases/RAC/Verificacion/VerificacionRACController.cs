@@ -3,36 +3,46 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.AprobarObservacion;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.RechazarObservacion;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionAmbiental.UseCases.RAC.Verificacion
 {
     public class VerificacionRACController : Controller
     {
+        private readonly ISelectItems _selectItems;
         private readonly IConsultarRAC _consultarRAC;
         private readonly IConsultarRACs _consultarRACs;
         private readonly IAprobarObservacion _aprobarObservacion;
         private readonly IRechazarObservacion _rechazarObservacion;
 
         public VerificacionRACController(
+            ISelectItems selectItems,
             IConsultarRAC consultarRAC,
             IConsultarRACs consultarRACs,
             IAprobarObservacion aprobarObservacion,
             IRechazarObservacion rechazarObservacion
             )
         {
+            _selectItems = selectItems;
             _consultarRAC = consultarRAC;
             _consultarRACs = consultarRACs;
             _aprobarObservacion = aprobarObservacion;
             _rechazarObservacion = rechazarObservacion;
         }
 
-        public IActionResult Resumen()
+        public async Task<IActionResult> Resumen()
         {
+            var items = await _selectItems.Execute();
+            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            ViewBag.Usuarios = usuarios;
             return View();
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
@@ -54,7 +64,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/VerificacionRAC/VerificarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/VerificacionRAC/VerificarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -73,8 +83,19 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                     }
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Supervisor + "</td>";
-                    filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>"; 
-                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
+                    if (EstadosRAC.Rechazado.ToString() == fila.Estado)
+                    {
+                        filasTabla += "<td>Pendiente de implementación</td>";
+                    }
+                    else if (EstadosRAC.Implementado.ToString() == fila.Estado)
+                    {
+                        filasTabla += "<td>Pendiente de verificación</td>";
+                    }
+                    else
+                    {
+                        filasTabla += "<td>Cerrado</td>";
+                    }
                     filasTabla += "</tr>";
                 }
 
@@ -103,7 +124,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
 
         public async Task<IActionResult> VerificarRAC(int IdRAC)
         {
-            var reporte = await _consultarRAC.Execute(IdRAC);
+            var reporte = await _consultarRAC.Execute(IdRAC,User.Identity.Name);
             var model = new VerificarRACModel
             {
                 Id_RAC = reporte.Id_RAC,
@@ -132,6 +153,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                 Comentario_Verificacion = reporte.Comentario_Verificacion,
                 Estado = reporte.Estado
             };
+            ViewBag.Permiso = reporte.Permiso;
             return View(model);
         }
         [HttpPost]

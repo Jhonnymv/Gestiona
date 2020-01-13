@@ -26,10 +26,19 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC
             string pac, int responsable_cierre, string fecha_cierre, int supervisor, string evidencia,string usuario_red)
         {
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
+            var codigo = "";
+            var codigoAnterior = await _registrarRACReadOnlyRepository.GetUltimoCodigo(); 
+            if (codigoAnterior != null)
+            {
+                var correlativo = (Convert.ToInt32(codigoAnterior.Remove(0, 4)) + 1).ToString().PadLeft(5, '0');
+                codigo = "RAC-" + correlativo;
+            }
+            else
+                codigo = "RAC-00001";
             var reporte = new Domain.RAC.RAC
             {
                 Id_Registrado_Por = usuario.IdUsuario,
-                Codigo = "CODIGO",
+                Codigo = codigo,
                 Nombres_Apellidos = nombres_apellidos,
                 Id_Gerencia = gerencia,
                 Id_Empresa = empresa,

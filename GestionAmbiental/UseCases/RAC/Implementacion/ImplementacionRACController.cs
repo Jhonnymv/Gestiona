@@ -17,6 +17,8 @@ using GestionAmbiental.Domain.Enum;
 using System.Net;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Http;
+using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionAmbiental.UseCases.RAC.Implementacion
 {
@@ -25,6 +27,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
 
         private IMemoryCache _cache;
 
+        private readonly ISelectItems _selectItems;
         private readonly IConsultarRACs _consultarRACs;
         private readonly IConsultarRAC _consultarRAC;
         private readonly ILevantarObservacionRAC _levantarObservacionRAC;
@@ -32,8 +35,9 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
 
-        public ImplementacionRACController(
-            IMemoryCache cache,
+        public ImplementacionRACController(            
+            IMemoryCache cache, 
+            ISelectItems selectItems,
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
             ILevantarObservacionRAC levantarObservacionRAC,
@@ -42,6 +46,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             IGetInfo_SGA info_SGA)
         {
             _cache = cache;
+            _selectItems = selectItems;
             _consultarRACs = consultarRACs;
             _consultarRAC = consultarRAC;
             _levantarObservacionRAC = levantarObservacionRAC;
@@ -49,8 +54,12 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             _info_SGA = info_SGA;
         }
 
-        public IActionResult Resumen()
+        public async Task<IActionResult> Resumen()
         {
+            var items = await _selectItems.Execute();
+            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            ViewBag.Usuarios = usuarios;
             return View();
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int pagina, int rpp)
@@ -73,7 +82,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/ImplementacionRAC/ImplementarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/ImplementacionRAC/ImplementarRAC?IdRAC=" + fila.Id_RAC + "\">" + fila.Codigo + "</a></label></td>";
                     filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -93,10 +102,20 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Responsable_Cierre + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
-                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    if(EstadosRAC.Registrado.ToString()==fila.Estado || EstadosRAC.Rechazado.ToString() == fila.Estado)
+                    {
+                        filasTabla += "<td>Pendiente de Implementación</td>";
+                    }
+                    else if(EstadosRAC.Implementado.ToString() == fila.Estado)
+                    {
+                        filasTabla += "<td>Pendiente de Verificación</td>";
+                    }
+                    else
+                    {
+                        filasTabla += "<td>Cerrado</td>";
+                    }
                     filasTabla += "</tr>";
                 }
-
                 paginador += "<ul class=\"pagination\">";
                 for (int i = 1; i <= nPaginas; i++)
                 {
@@ -173,7 +192,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
 
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia__Registro_RAC_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            var fileName = "Evidencia__Implementacion_RAC_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             return fileName;
         }
         private string GetContentType(string path)

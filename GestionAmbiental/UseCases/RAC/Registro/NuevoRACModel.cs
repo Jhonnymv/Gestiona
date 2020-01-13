@@ -64,7 +64,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         [DisplayName("Fecha de cierre programada:")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string Fecha_Cierre { get; set; }
-        [DisplayName("Supervisor de SSO/MA (Marcobre) a notificar:")]
+        [DisplayName("Verificador de SSO/MA (Marcobre) a notificar:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Supervisor { get; set; }
         [DisplayName("Evidencia de la Observación:")]

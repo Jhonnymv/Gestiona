@@ -183,7 +183,7 @@
                 <label asp-for="Comentario_Verificacion"></label>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()))
+                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString())&&ViewBag.Permiso)
                 {
                     <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250"></textarea>
                 }
@@ -199,17 +199,18 @@
         <div class="col-12">
             @if (Model.Estado.Equals(EstadosRAC.Aprobado.ToString()))
             {
-                <div class="alert alert-success" role="alert" style="text-align:center;">Aprobado</div>
+                <div class="alert alert-success" role="alert" style="text-align:center;">Cerrado</div>
             }
             else if(Model.Estado.Equals(EstadosRAC.Rechazado.ToString()))
             {
-                <div class="alert alert-danger" role="alert" style="text-align:center;">Rechazado</div>
+                <div class="alert alert-danger" role="alert" style="text-align:center;">Pendiente de Implementación</div>
             }
         </div>
     </div>
     <div class="modal-footer">
         <a class="btn btn-secondary" style="color:white" asp-controller="VerificacionRAC" asp-action="Resumen">Cancelar</a>
-        @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()))
+        <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.Id_RAC">Descargar Excel</a>
+        @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString())&&ViewBag.Permiso)
         {
             <button type="button" class="btn btn-danger" onclick="rechazar()">Rechazar</button>
             <button type="button" class="btn btn-success" onclick="aprobar()">Aprobar</button>
@@ -234,12 +235,10 @@
         });
         function rechazar() {
             $("#Opcion").val("Rechazar");
-            console.log($("#Opcion").val())
             $("#form_verificarRAC").submit();
         }
         function aprobar() {
             $("#Opcion").val("Aprobar");
-            console.log($("#Opcion").val())
             $("#form_verificarRAC").submit();
         }
     </script>
