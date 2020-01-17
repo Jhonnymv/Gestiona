@@ -113,6 +113,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             {
                 ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
                 var data = await _getDetalleObservacionesXEstado.Execute(estado);
+                data = data.OrderByDescending(x => x.Codigo).OrderByDescending(x=>x.FechaProgramada).ToList();
                 foreach(var item in data)
                 {
                     item.IdInspeccionCabeceraEncriptado = _protector.Protect(item.IdInspeccionCabecera.ToString());

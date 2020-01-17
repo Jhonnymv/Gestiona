@@ -354,7 +354,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado,User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado,User.Identity.Name);
                     ViewBag.nObservacioness = observaciones.Count;
 
                     foreach (var observacion in observaciones)

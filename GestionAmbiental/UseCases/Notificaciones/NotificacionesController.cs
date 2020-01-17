@@ -416,7 +416,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     NetworkCredential MyCredentials = new NetworkCredential(user, pass);
                     mail.Credentials = MyCredentials;
                     mail.EnableSsl = true;
-                    await mail.SendMailAsync(msg);
+                    //await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();
@@ -489,7 +489,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 NetworkCredential MyCredentials = new NetworkCredential(user, pass);
                 mail.Credentials = MyCredentials;
                 mail.EnableSsl = true;
-                await mail.SendMailAsync(msg);
+                //await mail.SendMailAsync(msg);
                 msg.Attachments.Dispose();
                 mail.Dispose();
                 msg.Dispose();
