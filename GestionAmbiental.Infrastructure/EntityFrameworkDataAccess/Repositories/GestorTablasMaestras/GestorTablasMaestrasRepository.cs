@@ -52,7 +52,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return tipoCondicionEntity.Id_Tipo_Condicion;
         }
                
-        public async Task<int> AddUsuario(Usuario usuario)
+        /*public async Task<int> AddUsuario(Usuario usuario)
         {
             var usuarioEntity = new Entities.Usuario
             {
@@ -67,7 +67,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Usuarios.Add(usuarioEntity);
             await _context.SaveChangesAsync();
             return usuarioEntity.Id_Usuario;
-        }
+        }*/
                
         public async Task<Empresa> GetEmpresa(int idEmpresa)
         {

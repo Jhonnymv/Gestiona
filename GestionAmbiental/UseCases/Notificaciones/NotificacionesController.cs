@@ -119,9 +119,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
                 try
                 {
+                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                    string smtp = "", user = "", pass = "";
+                    foreach (var item in credenciales.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "smtp": smtp = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
+                    }
+
                     SmtpClient mail = new SmtpClient();
+                    mail.Host = smtp;
+                    mail.Credentials = new NetworkCredential(user,pass);
                     MailMessage msg = new MailMessage();
-                    mail.Host = "smtp.gmail.com";
                     msg.Priority = MailPriority.Normal;
                     mail.EnableSsl = true;
                     msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
@@ -129,24 +142,12 @@ namespace GestionAmbiental.UseCases.Notificaciones
                     msg.Subject = "Nueva Observacion Asignada";
                     msg.SubjectEncoding = Encoding.UTF8;
                     msg.IsBodyHtml = true;
-                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                    string user = "", pass = "";
-                    foreach(var item in credenciales.Info)
-                    {
-                        switch (item.Key)
-                        {
-                            case "user":user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                        }
-                    }
+                   
                     msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
                     msg.BodyEncoding = Encoding.UTF8;
                     msg.Body = msgBody;
                     mail.UseDefaultCredentials = false;
-                    NetworkCredential MyCredentials = new NetworkCredential(user, pass);
-                    mail.Credentials = MyCredentials;
-                    mail.EnableSsl = true;
-                    //await mail.SendMailAsync(msg);
+                    await mail.SendMailAsync(msg);
                     msg.Attachments.Dispose();
                     mail.Dispose();
                     msg.Dispose();

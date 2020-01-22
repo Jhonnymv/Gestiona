@@ -26,7 +26,7 @@ namespace GestionAmbiental.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var rol = await _getRolUsuario.Execute(User.Identity.Name.Split("\\")[1]);
+            /*var rol = await _getRolUsuario.Execute(User.Identity.Name.Split("\\")[1]);
             if (!rol.HasValue)
                 return RedirectToAction("NoAutorizado");
             else
@@ -46,7 +46,13 @@ namespace GestionAmbiental.Controllers
                 ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
 
                 return View();
-            }            
+            }    */
+            if (_cache.Get(CacheKeys.RolUsuario) != null && _cache.Get(CacheKeys.NombreUsuario)!=null)
+            {
+                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                ViewBag.Usuario = _cache.Get<string>(CacheKeys.NombreUsuario);
+            }
+            return View();
         }
 
         public IActionResult Privacy()

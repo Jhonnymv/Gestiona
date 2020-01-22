@@ -12,7 +12,7 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<List<Usuario>> GetUsuarios(string filtro);
         Task<Usuario> GetUsuario(int idUsuario);
         Task UpdateUsuario(Usuario usuario);
-        Task<int> AddUsuario(Usuario usuario);
+        //Task<int> AddUsuario(Usuario usuario);
         //Tb_Empresa
         Task<List<Empresa>> GetEmpresas(string filtro);
         Task<Empresa> GetEmpresa(int idEmpresa);

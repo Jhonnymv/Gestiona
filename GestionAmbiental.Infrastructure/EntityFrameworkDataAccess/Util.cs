@@ -8,7 +8,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
     {
         public static string GetDomain()
         {
-            return @"MSI\";
+            return @"PRUEBA\";
         }
     }
 }

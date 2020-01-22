@@ -11,6 +11,7 @@ namespace GestionAmbiental.Domain.Enum
         NotificationAccount = 3,
         FileEncryption = 4,
         FTPConnectionEvidenciaRACR = 5,
-        FTPConnectionEvidenciaRACI = 6
+        FTPConnectionEvidenciaRACI = 6,
+        LDAPConnection = 7
     }
 }

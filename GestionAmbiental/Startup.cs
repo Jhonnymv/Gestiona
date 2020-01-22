@@ -80,9 +80,6 @@ namespace GestionAmbiental
                 .AddFeatureFolders(new OdeToCode.AddFeatureFolders.FeatureFolderOptions()
                 { FeatureFolderName = "UseCases" });
             services.AddSingleton<DataProtectionPurpouseStrings>();
-            //services.AddScoped<IConsultarCabeceras, ConsultarCabeceras>();
-            //services.AddScoped<ISelectItems, SelectItems>();
-            //services.AddScoped<IRegistrarInspeccion, RegistrarInspeccion>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

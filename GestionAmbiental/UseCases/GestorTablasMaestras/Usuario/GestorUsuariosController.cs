@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.AgregarUsuario;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.EditarUsuario;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
 {
@@ -20,12 +24,17 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         private readonly IGetUsuario _getUsuario;
         private readonly IEditarUsuario _editarUsuario;
         private readonly IAgregarUsuario _agregarUsuario;
+        private readonly IUpdateUsuarios _updateUsuarios;
+
+        private readonly IGetInfo_SGA _info_SGA;
         public GestorUsuariosController(
             IMemoryCache cache,
             IGetUsuarios getUsuarios,
             IGetUsuario getUsuario,
             IEditarUsuario editarUsuario,
-            IAgregarUsuario agregarUsuario
+            IAgregarUsuario agregarUsuario,
+            IUpdateUsuarios updateUsuarios,
+            IGetInfo_SGA info_SGA
             )
         {
             _cache = cache;
@@ -33,6 +42,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
             _editarUsuario = editarUsuario ?? throw new ArgumentNullException(nameof(editarUsuario));
             _agregarUsuario = agregarUsuario ?? throw new ArgumentNullException(nameof(agregarUsuario));
+            _updateUsuarios = updateUsuarios ?? throw new ArgumentNullException(nameof(updateUsuarios));
+            _info_SGA = info_SGA ?? throw new ArgumentNullException(nameof(info_SGA));
         }
 
         public IActionResult Usuarios()
@@ -146,7 +157,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 return View(model);
             }
         }
-        public async Task<IActionResult> AgregarUsuario()
+        /*public async Task<IActionResult> AgregarUsuario()
         {
             if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
                    _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
@@ -194,7 +205,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 }
                 return RedirectToAction("AgregarUsuario");
             }
-        }
+        }*/
         [HttpPost]
         public async Task<IActionResult> EditarUsuario(UsuarioModel model)
         {
@@ -211,6 +222,116 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 }
                 return RedirectToAction("DetalleUsuario", new { IdUsuario = model.IdUsuario });
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ActualizarInformacion()
+        {
+            var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
+            string ldap_path = "", ldap_domain = "";
+            foreach (var item in info.Info)
+            {
+                switch (item.Key)
+                {
+                    case "ldap_path": ldap_path = item.Value; break;
+                    case "ldap_domain": ldap_domain = item.Value; break;
+                }
+            }
+            DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path);
+            DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
+
+            adSearcher.Filter = "(&(objectClass=user)(objectCategory=person))";
+            adSearcher.PropertiesToLoad.Add("samaccountname");
+            adSearcher.PropertiesToLoad.Add("mail");
+            adSearcher.PropertiesToLoad.Add("givenName");
+            adSearcher.PropertiesToLoad.Add("sn");
+            adSearcher.PropertiesToLoad.Add("usergroup");
+            adSearcher.PropertiesToLoad.Add("company");
+            adSearcher.PropertiesToLoad.Add("department");
+            adSearcher.PropertiesToLoad.Add("telephoneNumber");
+            adSearcher.PropertiesToLoad.Add("mobile");
+            adSearcher.PropertiesToLoad.Add("displayname");
+            SearchResult result;
+            SearchResultCollection iResult = adSearcher.FindAll();
+
+
+            ADUserModel usuario;
+            var rst = new List<ADUserModel>();
+            dynamic response;
+            if (iResult != null)
+            {
+                for (int counter = 0; counter < iResult.Count; counter++)
+                {
+                    result = iResult[counter];
+                    if (result.Properties.Contains("samaccountname"))
+                    {
+                        usuario = new ADUserModel();
+                        usuario.UserName = (String)result.Properties["samaccountname"][0];
+
+                        if (result.Properties.Contains("displayname"))
+                        {
+                            usuario.DisplayName = (String)result.Properties["displayname"][0];
+                        }
+                        if (result.Properties.Contains("givenName"))
+                        {
+                            usuario.FirstName = (String)result.Properties["givenName"][0];
+                        }
+                        if (result.Properties.Contains("sn"))
+                        {
+                            usuario.LastName = (String)result.Properties["sn"][0];
+                        }
+                        if (result.Properties.Contains("mail"))
+                        {
+                            usuario.Email = (String)result.Properties["mail"][0];
+                        }
+
+                        if (result.Properties.Contains("company"))
+                        {
+                            usuario.Company = (String)result.Properties["company"][0];
+                        }
+
+                        if (result.Properties.Contains("title"))
+                        {
+                            usuario.JobTitle = (String)result.Properties["title"][0];
+                        }
+
+                        if (result.Properties.Contains("department"))
+                        {
+                            usuario.Deparment = (String)result.Properties["department"][0];
+                        }
+
+                        if (result.Properties.Contains("telephoneNumber"))
+                        {
+                            usuario.Phone = (String)result.Properties["telephoneNumber"][0];
+                        }
+
+                        if (result.Properties.Contains("mobile"))
+                        {
+                            usuario.Mobile = (String)result.Properties["mobile"][0];
+                        }
+                        rst.Add(usuario);
+                    }
+                }
+            }
+            else
+            {
+                response = new
+                {
+                    Mensaje = "No se encontraron usuarios.",
+                    Success = false
+                };
+                return Ok(response);
+            }
+
+            adSearcher.Dispose();
+            adSearchRoot.Dispose();
+            await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
+
+            response = new
+            {
+                Mensaje = "Se actualizó la información de los usuarios",
+                Success = true
+            };
+            return Ok(response);
         }
     }
 }

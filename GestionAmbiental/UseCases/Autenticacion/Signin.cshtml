@@ -1,0 +1,31 @@
+﻿@model GestionAmbiental.UseCases.Autenticacion.SigninModel
+@{
+    ViewData["Title"] = "Signin";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Iniciar Sesión</h2>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12 text-center">
+            <form class="form-signin" enctype="application/x-www-form-urlencoded" autocomplete="off" asp-controller="Autenticacion" asp-action="Signin">
+                <div class="row mb-2">
+                    <input type="text"  asp-for="User" class="form-control" placeholder="Usuario" autofocus="">
+                    <span class="text-danger" asp-validation-for="User"></span>
+                </div>
+                <div class="row mb-2">
+                    <input type="password" asp-for="Password" class="form-control" placeholder="Password">
+                    <span class="text-danger" asp-validation-for="Password"></span>
+                </div>
+                <div class="row mb-2">
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -59,11 +59,21 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         }
         public async Task<IActionResult> Resumen()
         {
-            var items = await _selectItems.Execute();
-            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            ViewBag.Usuarios = usuarios;
-            return View();
+            var rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+            var nombre_usuario = _cache.Get<string>(CacheKeys.NombreUsuario);
+            ViewBag.Rol = rol;
+            if (rol.Equals(InspeccionRol.Admin.ToString())){
+
+                var items = await _selectItems.Execute();
+                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Usuarios = usuarios;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha,int filtroUsuario, string filtroCodigo, int pagina, int rpp)
         {

@@ -9,5 +9,6 @@ namespace GestionAmbiental
     public class CacheKeys
     {
         public static InspeccionRol RolUsuario { get; set; }
+        public static string NombreUsuario { get { return "_NombreUsuario"; } }
     }
 }
