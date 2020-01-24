@@ -19,22 +19,21 @@ using NPOI.XSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
     public class DescargaInspeccionController : Controller
     {
-        private IMemoryCache _cache;
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
         private readonly IGetInfo_SGA _info_SGA;
         public DescargaInspeccionController(
-            IMemoryCache cache, 
             IHostingEnvironment hostingEnvironment,
             IConsultarInspeccionDescarga consultarInspeccionDescarga,
             IGetInfo_SGA info_SGA)
         {
-            _cache = cache;
             _hostingEnvironment = hostingEnvironment;
             _consultarInspeccionDescarga = consultarInspeccionDescarga;
             _info_SGA = info_SGA;
@@ -42,13 +41,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
         public async Task<IActionResult> DescargaInspeccion(int IdCabecera)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var cabecera = await _consultarInspeccionDescarga.Execute(IdCabecera);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
@@ -78,7 +79,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 //->HORA
                 sheet.GetRow(13).GetCell(15).SetCellValue(cabecera.FechaInspeccion.Hour + ":" + cabecera.FechaInspeccion.Minute);
                 //->FECHA  
-                sheet.GetRow(13).GetCell(18).SetCellValue(cabecera.FechaInspeccion.Date.ToShortDateString());
+                sheet.GetRow(13).GetCell(18).SetCellValue(cabecera.FechaInspeccion.ToString("dd/MM/yyyy"));
                 //->PARTICIPANTES DE LA INSPECCION :  
                 sheet.GetRow(13).GetCell(24).SetCellValue(cabecera.Participantes);
                 //->RESPONSABLE DEL ÁREA INSPECCIONADA:	
@@ -198,7 +199,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
                     row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
                     //->Fecha Programada
-                    row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToShortDateString());
+                    row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToString("dd/MM/yyyy"));
 
                     row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
                     
@@ -228,6 +229,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         //Retorna el tamaño de la fila para la imagen agregada
         private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
             FtpWebRequest ftpRequest;
@@ -242,9 +244,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
-                var archiveFile = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\archive.zip";
-                var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
+                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                 if (Directory.Exists(filePath))
                 {

@@ -29,6 +29,7 @@
             </button>
             <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse justify-content-start">
                 <ul class="navbar-nav">
+                    <li class="nav-item"><a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes</a></li>
                     @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
                     {
                         <li class="nav-item dropdown dropleft">

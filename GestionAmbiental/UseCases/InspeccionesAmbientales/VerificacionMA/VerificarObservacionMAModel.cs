@@ -8,7 +8,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
 {
     public class VerificarObservacionMAModel
     {
-        public int idObservacion { get; set; }
+        public int idObs { get; set; }
         public string EncryptedId { get; set; }
         [DisplayName("Tipo de Inspección:")]
         public string TipoInspeccion { get; set; }

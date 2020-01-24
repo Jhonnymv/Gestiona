@@ -136,7 +136,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 msg.Subject = "Nueva Observacion Asignada";
                 msg.SubjectEncoding = Encoding.UTF8;
                 msg.IsBodyHtml = true;
-                msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+                msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
                 msg.BodyEncoding = Encoding.UTF8;
                 msg.Body = msgBody;
                 await mail.SendMailAsync(msg);                    
@@ -214,6 +214,29 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 }
             }
 
+            /*
+             
+             SmtpClient mail = new SmtpClient();
+                MailMessage msg = new MailMessage();
+                mail.Host = smtp;
+                msg.Priority = MailPriority.Normal;
+                mail.EnableSsl = true;
+                mail.UseDefaultCredentials = false;
+                NetworkCredential credential = new NetworkCredential(user, pass);
+                mail.Credentials = credential;
+                msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                msg.To.Add(new MailAddress(observacion.Asesor.Email));
+                msg.Subject = "Nueva Observacion Asignada";
+                msg.SubjectEncoding = Encoding.UTF8;
+                msg.IsBodyHtml = true;
+                msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+                msg.BodyEncoding = Encoding.UTF8;
+                msg.Body = msgBody;
+                await mail.SendMailAsync(msg);                    
+                mail.Dispose();
+                msg.Dispose();
+             */
+
             SmtpClient mail = new SmtpClient();
             MailMessage msg = new MailMessage();
             mail.Host = smtp;
@@ -226,11 +249,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Observación Implementada";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-
             msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-            mail.UseDefaultCredentials = false;
             await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();
             var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
@@ -322,7 +343,6 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-            mail.UseDefaultCredentials = false;
             await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();
             var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
@@ -384,10 +404,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-            mail.UseDefaultCredentials = false;
             await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();
             mail.Dispose();
@@ -454,10 +473,9 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-            mail.UseDefaultCredentials = false;
             await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();
             mail.Dispose();

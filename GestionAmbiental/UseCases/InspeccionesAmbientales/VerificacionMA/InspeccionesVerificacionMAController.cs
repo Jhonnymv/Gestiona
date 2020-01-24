@@ -13,15 +13,16 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.VerificarO
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
 {
     public class InspeccionesVerificacionMAController : Controller
     {
-        private IMemoryCache _cache;
         private readonly ISelectItems _selectItems;
         private readonly IConsultarCabecerasVerificacion _consultarCabecerasVerificacion;
         private readonly IConsultarCabeceraVerificacion _consultarCabeceraVerificacion;
@@ -31,12 +32,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IDataProtector _protector;
 
         private readonly IHostingEnvironment _hostingEnvironment;
-
-        private const string CarpetaEvidenciasCondicion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasRegistro/";
-        private const string CarpetaEvidenciasImplementacion = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
-
         public InspeccionesVerificacionMAController(
-            IMemoryCache cache,
             ISelectItems selectItems,
             IConsultarCabecerasVerificacion consultarCabecerasVerificacion, 
             IConsultarCabeceraVerificacion consultarCabeceraVerificacion, 
@@ -47,7 +43,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
-            _cache = cache;
             _selectItems = selectItems;
             _consultarCabecerasVerificacion = consultarCabecerasVerificacion;
             _consultarCabeceraVerificacion = consultarCabeceraVerificacion;
@@ -60,13 +55,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
 
         public async Task<IActionResult> Resumen()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -80,87 +78,78 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+            DateTime fecha;
+            if (filtroFecha != null)
+                fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
+            else
+                fecha = (DateTime)SqlDateTime.MinValue;
+
+            filtroCodigo = filtroCodigo ?? "";
+            
+            var datosTabla = await _consultarCabecerasVerificacion.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
+            if (datosTabla.NCabeceras > 0)
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                foreach (var fila in datosTabla.Cabeceras)
+                {
+                    var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td>" + fila.Gerencia + "</td>";
+                    filasTabla += "<td>" + fila.Empresa + "</td>";
+                    filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
+                    filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
+                    filasTabla += "<td>" + fila.NObservaciones + "</td>";
+                    filasTabla += "</tr>";
+                }
+                paginador += "<ul class=\"pagination\">";
+                for (int i = 1; i <= nPaginas; i++)
+                {
+                    if (i == pagina)
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    else
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                }
+                paginador += "</ul>";
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                DateTime fecha;
-                if (filtroFecha != null)
-                    fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
-                else
-                    fecha = (DateTime)SqlDateTime.MinValue;
-
-                filtroCodigo = filtroCodigo ?? "";
-                var datosTabla = await _consultarCabecerasVerificacion.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
-                var filasTabla = "";
-                var paginador = "";
-                int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
-                if (datosTabla.NCabeceras > 0)
-                {
-                    foreach (var fila in datosTabla.Cabeceras)
-                    {
-                        var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
-                        filasTabla += "<tr>";
-                        /*switch (fila.Estado)
-                        {
-                            case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
-                            case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
-                            default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                        }*/
-                        filasTabla += "<td><a href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                        filasTabla += "<td>" + fila.Gerencia + "</td>";
-                        filasTabla += "<td>" + fila.Empresa + "</td>";
-                        filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
-                        filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
-                        filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                        filasTabla += "</tr>";
-                    }
-                    paginador += "<ul class=\"pagination\">";
-                    for (int i = 1; i <= nPaginas; i++)
-                    {
-                        if (i == pagina)
-                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                        else
-                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                    }
-                    paginador += "</ul>";
-                }
-                else
-                {
-                    filasTabla = "Sin datos";
-                }
-                dynamic response = new
-                {
-                    Data = filasTabla,
-                    Paginador = paginador
-                };
-                return Ok(response);
+                filasTabla = "Sin datos";
             }
+            dynamic response = new
+            {
+                Data = filasTabla,
+                Paginador = paginador
+            };
+            return Ok(response);
         }
         public async Task<IActionResult> VerificarInspeccion(string IdCabecera)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
                 if (IdCabecera.Length != 0)
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var cabecera = await _consultarCabeceraVerificacion.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdDesencriptado, User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdDesencriptado, userInfo.NombreUsuario);
                     foreach (var observacion in observaciones)
                     {
                         var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
-                        //if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
-                        //{
                         var evidencia = "<label style=\"width:110px\">";
                         var evidencia_implementacion = "<label style=\"width:110px\">";
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
@@ -200,7 +189,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                             filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdObsEncriptado + "\" disabled>" + "Verificar" + "</button></td>";
                         filaObservacion += "</tr>";
                     }
-                    //}
                     ViewBag.NObservaciones = observaciones.ToList().Count;
                     ViewBag.ContenidoTabla = filaObservacion;
                 }
@@ -209,17 +197,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         }
         public async Task<IActionResult> VerificarObservacion(string IdObservacion)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
                 var observacion = await _consultarDetalleVerificacion.Execute(IdDesencriptado);
                 var model = new VerificarObservacionMAModel();
-                model.idObservacion = observacion.IdInspeccionDetalle;
+                model.idObs = observacion.IdInspeccionDetalle;
                 model.EncryptedId = IdObservacion;
                 model.idCabecera = observacion.IdInspeccionCabecera;
                 model.TipoInspeccion = observacion.TipoInspeccion;
@@ -243,12 +234,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
                 if (model.Accion.Equals("Rechazar")) {
-                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), User.Identity.Name);
+                    await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Rechazado.ToString(), userInfo.NombreUsuario);
                     return RedirectToAction("NotificarObservacionRechazada","Notificaciones", new { IdObservacion = model.EncryptedId });
                 }
                 else
-                    await _verificarObservacion.Execute(model.idObservacion, model.ComentarioVerificacionMA, EstadosInspeccion.Aprobado.ToString(), User.Identity.Name);
+                    await _verificarObservacion.Execute(model.idObs, model.ComentarioVerificacionMA, EstadosInspeccion.Aprobado.ToString(), userInfo.NombreUsuario);
             }
             var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("VerificarInspeccion", new { IdCabecera = IdEncriptado });

@@ -153,9 +153,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            
-            ViewBag.Rol = userInfo.Rol.ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
+                ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
 
@@ -251,8 +251,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            ViewBag.Rol = userInfo.Rol.ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
@@ -341,7 +341,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -480,7 +480,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia__Registro_Observacion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            var fileName = "Ev_Reg_Obs_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
             return fileName;
         }
         private string GetContentType(string path)
@@ -637,75 +637,68 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<string> DownloadFTPFileAsync(string fileName)
         {
-            try
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                if (!(HttpContext.Session.GetString("SessionUser") != null))
-                {
-                    return "NoAutorizado";
-                }
-                else
-                {
-                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                    var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                    string route = "", user = "", pass = "";
-                    foreach (var item in serverInfo.Info)
-                    {
-                        switch (item.Key)
-                        {
-                            case "route": route = item.Value; break;
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                        }
-                    }
-                    /* Create an FTP Request */
-                    FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
-                    /* Log in to the FTP Server with the User Name and Password Provided */
-                    ftpRequest.Credentials = new NetworkCredential(user, pass);
-                    /* When in doubt, use these options */
-                    ftpRequest.UseBinary = true;
-                    ftpRequest.UsePassive = true;
-                    ftpRequest.KeepAlive = true;
-                    /* Specify the Type of FTP Request */
-                    ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                    /* Establish Return Communication with the FTP Server */
-                    var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                    /* Get the FTP Server's Response Stream */
-                    var ftpStream = ftpResponse.GetResponseStream();
-
-                    /* Save file in application server to decrypt */
-                    var tempPath = Path.GetTempPath();
-                    var SGATempPath = tempPath + "SGA-Marcobre/";
-                    if (!Directory.Exists(SGATempPath))
-                    {
-                        Directory.CreateDirectory(SGATempPath);
-                    }
-                    var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                    var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                    if (Directory.Exists(filePath))
-                    {
-                        Directory.Delete(filePath, true);
-                    }
-                    if (Directory.Exists(archivePath))
-                    {
-                        Directory.Delete(archivePath, true);
-                    }
-
-                    Directory.CreateDirectory(filePath);
-                    Directory.CreateDirectory(archivePath);
-                    /*New file downloaded name*/
-                    var downloadedFilePath = archivePath + fileName;
-                    /*Copy data to new temp file*/
-                    var fileStream = System.IO.File.Create(downloadedFilePath);
-                    ftpStream.CopyTo(fileStream);
-                    fileStream.Close();
-
-                    return downloadedFilePath;
-                }
+                return "NoAutorizado";
             }
-            catch (Exception e)
+            else
             {
-                return e.Message;
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
+                string route = "", user = "", pass = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "route": route = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                    }
+                }
+                /* Create an FTP Request */
+                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
+                /* Log in to the FTP Server with the User Name and Password Provided */
+                ftpRequest.Credentials = new NetworkCredential(user, pass);
+                /* When in doubt, use these options */
+                ftpRequest.UseBinary = true;
+                ftpRequest.UsePassive = true;
+                ftpRequest.KeepAlive = true;
+                /* Specify the Type of FTP Request */
+                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                /* Establish Return Communication with the FTP Server */
+                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                /* Get the FTP Server's Response Stream */
+                var ftpStream = ftpResponse.GetResponseStream();
+
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                ftpStream.CopyTo(fileStream);
+                fileStream.Close();
+
+                return downloadedFilePath;
             }
         }
         private async Task EncryptFileAsync(string inputFile, string outputFile)

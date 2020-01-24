@@ -17,14 +17,15 @@ using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetResumenObse
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.Reportes.Inspecciones
 {
     public class ReportesInspeccionesController : Controller
     {
-        private IMemoryCache _cache;
         private readonly IGetObservacionesMAPvsSSO _getInspeccionesMAPvsSSO;
         private readonly IGetObservacionesXUsuario _getObservacionesXUsuario;
         private readonly IGetObservacionesXEstado _getObservacionesXEstado;
@@ -40,7 +41,6 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IDataProtector _protector;
 
         public ReportesInspeccionesController(
-            IMemoryCache cache, 
             IGetObservacionesMAPvsSSO getInspeccionesMAPvsSSO, 
             IGetObservacionesXUsuario getObservacionesXUsuario, 
             IGetObservacionesXEstado getObservacionesXEstado, 
@@ -56,7 +56,6 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
-            _cache = cache;
             _getInspeccionesMAPvsSSO = getInspeccionesMAPvsSSO;
             _getObservacionesXUsuario = getObservacionesXUsuario;
             _getObservacionesXEstado = getObservacionesXEstado;
@@ -74,13 +73,15 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
 
         public async Task<IActionResult> Resumen()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var nObservaciones = await _getObservacionesXEstado.Execute();
                 var inspecciones_diarias = await _getInspeccionesDiarias.Execute();
                 var map_vs_sso = await _getInspeccionesMAPvsSSO.Execute();
@@ -105,13 +106,15 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         }
         public async Task<IActionResult> DetalleObservacionEstado(string estado)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var data = await _getDetalleObservacionesXEstado.Execute(estado);
                 data = data.OrderByDescending(x => x.Codigo).OrderByDescending(x=>x.FechaProgramada).ToList();
                 foreach(var item in data)
@@ -127,12 +130,13 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         [HttpPost]
         public async Task<IActionResult> GetObservacionesMAPXTipoCondicion()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var data = await _getObservacionesMAPXTipoCondicion.Execute();
                 dynamic response = new
                 {
@@ -145,12 +149,13 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         [HttpPost]
         public async Task<IActionResult> GetObservacionesSSOXTipoCondicion()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var data = await _getObservacionesSSOXTipoCondicion.Execute();
                 dynamic response = new
                 {

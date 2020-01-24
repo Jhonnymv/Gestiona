@@ -182,13 +182,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
+            var responsable_area = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Area));
 
-            var usuarios = await _context.Usuarios.ToListAsync();
-            var usuarios_domain = new List<Domain.ValueObjects.Usuario>();
-            foreach (var item in usuarios)
-            {
-                usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario, item.Id_Rol, item.Nombres, item.Apellidos, item.Email));
-            }
+            var responsable_area_domain = new Domain.ValueObjects.Usuario(responsable_area.Id_Usuario, responsable_area.Id_Rol, responsable_area.Nombres, responsable_area.Apellidos, responsable_area.Email);
 
             var output = new InspeccionCabecera();
             output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
@@ -197,7 +193,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia)).Descripcion;
             output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabeccera.Id_Empresa)).Razon_Social;
             output.AreaInspeccionada = cabeccera.Area_Inspeccionada;
-            output.ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabeccera.Id_Responsable_Area));
+            output.ResponsableArea = responsable_area_domain;
             output.FechaInspeccion = cabeccera.Fecha_Inspeccion;
             output.NObservaciones = observaciones.Count;
             output.Participantes = cabeccera.Participantes;

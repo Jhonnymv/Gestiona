@@ -23,13 +23,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 {
     public class InspeccionesImplementacionController : Controller
     {
-        private IMemoryCache _cache;
-
         private readonly ISelectItems _selectItems;
         private readonly IConsultarCabecerasImplementacion _consultarCabeceras;
         private readonly IConsultarCabeceraImplementacion _consultarCabecera;
@@ -41,9 +40,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
-        private const string CarpetaEvidencias = "ftp://127.0.0.1:2020/InspeccionesAmbientales/EvidenciasImplementacion/";
         public InspeccionesImplementacionController(
-            IMemoryCache cache,
             ISelectItems selectItems,
             IConsultarCabecerasImplementacion consultarCabeceras,
             IConsultarCabeceraImplementacion consultarCabecera,
@@ -56,7 +53,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             IGetInfo_SGA info_SGA
             )
         {
-            _cache = cache;
             _selectItems = selectItems;
             _consultarCabeceras = consultarCabeceras;
             _consultarCabecera = consultarCabecera;
@@ -69,13 +65,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> Resumen()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -89,6 +87,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fecha;
             if (filtroFecha != null)
                 fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
@@ -96,7 +95,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo, User.Identity.Name);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo, userInfo.NombreUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
@@ -106,13 +105,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {
 
                     var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
-                    filasTabla += "<tr>";
-                    /*switch (fila.Estado)
-                    {
-                        case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
-                        case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
-                        default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }*/
+                    filasTabla += "<tr>";                    
                     filasTabla += "<td><a href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
@@ -144,20 +137,23 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> ImplementarInspeccion(string IdCabecera)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 if (IdCabecera.Length != 0)
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var cabecera = await _consultarCabecera.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado, User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado, userInfo.NombreUsuario);
                     foreach (var observacion in observaciones)
                     {
                         var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
@@ -231,13 +227,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> ImplementarObservacion(string IdObservacion)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
                 var observacion = await _consultarDetalleImplementacion.Execute(IdDesencriptado);
                 var IdCabeceraEncriptado = _protector.Protect(observacion.IdInspeccionCabecera.ToString());
@@ -265,6 +264,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var evidencias = new List<string>();
                 if (model.EvidenciasInspeccion != null)
                 {
@@ -276,22 +276,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     }
                 }
 
-                await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario,User.Identity.Name);
+                await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario, userInfo.NombreUsuario);
                 return RedirectToAction("NotificarImplementacionObservacion", "Notificaciones", new { IdObservacion = model.EncryptedId });
             }
             var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = IdEncriptado });
         }
-        /*public async Task<IActionResult> SolicitarAmpliacion(string IdObservacion)
-        {
-            //notificar
-
-            var response = "";
-            return Ok(response);
-        }*/
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia_Inspecciones_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
+            var fileName = "Ev_Imp_Obs_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile.ToString();
             return fileName;
         }
         private string GetContentType(string path)
@@ -320,12 +313,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<IActionResult> Download(string fileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 try
                 {
                     var encryptedFile = await DownloadFTPFileAsync(fileName);
@@ -338,8 +332,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     {
                         Directory.CreateDirectory(SGATempPath);
                     }
-                    var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
-                    var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado.zip";
@@ -357,10 +351,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
-            {
-                return "No Autorizado";
-            }
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return "NoAutorizado";
             else
             {
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
@@ -398,21 +390,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
-            {
-                return "No Autorizado";
-            }
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return "NoAutorizado";
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/archive.zip";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
                 if (Directory.Exists(filePath))
                 {
@@ -436,17 +427,24 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 }
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
-                var encryptedArchiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/encriptado.zip";
+                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
                 //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);               
             }
         }
         public async Task<string> DownloadFTPFileAsync(string fileName)
         {
-            try
+            
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
+                return "NoAutorizado";
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
                 string route = "", user = "", pass = "";
                 foreach (var item in serverInfo.Info)
@@ -480,8 +478,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
                 if (Directory.Exists(filePath))
                 {
@@ -502,10 +500,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 fileStream.Close();
 
                 return downloadedFilePath;
-            }
-            catch (Exception e)
-            {
-                return e.Message;
             }
         }
         private async Task EncryptFileAsync(string inputFile, string outputFile)

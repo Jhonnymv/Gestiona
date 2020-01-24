@@ -450,19 +450,7 @@
             }
         );
         function ObsDetalleEstado(estado) {
-            window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")"+"?estado="+estado);
-            /*$.ajax({
-                type: "POST",
-                url: "/ReportesInspecciones/DetalleObservacionEstado",
-                data: {
-                    //"pagina": pag,
-                    //"rpp":10,
-                    "estado": estado
-                },
-                traditional: true,
-                success: (response) => {
-                }
-            });*/
+            window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")" + "?estado=" + estado);
         }
 
         function ObservacionsMAPXTipoCondicion() {
