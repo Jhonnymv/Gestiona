@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Usuarios";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
@@ -23,8 +22,8 @@
     </div>
 </form>
 <div class="row mb-2 justify-content-end">
-    <div class="col-lg-3 mt-1">
-        <button class="btn btn-primary float-right" onclick="ActualizarUsuarios()">Actualizar Información de Usuarios</button>
+    <div class="col-lg-2 mt-1">
+        <button class="btn btn-primary float-right" onclick="ActualizarUsuarios()">Actualizar Información desde AD</button>
     </div>
 </div>
 <div class="row mb-2 justify-content-center">
@@ -60,10 +59,9 @@
                 </div>
                 <br>
                 <label id="modal_msg">Conectandose al servidor</label>
-                </div>
+            </div>
             <div class="modal-footer justify-content-center" id="btn_modal_aceptar" style="display:none">
                 <button class="btn btn-primary" type="button" onclick="refresh()">Aceptar</button>
-            </div>                    
             </div>
         </div>
     </div>
@@ -87,7 +85,7 @@
                 success: (response) => {
                     console.log(response)
                     if (response.success) {
-                        $('#modal_msg').html(response.mensaje);                       
+                        $('#modal_msg').html(response.mensaje);
                     } else {
                         $('#modal_msg').html(response.mensaje);
                     }

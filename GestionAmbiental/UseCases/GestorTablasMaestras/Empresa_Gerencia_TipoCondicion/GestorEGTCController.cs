@@ -15,17 +15,16 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.TipoCondicion.E
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.TipoCondicion.GetTipoCondicion;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.TipoCondicion.GetTiposCondicion;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCondicion
 {
     public class GestorEGTCController : Controller
     {
-
-        private IMemoryCache _cache;
-
         private readonly IGetEmpresas _getEmpresas;
         private readonly IGetGerencias _getGerencias;
         private readonly IGetTiposCondicion _getTiposCondicion;
@@ -42,9 +41,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         private readonly IAgregarGerencia _agregarGerencia;
         private readonly IAgregarTipoCondicion _agregarTipoCondicion;
 
-        public GestorEGTCController(IMemoryCache cache,IGetEmpresas getEmpresas, IGetGerencias getGerencias, IGetTiposCondicion getTiposCondicion, IGetEmpresa getEmpresa, IGetGerencia getGerencia, IGetTipoCondicion getTipoCondicion, IEditarEmpresa editarEmpresa, IEditarGerencia editarGerencia, IEditarTipoCondicion editarTipoCondicion, IAgregarEmpresa agregarEmpresa, IAgregarGerencia agregarGerencia, IAgregarTipoCondicion agregarTipoCondicion)
+        public GestorEGTCController(IGetEmpresas getEmpresas, IGetGerencias getGerencias, IGetTiposCondicion getTiposCondicion, IGetEmpresa getEmpresa, IGetGerencia getGerencia, IGetTipoCondicion getTipoCondicion, IEditarEmpresa editarEmpresa, IEditarGerencia editarGerencia, IEditarTipoCondicion editarTipoCondicion, IAgregarEmpresa agregarEmpresa, IAgregarGerencia agregarGerencia, IAgregarTipoCondicion agregarTipoCondicion)
         {
-            _cache = cache;
             _getEmpresas = getEmpresas;
             _getGerencias = getGerencias;
             _getTiposCondicion = getTiposCondicion;
@@ -61,32 +59,30 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
 
         public IActionResult EGTCs()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                return View();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    return View();
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> Empresas(string filtro, int pagina, int rpp)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-                {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
                     return RedirectToAction("NoAutorizado", "Home");
-                }
                 else
                 {
                     var data = await _getEmpresas.Execute(filtro, pagina, rpp);
@@ -129,178 +125,197 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         }
         public async Task<IActionResult> DetalleEmpresa(int IdEmpresa)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                var data = await _getEmpresa.Execute(IdEmpresa);
-                var model = new EmpresaModel();
-                model.IdEmpresa = data.IdEmpresa;
-                model.RazonSocial = data.RazonSocial;
-                return View(model);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    var data = await _getEmpresa.Execute(IdEmpresa);
+                    var model = new EmpresaModel();
+                    model.IdEmpresa = data.IdEmpresa;
+                    model.RazonSocial = data.RazonSocial;
+                    return View(model);
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> EditarEmpresa(EmpresaModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (ModelState.IsValid)
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
                 {
-                    await _editarEmpresa.Execute(model.IdEmpresa, model.RazonSocial);
+                    if (ModelState.IsValid)
+                    {
+                        await _editarEmpresa.Execute(model.IdEmpresa, model.RazonSocial);
+                    }
+                    return RedirectToAction("DetalleEmpresa", new { IdEmpresa = model.IdEmpresa });
                 }
-                return RedirectToAction("DetalleEmpresa", new { IdEmpresa = model.IdEmpresa });
             }
         }
 
         public IActionResult AgregarEmpresa()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                return View();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    return View();
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarEmpresa(EmpresaModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (ModelState.IsValid)
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
                 {
-                    var idEmpresa = await _agregarEmpresa.Execute(model.RazonSocial);
-                    return RedirectToAction("DetalleEmpresa", new { IdEmpresa = idEmpresa });
+                    if (ModelState.IsValid)
+                    {
+                        var idEmpresa = await _agregarEmpresa.Execute(model.RazonSocial);
+                        return RedirectToAction("DetalleEmpresa", new { IdEmpresa = idEmpresa });
+                    }
+                    return RedirectToAction("AgregarEmpresa");
                 }
-                return RedirectToAction("AgregarEmpresa");
             }
         }
         [HttpPost]
         public async Task<IActionResult> Gerencias(string filtro, int pagina, int rpp)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                var data = await _getGerencias.Execute(filtro, pagina, rpp);
-                var filasTabla = "";
-                var paginador = "";
-                int nPaginas = data.nGerencias % rpp != 0 ? (data.nGerencias / rpp) + 1 : data.nGerencias / rpp;
-                if (data.nGerencias > 0)
-                {
-                    foreach (var empresa in data.Gerencias)
-                    {
-                        filasTabla += "<tr>";
-                        filasTabla += "<td>" + empresa.Descripcion + "</td>";
-                        filasTabla += "<td><a href=\"/GestorEGTC/DetalleGerencia?IdGerencia=" + empresa.IdGerencia + "\">Detalle</a></td>";
-                        filasTabla += "</tr>";
-                    }
-
-                    paginador += "<ul class=\"pagination\">";
-                    for (int i = 1; i <= nPaginas; i++)
-                    {
-                        if (i == pagina)
-                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
-                        else
-                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
-                    }
-                    paginador += "</ul>";
-                }
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
                 else
                 {
-                    filasTabla = "Sin datos";
+                    var data = await _getGerencias.Execute(filtro, pagina, rpp);
+                    var filasTabla = "";
+                    var paginador = "";
+                    int nPaginas = data.nGerencias % rpp != 0 ? (data.nGerencias / rpp) + 1 : data.nGerencias / rpp;
+                    if (data.nGerencias > 0)
+                    {
+                        foreach (var empresa in data.Gerencias)
+                        {
+                            filasTabla += "<tr>";
+                            filasTabla += "<td>" + empresa.Descripcion + "</td>";
+                            filasTabla += "<td><a href=\"/GestorEGTC/DetalleGerencia?IdGerencia=" + empresa.IdGerencia + "\">Detalle</a></td>";
+                            filasTabla += "</tr>";
+                        }
+
+                        paginador += "<ul class=\"pagination\">";
+                        for (int i = 1; i <= nPaginas; i++)
+                        {
+                            if (i == pagina)
+                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                            else
+                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                        }
+                        paginador += "</ul>";
+                    }
+                    else
+                    {
+                        filasTabla = "Sin datos";
+                    }
+                    dynamic response = new
+                    {
+                        Data = filasTabla,
+                        Paginador = paginador
+                    };
+                    return Ok(response);
                 }
-                dynamic response = new
-                {
-                    Data = filasTabla,
-                    Paginador = paginador
-                };
-                return Ok(response);
             }
         }
         public async Task<IActionResult> DetalleGerencia(int IdGerencia)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                var data = await _getGerencia.Execute(IdGerencia);
-                var model = new GerenciaModel();
-                model.IdGerencia = data.IdGerencia;
-                model.Descripcion = data.Descripcion;
-                return View(model);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    var data = await _getGerencia.Execute(IdGerencia);
+                    var model = new GerenciaModel();
+                    model.IdGerencia = data.IdGerencia;
+                    model.Descripcion = data.Descripcion;
+                    return View(model);
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> EditarGerencia(GerenciaModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (ModelState.IsValid)
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
                 {
-                    await _editarGerencia.Execute(model.IdGerencia, model.Descripcion);
+                    if (ModelState.IsValid)
+                    {
+                        await _editarGerencia.Execute(model.IdGerencia, model.Descripcion);
+                    }
+                    return RedirectToAction("DetalleGerencia", new { IdGerencia = model.IdGerencia });
                 }
-                return RedirectToAction("DetalleGerencia", new { IdGerencia = model.IdGerencia });
             }
         }
         public IActionResult AgregarGerencia()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                   _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                return View();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    return View();
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarGerencia(GerenciaModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-                {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
                     return RedirectToAction("NoAutorizado", "Home");
-                }
                 else
                 {
                     if (ModelState.IsValid)
@@ -315,132 +330,147 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         [HttpPost]
         public async Task<IActionResult> TiposCondicion(string filtro, int pagina, int rpp)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                var data = await _getTiposCondicion.Execute(filtro, pagina, rpp);
-                var filasTabla = "";
-                var paginador = "";
-                int nPaginas = data.nTiposCondicion % rpp != 0 ? (data.nTiposCondicion / rpp) + 1 : data.nTiposCondicion / rpp;
-                if (data.nTiposCondicion > 0)
-                {
-                    foreach (var gerencia in data.TiposCondicion)
-                    {
-                        filasTabla += "<tr>";
-                        filasTabla += "<td>" + gerencia.Descripcion + "</td>";
-                        filasTabla += "<td>" + gerencia.Grupo + "</td>";
-                        filasTabla += "<td><a href=\"/GestorEGTC/DetalleTipoCondicion?IdTipoCondicion=" + gerencia.IdTipoCondicion + "\">Detalle</a></td>";
-                        filasTabla += "</tr>";
-                    }
-
-                    paginador += "<ul class=\"pagination\">";
-                    for (int i = 1; i <= nPaginas; i++)
-                    {
-                        if (i == pagina)
-                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
-                        else
-                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
-                    }
-                    paginador += "</ul>";
-                }
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
                 else
                 {
-                    filasTabla = "Sin datos";
+                    var data = await _getTiposCondicion.Execute(filtro, pagina, rpp);
+                    var filasTabla = "";
+                    var paginador = "";
+                    int nPaginas = data.nTiposCondicion % rpp != 0 ? (data.nTiposCondicion / rpp) + 1 : data.nTiposCondicion / rpp;
+                    if (data.nTiposCondicion > 0)
+                    {
+                        foreach (var gerencia in data.TiposCondicion)
+                        {
+                            filasTabla += "<tr>";
+                            filasTabla += "<td>" + gerencia.Descripcion + "</td>";
+                            filasTabla += "<td>" + gerencia.Grupo + "</td>";
+                            filasTabla += "<td><a href=\"/GestorEGTC/DetalleTipoCondicion?IdTipoCondicion=" + gerencia.IdTipoCondicion + "\">Detalle</a></td>";
+                            filasTabla += "</tr>";
+                        }
+
+                        paginador += "<ul class=\"pagination\">";
+                        for (int i = 1; i <= nPaginas; i++)
+                        {
+                            if (i == pagina)
+                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                            else
+                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                        }
+                        paginador += "</ul>";
+                    }
+                    else
+                    {
+                        filasTabla = "Sin datos";
+                    }
+                    dynamic response = new
+                    {
+                        Data = filasTabla,
+                        Paginador = paginador
+                    };
+                    return Ok(response);
                 }
-                dynamic response = new
-                {
-                    Data = filasTabla,
-                    Paginador = paginador
-                };
-                return Ok(response);
             }
         }
         public async Task<IActionResult> DetalleTipoCondicion(int IdTipoCondicion)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                var data = await _getTipoCondicion.Execute(IdTipoCondicion);
-                var grupos = new List<SelectListItem>
-            {
-                new SelectListItem("--SELECCIONE--", "", true),
-                new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
-                new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
-                new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
-                new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
-            };
-                ViewBag.Grupos = grupos;
-                var model = new TipoCondicionModel();
-                model.IdTipoCondicion = data.IdTipoCondicion;
-                model.Descripcion = data.Descripcion;
-                model.Grupo = data.Grupo;
-                return View(model);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    var data = await _getTipoCondicion.Execute(IdTipoCondicion);
+                    var grupos = new List<SelectListItem>
+                    {
+                        new SelectListItem("--SELECCIONE--", "", true),
+                        new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
+                        new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
+                        new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
+                        new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
+                    };
+                    ViewBag.Grupos = grupos;
+                    var model = new TipoCondicionModel();
+                    model.IdTipoCondicion = data.IdTipoCondicion;
+                    model.Descripcion = data.Descripcion;
+                    model.Grupo = data.Grupo;
+                    return View(model);
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> EditarTipoCondicion(TipoCondicionModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                if (ModelState.IsValid)
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
                 {
-                    await _editarTipoCondicion.Execute(model.IdTipoCondicion, model.Descripcion, model.Grupo);
+                    if (ModelState.IsValid)
+                    {
+                        await _editarTipoCondicion.Execute(model.IdTipoCondicion, model.Descripcion, model.Grupo);
+                    }
+                    return RedirectToAction("DetalleTipoCondicion", new { IdTipoCondicion = model.IdTipoCondicion });
                 }
-                return RedirectToAction("DetalleTipoCondicion", new { IdTipoCondicion = model.IdTipoCondicion });
             }
         }
         public IActionResult AgregarTipoCondicion()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                var grupos = new List<SelectListItem>
-            {
-                new SelectListItem("--SELECCIONE--", "", true),
-                new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
-                new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
-                new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
-                new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
-            };
-                ViewBag.Grupos = grupos;
-                return View();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    ViewBag.Rol = userInfo.Rol.ToString();
+                    var grupos = new List<SelectListItem>
+                    {
+                        new SelectListItem("--SELECCIONE--", "", true),
+                        new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
+                        new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
+                        new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
+                        new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
+                    };
+                    ViewBag.Grupos = grupos;
+                    return View();
+                }
             }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarTipoCondicion(TipoCondicionModel model)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0 ||
-                _cache.Get<InspeccionRol>(CacheKeys.RolUsuario) != InspeccionRol.Admin)
-            {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
-            }
             else
-            {                
-                if (ModelState.IsValid)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
                 {
-                    var idTipoCondición = await _agregarTipoCondicion.Execute(model.Descripcion, model.Grupo);
-                    return RedirectToAction("DetalleTipoCondicion", new { IdTipoCondicion = idTipoCondición });
+                    if (ModelState.IsValid)
+                    {
+                        var idTipoCondición = await _agregarTipoCondicion.Execute(model.Descripcion, model.Grupo);
+                        return RedirectToAction("DetalleTipoCondicion", new { IdTipoCondicion = idTipoCondición });
+                    }
+                    return RedirectToAction("AgregarTipoCondicion");
                 }
-                return RedirectToAction("AgregarTipoCondicion");
             }
         }
     }

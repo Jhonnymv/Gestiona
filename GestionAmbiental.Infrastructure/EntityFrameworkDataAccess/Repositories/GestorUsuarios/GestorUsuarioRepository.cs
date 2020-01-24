@@ -39,7 +39,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<Usuario> GetUsuario(string usuario_red)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => usuario_red.Equals(Util.GetDomain()+x.usuario_red) && x.Estado.Equals("ACT"));
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => usuario_red.Equals(x.usuario_red) && x.Estado.Equals("ACT"));
             var output = new Usuario();
             output.Nombres = usuario.Nombres;
             output.Apellidos = usuario.Apellidos;
@@ -52,7 +52,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<int> GetIdUsuario(string usuario_red)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => usuario_red.Equals(Util.GetDomain() + x.usuario_red) && x.Estado.Equals("ACT"));
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => usuario_red.Equals(x.usuario_red) && x.Estado.Equals("ACT"));
             return usuario.Id_Usuario;
         }
         public async Task ActualizarUsuarios(List<Usuario> usuarios)

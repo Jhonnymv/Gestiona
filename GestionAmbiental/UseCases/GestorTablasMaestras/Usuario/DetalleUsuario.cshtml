@@ -102,13 +102,8 @@
         $("#btnCancelar").prop('disabled', false);
         $("#btnGuardar").prop('disabled', false);
         //Habilitar inputs
-        $("#Nombres").prop('disabled', false);
-        $("#Apellidos").prop('disabled', false);
         $("#IdRol").prop('disabled', false);
-        $("#UsuarioRed").prop('disabled', false);
-        $("#Email").prop('disabled', false);
         $("#IdSuperior").prop('disabled', false);
-        $("#Estado").prop('disabled', false);
     });
     
     $("#btnCancelar").on('click',function(){
@@ -126,6 +121,16 @@
         $("#Email").prop('disabled', true);
         $("#IdSuperior").prop('disabled', true);
         $("#Estado").prop('disabled', true);
+    });
+    $("#btnGuardar").on('click', function () {
+        //Habilitar inputs
+        $("#Nombres").prop('disabled', false);
+        $("#Apellidos").prop('disabled', false);
+        $("#IdRol").prop('disabled', false);
+        $("#UsuarioRed").prop('disabled', false);
+        $("#Email").prop('disabled', false);
+        $("#IdSuperior").prop('disabled', false);
+        $("#Estado").prop('disabled', false);
     });
 </script>
 }

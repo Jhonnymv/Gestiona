@@ -12,6 +12,8 @@ using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
 using Microsoft.Extensions.Caching.Memory;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace GestionAmbiental.UseCases.Autenticacion
 {
@@ -19,12 +21,10 @@ namespace GestionAmbiental.UseCases.Autenticacion
     {
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IGetRolUsuario _getRolUsuario;
-        private IMemoryCache _cache;
 
-        public AutenticacionController(IGetInfo_SGA info_SGA, IMemoryCache cache, IGetRolUsuario getRolUsuario)
+        public AutenticacionController(IGetInfo_SGA info_SGA, IGetRolUsuario getRolUsuario)
         {
             _info_SGA = info_SGA;
-            _cache = cache;
             _getRolUsuario = getRolUsuario;
         }
 
@@ -53,7 +53,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 {
                     if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
                     {
-                        using (var de = new DirectoryEntry(ldap_path))
+                        /*using (var de = new DirectoryEntry(ldap_path))
                         using (var ds = new DirectorySearcher(de))
                         {
                             // other logic to verify user has correct permissions
@@ -61,44 +61,18 @@ namespace GestionAmbiental.UseCases.Autenticacion
                             // User authenticated and authorized
                             var identities = new List<ClaimsIdentity> { new ClaimsIdentity("custom auth type") };
                             var ticket = new AuthenticationTicket(new ClaimsPrincipal(identities), Options.DefaultName);
-
+*/
 
                             var rol = await _getRolUsuario.Execute(model.User);
                             if (!rol.HasValue)
                                 return RedirectToAction("NoAutorizado", "Home");
                             else
                             {
-                                var cache_value_rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
-                                if (!cache_value_rol.Equals(rol))
-                                {
-                                    // Set cache options.
-                                    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                                        // Keep in cache for this time, reset time if accessed.
-                                        .SetSlidingExpiration(TimeSpan.FromDays(1));
-
-                                    // Save data in cache.
-                                    _cache.Set(CacheKeys.RolUsuario, rol, cacheEntryOptions);
-                                }
-                                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-
-                                string cache_value_usuario;
-                                if (!_cache.TryGetValue(CacheKeys.NombreUsuario, out cache_value_usuario))
-                                {
-                                    cache_value_usuario = model.User;
-                                    // Set cache options.
-                                    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                                        // Keep in cache for this time, reset time if accessed.
-                                        .SetSlidingExpiration(TimeSpan.FromDays(1));
-
-                                    // Save data in cache.
-                                    _cache.Set(CacheKeys.NombreUsuario, cache_value_usuario, cacheEntryOptions);
-                                }
-                                ViewBag.Usuario = _cache.Get<string>(CacheKeys.NombreUsuario);
-
+                                var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                                HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                                 return RedirectToAction("Index", "Home");
                             }
-                            //return Task.FromResult(AuthenticateResult.Success(ticket));
-                        }
+                        //}
                     }
                 }
                 // User not authenticated

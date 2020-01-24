@@ -7,51 +7,31 @@ using GestionAmbiental.Application.UseCases.GestorUsuarios;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.Controllers
 {
     public class HomeController : Controller
     {
         private readonly IGetRolUsuario _getRolUsuario;
-        private IMemoryCache _cache;
 
-        public HomeController(IGetRolUsuario getRolUsuario, IMemoryCache cache)
+        public HomeController(IGetRolUsuario getRolUsuario)
         {
             _getRolUsuario = getRolUsuario;
-            _cache = cache;
         }
 
         public async Task<IActionResult> Index()
         {
-            /*var rol = await _getRolUsuario.Execute(User.Identity.Name.Split("\\")[1]);
-            if (!rol.HasValue)
-                return RedirectToAction("NoAutorizado");
-            else
+            if(HttpContext.Session.GetString("SessionUser")!= null)
             {
-                var cache_value = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario);
-                if (!cache_value.Equals(rol))
-                {
-                    // Set cache options.
-                    var cacheEntryOptions = new MemoryCacheEntryOptions()
-                        // Keep in cache for this time, reset time if accessed.
-                        .SetSlidingExpiration(TimeSpan.FromDays(1));
-
-                    // Save data in cache.
-                    _cache.Set(CacheKeys.RolUsuario, rol, cacheEntryOptions);
-                }
-
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-
-                return View();
-            }    */
-            if (_cache.Get(CacheKeys.RolUsuario) != null && _cache.Get(CacheKeys.NombreUsuario)!=null)
-            {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
-                ViewBag.Usuario = _cache.Get<string>(CacheKeys.NombreUsuario);
-            }
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+            }            
             return View();
         }
 

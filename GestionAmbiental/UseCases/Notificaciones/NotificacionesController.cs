@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             _protectorRAC = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
-        public async Task<IActionResult> NotificarInspección(int IdCabecera)
+        public async Task<IActionResult> NotificarInspeccion(int IdCabecera)
         {
             /*
             Área Ejecutora{0}
@@ -80,6 +80,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             Codigo {18}
             Id_Cabecera{19}
             */
+            
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "NuevaObservacion.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
@@ -93,69 +94,54 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.AreaInspeccionada,
                 info.TipoInspeccion,
                 info.FechaInspeccion,
-                info.ResponsableArea.Nombres+" "+info.ResponsableArea.Apellidos,
+                info.ResponsableArea.Nombres + " " + info.ResponsableArea.Apellidos,
                 info.ResponsableInspeccion,
                 info.Participantes,
                 info.Objetivo,
                 observacion.TipoObservacion,
-                observacion.Asesor.Nombres+" "+ observacion.Asesor.Apellidos,
+                observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
                 observacion.DescripcionCondicion,
                 observacion.TipoCondicion.Descripcion,
                 observacion.NivelRiesgo,
                 observacion.DescripcionAccion,
-                observacion.ResponsableMarcobre.Nombres+ " "+ observacion.ResponsableMarcobre.Apellidos,
+                observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
                 observacion.ResponsableContratista,
                 observacion.FechaProgramada.ToShortDateString(),
                 info.Codigo,
                 _protector.Protect(IdCabecera.ToString())
                 );
-
-                var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);
-                var listEvidencias_condicion = new List<string>();
-                foreach (var evidencia in evidencias_condicion)
+                
+                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                string smtp = "", user = "", pass = "";
+                foreach (var item in credenciales.Info)
                 {
-                    listEvidencias_condicion.Add((string)evidencia);
-                }
-
-                try
-                {
-                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                    string smtp = "", user = "", pass = "";
-                    foreach (var item in credenciales.Info)
+                    switch (item.Key)
                     {
-                        switch (item.Key)
-                        {
-                            case "smtp": smtp = item.Value; break;
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                        }
+                        case "smtp": smtp = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
                     }
+                }
 
-                    SmtpClient mail = new SmtpClient();
-                    mail.Host = smtp;
-                    mail.Credentials = new NetworkCredential(user,pass);
-                    MailMessage msg = new MailMessage();
-                    msg.Priority = MailPriority.Normal;
-                    mail.EnableSsl = true;
-                    msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
-                    msg.To.Add(new MailAddress(observacion.Asesor.Email));
-                    msg.Subject = "Nueva Observacion Asignada";
-                    msg.SubjectEncoding = Encoding.UTF8;
-                    msg.IsBodyHtml = true;
-                   
-                    msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
-                    msg.BodyEncoding = Encoding.UTF8;
-                    msg.Body = msgBody;
-                    mail.UseDefaultCredentials = false;
-                    await mail.SendMailAsync(msg);
-                    msg.Attachments.Dispose();
-                    mail.Dispose();
-                    msg.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+                SmtpClient mail = new SmtpClient();
+                MailMessage msg = new MailMessage();
+                mail.Host = smtp;
+                msg.Priority = MailPriority.Normal;
+                mail.EnableSsl = true;
+                mail.UseDefaultCredentials = false;
+                NetworkCredential credential = new NetworkCredential(user, pass);
+                mail.Credentials = credential;
+                msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                msg.To.Add(new MailAddress(observacion.Asesor.Email));
+                msg.Subject = "Nueva Observacion Asignada";
+                msg.SubjectEncoding = Encoding.UTF8;
+                msg.IsBodyHtml = true;
+                msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+                msg.BodyEncoding = Encoding.UTF8;
+                msg.Body = msgBody;
+                await mail.SendMailAsync(msg);                    
+                mail.Dispose();
+                msg.Dispose();
             }
             var IdEncriptado = _protector.Protect(IdCabecera.ToString());
             return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdEncriptado });
@@ -193,66 +179,60 @@ namespace GestionAmbiental.UseCases.Notificaciones
                         Id_Cabecera{21}
                         */
             var msgBody = string.Format(templateReaded,
-                info.AreaEjecutora,
-                info.Empresa,
-                info.AreaInspeccionada,
-                info.TipoInspeccion,
-                info.FechaInspeccion,
-                info.ResponsableLugar,
-                info.ResponsableInspeccion,
-                info.Participantes,
-                info.Objetivo,
-                info.TipoObservacion,
-                info.Asesor,
-                info.DescripcionCondicion,
-                info.TipoCondicion,
-                info.NivelRiesgo,
-                info.DescripcionAccion,
-                info.ResponsableMarcobre,
-                info.ResponsableContratista,
-                info.FechaProgramada.ToShortDateString(),
-                info.ComentarioImplementacion,
-                info.FechaCierre,
-                info.Codigo,
-                _protector.Protect(info.IdInspeccionCabecera.ToString())
-                );
-            try
+            info.AreaEjecutora,
+            info.Empresa,
+            info.AreaInspeccionada,
+            info.TipoInspeccion,
+            info.FechaInspeccion,
+            info.ResponsableLugar,
+            info.ResponsableInspeccion,
+            info.Participantes,
+            info.Objetivo,
+            info.TipoObservacion,
+            info.Asesor,
+            info.DescripcionCondicion,
+            info.TipoCondicion,
+            info.NivelRiesgo,
+            info.DescripcionAccion,
+            info.ResponsableMarcobre,
+            info.ResponsableContratista,
+            info.FechaProgramada.ToShortDateString(),
+            info.ComentarioImplementacion,
+            info.FechaCierre,
+            info.Codigo,
+            _protector.Protect(info.IdInspeccionCabecera.ToString())
+            );
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", user = "", pass = "";
+            foreach (var item in credenciales.Info)
             {
-                SmtpClient MyMail = new SmtpClient();
-                MailMessage MyMsg = new MailMessage();
-                MyMail.Host = "smtp.gmail.com";
-                MyMsg.Priority = MailPriority.Normal;
-                MyMail.EnableSsl = true;
-                MyMsg.To.Add(new MailAddress(info.EmailAsesor));
-                MyMsg.Subject = "Observación Implementada";
-                MyMsg.SubjectEncoding = Encoding.UTF8;
-                MyMsg.IsBodyHtml = true;
-
-                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                string user = "", pass = "";
-                foreach (var item in credenciales.Info)
+                switch (item.Key)
                 {
-                    switch (item.Key)
-                    {
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                    }
+                    case "smtp": smtp = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
                 }
+            }
 
-                MyMsg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
-                MyMsg.BodyEncoding = Encoding.UTF8;
-                MyMsg.Body = msgBody;
-                MyMail.UseDefaultCredentials = false;
-                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
-                MyMail.Credentials = MyCredentials;
-                MyMail.EnableSsl = true;
-                //await MyMail.SendMailAsync(MyMsg);
-                MyMsg.Attachments.Dispose();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            SmtpClient mail = new SmtpClient();
+            MailMessage msg = new MailMessage();
+            mail.Host = smtp;
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.EmailAsesor));
+            msg.Subject = "Observación Implementada";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+
+            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            mail.UseDefaultCredentials = false;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
             var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
             return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = IdEncriptado });
         }
@@ -316,42 +296,35 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.Codigo,
                 _protector.Protect(info.IdInspeccionCabecera.ToString())
                 );
-            try
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", user = "", pass = "";
+            foreach (var item in credenciales.Info)
             {
-                SmtpClient MyMail = new SmtpClient();
-                MailMessage MyMsg = new MailMessage();
-                MyMail.Host = "smtp.gmail.com";
-                MyMsg.Priority = MailPriority.Normal;
-                MyMail.EnableSsl = true;
-                MyMsg.To.Add(new MailAddress(info.EmailResponsableMarcobre));
-                MyMsg.Subject = "Observación Rechazada";
-                MyMsg.SubjectEncoding = Encoding.UTF8;
-                MyMsg.IsBodyHtml = true;
-
-                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                string user = "", pass = "";
-                foreach (var item in credenciales.Info)
+                switch (item.Key)
                 {
-                    switch (item.Key)
-                    {
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                    }
+                    case "smtp": smtp = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
                 }
-
-                MyMsg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
-                MyMsg.BodyEncoding = Encoding.UTF8;
-                MyMsg.Body = msgBody;
-                MyMail.UseDefaultCredentials = false;
-                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
-                MyMail.Credentials = MyCredentials;
-                //await MyMail.SendMailAsync(MyMsg);
-                MyMsg.Attachments.Dispose();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            SmtpClient mail = new SmtpClient();
+            MailMessage msg = new MailMessage();
+            mail.Host = smtp;
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.EmailResponsableMarcobre));
+            msg.Subject = "Observación Rechazada";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            mail.UseDefaultCredentials = false;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
             var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
             return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = IdEncriptado });
         }
@@ -362,8 +335,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "RAC", "NuevoRAC.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
-
-                var msgBody = string.Format(templateReaded,
+            
+            var msgBody = string.Format(templateReaded,
                 info.Nombres_Apellidos,
                 info.Gerencia,
                 info.Empresa,
@@ -386,46 +359,40 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 info.Codigo,
                 IdEncriptado
                 );
-
-                var evidencias_condicion = info.Evidencia_Obs;                
-
-                try
+            
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", user = "", pass = "";
+            foreach (var item in credenciales.Info)
+            {
+                switch (item.Key)
                 {
-                    SmtpClient mail = new SmtpClient();
-                    MailMessage msg = new MailMessage();
-                    mail.Host = "smtp.gmail.com";
-                    msg.Priority = MailPriority.Normal;
-                    mail.EnableSsl = true;
-                    msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
-                    msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
-                    msg.SubjectEncoding = Encoding.UTF8;
-                    msg.IsBodyHtml = true;
-                    var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                    string user = "", pass = "";
-                    foreach (var item in credenciales.Info)
-                    {
-                        switch (item.Key)
-                        {
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                        }
-                    }
-                    msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
-                    msg.BodyEncoding = Encoding.UTF8;
-                    msg.Body = msgBody;
-                    mail.UseDefaultCredentials = false;
-                    NetworkCredential MyCredentials = new NetworkCredential(user, pass);
-                    mail.Credentials = MyCredentials;
-                    mail.EnableSsl = true;
-                    //await mail.SendMailAsync(msg);
-                    msg.Attachments.Dispose();
-                    mail.Dispose();
-                    msg.Dispose();
+                    case "smtp": smtp = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
+            }
+
+            SmtpClient mail = new SmtpClient();
+            MailMessage msg = new MailMessage();
+            mail.Host = smtp;
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+            msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            mail.UseDefaultCredentials = false;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
+            mail.Dispose();
+            msg.Dispose();
+            
             return RedirectToAction("ImplementarRAC", "ImplementacionRAC", new { IdRAC = IdEncriptado });
         }
         public async Task<IActionResult> NotificarImplementacionRAC(int IdRAC)
@@ -462,43 +429,40 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
             var evidencias_condicion = info.Evidencia_Obs;
 
-            try
+            
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", user = "", pass = "";
+            foreach (var item in credenciales.Info)
             {
-                SmtpClient mail = new SmtpClient();
-                MailMessage msg = new MailMessage();
-                mail.Host = "smtp.gmail.com";
-                msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = true;
-                msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
-                msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
-                msg.SubjectEncoding = Encoding.UTF8;
-                msg.IsBodyHtml = true;
-                var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                string user = "", pass = "";
-                foreach (var item in credenciales.Info)
+                switch (item.Key)
                 {
-                    switch (item.Key)
-                    {
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                    }
+                    case "smtp": smtp = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
                 }
-                msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
-                msg.BodyEncoding = Encoding.UTF8;
-                msg.Body = msgBody;
-                mail.UseDefaultCredentials = false;
-                NetworkCredential MyCredentials = new NetworkCredential(user, pass);
-                mail.Credentials = MyCredentials;
-                mail.EnableSsl = true;
-                //await mail.SendMailAsync(msg);
-                msg.Attachments.Dispose();
-                mail.Dispose();
-                msg.Dispose();
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+
+            SmtpClient mail = new SmtpClient();
+            MailMessage msg = new MailMessage();
+            mail.Host = smtp;
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+            msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(user, @"Sistema de Control - Marcobre");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            mail.UseDefaultCredentials = false;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
+            mail.Dispose();
+            msg.Dispose();
+
             return RedirectToAction("VerificarRAC", "VerificacionRAC", new { IdRAC = IdEncriptado });
         }
     }

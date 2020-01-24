@@ -24,12 +24,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 {
     public class InspeccionesController : Controller
     {
-        private IMemoryCache _cache;
 
         private readonly IConsultarCabeceras _consultarCabeceras;
         private readonly IConsultarCabecera _consultarCabecera;
@@ -44,7 +44,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IGetInfo_SGA _info_SGA;
 
         public InspeccionesController(
-            IMemoryCache cache,
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
             IRegistrarInspeccionCabecera registrarInspeccionCabecera,
@@ -58,7 +57,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
-            _cache = cache;
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
             _registrarInspeccionCabecera = registrarInspeccionCabecera;
@@ -73,13 +71,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<IActionResult> Resumen()
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -87,9 +88,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 ViewBag.Filtro = filtroGerencias;
                 return View();
-            }
+           }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo,int pagina,int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
         {
             DateTime fecha;
             if (filtroFecha != null)
@@ -101,37 +102,31 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
             var filasTabla = "";
             var paginador = "";
-            int nPaginas = datosTabla.NCabeceras%rpp!=0 ? (datosTabla.NCabeceras/rpp)+1 : datosTabla.NCabeceras/rpp;
+            int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
             if (datosTabla.NCabeceras > 0)
             {
                 foreach (var fila in datosTabla.Cabeceras)
                 {
                     var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    /*switch (fila.Estado)
-                    {
-                        case "Pendiente": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/alert-icon.png\"></td>"; break;
-                        case "Vencido": filasTabla += "<td class=\"alert-column\"><img src=\"~/img/icons/pending-icon.png\"></td>"; break;
-                        default: filasTabla += "<td class=\"alert-column\"></td>"; break;
-                    }*/
-                    double avance = fila.NObsImplementadas!=0? Math.Round((float)fila.NObsImplementadas / fila.NObservaciones * 100,1) : 0;
-                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">"+fila.Codigo+"</a></td>";
+                    double avance = fila.NObsImplementadas != 0 ? Math.Round((float)fila.NObsImplementadas / fila.NObservaciones * 100, 1) : 0;
+                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance+ "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
+                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance + "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
-                
+
                 paginador += "<ul class=\"pagination\">";
                 for (int i = 1; i <= nPaginas; i++)
                 {
                     if (i == pagina)
                         paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
                     else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar("+ i +")\">" + i + "</a></li>";
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
                 }
                 paginador += "</ul>";
 
@@ -140,8 +135,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             {
                 filasTabla = "Sin datos";
             }
-            
-            
+
+
 
             dynamic response = new
             {
@@ -152,14 +147,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<IActionResult> NuevaInspeccion()
         {
-            //Cargar observaciones si se tiene
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            
+            ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -182,7 +179,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 if (idCabecera != 0)
                 {
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera,User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera, userInfo.NombreUsuario);
                     ViewBag.nObservacioness = observaciones.Count;
 
                     foreach (var observacion in observaciones)
@@ -224,27 +221,39 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
             if (ModelState.IsValid)
             {
-                int idCabecera = await _registrarInspeccionCabecera.Execute(
-                model.Objetivo, User.Identity.Name, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
-                model.Tipo_Inspeccion, model.Id_Responsable_Lugar, model.Responsable_Inspeccion, model.Inspectores, model.opcion);
-                if (model.opcion.Equals("Observacion")) {
-                    var IdEncriptado = _protector.Protect(idCabecera.ToString());
+                if (HttpContext.Session.GetString("SessionUser") != null)
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                    return RedirectToAction("NuevaObservacion", new { IdCabecera = IdEncriptado });
+                    int idCabecera = await _registrarInspeccionCabecera.Execute(
+                    model.Objetivo, userInfo.NombreUsuario, model.Id_Gerencia_Ejecutora, model.Id_Empresa_Contratista, model.Lugar_Inspeccionado, model.Fecha_Inspeccion, model.Hora_Inspeccion,
+                    model.Tipo_Inspeccion, model.Id_Responsable_Lugar, model.Responsable_Inspeccion, model.Inspectores, model.opcion);
+                    if (model.opcion.Equals("Observacion"))
+                    {
+                        var IdEncriptado = _protector.Protect(idCabecera.ToString());
+
+                        return RedirectToAction("NuevaObservacion", new { IdCabecera = IdEncriptado });
+                    }
+                }
+                else
+                {
+                    RedirectToAction("Signin", "Autenticacion");
                 }
             }
-                return RedirectToAction("Resumen");
+            return RedirectToAction("Resumen");
         }
-        
+
         public async Task<IActionResult> NuevaObservacion(string IdCabecera)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaNuevaObservacion();
 
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -289,12 +298,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
                 var evidencias = new List<string>();
                 if (model.Evidencias != null)
                 {
                     for (int i = 0; i < model.Evidencias.Count; i++)
-                    {                       
-                        var newfileName = CreateUniqueFileName(i + 1)+".zip";
+                    {
+                        var newfileName = CreateUniqueFileName(i + 1) + ".zip";
                         var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                         evidencias.Add(filePath);
                     }
@@ -311,7 +322,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             model.ResponsableMarc,
                             model.ResponsableCont,
                             model.FechaProgramada,
-                            User.Identity.Name);
+                            userInfo.NombreUsuario);
                 var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
                 return RedirectToActionPermanent("EditarInspeccion", new { IdCabecera = IdEncriptado });
             }
@@ -324,13 +335,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<IActionResult> EditarInspeccion(string IdCabecera)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
@@ -354,7 +368,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado,User.Identity.Name);
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado,userInfo.NombreUsuario);
                     ViewBag.nObservacioness = observaciones.Count;
 
                     foreach (var observacion in observaciones)
@@ -404,7 +418,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Responsables = responsables;
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
 
-                var cabecera = await _consultarCabecera.Execute(IdDesencriptado, User.Identity.Name);
+                var cabecera = await _consultarCabecera.Execute(IdDesencriptado, userInfo.NombreUsuario);
 
                 if (cabecera != null)
                 {
@@ -436,6 +450,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             {
                 if (model.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                     await _editarInspeccionCabecera.Execute(
                     model.Id_Inspeccion_Cabecera,
                     model.Objetivo,
@@ -447,11 +462,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.Id_Responsable_Lugar,
                     model.Inspectores,
                     model.opcion,
-                    User.Identity.Name);
+                    userInfo.NombreUsuario);
                     if (model.opcion.Equals("Observacion"))
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
                     else if (model.opcion.Equals("Guardar"))
-                        return RedirectToAction("NotificarInspección","Notificaciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                        return RedirectToAction("NotificarInspeccion","Notificaciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                 }                
             }
             return RedirectToAction("Resumen");
@@ -459,7 +474,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [HttpPost]
         public async Task<IActionResult> AmpliarFechaObservacion(string idCabecera, int idObservacion, string fecha)
         {
-            await _ampliarFechaObservacion.Execute(idObservacion, fecha,User.Identity.Name);
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            await _ampliarFechaObservacion.Execute(idObservacion, fecha,userInfo.NombreUsuario);
             return RedirectToAction("EditarInspeccion", new { IdCabecera = idCabecera });
         }
         private string CreateUniqueFileName(int nFile)
@@ -490,15 +506,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
-        }       
+        }
         public async Task<IActionResult> Download(string fileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            
                 try
                 {
                     var encryptedFile = await DownloadFTPFileAsync(fileName);
@@ -511,8 +529,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     {
                         Directory.CreateDirectory(SGATempPath);
                     }
-                    var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
-                    var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado.zip";
@@ -530,12 +548,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
-            {
-                return "No Autorizado";
-            }
+            if (!(HttpContext.Session.GetString("SessionUser")!=null))
+                return "NoAutorizado";
             else
-            {
+            {                
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
                 string route ="", user ="", pass = "";
                 foreach(var item in serverInfo.Info)
@@ -571,21 +587,24 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<string> UploadZipFileAsync(IFormFile file,string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario)==0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return "No Autorizado";
+                return "NoAutorizado";
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/archive.zip";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
                 if (Directory.Exists(filePath))
                 {
@@ -609,7 +628,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 }
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
-                var encryptedArchiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/encriptado.zip";
+                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
                 //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
 
@@ -620,61 +639,69 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             try
             {
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                string route = "", user = "", pass = "";
-                foreach (var item in serverInfo.Info)
+                if (!(HttpContext.Session.GetString("SessionUser") != null))
                 {
-                    switch (item.Key)
+                    return "NoAutorizado";
+                }
+                else
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
+                    string route = "", user = "", pass = "";
+                    foreach (var item in serverInfo.Info)
                     {
-                        case "route": route = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
+                        switch (item.Key)
+                        {
+                            case "route": route = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                        }
                     }
-                }
-                /* Create an FTP Request */
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
-                /* Log in to the FTP Server with the User Name and Password Provided */
-                ftpRequest.Credentials = new NetworkCredential(user, pass);
-                /* When in doubt, use these options */
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-                /* Specify the Type of FTP Request */
-                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                /* Establish Return Communication with the FTP Server */
-                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                /* Get the FTP Server's Response Stream */
-                var ftpStream = ftpResponse.GetResponseStream();
+                    /* Create an FTP Request */
+                    FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
+                    /* Log in to the FTP Server with the User Name and Password Provided */
+                    ftpRequest.Credentials = new NetworkCredential(user, pass);
+                    /* When in doubt, use these options */
+                    ftpRequest.UseBinary = true;
+                    ftpRequest.UsePassive = true;
+                    ftpRequest.KeepAlive = true;
+                    /* Specify the Type of FTP Request */
+                    ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
+                    /* Establish Return Communication with the FTP Server */
+                    var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
+                    /* Get the FTP Server's Response Stream */
+                    var ftpStream = ftpResponse.GetResponseStream();
 
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                    /* Save file in application server to decrypt */
+                    var tempPath = Path.GetTempPath();
+                    var SGATempPath = tempPath + "SGA-Marcobre/";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                    var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
+                    if (Directory.Exists(filePath))
+                    {
+                        Directory.Delete(filePath, true);
+                    }
+                    if (Directory.Exists(archivePath))
+                    {
+                        Directory.Delete(archivePath, true);
+                    }
 
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream =System.IO.File.Create(downloadedFilePath);
-                ftpStream.CopyTo(fileStream);
-                fileStream.Close();
+                    Directory.CreateDirectory(filePath);
+                    Directory.CreateDirectory(archivePath);
+                    /*New file downloaded name*/
+                    var downloadedFilePath = archivePath + fileName;
+                    /*Copy data to new temp file*/
+                    var fileStream = System.IO.File.Create(downloadedFilePath);
+                    ftpStream.CopyTo(fileStream);
+                    fileStream.Close();
 
-                return downloadedFilePath;
+                    return downloadedFilePath;
+                }
             }
             catch (Exception e)
             {

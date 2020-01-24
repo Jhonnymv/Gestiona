@@ -74,7 +74,16 @@ namespace GestionAmbiental
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMemoryCache();
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromMinutes(5);
+                options.Cookie.HttpOnly = true;
+                // Make the session cookie essential
+                options.Cookie.IsEssential = true;
+            });
             services
                 .AddMvc()
                 .AddFeatureFolders(new OdeToCode.AddFeatureFolders.FeatureFolderOptions()
@@ -101,6 +110,8 @@ namespace GestionAmbiental
             //}
 
             app.UseStaticFiles();
+            app.UseSession();
+            app.UseHttpContextItemsMiddleware();
             //app.UseCookiePolicy();
             //app.UseMvc();
 
