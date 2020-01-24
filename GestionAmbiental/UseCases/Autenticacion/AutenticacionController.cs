@@ -30,7 +30,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
 
         public IActionResult Signin()
         {
-            return View();
+            return View(new SigninModel());
         }
         [HttpPost]
         public async Task<IActionResult> Signin(SigninModel model)
@@ -63,17 +63,19 @@ namespace GestionAmbiental.UseCases.Autenticacion
                             var ticket = new AuthenticationTicket(new ClaimsPrincipal(identities), Options.DefaultName);
 */
 
-                            var rol = await _getRolUsuario.Execute(model.User);
-                            if (!rol.HasValue)
-                                return RedirectToAction("NoAutorizado", "Home");
-                            else
-                            {
-                                var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                                HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                                return RedirectToAction("Index", "Home");
-                            }
+                        var rol = await _getRolUsuario.Execute(model.User);
+                        if (!rol.HasValue)
+                            return RedirectToAction("NoAutorizado", "Home");
+                        else
+                        {
+                            var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                            return RedirectToAction("Index", "Home");
+                        }
                         //}
                     }
+                    else
+                        return View(new SigninModel { MensajeAut = "El usuario o la contraseña son incorrectas" });
                 }
                 // User not authenticated
                 //return Task.FromResult(AuthenticateResult.Fail("Invalid auth key."));

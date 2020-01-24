@@ -21,6 +21,11 @@
                     <input type="password" asp-for="Password" class="form-control" placeholder="Password">
                     <span class="text-danger" asp-validation-for="Password"></span>
                 </div>
+                @if(Model.MensajeAut != null){
+                <div class="row mb-2">
+                    <span class="text-danger">@Model.MensajeAut</span>
+                </div>
+                }
                 <div class="row mb-2">
                     <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>
                 </div>

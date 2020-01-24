@@ -15,5 +15,6 @@ namespace GestionAmbiental.UseCases.Autenticacion
         [Required(ErrorMessage = "Debe ingresar su contraseña")]
         [DisplayName("Contraseña")]
         public string Password { get; set; }
+        public string MensajeAut { get; set; }
     }
 }
