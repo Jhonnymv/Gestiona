@@ -10,8 +10,10 @@ using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.RechazarObservacion;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.RAC.Verificacion
 {
@@ -44,11 +46,21 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _selectItems.Execute();
-            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            ViewBag.Usuarios = usuarios;
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var items = await _selectItems.Execute();
+                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Usuarios = usuarios;
+                return View();
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo,int filtroUsuario, int pagina, int rpp)
         {
@@ -129,51 +141,69 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
 
         public async Task<IActionResult> VerificarRAC(string IdRAC)
         {
-            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
-            var reporte = await _consultarRAC.Execute(IdDesencriptado, User.Identity.Name);
-            var model = new VerificarRACModel
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                Id_RAC = reporte.Id_RAC,
-                IdEncriptado = IdRAC,
-                Nombres_Apellidos = reporte.Nombres_Apellidos,
-                Gerencia = reporte.Gerencia,
-                Empresa = reporte.Empresa,
-                Otra_Empresa = reporte.Otra_Empresa,
-                Empresa_Obs = reporte.Empresa_Ob,
-                Gerencia_Obs = reporte.Gerencia_Obs,
-                Ubicacion = reporte.Ubicacion,
-                Fecha = reporte.Fecha.ToString("dd/MM/yyyy"),
-                Hora = reporte.Fecha.ToString("HH:mm"),
-                SSO_MA = reporte.SSO_MA,
-                Clasificacion = reporte.Clasificacion,
-                NivelRiesgo = reporte.NivelRiesgo,
-                Tipo_Condicion = reporte.TipoCondicion,
-                Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
-                Medida_Control = reporte.Medida_Control,
-                PAC = reporte.PAC,
-                Responsable_Cierre = reporte.Responsable_Cierre,
-                Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
-                Supervisor = reporte.Supervisor,
-                Evidencia_Obs = reporte.Evidencia_Obs,
-                Evidencia_Cierre = reporte.Evidencia_Cierre,
-                Comentario_Cierre = reporte.Comentario_Cierre,
-                Comentario_Verificacion = reporte.Comentario_Verificacion,
-                Estado = reporte.Estado
-            };
-            ViewBag.Permiso = reporte.Permiso;
-            return View(model);
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+                var reporte = await _consultarRAC.Execute(IdDesencriptado, userInfo.NombreUsuario);
+                var model = new VerificarRACModel
+                {
+                    Id_RAC = reporte.Id_RAC,
+                    IdEncriptado = IdRAC,
+                    Nombres_Apellidos = reporte.Nombres_Apellidos,
+                    Gerencia = reporte.Gerencia,
+                    Empresa = reporte.Empresa,
+                    Otra_Empresa = reporte.Otra_Empresa,
+                    Empresa_Obs = reporte.Empresa_Ob,
+                    Gerencia_Obs = reporte.Gerencia_Obs,
+                    Ubicacion = reporte.Ubicacion,
+                    Fecha = reporte.Fecha.ToString("dd/MM/yyyy"),
+                    Hora = reporte.Fecha.ToString("HH:mm"),
+                    SSO_MA = reporte.SSO_MA,
+                    Clasificacion = reporte.Clasificacion,
+                    NivelRiesgo = reporte.NivelRiesgo,
+                    Tipo_Condicion = reporte.TipoCondicion,
+                    Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
+                    Medida_Control = reporte.Medida_Control,
+                    PAC = reporte.PAC,
+                    Responsable_Cierre = reporte.Responsable_Cierre,
+                    Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
+                    Supervisor = reporte.Supervisor,
+                    Evidencia_Obs = reporte.Evidencia_Obs,
+                    Evidencia_Cierre = reporte.Evidencia_Cierre,
+                    Comentario_Cierre = reporte.Comentario_Cierre,
+                    Comentario_Verificacion = reporte.Comentario_Verificacion,
+                    Estado = reporte.Estado
+                };
+                ViewBag.Permiso = reporte.Permiso;
+                return View(model);
+            }
         }
         [HttpPost]
         public async Task<IActionResult> VerificarRAC(VerificarRACModel model)
         {
             if (ModelState.IsValid)
             {
-                if (model.Opcion.Equals("Aprobar"))
-                    await _aprobarObservacion.Execute(model.Id_RAC, model.Comentario_Verificacion, User.Identity.Name);
+                if (!(HttpContext.Session.GetString("SessionUser") != null))
+                {
+                    return RedirectToAction("NoAutorizado", "Home");
+                }
                 else
-                    await _rechazarObservacion.Execute(model.Id_RAC, model.Comentario_Verificacion, User.Identity.Name);
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    if (model.Opcion.Equals("Aprobar"))
+                        await _aprobarObservacion.Execute(model.Id_RAC, model.Comentario_Verificacion, userInfo.NombreUsuario);
+                    else
+                        await _rechazarObservacion.Execute(model.Id_RAC, model.Comentario_Verificacion, userInfo.NombreUsuario);
+                }
             }
-            return RedirectToAction("VerificarRAC", new { IdRAC = model.Id_RAC });
+            return RedirectToAction("VerificarRAC", new { IdRAC = model.IdEncriptado });
         }
     }
 }

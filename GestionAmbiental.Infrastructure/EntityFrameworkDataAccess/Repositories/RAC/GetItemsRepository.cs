@@ -1,8 +1,10 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,7 +52,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
+            var usuarios = await _context.Usuarios.Where(x=>x.Estado!="INA" && x.Id_Rol!=(int)InspeccionRol.Admin).ToListAsync();
             var output = new List<Usuario>();
             foreach (var item in usuarios)
             {

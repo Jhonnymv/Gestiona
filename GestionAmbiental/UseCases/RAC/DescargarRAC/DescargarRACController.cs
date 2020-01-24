@@ -20,12 +20,13 @@ using System.Net;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using System.IO.Compression;
 using Microsoft.AspNetCore.DataProtection;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 {
     public class DescargarRACController : Controller
     {
-        private IMemoryCache _cache;
         private IHostingEnvironment _hostingEnvironment;
         private readonly IGetRACDescarga _getRACDescarga;
         private readonly IGetInfo_SGA _info_SGA;
@@ -33,14 +34,12 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
         private readonly IDataProtector _protector;
 
         public DescargarRACController(
-            IMemoryCache cache, 
             IHostingEnvironment hostingEnvironment,
             IGetRACDescarga getRACDescarga, 
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
-            _cache = cache;
             _hostingEnvironment = hostingEnvironment;
             _getRACDescarga = getRACDescarga;
             _info_SGA = info_SGA;
@@ -49,13 +48,13 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 
         public async Task<IActionResult> DescargaRAC(string IdRAC)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                ViewBag.Rol = _cache.Get<InspeccionRol>(CacheKeys.RolUsuario).ToString();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
                 var rac = await _getRACDescarga.Execute(IdDesencriptado);
 
@@ -183,6 +182,8 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
         //Retorna el tamaño de la fila para la imagen agregada
         private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int column, short rowHeight, int imageIndex, string tipoEvidencia)
         {
+            
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
             var evidencia = path;
             FtpWebRequest ftpRequest;
@@ -196,9 +197,9 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
             {
                 Directory.CreateDirectory(SGATempPath);
             }
-            var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
-            var archiveFile = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\archive.zip";
-            var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
+            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
             if (Directory.Exists(filePath))
             {
@@ -242,7 +243,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                     }
                 }
             }
-            
+
             ftpRequest = (FtpWebRequest)WebRequest.Create(route + evidencia);
             ftpRequest.Credentials = new NetworkCredential(user, pass);
             ftpRequest.UseBinary = true;
@@ -292,7 +293,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 anchor.Col2 = column + imgNCol;
 
                 IDrawing drawing = sheet.CreateDrawingPatriarch();
-                
+
                 IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
 
                 var image_dim = picture.GetImageDimension();
@@ -307,7 +308,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 
                 output.rowHeight = rowHeight;
                 output.image = picture;
-                
+
             }
             else
             {
@@ -345,7 +346,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 output.rowHeight = rowHeight;
                 output.image = picture;
             }
-            output.extension = extension;          
+            output.extension = extension;
 
             return output;
         }

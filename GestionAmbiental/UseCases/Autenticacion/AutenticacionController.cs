@@ -53,16 +53,6 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 {
                     if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
                     {
-                        /*using (var de = new DirectoryEntry(ldap_path))
-                        using (var ds = new DirectorySearcher(de))
-                        {
-                            // other logic to verify user has correct permissions
-
-                            // User authenticated and authorized
-                            var identities = new List<ClaimsIdentity> { new ClaimsIdentity("custom auth type") };
-                            var ticket = new AuthenticationTicket(new ClaimsPrincipal(identities), Options.DefaultName);
-*/
-
                         var rol = await _getRolUsuario.Execute(model.User);
                         if (!rol.HasValue)
                             return RedirectToAction("NoAutorizado", "Home");
@@ -72,16 +62,12 @@ namespace GestionAmbiental.UseCases.Autenticacion
                             HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                             return RedirectToAction("Index", "Home");
                         }
-                        //}
                     }
                     else
                         return View(new SigninModel { MensajeAut = "El usuario o la contraseña son incorrectas" });
                 }
-                // User not authenticated
-                //return Task.FromResult(AuthenticateResult.Fail("Invalid auth key."));
-                return View();
             }
-            return View();
+            return View(new SigninModel());
         }
     }
 }

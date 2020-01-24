@@ -412,7 +412,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             mail.Dispose();
             msg.Dispose();
             
-            return RedirectToAction("ImplementarRAC", "ImplementacionRAC", new { IdRAC = IdEncriptado });
+            return RedirectToAction("DetalleRAC", "RegistroRAC", new { IdRAC = IdEncriptado });
         }
         public async Task<IActionResult> NotificarImplementacionRAC(int IdRAC)
         {
@@ -481,7 +481,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             mail.Dispose();
             msg.Dispose();
 
-            return RedirectToAction("VerificarRAC", "VerificacionRAC", new { IdRAC = IdEncriptado });
+            return RedirectToAction("ImplementarRAC", "ImplementacionRAC", new { IdRAC = IdEncriptado });
         }
     }
 }

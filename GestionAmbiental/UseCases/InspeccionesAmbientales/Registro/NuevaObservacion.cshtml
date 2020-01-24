@@ -58,7 +58,6 @@
                 </div>
                 <div class="col-md-8">
                     <span class="text-danger" asp-validation-for="TipoCondicion"></span>
-                    @* Simular select vacio hasta seleccionar condición *@
                     <select class="form-control Vacio" asp-for="TipoCondicion">
                         <option value="">-- SELECCIONE --</option>
                     </select>
@@ -117,7 +116,7 @@
                 <div class="col-md-8">
                     <span class="text-danger" asp-validation-for="ResponsableCont"></span>
                     <input type="text" class="form-control" asp-for="ResponsableCont" />
-                    <small class="form-text text-muted">En caso que la empresa obserbada es Marcobre, ingresar "No Aplica".</small>
+                    <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                 </div>
             </div>
             <div class="row mb-2">

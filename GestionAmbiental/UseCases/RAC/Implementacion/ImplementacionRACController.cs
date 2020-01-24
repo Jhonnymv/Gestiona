@@ -19,13 +19,12 @@ using System.IO.Compression;
 using Microsoft.AspNetCore.Http;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.RAC.Implementacion
 {
     public class ImplementacionRACController : Controller
     {
-
-        private IMemoryCache _cache;
 
         private readonly ISelectItems _selectItems;
         private readonly IConsultarRACs _consultarRACs;
@@ -35,8 +34,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
 
-        public ImplementacionRACController(            
-            IMemoryCache cache, 
+        public ImplementacionRACController(
             ISelectItems selectItems,
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
@@ -45,7 +43,6 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
-            _cache = cache;
             _selectItems = selectItems;
             _consultarRACs = consultarRACs;
             _consultarRAC = consultarRAC;
@@ -56,13 +53,23 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _selectItems.Execute();
-            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            ViewBag.Usuarios = usuarios;
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var items = await _selectItems.Execute();
+                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Usuarios = usuarios;
+                return View();
+            }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo,int filtroUsuario, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int filtroUsuario, int pagina, int rpp)
         {
 
             DateTime fecha;
@@ -72,7 +79,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo, filtroUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -102,11 +109,11 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Responsable_Cierre + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
-                    if(EstadosRAC.Registrado.ToString()==fila.Estado || EstadosRAC.Rechazado.ToString() == fila.Estado)
+                    if (EstadosRAC.Registrado.ToString() == fila.Estado || EstadosRAC.Rechazado.ToString() == fila.Estado)
                     {
                         filasTabla += "<td>Pendiente de Implementación</td>";
                     }
-                    else if(EstadosRAC.Implementado.ToString() == fila.Estado)
+                    else if (EstadosRAC.Implementado.ToString() == fila.Estado)
                     {
                         filasTabla += "<td>Pendiente de Verificación</td>";
                     }
@@ -141,52 +148,70 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
 
         public async Task<IActionResult> ImplementarRAC(string IdRAC)
         {
-            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
-            var reporte = await _consultarRAC.Execute(IdDesencriptado, User.Identity.Name);
-            var model = new ImplementarRACModel
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                Id_RAC = reporte.Id_RAC,
-                IdEncriptado = IdRAC,
-                Nombres_Apellidos = reporte.Nombres_Apellidos,
-                Gerencia = reporte.Gerencia,
-                Empresa = reporte.Empresa,
-                Otra_Empresa = reporte.Otra_Empresa,
-                Empresa_Obs = reporte.Empresa_Ob,
-                Gerencia_Obs = reporte.Gerencia_Obs,
-                Ubicacion = reporte.Ubicacion,
-                Fecha = reporte.Fecha.ToString("dd/MM/yyyy"),
-                Hora = reporte.Fecha.ToString("HH:mm"),
-                SSO_MA = reporte.SSO_MA,
-                Clasificacion = reporte.Clasificacion,
-                NivelRiesgo = reporte.NivelRiesgo,
-                Tipo_Condicion = reporte.TipoCondicion,
-                Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
-                Medida_Control = reporte.Medida_Control,
-                PAC = reporte.PAC,
-                Responsable_Cierre = reporte.Responsable_Cierre,
-                Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
-                Supervisor = reporte.Supervisor,
-                Evidencia_Obs = reporte.Evidencia_Obs,
-                Evidencia_Cierre_Imp = reporte.Evidencia_Cierre,
-                Comentario_Cierre = reporte.Comentario_Cierre,
-                Estado = reporte.Estado
-            };
-            ViewBag.Permiso = reporte.Permiso;
-            return View(model);
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+                var reporte = await _consultarRAC.Execute(IdDesencriptado, userInfo.NombreUsuario);
+                var model = new ImplementarRACModel
+                {
+                    Id_RAC = reporte.Id_RAC,
+                    IdEncriptado = IdRAC,
+                    Nombres_Apellidos = reporte.Nombres_Apellidos,
+                    Gerencia = reporte.Gerencia,
+                    Empresa = reporte.Empresa,
+                    Otra_Empresa = reporte.Otra_Empresa,
+                    Empresa_Obs = reporte.Empresa_Ob,
+                    Gerencia_Obs = reporte.Gerencia_Obs,
+                    Ubicacion = reporte.Ubicacion,
+                    Fecha = reporte.Fecha.ToString("dd/MM/yyyy"),
+                    Hora = reporte.Fecha.ToString("HH:mm"),
+                    SSO_MA = reporte.SSO_MA,
+                    Clasificacion = reporte.Clasificacion,
+                    NivelRiesgo = reporte.NivelRiesgo,
+                    Tipo_Condicion = reporte.TipoCondicion,
+                    Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
+                    Medida_Control = reporte.Medida_Control,
+                    PAC = reporte.PAC,
+                    Responsable_Cierre = reporte.Responsable_Cierre,
+                    Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
+                    Supervisor = reporte.Supervisor,
+                    Evidencia_Obs = reporte.Evidencia_Obs,
+                    Evidencia_Cierre_Imp = reporte.Evidencia_Cierre,
+                    Comentario_Cierre = reporte.Comentario_Cierre,
+                    Estado = reporte.Estado
+                };
+                ViewBag.Permiso = reporte.Permiso;
+                return View(model);
+            }
         }
         [HttpPost]
         public async Task<IActionResult> ImplementarRAC(ImplementarRACModel model)
         {
             if (ModelState.IsValid)
             {
-                var filePath = "";
-                if (model.Evidencia_Cierre != null)
+                if (!(HttpContext.Session.GetString("SessionUser") != null))
                 {
-                    var newfileName = CreateUniqueFileName(1) + ".zip";
-                    filePath = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName);
+                    return RedirectToAction("NoAutorizado", "Home");
                 }
-                await _levantarObservacionRAC.Execute(model.Id_RAC, filePath,model.Comentario_Cierre, User.Identity.Name);
-                return RedirectToAction("NotificarImplementacionRAC", "Notificaciones", new { IdRAC = model.Id_RAC });
+                else
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    var filePath = "";
+                    if (model.Evidencia_Cierre != null)
+                    {
+                        var newfileName = CreateUniqueFileName(1) + ".zip";
+                        filePath = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName);
+                    }
+                    await _levantarObservacionRAC.Execute(model.Id_RAC, filePath, model.Comentario_Cierre, userInfo.NombreUsuario);
+                    return RedirectToAction("NotificarImplementacionRAC", "Notificaciones", new { IdRAC = model.Id_RAC });
+                }
             }
             //var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarRAC", new { IdRAC = model.Id_RAC });
@@ -223,12 +248,13 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         }
         public async Task<IActionResult> Download(string fileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 try
                 {
                     var encryptedFile = await DownloadFTPFileAsync(fileName);
@@ -241,8 +267,8 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     {
                         Directory.CreateDirectory(SGATempPath);
                     }
-                    var filePath = SGATempPath + "submission\\" + User.Identity.Name.Split("\\")[1] + "\\";
-                    var archivePath = SGATempPath + "zip\\" + User.Identity.Name.Split("\\")[1] + "\\";
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado.zip";
@@ -260,12 +286,10 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (HttpContext.Session.GetString("SessionUser") != null)
             {
-                return "No Autorizado";
-            }
-            else
-            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACI);
                 string route = "", user = "", pass = "";
                 foreach (var item in serverInfo.Info)
@@ -298,24 +322,29 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 }
                 return newFileName;
             }
+            else
+            {
+                return "NoAutorizado";
+            }
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
-            if (_cache.Get<InspeccionRol>(CacheKeys.RolUsuario) == 0)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return "No Autorizado";
+                return "No autorizado";
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/archive.zip";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
                 if (Directory.Exists(filePath))
                 {
@@ -339,7 +368,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 }
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
-                var encryptedArchiveFile = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/encriptado.zip";
+                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
                 //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
 
@@ -350,6 +379,8 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         {
             try
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACI);
                 string route = "", user = "", pass = "";
                 foreach (var item in serverInfo.Info)
@@ -383,8 +414,8 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 {
                     Directory.CreateDirectory(SGATempPath);
                 }
-                var filePath = SGATempPath + "submission/" + User.Identity.Name.Split("\\")[1] + "/";
-                var archivePath = SGATempPath + "zip/" + User.Identity.Name.Split("\\")[1] + "/";
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
                 if (Directory.Exists(filePath))
                 {
