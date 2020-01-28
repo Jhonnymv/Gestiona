@@ -50,7 +50,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        //
         public async Task<List<Dimension>> GetObservacionesXEstado()
         {
             var cabeceras_registradas = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).ToListAsync();
@@ -192,7 +191,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionMAP()
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
@@ -228,7 +226,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionSSO()
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();

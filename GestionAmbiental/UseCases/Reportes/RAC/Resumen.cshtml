@@ -38,6 +38,20 @@
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FInicio"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FFin"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
                     <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
                 </div>
             </div>
@@ -125,73 +139,152 @@
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Reportes de Acto y Condición Subestándar entre Fechas</h6>
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Reportes de Acto y Condición Subestándar Registrados</h6>
             </div>
             <div class="card-body">
                 <div class="chart-area">
                     <div class="chartjs-size-monitor">
-                    <div class="chartjs-size-monitor-expand">
-                        <div class="">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class="">
                             </div>
                         </div>
-                    <div class="chartjs-size-monitor-shrink">
-                        <div class="">
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class="">
                             </div>
                         </div>
                     </div>
                     <canvas id="chart_rac_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
-            <div class="card-header">
-                <div class="d-flex justify-content-between bd-highlight mb-3">
-                    <div class="p-2 bd-highlight text-center">
-                        <label>Fecha de Inicio:</label>
-                        <input id="fInicio" type="date" class="form-control" />
+
+        </div>
+    </div>
+</div>
+<!--Gráficos MAP-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Reportes de Acto y Condición Subestándar MA</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Reportes de Acto y Condición Subestándar MA por Nivel de Riesgo</h6>
+                        <div class="chart-area click-option" onclick="ObservacionsMAPXTipoCondicion()">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_MA_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
                     </div>
-                    <div class="p-2 bd-highlight text-center"><button class="btn btn-primary" onclick="ActualizarContadorRxFecha()">Actualizar Tabla</button></div>
-                    <div class="p-2 bd-highlight text-center">
-                        <label>Fecha de Fin:</label>
-                        <input id="fFin" type="date" class="form-control" />
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;"># Reportes de Acto y Condición Subestándar</h6>
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_MA_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
                     </div>
                 </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Gráficos SSO-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Reportes de Acto y Condición Subestándar SSO</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Reportes de Acto y Condición Subestándar SSO por Nivel de Riesgo</h6>
+                        <div class="chart-area click-option" onclick="ObservacionsSSOXTipoCondicion()">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Reportes de Acto y Condición Subestándar</h6>
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_SSO_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 @section Scripts{
+@*Script de la página*@
     <script type="text/javascript">
         var gerencia = $("#IdGerencia").val();
         var empresa = $("#IdEmpresa").val();
         var usuario = $("#IdUsuario").val();
+        var fechaInicio = "";
+        var fechaFin = "";
 
         //Variables gráfico RAC Fecha
         var data_rac_fechas = [];
         var graph_rac_fechas;
+        //Variables gráfico MA nivel de riesgo
+        var data_rac_ma_nr = [];
+        var graph_rac_ma_nr;
+        //Variables gráfico SSO nivel de riesgo
+        var data_rac_sso_nr = [];
+        var graph_rac_sso_nr;
+        //Variables gráfico MA tipo condición
+        var data_rac_ma_c = [];
+        var graph_rac_ma_c;
+        //Variables gráfico SSO tipo condición
+        var data_rac_sso_c = [];
+        var graph_rac_sso_c;
 
         $(document).ready(function () {
             Filtrar();
+            ActualizarDatosGraficoMA_NR_Tipo();
         });
 
         function Filtrar() {
-            $.ajax({
-                type: "POST",
-                url: "/ReportesRAC/Filtrar",
-                data: {
-                    "IdGerencia": $("#IdGerencia").val(),
-                    "IdEmpresa": $("#IdEmpresa").val(),
-                    "IdUsuario": $("#IdUsuario").val(),
-                },
-                traditional: true,
-                success: (response) => {
-                    //Actualizar contador
-                    var nObs = response.nObservaciones;
-                    ActualizarContadorRxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor);
-                    //Actualizar gráfico de rac de fechas
-                    $("#fInicio").val(response.fInicio);
-                    $("#fFin").val(response.fFin);
-                    ActualizarContadorRxFecha();
-                }
-            });
+            fechaInicio = $("#FInicio").val();
+            fechaFin = $("#FFin").val();
+            if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ReportesRAC/Filtrar",
+                    data: {
+                        "IdGerencia": $("#IdGerencia").val(),
+                        "IdEmpresa": $("#IdEmpresa").val(),
+                        "IdUsuario": $("#IdUsuario").val(),
+                        "FechaInicio": $("#FInicio").val(),
+                        "FechaFin": $("#FFin").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        //Actualizar contador
+                        var nObs = response.nObservaciones;
+                        ActualizarContadorRxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor);
+                        //Actualizar input fechas
+                        fechaInicio = $("#FInicio").val();
+                        fechaFin = $("#FFin").val();
+                        //Actualizar gráfico de rac de fechas
+                        ActualizarContadorRxFecha();
+                        //Actualizar gráfico de ma por nivel de riesgo
+                        ActualizarDatosGraficoMA_NR();
+                        //Actualizar gráfico de sso por nivel de riesgo
+                        ActualizarDatosGraficoSSO_NR();
+                        //Actualizar gráfico de ma por clasificación
+                        ActualizarDatosGraficoMA_Clas();
+                        //Actualizar gráfico de sso por clasificación
+                        ActualizarDatosGraficoSSO_Clas();
+                    }
+                });
+            } else {
+                alert("La fecha de fin debe ser mayor a la fecha de inicio");
+            }
         }
         //Para Contador de reportes por estado
         function ActualizarContadorRxE(reg, imp, apr, rec, ven, amp) {
@@ -212,95 +305,424 @@
         }
         //Para gráfico RAC Fecha
         function ActualizarContadorRxFecha() {
-            var fechaInicio = $("#fInicio").val();
-            var fechaFin = $("#fFin").val();
-
-            if (fechaInicio < fechaFin) {
-                $.ajax({
-                    type: "POST",
-                    url: "/ReportesRAC/GetNReportesEntreFechas",
-                    data: {
-                        "IdGerencia": $("#IdGerencia").val(),
-                        "IdEmpresa": $("#IdEmpresa").val(),
-                        "IdUsuario": $("#IdUsuario").val(),
-                        "FechaInicio": fechaInicio,
-                        "FechaFin": fechaFin
-                    },
-                    traditional: true,
-                    success: (response) => {
-                        if (data_rac_fechas.length > 0) {
-                            //Actualizar contador
-                            data_rac_fechas = response.nReportesEntreFechas;
-
-                            var labels = [];
-                            var data = [];
-                            for (var i = 0; i < data_rac_fechas.length; i++) {
-                                labels.push(data_rac_fechas[i].nombre);
-                                data.push(data_rac_fechas[i].valor);
-                            }
-                            //Actualizar gráfica
-                            graph_rac_fechas.data.labels = labels;
-                            graph_rac_fechas.data.datasets[0].data = data;
-                            graph_rac_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
-                            graph_rac_fechas.update();
-                        } else {
-                            //Actualizar contador
-                            data_rac_fechas = response.nReportesEntreFechas;
-
-                            var labels = [];
-                            var data = [];
-                            for (var i = 0; i < data_rac_fechas.length; i++) {
-                                labels.push(data_rac_fechas[i].nombre);
-                                data.push(data_rac_fechas[i].valor);
-                            }
-                            //Crear gráfica
-                            CrearGraficaContardorRxFecha(labels, data,Math.max(data)/10);
-                        }                        
-                    }
-                });
-            } else {
-                alert("La fecha de fin debe se mayor a la fecha de inicio");
-            }
-        }
-        function CrearGraficaContardorRxFecha(labels, data,stepSize) {
-            graph_rac_fechas = new Chart(
-            document.getElementById("chart_rac_fechas"),
-            {
-                "type": "bar",
-                "data": {
-                    "labels": labels,
-                    "datasets": [{
-                        "label": "# Inspecciones Registradas",
-                        "data": data,
-                        "fill": false,
-                        "backgroundColor":"rgb(46, 103, 147)",
-                        "borderColor": "rgb(46, 103, 147)",
-                        "lineTension": 0.1
-                    }]
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetNReportesEntreFechas",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
                 },
-                "options": {
-                    "scales": {
-                        'yAxes': [{
-                            'ticks': {
-                                'stepSize':stepSize
-                            }
-                        }]
-                    },
-                    "legend": {
-                        "labels": {
-                            // This more specific font property overrides the global property
-                            fontColor: 'black'
+                traditional: true,
+                success: (response) => {
+                    if (data_rac_fechas.length > 0) {
+                        //Actualizar contador
+                        data_rac_fechas = response.nReportesEntreFechas;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_fechas.length; i++) {
+                            labels.push(data_rac_fechas[i].nombre);
+                            data.push(data_rac_fechas[i].valor);
                         }
-                    },
-                    "plugins": {
-                        datalabels: {
-                            color: 'white',
-                            defaultFontSize: 15
+                        //Actualizar gráfica
+                        graph_rac_fechas.data.labels = labels;
+                        graph_rac_fechas.data.datasets[0].data = data;
+                        graph_rac_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                        graph_rac_fechas.update();
+                    } else {
+                        //Actualizar contador
+                        data_rac_fechas = response.nReportesEntreFechas;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_fechas.length; i++) {
+                            labels.push(data_rac_fechas[i].nombre);
+                            data.push(data_rac_fechas[i].valor);
                         }
+                        //Crear gráfica
+                        CrearGraficaContardorRxFecha(labels, data, Math.max(data) / 10);
                     }
                 }
             });
         }
+        function CrearGraficaContardorRxFecha(labels, data, stepSize) {
+            graph_rac_fechas = new Chart(
+                document.getElementById("chart_rac_fechas"),
+                {
+                    "type": "bar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Reportes registrados",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": "rgb(46, 103, 147)",
+                            "borderColor": "rgb(46, 103, 147)",
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            'yAxes': [{
+                                'ticks': {
+                                    'stepSize': stepSize
+                                }
+                            }]
+                        },
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'white',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                });
+        }
+        //Para gráfico MA Nivel de Riesgo
+        function ActualizarDatosGraficoMA_NR() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetNReportesXNivelRiesgoMA",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    if (data_rac_ma_nr.length > 0) {
+                        //Actualizar contador
+                        data_rac_ma_nr = response.nR_MA;
 
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_ma_nr.length; i++) {
+                            labels.push(data_rac_ma_nr[i].nombre);
+                            data.push(data_rac_ma_nr[i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_rac_ma_nr.data.labels = labels;
+                        graph_rac_ma_nr.data.datasets[0].data = data;
+                        graph_rac_ma_nr.update();
+                    } else {
+                        //Actualizar contador
+                        data_rac_ma_nr = response.nR_MA;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_ma_nr.length; i++) {
+                            labels.push(data_rac_ma_nr[i].nombre);
+                            data.push(data_rac_ma_nr[i].valor);
+                        }
+                        //Crear gráfica
+                        CrearGraficoMA_NR(labels, data);
+                    }
+                }
+            });
+        }
+        function CrearGraficoMA_NR(labels, data) {
+            graph_rac_ma_nr = new Chart(
+                document.getElementById("chart_MA_Nivel_Riesgo"),
+                {
+                    "type": "doughnut",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Reportes registrados",
+                            "data": data,
+                            "backgroundColor": [
+                                '#3DFE8E',
+                                '#FEC63D',
+                                '#FE3D3D'
+                            ],
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'black',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                }
+            );
+        }
+        //Para gráfico SSO Nivel de Riesgo
+        function ActualizarDatosGraficoSSO_NR() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetNReportesXNivelRiesgoSSO",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    if (data_rac_sso_nr.length > 0) {
+                        //Actualizar contador
+                        data_rac_sso_nr = response.nR_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_sso_nr.length; i++) {
+                            labels.push(data_rac_sso_nr[i].nombre);
+                            data.push(data_rac_sso_nr[i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_rac_sso_nr.data.labels = labels;
+                        graph_rac_sso_nr.data.datasets[0].data = data;
+                        graph_rac_sso_nr.update();
+                    } else {
+                        //Actualizar contador
+                        data_rac_sso_nr = response.nR_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_sso_nr.length; i++) {
+                            labels.push(data_rac_sso_nr[i].nombre);
+                            data.push(data_rac_sso_nr[i].valor);
+                        }
+                        //Crear gráfica
+                        CrearGraficoSSO_NR(labels, data);
+                    }
+                }
+            });
+        }
+        function CrearGraficoSSO_NR(labels, data) {
+            graph_rac_sso_nr = new Chart(
+                document.getElementById("chart_SSO_Nivel_Riesgo"),
+                {
+                    "type": "doughnut",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Reportes registrados",
+                            "data": data,
+                            "backgroundColor": [
+                                '#3DFE8E',
+                                '#FEC63D',
+                                '#FE3D3D'
+                            ],
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'black',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                }
+            );
+        }
+        //Para gráfico MA Clasificación
+        function ActualizarDatosGraficoMA_Clas() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetNReportesXClasificacionMA",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    console.log(response);
+                    if (data_rac_ma_c.length > 0) {
+                        //Actualizar contador
+                        data_rac_ma_c = response.c_MA;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_ma_c.length; i++) {
+                            labels.push(data_rac_ma_c[i].nombre);
+                            data.push(data_rac_ma_c[i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_rac_ma_c.data.labels = labels;
+                        graph_rac_ma_c.data.datasets[0].data = data;
+                        graph_rac_ma_c.update();
+                    } else {
+                        //Actualizar contador
+                        data_rac_ma_c = response.c_MA;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_ma_c.length; i++) {
+                            labels.push(data_rac_ma_c[i].nombre);
+                            data.push(data_rac_ma_c[i].valor);
+                        }
+                        //Crear gráfica
+                        CrearGraficoMA_Clas(labels, data);
+                    }
+                }
+            });
+        }
+        function CrearGraficoMA_Clas(labels, data) {
+            graph_rac_ma_c = new Chart(
+                document.getElementById("chart_MA_Clasificacion"),
+                {
+                    "type": "doughnut",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Inspecciones Registradas",
+                            "data": data,
+                            "backgroundColor": [
+                                '#ed4c4c',
+                                '#36b9cc'
+                            ],
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'black',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                }
+            );
+        }
+        //Para gráfico SSO Clasificación
+        function ActualizarDatosGraficoSSO_Clas() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetNReportesXClasificacionSSO",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    console.log(response
+                    );
+                    if (data_rac_sso_c.length > 0) {
+                        //Actualizar contador
+                        data_rac_sso_c = response.c_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_sso_c.length; i++) {
+                            labels.push(data_rac_sso_c[i].nombre);
+                            data.push(data_rac_sso_c[i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_rac_sso_c.data.labels = labels;
+                        graph_rac_sso_c.data.datasets[0].data = data;
+                        graph_rac_sso_c.update();
+                    } else {
+                        //Actualizar contador
+                        data_rac_sso_c = response.c_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_rac_sso_c.length; i++) {
+                            labels.push(data_rac_sso_c[i].nombre);
+                            data.push(data_rac_sso_c[i].valor);
+                        }
+                        //Crear gráfica
+                        CrearGraficoSSO_Clas(labels, data);
+                    }
+                }
+            });
+        }
+        function CrearGraficoSSO_Clas(labels, data) {
+            graph_rac_sso_c = new Chart(
+                document.getElementById("chart_SSO_Clasificacion"),
+                {
+                    "type": "doughnut",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Inspecciones Registradas",
+                            "data": data,
+                            "backgroundColor": [
+                                '#ed4c4c',
+                                '#36b9cc'
+                            ],
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'black',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                }
+            );
+        }
+    </script>
+@*Script del modal tipo condición x nivel de riesgo*@
+    <script type="text/javascript">
+        function ActualizarDatosGraficoMA_NR_Tipo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetReportesTipoCondicionxNivelRiesgoMA",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    console.log(response);
+                }
+            });
+        }
     </script>
 }

@@ -102,7 +102,7 @@
                 <select class="form-control" asp-for="SSO_MA">
                     <option value="">--SELECCIONE--</option>
                     <option value="SSO">SSO</option>
-                    <option value="MAP">MA</option>
+                    <option value="MA">MA</option>
                 </select>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-2">
@@ -196,7 +196,7 @@
             <div class="col-sm-12 col-md-6 col-lg-4">
                 <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
                 <select class="form-control AsesorTemporal" asp-for="Id_Supervisor"><option value="0">--SELECCIONE--</option></select>
-                <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMAP" asp-for="Id_Supervisor" style="display:none" disabled></select>
+                <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMA" asp-for="Id_Supervisor" style="display:none" disabled></select>
                 <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor" style="display:none" disabled></select>
             </div>
         </div>
@@ -276,7 +276,7 @@
             }
         });
         $("#SSO_MA").on('change', function () {
-            if ($("#SSO_MA").val() == "MAP") {
+            if ($("#SSO_MA").val() == "MA") {
                 //Ocultar Temporal
                 $(".AsesorTemporal").hide();
                 $(".AsesorTemporal").prop('disabled', 'disabled')
@@ -316,7 +316,7 @@
                 $("#Clasificacion").val("");
                 //reiniciar condicion
                 $("#Id_Tipo_Condicion").val("");
-                //Eliminar Niveles MAP
+                //Eliminar Niveles MA
                 $("#NivelRiesgo option[value='No Aplica']").remove();
                 $("#NivelRiesgo option[value='Tolerable']").remove();
                 $("#NivelRiesgo option[value='Alerta']").remove();
@@ -346,7 +346,7 @@
                 $(".AsesorSeguridad").prop('disabled', 'disabled');
                 //reiniciar condicion
                 $("#Id_Tipo_Condicion").val("");
-                //Eliminar Niveles MAP
+                //Eliminar Niveles MA
                 $("#NivelRiesgo option[value='No Aplica']").remove();
                 $("#NivelRiesgo option[value='Tolerable']").remove();
                 $("#NivelRiesgo option[value='Alerta']").remove();
@@ -375,14 +375,14 @@
         });
         $("#Clasificacion").on('change', function () {
             var selectedOption = $("#Clasificacion option:selected").val();
-            if ($("#SSO_MA").val() == "MAP" && selectedOption == "Acto Subestándar") {
+            if ($("#SSO_MA").val() == "MA" && selectedOption == "Acto Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").show();
                 $(".MA-Acto").prop('disabled', false);
                 $(".MA-Condicion").hide();
                 $(".MA-Condicion").prop('disabled', 'disabled');
-            } else if ($("#SSO_MA").val() == "MAP" && selectedOption == "Condición Subestándar") {
+            } else if ($("#SSO_MA").val() == "MA" && selectedOption == "Condición Subestándar") {
                 $(".Vacio").hide();
                 $(".Vacio").prop('disabled', 'disabled');
                 $(".MA-Acto").hide();

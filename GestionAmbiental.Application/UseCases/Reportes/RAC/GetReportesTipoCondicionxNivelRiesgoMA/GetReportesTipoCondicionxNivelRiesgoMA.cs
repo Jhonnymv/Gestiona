@@ -1,0 +1,45 @@
+﻿using GestionAmbiental.Application.Repositories.Reportes;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoCondicionxNivelRiesgoMA
+{
+    public class GetReportesTipoCondicionxNivelRiesgoMA: IGetReportesTipoCondicionxNivelRiesgoMA
+    {
+        private readonly IGetReportesRACReadOnlyRepository _getReportesRACReadOnlyRepository;
+        public GetReportesTipoCondicionxNivelRiesgoMA(IGetReportesRACReadOnlyRepository getReportesRACReadOnlyRepository)
+        {
+            _getReportesRACReadOnlyRepository = getReportesRACReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesRACReadOnlyRepository));
+        }
+        public async Task<List<List<DimensionOutput>>> Execute(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            //Dar formato a fechas
+            DateTime fInicio, fFinal;
+            if (FechaInicio != null)
+                fInicio = Convert.ToDateTime(FechaInicio);
+            else
+                fInicio = DateTime.MinValue;
+
+            if (FechaFin != null)
+                fFinal = Convert.ToDateTime(FechaFin);
+            else
+                fFinal = DateTime.MaxValue;
+            //Obtener valores
+            var data = await _getReportesRACReadOnlyRepository.GetReportesTipoCondicionxNivelRiesgoMA(IdGerencia, IdEmpresa, IdUsuario, fInicio, fFinal);
+
+            var output = new List<List<DimensionOutput>>();
+            foreach (var item in data)
+            {
+                var temp = new List<DimensionOutput>();
+                foreach (var subitem in item)
+                {
+                    temp.Add(new DimensionOutput(subitem));
+                }
+                output.Add(temp);
+            }
+            return output;
+        }
+    }
+}

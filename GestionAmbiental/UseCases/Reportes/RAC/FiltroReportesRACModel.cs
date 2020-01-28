@@ -14,5 +14,9 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         public int IdEmpresa { get; set; }
         [DisplayName("Usuario con Observación Asignada:")]
         public int IdUsuario { get; set; }
+        [DisplayName("Fecha de Inicio:")]
+        public string FInicio { get; set; }
+        [DisplayName("Fecha de Fin:")]
+        public string FFin { get; set; }
     }
 }

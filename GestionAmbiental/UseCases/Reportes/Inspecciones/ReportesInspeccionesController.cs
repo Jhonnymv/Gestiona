@@ -96,8 +96,8 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                 var model = new List<ReportesModel>();
                 model.Add(new ReportesModel("#Inspecciones registradas en los últimos 30 días", inspecciones_diarias));
                 model.Add(new ReportesModel("Cantidad de Observaciones MAP vs SSO", map_vs_sso));
-                model.Add(new ReportesModel("Cantidad de Observaciones MAP por Nivel de Riesgo", MAP_x_nivel_riesgo));
-                model.Add(new ReportesModel("Cantidad de Observaciones SSO por Nivel de Riesgo", SSO_x_nivel_riesgo));
+                model.Add(new ReportesModel("Cantidad de Observaciones MAP por Nivel de Riesgo", MAP_x_nivel_riesgo.OrderBy(x => x.Nombre).ToList()));
+                model.Add(new ReportesModel("Cantidad de Observaciones SSO por Nivel de Riesgo", SSO_x_nivel_riesgo.OrderBy(x => x.Nombre).ToList()));
                 model.Add(new ReportesModel("Cantidad de Observaciones MAP por Tipo de Observación", MAP_x_tipo_observacion));
                 model.Add(new ReportesModel("Cantidad de Observaciones SSO por Tipo de Observación", SSO_x_tipo_observacion));
 

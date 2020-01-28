@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetItemsFiltroResumen;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetNReportesEntreFechas;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetObservacionesXEstado;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesNivelRiesgoMA;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesNivelRiesgoSSO;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoCondicionxNivelRiesgoMA;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoInspeccionMA;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoInspeccionSSO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -15,12 +20,30 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         private readonly IGetObservacionesXEstado _getObservacionesXEstado;
         private readonly IGetItemsFiltroResumen _getItemsFiltroResumen;
         private readonly IGetNReportesEntreFechas _getNReportesEntreFechas;
-         
-        public ReportesRACController(IGetObservacionesXEstado getObservacionesXEstado, IGetItemsFiltroResumen getItemsFiltroResumen,IGetNReportesEntreFechas getNReportesEntreFechas)
+        private readonly IGetReportesNivelRiesgoMA _getReportesNivelRiesgoMA;
+        private readonly IGetReportesNivelRiesgoSSO _getReportesNivelRiesgoSSO;
+        private readonly IGetReportesClasificacionMA _getReportesClasificacionMA;
+        private readonly IGetReportesClasificacionSSO _getReportesClasificacionSSO;
+        private readonly IGetReportesTipoCondicionxNivelRiesgoMA _getReportesTipoCondicionxNivelRiesgoMA;
+        public ReportesRACController(
+            IGetObservacionesXEstado getObservacionesXEstado, 
+            IGetItemsFiltroResumen getItemsFiltroResumen,
+            IGetNReportesEntreFechas getNReportesEntreFechas,
+            IGetReportesNivelRiesgoMA getReportesNivelRiesgoMA,
+            IGetReportesNivelRiesgoSSO getReportesNivelRiesgoSSO,
+            IGetReportesClasificacionMA getReportesClasificacionMA,
+            IGetReportesClasificacionSSO getReportesClasificacionSSO,
+            IGetReportesTipoCondicionxNivelRiesgoMA getReportesTipoCondicionxNivelRiesgoMA
+            )
         {
             _getObservacionesXEstado = getObservacionesXEstado;
             _getItemsFiltroResumen = getItemsFiltroResumen;
             _getNReportesEntreFechas = getNReportesEntreFechas;
+            _getReportesNivelRiesgoMA = getReportesNivelRiesgoMA;
+            _getReportesNivelRiesgoSSO = getReportesNivelRiesgoSSO;
+            _getReportesClasificacionMA = getReportesClasificacionMA;
+            _getReportesClasificacionSSO = getReportesClasificacionSSO;
+            _getReportesTipoCondicionxNivelRiesgoMA = getReportesTipoCondicionxNivelRiesgoMA;
         }
 
         public async Task<IActionResult> Resumen()
@@ -41,11 +64,13 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
             ViewBag.ItemsGerencia = filtroGerencias;
             ViewBag.ItemsEmpresa = filtroEmpresas;
             ViewBag.ItemsUsuario = filtroUsuarios;
+            ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+            ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Filtrar(int IdGerencia,int IdEmpresa, int IdUsuario)
+        public async Task<IActionResult> Filtrar(int IdGerencia,int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nObservaciones = await _getObservacionesXEstado.Execute(IdGerencia, IdEmpresa, IdUsuario);
@@ -53,8 +78,10 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
             dynamic response = new
             {
                 nObservaciones = nObservaciones,
+                /*
                 fInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd"),
                 fFin = DateTime.Now.ToString("yyyy-MM-dd")
+                */
             };
             return Ok(response);
         }
@@ -66,6 +93,48 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
                 nReportesEntreFechas = nReportesEntreFechas
             };
             return Ok(response);
+        }
+        public async Task<IActionResult> GetNReportesXNivelRiesgoMA(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var nRepotesNivelRiesgoMA = await _getReportesNivelRiesgoMA.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                NR_MA = nRepotesNivelRiesgoMA
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> GetNReportesXNivelRiesgoSSO(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var nRepotesNivelRiesgoSSO = await _getReportesNivelRiesgoSSO.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                NR_SSO = nRepotesNivelRiesgoSSO
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> GetNReportesXClasificacionMA(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var nRepotesClasificacionMA = await _getReportesClasificacionMA.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                C_MA = nRepotesClasificacionMA
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> GetNReportesXClasificacionSSO(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var nRepotesClasificacionSSO = await _getReportesClasificacionSSO.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                C_SSO = nRepotesClasificacionSSO
+            };
+            return Ok(response);
+         
+        }
+        public async Task<IActionResult> GetReportesTipoCondicionxNivelRiesgoMA(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var data = await _getReportesTipoCondicionxNivelRiesgoMA.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            return Ok();
         }
     }
 }
