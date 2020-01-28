@@ -10,9 +10,9 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
 {
     public class GetObservacionesXNivelRiesgoMAP : IGetObservacionesXNivelRiesgoMAP
     {
-        private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
+        private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesReadOnlyRepository;
 
-        public GetObservacionesXNivelRiesgoMAP(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        public GetObservacionesXNivelRiesgoMAP(IGetReportesInspeccionesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }

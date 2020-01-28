@@ -38,6 +38,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="Views\ReportesRAC\" />
   </ItemGroup>
   
 </Project>

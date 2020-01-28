@@ -10,7 +10,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
     public class Log_RAC
     {
         [Key]
-        public int Id_Log_Inspeccion { get; set; }
+        public int Id_Log_RAC { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha { get; set; }
         [Column(TypeName = "varchar(6)")]

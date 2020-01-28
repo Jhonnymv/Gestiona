@@ -170,7 +170,6 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 templateWorkbook.Write(ms);
 
                 // Send the memory stream to the browser
-                //ExportDataTableToExcel(ms, "EventExpenseReport.xls");
                 ms.Position = 0;
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteRAC-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }

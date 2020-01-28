@@ -1,0 +1,306 @@
+﻿@model GestionAmbiental.UseCases.Reportes.RAC.FiltroReportesRACModel
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Dashboard de Reportes de Acto y Condición Subestándar</h2>
+    </div>
+</div>
+<form autocomplete="off">
+    <div class="container-fluid">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-6 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-4 mt-3">
+                        <label asp-for="IdGerencia"></label>
+                    </div>
+                    <div class="col-lg-8 mt-3">
+                        <select class="form-control" asp-for="IdGerencia" asp-items="@ViewBag.ItemsGerencia"></select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-4 mt-1">
+                        <label asp-for="IdEmpresa"></label>
+                    </div>
+                    <div class="col-lg-8 mt-1">
+                        <select class="form-control" asp-for="IdEmpresa" asp-items="@ViewBag.ItemsEmpresa"></select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-4 mt-1">
+                        <label asp-for="IdUsuario"></label>
+                    </div>
+                    <div class="col-lg-8 mt-1">
+                        <select class="form-control" asp-for="IdUsuario" asp-items="@ViewBag.ItemsUsuario"></select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Contador de reportes por estado-->
+<div class="row mb-2">
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-pendiente shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Registrado')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes de Implementación</div>
+                        @*<div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[0].Valor</div>*@
+                        <div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-implementado shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Implementado')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Pendientes de Verificación</div>
+                        <div id="ObsImplementado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-aprobado shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Aprobado')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
+                        <div id="ObsAprobado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-rechazado shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Rechazado')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
+                        <div id="ObsRechazado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-vencido shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Vencido')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
+                        <div id="ObsVencido" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-total shadow h-100">
+            <div class="card-body click-option" onclick="ObsDetalleEstado('Ampliado')">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
+                        <div id="ObsAmpliado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Contador de reportes por fecha-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Reportes de Acto y Condición Subestándar entre Fechas</h6>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <div class="chartjs-size-monitor">
+                    <div class="chartjs-size-monitor-expand">
+                        <div class="">
+                            </div>
+                        </div>
+                    <div class="chartjs-size-monitor-shrink">
+                        <div class="">
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="chart_rac_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+            <div class="card-header">
+                <div class="d-flex justify-content-between bd-highlight mb-3">
+                    <div class="p-2 bd-highlight text-center">
+                        <label>Fecha de Inicio:</label>
+                        <input id="fInicio" type="date" class="form-control" />
+                    </div>
+                    <div class="p-2 bd-highlight text-center"><button class="btn btn-primary" onclick="ActualizarContadorRxFecha()">Actualizar Tabla</button></div>
+                    <div class="p-2 bd-highlight text-center">
+                        <label>Fecha de Fin:</label>
+                        <input id="fFin" type="date" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        var gerencia = $("#IdGerencia").val();
+        var empresa = $("#IdEmpresa").val();
+        var usuario = $("#IdUsuario").val();
+
+        //Variables gráfico RAC Fecha
+        var data_rac_fechas = [];
+        var graph_rac_fechas;
+
+        $(document).ready(function () {
+            Filtrar();
+        });
+
+        function Filtrar() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/Filtrar",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    //Actualizar contador
+                    var nObs = response.nObservaciones;
+                    ActualizarContadorRxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor);
+                    //Actualizar gráfico de rac de fechas
+                    $("#fInicio").val(response.fInicio);
+                    $("#fFin").val(response.fFin);
+                    ActualizarContadorRxFecha();
+                }
+            });
+        }
+        //Para Contador de reportes por estado
+        function ActualizarContadorRxE(reg, imp, apr, rec, ven, amp) {
+            //Reiniciar valores
+            $("#ObsRegistrado").html(0);
+            $("#ObsImplementado").html(0);
+            $("#ObsAprobado").html(0);
+            $("#ObsRechazado").html(0);
+            $("#ObsVencido").html(0);
+            $("#ObsAmpliado").html(0);
+            //Nuevo valores
+            $("#ObsRegistrado").html(reg);
+            $("#ObsImplementado").html(imp);
+            $("#ObsAprobado").html(apr);
+            $("#ObsRechazado").html(rec);
+            $("#ObsVencido").html(ven);
+            $("#ObsAmpliado").html(amp);
+        }
+        //Para gráfico RAC Fecha
+        function ActualizarContadorRxFecha() {
+            var fechaInicio = $("#fInicio").val();
+            var fechaFin = $("#fFin").val();
+
+            if (fechaInicio < fechaFin) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ReportesRAC/GetNReportesEntreFechas",
+                    data: {
+                        "IdGerencia": $("#IdGerencia").val(),
+                        "IdEmpresa": $("#IdEmpresa").val(),
+                        "IdUsuario": $("#IdUsuario").val(),
+                        "FechaInicio": fechaInicio,
+                        "FechaFin": fechaFin
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (data_rac_fechas.length > 0) {
+                            //Actualizar contador
+                            data_rac_fechas = response.nReportesEntreFechas;
+
+                            var labels = [];
+                            var data = [];
+                            for (var i = 0; i < data_rac_fechas.length; i++) {
+                                labels.push(data_rac_fechas[i].nombre);
+                                data.push(data_rac_fechas[i].valor);
+                            }
+                            //Actualizar gráfica
+                            graph_rac_fechas.data.labels = labels;
+                            graph_rac_fechas.data.datasets[0].data = data;
+                            graph_rac_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                            graph_rac_fechas.update();
+                        } else {
+                            //Actualizar contador
+                            data_rac_fechas = response.nReportesEntreFechas;
+
+                            var labels = [];
+                            var data = [];
+                            for (var i = 0; i < data_rac_fechas.length; i++) {
+                                labels.push(data_rac_fechas[i].nombre);
+                                data.push(data_rac_fechas[i].valor);
+                            }
+                            //Crear gráfica
+                            CrearGraficaContardorRxFecha(labels, data,Math.max(data)/10);
+                        }                        
+                    }
+                });
+            } else {
+                alert("La fecha de fin debe se mayor a la fecha de inicio");
+            }
+        }
+        function CrearGraficaContardorRxFecha(labels, data,stepSize) {
+            graph_rac_fechas = new Chart(
+            document.getElementById("chart_rac_fechas"),
+            {
+                "type": "bar",
+                "data": {
+                    "labels": labels,
+                    "datasets": [{
+                        "label": "# Inspecciones Registradas",
+                        "data": data,
+                        "fill": false,
+                        "backgroundColor":"rgb(46, 103, 147)",
+                        "borderColor": "rgb(46, 103, 147)",
+                        "lineTension": 0.1
+                    }]
+                },
+                "options": {
+                    "scales": {
+                        'yAxes': [{
+                            'ticks': {
+                                'stepSize':stepSize
+                            }
+                        }]
+                    },
+                    "legend": {
+                        "labels": {
+                            // This more specific font property overrides the global property
+                            fontColor: 'black'
+                        }
+                    },
+                    "plugins": {
+                        datalabels: {
+                            color: 'white',
+                            defaultFontSize: 15
+                        }
+                    }
+                }
+            });
+        }
+
+    </script>
+}

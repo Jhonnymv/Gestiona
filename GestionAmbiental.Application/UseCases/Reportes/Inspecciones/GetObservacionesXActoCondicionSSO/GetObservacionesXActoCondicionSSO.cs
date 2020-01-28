@@ -10,9 +10,9 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
 {
     public class GetObservacionesXActoCondicionSSO : IGetObservacionesXActoCondicionSSO
     {
-        private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
+        private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesReadOnlyRepository;
 
-        public GetObservacionesXActoCondicionSSO(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        public GetObservacionesXActoCondicionSSO(IGetReportesInspeccionesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }

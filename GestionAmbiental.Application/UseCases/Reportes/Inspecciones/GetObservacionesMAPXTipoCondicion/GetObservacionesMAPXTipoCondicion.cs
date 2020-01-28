@@ -9,9 +9,9 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
 {
     public class GetObservacionesMAPXTipoCondicion : IGetObservacionesMAPXTipoCondicion
     {
-        private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
+        private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesReadOnlyRepository;
 
-        public GetObservacionesMAPXTipoCondicion(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        public GetObservacionesMAPXTipoCondicion(IGetReportesInspeccionesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }

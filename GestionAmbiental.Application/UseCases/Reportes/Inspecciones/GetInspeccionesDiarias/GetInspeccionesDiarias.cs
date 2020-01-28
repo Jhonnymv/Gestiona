@@ -9,9 +9,9 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspecc
 {
     public class GetInspeccionesDiarias : IGetInspeccionesDiarias
     {
-        private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
+        private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesReadOnlyRepository;
 
-        public GetInspeccionesDiarias(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        public GetInspeccionesDiarias(IGetReportesInspeccionesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }

@@ -9,8 +9,8 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetResumen
 {
     public class GetResumenObservacionesXUsuario : IGetResumenObservacionesXUsuario
     {
-        private readonly IGetReportesReadOnlyRepository _getReportesReadOnlyRepository;
-        public GetResumenObservacionesXUsuario(IGetReportesReadOnlyRepository getReportesReadOnlyRepository)
+        private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesReadOnlyRepository;
+        public GetResumenObservacionesXUsuario(IGetReportesInspeccionesReadOnlyRepository getReportesReadOnlyRepository)
         {
             _getReportesReadOnlyRepository = getReportesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesReadOnlyRepository));
         }

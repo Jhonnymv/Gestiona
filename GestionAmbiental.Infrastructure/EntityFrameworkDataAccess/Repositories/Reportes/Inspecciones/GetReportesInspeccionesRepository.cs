@@ -8,13 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Reportes
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Reportes.Inspecciones
 {
-    public class GetReportesRepository : IGetReportesReadOnlyRepository
+    public class GetReportesInspeccionesRepository : IGetReportesInspeccionesReadOnlyRepository
     {
         private Context _context;
 
-        public GetReportesRepository(Context context)
+        public GetReportesInspeccionesRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
@@ -42,13 +42,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var usuarios = await _context.Usuarios.ToListAsync();
 
             var output = new List<Dimension>();
-            foreach(var item in usuarios) {
+            foreach (var item in usuarios)
+            {
                 var nObservaciones = observaciones.Where(x => x.Id_Responsable_Marcobre.Equals(item.Id_Usuario)).Count();
-                if(nObservaciones >0)
+                if (nObservaciones > 0)
                     output.Add(new Dimension(item.Nombres + " " + item.Apellidos, nObservaciones));
             }
             return output;
         }
+        //
         public async Task<List<Dimension>> GetObservacionesXEstado()
         {
             var cabeceras_registradas = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).ToListAsync();
@@ -71,10 +73,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
 
-            foreach(var usuario in usuarios)
+            foreach (var usuario in usuarios)
             {
                 var detalle = new ObservacionesUsuario();
-                detalle.usuario = new Domain.ValueObjects.Usuario(usuario.Id_Usuario,usuario.Id_Rol,usuario.Nombres,usuario.Apellidos,usuario.Email);
+                detalle.usuario = new Domain.ValueObjects.Usuario(usuario.Id_Usuario, usuario.Id_Rol, usuario.Nombres, usuario.Apellidos, usuario.Email);
                 detalle.pendientes = observaciones.Where(x => x.Id_Responsable_Marcobre.Equals(usuario.Id_Usuario) && x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).Count();
                 detalle.implementadas = observaciones.Where(x => x.Id_Responsable_Marcobre.Equals(usuario.Id_Usuario) && x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).Count();
                 detalle.aprobadas = observaciones.Where(x => x.Id_Responsable_Marcobre.Equals(usuario.Id_Usuario) && x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).Count();
@@ -100,15 +102,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var list_inspecciones = new List<Dimension>();
             for (int i = ndias; i >= 0; i--)
             {
-                list_dias.Add(new Dimension(DateTime.Now.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0,i));
+                list_dias.Add(new Dimension(DateTime.Now.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0, i));
             }
-            foreach(var item in inspecciones_diarias)
+            foreach (var item in inspecciones_diarias)
             {
-                list_inspecciones.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0,6), item.Count(),(int)(DateTime.Now-item.Key).TotalDays));
+                list_inspecciones.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Count(), (int)(DateTime.Now - item.Key).TotalDays));
             }
-            var distinct = list_dias.Where(x => !list_inspecciones.Select(y=>y.Nombre).ToList().Contains(x.Nombre)).ToList();
+            var distinct = list_dias.Where(x => !list_inspecciones.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
 
-            output = distinct.Union(list_inspecciones).Where(x=>x.Index>=0).OrderByDescending(x => x.Index).ToList();
+            output = distinct.Union(list_inspecciones).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
 
             //var union = distinct.Union(output).OrderBy(x=>x.Nombre).ToList();
             return output;
@@ -116,12 +118,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Dimension>> GetObservacionesNivelRiesgoMAP()
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
-            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x => 
+            var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
-            &&  observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
-                .Select(x=>x.Id_Inspeccion_Cabecera)
+            && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
-            var map = observaciones.Where(x=>id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo).ToList();
+            var map = observaciones.Where(x => id_inspecciones.Contains(x.Id_Inspeccion_Cabecera)).GroupBy(x => x.Nivel_Riesgo).ToList();
 
             var output = new List<Dimension>();
             if (map.Count == 3)
@@ -143,7 +145,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     switch (item.Key)
                     {
-                        case "Tolerable": output.FirstOrDefault(x=>x.Nombre.Equals("Tolerable")).Valor=item.Count(); break;
+                        case "Tolerable": output.FirstOrDefault(x => x.Nombre.Equals("Tolerable")).Valor = item.Count(); break;
                         case "Alerta": output.FirstOrDefault(x => x.Nombre.Equals("Alerta")).Valor = item.Count(); break;
                         case "No Aceptable": output.FirstOrDefault(x => x.Nombre.Equals("No Aceptable")).Valor = item.Count(); break;
                     }
@@ -266,8 +268,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var output = new List<DetalleObservacionXEstado>();
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Estado.Equals(estado.ToString())).ToListAsync();
-            var inspecciones = await _context.Inspecciones_Cabecera.Where(x => 
-            observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) 
+            var inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
+            observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)
             && x.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
                 .ToListAsync();
             observaciones = observaciones.Where(x => inspecciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
@@ -315,7 +317,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //tolerables
             if (agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")) != null)
                 foreach (var item in agrupado.FirstOrDefault(x => x.Key.Equals("Tolerable")).GroupBy(y => y.Id_Tipo_Condicion))
-                {                    
+                {
                     tolerables.Add(new Dimension(tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Key)).Descripcion, item.Count()));
                 }
             //alerta

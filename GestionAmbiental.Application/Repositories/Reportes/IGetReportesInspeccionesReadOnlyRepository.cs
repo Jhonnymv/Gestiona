@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GestionAmbiental.Application.Repositories.Reportes
 {
-    public interface IGetReportesReadOnlyRepository
+    public interface IGetReportesInspeccionesReadOnlyRepository
     {
         Task<Dimension> GetObservacionesMAP();
         Task<Dimension> GetObservacionesSSO();

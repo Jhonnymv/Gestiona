@@ -8,9 +8,9 @@ namespace GestionAmbiental.Domain.Enum
     {
         Registrado = 1,
         Implementado = 2,
-        Vencido = 3,
-        Ampliado = 4,
-        Aprobado = 5,
-        Rechazado = 6
+        Aprobado = 3,
+        Rechazado = 4,
+        Vencido = 5,
+        Ampliado = 6,
     }
 }

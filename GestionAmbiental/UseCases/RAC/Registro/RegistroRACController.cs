@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.RAC.Registro;
+using GestionAmbiental.Application.UseCases.RAC.Registro.AmpliarFechaRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
@@ -33,6 +34,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IRegistrarRAC _registrarRAC;
         private readonly IConsultarRAC _consultarRAC;
         private readonly IGetUsuario _getUsuario;
+        private readonly IAmpliarFechaRAC _ampliarFechaRAC;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
@@ -42,6 +44,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             ISelectItems selectItems,
             IRegistrarRAC registrarRAC,
             IGetUsuario getUsuario,
+            IAmpliarFechaRAC ampliarFechaRAC,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -51,6 +54,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _selectItems = selectItems;
             _registrarRAC = registrarRAC;
             _getUsuario = getUsuario;
+            _ampliarFechaRAC = ampliarFechaRAC;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -277,10 +281,19 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Responsable_Cierre = reporte.Responsable_Cierre,
                     Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
                     Supervisor = reporte.Supervisor,
-                    Evidencia_Obs = reporte.Evidencia_Obs
+                    Evidencia_Obs = reporte.Evidencia_Obs,
+                    Estado = reporte.Estado                   
                 };
                 return View(model);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AmpliarFecha(string idRAC, string fecha)
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            var IdDescencriptado = Int32.Parse(_protector.Unprotect(idRAC));
+            await _ampliarFechaRAC.Execute(IdDescencriptado, fecha, userInfo.NombreUsuario);
+            return RedirectToAction("DetalleRAC", new { IdRAC = idRAC });
         }
         private string CreateUniqueFileName(int nFile)
         {
