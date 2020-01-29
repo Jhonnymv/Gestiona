@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Reportes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,6 +38,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoCond
                 {
                     temp.Add(new DimensionOutput(subitem));
                 }
+                temp = temp.OrderBy(x => x.Nombre).ToList();
                 output.Add(temp);
             }
             return output;

@@ -171,7 +171,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Reportes de Acto y Condición Subestándar MA por Nivel de Riesgo</h6>
-                        <div class="chart-area click-option" onclick="ObservacionsMAPXTipoCondicion()">
+                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoMA_NR_Tipo()">
                             <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_MA_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
@@ -200,7 +200,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Reportes de Acto y Condición Subestándar SSO por Nivel de Riesgo</h6>
-                        <div class="chart-area click-option" onclick="ObservacionsSSOXTipoCondicion()">
+                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoSSO_NR_Tipo()">
                             <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
@@ -218,8 +218,118 @@
         </div>
     </div>
 </div>
+<!-- Modal Detalles MAP-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Reportes MA según Nivel de Riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel de Riesgo Tolerable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Tolerable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición del Nivel del Riesgo Alerta</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Alerta" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel del Riesgo No Aceptable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_No_Aceptable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Detalles SSO-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de observaciones SSO según Nivel de Riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Bajo</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Bajo" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Medio</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Medio" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Alto</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Alto" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
-@*Script de la página*@
+    @*Script de la página*@
     <script type="text/javascript">
         var gerencia = $("#IdGerencia").val();
         var empresa = $("#IdEmpresa").val();
@@ -245,7 +355,8 @@
 
         $(document).ready(function () {
             Filtrar();
-            ActualizarDatosGraficoMA_NR_Tipo();
+            //ActualizarDatosGraficoMA_NR_Tipo();
+            //ActualizarDatosGraficoSSO_NR_Tipo();
         });
 
         function Filtrar() {
@@ -559,7 +670,6 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    console.log(response);
                     if (data_rac_ma_c.length > 0) {
                         //Actualizar contador
                         data_rac_ma_c = response.c_MA;
@@ -638,8 +748,6 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    console.log(response
-                    );
                     if (data_rac_sso_c.length > 0) {
                         //Actualizar contador
                         data_rac_sso_c = response.c_SSO;
@@ -705,8 +813,18 @@
             );
         }
     </script>
-@*Script del modal tipo condición x nivel de riesgo*@
+    @*Script del modal tipo condición x nivel de riesgo*@
     <script type="text/javascript">
+        var data_ma_nr_tipo = [];
+        var graph_ma_tol_tipo;
+        var graph_ma_ale_tipo;
+        var graph_ma_noa_tipo;
+
+        var data_sso_nr_tipo = [];
+        var graph_sso_baj_tipo;
+        var graph_sso_med_tipo;
+        var graph_sso_alt_tipo;
+
         function ActualizarDatosGraficoMA_NR_Tipo() {
             $.ajax({
                 type: "POST",
@@ -720,9 +838,411 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    console.log(response);
+                    //0: Tolerable
+                    //1: Alerta
+                    //2: No aceptable
+                    console.log(response.nR_TC_MA)
+                    if (data_ma_nr_tipo.length > 0) {
+                        //Actualizar contador
+                        data_ma_nr_tipo = response.nR_TC_MA;
+
+                        var labels = [];
+                        var data = [];
+                        //Tolerable
+                        for (var i = 0; i < data_ma_nr_tipo[0].length; i++) {
+                            labels.push(data_ma_nr_tipo[0][i].nombre);
+                            data.push(data_ma_nr_tipo[0][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_ma_tol_tipo.data.labels = labels;
+                        graph_ma_tol_tipo.data.datasets[0].data = data;
+                        graph_ma_tol_tipo.update();
+                        labels = [];
+                        data = [];
+                        //Alerta
+                        for (var i = 0; i < data_ma_nr_tipo[1].length; i++) {
+                            labels.push(data_ma_nr_tipo[1][i].nombre);
+                            data.push(data_ma_nr_tipo[1][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_ma_ale_tipo.data.labels = labels;
+                        graph_ma_ale_tipo.data.datasets[0].data = data;
+                        graph_ma_ale_tipo.update();
+                        labels = [];
+                        data = [];
+                        //No aceptable
+                        for (var i = 0; i < data_ma_nr_tipo[2].length; i++) {
+                            labels.push(data_ma_nr_tipo[2][i].nombre);
+                            data.push(data_ma_nr_tipo[2][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_ma_noa_tipo.data.labels = labels;
+                        graph_ma_noa_tipo.data.datasets[0].data = data;
+                        graph_ma_noa_tipo.update();
+                    }
+                    else {
+                        //Actualizar contador
+                        data_ma_nr_tipo = response.nR_TC_MA;
+
+                        var labels = [];
+                        var data = [];
+                        //Tolerable
+                        for (var i = 0; i < data_ma_nr_tipo[0].length; i++) {
+                            labels.push(data_ma_nr_tipo[0][i].nombre);
+                            data.push(data_ma_nr_tipo[0][i].valor);
+                        }
+                        console.log("labels tolerable: ")
+                        console.log(labels)
+                        console.log("data tolerable: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoMA_Tolerable_Tipo(labels, data);
+                        labels = [];
+                        data = [];
+
+                        //Alerta
+                        for (var i = 0; i < data_ma_nr_tipo[1].length; i++) {
+                            labels.push(data_ma_nr_tipo[1][i].nombre);
+                            data.push(data_ma_nr_tipo[1][i].valor);
+                        }
+                        console.log("labels alerta: ")
+                        console.log(labels)
+                        console.log("data alerta: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoMA_Alerta_Tipo(labels, data);
+                        labels = [];
+                        data = [];
+                        //No aceptable
+                        for (var i = 0; i < data_ma_nr_tipo[2].length; i++) {
+                            labels.push(data_ma_nr_tipo[2][i].nombre);
+                            data.push(data_ma_nr_tipo[2][i].valor);
+                        }
+                        console.log("labels no aceptable: ")
+                        console.log(labels)
+                        console.log("data no aceptable: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoMA_No_Aceptable_Tipo(labels, data);
+                    }
+                    $("#Modal_Nivel_Riesgo_MAP").modal('show');
                 }
             });
+        }
+
+        function CrearGraficoMA_Tolerable_Tipo(labels, data) {
+            graph_ma_tol_tipo = new Chart(document.getElementById('chart_MAP_Nivel_Riesgo_Tolerable'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+
+        function CrearGraficoMA_Alerta_Tipo(labels, data) {
+            graph_ma_ale_tipo = new Chart(document.getElementById('chart_MAP_Nivel_Riesgo_Alerta'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+
+        function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
+            graph_ma_noa_tipo = new Chart(document.getElementById('chart_MAP_Nivel_Riesgo_No_Aceptable'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+
+        function ActualizarDatosGraficoSSO_NR_Tipo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesRAC/GetReportesTipoCondicionxNivelRiesgoSSO",
+                data: {
+                    "IdGerencia": $("#IdGerencia").val(),
+                    "IdEmpresa": $("#IdEmpresa").val(),
+                    "IdUsuario": $("#IdUsuario").val(),
+                    "FechaInicio": fechaInicio,
+                    "FechaFin": fechaFin
+                },
+                traditional: true,
+                success: (response) => {
+                    //0: Bajo
+                    //1: Medio
+                    //2: Alto
+                    console.log(response.nR_TC_SSO)
+                    if (data_sso_nr_tipo.length > 0) {
+                        //Actualizar contador
+                        data_sso_nr_tipo = response.nR_TC_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        //Bajo
+                        for (var i = 0; i < data_sso_nr_tipo[0].length; i++) {
+                            labels.push(data_sso_nr_tipo[0][i].nombre);
+                            data.push(data_sso_nr_tipo[0][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_sso_baj_tipo.data.labels = labels;
+                        graph_sso_baj_tipo.data.datasets[0].data = data;
+                        graph_sso_baj_tipo.update();
+                        labels = [];
+                        data = [];
+                        //Medio
+                        for (var i = 0; i < data_sso_nr_tipo[1].length; i++) {
+                            labels.push(data_sso_nr_tipo[1][i].nombre);
+                            data.push(data_sso_nr_tipo[1][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_sso_med_tipo.data.labels = labels;
+                        graph_sso_med_tipo.data.datasets[0].data = data;
+                        graph_sso_med_tipo.update();
+                        labels = [];
+                        data = [];
+                        //Alto
+                        for (var i = 0; i < data_sso_nr_tipo[2].length; i++) {
+                            labels.push(data_sso_nr_tipo[2][i].nombre);
+                            data.push(data_sso_nr_tipo[2][i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_sso_alt_tipo.data.labels = labels;
+                        graph_sso_alt_tipo.data.datasets[0].data = data;
+                        graph_sso_alt_tipo.update();
+                    }
+                    else {
+                        //Actualizar contador
+                        data_sso_nr_tipo = response.nR_TC_SSO;
+
+                        var labels = [];
+                        var data = [];
+                        //Bajo
+                        for (var i = 0; i < data_sso_nr_tipo[0].length; i++) {
+                            labels.push(data_sso_nr_tipo[0][i].nombre);
+                            data.push(data_sso_nr_tipo[0][i].valor);
+                        }
+                        console.log("labels tolerable: ")
+                        console.log(labels)
+                        console.log("data tolerable: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoSSO_Bajo_Tipo(labels, data);
+                        labels = [];
+                        data = [];
+
+                        //Medio
+                        for (var i = 0; i < data_sso_nr_tipo[1].length; i++) {
+                            labels.push(data_sso_nr_tipo[1][i].nombre);
+                            data.push(data_sso_nr_tipo[1][i].valor);
+                        }
+                        console.log("labels alerta: ")
+                        console.log(labels)
+                        console.log("data alerta: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoSSO_Medio_Tipo(labels, data);
+                        labels = [];
+                        data = [];
+                        //Alto
+                        for (var i = 0; i < data_sso_nr_tipo[2].length; i++) {
+                            labels.push(data_sso_nr_tipo[2][i].nombre);
+                            data.push(data_sso_nr_tipo[2][i].valor);
+                        }
+                        console.log("labels no aceptable: ")
+                        console.log(labels)
+                        console.log("data no aceptable: ")
+                        console.log(data)
+                        //Crear gráfica
+                        CrearGraficoSSO_Alto_Tipo(labels, data);
+                    }
+                    $("#Modal_Nivel_Riesgo_SSO").modal('show');
+                }
+            });
+        }
+
+        function CrearGraficoSSO_Bajo_Tipo(labels, data) {
+            graph_sso_baj_tipo = new Chart(document.getElementById('chart_SSO_Nivel_Riesgo_Bajo'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+
+        function CrearGraficoSSO_Medio_Tipo(labels, data) {
+            graph_sso_med_tipo = new Chart(document.getElementById('chart_SSO_Nivel_Riesgo_Medio'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
+        }
+
+        function CrearGraficoSSO_Alto_Tipo(labels, data) {
+            graph_sso_alt_tipo = new Chart(document.getElementById('chart_SSO_Nivel_Riesgo_Alto'),
+                {
+                    "type": "horizontalBar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "#Reportes de Acto y Condición Subestándar",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                            "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                            "borderWidth": 1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            "xAxes": [{
+                                "ticks": {
+                                    "beginAtZero": true,
+                                    "stepSize": 1
+                                }
+                            }]
+                        },
+                        "plugins": {
+                            "datalabels": {
+                                "anchor": "center",
+                                "color": "black",
+                                "defaultFontSize": 15
+                            }
+                        }
+                    }
+                });
         }
     </script>
 }

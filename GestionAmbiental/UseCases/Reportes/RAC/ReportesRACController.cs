@@ -8,6 +8,7 @@ using GestionAmbiental.Application.UseCases.Reportes.RAC.GetObservacionesXEstado
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesNivelRiesgoMA;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesNivelRiesgoSSO;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoCondicionxNivelRiesgoMA;
+using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoCondicionxNivelRiesgoSSO;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoInspeccionMA;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesTipoInspeccionSSO;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         private readonly IGetReportesClasificacionMA _getReportesClasificacionMA;
         private readonly IGetReportesClasificacionSSO _getReportesClasificacionSSO;
         private readonly IGetReportesTipoCondicionxNivelRiesgoMA _getReportesTipoCondicionxNivelRiesgoMA;
+        private readonly IGetReportesTipoCondicionxNivelRiesgoSSO _getReportesTipoCondicionxNivelRiesgoSSO;
         public ReportesRACController(
             IGetObservacionesXEstado getObservacionesXEstado, 
             IGetItemsFiltroResumen getItemsFiltroResumen,
@@ -33,7 +35,8 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
             IGetReportesNivelRiesgoSSO getReportesNivelRiesgoSSO,
             IGetReportesClasificacionMA getReportesClasificacionMA,
             IGetReportesClasificacionSSO getReportesClasificacionSSO,
-            IGetReportesTipoCondicionxNivelRiesgoMA getReportesTipoCondicionxNivelRiesgoMA
+            IGetReportesTipoCondicionxNivelRiesgoMA getReportesTipoCondicionxNivelRiesgoMA,
+            IGetReportesTipoCondicionxNivelRiesgoSSO getReportesTipoCondicionxNivelRiesgoSSO
             )
         {
             _getObservacionesXEstado = getObservacionesXEstado;
@@ -44,6 +47,7 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
             _getReportesClasificacionMA = getReportesClasificacionMA;
             _getReportesClasificacionSSO = getReportesClasificacionSSO;
             _getReportesTipoCondicionxNivelRiesgoMA = getReportesTipoCondicionxNivelRiesgoMA;
+            _getReportesTipoCondicionxNivelRiesgoSSO = getReportesTipoCondicionxNivelRiesgoSSO;
         }
 
         public async Task<IActionResult> Resumen()
@@ -133,8 +137,21 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         }
         public async Task<IActionResult> GetReportesTipoCondicionxNivelRiesgoMA(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
         {
-            var data = await _getReportesTipoCondicionxNivelRiesgoMA.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
-            return Ok();
+            var nReportesMA_TipoCondicion = await _getReportesTipoCondicionxNivelRiesgoMA.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                NR_TC_MA = nReportesMA_TipoCondicion
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> GetReportesTipoCondicionxNivelRiesgoSSO(int IdGerencia, int IdEmpresa, int IdUsuario, string FechaInicio, string FechaFin)
+        {
+            var nReportesSSO_TipoCondicion = await _getReportesTipoCondicionxNivelRiesgoSSO.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
+            dynamic response = new
+            {
+                NR_TC_SSO = nReportesSSO_TipoCondicion
+            };
+            return Ok(response);
         }
     }
 }

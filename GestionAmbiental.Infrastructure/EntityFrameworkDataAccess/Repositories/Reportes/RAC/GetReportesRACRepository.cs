@@ -193,6 +193,63 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var reportes = await _context.RACs
                 .Where(x =>
+                x.SSO_MA.Equals("MA") &&
+                x.Id_Gerencia.Equals(IdGerencia > 0 ? IdGerencia : x.Id_Gerencia) &&
+                x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
+                x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
+                x.Fecha >= FechaInicio &&
+                x.Fecha < FechaFin)
+                .GroupBy(y => y.NivelRiesgo)
+                .ToListAsync();
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var output = new List<List<Dimension>>();
+            var list_no_aceptable = new List<Dimension>();
+            var list_alerta = new List<Dimension>();
+            var list_tolerable = new List<Dimension>();
+
+            foreach (var item in reportes)
+            {
+                switch (item.Key)
+                {
+                    case "Tolerable":
+                        var tipos_tolerable = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_tolerable)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_tolerable.Add(new Dimension { Nombre = tipo_condicion.Descripcion,Valor= subitem.Count()});
+                        }
+                        break;
+                    case "Alerta":
+                        var tipos_alerta = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_alerta)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_alerta.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "No Aceptable":
+                        var tipos_no_aceptable = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_no_aceptable)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_no_aceptable.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                }
+            }
+            
+            output.Add(list_tolerable);
+            output.Add(list_alerta);
+            output.Add(list_no_aceptable);
+
+            return output;
+        }
+        public async Task<List<List<Dimension>>> GetReportesTipoCondicionxNivelRiesgoSSO(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin)
+        {
+            var reportes = await _context.RACs
+                .Where(x =>
                 x.SSO_MA.Equals("SSO") &&
                 x.Id_Gerencia.Equals(IdGerencia > 0 ? IdGerencia : x.Id_Gerencia) &&
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
@@ -201,13 +258,49 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha < FechaFin)
                 .GroupBy(y => y.NivelRiesgo)
                 .ToListAsync();
-            
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
             var output = new List<List<Dimension>>();
-            foreach(var item in reportes)
+            var list_alto = new List<Dimension>();
+            var list_medio = new List<Dimension>();
+            var list_bajo = new List<Dimension>();
+
+            foreach (var item in reportes)
             {
-                item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                switch (item.Key)
+                {
+                    case "Alto":
+                        var tipos_alto = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_alto)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_alto.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "Medio":
+                        var tipos_medio = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_medio)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_medio.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "Bajo":
+                        var tipos_bajo = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_bajo)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_bajo.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                }
             }
             
+            output.Add(list_bajo);
+            output.Add(list_medio);
+            output.Add(list_alto);
+
             return output;
         }
     }

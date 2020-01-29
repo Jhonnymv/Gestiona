@@ -151,6 +151,9 @@ td {
 .modal-xl {
     max-width: 95%;
 }
+.modal-lg{
+    max-width: 75% !important;
+}
 
 .thead-mcolor {
     background-color: #2e6793;
