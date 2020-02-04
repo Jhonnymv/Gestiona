@@ -184,7 +184,7 @@
                 <label asp-for="Comentario_Verificacion"></label>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString())&&ViewBag.Permiso)
+                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()) && ViewBag.Permiso)
                 {
                     <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250"></textarea>
                 }
@@ -202,7 +202,7 @@
             {
                 <div class="alert alert-success" role="alert" style="text-align:center;">Cerrado</div>
             }
-            else if(Model.Estado.Equals(EstadosRAC.Rechazado.ToString()))
+            else if (Model.Estado.Equals(EstadosRAC.Rechazado.ToString()))
             {
                 <div class="alert alert-danger" role="alert" style="text-align:center;">Pendiente de Implementación</div>
             }
@@ -211,7 +211,7 @@
     <div class="modal-footer">
         <a class="btn btn-secondary" style="color:white" asp-controller="VerificacionRAC" asp-action="Resumen">Cancelar</a>
         <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
-        @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString())&&ViewBag.Permiso)
+        @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()) && ViewBag.Permiso)
         {
             <button type="button" class="btn btn-danger" onclick="rechazar()">Rechazar</button>
             <button type="button" class="btn btn-success" onclick="aprobar()">Aprobar</button>
@@ -219,7 +219,23 @@
     </div>
 
 </div>
-
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                    <br />
+                    <label>Notificando a Responsables</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -238,7 +254,8 @@
             if ($("#Comentario_Verificacion").val() == "") {
                 alert("Debe ingresar un comentario antes de rechazar");
                 return false;
-            }            
+            }
+            $("#Modal_Enviando_Correo").modal('show')
             $("#Opcion").val("Rechazar");
             $("#form_verificarRAC").submit();
         }

@@ -15,9 +15,21 @@ namespace GestionAmbiental.Application.UseCases.Reportes.RAC.GetObservacionesXEs
             _getReportesRACReadOnlyRepository = getReportesRACReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesRACReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int IdGerencia, int IdEmpresa, int IdUsuario)
+        public async Task<List<DimensionOutput>> Execute(int IdGerencia, int IdEmpresa, int IdUsuario,string FechaInicio, string FechaFin)
         {
-            var data = await _getReportesRACReadOnlyRepository.GetObservacionesXEstado(IdGerencia,IdEmpresa,IdUsuario);
+            //Dar formato a fechas
+            DateTime fInicio, fFinal;
+            if (FechaInicio != null)
+                fInicio = Convert.ToDateTime(FechaInicio);
+            else
+                fInicio = DateTime.MinValue;
+
+            if (FechaFin != null)
+                fFinal = Convert.ToDateTime(FechaFin + " 23:59:59");
+            else
+                fFinal = DateTime.MaxValue;
+            //Obtener valores
+            var data = await _getReportesRACReadOnlyRepository.GetObservacionesXEstado(IdGerencia,IdEmpresa,IdUsuario,fInicio,fFinal);
             var output = new List<DimensionOutput>();
             foreach (var item in data)
             {

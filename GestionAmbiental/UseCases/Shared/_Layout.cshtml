@@ -29,10 +29,9 @@
             </button>
             <div class="navbar-collapse collapse d-md-inline-flex flex-md-row-reverse justify-content-start">
                 <ul class="navbar-nav">
-                    <li class="nav-item dropdown dropleft"><a class="dropdown-item" asp-controller="ReportesRAC" asp-action="Resumen">Reportes RAC</a></li>
                     @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
                     {
-                        <li class="nav-item dropdown dropleft">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
                                 <a class="dropdown-item" asp-controller="Inspecciones" asp-action="Resumen">Inspecciones</a>
@@ -44,34 +43,27 @@
                                 }
                             </div>
                         </li>
-                        <li class="nav-item dropdown dropleft">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes de Acto y Condición Subestándar</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                                <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a> 
+                                <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a>
+                                <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Reportes Pendientes de Implementación</a>
                                 @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
                                 {
-                                    <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Reportes Pendientes de Implementación</a>
                                     <a class="dropdown-item" asp-controller="VerificacionRAC" asp-action="Resumen">Reportes Pendientes de Verificación</a>
-                                 }
-                                </div>
+                                    <a class="dropdown-item" asp-controller="ReportesRAC" asp-action="Resumen">Reportes RAC</a>
+                                }
+                            </div>
                         </li>
                     }
                     @if (ViewBag.Rol == "Admin")
                     {
-                        <li class="nav-item dropdown dropleft">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_tablas_maestras" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_tablas_maestras">
                                 <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
                                 <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Inspección</a>
                                 <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown dropleft">
-                            <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes de Acto y Condición Subestándar</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                                <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a>
-                                <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Reportes Pendientes de Implementación</a>
-                                <a class="dropdown-item" asp-controller="VerificacionRAC" asp-action="Resumen">Reportes Pendientes de Verificación</a>
                             </div>
                         </li>
 

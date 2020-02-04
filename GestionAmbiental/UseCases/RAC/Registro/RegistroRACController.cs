@@ -98,8 +98,6 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+IdEncriptado+"\">" + fila.Codigo + "</a></label></td>";
-                    filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
-                    filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Obs + "</td>";
                     filasTabla += "<td>" + fila.SSO_MA + "</td>";
@@ -116,6 +114,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     }
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
                     filasTabla += "</tr>";
                 }
 
@@ -185,7 +184,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Gerencias = gerencias;
                 ViewBag.Empresas = empresas;
                 ViewBag.Usuarios = usuarios;
-                ViewBag.AsesoresMAP = asesoresMAP;
+                ViewBag.AsesoresMA = asesoresMAP;
                 ViewBag.AsesoresSSO = asesoresSSO;
 
                 ViewBag.NombreUsuario = usuario.Nombres + " " + usuario.Apellidos;

@@ -1,6 +1,8 @@
 ﻿using GestionAmbiental.Application.Repositories.Reportes;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.RAC;
 using GestionAmbiental.Domain.Reportes;
+using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,13 +19,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-        public async Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario)
+        public async Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin)
         {
             var reportes = await _context.RACs
                 .Where(x=>
                 x.Id_Gerencia.Equals(IdGerencia>0?IdGerencia:x.Id_Gerencia)&&
                 x.Id_Empresa.Equals(IdEmpresa>0?IdEmpresa:x.Id_Empresa)&&
-                x.Id_Responsable_Cierre.Equals(IdUsuario>0?IdUsuario:x.Id_Responsable_Cierre))
+                x.Id_Responsable_Cierre.Equals(IdUsuario>0?IdUsuario:x.Id_Responsable_Cierre) &&
+                x.Fecha >= FechaInicio &&
+                x.Fecha <= FechaFin)
                 .ToListAsync();
 
             var output = new List<Dimension>();
@@ -35,6 +39,71 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<List<Domain.RAC.RAC>> GetDetalleReportesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin, EstadosRAC estado)
+        {
+            var output = new List<Domain.RAC.RAC>();
+            var reportes = await _context.RACs
+                .Where(x =>
+                x.Id_Gerencia.Equals(IdGerencia > 0 ? IdGerencia : x.Id_Gerencia) &&
+                x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
+                x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
+                x.Fecha >= FechaInicio &&
+                x.Fecha <= FechaFin &&
+                x.Estado.Equals(estado.ToString()))
+                .ToListAsync();
+
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var empresas = await _context.Empresas.ToListAsync();
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+            var usuarios = await _context.Usuarios.ToListAsync();
+
+            foreach (var item in reportes)
+            {
+                var empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa));
+                var gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia));
+                var empresa_obs = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa_Obs));
+                var gerencia_obs = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Obs));
+                var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
+                var responsable_cierre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Cierre));
+                var supervisor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Supervisor));
+                output.Add(new Domain.RAC.RAC
+                {
+                    Id_RAC = item.Id_RAC,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
+                    Codigo = item.Codigo,
+                    Nombres_Apellidos = item.Nombres_Apellidos,
+                    Id_Gerencia = item.Id_Gerencia,
+                    Gerencia = new Gerencia(gerencia.Id_Gerencia, gerencia.Descripcion),
+                    Id_Empresa = item.Id_Empresa,
+                    Empresa = new Empresa(empresa.Id_Empresa, empresa.Razon_Social),
+                    Otra_Empresa = item.Otra_Empresa,
+                    Id_Empresa_Obs = item.Id_Empresa_Obs,
+                    Empresa_Ob = new Empresa(empresa_obs.Id_Empresa, empresa_obs.Razon_Social),
+                    Id_Gerencia_Obs = item.Id_Gerencia_Obs,
+                    Gerencia_Obs = new Gerencia(gerencia_obs.Id_Gerencia, gerencia_obs.Descripcion),
+                    Ubicacion = item.Ubicacion,
+                    Fecha = item.Fecha,
+                    SSO_MA = item.SSO_MA,
+                    Clasificacion = item.Clasificacion,
+                    NivelRiesgo = item.NivelRiesgo,
+                    Id_Tipo_Condicion = item.Id_Tipo_Condicion,
+                    TipoCondicion = new TipoCondicion(tipo_condicion.Id_Tipo_Condicion, tipo_condicion.Descripcion, tipo_condicion.Grupo),
+                    Descripcion_Acto_Cond = item.Descripcion_Acto_Cond,
+                    Medida_Control = item.Medida_Control,
+                    PAC = item.PAC,
+                    Id_Responsable_Cierre = item.Id_Responsable_Cierre,
+                    Responsable_Cierre = new Usuario(responsable_cierre.Id_Usuario, responsable_cierre.Id_Rol, responsable_cierre.usuario_red, responsable_cierre.Nombres, responsable_cierre.Apellidos, responsable_cierre.Email, responsable_cierre.Id_Superior, responsable_cierre.Estado),
+                    Fecha_Cierre = item.Fecha_Cierre,
+                    Id_Supervisor = item.Id_Supervisor,
+                    Supervisor = new Usuario(supervisor.Id_Usuario, supervisor.Id_Rol, supervisor.usuario_red, supervisor.Nombres, supervisor.Apellidos, supervisor.Email, supervisor.Id_Superior, supervisor.Estado),
+                    Evidencia_Obs = item.Evidencia_Obs,
+                    Evidencia_Cierre = item.Evidencia_Cierre,
+                    Estado = item.Estado
+                });
+            }
+
+            return output; 
+        }
         public async Task<List<Dimension>> GetNReportesEntreFechas(int IdGerencia, int IdEmpresa, int IdUsuario,DateTime FechaInicio, DateTime FechaFin)
         {
             var output = new List<Dimension>();
@@ -45,7 +114,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre)&&
                 x.Fecha >= FechaInicio&&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .ToListAsync();
 
             var nReportesxFecha = reportes.Select(x => x.Fecha).GroupBy(y => y.Date).ToList();
@@ -84,7 +153,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(y=>y.NivelRiesgo)
                 .ToListAsync();
 
@@ -113,7 +182,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(y => y.NivelRiesgo)
                 .ToListAsync();
 
@@ -142,7 +211,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(x=>x.Clasificacion)
                 .ToListAsync();
 
@@ -170,7 +239,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(x => x.Clasificacion)
                 .ToListAsync();
 
@@ -198,7 +267,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(y => y.NivelRiesgo)
                 .ToListAsync();
 
@@ -255,7 +324,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa.Equals(IdEmpresa > 0 ? IdEmpresa : x.Id_Empresa) &&
                 x.Id_Responsable_Cierre.Equals(IdUsuario > 0 ? IdUsuario : x.Id_Responsable_Cierre) &&
                 x.Fecha >= FechaInicio &&
-                x.Fecha < FechaFin)
+                x.Fecha <= FechaFin)
                 .GroupBy(y => y.NivelRiesgo)
                 .ToListAsync();
 

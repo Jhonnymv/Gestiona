@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.RAC.GetReportesNivelRie
                 fInicio = DateTime.MinValue;
 
             if (FechaFin != null)
-                fFinal = Convert.ToDateTime(FechaFin);
+                fFinal = Convert.ToDateTime(FechaFin + " 23:59:59");
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores

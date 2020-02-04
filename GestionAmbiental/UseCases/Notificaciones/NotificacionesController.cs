@@ -14,6 +14,7 @@ using GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion;
 using GestionAmbiental.Application.UseCases.Notificaciones.NuevoRAC;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplementada;
 using GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechazada;
+using GestionAmbiental.Application.UseCases.Notificaciones.RacRechazado;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -30,17 +31,19 @@ namespace GestionAmbiental.UseCases.Notificaciones
         private readonly IGetObservacionRechazada _getObservacionRechazada;
         private readonly IGetNuevoRACInfo _getNuevoRACInfo;
         private readonly IGetImplementacionRACInfo _getImplementacionRACInfo;
+        private readonly IGetRACRechazadoInfo _getRACRechazadoInfo;
         private readonly IDataProtector _protector;
         private readonly IDataProtector _protectorRAC;
         private readonly IGetInfo_SGA _info_SGA;
 
         public NotificacionesController(
-            IHostingEnvironment hostingEnvironment, 
-            IGetNuevaInspeccionInfo getNuevaInspeccionInfo, 
+            IHostingEnvironment hostingEnvironment,
+            IGetNuevaInspeccionInfo getNuevaInspeccionInfo,
             IGetObservacionImplementada getObservacionImplementada,
             IGetObservacionRechazada getObservacionRechazada,
             IGetNuevoRACInfo getNuevoRACInfo,
             IGetImplementacionRACInfo getImplementacionRACInfo,
+            IGetRACRechazadoInfo getRACRechazadoInfo,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -51,6 +54,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             _getObservacionRechazada = getObservacionRechazada;
             _getNuevoRACInfo = getNuevoRACInfo;
             _getImplementacionRACInfo = getImplementacionRACInfo;
+            _getRACRechazadoInfo = getRACRechazadoInfo;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _protectorRAC = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
@@ -443,7 +447,8 @@ namespace GestionAmbiental.UseCases.Notificaciones
             info.Fecha_Cierre.ToString("dd/MM/yyyy"),
             info.Supervisor,
             info.Codigo, 
-            IdEncriptado
+            IdEncriptado,
+            info.Comentario_Implementacion
             );
 
             var evidencias_condicion = info.Evidencia_Obs;
@@ -483,5 +488,74 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
             return RedirectToAction("ImplementarRAC", "ImplementacionRAC", new { IdRAC = IdEncriptado });
         }
+        public async Task<IActionResult> NotificarRACRechazado(int IdRAC)
+        {
+            var info = await _getRACRechazadoInfo.Execute(IdRAC);
+            var IdEncriptado = _protectorRAC.Protect(info.Id_RAC.ToString());
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "RAC", "RACRechazado.html");
+            StreamReader SourceReader = System.IO.File.OpenText(template);
+            var templateReaded = SourceReader.ReadToEnd();
+
+            var msgBody = string.Format(templateReaded,
+                info.Nombres_Apellidos,
+                info.Gerencia,
+                info.Empresa,
+                info.Otra_Empresa,
+                info.Empresa_Ob,
+                info.Gerencia_Obs,
+                info.Ubicacion,
+                info.Fecha.ToString("dd/MM/yyyy"),
+                info.Fecha.ToString("HH:mm"),
+                info.SSO_MA,
+                info.Clasificacion,
+                info.NivelRiesgo,
+                info.TipoCondicion,
+                info.Descripcion_Acto_Cond,
+                info.Medida_Control,
+                info.PAC,
+                info.Responsable_Cierre,
+                info.Fecha_Cierre.ToString("dd/MM/yyyy"),
+                info.Supervisor,
+                info.Codigo,
+                IdEncriptado,
+                info.Comentario_Implementacion,
+                info.Comentario_Verificacion
+                ) ;
+
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", user = "", pass = "";
+            foreach (var item in credenciales.Info)
+            {
+                switch (item.Key)
+                {
+                    case "smtp": smtp = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                }
+            }
+
+            SmtpClient mail = new SmtpClient();
+            MailMessage msg = new MailMessage();
+            mail.Host = smtp;
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+            msg.Subject = "Reporte de Condición y Acto Subestándar Rechazado";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
+            mail.Dispose();
+            msg.Dispose();
+
+            return RedirectToAction("Resumen", "VerificacionRAC");
+        }
+
     }
 }

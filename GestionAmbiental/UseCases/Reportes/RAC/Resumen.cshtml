@@ -62,7 +62,7 @@
 <div class="row mb-2">
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-pendiente shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Registrado')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Registrado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes de Implementación</div>
@@ -75,7 +75,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-implementado shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Implementado')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Implementado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Pendientes de Verificación</div>
@@ -87,7 +87,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-aprobado shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Aprobado')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Aprobado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
@@ -99,7 +99,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-rechazado shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Rechazado')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Rechazado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
@@ -111,7 +111,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-vencido shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Vencido')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Vencido')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
@@ -123,7 +123,7 @@
     </div>
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-total shadow h-100">
-            <div class="card-body click-option" onclick="ObsDetalleEstado('Ampliado')">
+            <div class="card-body click-option" onclick="ReporteDetalleEstado('Ampliado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
@@ -360,6 +360,9 @@
         });
 
         function Filtrar() {
+            gerencia = $("#IdGerencia").val();
+            empresa = $("#IdEmpresa").val();
+            usuario = $("#IdUsuario").val();
             fechaInicio = $("#FInicio").val();
             fechaFin = $("#FFin").val();
             if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
@@ -812,6 +815,10 @@
                 }
             );
         }
+
+        function ReporteDetalleEstado(estado) {
+            window.location.assign("@Url.Action("GetDetalleReporteXEstado","ReportesRAC")" + "?IdGerencia=" + gerencia+"&IdEmpresa="+empresa+"&IdUsuario="+usuario+"&FechaInicio="+fechaInicio+"&FechaFin="+fechaFin+"&estado="+estado);
+        }
     </script>
     @*Script del modal tipo condición x nivel de riesgo*@
     <script type="text/javascript">
@@ -1245,4 +1252,5 @@
                 });
         }
     </script>
+    
 }

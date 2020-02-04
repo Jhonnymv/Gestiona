@@ -38,6 +38,8 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ImplementacionRAC
         public string Supervisor_Email { get; set; }
         public string Evidencia_Obs { get; set; }
         public string Evidencia_Cierre { get; set; }
+        public string Comentario_Implementacion { get; set; }
+        public string Comentario_Verificacion { get; set; }
         public ImplementacionRACOutput(Domain.RAC.RAC rac)
         {
             Id_RAC = rac.Id_RAC;
@@ -72,6 +74,8 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ImplementacionRAC
             Supervisor_Email = rac.Supervisor.Email;
             Evidencia_Obs = rac.Evidencia_Obs;
             Evidencia_Cierre = rac.Evidencia_Cierre;
+            Comentario_Implementacion = rac.Comentario_Cierre ?? "";
+            Comentario_Verificacion = rac.Comentario_Verificacion ?? "";
         }
     }
 }

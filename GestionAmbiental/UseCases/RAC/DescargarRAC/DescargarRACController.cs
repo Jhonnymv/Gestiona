@@ -59,7 +59,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 var rac = await _getRACDescarga.Execute(IdDesencriptado);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "RAC");
-                string sFileName = @"Reporte de acto y condición subestándar-V00.xlsx";
+                string sFileName = @"JU-MAP-PRO-004.F02.xlsx";
                 string sFilePath = Path.Combine(sWebRootFolder, sFileName);
                 FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
 

@@ -171,14 +171,15 @@
                 <label asp-for="Evidencia_Cierre"></label>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-4">
-                @if (Model.Estado == EstadosRAC.Registrado.ToString() ||Model.Estado == EstadosRAC.Rechazado.ToString())
+                @if (Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString())
                 {
                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Cierre" data-valmsg-replace="true">
                         <span id="danger_evidencia" class=""></span>
                     </span>
-                    if (ViewBag.Permiso) { 
-                    <label class="btn btn-primary" for="Evidencia_Cierre">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Cierre" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
+                    if (ViewBag.Permiso)
+                    {
+                        <label class="btn btn-primary" for="Evidencia_Cierre">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Cierre" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
                     }
                     <label id="files_name">0 Archivos</label>
                 }
@@ -191,7 +192,7 @@
                 <label asp-for="Comentario_Cierre"></label>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                @if ((Model.Estado == EstadosRAC.Registrado.ToString() ||Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
+                @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
                 {
                     <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250"></textarea>
                 }
@@ -212,7 +213,23 @@
     </div>
 
 </div>
-
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only"></span>
+                    </div>
+                    <br />
+                    <label>Notificando a Responsables</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -263,16 +280,17 @@
                     $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
             }
         });
-        
+
         function guardar() {
 
-        if ($("#Evidencia_Cierre").get(0).files.length === 0) {
-            $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
-            return false;
-        }        
-        $("#form_implementarRAC").submit();
-        return true;
-    }
+            if ($("#Evidencia_Cierre").get(0).files.length === 0) {
+                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+                return false;
+            }
+            $("#Modal_Enviando_Correo").modal('show')
+            $("#form_implementarRAC").submit();
+            return true;
+        }
     </script>
 }
 

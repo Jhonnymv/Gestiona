@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.RAC.GetObservacionesXEs
 {
     public interface IGetObservacionesXEstado
     {
-        Task<List<DimensionOutput>> Execute(int IdGerencia, int IdEmpresa, int IdUsuario);
+        Task<List<DimensionOutput>> Execute(int IdGerencia, int IdEmpresa, int IdUsuario,string FechaInicio, string FechaFin);
     }
 }

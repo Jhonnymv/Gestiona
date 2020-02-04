@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "GetDetalleReporteXEstado";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>@ViewBag.nReportes Reportes de Acto y Condición Subestándar en estado "@ViewBag.Estado" </h2>
+    </div>
+</div>
+
+<div>
+    @if (ViewBag.nReportes != 0)
+    {
+        <div class="row mb-2" id="div_tabla_observaciones">
+            <div class="col-md-12">
+                <table class="table table-modal" id="tabla_observaciones">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código</th>
+                            <th>Responsable del levantamiento de la Obs.</th>
+                            <th>Empresa Observada</th>
+                            <th>Gerencia Observada</th>
+                            <th>Ubicación</th>
+                            <th>SSO/MA</th>
+                            <th>Clasificación</th>
+                            <th>Nivel de Riesgo</th>
+                            <th>Tipo de Acto/Condición Subestándar</th>
+                            <th>Fecha de Registro</th>
+                            <th>Fecha Programada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Data)
+                        {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("DetalleRAC","RegistroRAC", new { IdRAC = item.Id_Rac_Encriptado })">@item.Codigo</a>
+                            </td>
+                            <td>@item.Responsable_Cierre</td>
+                            <td>@item.Empresa_Ob</td>
+                            <td>@item.Gerencia_Obs</td>
+                            <td>@item.Ubicacion</td>
+                            <td>@item.SSO_MA</td>
+                            <td>@item.Clasificacion</td>
+                            <td>@item.NivelRiesgo</td>
+                            <td>@item.TipoCondicion</td>
+                            <td>@item.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td>@item.Fecha_Cierre.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <h4>No se encontraron observaciones</h4>
+    }
+</div>

@@ -90,8 +90,6 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td><label style=\"width:80px;\"><a href=\"/ImplementacionRAC/ImplementarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
-                    filasTabla += "<td>" + fila.Nombres_Apellidos + "</td>";
-                    filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Obs + "</td>";
                     filasTabla += "<td>" + fila.SSO_MA + "</td>";

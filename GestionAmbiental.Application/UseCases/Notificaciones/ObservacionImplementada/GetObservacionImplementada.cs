@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplem
             var observacion = await _getInspeccionDetalleInfoReadOnlyRepository.GetInspeccionDetalleImplementacion(IdObservacion);
             var cabecera = await _getInspeccionCabeceraInfoReadOnlyRepository.GetInspeccionCabecera(observacion.IdInspeccionCabecera);
 
-            var output = new ObservacionImplementadaOutput();
+            var output = new ObservacionImplementadaOutput();            
             output.Codigo = cabecera.Codigo;
             output.IdInspeccionCabecera = cabecera.IdCabecera;
             output.IdInspeccionDetalle = observacion.IdInspeccionDetalle;
