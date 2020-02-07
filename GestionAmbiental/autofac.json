@@ -14,7 +14,7 @@
     {
       "type": "GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Module",
       "properties": {
-        "ConnectionString": "Server=MSI;Database=GestionAmbiental;Trusted_Connection=True;MultipleActiveResultSets=True;"
+        "ConnectionString": "Server=SVMCBBDPRD02\\MEDA;Database=GestionAmbiental;User Id=serv.meda02;Password=M3di0@2020;"
       }
     }
   ]

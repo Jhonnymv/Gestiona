@@ -108,7 +108,7 @@
                         <span id="danger_evidencia" class=""></span>
                     </span>
                     <label class="btn btn-primary" for="EvidenciasInspeccion">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="EvidenciasInspeccion" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="20971520">
+                    <input type="file" style="visibility:hidden; display:none" asp-for="EvidenciasInspeccion" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520">
                     <label id="files_name">0 Archivos</label>
                 </div>
             </div>
@@ -156,7 +156,7 @@
                 if (fileSize > maxSize) {
                     this.value = '';
                     var filesname = this.files.length + " Archivos";
-                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 20MB<br/>");
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 8MB<br/>");
                 }
             }
             //Validacion del tipo de archivo

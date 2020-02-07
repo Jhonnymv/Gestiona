@@ -1,6 +1,6 @@
 ﻿@model GestionAmbiental.UseCases.Autenticacion.SigninModel
 @{
-    ViewData["Title"] = "Signin";
+    ViewData["Title"] = "Iniciar Sesión";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
@@ -34,3 +34,21 @@
     </div>
 </div>
 
+@section Scripts{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        ActualizarUsuarios();
+    });
+        function ActualizarUsuarios() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorUsuarios/ActualizarInformacion",
+                traditional: true,
+                data: {},
+                success: (response) => {
+                    console.log(response)
+                }
+            });
+        }
+</script>
+}

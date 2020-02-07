@@ -177,16 +177,19 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         public async Task<IActionResult> ActualizarInformacion()
         {
             var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-            string ldap_path = "", ldap_domain = "";
+            string ldap_path = "", ldap_domain = "", user = "", password = "";
             foreach (var item in info.Info)
             {
                 switch (item.Key)
                 {
                     case "ldap_path": ldap_path = item.Value; break;
                     case "ldap_domain": ldap_domain = item.Value; break;
+                    case "user": user = item.Value;break;
+                    case "password": password = item.Value;break;
                 }
             }
-            DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path);
+            //DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path, "serv.paltafmeda01", "Pl@f-M3d@.McB%-0220");
+            DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path, user, password);
             DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
 
             adSearcher.Filter = "(&(objectClass=user)(objectCategory=person))";

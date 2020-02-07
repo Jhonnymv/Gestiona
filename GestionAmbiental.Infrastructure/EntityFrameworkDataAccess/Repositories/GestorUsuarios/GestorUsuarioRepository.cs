@@ -57,36 +57,37 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task ActualizarUsuarios(List<Usuario> usuarios)
         {
+            
             var lista_usuarios = await _context.Usuarios.ToListAsync();
             lista_usuarios.ForEach(x => x.Estado = "INA");
             var temp = new List<Entities.Usuario>();
-            foreach(var usuario in usuarios)
-            {
-                var entidad = lista_usuarios.FirstOrDefault(x => x.usuario_red.Equals(usuario.UsuarioRed));
-                if(entidad != null)
+            foreach (var usuario in usuarios)
                 {
-                    entidad.Nombres = usuario.Nombres ?? "";
-                    entidad.usuario_red = usuario.UsuarioRed ?? "";
-                    entidad.Apellidos = usuario.Apellidos ?? "";
-                    entidad.Email = usuario.Email ?? "";
-                    entidad.Estado = "ACT";
-                    temp.Add(entidad);
-                }
-                else
-                {
-                    entidad = new Entities.Usuario
+                    var entidad = lista_usuarios.FirstOrDefault(x => x.usuario_red.Equals(usuario.UsuarioRed));
+                    if (entidad != null)
                     {
-                        Id_Rol = (int)InspeccionRol.Inspector,
-                        Nombres = usuario.Nombres ?? "",
-                        usuario_red = usuario.UsuarioRed ?? "",
-                        Apellidos = usuario.Apellidos ?? "",
-                        Email = usuario.Email ?? "",
-                        Estado = "ACT"
-                    };
-                    temp.Add(entidad);
+                        entidad.Nombres = usuario.Nombres ?? "";
+                        entidad.usuario_red = usuario.UsuarioRed ?? "";
+                        entidad.Apellidos = usuario.Apellidos ?? "";
+                        entidad.Email = usuario.Email ?? "";
+                        entidad.Estado = "ACT";
+                        temp.Add(entidad);
+                    }
+                    else
+                    {
+                        entidad = new Entities.Usuario
+                        {
+                            Id_Rol = (int)InspeccionRol.Inspector,
+                            Nombres = usuario.Nombres ?? "",
+                            usuario_red = usuario.UsuarioRed ?? "",
+                            Apellidos = usuario.Apellidos ?? "",
+                            Email = usuario.Email ?? "",
+                            Estado = "ACT"
+                        };
+                        temp.Add(entidad);
+                    }
                 }
-            }
-            lista_usuarios.RemoveAll(x => temp.Select(y=>y.Id_Usuario).Contains(x.Id_Usuario));
+            lista_usuarios.RemoveAll(x => temp.Select(y => y.Id_Usuario).Contains(x.Id_Usuario));
             lista_usuarios.AddRange(temp);
             _context.Usuarios.UpdateRange(lista_usuarios);
             await _context.SaveChangesAsync();
