@@ -69,5 +69,13 @@ namespace GestionAmbiental.UseCases.Autenticacion
             }
             return View(new SigninModel());
         }
+        public async Task<IActionResult> SignOut()
+        {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                HttpContext.Session.Clear();
+            }
+            return RedirectToAction("Index", "Home");
+        }    
     }
 }

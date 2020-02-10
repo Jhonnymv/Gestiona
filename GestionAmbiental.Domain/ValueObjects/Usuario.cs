@@ -19,8 +19,8 @@ namespace GestionAmbiental.Domain.ValueObjects
         {
             IdUsuario = id_Usuario;
             IdRol = id_Rol;
-            Nombres = nombres;
-            Apellidos = apellidos;
+            Nombres = nombres.ToUpper();
+            Apellidos = apellidos.ToUpper();
             Email = email;
         }
 
@@ -28,8 +28,8 @@ namespace GestionAmbiental.Domain.ValueObjects
         {
             IdUsuario = idUsuario;
             IdRol = idRol;
-            Nombres = nombres;
-            Apellidos = apellidos;
+            Nombres = nombres.ToUpper();
+            Apellidos = apellidos.ToUpper();
             Email = email;
             UsuarioRed = usuarioRed;
             IdSuperior = idSuperior;

@@ -68,7 +68,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Id_Supervisor { get; set; }
         [DisplayName("Evidencia de la Observación:")]
-        [Required(ErrorMessage = "Debe ingresar una evidencia")]
+        //[Required(ErrorMessage = "Debe ingresar una evidencia")]
         public IFormFile Evidencia_Obs { get; set; }
     }
 }

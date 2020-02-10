@@ -116,36 +116,36 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 );
                 
                 var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-                string smtp = "", user = "", pass = "";
+                string smtp = "",port="", user = "", pass = "",mailFrom="";
                 foreach (var item in credenciales.Info)
                 {
                     switch (item.Key)
                     {
                         case "smtp": smtp = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
+                        case "ntwkuser": user = item.Value; break;
+                        case "ntwkpassword": pass = item.Value; break;
+                        case "port": port = item.Value;break;
+                        case "mailfrom":mailFrom = item.Value;break;
                     }
                 }
-
-                SmtpClient mail = new SmtpClient();
+                SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 MailMessage msg = new MailMessage();
-                mail.Host = smtp;
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = true;
+                mail.EnableSsl = false;
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
                 msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
-                msg.To.Add(new MailAddress(observacion.Asesor.Email));
+                //msg.To.Add(new MailAddress(observacion.Asesor.Email));
                 msg.Subject = "Nueva Observacion Asignada";
                 msg.SubjectEncoding = Encoding.UTF8;
                 msg.IsBodyHtml = true;
-                msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+                msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
                 msg.BodyEncoding = Encoding.UTF8;
                 msg.Body = msgBody;
-                await mail.SendMailAsync(msg);                    
+                await mail.SendMailAsync(msg);
                 mail.Dispose();
-                msg.Dispose();
+                msg.Dispose();    
             }
             var IdEncriptado = _protector.Protect(IdCabecera.ToString());
             return RedirectToAction("EditarInspeccion", "Inspecciones", new { IdCabecera = IdEncriptado });
@@ -207,45 +207,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
             _protector.Protect(info.IdInspeccionCabecera.ToString())
             );
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-            string smtp = "", user = "", pass = "";
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
             {
                 switch (item.Key)
                 {
                     case "smtp": smtp = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-
-            /*
-             
-             SmtpClient mail = new SmtpClient();
-                MailMessage msg = new MailMessage();
-                mail.Host = smtp;
-                msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = true;
-                mail.UseDefaultCredentials = false;
-                NetworkCredential credential = new NetworkCredential(user, pass);
-                mail.Credentials = credential;
-                msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
-                msg.To.Add(new MailAddress(observacion.Asesor.Email));
-                msg.Subject = "Nueva Observacion Asignada";
-                msg.SubjectEncoding = Encoding.UTF8;
-                msg.IsBodyHtml = true;
-                msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
-                msg.BodyEncoding = Encoding.UTF8;
-                msg.Body = msgBody;
-                await mail.SendMailAsync(msg);                    
-                mail.Dispose();
-                msg.Dispose();
-             */
-
-            SmtpClient mail = new SmtpClient();
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
-            mail.Host = smtp;
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -322,21 +299,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 _protector.Protect(info.IdInspeccionCabecera.ToString())
                 );
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-            string smtp = "", user = "", pass = "";
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
             {
                 switch (item.Key)
                 {
                     case "smtp": smtp = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-            SmtpClient mail = new SmtpClient();
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
-            mail.Host = smtp;
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -385,22 +363,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 );
             
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-            string smtp = "", user = "", pass = "";
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
             {
                 switch (item.Key)
                 {
                     case "smtp": smtp = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-
-            SmtpClient mail = new SmtpClient();
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
-            mail.Host = smtp;
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -453,24 +431,24 @@ namespace GestionAmbiental.UseCases.Notificaciones
 
             var evidencias_condicion = info.Evidencia_Obs;
 
-            
+
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-            string smtp = "", user = "", pass = "";
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
             {
                 switch (item.Key)
                 {
                     case "smtp": smtp = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-
-            SmtpClient mail = new SmtpClient();
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
-            mail.Host = smtp;
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -523,22 +501,22 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 ) ;
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
-            string smtp = "", user = "", pass = "";
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
             {
                 switch (item.Key)
                 {
                     case "smtp": smtp = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-
-            SmtpClient mail = new SmtpClient();
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
-            mail.Host = smtp;
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;

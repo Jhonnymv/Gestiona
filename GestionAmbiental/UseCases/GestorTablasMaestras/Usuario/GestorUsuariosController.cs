@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.DirectoryServices;
+using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.EditarUsuario;
@@ -177,7 +179,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         public async Task<IActionResult> ActualizarInformacion()
         {
             var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-            string ldap_path = "", ldap_domain = "", user = "", password = "";
+            string ldap_path = "", ldap_domain = "", user = "", password = "", groupName = "G_Users_Marcobre";
             foreach (var item in info.Info)
             {
                 switch (item.Key)
@@ -186,84 +188,48 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                     case "ldap_domain": ldap_domain = item.Value; break;
                     case "user": user = item.Value;break;
                     case "password": password = item.Value;break;
+                    case "group_name":groupName = item.Value;break;
                 }
             }
-            //DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path, "serv.paltafmeda01", "Pl@f-M3d@.McB%-0220");
+            
             DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path, user, password);
             DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
+            adSearcher.Filter = "(&(objectClass=group)(cn=" + groupName + "))";
+            
+            SearchResult searchResult = adSearcher.FindOne();
 
-            adSearcher.Filter = "(&(objectClass=user)(objectCategory=person))";
-            adSearcher.PropertiesToLoad.Add("samaccountname");
-            adSearcher.PropertiesToLoad.Add("mail");
-            adSearcher.PropertiesToLoad.Add("givenName");
-            adSearcher.PropertiesToLoad.Add("sn");
-            adSearcher.PropertiesToLoad.Add("usergroup");
-            adSearcher.PropertiesToLoad.Add("company");
-            adSearcher.PropertiesToLoad.Add("department");
-            adSearcher.PropertiesToLoad.Add("telephoneNumber");
-            adSearcher.PropertiesToLoad.Add("mobile");
-            adSearcher.PropertiesToLoad.Add("displayname");
-            SearchResult result;
-            SearchResultCollection iResult = adSearcher.FindAll();
-
-
-            ADUserModel usuario;
             var rst = new List<ADUserModel>();
             dynamic response;
-            if (iResult != null)
+
+            if (searchResult != null)
             {
-                for (int counter = 0; counter < iResult.Count; counter++)
+                DirectoryEntry deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
+
+                // Get the group's property collection.
+                System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties; 
+
+                int propertyCount = propertyCollection["member"].Count;
+                for (int j = 0; j < propertyCount; j++)
                 {
-                    result = iResult[counter];
-                    if (result.Properties.Contains("samaccountname"))
-                    {
-                        usuario = new ADUserModel();
-                        usuario.UserName = (String)result.Properties["samaccountname"][0];
+                    DirectoryEntry deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                    
+                    var info_usuario = new ADUserModel();
+                    info_usuario.UserName = GetValidProperty(deUser, "samaccountname");
+                    info_usuario.Email = GetValidProperty(deUser, "mail");
+                    info_usuario.FirstName = GetValidProperty(deUser, "givenName");
+                    info_usuario.LastName = GetValidProperty(deUser, "sn");
+                    info_usuario.Company = GetValidProperty(deUser, "company");
+                    info_usuario.Deparment = GetValidProperty(deUser, "department");
+                    info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
+                    info_usuario.Mobile = GetValidProperty(deUser, "mobile");
+                    info_usuario.DisplayName = GetValidProperty(deUser, "displayname");
+                    rst.Add(info_usuario);
 
-                        if (result.Properties.Contains("displayname"))
-                        {
-                            usuario.DisplayName = (String)result.Properties["displayname"][0];
-                        }
-                        if (result.Properties.Contains("givenName"))
-                        {
-                            usuario.FirstName = (String)result.Properties["givenName"][0];
-                        }
-                        if (result.Properties.Contains("sn"))
-                        {
-                            usuario.LastName = (String)result.Properties["sn"][0];
-                        }
-                        if (result.Properties.Contains("mail"))
-                        {
-                            usuario.Email = (String)result.Properties["mail"][0];
-                        }
-
-                        if (result.Properties.Contains("company"))
-                        {
-                            usuario.Company = (String)result.Properties["company"][0];
-                        }
-
-                        if (result.Properties.Contains("title"))
-                        {
-                            usuario.JobTitle = (String)result.Properties["title"][0];
-                        }
-
-                        if (result.Properties.Contains("department"))
-                        {
-                            usuario.Deparment = (String)result.Properties["department"][0];
-                        }
-
-                        if (result.Properties.Contains("telephoneNumber"))
-                        {
-                            usuario.Phone = (String)result.Properties["telephoneNumber"][0];
-                        }
-
-                        if (result.Properties.Contains("mobile"))
-                        {
-                            usuario.Mobile = (String)result.Properties["mobile"][0];
-                        }
-                        rst.Add(usuario);
-                    }
+                    deUser.Close();
                 }
+                deGroup.Close();
+                adSearchRoot.Close();
+                rst = rst.OrderBy(x => x.UserName).ToList();
             }
             else
             {
@@ -285,6 +251,17 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 Success = true
             };
             return Ok(response);
+        }
+        private string GetValidProperty(DirectoryEntry directoryEntry, string propertyName)
+        {
+            if (directoryEntry.Properties.Contains(propertyName))
+            {
+                return directoryEntry.Properties[propertyName].Value.ToString();
+            }
+            else
+            {
+                return string.Empty;
+            }
         }
     }
 }

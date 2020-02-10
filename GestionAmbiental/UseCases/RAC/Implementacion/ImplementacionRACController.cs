@@ -20,6 +20,7 @@ using Microsoft.AspNetCore.Http;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Renci.SshNet;
 
 namespace GestionAmbiental.UseCases.RAC.Implementacion
 {
@@ -204,8 +205,16 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     var filePath = "";
                     if (model.Evidencia_Cierre != null)
                     {
-                        var newfileName = CreateUniqueFileName(1) + ".zip";
-                        filePath = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName);
+                        var extension = Path.GetExtension(model.Evidencia_Cierre.FileName);
+                        var max_file_size = 8388608;
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencia_Cierre.Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(1) + ".zip";
+                            filePath = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName);
+                        }
                     }
                     await _levantarObservacionRAC.Execute(model.Id_RAC, filePath, model.Comentario_Cierre, userInfo.NombreUsuario);
                     return RedirectToAction("NotificarImplementacionRAC", "Notificaciones", new { IdRAC = model.Id_RAC });
@@ -289,34 +298,28 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACI);
-                string route = "", user = "", pass = "";
+                string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
                     switch (item.Key)
                     {
-                        case "route": route = item.Value; break;
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
                         case "user": user = item.Value; break;
                         case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
                     }
                 }
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + newFileName);
 
-                ftpRequest.Credentials = new NetworkCredential(user, pass);
-                ftpRequest.Method = WebRequestMethods.Ftp.UploadFile;
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-
-                using (FileStream fs = System.IO.File.OpenRead(path))
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
                 {
-
-                    byte[] buffer = new byte[fs.Length];
-                    fs.Read(buffer, 0, buffer.Length);
-                    fs.Close();
-                    Stream requestStream = ftpRequest.GetRequestStream();
-                    await requestStream.WriteAsync(buffer, 0, buffer.Length);
-                    await requestStream.FlushAsync();
-                    requestStream.Close();
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+                    using (FileStream fs = System.IO.File.OpenRead(path))
+                    {
+                        sftp.UploadFile(fs, newFileName, true);
+                    }
+                    sftp.Dispose();
                 }
                 return newFileName;
             }
@@ -380,31 +383,18 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACI);
-                string route = "", user = "", pass = "";
+                string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
                     switch (item.Key)
                     {
-                        case "route": route = item.Value; break;
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
                         case "user": user = item.Value; break;
                         case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
                     }
                 }
-                /* Create an FTP Request */
-                FtpWebRequest ftpRequest = (FtpWebRequest)WebRequest.Create(route + fileName);
-                /* Log in to the FTP Server with the User Name and Password Provided */
-                ftpRequest.Credentials = new NetworkCredential(user, pass);
-                /* When in doubt, use these options */
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-                /* Specify the Type of FTP Request */
-                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                /* Establish Return Communication with the FTP Server */
-                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                /* Get the FTP Server's Response Stream */
-                var ftpStream = ftpResponse.GetResponseStream();
-
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
@@ -430,7 +420,16 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 var downloadedFilePath = archivePath + fileName;
                 /*Copy data to new temp file*/
                 var fileStream = System.IO.File.Create(downloadedFilePath);
-                ftpStream.CopyTo(fileStream);
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(fileName, fileStream);
+
+                    sftp.Dispose();
+                }
                 fileStream.Close();
 
                 return downloadedFilePath;

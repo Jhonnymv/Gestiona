@@ -21,6 +21,7 @@ using NPOI.SS.Util;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using Renci.SshNet;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -201,7 +202,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Fecha Programada
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToString("dd/MM/yyyy"));
 
-                    row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "");
+                    row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
                     
                     
                     obsIndex++;
@@ -216,7 +217,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 templateWorkbook.Write(ms);
 
                 // Send the memory stream to the browser
-                //ExportDataTableToExcel(ms, "EventExpenseReport.xls");
                 ms.Position = 0;
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
@@ -232,7 +232,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
-            FtpWebRequest ftpRequest;
             foreach (var evidencia in evidenciasCondicion)
             {
                 var imgNCol = 0;
@@ -260,7 +259,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 Directory.CreateDirectory(archivePath);
 
                 //2. Descargar .zip de ftp y guardar en carpeta temporal zip
-                string route = "", user = "", pass = "";
+                string host = "", port = "", user = "", pass = "", dir = "";
                 var serverInfo = new Info_SGAOutput();
                 if (tipoEvidencia == "condicion")
                 {
@@ -270,9 +269,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     {
                         switch (item.Key)
                         {
-                            case "route": route = item.Value; break;
+                            case "host": host = item.Value; break;
+                            case "port": port = item.Value; break;
                             case "user": user = item.Value; break;
                             case "password": pass = item.Value; break;
+                            case "directory": dir = item.Value; break;
                         }
                     }
                 }
@@ -284,25 +285,28 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     {
                         switch (item.Key)
                         {
-                            case "route": route = item.Value; break;
+                            case "host": host = item.Value; break;
+                            case "port": port = item.Value; break;
                             case "user": user = item.Value; break;
                             case "password": pass = item.Value; break;
+                            case "directory": dir = item.Value; break;
                         }
                     }
                 }
 
-                ftpRequest = (FtpWebRequest)WebRequest.Create(route + evidencia);
-                ftpRequest.Credentials = new NetworkCredential(user, pass);
-                ftpRequest.UseBinary = true;
-                ftpRequest.UsePassive = true;
-                ftpRequest.KeepAlive = true;
-                ftpRequest.Method = WebRequestMethods.Ftp.DownloadFile;
-                var ftpResponse = (FtpWebResponse)ftpRequest.GetResponse();
-                var ftpStream = ftpResponse.GetResponseStream();
                 var fileStream = System.IO.File.Create(archiveFile);
-                ftpStream.CopyTo(fileStream);
-                ftpStream.Close();
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(evidencia.ToString(), fileStream);
+
+                    sftp.Dispose();
+                }
                 fileStream.Close();
+                
                 //3. Desencriptar archivo
                 await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
                 var pathDesencriptado = archivePath + "desencriptado.zip";
