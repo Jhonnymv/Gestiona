@@ -191,8 +191,13 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                     case "group_name":groupName = item.Value;break;
                 }
             }
-            
-            DirectoryEntry adSearchRoot = new DirectoryEntry(ldap_path, user, password);
+            //quitar de aqui
+            DirectoryEntry adSearchRoot;
+            if (user != "" || password != "")
+                adSearchRoot = new DirectoryEntry(ldap_path, user, password);
+            else
+                adSearchRoot = new DirectoryEntry(ldap_path);
+            //hasta aqui
             DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
             adSearcher.Filter = "(&(objectClass=group)(cn=" + groupName + "))";
             
@@ -203,15 +208,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
 
             if (searchResult != null)
             {
-                DirectoryEntry deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
+                DirectoryEntry deGroup;
+                if (user != "" || password != "")
+                    deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
+                else
+                    deGroup = new DirectoryEntry(searchResult.Path);
 
                 // Get the group's property collection.
-                System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties; 
+               System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties; 
 
                 int propertyCount = propertyCollection["member"].Count;
                 for (int j = 0; j < propertyCount; j++)
                 {
-                    DirectoryEntry deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                    DirectoryEntry deUser;
+                    if (user != "" || password != "")
+                        deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                    else
+                        deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString());
                     
                     var info_usuario = new ADUserModel();
                     info_usuario.UserName = GetValidProperty(deUser, "samaccountname");
