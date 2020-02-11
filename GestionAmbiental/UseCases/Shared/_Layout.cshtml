@@ -39,19 +39,19 @@
                                 @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
                                 {
                                     <a class="dropdown-item" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
-                                    <a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes</a>
+                                    <a class="dropdown-item" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes Estadísticos</a>
                                 }
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reportes de Acto y Condición Subestándar</a>
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reporte de Acto y Condición Subestándar</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                                <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Reportes de Acto y Condición Subestándar</a>
-                                <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Reportes Pendientes de Implementación</a>
+                                <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">Registro nuevo de RAC</a>
+                                <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Pendientes de Implementación</a>
                                 @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
                                 {
-                                    <a class="dropdown-item" asp-controller="VerificacionRAC" asp-action="Resumen">Reportes Pendientes de Verificación</a>
-                                    <a class="dropdown-item" asp-controller="ReportesRAC" asp-action="Resumen">Reportes RAC</a>
+                                    <a class="dropdown-item" asp-controller="VerificacionRAC" asp-action="Resumen">Pendientes de Verificación</a>
+                                    <a class="dropdown-item" asp-controller="ReportesRAC" asp-action="Resumen">Reportes Estadísticos</a>
                                 }
                             </div>
                         </li>
