@@ -161,6 +161,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
+                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
+                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Verificar" + "</a></td>";
+                        else
+                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdObsEncriptado + "\" disabled>" + "Verificar" + "</button></td>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
@@ -183,10 +187,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.ComentarioImplementacion + "</td>";
-                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
-                            filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Verificar" + "</a></td>";
-                        else
-                            filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdObsEncriptado + "\" disabled>" + "Verificar" + "</button></td>";
                         filaObservacion += "</tr>";
                     }
                     ViewBag.NObservaciones = observaciones.ToList().Count;

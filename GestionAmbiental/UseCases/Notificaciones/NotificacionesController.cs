@@ -230,7 +230,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Observación Implementada";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             await mail.SendMailAsync(msg);
@@ -322,7 +322,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Observación Rechazada";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             await mail.SendMailAsync(msg);
@@ -386,7 +386,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             await mail.SendMailAsync(msg);
@@ -456,7 +456,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             await mail.SendMailAsync(msg);
@@ -524,7 +524,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             msg.Subject = "Reporte de Condición y Acto Subestándar Rechazado";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
-            msg.From = new MailAddress(user, @"Sistema de Gestión Ambiental");
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             await mail.SendMailAsync(msg);

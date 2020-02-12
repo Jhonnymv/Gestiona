@@ -54,6 +54,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var detalleEntity = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(detalle.IdInspeccionDetalle));
 
+            detalleEntity.Tipo_Observacion = detalle.TipoInspeccion == detalleEntity.Tipo_Observacion ? detalleEntity.Tipo_Observacion : detalle.TipoInspeccion;
+            detalleEntity.Id_Asesor = detalle.IdAsesorMASeguridad == detalleEntity.Id_Asesor ? detalleEntity.Id_Asesor : detalle.IdAsesorMASeguridad;
+            detalleEntity.Descripcion_Condicion = detalle.DescripcionCondicion == detalleEntity.Descripcion_Condicion ? detalleEntity.Descripcion_Condicion : detalle.DescripcionCondicion;
+            detalleEntity.Id_Tipo_Condicion = detalle.IdTipoCondicion == detalleEntity.Id_Tipo_Condicion ? detalleEntity.Id_Tipo_Condicion : detalle.IdTipoCondicion;
+            detalleEntity.Evidencia_Condicion = detalle.EvidenciaCondicion == detalleEntity.Evidencia_Condicion ? detalleEntity.Evidencia_Condicion : detalle.EvidenciaCondicion;
             detalleEntity.Fecha_Programada = detalle.FechaProgramada;
             detalleEntity.Estado = detalle.Estado;
 
