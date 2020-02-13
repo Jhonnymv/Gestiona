@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
         [DisplayName("Evidencia del levantamiento de observación (Cierre de la acción correctiva):")]
         public IFormFile Evidencia_Cierre { get; set; }
         public string Evidencia_Cierre_Imp { get; set; }
-        [DisplayName("Comentario del levanamiento de la observación:")]
+        [DisplayName("Comentario del levantamiento de la observación:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Comentario_Cierre { get; set; }
         public string Estado { get; set; }

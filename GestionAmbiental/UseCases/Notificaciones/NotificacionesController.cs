@@ -452,7 +452,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
-            msg.To.Add(new MailAddress(info.Responsable_Cierre_Email));
+            msg.To.Add(new MailAddress(info.Supervisor_Email));
             msg.Subject = "Nuevo Reporte de Condición y Acto Subestándar";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;

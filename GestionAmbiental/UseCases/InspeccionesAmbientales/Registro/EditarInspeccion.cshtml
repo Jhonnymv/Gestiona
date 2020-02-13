@@ -122,6 +122,8 @@
                     <table class="table table-modal" id="tabla_observaciones">
                         <thead class="thead-mcolor">
                             <tr>
+                                <th></th>
+                                <th></th>
                                 <th>Tipo de Observación</th>
                                 <th>Asesor de MAP/SSO</th>
                                 <th>Acto/Condición Subestándar Identificada</th>
@@ -151,8 +153,9 @@
             }
             @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
             {
-                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>                
+                <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
+            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
                 @if (ViewBag.nObservacioness > 0)
                 {
                     <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
@@ -249,6 +252,12 @@
         });
         $("#nueva_obs").click(function () {
             $("#opcion").val("Observacion");
+        });
+        $("#eliminar").click(function () {     
+            if (window.confirm("¿Seguro que desea eliminar esta inspección?")) {
+                $("#opcion").val("Eliminar");
+                $("#form_nuevaInspeccion").submit();
+            }
         });
         function EnviarNuevaFecha() {
             var fecha = $("#nuevaFecha").val();

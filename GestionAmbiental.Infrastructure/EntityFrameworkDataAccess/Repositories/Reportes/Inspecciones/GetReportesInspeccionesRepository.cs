@@ -38,7 +38,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Dimension>> GetObservacionesXUsuario()
         {
             var cabeceras_registradas = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).ToListAsync();
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) 
+            && x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
 
             var output = new List<Dimension>();
@@ -53,7 +54,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Dimension>> GetObservacionesXEstado()
         {
             var cabeceras_registradas = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).ToListAsync();
-            var inspecciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
+            var inspecciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) 
+            && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
 
             var output = new List<Dimension>();
 
@@ -69,7 +71,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<ObservacionesUsuario>();
 
             var cabeceras_registradas = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).ToListAsync();
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => cabeceras_registradas.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) 
+            && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
 
             foreach (var usuario in usuarios)
@@ -116,7 +119,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesNivelRiesgoMAP()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
@@ -154,7 +157,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesNivelRiesgoSSO()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
@@ -193,7 +196,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionMAP()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
@@ -228,7 +231,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Dimension>> GetObservacionesTipoInspeccionSSO()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
@@ -264,7 +267,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<DetalleObservacionXEstado>> GetDetalleObservacionXEstados(EstadosInspeccion estado)
         {
             var output = new List<DetalleObservacionXEstado>();
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Estado.Equals(estado.ToString())).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Estado.Equals(estado.ToString()) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
             observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)
             && x.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
@@ -299,7 +302,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<List<Dimension>>> GetObservacionesMAPXTipoCondicion()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
 
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 
@@ -339,7 +342,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<List<Dimension>>> GetObservacionesSSOXTipoCondicion()
         {
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO")).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
 
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
 

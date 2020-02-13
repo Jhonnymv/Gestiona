@@ -13,13 +13,16 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public int IdInspeccionCabecera { get; set; }
         public int IdInspeccionDetalle { get; set; }
         public string TipoInspeccion { get; set; }
+        public int IdAsesor { get; set; }
         public string AsesorMASeguridad { get; set; }
         public string DescripcionCondicion { get; set; }
+        public int IdTipoCondicion { get; set; }
         public string TipoCondicion { get; set; }
         public List<string> EvidenciaCondicion { get; set; }
         public string NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
         public string ResponsableMarcobre { get; set; }
+        public int IdResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }
         public DateTime FechaProgramada { get; set; }
         public List<string> EvidenciaImplementacion { get; set; }
@@ -38,6 +41,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             AsesorMASeguridad = detalle.Asesor.Nombres+ " " +detalle.Asesor.Apellidos;
             DescripcionCondicion = detalle.DescripcionCondicion;
             TipoCondicion = detalle.TipoCondicion.Descripcion;
+            IdAsesor = detalle.Asesor != null ? detalle.Asesor.IdUsuario : 0;
 
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             EvidenciaCondicion = new List<string>();
@@ -49,6 +53,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             DescripcionAccion = detalle.DescripcionAccion;
             ResponsableMarcobre = detalle.ResponsableMarcobre.Nombres + " " + detalle.ResponsableMarcobre.Apellidos;
             ResponsableContratista = detalle.ResponsableContratista;
+            IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
             FechaProgramada = detalle.FechaProgramada;
 
             EvidenciaImplementacion = new List<string>();
@@ -71,13 +76,15 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         }
         public InspeccionDetalleOutput(InspeccionDetalle detalle)
         {
+
             IdInspeccionCabecera = detalle.IdInspeccionCabecera;
             IdInspeccionDetalle = detalle.IdInspeccionDetalle;
             TipoInspeccion = detalle.TipoObservacion;
             AsesorMASeguridad = detalle.Asesor.Nombres + " " + detalle.Asesor.Apellidos;
             DescripcionCondicion = detalle.DescripcionCondicion;
             TipoCondicion = detalle.TipoCondicion.Descripcion;
-
+            IdAsesor = detalle.Asesor.IdUsuario;
+            IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             var listEvidencias = new List<string>();
             foreach (var evidencia in evidencias)
@@ -88,6 +95,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             NivelRiesgo = detalle.NivelRiesgo;
             DescripcionAccion = detalle.DescripcionAccion;
             ResponsableMarcobre = detalle.ResponsableMarcobre.Nombres + " " + detalle.ResponsableMarcobre.Apellidos;
+            IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
             ResponsableContratista = detalle.ResponsableContratista;
             FechaProgramada = detalle.FechaProgramada;
 

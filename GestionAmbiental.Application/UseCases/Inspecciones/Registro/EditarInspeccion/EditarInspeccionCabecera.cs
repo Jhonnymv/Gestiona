@@ -50,6 +50,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
 
             switch (opcion)
             {
+                case "Eliminar": cabecera.Estado = EstadosInspeccion.Eliminado.ToString();break;
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
                 case "Guardar":
                     cabecera.Estado = EstadosInspeccion.Registrado.ToString();

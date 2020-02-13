@@ -203,8 +203,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToString("dd/MM/yyyy"));
 
                     row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
-                    
-                    
+                                        
                     obsIndex++;
                     fila++;
 

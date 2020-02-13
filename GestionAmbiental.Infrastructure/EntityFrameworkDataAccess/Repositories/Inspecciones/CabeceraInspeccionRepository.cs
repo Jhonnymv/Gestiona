@@ -25,20 +25,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
                 && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo))
+                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
+                && (c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || c.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
                 .OrderByDescending(x=>x.Codigo)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
-            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera)).ToListAsync();
+            var detalles_cabecera = await _context.Inspecciones_Detalle
+                .Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera)&&
+                e.Estado!=EstadosInspeccion.Eliminado.ToString())
+                .ToListAsync();
 
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
             {
                 var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia)).FirstOrDefault();
                 var empContMar = empresas.Where(e => e.Id_Empresa.Equals(item.Id_Empresa)).FirstOrDefault();
-                var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
-                var nObsImplementadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Implementado.ToString())).Count();
+                var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)&&d.Estado!=EstadosInspeccion.Eliminado.ToString()).Count();
+                var nObsImplementadas = detalles_cabecera.Where(
+                    d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && 
+                    d.Estado.Equals(EstadosInspeccion.Implementado.ToString())).Count();
                 var nObsAprobadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).Count();
                 var nObsRechazadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).Count();
 
@@ -68,7 +74,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<InspeccionCabecera> GetInspeccionCabecera(int idCabecera)
         {
             var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)&&x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var output = new InspeccionCabecera();
             output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
             output.IdRegistradoPor = cabeccera.Id_Registrado_Por;
@@ -104,7 +110,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
-            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera)).ToListAsync();
+            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera) && e.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
 
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
@@ -121,7 +127,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<InspeccionCabecera> GetInspeccionCabeceraImplementacion(int idCabecera)
         {
             var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
@@ -160,7 +166,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
-            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera)).ToListAsync();
+            var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera) && e.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
 
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
@@ -179,7 +185,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera)
         {
             var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var responsable_area = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Area));
@@ -206,7 +212,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             //Cabecera
             var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
 

@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var detalles = new List<InspeccionDetalle>();
             
-            var inspeccionesDetalle = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var inspeccionesDetalle = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             
             var usuarios = await _context.Usuarios.ToListAsync();
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();

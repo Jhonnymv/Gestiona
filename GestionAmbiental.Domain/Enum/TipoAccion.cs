@@ -7,6 +7,7 @@ namespace GestionAmbiental.Domain.Enum
     public enum TipoAccion
     {
         CREATE = 1,
-        UPDATE = 2
+        UPDATE = 2,
+        DELETE = 3
     }
 }

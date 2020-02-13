@@ -11,6 +11,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
     public class NuevaObservacionModel
     {
         public int idCabecera { get; set; }
+        public int IdObservacion { get; set; }
         [DisplayName("Tipo de Inspección:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string TipoInspeccion { get; set; }
@@ -28,7 +29,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Nivel de Riesgo:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string NiveRiesgo { get; set; }
-        [DisplayName("Acción Preventiva / Correctiva Tomada:")]
+        [DisplayName("Acción Preventiva / Correctiva:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string AccionTomada { get; set; }
         [DisplayName("Responsable Marcobre:")]

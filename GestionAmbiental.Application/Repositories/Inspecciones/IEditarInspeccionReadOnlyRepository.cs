@@ -10,6 +10,7 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     {
         Task EditarInspeccionCabecera(NuevaInspeccionCabecera cabecera,int idUsuario);
         Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle, int idUsuario);
+        Task EliminarInspeccionDetalle(int IdObservacion, int idUsuario);
         Task<string> GetUltimoCodigo();
     }
 }

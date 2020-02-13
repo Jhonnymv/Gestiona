@@ -43,7 +43,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             log.Fecha = DateTime.Now;
             log.Id_Inspeccion_Cabecera = cabecera.IdCabecera;
             log.Id_Usuario = idUsuario;
-            log.Tipo = TipoAccion.UPDATE.ToString();
+            log.Tipo = cabeceraEntity.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) ? TipoAccion.DELETE.ToString() : TipoAccion.UPDATE.ToString();
 
             _context.Log_Inspecciones.Add(log);
             await _context.SaveChangesAsync();
@@ -59,8 +59,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Descripcion_Condicion = detalle.DescripcionCondicion == detalleEntity.Descripcion_Condicion ? detalleEntity.Descripcion_Condicion : detalle.DescripcionCondicion;
             detalleEntity.Id_Tipo_Condicion = detalle.IdTipoCondicion == detalleEntity.Id_Tipo_Condicion ? detalleEntity.Id_Tipo_Condicion : detalle.IdTipoCondicion;
             detalleEntity.Evidencia_Condicion = detalle.EvidenciaCondicion == detalleEntity.Evidencia_Condicion ? detalleEntity.Evidencia_Condicion : detalle.EvidenciaCondicion;
+            detalleEntity.Nivel_Riesgo = detalle.NivelRiesgo == detalleEntity.Nivel_Riesgo ? detalleEntity.Nivel_Riesgo : detalle.NivelRiesgo;
+            detalleEntity.Descripcion_Accion = detalle.DescripcionAccion == detalleEntity.Descripcion_Accion ? detalleEntity.Descripcion_Accion : detalle.DescripcionAccion;
+            detalleEntity.Id_Responsable_Marcobre = detalle.IdResponsableMarcobre == detalleEntity.Id_Responsable_Marcobre ? detalleEntity.Id_Responsable_Marcobre : detalle.IdResponsableMarcobre;
+            detalleEntity.Responsable_Contratista = detalleEntity.Responsable_Contratista == detalle.ResponsableContratista ? detalleEntity.Responsable_Contratista : detalle.ResponsableContratista;
+                        
             detalleEntity.Fecha_Programada = detalle.FechaProgramada;
-            detalleEntity.Estado = detalle.Estado;
 
             _context.Inspecciones_Detalle.Update(detalleEntity);
             await _context.SaveChangesAsync();
@@ -75,6 +79,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
            _context.Log_Inspecciones.Add(log);
            await _context.SaveChangesAsync();
+        }
+        public async Task EliminarInspeccionDetalle(int IdObservacion,int idUsuario)
+        {
+            var observacion = await _context.Inspecciones_Detalle.FirstAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion));
+            observacion.Estado = EstadosInspeccion.Eliminado.ToString();
+            _context.Inspecciones_Detalle.Update(observacion);
+            await _context.SaveChangesAsync();
+
+            var log = new Log_Inspeccion();
+            var bkp = JsonConvert.SerializeObject(observacion);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = observacion.Id_Inspeccion_Cabecera;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.DELETE.ToString();
+
+            _context.Log_Inspecciones.Add(log);
+            await _context.SaveChangesAsync();
         }
         public async Task<string> GetUltimoCodigo()
         {

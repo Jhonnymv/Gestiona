@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Notificaciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Area));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
             
-            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)).ToListAsync();
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)&&x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
             var output = new InspeccionCabecera();

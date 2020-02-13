@@ -23,22 +23,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string ComentarioVerificacion { get; set; }
         public string Estado { get; set; }
         public string Accion { get; set; }
-
-        public NuevaInspeccionDetalle(
-            int id_Inspeccion_Cabecera, string descripcion_Condicion, int id_Tipo_Condicion, 
-            string evidencia_Condicion, string nivel_Riesgo_Ambiental, string descripcion_Accion, 
-            int id_Responsable_Marcobre, string responsable_Contratista, DateTime fecha_Programada)
-        {
-            IdInspeccionCabecera = id_Inspeccion_Cabecera;
-            DescripcionCondicion = descripcion_Condicion;
-            IdTipoCondicion = id_Tipo_Condicion;
-            EvidenciaCondicion = evidencia_Condicion;
-            NivelRiesgo = nivel_Riesgo_Ambiental;
-            DescripcionAccion = descripcion_Accion;
-            IdResponsableMarcobre = id_Responsable_Marcobre;
-            ResponsableContratista = responsable_Contratista;
-            FechaProgramada = fecha_Programada;
-        }
+        
         public NuevaInspeccionDetalle() { }
     }
 
