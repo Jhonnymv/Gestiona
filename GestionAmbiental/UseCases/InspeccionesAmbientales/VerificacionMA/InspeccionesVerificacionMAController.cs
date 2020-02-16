@@ -77,9 +77,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
-        {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
+        {           
             DateTime fecha;
             if (filtroFecha != null)
                 fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));

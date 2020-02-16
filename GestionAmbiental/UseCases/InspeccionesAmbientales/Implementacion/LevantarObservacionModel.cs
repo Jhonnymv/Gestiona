@@ -14,7 +14,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         public int idObservacion { get; set; }
         public string EncryptedId { get; set; }
         public int idCabecera { get; set; }
-        [DisplayName("Tipo de Inspección:")]
+        [DisplayName("Tipo de Observación:")]
         public string TipoInspeccion { get; set; }
         [DisplayName("Asesor MAP o SSO:")]
         public string Asesor_MA_Seguridad { get; set; }

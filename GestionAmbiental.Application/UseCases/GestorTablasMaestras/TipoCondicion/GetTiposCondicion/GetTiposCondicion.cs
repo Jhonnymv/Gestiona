@@ -29,11 +29,13 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.TipoCondici
                 temp.Grupo = item.Grupo;
                 tiposCondicionOutputs.Add(temp);
             }
+            tiposCondicionOutputs = tiposCondicionOutputs.OrderBy(x => x.Descripcion).ToList();
             var output = new TiposCondicionOutput
             {
                 nTiposCondicion = tiposCondicionOutputs.Count,
                 TiposCondicion = tiposCondicionOutputs.Skip((pagina - 1) * rpp).Take(rpp).ToList()
             };
+            
 
             return output;
         }

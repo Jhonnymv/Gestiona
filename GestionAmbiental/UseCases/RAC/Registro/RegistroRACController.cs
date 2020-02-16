@@ -68,19 +68,23 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                                
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var items = await _selectItems.Execute();
                 var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerenciasObs = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerenciasObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 ViewBag.Usuarios = usuarios;
+                ViewBag.GerenciasObs = gerenciasObs;
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha,int filtroUsuario, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha,int filtroUsuario,int filtroGerenciaObs, string filtroCodigo, int pagina, int rpp)
         {
-
             DateTime fecha;
             if (filtroFecha != null)
                 fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
@@ -88,7 +92,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario, filtroGerenciaObs);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -150,6 +154,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var items = await _selectItems.Execute();
@@ -209,8 +214,9 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 }
                 else
                 {
-                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                    
                     var filePath = "";
+
                     if (model.Evidencia_Obs != null)
                     {
                         var extension = Path.GetExtension(model.Evidencia_Obs.FileName);
@@ -262,6 +268,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                            
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
@@ -377,7 +384,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
+                
                 var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
@@ -417,6 +424,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
@@ -451,7 +459,6 @@ namespace GestionAmbiental.UseCases.RAC.Registro
 
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
-                //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
 
                 return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
             }

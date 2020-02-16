@@ -66,11 +66,14 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 var items = await _selectItems.Execute();
                 var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 ViewBag.Usuarios = usuarios;
+                ViewBag.GerenciasObs = gerencias;
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int filtroUsuario, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, string filtroCodigo, int filtroUsuario, int filtroGerenciaObs, int pagina, int rpp)
         {
 
             DateTime fecha;
@@ -80,7 +83,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo, filtroUsuario);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo, filtroUsuario, filtroGerenciaObs);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;

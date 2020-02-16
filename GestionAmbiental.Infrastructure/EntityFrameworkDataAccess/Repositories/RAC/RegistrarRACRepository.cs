@@ -1,6 +1,8 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,9 +46,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Evidencia_Obs = nuevoRegistro.Evidencia_Obs,
                 Estado = nuevoRegistro.Estado
             };
-
+            
             _context.RACs.Add(racEntity);
             await _context.SaveChangesAsync();
+
+            var log = new Log_RAC();
+            var bkp = JsonConvert.SerializeObject(racEntity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_RAC = racEntity.Id_RAC;
+            log.Id_Usuario = racEntity.Id_Registrado_Por;
+            log.Tipo = TipoAccion.CREATE.ToString();
+
+            _context.Log_RACs.Add(log);
+            await _context.SaveChangesAsync();
+
             return racEntity.Id_RAC;
         }
         public async Task<string> GetUltimoCodigo()

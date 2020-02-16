@@ -121,7 +121,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
-            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            x.Estado.Equals(EstadosInspeccion.Registrado.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
@@ -159,7 +159,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
-            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            x.Estado.Equals(EstadosInspeccion.Registrado.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
@@ -198,7 +198,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("MAP") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
-            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            x.Estado.Equals(EstadosInspeccion.Registrado.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();
@@ -233,7 +233,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Tipo_Observacion.Equals("SSO") && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var id_inspecciones = await _context.Inspecciones_Cabecera.Where(x =>
-            !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())
+            x.Estado.Equals(EstadosInspeccion.Registrado.ToString())
             && observaciones.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .Select(x => x.Id_Inspeccion_Cabecera)
                 .ToListAsync();

@@ -73,6 +73,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
@@ -453,14 +454,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
-                //await DecryptFileAsync(archivePath + "encriptado.zip", archivePath + "desencriptado.zip");
 
                 return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);               
             }
         }
         public async Task<string> DownloadFTPFileAsync(string fileName)
-        {
-            
+        {            
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return "NoAutorizado";

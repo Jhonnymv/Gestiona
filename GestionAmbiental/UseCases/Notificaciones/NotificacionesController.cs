@@ -136,7 +136,6 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
                 msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
-                //msg.To.Add(new MailAddress(observacion.Asesor.Email));
                 msg.Subject = "Nueva Observacion Asignada";
                 msg.SubjectEncoding = Encoding.UTF8;
                 msg.IsBodyHtml = true;

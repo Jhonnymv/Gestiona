@@ -393,10 +393,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     var grupos = new List<SelectListItem>
                     {
                         new SelectListItem("--SELECCIONE--", "", true),
-                        new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
-                        new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
-                        new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
-                        new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
+                        new SelectListItem("Acto Subestándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
+                        new SelectListItem("Acto Subestándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
+                        new SelectListItem("Condición Subestándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
+                        new SelectListItem("Condición Subestándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
                     };
                     ViewBag.Grupos = grupos;
                     var model = new TipoCondicionModel();
@@ -442,10 +442,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     var grupos = new List<SelectListItem>
                     {
                         new SelectListItem("--SELECCIONE--", "", true),
-                        new SelectListItem("Acto Subéstándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
-                        new SelectListItem("Acto Subéstándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
-                        new SelectListItem("Condición Subéstándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
-                        new SelectListItem("Condición Subéstándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
+                        new SelectListItem("Acto Subestándar MAP",Domain.Enum.TiposCondicion.ASA.ToString(), false),
+                        new SelectListItem("Acto Subestándar SSO",Domain.Enum.TiposCondicion.ASS.ToString(), false),
+                        new SelectListItem("Condición Subestándar MAP",Domain.Enum.TiposCondicion.CSA.ToString(), false),
+                        new SelectListItem("Condición Subestándar SSO",Domain.Enum.TiposCondicion.CSS.ToString(), false),
                     };
                     ViewBag.Grupos = grupos;
                     return View();

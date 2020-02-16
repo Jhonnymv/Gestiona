@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Application.UseCases.Inspecciones.Registro.EliminarObservacion;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using System;
@@ -13,13 +14,16 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
     {
         private readonly IEditarInspeccionReadOnlyRepository _editarInspeccionReadonlyRepository;
         private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
+        private readonly IDetalleInspeccionReadOnlyRepository _detalleInspeccionReadOnlyRepository;
+        private readonly IEliminarObservacion _eliminarObservacion;
 
-        public EditarInspeccionCabecera(
-            IEditarInspeccionReadOnlyRepository editarInspeccionReadonlyRepository,
-            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
+        public EditarInspeccionCabecera(IEditarInspeccionReadOnlyRepository editarInspeccionReadonlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository, 
+            IDetalleInspeccionReadOnlyRepository detalleInspeccionReadOnlyRepository, IEliminarObservacion eliminarObservacion)
         {
             _editarInspeccionReadonlyRepository = editarInspeccionReadonlyRepository ?? throw new ArgumentNullException(nameof(editarInspeccionReadonlyRepository));
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
+            _detalleInspeccionReadOnlyRepository = detalleInspeccionReadOnlyRepository ?? throw new ArgumentNullException(nameof(detalleInspeccionReadOnlyRepository));
+            _eliminarObservacion = eliminarObservacion ?? throw new ArgumentNullException(nameof(eliminarObservacion));
         }
 
         public async Task Execute(
@@ -50,7 +54,13 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
 
             switch (opcion)
             {
-                case "Eliminar": cabecera.Estado = EstadosInspeccion.Eliminado.ToString();break;
+                case "Eliminar":
+                    cabecera.Codigo = "TBD";
+                    cabecera.Estado = EstadosInspeccion.Eliminado.ToString();
+                    var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(cabecera.IdCabecera);
+                    foreach(var observacion in observaciones)
+                        await _eliminarObservacion.Execute(observacion.IdInspeccionDetalle, usuario_red);
+                    break;
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
                 case "Guardar":
                     cabecera.Estado = EstadosInspeccion.Registrado.ToString();

@@ -1,6 +1,8 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,21 +23,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             rac.Evidencia_Cierre = reporte.Evidencia_Cierre;
             rac.Comentario_Cierre = reporte.Comentario_Cierre;
             rac.Estado = EstadosRAC.Implementado.ToString();
-            //detalle.Fecha_Cierre = DateTime.Now;
             _context.RACs.Update(rac);
             await _context.SaveChangesAsync();
-            /*
-            var log = new Log_Inspeccion();
+            
+            var log = new Log_RAC();
             var bkp = JsonConvert.SerializeObject(rac);
             log.Bkp = bkp;
             log.Fecha = DateTime.Now;
-            log.Id_Inspeccion_Cabecera = rac.Id_Inspeccion_Cabecera;
-            log.Id_Usuario = Id_Usuario;
+            log.Id_RAC = rac.Id_RAC;
+            log.Id_Usuario = IdUsuario;
             log.Tipo = TipoAccion.UPDATE.ToString();
 
-            _context.Log_Inspecciones.Add(log);
+            _context.Log_RACs.Add(log);
             await _context.SaveChangesAsync();
-            */
+            
         }
     }
 }

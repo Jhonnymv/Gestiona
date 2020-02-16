@@ -155,7 +155,7 @@
             {
                 <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>                
                 <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
-            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
                 @if (ViewBag.nObservacioness > 0)
                 {
                     <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
@@ -222,9 +222,6 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            console.log(@(ViewBag.Permiso.ToString().ToLower()));
-            console.log('@Model.Estado');
-
            if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', false);
@@ -240,7 +237,6 @@
                $('#Tipo_Inspeccion').prop('disabled', false);
                //disable buttons
                //$("#nueva_obs").css('display', 'none');
-
             }
 
     });
@@ -274,7 +270,6 @@
                         "fecha": fecha
                     },
                     success: function (data) {
-                        console.log("Cambiado")
                         location.reload()
                     }
                 });

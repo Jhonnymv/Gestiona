@@ -14,7 +14,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public int idCabecera { get; set; }
         public int IdObservacion { get; set; }
         public string IdObservacionEncryp { get; set; }
-        [DisplayName("Tipo de Inspección:")]
+        [DisplayName("Tipo de Observación:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string TipoInspeccion { get; set; }
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]

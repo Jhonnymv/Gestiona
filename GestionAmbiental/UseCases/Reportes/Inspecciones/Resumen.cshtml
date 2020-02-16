@@ -7,7 +7,7 @@
 
     var Xinspecciones_diarias = Newtonsoft.Json.JsonConvert.SerializeObject(Model[0].data.Select(x => x.Nombre).ToList());
     var Yinspecciones_diarias = Newtonsoft.Json.JsonConvert.SerializeObject(Model[0].data.Select(x => x.Valor).ToList());
-
+    //No se utiliza map vs sso
     var Xmap_vs_sso = Newtonsoft.Json.JsonConvert.SerializeObject(Model[1].data.Select(x => x.Nombre).ToList());
     var Ymap_vs_sso = Newtonsoft.Json.JsonConvert.SerializeObject(Model[1].data.Select(x => x.Valor).ToList());
 
