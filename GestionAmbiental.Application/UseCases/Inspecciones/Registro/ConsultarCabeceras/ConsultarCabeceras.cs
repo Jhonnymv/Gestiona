@@ -15,9 +15,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
-        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int gerencia, string codigo)
+        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int empresa,int reg_por, string codigo)
         {
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fecha, gerencia, codigo);
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fecha, empresa,reg_por, codigo);
             var output = new InspeccionesCabeceraOutput();
             output.NCabeceras = cabeceras.Count;
             output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();

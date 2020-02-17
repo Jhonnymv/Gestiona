@@ -19,12 +19,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fecha, int empresa,int reg_por, string codigo)
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
                 c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
+                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
+                && c.Id_Registrado_Por.Equals(reg_por != 0 ? reg_por : c.Id_Registrado_Por)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && (c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || c.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
                 .OrderByDescending(x=>x.Codigo)
@@ -94,7 +95,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fecha, int gerencia, string codigo,int id_usuario)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fecha, int empresa,int reg_por, string codigo,int id_usuario)
         {
             var obsPendImp = await _context.Inspecciones_Detalle
                  .Where(x =>
@@ -106,7 +107,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
                 obsPendImp.Select(y => y.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera)
                 && c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
+                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
+                && c.Id_Registrado_Por.Equals(reg_por!=0 ? reg_por:c.Id_Registrado_Por)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Estado.Equals(EstadosInspeccion.Registrado.ToString())
                 )
@@ -157,7 +159,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fecha, int gerencia, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fecha, int empresa,int reg_por, string codigo)
         {
             var obsPendVer = await _context.Inspecciones_Detalle
                .Where(x => x.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
@@ -168,7 +170,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 obsPendVer.Select(y => y.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera)
                 && c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) 
                 && c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Gerencia.Equals(gerencia != 0 ? gerencia : c.Id_Gerencia)
+                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
+                && c.Id_Registrado_Por.Equals(reg_por!=0?reg_por:c.Id_Registrado_Por)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 )
                 .OrderByDescending(x => x.Codigo)

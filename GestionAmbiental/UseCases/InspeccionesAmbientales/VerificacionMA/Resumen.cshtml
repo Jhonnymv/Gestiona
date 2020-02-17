@@ -11,26 +11,36 @@
 </div>
 <form autocomplete="off">
     <div class="row mb-2 justify-content-center">
-        <div class="col-lg-1 mt-1">
+        <div class="col-lg-2 mt-1">
             <label>Fecha de Inspección:</label>
         </div>
-        <div class="col-lg-2 mt-1">
+        <div class="col-lg-3 mt-1">
             <input type="date" class="form-control" id="fecha_filtro">
         </div>
-        <div class="col-lg-1 mt-1">
-            <label>Área Ejecutora de la Inspección:</label>
+        <div class="col-lg-2 mt-1">
+            <label>Empresa Inspeccionada:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select id="gerenciaEjecutora_filtro" asp-items="@ViewBag.Filtro" class="form-control"></select>
+            <select id="empresaInspec_filtro" asp-items="@ViewBag.Empresas" class="form-control"></select>
         </div>
-        <div class="col-lg-1 mt-1">
-            <label>Buscar Código:</label>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-2 mt-1">
+            <label>Registrado Por:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
+            <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="form-control"></select>
         </div>
         <div class="col-lg-2 mt-1">
+            <label>Buscar Código:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
             <input type="text" class="form-control" id="codigo_filtro">
         </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
         <div class="col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar()">Filtrar</button>
+            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
         </div>
     </div>
 </form>
@@ -69,7 +79,8 @@
                     "pagina": pag,
                     "rpp":10,
                     "filtroFecha": $('#fecha_filtro').val(),
-                    "filtroGerencia": $('#gerenciaEjecutora_filtro').val(),
+                    "filtroEmpresa": $('#empresaInspec_filtro').val(),
+                    "filtroUsuario": $("#registrado_por_filtro").val(),
                     "filtroCodigo": $('#codigo_filtro').val()
                 },
                 traditional: true,

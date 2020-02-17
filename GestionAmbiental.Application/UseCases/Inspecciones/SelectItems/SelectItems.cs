@@ -59,8 +59,12 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
         public async Task<ItemsSelectResumen> ItemVistaResumen()
         {
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
+            var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
+            var empresas = await _getItemsReadOnlyRepository.GetEmpresaContratistas();
             var output = new ItemsSelectResumen();
             output.GerenciaEjecutora = gerencias;
+            output.EmpContratMarcobre = empresas;
+            output.Usuarios = usuarios; 
             return output;
         }
     }

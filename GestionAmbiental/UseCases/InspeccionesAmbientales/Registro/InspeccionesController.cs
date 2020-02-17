@@ -91,21 +91,25 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));            
             
-            ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-                var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+ " "+g.Apellidos }).ToList();
+                filtroUsuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                ViewBag.Filtro = filtroGerencias;
+                ViewBag.Empresas = filtroEmpresas;
+                ViewBag.Usuarios = filtroUsuarios;
+
                 return View();
            }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroGerencia, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroEmpresa,int filtroUsuario, string filtroCodigo, int pagina, int rpp)
         {
             DateTime fecha;
             if (filtroFecha != null)
@@ -114,7 +118,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 fecha = (DateTime)SqlDateTime.MinValue;
 
             filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroGerencia, filtroCodigo);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroEmpresa,filtroUsuario, filtroCodigo);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
