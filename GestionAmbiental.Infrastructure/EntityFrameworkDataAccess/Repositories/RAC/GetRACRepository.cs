@@ -141,7 +141,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 && c.Id_Gerencia_Obs.Equals(id_Gerencia_Obs != 0 ? id_Gerencia_Obs : c.Id_Gerencia_Obs)
                 && (
                 c.Estado.Equals(EstadosRAC.Registrado.ToString()) ||
-                c.Estado.Equals(EstadosRAC.Implementado.ToString()) ||
+                c.Estado.Equals(EstadosRAC.Ampliado.ToString()) ||
                 c.Estado.Equals(EstadosRAC.Rechazado.ToString())
                 ))
                 .OrderByDescending(x => x.Codigo)
@@ -205,9 +205,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Id_Supervisor.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Supervisor)
                 && c.Id_Gerencia_Obs.Equals(id_Gerencia_Obs != 0 ? id_Gerencia_Obs:c.Id_Gerencia_Obs)
-                && (c.Estado.Equals(EstadosRAC.Implementado.ToString())|| 
-                    c.Estado.Equals(EstadosRAC.Aprobado.ToString())||
-                    c.Estado.Equals(EstadosRAC.Rechazado.ToString())))
+                && c.Estado.Equals(EstadosRAC.Implementado.ToString()))
                 .OrderByDescending(x => x.Codigo)
                 .ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();

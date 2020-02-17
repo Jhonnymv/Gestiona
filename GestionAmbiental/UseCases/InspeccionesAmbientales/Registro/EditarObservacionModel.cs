@@ -35,13 +35,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable Marcobre:")]
+        [DisplayName("Responsable de Marcobre para levantar Obs.:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string ResponsableCont { get; set; }
-        [DisplayName("Fecha Programada:")]
+        [DisplayName("Fecha Programada para levantar Obs.:")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string FechaProgramada { get; set; }
     }

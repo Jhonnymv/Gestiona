@@ -36,7 +36,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 output.Add(new Dimension(item, reportes.Where(x => x.Estado.Equals(item)).Count()));
             }
-
+            var totalRAC = await _context.RACs.CountAsync();
+            output.Add(new Dimension("total", totalRAC));
             return output;
         }
         public async Task<List<Domain.RAC.RAC>> GetDetalleReportesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin, EstadosRAC estado)

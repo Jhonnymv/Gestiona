@@ -46,8 +46,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
             var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
-            var responsableMA = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
-            var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
+            var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
+            var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
+            var Asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
+            var Asesor_Domain = new Usuario(Asesor.Id_Usuario, Asesor.Id_Rol, Asesor.Nombres, Asesor.Apellidos, Asesor.Email);
             var detalle = new InspeccionDetalle();
 
             detalle.IdInspeccionCabecera = inspeccionDetalle.Id_Inspeccion_Cabecera;
@@ -58,11 +60,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalle.DescripcionAccion = inspeccionDetalle.Descripcion_Accion;
             detalle.EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion;
             detalle.NivelRiesgo = inspeccionDetalle.Nivel_Riesgo;
-            detalle.ResponsableMarcobre = responsableMA_Domain;
+            detalle.ResponsableMarcobre = responsableMarcobre_Domain;
             detalle.ResponsableContratista = inspeccionDetalle.Responsable_Contratista;
             detalle.FechaProgramada = inspeccionDetalle.Fecha_Programada;
             detalle.ComentarioImplementacion = inspeccionDetalle.Comentario_Implementacion;
-            detalle.Asesor = responsableMA_Domain;
+            detalle.Asesor = Asesor_Domain;
             detalle.FechaCierre = inspeccionDetalle.Fecha_Cierre;
             detalle.EvidenciaImplementacion = inspeccionDetalle.Evidencia_Implementacion;
             return detalle;
@@ -72,8 +74,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
             var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
-            var responsableMA = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
-            var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
+            var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
+            var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
+            var Asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
+            var Asesor_Domain = new Usuario(Asesor.Id_Usuario, Asesor.Id_Rol, Asesor.Nombres, Asesor.Apellidos, Asesor.Email);
             var detalle = new InspeccionDetalle();
 
             detalle.IdInspeccionCabecera = inspeccionDetalle.Id_Inspeccion_Cabecera;
@@ -84,11 +88,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalle.DescripcionAccion = inspeccionDetalle.Descripcion_Accion;
             detalle.EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion;
             detalle.NivelRiesgo = inspeccionDetalle.Nivel_Riesgo;
-            detalle.ResponsableMarcobre = responsableMA_Domain;
+            detalle.ResponsableMarcobre = responsableMarcobre_Domain;
             detalle.ResponsableContratista = inspeccionDetalle.Responsable_Contratista;
             detalle.FechaProgramada = inspeccionDetalle.Fecha_Programada;
             detalle.ComentarioImplementacion = inspeccionDetalle.Comentario_Implementacion;
-            detalle.Asesor = responsableMA_Domain;
+            detalle.Asesor = Asesor_Domain;
             detalle.FechaCierre = inspeccionDetalle.Fecha_Cierre;
             detalle.EvidenciaImplementacion = inspeccionDetalle.Evidencia_Implementacion;
             detalle.FechaVerificacion = inspeccionDetalle.Fecha_Verificacion;

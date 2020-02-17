@@ -58,6 +58,33 @@
         </div>
     </div>
 </form>
+<!--Contador de reportes totales-->
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card border-left-contador shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-contador text-uppercase mb-1">Cantidad de RAC hasta la fecha</div>
+                        <div id="NTotalRAC" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6 col-sm-6">
+        <div class="card border-left-contador shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-contador text-uppercase mb-1">Cantidad de RAC encontrados</div>
+                        <div id="NFiltroRAC" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--Contador de reportes por estado-->
 <div class="row mb-2">
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
@@ -380,7 +407,7 @@
                     success: (response) => {
                         //Actualizar contador
                         var nObs = response.nObservaciones;
-                        ActualizarContadorRxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor);
+                        ActualizarContadorRxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor,nObs[6].valor);
                         //Actualizar input fechas
                         fechaInicio = $("#FInicio").val();
                         fechaFin = $("#FFin").val();
@@ -401,7 +428,7 @@
             }
         }
         //Para Contador de reportes por estado
-        function ActualizarContadorRxE(reg, imp, apr, rec, ven, amp) {
+        function ActualizarContadorRxE(reg, imp, apr, rec, ven, amp, total) {
             //Reiniciar valores
             $("#ObsRegistrado").html(0);
             $("#ObsImplementado").html(0);
@@ -409,6 +436,8 @@
             $("#ObsRechazado").html(0);
             $("#ObsVencido").html(0);
             $("#ObsAmpliado").html(0);
+            $("#NTotalRAC").html(0);
+            $("#NFiltroRAC").html(0);
             //Nuevo valores
             $("#ObsRegistrado").html(reg);
             $("#ObsImplementado").html(imp);
@@ -416,6 +445,8 @@
             $("#ObsRechazado").html(rec);
             $("#ObsVencido").html(ven);
             $("#ObsAmpliado").html(amp);
+            $("#NTotalRAC").html(total);
+            $("#NFiltroRAC").html(reg + imp + apr + rec + ven + amp);
         }
         //Para gráfico RAC Fecha
         function ActualizarContadorRxFecha() {
@@ -1252,5 +1283,5 @@
                 });
         }
     </script>
-    
+
 }

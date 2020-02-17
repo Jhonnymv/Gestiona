@@ -249,3 +249,10 @@ td {
 .click-option:hover {
     background-color: rgba(190, 190, 190, 0.5);
 }
+.border-left-contador {
+    border-left: .25rem solid #2e6793 !important;
+}
+
+.text-contador {
+    color: #2e6793;
+}

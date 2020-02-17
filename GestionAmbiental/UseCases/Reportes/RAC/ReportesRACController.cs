@@ -102,11 +102,7 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
 
             dynamic response = new
             {
-                nObservaciones = nObservaciones,
-                /*
-                fInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd"),
-                fFin = DateTime.Now.ToString("yyyy-MM-dd")
-                */
+                nObservaciones = nObservaciones
             };
             return Ok(response);
         }

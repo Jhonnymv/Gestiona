@@ -25,11 +25,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable Marcobre:")]
+        [DisplayName("Responsable de Marcobre para levantar Obs.:")]
         public string ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista:")]
         public string ResponsableCont { get; set; }
-        [DisplayName("Fecha Programada:")]
+        [DisplayName("Fecha Programada para levantar Obs.:")]
         public string FechaProgramada { get; set; }
         [DisplayName("Evidencia:")]
         public List<string> EvidenciasInspeccion { get; set; }
