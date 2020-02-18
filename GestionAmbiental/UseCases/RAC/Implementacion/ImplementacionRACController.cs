@@ -111,7 +111,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Responsable_Cierre + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
-                    if (EstadosRAC.Registrado.ToString() == fila.Estado || EstadosRAC.Rechazado.ToString() == fila.Estado)
+                    if (EstadosRAC.Registrado.ToString() == fila.Estado||EstadosRAC.Ampliado.ToString()==fila.Estado || EstadosRAC.Rechazado.ToString() == fila.Estado)
                     {
                         filasTabla += "<td>Pendiente de Implementación</td>";
                     }

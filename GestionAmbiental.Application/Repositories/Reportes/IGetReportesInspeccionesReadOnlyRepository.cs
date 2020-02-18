@@ -9,19 +9,8 @@ namespace GestionAmbiental.Application.Repositories.Reportes
 {
     public interface IGetReportesInspeccionesReadOnlyRepository
     {
-        Task<Dimension> GetObservacionesMAP();
-        Task<Dimension> GetObservacionesSSO();
-        Task<List<Dimension>> GetObservacionesXUsuario();
-        Task<List<Dimension>> GetObservacionesXEstado();
-        Task<List<ObservacionesUsuario>> GetResumenObservacionesXUsuario(string filtro);
-        Task<List<Dimension>> GetInspeccionesDiarias();
-        Task<List<Dimension>> GetObservacionesNivelRiesgoMAP();
-        Task<List<Dimension>> GetObservacionesNivelRiesgoSSO();
-        Task<List<Dimension>> GetObservacionesTipoInspeccionMAP();
-        Task<List<Dimension>> GetObservacionesTipoInspeccionSSO();
-        Task<List<DetalleObservacionXEstado>> GetDetalleObservacionXEstados(EstadosInspeccion estado);
-        Task<List<List<Dimension>>> GetObservacionesMAPXTipoCondicion();
-        Task<List<List<Dimension>>> GetObservacionesSSOXTipoCondicion();
+        Task<List<Dimension>> GetNInspecciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin);
+        Task<List<Dimension>> GetInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string fecuencia);
 
         /*
         Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin);

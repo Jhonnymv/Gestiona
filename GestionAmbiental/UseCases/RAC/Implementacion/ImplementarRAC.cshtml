@@ -171,7 +171,7 @@
                 <label asp-for="Evidencia_Cierre"></label>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-4">
-                @if (Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString())
+                @if (Model.Estado == EstadosRAC.Registrado.ToString()  || Model.Estado == EstadosRAC.Ampliado.ToString()|| Model.Estado == EstadosRAC.Rechazado.ToString())
                 {
                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Cierre" data-valmsg-replace="true">
                         <span id="danger_evidencia" class=""></span>
@@ -192,7 +192,7 @@
                 <label asp-for="Comentario_Cierre"></label>
             </div>
             <div class="col-sm-12 col-md-12 col-lg-4">
-                @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
+                @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Ampliado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
                 {
                     <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250"></textarea>
                 }
@@ -206,7 +206,7 @@
     <div class="modal-footer">
         <a class="btn btn-secondary" style="color:white" asp-controller="ImplementacionRAC" asp-action="Resumen">Cancelar</a>
         <a class="btn btn-danger" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
-        @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
+        @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Ampliado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
         {
             <button type="button" class="btn btn-primary" onclick="guardar()">Implementar</button>
         }

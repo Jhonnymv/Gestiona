@@ -103,7 +103,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Supervisor + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
-                    if (EstadosRAC.Rechazado.ToString() == fila.Estado)
+                    if (EstadosRAC.Rechazado.ToString() == fila.Estado|| EstadosRAC.Registrado.ToString() == fila.Estado|| EstadosRAC.Ampliado.ToString() == fila.Estado)
                     {
                         filasTabla += "<td>Pendiente de implementación</td>";
                     }

@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using Newtonsoft.Json;
 using System;
@@ -39,7 +40,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
                 DescripcionAccion = Descripcion_Accion,
                 IdResponsableMarcobre = Id_Responsable_Marcobre,
                 ResponsableContratista = Responsable_Contratista,
-                FechaProgramada = Convert.ToDateTime(Fecha_Programada)
+                FechaProgramada = Convert.ToDateTime(Fecha_Programada),
+                Estado = EstadosInspeccion.Registrado.ToString()                
             };
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
             await _editarInspeccionReadOnlyRepository.EditarInspeccionDetalle(detalle, Id_Usuario);
