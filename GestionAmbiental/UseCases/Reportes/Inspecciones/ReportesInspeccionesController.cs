@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspecciones;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXFecha;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.AspNetCore.DataProtection;
@@ -21,6 +22,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetItemsFiltro _getItemsFiltro;
         private readonly IGetNInspecciones _getNInspecciones;
         private readonly IGetInspeccionesXFecha _getInspeccionesXFecha;
+        private readonly IGetObservacionesXFecha _getObservacionesXFecha;
 
 
         private readonly IDataProtector _protector;
@@ -28,13 +30,15 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         public ReportesInspeccionesController(
             IGetItemsFiltro getItemsFiltro,
             IGetNInspecciones getNInspecciones,
-            IGetInspeccionesXFecha getInspeccionesXFecha,
+            IGetInspeccionesXFecha getInspeccionesXFecha, 
+            IGetObservacionesXFecha getObservacionesXFecha,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getItemsFiltro = getItemsFiltro;
             _getNInspecciones = getNInspecciones;
             _getInspeccionesXFecha = getInspeccionesXFecha;
+            _getObservacionesXFecha = getObservacionesXFecha;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
@@ -95,8 +99,16 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         }
         public async Task<IActionResult> ActualizarInspeccionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia)
         {
-            frecuencia = "Semanal";
             var inspeccionesXFecha = await _getInspeccionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia);
+            dynamic response = new
+            {
+                inspeccionesXFecha = inspeccionesXFecha
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia,string estado)
+        {
+            var inspeccionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia,estado);
             dynamic response = new
             {
                 inspeccionesXFecha = inspeccionesXFecha

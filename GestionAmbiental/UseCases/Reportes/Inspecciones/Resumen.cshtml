@@ -126,7 +126,19 @@
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registrados</h6>
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registrados</h6>
+                    </div>
+                    <div class="col-2">
+                        <select id="sel_frec_insp_fecha" class="form-control">
+                            <option value="Diario" selected>Diario</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="chart-area">
@@ -141,6 +153,47 @@
                         </div>
                     </div>
                     <canvas id="chart_insp_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Contador de observacioens por fecha-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registrados</h6>
+                    </div>
+                    <div class="col-2">
+                        <select id="sel_frec_obs_estado" class="form-control">
+                            <option value="Tod" selected>TODOS</option>
+                            <option value="Reg">Registrado</option>
+                            <option value="Imp">Implementado</option>
+                            <option value="Ven">Vencido</option>
+                            <option value="Apr">Aprobado</option>
+                            <option value="Rec">Rechazado</option>
+                            <option value="Eli">Eliminado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class="">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class="">
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="chart_obs_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
@@ -188,6 +241,7 @@
                         ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor);
 
                         ActualizarContadorRxFecha();
+                        ActualizarContadorOxFecha();
                         /*
                         //Actualizar contador
                         var nObs = response.nObservaciones;
@@ -219,6 +273,9 @@
             $("#InsEliminado").html(elim);
         }
         //Para contador de inspecciones x fecha
+        $("#sel_frec_insp_fecha").on('change', function () {
+            ActualizarContadorRxFecha();
+        });
         function ActualizarContadorRxFecha() {
             $.ajax({
                 type: "POST",
@@ -229,7 +286,8 @@
                     "asesor": $("#IdAsesor").val(),
                     "respLevObs": $("#IdRespLev").val(),
                     "FechaInicio": $("#FInicio").val(),
-                    "FechaFin": $("#FFin").val()
+                    "FechaFin": $("#FFin").val(),
+                    "frecuencia": $("#sel_frec_insp_fecha").val()
                 },
                 traditional: true,
                 success: (response) => {
@@ -272,7 +330,7 @@
                     "data": {
                         "labels": labels,
                         "datasets": [{
-                            "label": "# Reportes registrados",
+                            "label": "# Inspecciones Registradas",
                             "data": data,
                             "fill": false,
                             "backgroundColor": "rgb(46, 103, 147)",
@@ -284,7 +342,99 @@
                         "scales": {
                             'yAxes': [{
                                 'ticks': {
-                                    'stepSize': stepSize
+                                    'stepSize': stepSize,
+                                    'beginAtZero': true
+                                }
+                            }]
+                        },
+                        "legend": {
+                            "labels": {
+                                // This more specific font property overrides the global property
+                                fontColor: 'black'
+                            }
+                        },
+                        "plugins": {
+                            datalabels: {
+                                color: 'white',
+                                defaultFontSize: 15
+                            }
+                        }
+                    }
+                });
+        }
+        //Para contador de observaciones x fecha
+        $("#sel_frec_obs_estado").on('change', function () {
+            ActualizarContadorOxFecha();
+        });
+        function ActualizarContadorOxFecha() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/ActualizarObservacionesXFecha",
+                data: {
+                    "gerencia": $("#IdGerencia").val(),
+                    "empresa": $("#IdEmpresa").val(),
+                    "asesor": $("#IdAsesor").val(),
+                    "respLevObs": $("#IdRespLev").val(),
+                    "FechaInicio": $("#FInicio").val(),
+                    "FechaFin": $("#FFin").val(),
+                    "frecuencia": $("#sel_frec_insp_fecha").val(),
+                    "estado": $("#sel_frec_obs_estado").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    /*if (data_insp_fechas.length > 0) {
+                        //Actualizar contador
+                        data_insp_fechas = response.inspeccionesXFecha;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_insp_fechas.length; i++) {
+                            labels.push(data_insp_fechas[i].nombre);
+                            data.push(data_insp_fechas[i].valor);
+                        }
+                        //Actualizar gráfica
+                        graph_insp_fechas.data.labels = labels;
+                        graph_insp_fechas.data.datasets[0].data = data;
+                        graph_insp_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                        graph_insp_fechas.update();
+                    } else {
+                        //Actualizar contador
+                        data_insp_fechas = response.inspeccionesXFecha;
+
+                        var labels = [];
+                        var data = [];
+                        for (var i = 0; i < data_insp_fechas.length; i++) {
+                            labels.push(data_insp_fechas[i].nombre);
+                            data.push(data_insp_fechas[i].valor);
+                        }
+                        //Crear gráfica
+                        CrearGraficaContardorIxFecha(labels, data, Math.max(data) / 10);
+                    }*/
+                }
+            });
+        }
+        function CrearGraficaContardorOxFecha(labels, data, stepSize) {
+            graph_insp_fechas = new Chart(
+                document.getElementById("chart_insp_fechas"),
+                {
+                    "type": "bar",
+                    "data": {
+                        "labels": labels,
+                        "datasets": [{
+                            "label": "# Inspecciones Registradas",
+                            "data": data,
+                            "fill": false,
+                            "backgroundColor": "rgb(46, 103, 147)",
+                            "borderColor": "rgb(46, 103, 147)",
+                            "lineTension": 0.1
+                        }]
+                    },
+                    "options": {
+                        "scales": {
+                            'yAxes': [{
+                                'ticks': {
+                                    'stepSize': stepSize,
+                                    'beginAtZero': true
                                 }
                             }]
                         },
