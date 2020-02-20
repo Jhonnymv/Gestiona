@@ -28,7 +28,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
 
             var observacion = new NuevaInspeccionDetalle();
             
-
             observacion.IdInspeccionDetalle = idObservacion;
             observacion.TipoInspeccion = data_obs.TipoObservacion;
             observacion.IdAsesorMASeguridad = data_obs.Asesor.IdUsuario;

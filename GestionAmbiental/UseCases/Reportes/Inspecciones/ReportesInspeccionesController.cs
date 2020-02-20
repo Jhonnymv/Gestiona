@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspecciones;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNObservaciones;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXFecha;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPvsSSO;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPvsSSO_Estado;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.AspNetCore.DataProtection;
@@ -23,7 +26,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetNInspecciones _getNInspecciones;
         private readonly IGetInspeccionesXFecha _getInspeccionesXFecha;
         private readonly IGetObservacionesXFecha _getObservacionesXFecha;
-
+        private readonly IGetNObservaciones _getNObservaciones;
+        private readonly IGetObsMAPvsSSO _getObsMAPvsSSO;
+        private readonly IGetObsMAPvsSSO_Estado _getObsMAPvsSSO_Estado;
 
         private readonly IDataProtector _protector;
 
@@ -32,6 +37,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetNInspecciones getNInspecciones,
             IGetInspeccionesXFecha getInspeccionesXFecha, 
             IGetObservacionesXFecha getObservacionesXFecha,
+            IGetNObservaciones getNObservaciones,
+            IGetObsMAPvsSSO getObsMAPvsSSO,
+            IGetObsMAPvsSSO_Estado getObsMAPvsSSO_Estado,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -39,6 +47,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getNInspecciones = getNInspecciones;
             _getInspeccionesXFecha = getInspeccionesXFecha;
             _getObservacionesXFecha = getObservacionesXFecha;
+            _getNObservaciones = getNObservaciones;
+            _getObsMAPvsSSO = getObsMAPvsSSO;
+            _getObsMAPvsSSO_Estado = getObsMAPvsSSO_Estado;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
@@ -108,13 +119,39 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         }
         public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia,string estado)
         {
-            var inspeccionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia,estado);
+            var observacionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia,estado);
             dynamic response = new
             {
-                inspeccionesXFecha = inspeccionesXFecha
+                observacionesXFecha = observacionesXFecha
             };
             return Ok(response);
         }
-
+        public async Task<IActionResult> ActualizarContadorObservaciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var nObservaciones = await _getNObservaciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                nObservaciones = nObservaciones
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var mapvssso = await _getObsMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                mapvssso = mapvssso
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var mapvssso = await _getObsMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                mapvssso = mapvssso
+            };
+            return Ok(response);
+        }
     }
 }
