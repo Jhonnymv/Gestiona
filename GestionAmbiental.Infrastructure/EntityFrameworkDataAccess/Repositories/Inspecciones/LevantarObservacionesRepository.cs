@@ -1,7 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
-using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Inspecciones
 {
-   public class LevantarObservacionesRepository : ILevantarObservacionesReadOnlyRepository
+    public class LevantarObservacionesRepository : ILevantarObservacionesReadOnlyRepository
     {
         private readonly Context _context;
         public LevantarObservacionesRepository(Context context)

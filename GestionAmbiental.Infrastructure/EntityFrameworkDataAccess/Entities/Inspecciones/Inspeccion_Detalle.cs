@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones
 {
     [Table("Tb_Inspeccion_Detalle")]
     public class Inspeccion_Detalle
@@ -41,7 +41,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Cierre { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime? Fecha_Verificacion{ get; set; }
+        public DateTime? Fecha_Verificacion { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Comentario_Verificacion { get; set; }
         [Column(TypeName = "varchar(15)")]

@@ -6,7 +6,7 @@ using System.Text;
 
 
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones
 {
     [Table("Tb_Inspeccion_Cabecera")]
     public class Inspeccion_Cabecera

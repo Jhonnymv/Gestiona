@@ -1,6 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
 using GestionAmbiental.Domain.Enum;
-using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;

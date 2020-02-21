@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones
 {
     [Table("Tb_Log_Inspeccion")]
     public class Log_Inspeccion

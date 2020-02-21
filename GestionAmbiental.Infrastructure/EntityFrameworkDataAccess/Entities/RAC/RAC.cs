@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC
 {
     [Table("Tb_RAC")]
     public class RAC

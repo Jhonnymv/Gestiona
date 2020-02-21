@@ -1,6 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
 using GestionAmbiental.Domain.Enum;
-using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -21,7 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<int> RegistrarRAC(Domain.RAC.RAC nuevoRegistro)
         {
-            var racEntity = new Entities.RAC
+            var racEntity = new Entities.RAC.RAC
             {
                 Id_Registrado_Por = nuevoRegistro.Id_Registrado_Por,
                 Codigo = nuevoRegistro.Codigo,

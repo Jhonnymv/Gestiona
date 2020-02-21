@@ -1,7 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Inspecciones;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
-using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
