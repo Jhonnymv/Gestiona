@@ -6,9 +6,15 @@ using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccione
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspecciones;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNObservaciones;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsClasificacionMA;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsClasificacionSSO;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObservacionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPvsSSO;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPvsSSO_Estado;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsNivelRiesgoMA;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsNivelRiesgoSSO;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsTipoCondicionxNivelRiesgoMA;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsTipoCondicionxNivelRiesgoSSO;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.AspNetCore.DataProtection;
@@ -29,6 +35,12 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetNObservaciones _getNObservaciones;
         private readonly IGetObsMAPvsSSO _getObsMAPvsSSO;
         private readonly IGetObsMAPvsSSO_Estado _getObsMAPvsSSO_Estado;
+        private readonly IGetObsNivelRiesgoMA _getObsNivelRiesgoMA;
+        private readonly IGetObsNivelRiesgoSSO _getObsNivelRiesgoSSO;
+        private readonly IGetObsClasificacionMA _getObsClasificacionMA;
+        private readonly IGetObsClasificacionSSO _getObsClasificacionSSO;
+        private readonly IGetObsTipoCondicionxNivelRiesgoMA _getObsTipoCondicionxNivelRiesgoMA;
+        private readonly IGetObsTipoCondicionxNivelRiesgoSSO _getObsTipoCondicionxNivelRiesgoSSO;
 
         private readonly IDataProtector _protector;
 
@@ -40,6 +52,12 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetNObservaciones getNObservaciones,
             IGetObsMAPvsSSO getObsMAPvsSSO,
             IGetObsMAPvsSSO_Estado getObsMAPvsSSO_Estado,
+            IGetObsNivelRiesgoMA getObsNivelRiesgoMA,
+            IGetObsNivelRiesgoSSO getObsNivelRiesgoSSO,
+            IGetObsClasificacionMA getObsClasificacionMA,
+            IGetObsClasificacionSSO getObsClasificacionSSO,
+            IGetObsTipoCondicionxNivelRiesgoMA getObsTipoCondicionxNivelRiesgoMA,
+            IGetObsTipoCondicionxNivelRiesgoSSO getObsTipoCondicionxNivelRiesgoSSO,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -50,6 +68,12 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getNObservaciones = getNObservaciones;
             _getObsMAPvsSSO = getObsMAPvsSSO;
             _getObsMAPvsSSO_Estado = getObsMAPvsSSO_Estado;
+            _getObsNivelRiesgoMA = getObsNivelRiesgoMA;
+            _getObsNivelRiesgoSSO = getObsNivelRiesgoSSO;
+            _getObsClasificacionMA = getObsClasificacionMA;
+            _getObsClasificacionSSO = getObsClasificacionSSO;
+            _getObsTipoCondicionxNivelRiesgoMA = getObsTipoCondicionxNivelRiesgoMA;
+            _getObsTipoCondicionxNivelRiesgoSSO = getObsTipoCondicionxNivelRiesgoSSO;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
@@ -150,6 +174,60 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             dynamic response = new
             {
                 mapvssso = mapvssso
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var nivelRiesgoMA = await _getObsNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                nivelRiesgoMA = nivelRiesgoMA
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var nivelRiesgoSSO = await _getObsNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                nivelRiesgoSSO = nivelRiesgoSSO
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsClasificacionMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var clasificacionMA = await _getObsClasificacionMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                clasificacionMA = clasificacionMA
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var clasificacionSSO = await _getObsClasificacionSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                clasificacionSSO = clasificacionSSO
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var tipoNivelRiesgoMA = await _getObsTipoCondicionxNivelRiesgoMA.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                tipoNivelRiesgoMA = tipoNivelRiesgoMA
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var tipoNivelRiesgoSSO = await _getObsTipoCondicionxNivelRiesgoSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                tipoNivelRiesgoSSO = tipoNivelRiesgoSSO
             };
             return Ok(response);
         }

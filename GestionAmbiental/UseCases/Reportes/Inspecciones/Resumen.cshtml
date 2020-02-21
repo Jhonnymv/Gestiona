@@ -357,7 +357,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 mb-2">
                         <h6 class="card-title" style="text-align:center;">#Observaciones MAP vs SSO</h6>
-                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoMA_NR_Tipo()">
+                        <div class="chart-area">
                             <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                             <canvas id="chart_MAP_vs_SSO" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
@@ -371,6 +371,174 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+<!--Gráficos MAP-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Observaciones MA</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Observaciones MA por Nivel de Riesgo</h6>
+                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoMA_NR_Tipo()">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_MA_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;"># Observaciones</h6>
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_MA_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--Gráficos SSO-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Observaciones SSO</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Observaciones SSO por Nivel de Riesgo</h6>
+                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoSSO_NR_Tipo()">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 mb-2">
+                        <h6 class="card-title" style="text-align:center;">#Observaciones</h6>
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_SSO_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Detalles MAP-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Reportes MA según Nivel de Riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel de Riesgo Tolerable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Tolerable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición del Nivel del Riesgo Alerta</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_Alerta" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel del Riesgo No Aceptable</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_MAP_Nivel_Riesgo_No_Aceptable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Detalles SSO-->
+<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de observaciones SSO según Nivel de Riesgo</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Bajo</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Bajo" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Medio</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Medio" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Alto</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_SSO_Nivel_Riesgo_Alto" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

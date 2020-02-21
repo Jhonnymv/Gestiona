@@ -1,13 +1,11 @@
 ﻿using GestionAmbiental.Application.Repositories.Reportes;
 using GestionAmbiental.Domain.Enum;
-using GestionAmbiental.Domain.Inspecciones;
 using GestionAmbiental.Domain.Reportes;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Reportes.Inspecciones
@@ -19,7 +17,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public GetReportesInspeccionesRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-        }        
+        }
         public async Task<List<Dimension>> GetNInspecciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin)
         {
             //Se considera también eliminados
@@ -39,10 +37,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion <= FechaFin)
                 .GroupBy(x => x.Estado)
                 .ToList();
-                        
+
             var output = new List<Dimension>();
             output.Add(new Dimension("Pendiente", 0, 0));
-            output.Add(new Dimension("Registrado",0, 1));
+            output.Add(new Dimension("Registrado", 0, 1));
             output.Add(new Dimension("Eliminado", 0, 2));
             output.Add(new Dimension("Total", temp_cabeceras.Count(), 3));
 
@@ -101,10 +99,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else if (frecuencia.Equals("Semanal"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = cabeceras.Select(x => new { woy =  cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2,'0')+ " "+x.Fecha_Inspeccion.ToString("yyyy") }).ToList();
+                var data = cabeceras.Select(x => new { woy = cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha_Inspeccion.ToString("yyyy") }).ToList();
                 var frec_cabeceras = data.GroupBy(x => x.woy).ToList();
 
-                 int nSemInicial = cul.Calendar.GetWeekOfYear(FechaInicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
+                int nSemInicial = cul.Calendar.GetWeekOfYear(FechaInicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
                 int nSemFinal = cul.Calendar.GetWeekOfYear(FechaFin, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
                 var lstSemSinValor = new List<Dimension>();
@@ -123,7 +121,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     {
                         var week = Convert.ToInt32(item.Key.Substring(0, 2));
                         var year = Convert.ToInt32(item.Key.Substring(3, 4));
-                        lstSemConValor.Add(new Dimension("Sem " + week + " - " + year, item.Count(), year*100+week));
+                        lstSemConValor.Add(new Dimension("Sem " + week + " - " + year, item.Count(), year * 100 + week));
                     }
                     var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                     output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
@@ -182,13 +180,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else if (frecuencia.Equals("Mensual"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = cabeceras.Select(x => new { date = x.Fecha_Inspeccion.ToString("MM yyyy")}).ToList();
+                var data = cabeceras.Select(x => new { date = x.Fecha_Inspeccion.ToString("MM yyyy") }).ToList();
                 var frec_cabeceras = data.GroupBy(x => x.date).ToList();
-                
-                int nMeses; 
+
+                int nMeses;
                 var lstMesSinValor = new List<Dimension>();
                 var lstMesConValor = new List<Dimension>();
-                
+
                 if (FechaInicio.Year == FechaFin.Year)
                 {
                     nMeses = FechaFin.Month - FechaInicio.Month + 1;
@@ -222,7 +220,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             for (int i = 1; i <= 12; i++)
                             {
                                 var fecha = new DateTime(FechaInicio.Year + j, i, 1);
-                                var nombre = fecha.ToString("MMMM").Substring(0,3)+ " " + fecha.ToString("yyyy");
+                                var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
                                 lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.AddYears(j).Year * 100) + i));
                             }
                         }
@@ -238,11 +236,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 foreach (var item in frec_cabeceras)
                 {
-                    var mes= Convert.ToInt32(item.Key.Substring(0, 2));
+                    var mes = Convert.ToInt32(item.Key.Substring(0, 2));
                     var anio = Convert.ToInt32(item.Key.Substring(3, 4));
                     var fecha = new DateTime(anio, mes, 1);
-                    var nombre = fecha.ToString("MMMM").Substring(0, 3) + " "+ fecha.ToString("yyyy");
-                    lstMesConValor.Add(new Dimension(nombre, item.Count(), anio*100+mes ));
+                    var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
+                    lstMesConValor.Add(new Dimension(nombre, item.Count(), anio * 100 + mes));
                 }
                 var distinct = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                 output = distinct.Union(lstMesConValor).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();
@@ -252,7 +250,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Dimension>> GetObservacionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, EstadosInspeccion? estado)
         {
             var output = new List<Dimension>();
-                        
+
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
                 x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
@@ -264,7 +262,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
             x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
             x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
-            x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor)).ToList() ;
+            x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor)).ToList();
 
             //Crear una lista de obs por cada inspeccion
             var obsXInsp = observaciones.GroupBy(x => x.Id_Inspeccion_Cabecera).ToList();
@@ -297,26 +295,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         //Iterar las cabeceras de una fecha
                         foreach (var cabecera in fecha)
                         {
-                            if(obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera))!=null)
+                            if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)) != null)
                                 contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)).Count();
                         }
-                        frec_obs_x_fecha.Add(new ObsXFecha { fecha = fecha.Key, cantidad = contador });
+                        frec_obs_x_fecha.Add(new ObsXFecha { Fecha = fecha.Key, Cantidad = contador });
                     }
                     foreach (var item in frec_obs_x_fecha)
                     {
-                        var diaAnio = item.fecha.DayOfYear;
-                        lstDiasConValor.Add(new Dimension(item.fecha.ToString("dd MMMM").Substring(0, 6), item.cantidad, (item.fecha.Year * 1000) + item.fecha.DayOfYear));
+                        var diaAnio = item.Fecha.DayOfYear;
+                        lstDiasConValor.Add(new Dimension(item.Fecha.ToString("dd MMMM").Substring(0, 6), item.Cantidad, (item.Fecha.Year * 1000) + item.Fecha.DayOfYear));
                     }
                 }
                 var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                 output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
             }
             else if (frecuencia.Equals("Semanal"))
-                {
+            {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = cabeceras.Select(x => new { 
+                var data = cabeceras.Select(x => new {
                     woy = cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha_Inspeccion.ToString("yyyy"),
-                    cabecera = x.Id_Inspeccion_Cabecera}).ToList();
+                    cabecera = x.Id_Inspeccion_Cabecera }).ToList();
                 var frec_cabeceras = data.GroupBy(x => x.woy).ToList();
 
                 //var frec_cabeceras = cabeceras.GroupBy(x => cul.Calendar.GetWeekOfYear(x.Fecha_Inspeccion, CalendarWeekRule.FirstDay, DayOfWeek.Monday)).ToList();
@@ -330,7 +328,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 //Mismo año
                 if (FechaInicio.Year == FechaFin.Year)
                 {
-                nSem = nSemFinal - nSemInicial;
+                    nSem = nSemFinal - nSemInicial;
                     for (int i = nSem; i >= 0; i--)
                     {
                         lstSemSinValor.Add(new Dimension("Sem " + (nSemInicial + i).ToString() + " - " + FechaInicio.Year, 0, nSemInicial + i));
@@ -344,17 +342,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             //Iterar las cabeceras de cada semana
                             foreach (var cabecera in sem.Select(x => x.cabecera).ToList())
                             {
-                                if(obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera))!=null)
-                                    contador+= obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                                if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
+                                    contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
                             }
                             var semana = Convert.ToInt32(sem.Key.Substring(0, 2));
                             var anio = Convert.ToInt32(sem.Key.Substring(3, 4));
                             var nombre = "Sem " + semana.ToString() + " - " + anio.ToString();
-                            lstSemConValor.Add(new Dimension(nombre,contador,(anio*100)+semana));
+                            lstSemConValor.Add(new Dimension(nombre, contador, (anio * 100) + semana));
                         }
                     }
 
-                var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                     output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
                     output = output.OrderBy(x => x.Index).ToList();
                 }
@@ -417,7 +415,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else if (frecuencia.Equals("Mensual"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = cabeceras.Select(x => new { date = x.Fecha_Inspeccion.ToString("MM yyyy"), cabecera=x.Id_Inspeccion_Cabecera }).ToList();
+                var data = cabeceras.Select(x => new { date = x.Fecha_Inspeccion.ToString("MM yyyy"), cabecera = x.Id_Inspeccion_Cabecera }).ToList();
                 var frec_cabeceras = data.GroupBy(x => x.date).ToList();
 
                 int nMeses;
@@ -482,10 +480,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
                                 contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
                         }
-                        
+
                         var nMes = Convert.ToInt32(mes.Key.Substring(0, 2));
                         var anio = Convert.ToInt32(mes.Key.Substring(3, 4));
-                        var fecha = new DateTime(anio,nMes,1);
+                        var fecha = new DateTime(anio, nMes, 1);
                         var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
                         lstMesConValor.Add(new Dimension(nombre, contador, (anio * 100) + nMes));
                     }
@@ -495,7 +493,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetNObservaciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin,EstadosInspeccion?estado)
+        public async Task<List<Dimension>> GetNObservaciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
@@ -509,7 +507,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
-                .GroupBy(x=>x.Estado)
+                .GroupBy(x => x.Estado)
                 .ToList();
             //Se considera también eliminados            
 
@@ -554,8 +552,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
-        public async Task<List<Dimension>> GetObsMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        public async Task<List<List<Dimension>>> GetObsMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
@@ -571,21 +568,326 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .GroupBy(x => x.Tipo_Observacion)
                 .ToList();
-            var output = new List<Dimension>();
-            output.Add(new Dimension("MAP", 0, 0));
-            output.Add(new Dimension("SSO", 0, 1));
+
+            var output = new List<List<Dimension>>();
+            var obsMAPxEstado = new List<Dimension>();
+            var obsSSOxEstado = new List<Dimension>();
+
+            obsMAPxEstado.Add(new Dimension("Pendientes de implementación", 0, 0));
+            obsMAPxEstado.Add(new Dimension("Pendientes de verificación", 0, 1));
+            obsMAPxEstado.Add(new Dimension("Cerradas", 0, 2));
+            obsMAPxEstado.Add(new Dimension("Vencido", 0, 3));
+
+            obsSSOxEstado.Add(new Dimension("Pendientes de implementación", 0, 0));
+            obsSSOxEstado.Add(new Dimension("Pendientes de verificación", 0, 1));
+            obsSSOxEstado.Add(new Dimension("Cerradas", 0, 2));
+            obsSSOxEstado.Add(new Dimension("Vencido", 0, 3));
+
             foreach (var item in observaciones)
             {
-                
-                output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
+                var obsXEstado = item.GroupBy(x => x.Estado).ToList();
+                if (item.Key.Equals("MAP"))
+                {
+                    foreach (var subitem in obsXEstado)
+                    {
+                        switch (subitem.Key)
+                        {
+                            case "Registrado": obsMAPxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Ampliado": obsMAPxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Rechazado": obsMAPxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Implementado": obsMAPxEstado.FirstOrDefault(x => x.Index == 1).Valor += subitem.Count(); break;
+                            case "Aprobado": obsMAPxEstado.FirstOrDefault(x => x.Index == 2).Valor += subitem.Count(); break;
+                            case "Vencido": obsMAPxEstado.FirstOrDefault(x => x.Index == 3).Valor += subitem.Count(); break;
+                        }
+                    }
+                }
+                else if (item.Key.Equals("SSO"))
+                {
+                    foreach (var subitem in obsXEstado)
+                    {
+                        switch (subitem.Key)
+                        {
+                            case "Registrado": obsSSOxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Ampliado": obsSSOxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Rechazado": obsSSOxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Implementado": obsSSOxEstado.FirstOrDefault(x => x.Index == 1).Valor += subitem.Count(); break;
+                            case "Aprobado": obsMAPxEstado.FirstOrDefault(x => x.Index == 2).Valor += subitem.Count(); break;
+                            case "Vencido": obsSSOxEstado.FirstOrDefault(x => x.Index == 3).Valor += subitem.Count(); break;
+                        }
+                    }
+                }
             }
+            output.Add(obsMAPxEstado);
+            output.Add(obsSSOxEstado);
+
+            return output;
+        }
+        public async Task<List<Dimension>> GetObsNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin)
+                .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("MAP"))
+                .GroupBy(x => x.Nivel_Riesgo)
+                .ToList();
+
+            var output = new List<Dimension>();
+
+            output.Add(new Dimension("Tolerable", 0, 0));
+            output.Add(new Dimension("Alerta", 0, 1));
+            output.Add(new Dimension("No Aceptable", 0, 2));
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Tolerable": output.FirstOrDefault(x => x.Nombre.Equals("Tolerable")).Valor = item.Count(); break;
+                    case "Alerta": output.FirstOrDefault(x => x.Nombre.Equals("Alerta")).Valor = item.Count(); break;
+                    case "No Aceptable": output.FirstOrDefault(x => x.Nombre.Equals("No Aceptable")).Valor = item.Count(); break;
+                }
+            }
+            return output;
+        }
+        public async Task<List<Dimension>> GetObsNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin)
+                .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("SSO"))
+                .GroupBy(x => x.Nivel_Riesgo)
+                .ToList();
+
+            var output = new List<Dimension>();
+
+            output.Add(new Dimension("Bajo", 0, 0));
+            output.Add(new Dimension("Medio", 0, 1));
+            output.Add(new Dimension("Alto", 0, 2));
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Bajo": output.FirstOrDefault(x => x.Nombre.Equals("Bajo")).Valor = item.Count(); break;
+                    case "Medio": output.FirstOrDefault(x => x.Nombre.Equals("Medio")).Valor = item.Count(); break;
+                    case "Alto": output.FirstOrDefault(x => x.Nombre.Equals("Alto")).Valor = item.Count(); break;
+                }
+            }
+            return output;
+        }
+        public async Task<List<Dimension>> GetObsClasificacionMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+               x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+               x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Inspeccion >= FechaInicio &&
+               x.Fecha_Inspeccion <= FechaFin)
+               .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("MAP"))
+                .GroupBy(x => x.Descripcion_Condicion)
+                .ToList();
+
+
+            var output = new List<Dimension>();
+
+            output.Add(new Dimension("Condición Subestándar", 0, 1));
+            output.Add(new Dimension("Acto Subestándar", 0, 2));
+
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
+                    case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                }
+            }
+            return output;
+        }
+        public async Task<List<Dimension>> GetObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+               x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+               x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Inspeccion >= FechaInicio &&
+               x.Fecha_Inspeccion <= FechaFin)
+               .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("SSO"))
+                .GroupBy(x => x.Descripcion_Condicion)
+                .ToList();
+
+
+            var output = new List<Dimension>();
+
+            output.Add(new Dimension("Condición Subestándar", 0, 1));
+            output.Add(new Dimension("Acto Subestándar", 0, 2));
+
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
+                    case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                }
+            }
+            return output;
+        }
+        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+               x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+               x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Inspeccion >= FechaInicio &&
+               x.Fecha_Inspeccion <= FechaFin)
+               .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("MAP"))
+                .GroupBy(x => x.Nivel_Riesgo)
+                .ToList();
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var output = new List<List<Dimension>>();
+            var list_no_aceptable = new List<Dimension>();
+            var list_alerta = new List<Dimension>();
+            var list_tolerable = new List<Dimension>();
+
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Tolerable":
+                        var tipos_tolerable = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_tolerable)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_tolerable.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "Alerta":
+                        var tipos_alerta = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_alerta)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_alerta.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "No Aceptable":
+                        var tipos_no_aceptable = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_no_aceptable)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_no_aceptable.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                }
+            }
+
+            output.Add(list_tolerable);
+            output.Add(list_alerta);
+            output.Add(list_no_aceptable);
+
+            return output;
+        }
+
+        public async Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+               x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+               x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Inspeccion >= FechaInicio &&
+               x.Fecha_Inspeccion <= FechaFin)
+               .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor) &&
+                x.Tipo_Observacion.Equals("SSO"))
+                .GroupBy(x => x.Nivel_Riesgo)
+                .ToList();
+
+            var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var output = new List<List<Dimension>>();
+            var list_alto = new List<Dimension>();
+            var list_medio = new List<Dimension>();
+            var list_bajo = new List<Dimension>();
+
+            foreach (var item in observaciones)
+            {
+                switch (item.Key)
+                {
+                    case "Alto":
+                        var tipos_alto = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_alto)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_alto.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "Medio":
+                        var tipos_medio = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_medio)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_medio.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                    case "Bajo":
+                        var tipos_bajo = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_bajo)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_bajo.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
+                }
+            }
+
+            output.Add(list_bajo);
+            output.Add(list_medio);
+            output.Add(list_alto);
+
             return output;
         }
 
         private class ObsXFecha
         {
-            public DateTime fecha { get; set; }
-            public int cantidad { get; set; }
+            public DateTime Fecha { get; set; }
+            public int Cantidad { get; set; }
         }
     }
 }

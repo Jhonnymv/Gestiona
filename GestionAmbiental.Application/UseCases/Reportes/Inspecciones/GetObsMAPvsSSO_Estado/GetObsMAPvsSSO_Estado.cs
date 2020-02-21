@@ -11,13 +11,11 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPv
     public class GetObsMAPvsSSO_Estado : IGetObsMAPvsSSO_Estado
     {
         private readonly IGetReportesInspeccionesReadOnlyRepository _getReportesInspeccionesReadOnlyRepository;
-
         public GetObsMAPvsSSO_Estado(IGetReportesInspeccionesReadOnlyRepository getReportesInspeccionesReadOnlyRepository)
         {
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
-
-        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado)
+        public async Task<List<List<DimensionOutput>>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -43,10 +41,16 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPv
             }
             var data = await _getReportesInspeccionesReadOnlyRepository.GetObsMAPvsSSO_Estado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado);
 
-            var output = new List<DimensionOutput>();
+            var output = new List<List<DimensionOutput>>();
+            
             foreach (var item in data)
             {
-                output.Add(new DimensionOutput(item));
+                var temp = new List<DimensionOutput>();
+                foreach(var dimen in item)
+                {
+                    temp.Add(new DimensionOutput(dimen));
+                }
+                output.Add(temp);
             }
             return output;
         }
