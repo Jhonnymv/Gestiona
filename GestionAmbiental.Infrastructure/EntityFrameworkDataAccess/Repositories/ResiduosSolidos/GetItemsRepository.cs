@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,16 +19,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-
+        public async Task<List<Empresa>> GetEmpresa()
+        {
+            var data = await _context.Empresas.ToListAsync();
+            var output = new List<Empresa>();
+            foreach (var item in data)
+            {
+                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
+            }
+            return output;
+        }
         public async Task<List<ACR_CMRS>> GetACR_CMRS()
         {
             var data = await _context.ACR_CMRs.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             var output = new List<ACR_CMRS>();
-            foreach(var item in data)
+            foreach (var item in data)
             {
-                output.Add(new ACR_CMRS(item.Id_ACR_CMRS,item.Descripcion,item.Estado));
+                output.Add(new ACR_CMRS(item.Id_ACR_CMRS, item.Descripcion, item.Estado));
             }
-            return output;
+                return output;
         }
 
         public async Task<List<EO_RS>> GetEO_RS()
@@ -65,17 +75,38 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Residuo_Solido>> GetResiduos_Solidos()
         {
-            throw new NotImplementedException();
+            var data = await _context.Residuos_Solidos.Where(x=> x.Estado.Equals("ACT")).ToListAsync();
+            var tipos = await _context.Tipo_Residuos.ToListAsync();
+            var output = new List<Residuo_Solido>();
+            foreach (var item in data)
+            {
+                var tipo = tipos.FirstOrDefault(x => x.Id_Tipo_Residuo.Equals(item.Id_Tipo_Residuo));
+                var tipo_model = new Tipo_Residuo(tipo.Id_Tipo_Residuo, tipo.Descripcion,tipo.Estado);
+                output.Add(new Residuo_Solido(item.Id_Residuo_Solido, tipo_model, item.Descripcion, item.Estado));
+            }
+            return output;
         }
 
         public async Task<List<Tipo_Residuo>> GetTipos_Residuo()
         {
-            throw new NotImplementedException();
+            var data = await _context.Tipo_Residuos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            var output = new List<Tipo_Residuo>();
+            foreach (var item in data)
+            {
+                output.Add(new Tipo_Residuo(item.Id_Tipo_Residuo,item.Descripcion,item.Estado));
+            }
+            return output;
         }
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            throw new NotImplementedException();
+            var data = await _context.Usuarios.Where(x => x.Estado.Equals("ACT") && !x.Id_Rol.Equals((int)RSRoles.Admin)).ToListAsync();
+            var output = new List<Usuario>();
+            foreach (var item in data)
+            {
+                output.Add(new Usuario(item.Id_Usuario, item.Id_Rol, item.Nombres, item.Apellidos, item.Email));
+            }
+            return output;
         }
     }
 }

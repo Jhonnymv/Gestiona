@@ -32,7 +32,6 @@ namespace GestionAmbiental.Controllers
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
             }
-            var data = await _getRolUsuario.Execute("Kevin");
             return View();
         }
 

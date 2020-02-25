@@ -9,19 +9,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
     
     public class Motivo_Ingreso_Salida
     {
+        [Key]
         public int Id_Motivo { get; set; }
+        [Column(TypeName = "varchar(30)")]
         public string Descripcion { get; set; }
+        [Column(TypeName = "varchar(6)")]
         public string Estado { get; set; }
 
-        public Motivo_Ingreso_Salida()
-        {
-        }
-
-        public Motivo_Ingreso_Salida(int id_Motivo, string descripcion, string estado)
-        {
-            Id_Motivo = id_Motivo;
-            Descripcion = descripcion;
-            Estado = estado;
-        }
     }
 }

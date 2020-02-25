@@ -8,6 +8,7 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos
 {
     public interface IGetItemsReadOnlyRepository
     {
+        Task<List<Empresa>> GetEmpresa();
         Task<List<ACR_CMRS>> GetACR_CMRS();
         Task<List<EO_RS>> GetEO_RS();
         Task<List<Ingreso_Salida>> GetIngreso_Salida();
