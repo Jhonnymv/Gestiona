@@ -13,9 +13,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         public int IdGerencia { get; set; }
         [DisplayName("Empresa Inspeccionada:")]
         public int IdEmpresa { get; set; }
-        [DisplayName("Fecha de Inicio:")]
+        [DisplayName("Desde:")]
         public string FInicio { get; set; }
-        [DisplayName("Fecha de Fin:")]
+        [DisplayName("Hasta:")]
         public string FFin { get; set; }
         //Observaciones
         [DisplayName("Asesor MA/SSO:")]

@@ -66,6 +66,32 @@
                 <div class="row mb-2 justify-content-center">
                     <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
                 </div>
+            </div>            
+            <div class="col-lg-2 col-md-6 col-sm-12 mb-2">
+                <div class="row ml-2">
+                    <div class="card border-left-pendiente shadow h-100">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Cantidad de inspecciones hasta la fecha </div>
+                                    <div id="InsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row ml-2 mt-2">
+                    <div class="card border-left-pendiente shadow h-100">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones hasta la fecha </div>
+                                    <div id="ObsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -78,19 +104,7 @@
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones</h6>
             </div>
             <div class="card-body">
-                <div class="row justify-content-center">
-                    <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Cantidad de inspecciones hasta la fecha </div>
-                                        <div id="InsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row justify-content-center">                    
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-pendiente shadow h-100">
                             <div class="card-body">
@@ -115,18 +129,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Eliminadas</div>
-                                        <div id="InsEliminado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                     <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-pendiente shadow h-100">
                             <div class="card-body">
@@ -199,7 +202,6 @@
                             <option value="Ven">Vencido</option>
                             <option value="Apr">Aprobado</option>
                             <option value="Rec">Rechazado</option>
-                            <option value="Eli">Eliminado</option>
                         </select>
                     </div>
                 </div>
@@ -231,30 +233,7 @@
             </div>
             <div class="card-body">
                 <div class="row justify-content-center">
-                    <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones hasta la fecha </div>
-                                        <div id="ObsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Eliminadas</div>
-                                        <div id="ObsEliminado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        
                     <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-pendiente shadow h-100">
                             <div class="card-body">
@@ -271,7 +250,7 @@
                 <div class="row mb-2">
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Reg')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Registradas</div>
@@ -283,7 +262,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-implementado shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Imp')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Implementadas</div>
@@ -295,7 +274,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-aprobado shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Apr')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
@@ -307,7 +286,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-rechazado shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Rec')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
@@ -319,7 +298,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-vencido shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Ven')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
@@ -331,7 +310,7 @@
                     </div>
                     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-total shadow h-100">
-                            <div class="card-body">
+                            <div class="card-body  click-option" onclick="ReporteDetalleEstado('Amp')">
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
@@ -546,4 +525,16 @@
 
 @section Scripts{
     <script src="~/js/UseCases/Reportes/ReportesInspeccionesScript.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function ReporteDetalleEstado(estado) {
+            
+            var gerencia = $("#IdGerencia").val();
+            var empresa = $("#IdEmpresa").val();
+            var asesor = $("#IdAsesor").val();
+            var respLevObs = $("#IdRespLev").val();
+            var fechaInicio = $("#FInicio").val();
+            var fechaFin = $("#FFin").val();
+            window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado);
+        }
+    </script>
 }

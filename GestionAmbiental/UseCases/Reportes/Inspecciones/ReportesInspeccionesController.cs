@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalleObsxEstado;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetNInspecciones;
@@ -41,13 +42,14 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetObsClasificacionSSO _getObsClasificacionSSO;
         private readonly IGetObsTipoCondicionxNivelRiesgoMA _getObsTipoCondicionxNivelRiesgoMA;
         private readonly IGetObsTipoCondicionxNivelRiesgoSSO _getObsTipoCondicionxNivelRiesgoSSO;
+        private readonly IGetDetalleObsxEstado _getDetalleObsxEstado;
 
         private readonly IDataProtector _protector;
 
         public ReportesInspeccionesController(
             IGetItemsFiltro getItemsFiltro,
             IGetNInspecciones getNInspecciones,
-            IGetInspeccionesXFecha getInspeccionesXFecha, 
+            IGetInspeccionesXFecha getInspeccionesXFecha,
             IGetObservacionesXFecha getObservacionesXFecha,
             IGetNObservaciones getNObservaciones,
             IGetObsMAPvsSSO getObsMAPvsSSO,
@@ -58,6 +60,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetObsClasificacionSSO getObsClasificacionSSO,
             IGetObsTipoCondicionxNivelRiesgoMA getObsTipoCondicionxNivelRiesgoMA,
             IGetObsTipoCondicionxNivelRiesgoSSO getObsTipoCondicionxNivelRiesgoSSO,
+            IGetDetalleObsxEstado getDetalleObsxEstado,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -74,6 +77,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getObsClasificacionSSO = getObsClasificacionSSO;
             _getObsTipoCondicionxNivelRiesgoMA = getObsTipoCondicionxNivelRiesgoMA;
             _getObsTipoCondicionxNivelRiesgoSSO = getObsTipoCondicionxNivelRiesgoSSO;
+            _getDetalleObsxEstado = getDetalleObsxEstado;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
         }
 
@@ -109,7 +113,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
             var grupoSSO = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
 
-            var filtroAsesor = itemsFiltro.AsesoresMAP.OrderBy(x=>x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoMA}).ToList();
+            var filtroAsesor = itemsFiltro.AsesoresMAP.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoMA }).ToList();
             filtroAsesor.AddRange(itemsFiltro.AsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoSSO }).ToList());
             filtroAsesor.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
@@ -121,9 +125,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
             return View();
-           // }
+            // }
         }
-        public async Task<IActionResult> ActualizarContadorInspecciones(int empresa,int gerencia,int respLevObs, int asesor, string FechaInicio,string FechaFin)
+        public async Task<IActionResult> ActualizarContadorInspecciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin)
         {
             var nInspecciones = await _getNInspecciones.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin);
             dynamic response = new
@@ -141,9 +145,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             };
             return Ok(response);
         }
-        public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia,string estado)
+        public async Task<IActionResult> ActualizarObservacionesXFecha(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string frecuencia, string estado)
         {
-            var observacionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia,estado);
+            var observacionesXFecha = await _getObservacionesXFecha.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, frecuencia, estado);
             dynamic response = new
             {
                 observacionesXFecha = observacionesXFecha
@@ -228,6 +232,72 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             dynamic response = new
             {
                 tipoNivelRiesgoSSO = tipoNivelRiesgoSSO
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            ViewBag.Empresa = empresa;
+            ViewBag.Gerencia = gerencia;
+            ViewBag.Responsable = respLevObs;
+            ViewBag.Asesor = asesor;
+            ViewBag.FechaInicio = FechaInicio;
+            ViewBag.FechaFin = FechaFin;
+            ViewBag.Estado = estado;
+            return View();
+        }
+        [HttpPost]
+         public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp)
+        {
+            var data = await _getDetalleObsxEstado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            data = data.OrderByDescending(x => x.Codigo).ToList();
+            var nObs = data.Count();
+            int nPaginas = nObs % rpp != 0 ? (nObs / rpp) + 1 : nObs / rpp;
+            data = data.Skip((pag - 1) * rpp).Take(rpp).ToList();
+           
+
+            var tabla = "";
+            var paginador = "";
+            if (nObs > 0)
+            {
+                foreach(var item in data)
+                {
+                    tabla += "<tr>";
+                    tabla += "<td><a href = \"#\" >" + item.Codigo + "</a></td>";
+                    tabla += "<td>" + item.Empresa + "</td>";
+                    tabla += "<td>" + item.Gerencia + "</td>";
+                    tabla += "<td>" + item.Fecha_Inspeccion + "</td>";
+                    tabla += "<td>" + item.Tipo_Observacion + "</td>";
+                    tabla += "<td>" + item.Asesor + "</td>";
+                    tabla += "<td>" + item.Tipo_Condicion + "</td>";
+                    switch (item.Nivel_Riesgo)
+                    {
+                        case "Tolerable": tabla += "<td><span class=\"badge badge-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Alerta": tabla += "<td><span class=\"badge badge-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "No Aceptable": tabla += "<td><span class=\"badge badge-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Bajo": tabla += "<td><span class=\"badge badge-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Medio": tabla += "<td><span class=\"badge badge-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Alto": tabla += "<td><span class=\"badge badge-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        default: tabla += "<td><span class=\"badge badge-secondary\">" + item.Nivel_Riesgo + "</span>"; break;
+                    }
+                    tabla += "<td>" + item.Responsable + "</td>";
+                    tabla += "<td>" + item.Fecha_Programada + "</td>";
+                    tabla += "</tr>";
+                }
+                paginador += "<ul class=\"pagination\">";
+                for (int i = 1; i <= nPaginas; i++)
+                {
+                    if (i == pag)
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"Filtrar(" + i + ")\">" + i + "</a></li>";
+                    else
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"Filtrar(" + i + ")\">" + i + "</a></li>";
+                }
+                paginador += "</ul>";
+            }
+            dynamic response = new
+            {
+                data = tabla,
+                paginador = paginador
             };
             return Ok(response);
         }

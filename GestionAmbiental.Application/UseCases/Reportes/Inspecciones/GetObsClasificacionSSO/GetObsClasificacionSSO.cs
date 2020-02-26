@@ -38,7 +38,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsClas
                 case "Ven": enum_estado = EstadosInspeccion.Vencido; break;
                 case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
                 case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
-                case "Eli": enum_estado = EstadosInspeccion.Eliminado; break;
             }
             var data = await _getReportesInspeccionesReadOnlyRepository.GetObsClasificacionSSO(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado);
 

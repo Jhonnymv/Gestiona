@@ -21,6 +21,6 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Dimension>> GetObsClasificacionSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado);
         Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoMA(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado);
         Task<List<List<Dimension>>> GetObsTipoCondicionxNivelRiesgoSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado);
-
+        Task<List<Domain.Inspecciones.InspeccionCabecera>> GetDetalleObsxEstado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion estado);
     }
 }

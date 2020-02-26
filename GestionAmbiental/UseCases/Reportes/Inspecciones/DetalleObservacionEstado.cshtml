@@ -6,55 +6,75 @@
 
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>@ViewBag.nObservaciones Observaciones en estado "@ViewBag.Estado" </h2>
+        <h2>Observaciones por estado </h2>
     </div>
 </div>
 
 <div>
-    @if (ViewBag.NObservaciones != 0)
-    {
+    <input id="empresa" type="hidden" value="@ViewBag.Empresa" />
+    <input id="gerencia" type="hidden" value="@ViewBag.Gerencia" />
+    <input id="responsable" type="hidden" value="@ViewBag.Responsable" />
+    <input id="asesor" type="hidden" value="@ViewBag.Asesor" />
+    <input id="fechaInicio" type="hidden" value="@ViewBag.FechaInicio" />
+    <input id="fechaFin" type="hidden" value="@ViewBag.FechaFin" />
+    <input id="estado" type="hidden" value="@ViewBag.Estado" />
+
         <div class="row mb-2" id="div_tabla_observaciones">
             <div class="col-md-12">
                 <table class="table table-modal" id="tabla_observaciones">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Código de inspección</th>
+                            <th>Empresa</th>
+                            <th>Gerencia</th>
+                            <th>Fecha de Inspeccion</th>
                             <th>Tipo de Observación</th>
                             <th>Asesor MAP/SSO</th>
-                            <th>Acto/Condición Subestándar Identificada</th>
                             <th>Tipo de Condición/Acto Subestándar</th>
                             <th>Nivel de Riesgo</th>
-                            <th>Acción Preventiva / Correctiva Tomada</th>
                             <th>Responsable Marcobre</th>
-                            <th>Responsable Contratista</th>
                             <th>Fecha Programada</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.Data)
-                        {
-                            <tr>
-                                <td>
-                                    <a href="@Url.Action("EditarInspeccion","Inspecciones", new { IdCabecera = item.IdInspeccionCabeceraEncriptado })">@item.Codigo</a>
-                                </td>
-                                <td>@item.TipoObservacion</td>
-                                <td>@item.Asesor</td>
-                                <td>@item.DescripcionCondicion</td>
-                                <td>@item.TipoCondicion</td>
-                                <td>@item.NivelRiesgo</td>
-                                <td>@item.DescripcionAccion</td>
-                                <td>@item.ResponsableMarcobre</td>
-                                <td>@item.ResponsableContratista</td>
-                                <td>@item.FechaProgramada.ToShortDateString()</td>
-                            </tr>
-                        }
                     </tbody>
                 </table>
             </div>
         </div>
-    }
-    else
-    {
-        <h4>No se encontraron observaciones</h4>
-    }
+        <div class="row mb-2 justify-content-center">
+            <nav id="paginado" aria-label="pagination">
+            </nav>
+        </div>
 </div>
+@section Scripts{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+            Filtrar(1);
+        });
+    function Filtrar(pag) {
+        $.ajax({
+                type: "POST",
+                url: "/ReportesInspecciones/GetTablaObservacionesxEstado",
+                data: {
+                    "pag": pag,
+                    "rpp":10,
+                    "empresa": $('#empresa').val(),
+                    "gerencia": $('#gerencia').val(),
+                    "respLevObs": $("#responsable").val(),
+                    "asesor": $('#asesor').val(),
+                    "FechaInicio": $('#fechaInicio').val(),
+                    "FechaFin": $('#fechaFin').val(),
+                    "estado": $('#estado').val()
+                },
+                traditional: true,
+            success: (response) => {
+                console.log(response);
+                    $('#tabla_observaciones tbody').empty()
+                    $('#tabla_observaciones tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+    }
+</script>
+}

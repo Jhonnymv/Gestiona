@@ -66,7 +66,7 @@ function Filtrar() {
             },
             success: (response) => {
                 var nObs = response.nInspecciones;
-                ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor);
+                ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor);
 
                 ActualizarContadorRxFecha();
                 ActualizarContadorOxFecha();
@@ -85,12 +85,11 @@ function Filtrar() {
     }
 }
 //Para contador de inspecciones x estado
-function ActualizarContadorInsXEst(pend, reg, elim, tot) {
+function ActualizarContadorInsXEst(pend, reg, tot) {
     $("#InsPendiente").html(pend);
     $("#InsRegistrado").html(reg);
-    $("#InsEliminado").html(elim);
     $("#InsTotal").html(tot);
-    $("#InsEncont").html(pend + reg + elim);
+    $("#InsEncont").html(pend + reg);
 }
 //Para contador de inspecciones x fecha
 $("#sel_frec_insp_fecha").on('change', function () {
@@ -305,11 +304,11 @@ function GetDataContadorOxE() {
         },
         success: (response) => {
             var nObs = response.nObservaciones;
-            ActualizarContadorOxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor, nObs[6].valor, nObs[7].valor);
+            ActualizarContadorOxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor, nObs[6].valor);
         }
     });
 }
-function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, elim, total) {
+function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     //Reiniciar valores
     $("#ObsRegistrado").html(0);
     $("#ObsImplementado").html(0);
@@ -326,9 +325,8 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, elim, total) {
     $("#ObsRechazado").html(rec);
     $("#ObsVencido").html(ven);
     $("#ObsAmpliado").html(amp);
-    $("#ObsEliminado").html(elim);
     $("#ObsTotal").html(total);
-    $("#ObsEncont").html(reg + imp + apr + rec + ven + amp + elim);
+    $("#ObsEncont").html(reg + imp + apr + rec + ven + amp );
 }
 //Para gráfico MAP vs SSO
 function ActualizarDatosGraficoMAP_SSO() {
