@@ -885,8 +885,8 @@ function CrearGraficoSSO_Clas(labels, data) {
 
 
 
-
 function ActualizarDatosGraficoMA_NR_Tipo() {
+    Filtrar();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoMA",
@@ -904,7 +904,6 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
             //0: Tolerable
             //1: Alerta
             //2: No aceptable
-            console.log(response.nR_TC_MA)
             if (data_ma_nr_tipo.length > 0) {
                 //Actualizar contador
                 data_ma_nr_tipo = response.tipoNivelRiesgoMA;
@@ -954,10 +953,6 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
                     labels.push(data_ma_nr_tipo[0][i].nombre);
                     data.push(data_ma_nr_tipo[0][i].valor);
                 }
-                console.log("labels tolerable: ")
-                console.log(labels)
-                console.log("data tolerable: ")
-                console.log(data)
                 //Crear gráfica
                 CrearGraficoMA_Tolerable_Tipo(labels, data);
                 labels = [];
@@ -968,10 +963,6 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
                     labels.push(data_ma_nr_tipo[1][i].nombre);
                     data.push(data_ma_nr_tipo[1][i].valor);
                 }
-                console.log("labels alerta: ")
-                console.log(labels)
-                console.log("data alerta: ")
-                console.log(data)
                 //Crear gráfica
                 CrearGraficoMA_Alerta_Tipo(labels, data);
                 labels = [];
@@ -981,10 +972,6 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
                     labels.push(data_ma_nr_tipo[2][i].nombre);
                     data.push(data_ma_nr_tipo[2][i].valor);
                 }
-                console.log("labels no aceptable: ")
-                console.log(labels)
-                console.log("data no aceptable: ")
-                console.log(data)
                 //Crear gráfica
                 CrearGraficoMA_No_Aceptable_Tipo(labels, data);
             }
@@ -1000,7 +987,7 @@ function CrearGraficoMA_Tolerable_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones Tolerables MA",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
@@ -1035,7 +1022,7 @@ function CrearGraficoMA_Alerta_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones Alerta MA",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
@@ -1070,7 +1057,7 @@ function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones No Aceptables MA",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
@@ -1099,6 +1086,7 @@ function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
 }
 
 function ActualizarDatosGraficoSSO_NR_Tipo() {
+    Filtrar();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoSSO",
@@ -1116,7 +1104,6 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
             //0: Bajo
             //1: Medio
             //2: Alto
-            console.log(response.nR_TC_SSO)
             if (data_sso_nr_tipo.length > 0) {
                 //Actualizar contador
                 data_sso_nr_tipo = response.tipoNivelRiesgoSSO;
@@ -1165,11 +1152,7 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
                 for (var i = 0; i < data_sso_nr_tipo[0].length; i++) {
                     labels.push(data_sso_nr_tipo[0][i].nombre);
                     data.push(data_sso_nr_tipo[0][i].valor);
-                }
-                console.log("labels tolerable: ")
-                console.log(labels)
-                console.log("data tolerable: ")
-                console.log(data)
+                }                
                 //Crear gráfica
                 CrearGraficoSSO_Bajo_Tipo(labels, data);
                 labels = [];
@@ -1179,11 +1162,7 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
                 for (var i = 0; i < data_sso_nr_tipo[1].length; i++) {
                     labels.push(data_sso_nr_tipo[1][i].nombre);
                     data.push(data_sso_nr_tipo[1][i].valor);
-                }
-                console.log("labels alerta: ")
-                console.log(labels)
-                console.log("data alerta: ")
-                console.log(data)
+                }                
                 //Crear gráfica
                 CrearGraficoSSO_Medio_Tipo(labels, data);
                 labels = [];
@@ -1193,10 +1172,7 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
                     labels.push(data_sso_nr_tipo[2][i].nombre);
                     data.push(data_sso_nr_tipo[2][i].valor);
                 }
-                console.log("labels no aceptable: ")
-                console.log(labels)
-                console.log("data no aceptable: ")
-                console.log(data)
+                
                 //Crear gráfica
                 CrearGraficoSSO_Alto_Tipo(labels, data);
             }
@@ -1212,7 +1188,7 @@ function CrearGraficoSSO_Bajo_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones Bajo SSO",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
@@ -1247,7 +1223,7 @@ function CrearGraficoSSO_Medio_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones Medio SSO",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
@@ -1282,7 +1258,7 @@ function CrearGraficoSSO_Alto_Tipo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Reportes de Acto y Condición Subestándar",
+                    "label": "#Observaciones Alto SSO",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],

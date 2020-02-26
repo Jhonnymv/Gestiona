@@ -79,14 +79,37 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<Ingreso_Salida_RS> GetIngreso_Salida_RS(int id_Ingreso_Salida_RS)
+        {
+            var output = new Ingreso_Salida_RS();
+            var data = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(id_Ingreso_Salida_RS));
+            if (data != null)
+            {
+                var acr_cmrs_entity = await _context.ACR_CMRs.FirstOrDefaultAsync(x => x.Id_ACR_CMRS.Equals(data.Id_ACR_CMRS));
+                var ing_sal_entity = await _context.Ingresos_Salidas.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida.Equals(data.Id_Ingreso_Salida));
+                var motivo_entity = await _context.Motivos_Ingreso_Salida.FirstOrDefaultAsync(x => x.Id_Motivo.Equals(data.Id_Motivo));
+                var residuo_solido_entity = await _context.Residuos_Solidos.FirstOrDefaultAsync(x => x.Id_Residuo_Solido.Equals(data.Id_Residuo_Solido));
+                var tipo_residuo_entity = await _context.Tipo_Residuos.FirstOrDefaultAsync(x => x.Id_Tipo_Residuo.Equals(residuo_solido_entity.Id_Tipo_Residuo));
+                var empresa_entity = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(data.Id_Empresa_RS));
+
+                output.Item = data.Item;
+                output.Id_Ingreso_Salida_RS = data.Id_Ingreso_Salida_RS;
+                output.ACR_CMRS = new Domain.ValueObjects.ACR_CMRS(acr_cmrs_entity.Id_ACR_CMRS, acr_cmrs_entity.Descripcion, acr_cmrs_entity.Estado);
+                output.Responsable_ACR_CMRS = data.Responsable_ACR_CMRS;
+                output.Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_entity.Id_Ingreso_Salida, ing_sal_entity.Descripcion, ing_sal_entity.Estado);
+                output.Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_entity.Id_Motivo, motivo_entity.Descripcion, motivo_entity.Estado);
+
+
+            }
+            return output;
+        }
         public async Task<int> GetLastItem()
         {
             var data = await _context.Ingresos_Salidas_RS.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
             if (data != null)
                 return data.Item;
             else
-                return 0;
-            
+                return 0;            
         }
     }
 }

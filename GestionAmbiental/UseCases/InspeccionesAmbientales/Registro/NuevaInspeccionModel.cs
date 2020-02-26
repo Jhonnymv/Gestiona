@@ -17,10 +17,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Código")]
         public string Codigo { get; set; }
         [DisplayName("Área Ejecutora de la Inspección:")]
-        [Range(1,99,ErrorMessage ="Debe seleccionar una opcción")]
+        [Range(1,99,ErrorMessage ="Debe seleccionar una opción")]
         public int Id_Gerencia_Ejecutora { get; set; }
         [DisplayName("Empresa Inspeccionada:")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opcción")]
+        [Range(1, 99, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Empresa_Contratista { get; set; }
         [DisplayName("Fecha:")]
         [Required(ErrorMessage ="Debe ingresar una fecha")]
@@ -32,10 +32,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Lugar_Inspeccionado { get; set; }
         [DisplayName("Tipo de Inspección:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opción")]
         public string Tipo_Inspeccion { get; set; }
         [DisplayName("Responsable del Área Inspeccionada:")]
-        [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opcción")]
+        [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Responsable_Lugar { get; set; }
         [DisplayName("Responsable de la Inspección:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
