@@ -9,49 +9,52 @@
         <h2>Nuevo Control de Ingreso o Salida de Residuos Sólidos del ACR o CMRS</h2>
     </div>
 </div>
-<form class="form-group" asp-action="NuevoRegistro" asp-controller="IngresoSalidaRS" method="post" enctype="multipart/form-data" autocomplete="off">
-    <div class="row mb-2">
-        <div class="col-sm-12 col-md-12 col-lg-2">
+<form id="formIngresoSalida" class="form-group" asp-action="NuevoRegistro" asp-controller="IngresoSalidaRS" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="opcion"/>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="ACR_CMRS"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="ACR_CMRS"></span>
             <select class="form-control" asp-items="@ViewBag.ACR_CMRS" asp-for="ACR_CMRS"></select>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Ingreso_Salida"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Ingreso_Salida"></span>
             <select class="form-control" asp-items="@ViewBag.IngresoSalida" asp-for="Ingreso_Salida"></select>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Fecha"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Fecha"></span>
             <input type="date" class="form-control" asp-for="Fecha">
         </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Motivo"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Motivo"></span>
             <select class="form-control" asp-items="@ViewBag.Motivo" asp-for="Motivo"></select>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Tipo_Residuo"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Tipo_Residuo"></span>
             <select class="form-control" asp-items="@ViewBag.TiposResiduo" asp-for="Tipo_Residuo"></select>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Residuo_Solido"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Residuo_Solido"></span>
             <select class="form-control Vacio" asp-for="Residuo_Solido">
                 <option class="Vacio" value="">--SELECCIONE--</option>
@@ -60,33 +63,51 @@
             <select class="form-control No-Peligroso" asp-for="Residuo_Solido" asp-items="@ViewBag.ResiduosSolidosNoPelig" style="display:none"></select>
         </div>
     </div>
-    <div class="row mb-2">        
-        <div class="col-sm-12 col-md-12 col-lg-2">
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Cantidad"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" />
+            <input type="number" class="form-control" asp-for="Cantidad" min="0"/>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Empresa"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Empresa"></span>
             <select class="form-control" asp-items="@ViewBag.Empresa" asp-for="Empresa"></select>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Responsable_Marcobre"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+            <select class="form-control" asp-items="@ViewBag.AsesoresMA" asp-for="Responsable_Marcobre"></select>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Responsable_ACR_CMRS"></label>
         </div>
-        <div class="col-sm-12 col-md-12 col-lg-2">
+        <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Responsable_ACR_CMRS"></span>
             <input type="text" class="form-control" asp-for="Responsable_ACR_CMRS" />
         </div>
     </div>
-    <div class="modal-footer">
-        <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
-        <button type="submit" class="btn btn-primary">Registrar</button>
-
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Comentario"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            <span class="text-danger" asp-validation-for="Comentario"></span>
+            <textarea class="form-control" asp-for="Comentario" rows="3"></textarea>
+        </div>
+        <div class="modal-footer">
+            <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
+            <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+            <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+        </div>
     </div>
 </form>
 @section Scripts{
@@ -117,6 +138,14 @@
                     $(".Vacio").prop('disabled', false);
                     break;
             }
+        });
+        $("#btnGuardarEstado").on('click', function () {
+            $("#opcion").val("GuardarEstado");
+            $("#formIngresoSalida").submit();
+        });
+        $("#btnRegistrar").on('click', function () {
+            $("#opcion").val("Registrar");
+            $("#formIngresoSalida").submit();
         });
     </script>
 }

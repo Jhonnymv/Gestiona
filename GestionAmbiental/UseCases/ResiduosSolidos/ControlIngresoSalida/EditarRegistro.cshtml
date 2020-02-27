@@ -1,0 +1,231 @@
+﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida.IngresoSalidaRSModel
+@{
+    ViewData["Title"] = "Editar Registro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Nuevo Control de Ingreso o Salida de Residuos Sólidos del ACR o CMRS</h2>
+    </div>
+</div>
+<form id="formIngresoSalida" class="form-group" asp-action="EditarRegistro" asp-controller="IngresoSalidaRS" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="Id_Ingreso_Salida_RS"/>
+    <input type="hidden" asp-for="opcion" />
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="ACR_CMRS"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="ACR_CMRS"></span>
+            <select class="form-control" asp-items="@ViewBag.ACR_CMRS" asp-for="ACR_CMRS" disabled></select>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Ingreso_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Ingreso_Salida"></span>
+            <select class="form-control" asp-items="@ViewBag.IngresoSalida" asp-for="Ingreso_Salida" disabled></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Fecha"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Fecha"></span>
+            <input type="date" class="form-control" asp-for="Fecha" disabled>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Motivo"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Motivo"></span>
+            <select class="form-control" asp-items="@ViewBag.Motivo" asp-for="Motivo" disabled></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Tipo_Residuo"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Tipo_Residuo"></span>
+            <select class="form-control" asp-items="@ViewBag.TiposResiduo" asp-for="Tipo_Residuo" disabled></select>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Residuo_Solido"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Residuo_Solido"></span>
+            <input type="hidden" asp-for="Residuo_Solido" />
+            <select class="form-control Vacio">
+                <option class="Vacio" value="">--SELECCIONE--</option>
+            </select>
+            <select class="form-control Peligroso" asp-items="@ViewBag.ResiduosSolidosPelig" style="display:none"  disabled></select>
+            <select class="form-control No-Peligroso"asp-items="@ViewBag.ResiduosSolidosNoPelig" style="display:none"  disabled></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Cantidad"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Cantidad"></span>
+            <input type="number" class="form-control" asp-for="Cantidad" min="0" disabled/>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Empresa"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Empresa"></span>
+            <select class="form-control" asp-items="@ViewBag.Empresa" asp-for="Empresa" disabled></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Responsable_Marcobre"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+            <select class="form-control" asp-items="@ViewBag.AsesoresMA" asp-for="Responsable_Marcobre" disabled></select>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Responsable_ACR_CMRS"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <span class="text-danger" asp-validation-for="Responsable_ACR_CMRS"></span>
+            <input type="text" class="form-control" asp-for="Responsable_ACR_CMRS" disabled/>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-3">
+            <label asp-for="Comentario"></label>
+        </div>
+        <div class="col-sm-12 col-md-12 col-lg-9">
+            <span class="text-danger" asp-validation-for="Comentario"></span>
+            <textarea class="form-control" asp-for="Comentario" rows="3"  disabled></textarea>
+        </div>
+        <div class="modal-footer">
+
+            @if (Model.Permiso && Model.Pendiente)
+            {
+                <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
+                <a id="btnEliminar" class="btn btn-danger" asp-controller="IngresoSalidaRS" asp-action="EliminarRegistro" asp-route-IdRegistro="@Model.Encrypted_Id">Eliminar</a>
+                <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+                <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+            }
+            else
+            {
+                <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Volver</a>
+            }
+        </div>
+    </div>
+</form>
+@section Scripts{
+    <script type="text/javascript">
+        $("#Tipo_Residuo").on('change', function () {
+            var selectedValue = $("#Tipo_Residuo").val();
+            $(".Vacio").hide();
+            $(".Vacio").prop('disabled', true);
+            $(".Peligroso").hide();
+            $(".Peligroso").prop('disabled', true);
+            $(".No-Peligroso").hide();
+            $(".No-Peligroso").prop('disabled', true);
+            switch (selectedValue) {
+                case "1":
+                    $(".Peligroso").show();
+                    $(".Peligroso").prop('disabled', false);
+                    break;
+                case "2":
+                    $(".No-Peligroso").show();
+                    $(".No-Peligroso").prop('disabled', false);
+                    break;
+                default:
+                    $(".Peligroso").hide();
+                    $(".Peligroso").prop('disabled', true);
+                    $(".No-Peligroso").hide();
+                    $(".No-Peligroso").prop('disabled', true);
+                    $("#Residuo_Solido").val(0);
+                    $(".Vacio").show();
+                    $(".Vacio").prop('disabled', false);
+                    break;
+            }
+        });
+        $(".No-Peligroso").on('change', function () {
+            $("#Residuo_Solido").val($(".No-Peligroso").val())
+        });
+        $(".Peligroso").on('change', function () {
+            $("#Residuo_Solido").val($(".Peligroso").val())
+        });
+        $(document).ready(function () {
+            CargarValorResiduoSolido();
+            HabilitarInputs(@Model.Permiso.ToString().ToLower(), @Model.Pendiente.ToString().ToLower())
+        });
+        $("#btnGuardarEstado").on('click', function () {
+            $("#opcion").val("GuardarEstado");
+            $("#formIngresoSalida").submit();
+        });
+        $("#btnRegistrar").on('click', function () {
+            $("#opcion").val("Registrar");
+            $("#formIngresoSalida").submit();
+        });
+        function CargarValorResiduoSolido() {
+            var selectedValue = $("#Tipo_Residuo").val();
+
+            $(".Vacio").hide();
+            $(".Vacio").prop('disabled', true);
+            $(".Peligroso").hide();
+            $(".Peligroso").prop('disabled', true);
+            $(".No-Peligroso").hide();
+            $(".No-Peligroso").prop('disabled', true);
+            switch (selectedValue) {
+                case "1":
+                    $(".Peligroso").show();
+                    $('.Peligroso option').filter(function () {
+                        return ($(this).val() == "@Model.Residuo_Solido"); //To select Blue
+                    }).prop('selected', true);
+
+                    $(".Peligroso").val("@Model.Residuo_Solido".toString());
+
+                    $("#Residuo_Solido").val("@Model.Residuo_Solido".toString())
+                    break;
+                case "2":
+                    $(".No-Peligroso").show();
+                    $('.No-Peligroso option').filter(function () {
+                        return ($(this).val() == "@Model.Residuo_Solido".toString()); //To select Blue
+                    }).prop('selected', true)
+                    $("#Residuo_Solido").val("@Model.Residuo_Solido".toString())
+                    break;
+                default:
+                    $(".Peligroso").hide();
+                    $(".Peligroso").prop('disabled', true);
+                    $(".No-Peligroso").hide();
+                    $(".No-Peligroso").prop('disabled', true);
+                    $(".Vacio").show();
+                    $(".Vacio").prop('disabled', false);
+                    $("#Residuo_Solido").val("0")
+                    break;
+            }           
+        }
+        function HabilitarInputs(permiso,pendiente) {
+            if (permiso && pendiente) {
+                $("#ACR_CMRS").prop('disabled', false);
+                $("#Responsable_ACR_CMRS").prop('disabled', false);
+                $("#Ingreso_Salida").prop('disabled', false);
+                $("#Motivo").prop('disabled', false);
+                $("#Fecha").prop('disabled', false);
+                $("#Tipo_Residuo").prop('disabled', false);
+                $("#Residuo_Solido").prop('disabled', false);
+                $("#Cantidad").prop('disabled', false);
+                $("#Empresa").prop('disabled', false);
+                $("#Responsable_Marcobre").prop('disabled', false);
+                $("#Comentario").prop('disabled', false);
+
+                if ($(".Peligroso").val() != "0")
+                    $(".Peligroso").prop('disabled', false);
+                else if($(".No-Peligroso").val() != "0")
+                    $(".No-Peligroso").prop('disabled', false);
+            }
+        }
+    </script>
+}

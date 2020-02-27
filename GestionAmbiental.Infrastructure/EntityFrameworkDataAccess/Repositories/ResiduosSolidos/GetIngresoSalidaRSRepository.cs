@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.ResiduosSolidos
 {
-    public class GetIngresoSalidaRSRepository : GetIngresoSalidaRSReadOnlyRepository
+    public class GetIngresoSalidaRSRepository : IGetIngresoSalidaRSReadOnlyRepository
     {
         private readonly Context _context;
 
@@ -33,7 +33,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 ids_residuos_solidos_tipo.Contains(x.Id_Residuo_Solido) &&
                 x.Fecha_Ingreso_Salida.Equals(fecha!=null ? fecha.Value : x.Fecha_Ingreso_Salida) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(asesorMA != 0 ? asesorMA : x.Id_Responsable_Marcobre))
+                x.Id_Responsable_Marcobre.Equals(asesorMA != 0 ? asesorMA : x.Id_Responsable_Marcobre)&&
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
                 .OrderByDescending(x=>x.Item)
                 .ToList();
 
@@ -43,7 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var residuo_solido_entities = await _context.Residuos_Solidos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             var tipo_residuo_entities = await _context.Tipo_Residuos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             var empresas_entities = await _context.Empresas.ToListAsync();
-            var asesoresMA_entities = await _context.Usuarios.Where(x => x.Id_Rol.Equals((int)RSRoles.AsesorMAP)).ToListAsync();
+            var asesoresMA_entities = await _context.Usuarios.Where(x => x.Id_Rol.Equals((int)RSRoles.AsesorMAP) && x.Estado.Equals("ACT")).ToListAsync();
 
             var output = new List<Ingreso_Salida_RS>();
             foreach (var item in data)
@@ -53,7 +54,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var motivo_model = motivos_entities.Find(x => x.Id_Motivo.Equals(item.Id_Motivo));
                 var residuo_solido_model = residuo_solido_entities.Find(x => x.Id_Residuo_Solido.Equals(item.Id_Residuo_Solido));
                 var tipo_residuo_model = tipo_residuo_entities.Find(x => x.Id_Tipo_Residuo.Equals(residuo_solido_model.Id_Tipo_Residuo));
-                var empresa_model = empresas_entities.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa_RS));
+                var empresa_model = empresas_entities.Find(x => x.Id_Empresa.Equals(item.Id_Empresa_RS));
                 var asesorMA_model = asesoresMA_entities.Find(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
 
                 var outputItem = new Ingreso_Salida_RS();
@@ -71,8 +72,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     residuo_solido_model.Estado);
                 outputItem.Cantidad = item.Cantidad;
                 outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Responsable_Marcobre = asesorMA_model != null ? new Domain.ValueObjects.Usuario(asesorMA_model.Id_Usuario, asesorMA_model.Id_Rol, asesorMA_model.Nombres, asesorMA_model.Apellidos, asesorMA_model.Email) : new Domain.ValueObjects.Usuario();
+                outputItem.Responsable_Marcobre = new Domain.ValueObjects.Usuario(asesorMA_model.Id_Usuario, asesorMA_model.Id_Rol, asesorMA_model.Nombres, asesorMA_model.Apellidos, asesorMA_model.Email);
                 outputItem.Comentario = item.Comentario;
+                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
+                outputItem.Fecha_Registro = item.Fecha_Registro;
                 outputItem.Estado = item.Estado;
 
                 output.Add(outputItem);
@@ -91,6 +94,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var residuo_solido_entity = await _context.Residuos_Solidos.FirstOrDefaultAsync(x => x.Id_Residuo_Solido.Equals(data.Id_Residuo_Solido));
                 var tipo_residuo_entity = await _context.Tipo_Residuos.FirstOrDefaultAsync(x => x.Id_Tipo_Residuo.Equals(residuo_solido_entity.Id_Tipo_Residuo));
                 var empresa_entity = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(data.Id_Empresa_RS));
+                var usuarios = await _context.Usuarios.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+                var responsable_entity = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(data.Id_Responsable_Marcobre));
 
                 output.Item = data.Item;
                 output.Id_Ingreso_Salida_RS = data.Id_Ingreso_Salida_RS;
@@ -98,18 +103,32 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Responsable_ACR_CMRS = data.Responsable_ACR_CMRS;
                 output.Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_entity.Id_Ingreso_Salida, ing_sal_entity.Descripcion, ing_sal_entity.Estado);
                 output.Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_entity.Id_Motivo, motivo_entity.Descripcion, motivo_entity.Estado);
-
-
-            }
+                output.Fecha_Ingreso_Salida = data.Fecha_Ingreso_Salida;
+                output.Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
+                    residuo_solido_entity.Id_Residuo_Solido,
+                    new Domain.ValueObjects.Tipo_Residuo(
+                        tipo_residuo_entity.Id_Tipo_Residuo,
+                        tipo_residuo_entity.Descripcion,
+                        tipo_residuo_entity.Estado),
+                    residuo_solido_entity.Descripcion,
+                    residuo_solido_entity.Estado);
+                output.Cantidad = data.Cantidad;
+                output.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_entity.Id_Empresa, empresa_entity.Razon_Social);
+                output.Responsable_Marcobre = new Domain.ValueObjects.Usuario(responsable_entity.Id_Usuario, responsable_entity.Id_Rol, responsable_entity.Nombres, responsable_entity.Apellidos, responsable_entity.Email);
+                output.Comentario = data.Comentario;
+                output.Id_Registrado_Por = data.Id_Registrado_Por;
+                output.Fecha_Registro = data.Fecha_Registro;
+                output.Estado = data.Estado;
+                }
             return output;
         }
-        public async Task<int> GetLastItem()
+        public async Task<string> GetLastItem()
         {
             var data = await _context.Ingresos_Salidas_RS.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
             if (data != null)
                 return data.Item;
             else
-                return 0;            
+                return "";            
         }
     }
 }

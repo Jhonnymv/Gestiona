@@ -262,8 +262,10 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             {
                 foreach(var item in data)
                 {
+                    item.Id_Cabecera_Encriptada = _protector.Protect(item.Id_Cabecera.ToString());
+
                     tabla += "<tr>";
-                    tabla += "<td><a href = \"#\" >" + item.Codigo + "</a></td>";
+                    tabla += "<td><a href = \"/Inspecciones/EditarInspeccion?IdCabecera="+item.Id_Cabecera_Encriptada+ "\">" + item.Codigo + "</a></td>";
                     tabla += "<td>" + item.Empresa + "</td>";
                     tabla += "<td>" + item.Gerencia + "</td>";
                     tabla += "<td>" + item.Fecha_Inspeccion + "</td>";

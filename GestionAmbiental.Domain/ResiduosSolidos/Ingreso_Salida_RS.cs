@@ -7,7 +7,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
 {
     public class Ingreso_Salida_RS
     {
-        public int Item { get; set; }
+        public string Item { get; set; }
         public int Id_Ingreso_Salida_RS { get; set; }
         public ACR_CMRS ACR_CMRS { get; set; }
         public string Responsable_ACR_CMRS { get; set; }
@@ -19,6 +19,8 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public Empresa Empresa_RS { get; set; }
         public Usuario Responsable_Marcobre { get; set; }
         public string Comentario { get; set; }
+        public int Id_Registrado_Por { get; set; }
+        public DateTime Fecha_Registro { get; set; }
         public string Estado { get; set; }
 
         public Ingreso_Salida_RS()
@@ -26,10 +28,11 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         }
 
         public Ingreso_Salida_RS(
-            int id_Ingreso_Salida_RS, int item, ACR_CMRS aCR_CMRS, string responsable_ACR_CMRS, 
+            int id_Ingreso_Salida_RS, string item, ACR_CMRS aCR_CMRS, string responsable_ACR_CMRS, 
             Ingreso_Salida ingreso_Salida, Motivo_Ingreso_Salida motivo, 
             DateTime fecha_Ingreso_Salida, Residuo_Solido residuo_Solido, double cantidad, 
-            Empresa id_Empresa_RS, Usuario responsable_Marcobre, string comentario, string estado)
+            Empresa id_Empresa_RS, Usuario responsable_Marcobre, string comentario,
+            int id_Registrado_Por,DateTime fecha_Registro, string estado)
         {
             Item = item;
             Id_Ingreso_Salida_RS = id_Ingreso_Salida_RS;
@@ -43,6 +46,8 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             Empresa_RS = id_Empresa_RS;
             Responsable_Marcobre = responsable_Marcobre;
             Comentario = comentario;
+            Id_Registrado_Por = id_Registrado_Por;
+            Fecha_Registro = fecha_Registro;
             Estado = estado;
         }
     }

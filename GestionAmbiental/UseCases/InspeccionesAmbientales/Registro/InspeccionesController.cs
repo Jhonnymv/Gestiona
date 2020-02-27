@@ -144,9 +144,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 for (int i = 1; i <= nPaginas; i++)
                 {
                     if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"Filtrar(" + i + ")\">" + i + "</a></li>";
                     else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"Filtrar(" + i + ")\">" + i + "</a></li>";
                 }
                 paginador += "</ul>";
 

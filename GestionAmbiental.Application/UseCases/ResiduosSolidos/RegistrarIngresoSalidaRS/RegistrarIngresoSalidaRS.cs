@@ -1,4 +1,6 @@
-﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
+using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
 using GestionAmbiental.Domain.ValueObjects;
 using System;
@@ -11,25 +13,44 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngreso
     public class RegistrarIngresoSalidaRS : IRegistrarIngresoSalidaRS
     {
         private readonly IRegistrarIngresoSalidaRSReadOnlyRepository _registrarIngresoSalidaRSReadOnlyRepository;
-        private readonly GetIngresoSalidaRSReadOnlyRepository _getIngresoSalidaRSReadOnlyRepository;
+        private readonly IGetIngresoSalidaRSReadOnlyRepository _getIngresoSalidaRSReadOnlyRepository;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public RegistrarIngresoSalidaRS(IRegistrarIngresoSalidaRSReadOnlyRepository registrarIngresoSalidaRSReadOnlyRepository, GetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository)
+        public RegistrarIngresoSalidaRS(
+            IRegistrarIngresoSalidaRSReadOnlyRepository registrarIngresoSalidaRSReadOnlyRepository, 
+            IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository, 
+            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _registrarIngresoSalidaRSReadOnlyRepository = registrarIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarIngresoSalidaRSReadOnlyRepository));
             _getIngresoSalidaRSReadOnlyRepository = getIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(getIngresoSalidaRSReadOnlyRepository));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa)
+        public async Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa,int responsable_marc,string comentario,string usuario_red)
         {
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
+            var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
+
+            switch (opcion)
+            {
+                case "Registrar": 
+                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+                    var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
+                    input.Item = lastItem.Length>0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
+                    break;
+                case "GuardarEstado": 
+                    input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
+                    input.Item = "TBD";
+                    break;
+            }
 
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();
             input.Motivo = new Motivo_Ingreso_Salida();
             input.Residuo_Solido = new Residuo_Solido();
             input.Empresa_RS = new Empresa();
-
+            input.Responsable_Marcobre = new Usuario();
 
             input.ACR_CMRS.Id_ACR_CMRS = arc_cmrs;
             input.Ingreso_Salida.Id_Ingreso_Salida = ingreso_salida;
@@ -39,8 +60,10 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngreso
             input.Responsable_ACR_CMRS = responsable;
             input.Cantidad = cantidad;
             input.Empresa_RS.IdEmpresa = empresa;
-            var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
-            input.Item = lastItem != null ? lastItem + 1 : 1;
+            input.Responsable_Marcobre.IdUsuario = responsable_marc;
+            input.Comentario = comentario;
+            input.Fecha_Registro = DateTime.Now;
+            input.Id_Registrado_Por = usuario.IdUsuario;
 
             return await _registrarIngresoSalidaRSReadOnlyRepository.RegistrarIngresoSalida(input);
         }

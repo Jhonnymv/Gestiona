@@ -6,6 +6,8 @@ namespace GestionAmbiental.Domain.Enum
 {
     public enum EstadosResiduosSolidos
     {
-        Registrado = 1
+        Pendiente = 1,
+        Registrado = 2,
+        Eliminado = 3
     }
 }

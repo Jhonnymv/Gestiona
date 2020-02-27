@@ -9,6 +9,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 {
     public class IngresoSalidaRSModel
     {
+        public int Id_Ingreso_Salida_RS { get; set; }
+        public string Encrypted_Id { get; set; }
+        public string opcion { get; set; }
         [DisplayName("ACR/CMRS:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int ACR_CMRS { get; set; }
@@ -36,6 +39,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [DisplayName("Empresa que generó/retiró el residuo:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Empresa { get; set; }
-        
+        [DisplayName("Responsable de Marcobre que entrega/retira el residuo:")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        public int Responsable_Marcobre { get; set; }
+        [DisplayName("Comentarios:")]
+        [Required(ErrorMessage = "Debe ingresar una fecha")]
+        public string Comentario { get; set; }
+        public bool Permiso { get; set; }
+        public bool Pendiente { get; set; }
     }
 }

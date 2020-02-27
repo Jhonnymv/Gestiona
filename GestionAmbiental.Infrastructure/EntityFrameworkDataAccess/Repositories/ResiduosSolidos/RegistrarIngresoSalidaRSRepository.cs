@@ -28,7 +28,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Residuo_Solido = ingreso_Salida_RS.Residuo_Solido.Id_Residuo_Solido;
             entity.Cantidad = ingreso_Salida_RS.Cantidad;
             entity.Id_Empresa_RS = ingreso_Salida_RS.Empresa_RS.IdEmpresa;
-            entity.Estado = EstadosResiduosSolidos.Registrado.ToString();
+            entity.Id_Responsable_Marcobre = ingreso_Salida_RS.Responsable_Marcobre.IdUsuario;
+            entity.Comentario = ingreso_Salida_RS.Comentario;
+            entity.Id_Registrado_Por = ingreso_Salida_RS.Id_Registrado_Por;
+            entity.Fecha_Registro = ingreso_Salida_RS.Fecha_Registro;
+            entity.Estado = ingreso_Salida_RS.Estado;
 
             _context.Ingresos_Salidas_RS.Add(entity);
             await _context.SaveChangesAsync();

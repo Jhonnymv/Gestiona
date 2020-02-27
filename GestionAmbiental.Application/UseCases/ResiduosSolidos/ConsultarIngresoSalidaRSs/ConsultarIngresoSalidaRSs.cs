@@ -9,9 +9,9 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngreso
 {
     public class ConsultarIngresoSalidaRSs : IConsultarIngresoSalidaRSs
     {
-        private readonly GetIngresoSalidaRSReadOnlyRepository _getIngresoSalidaRSReadOnlyRepository;
+        private readonly IGetIngresoSalidaRSReadOnlyRepository _getIngresoSalidaRSReadOnlyRepository;
 
-        public ConsultarIngresoSalidaRSs(GetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository)
+        public ConsultarIngresoSalidaRSs(IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository)
         {
             _getIngresoSalidaRSReadOnlyRepository = getIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(getIngresoSalidaRSReadOnlyRepository));
         }
