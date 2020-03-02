@@ -1,0 +1,78 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS
+{
+    public class ManifiestoRSOutput
+    {
+        public int Id_Manifiesto_RS { get; set; }
+        public int Item { get; set; }
+        public int Serie_Manifiesto { get; set; }
+        public string Num_Manifiesto { get; set; }
+        public DateTime Fecha_Emision_Manifiesto { get; set; }
+        public string Observacion_Manifiesto { get; set; }
+        public string Tipo_Residuo_Solido { get; set; }
+        public string Residuo_Solido { get; set; }
+        public double Cantidad_RS_Evacuado { get; set; }
+        public string EO_RS_Salida { get; set; }
+        public string Registro_EO_RS_Salida { get; set; }
+        public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
+        public string Num_Autorizacion_Municipal_Salida { get; set; }
+        public string Num_Autorizacion_Hoja_Ruta { get; set; }
+        public string Nombre_Conductor { get; set; }
+        public string Num_Licencia_Condutor { get; set; }
+        public string Placa_Vehiculo { get; set; }
+        public double Capacidad_Vehiculo { get; set; }
+        public string EO_RS_Llegada { get; set; }
+        public string Registro_EO_RS_Llegada { get; set; }
+        public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
+        public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
+        public string Num_Autorizacion_Municipal_Llegada { get; set; }
+        public string Certificado_Trat_Disp { get; set; }
+        public double Cantidad_RS_Dispuesto { get; set; }
+        public DateTime? Fecha_Devolucion { get; set; }
+        public string Informe_Transporte { get; set; }
+        public string Manifiesto { get; set; }
+        public string Asesor_MAP { get; set; }
+        public DateTime Fecha_Registro { get; set; }
+        public int Id_Registrado_Por { get; set; }
+        public string Estado { get; set; }
+        public bool Permiso { get; set; }
+        public ManifiestoRSOutput(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS)
+        {
+            Id_Manifiesto_RS = manifiesto_RS.Id_Manifiesto_RS;
+            Item = manifiesto_RS.Item;
+            Serie_Manifiesto = manifiesto_RS.Serie_Manifiesto;
+            Num_Manifiesto = manifiesto_RS.Num_Manifiesto;
+            Fecha_Emision_Manifiesto = manifiesto_RS.Fecha_Emision_Manifiesto;
+            Observacion_Manifiesto = manifiesto_RS.Observacion_Manifiesto;
+            Tipo_Residuo_Solido = manifiesto_RS.Residuo_Solido.Tipo_Residuo.Descripcion;
+            Residuo_Solido = manifiesto_RS.Residuo_Solido.Descripcion;
+            Cantidad_RS_Evacuado = manifiesto_RS.Cantidad_RS_Evacuado;
+            EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Razon_Social;
+            Registro_EO_RS_Salida = manifiesto_RS.Registro_EO_RS_Salida;
+            Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
+            Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
+            Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
+            Nombre_Conductor = manifiesto_RS.Nombre_Conductor;
+            Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
+            Placa_Vehiculo = manifiesto_RS.Placa_Vehiculo;
+            Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
+            EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Razon_Social;
+            Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;
+            Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
+            Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
+            Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
+            Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
+            Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
+            Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
+            Informe_Transporte = manifiesto_RS.Informe_Transporte;
+            Manifiesto = manifiesto_RS.Manifiesto;
+            Asesor_MAP = manifiesto_RS.Asesor_MAP.Nombres + " " + manifiesto_RS.Asesor_MAP.Apellidos;
+            Fecha_Registro = manifiesto_RS.Fecha_Registro;
+            Id_Registrado_Por = manifiesto_RS.Id_Registrado_Por;
+            Estado = manifiesto_RS.Estado;
+        }
+    }    
+}

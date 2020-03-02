@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS
 {
     public class IngresoSalidaRSOutput
     {

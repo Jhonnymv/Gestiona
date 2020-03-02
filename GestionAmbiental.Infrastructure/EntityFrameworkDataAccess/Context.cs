@@ -1,11 +1,8 @@
-﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
+﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
-using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 {
@@ -34,6 +31,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Residuo_Solido> Residuos_Solidos { get; set; }
         public DbSet<Tipo_Residuo> Tipo_Residuos { get; set; }
         public DbSet<Log_Ingreso_Salida_RS> Log_Ingreso_Salida_RSs { get; set; }
+        public DbSet<Log_Manifiesto_RS>Log_Manifiesto_RS { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -77,6 +75,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Tipo_Residuo");
             modelBuilder.Entity<Log_Ingreso_Salida_RS>()
                 .ToTable("Tb_Log_Ingreso_Salida_RS");
+            modelBuilder.Entity<Log_Manifiesto_RS>()
+                .ToTable("Tb_Log_Manifiesto_RS");
         }
     }
 

@@ -12,6 +12,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Key]
         public int Id_Manifiesto_RS { get; set; }
         [Column(TypeName = "int")]
+        public int Item { get; set; }
+        [Column(TypeName = "int")]
         public int Serie_Manifiesto { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Num_Manifiesto { get; set; }

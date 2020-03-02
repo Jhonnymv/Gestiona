@@ -8,6 +8,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
     public class Manifiesto_RS
     {
         public int Id_Manifiesto_RS { get; set; }
+        public int Item { get; set; }
         public int Serie_Manifiesto { get; set; }
         public string Num_Manifiesto { get; set; }
         public DateTime Fecha_Emision_Manifiesto { get; set; }
@@ -39,7 +40,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public string Estado { get; set; }
 
         public Manifiesto_RS(
-            int id_Manifiesto_RS, int serie_Manifiesto, string num_Manifiesto, 
+            int id_Manifiesto_RS, int item, int serie_Manifiesto, string num_Manifiesto, 
             DateTime fecha_Emision_Manifiesto, string observacion_Manifiesto, 
             Residuo_Solido residuo_Solido, double cantidad_RS_Evacuado, 
             EO_RS eO_RS_Salida, string registro_EO_RS_Salida, 
@@ -52,6 +53,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             string informe_Transporte, string manifiesto, Usuario asesor_MAP, string estado,int id_registrado_por,DateTime fecha_registro)
         {
             Id_Manifiesto_RS = id_Manifiesto_RS;
+            Item = item;
             Serie_Manifiesto = serie_Manifiesto;
             Num_Manifiesto = num_Manifiesto;
             Fecha_Emision_Manifiesto = fecha_Emision_Manifiesto;

@@ -8,6 +8,7 @@ namespace GestionAmbiental.Domain.Enum
     {
         Pendiente = 1,
         Registrado = 2,
-        Eliminado = 3
+        Eliminado = 3,
+        Cerrado = 4
     }
 }
