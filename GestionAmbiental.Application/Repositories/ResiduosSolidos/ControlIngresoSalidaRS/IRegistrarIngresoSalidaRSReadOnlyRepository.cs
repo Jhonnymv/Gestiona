@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.Repositories.ResiduosSolidos
+namespace GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS
 {
     public interface IRegistrarIngresoSalidaRSReadOnlyRepository
     {

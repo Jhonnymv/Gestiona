@@ -9,7 +9,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
     {
         public int Id_Manifiesto_RS { get; set; }
         public int Serie_Manifiesto { get; set; }
-        public int Num_Manifiesto { get; set; }
+        public string Num_Manifiesto { get; set; }
         public DateTime Fecha_Emision_Manifiesto { get; set; }
         public string Observacion_Manifiesto { get; set; }
         public Residuo_Solido Residuo_Solido { get; set; }
@@ -34,10 +34,12 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public string Informe_Transporte { get; set; }
         public string Manifiesto { get; set; }
         public Usuario Asesor_MAP { get; set; }
+        public DateTime Fecha_Registro { get; set; }
+        public int Id_Registrado_Por { get; set; }
         public string Estado { get; set; }
 
         public Manifiesto_RS(
-            int id_Manifiesto_RS, int serie_Manifiesto, int num_Manifiesto, 
+            int id_Manifiesto_RS, int serie_Manifiesto, string num_Manifiesto, 
             DateTime fecha_Emision_Manifiesto, string observacion_Manifiesto, 
             Residuo_Solido residuo_Solido, double cantidad_RS_Evacuado, 
             EO_RS eO_RS_Salida, string registro_EO_RS_Salida, 
@@ -47,7 +49,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             string registro_EO_RS_Llegada, DateTime fecha_Vencimiento_Registro_Llegada, 
             string num_Autorizacion_Sanitaria_Llegada, string num_Autorizacion_Municipal_Llegada,
             string certificado_Trat_Disp, double cantidad_RS_Dispuesto, DateTime fecha_Devolucion,
-            string informe_Transporte, string manifiesto, Usuario asesor_MAP, string estado)
+            string informe_Transporte, string manifiesto, Usuario asesor_MAP, string estado,int id_registrado_por,DateTime fecha_registro)
         {
             Id_Manifiesto_RS = id_Manifiesto_RS;
             Serie_Manifiesto = serie_Manifiesto;
@@ -77,6 +79,12 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             Manifiesto = manifiesto;
             Asesor_MAP = asesor_MAP;
             Estado = estado;
+            Id_Registrado_Por = id_registrado_por;
+            Fecha_Registro = fecha_registro;
+        }
+
+        public Manifiesto_RS()
+        {
         }
     }
 }

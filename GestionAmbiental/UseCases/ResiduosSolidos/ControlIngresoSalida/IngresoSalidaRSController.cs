@@ -2,16 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngresoSalidaRS;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngresoSalidaRSs;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.EditarIngresoSalidaRS;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.EliminarRegistroIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRSs;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRSs;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EditarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.RegistrarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EditarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngresoSalidaRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.RegistrarIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 {
@@ -45,24 +52,35 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         }
         public async Task<IActionResult> Resumen()
         {
-            var items = await _getSelectItems.Execute();
-            var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
-            acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
-            ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var tipo_residuo = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
-            tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-            empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            ViewBag.ACR_CMRS = acr_cmrs;
-            ViewBag.IngresoSalida = ingreso_salida;
-            ViewBag.TipoResiduo = tipo_residuo;
-            ViewBag.Empresa = empresa;
-            ViewBag.AsesoresMA = asesoresMA;
-            return View();
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var items = await _getSelectItems.Execute();
+                var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
+                acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
+                ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var tipo_residuo = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
+                tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.ACR_CMRS = acr_cmrs;
+                ViewBag.IngresoSalida = ingreso_salida;
+                ViewBag.TipoResiduo = tipo_residuo;
+                ViewBag.Empresa = empresa;
+                ViewBag.AsesoresMA = asesoresMA;
+                return View();
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int asesorMA, int pagina, int rpp)
         {
@@ -87,7 +105,6 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                     filasTabla += "<td>" + fila.Cantidad + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
-                    //filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance + "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -115,108 +132,134 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         }
         public async Task<IActionResult> NuevoRegistro()
         {
-            var items = await _getSelectItems.Execute();
-            var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
-            acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
-            ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
-            motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-            empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
-            tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var residuos_solidos_p = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.Peligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var items = await _getSelectItems.Execute();
+                var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
+                acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
+                ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
+                motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
+                tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var residuos_solidos_p = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.Peligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
 
-            ViewBag.ACR_CMRS = acr_cmrs;
-            ViewBag.IngresoSalida = ingreso_salida;
-            ViewBag.Motivo = motivo;
-            ViewBag.Empresa = empresa;
-            ViewBag.TiposResiduo = tipos_residuos;
-            ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
-            ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
-            ViewBag.AsesoresMA = asesoresMA;
-            return View();
+                ViewBag.ACR_CMRS = acr_cmrs;
+                ViewBag.IngresoSalida = ingreso_salida;
+                ViewBag.Motivo = motivo;
+                ViewBag.Empresa = empresa;
+                ViewBag.TiposResiduo = tipos_residuos;
+                ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
+                ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
+                ViewBag.AsesoresMA = asesoresMA;
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> NuevoRegistro(IngresoSalidaRSModel model)
         {
             if (ModelState.IsValid)
             {
-                var IdIngresoSalida = await _registrarIngresoSalidaRS.Execute(model.opcion,model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa,model.Responsable_Marcobre,model.Comentario,"kevin");
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var IdIngresoSalida = await _registrarIngresoSalidaRS.Execute(model.opcion,model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa,model.Responsable_Marcobre,model.Comentario,userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoRegistro");
         }
         public async Task<IActionResult> EditarRegistro(string IdRegistro)
         {
-            var id_decrypted = Convert.ToInt32(_protector.Unprotect(IdRegistro));
-
-            var data = await _consultarIngresoSalidaRS.Execute(id_decrypted,"kevin");
-
-            var items = await _getSelectItems.Execute();
-            var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
-            acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
-            ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
-            motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-            empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
-            tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var residuos_solidos_p = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.Peligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-
-            ViewBag.ACR_CMRS = acr_cmrs;
-            ViewBag.IngresoSalida = ingreso_salida;
-            ViewBag.Motivo = motivo;
-            ViewBag.Empresa = empresa;
-            ViewBag.TiposResiduo = tipos_residuos;
-            ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
-            ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
-            ViewBag.AsesoresMA = asesoresMA;
-
-            var model = new IngresoSalidaRSModel();
-            model.Encrypted_Id = IdRegistro;
-            model.Id_Ingreso_Salida_RS = id_decrypted;
-            model.ACR_CMRS = data.Id_ACR_CMRS;
-            model.Ingreso_Salida = data.Id_Ingreso_Salida;
-            model.Motivo = data.Id_Motivo;
-            model.Residuo_Solido = data.Id_Residuo_Solido;
-            model.Tipo_Residuo = data.Id_Tipo_Residuo;
-            model.Responsable_ACR_CMRS = data.Responsable_ACR_CMRS;
-            model.Comentario = data.Comentario;
-            model.Empresa = data.Id_Empresa;
-            model.Fecha = data.Fecha_Ingreso_Salida.ToString("yyyy-MM-dd");
-            model.Responsable_Marcobre = data.Id_Responsable_Marcobre;
-            model.Cantidad = data.Cantidad;
-            model.Residuo_Solido = data.Id_Residuo_Solido;
-            model.Permiso = data.Permiso;
-            if (data.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()))
-                model.Pendiente = true;
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
             else
-                model.Pendiente = false;
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            return View(model);
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var id_decrypted = Convert.ToInt32(_protector.Unprotect(IdRegistro));
+
+                var data = await _consultarIngresoSalidaRS.Execute(id_decrypted, userInfo.NombreUsuario);
+
+                var items = await _getSelectItems.Execute();
+                var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
+                acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
+                ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
+                motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
+                tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var residuos_solidos_p = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.Peligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+
+                ViewBag.ACR_CMRS = acr_cmrs;
+                ViewBag.IngresoSalida = ingreso_salida;
+                ViewBag.Motivo = motivo;
+                ViewBag.Empresa = empresa;
+                ViewBag.TiposResiduo = tipos_residuos;
+                ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
+                ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
+                ViewBag.AsesoresMA = asesoresMA;
+
+                var model = new IngresoSalidaRSModel();
+                model.Encrypted_Id = IdRegistro;
+                model.Id_Ingreso_Salida_RS = id_decrypted;
+                model.ACR_CMRS = data.Id_ACR_CMRS;
+                model.Ingreso_Salida = data.Id_Ingreso_Salida;
+                model.Motivo = data.Id_Motivo;
+                model.Residuo_Solido = data.Id_Residuo_Solido;
+                model.Tipo_Residuo = data.Id_Tipo_Residuo;
+                model.Responsable_ACR_CMRS = data.Responsable_ACR_CMRS;
+                model.Comentario = data.Comentario;
+                model.Empresa = data.Id_Empresa;
+                model.Fecha = data.Fecha_Ingreso_Salida.ToString("yyyy-MM-dd");
+                model.Responsable_Marcobre = data.Id_Responsable_Marcobre;
+                model.Cantidad = data.Cantidad;
+                model.Residuo_Solido = data.Id_Residuo_Solido;
+                model.Permiso = data.Permiso;
+                if (data.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()))
+                    model.Pendiente = true;
+                else
+                    model.Pendiente = false;
+
+                return View(model);
+            }
         }
         [HttpPost]
         public async Task<IActionResult> EditarRegistro(IngresoSalidaRSModel model)
         {
             if (ModelState.IsValid)
             {
-                await _editarIngresoSalidaRS.Execute(model.Id_Ingreso_Salida_RS,model.opcion, model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa, model.Responsable_Marcobre, model.Comentario, "kevin");
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                await _editarIngresoSalidaRS.Execute(model.Id_Ingreso_Salida_RS,model.opcion, model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa, model.Responsable_Marcobre, model.Comentario, userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoRegistro");
@@ -225,8 +268,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var decrypted_id = Convert.ToInt32(_protector.Unprotect(IdRegistro));
-                await _eliminarRegistroIngresoSalidaRS.Execute(decrypted_id, "kevin");
+                await _eliminarRegistroIngresoSalidaRS.Execute(decrypted_id, userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoRegistro");

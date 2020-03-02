@@ -41,6 +41,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                     return View();
                 }
             }
+            return View();
         }
         [HttpPost]
         public async Task<IActionResult> Info_SGA(string filtro, int pagina, int rpp)
@@ -65,7 +66,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
 
                             filasTabla += "<tr>";
                             filasTabla += "<td>" + info.Tipo + "</td>";
-                            //filasTabla += "<td><a href=\"/GestorUsuarios/DetalleUsuario?IdUsuario=" + info.IdInfo + "\">Detalle</a></td>";
+                            filasTabla += "<td><a href=\"/GestorUsuarios/DetalleUsuario?IdUsuario=" + info.IdInfo + "\">Detalle</a></td>";
                             filasTabla += "<td><a href=\"/GestorInfo_SGA/DetalleInfo_SGA?IdInfo=" + info.IdInfo + "\">Detalle</a></td>";
                             filasTabla += "</tr>";
                         }
@@ -123,9 +124,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                         Info = infoJson,
                         Tipo = data.Tipo
                     };
-
                     return View(model);
-                }
+                 }
             }
         }
         [HttpPost]

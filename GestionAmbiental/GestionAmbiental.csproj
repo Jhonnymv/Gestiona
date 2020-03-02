@@ -43,7 +43,7 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
-    <Folder Include="UseCases\ResiduosSolidos\ControlManifiestos\" />
+    <Folder Include="UseCases\ResiduosSolidos\ControlManifiesto\" />
   </ItemGroup>
   
 </Project>

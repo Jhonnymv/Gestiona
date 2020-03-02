@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EliminarRegistroIngresoSalidaRS
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS
 {
     public interface IEliminarRegistroIngresoSalidaRS
     {

@@ -1,12 +1,12 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
-using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngresoSalidaRS
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRS
 {
     public class ConsultarIngresoSalidaRS : IConsultarIngresoSalidaRS
     {
@@ -19,7 +19,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngreso
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task<IngresoSalidaRSOutput> Execute(int Id_Ingreso_Salida_RS,string usuario_red)
+        public async Task<IngresoSalidaRSOutput> Execute(int Id_Ingreso_Salida_RS, string usuario_red)
         {
             var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RS(Id_Ingreso_Salida_RS);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);

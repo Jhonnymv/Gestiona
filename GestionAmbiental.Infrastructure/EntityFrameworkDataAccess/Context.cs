@@ -33,6 +33,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Ingreso_Salida_RS> Ingresos_Salidas_RS { get; set; }
         public DbSet<Residuo_Solido> Residuos_Solidos { get; set; }
         public DbSet<Tipo_Residuo> Tipo_Residuos { get; set; }
+        public DbSet<Log_Ingreso_Salida_RS> Log_Ingreso_Salida_RSs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -74,6 +75,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Residuo_Solido");
             modelBuilder.Entity<Tipo_Residuo>()
                 .ToTable("Tb_Tipo_Residuo");
+            modelBuilder.Entity<Log_Ingreso_Salida_RS>()
+                .ToTable("Tb_Log_Ingreso_Salida_RS");
         }
     }
 

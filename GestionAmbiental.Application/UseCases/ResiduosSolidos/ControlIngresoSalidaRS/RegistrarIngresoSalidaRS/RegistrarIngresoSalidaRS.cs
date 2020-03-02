@@ -1,5 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
-using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
 using GestionAmbiental.Domain.ValueObjects;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngresoSalidaRS
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.RegistrarIngresoSalidaRS
 {
     public class RegistrarIngresoSalidaRS : IRegistrarIngresoSalidaRS
     {
@@ -17,8 +17,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngreso
         private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
         public RegistrarIngresoSalidaRS(
-            IRegistrarIngresoSalidaRSReadOnlyRepository registrarIngresoSalidaRSReadOnlyRepository, 
-            IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository, 
+            IRegistrarIngresoSalidaRSReadOnlyRepository registrarIngresoSalidaRSReadOnlyRepository,
+            IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository,
             IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _registrarIngresoSalidaRSReadOnlyRepository = registrarIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarIngresoSalidaRSReadOnlyRepository));
@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngreso
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa,int responsable_marc,string comentario,string usuario_red)
+        public async Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red)
         {
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
@@ -34,12 +34,12 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.RegistrarIngreso
 
             switch (opcion)
             {
-                case "Registrar": 
+                case "Registrar":
                     input.Estado = EstadosResiduosSolidos.Registrado.ToString();
                     var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
-                    input.Item = lastItem.Length>0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
+                    input.Item = lastItem.Length > 0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
                     break;
-                case "GuardarEstado": 
+                case "GuardarEstado":
                     input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
                     input.Item = "TBD";
                     break;

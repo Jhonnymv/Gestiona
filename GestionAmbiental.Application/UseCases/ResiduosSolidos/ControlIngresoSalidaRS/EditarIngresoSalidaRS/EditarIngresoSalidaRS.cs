@@ -1,5 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
-using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
 using GestionAmbiental.Domain.ValueObjects;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EditarIngresoSalidaRS
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EditarIngresoSalidaRS
 {
     public class EditarIngresoSalidaRS : IEditarIngresoSalidaRS
     {
@@ -18,7 +18,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EditarIngresoSal
 
         public EditarIngresoSalidaRS(
             IEditarIngresoSalidaRSReadOnlyRepository editarIngresoSalidaRSReadOnlyRepository,
-            IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository, 
+            IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository,
             IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _editarIngresoSalidaRSReadOnlyRepository = editarIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarIngresoSalidaRSReadOnlyRepository));
@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EditarIngresoSal
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task Execute(int id_ingreso_salida_rs,string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red)
+        public async Task Execute(int id_ingreso_salida_rs, string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red)
         {
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
@@ -64,7 +64,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EditarIngresoSal
             input.Responsable_Marcobre.IdUsuario = responsable_marc;
             input.Comentario = comentario;
 
-            await _editarIngresoSalidaRSReadOnlyRepository.EditarIngresoSalidaRS(input,usuario.IdUsuario);
+            await _editarIngresoSalidaRSReadOnlyRepository.EditarIngresoSalidaRS(input, usuario.IdUsuario);
         }
     }
 }

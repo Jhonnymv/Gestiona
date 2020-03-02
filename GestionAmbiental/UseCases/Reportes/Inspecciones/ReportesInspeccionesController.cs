@@ -83,49 +83,44 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
 
         public async Task<IActionResult> Resumen()
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));*/
-            var userInfo = new
-            {
-                NombreUsuario = "kevin",
-                Rol = "AsesorMA"
-            };
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            ViewBag.Rol = userInfo.Rol.ToString();
-            ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            var itemsFiltro = await _getItemsFiltro.Execute();
+                var itemsFiltro = await _getItemsFiltro.Execute();
 
-            var filtroEmpresas = itemsFiltro.Empresas.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-            filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroEmpresas = itemsFiltro.Empresas.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var filtroGerencias = itemsFiltro.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-            filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroGerencias = itemsFiltro.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var filtroRespLevObs = itemsFiltro.RespLevObs.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            filtroRespLevObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroRespLevObs = itemsFiltro.RespLevObs.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                filtroRespLevObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
-            var grupoSSO = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
+                var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
+                var grupoSSO = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
 
-            var filtroAsesor = itemsFiltro.AsesoresMAP.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoMA }).ToList();
-            filtroAsesor.AddRange(itemsFiltro.AsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoSSO }).ToList());
-            filtroAsesor.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var filtroAsesor = itemsFiltro.AsesoresMAP.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoMA }).ToList();
+                filtroAsesor.AddRange(itemsFiltro.AsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoSSO }).ToList());
+                filtroAsesor.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            ViewBag.FiltroEmpresas = filtroEmpresas;
-            ViewBag.FiltroGerencias = filtroGerencias;
-            ViewBag.FiltroRespLevObs = filtroRespLevObs;
-            ViewBag.FiltroAsesor = filtroAsesor;
-            ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
-            ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+                ViewBag.FiltroEmpresas = filtroEmpresas;
+                ViewBag.FiltroGerencias = filtroGerencias;
+                ViewBag.FiltroRespLevObs = filtroRespLevObs;
+                ViewBag.FiltroAsesor = filtroAsesor;
+                ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+                ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
-            return View();
-            // }
+                return View();
+            }
         }
         public async Task<IActionResult> ActualizarContadorInspecciones(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin)
         {

@@ -13,8 +13,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public int Id_Manifiesto_RS { get; set; }
         [Column(TypeName = "int")]
         public int Serie_Manifiesto { get; set; }
-        [Column(TypeName = "int")]
-        public int Num_Manifiesto { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string Num_Manifiesto { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Emision_Manifiesto { get; set; }
         [Column(TypeName = "varchar(10)")]
@@ -63,6 +63,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Manifiesto { get; set; }
         [Column(TypeName = "int")]
         public int Id_Asesor_MAP { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime Fecha_Registro { get; set; }
+        [Column(TypeName = "int")]
+        public int Id_Registrado_Por { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Estado { get; set; }
     }

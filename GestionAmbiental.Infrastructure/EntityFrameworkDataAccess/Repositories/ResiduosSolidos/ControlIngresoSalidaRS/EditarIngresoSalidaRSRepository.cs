@@ -1,24 +1,26 @@
-﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.ResiduosSolidos
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.ResiduosSolidos.ControlIngresoSalidaRS
 {
-    public class RegistrarIngresoSalidaRSRepository : IRegistrarIngresoSalidaRSReadOnlyRepository
+    public class EditarIngresoSalidaRSRepository : IEditarIngresoSalidaRSReadOnlyRepository
     {
         private readonly Context _context;
-        public RegistrarIngresoSalidaRSRepository(Context context)
+        public EditarIngresoSalidaRSRepository(Context context)
         {
             _context = context;
         }
-
-        public async Task<int> RegistrarIngresoSalida(Ingreso_Salida_RS ingreso_Salida_RS)
+        public async Task EditarIngresoSalidaRS(Ingreso_Salida_RS ingreso_Salida_RS, int Id_Editado_Por)
         {
-            var entity = new Entities.ResiduosSolidos.Ingreso_Salida_RS();
+            var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(ingreso_Salida_RS.Id_Ingreso_Salida_RS));
+
             entity.Item = ingreso_Salida_RS.Item;
             entity.Id_ACR_CMRS = ingreso_Salida_RS.ACR_CMRS.Id_ACR_CMRS;
             entity.Responsable_ACR_CMRS = ingreso_Salida_RS.Responsable_ACR_CMRS;
@@ -30,14 +32,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Empresa_RS = ingreso_Salida_RS.Empresa_RS.IdEmpresa;
             entity.Id_Responsable_Marcobre = ingreso_Salida_RS.Responsable_Marcobre.IdUsuario;
             entity.Comentario = ingreso_Salida_RS.Comentario;
-            entity.Id_Registrado_Por = ingreso_Salida_RS.Id_Registrado_Por;
-            entity.Fecha_Registro = ingreso_Salida_RS.Fecha_Registro;
             entity.Estado = ingreso_Salida_RS.Estado;
 
-            _context.Ingresos_Salidas_RS.Add(entity);
+            _context.Ingresos_Salidas_RS.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task EliminarRegistroIngresoSalidaRS(int Id_Ingreso_Salida_RS, int Id_Editado_Por)
+        {
+            var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(Id_Ingreso_Salida_RS));
+
+            entity.Estado = EstadosResiduosSolidos.Eliminado.ToString();
+
+            _context.Ingresos_Salidas_RS.Update(entity);
             await _context.SaveChangesAsync();
 
-            return entity.Id_Ingreso_Salida_RS;
+
         }
+
     }
 }

@@ -1,11 +1,11 @@
-﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngresoSalidaRSs
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRSs
 {
     public class ConsultarIngresoSalidaRSs : IConsultarIngresoSalidaRSs
     {
@@ -20,7 +20,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngreso
             DateTime? fechadt = null;
             if (fecha != null)
                 fechadt = Convert.ToDateTime(fecha);
-            
+
             var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RSs(acr_cmrs, ingreso_salida, tipo, fechadt, empresa, asesorMA);
 
             var output = new IngresoSalidaRSsOutput
@@ -28,7 +28,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ConsultarIngreso
                 Registros = new List<IngresoSalidaRSOutput>(),
                 NRegistros = data.Count
             };
-            
+
             data = data.Skip((pagina - 1) * rpp).Take(rpp).ToList();
             foreach (var item in data)
             {

@@ -1,11 +1,11 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
-using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EliminarRegistroIngresoSalidaRS
+namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS
 {
     public class EliminarRegistroIngresoSalidaRS : IEliminarRegistroIngresoSalidaRS
     {
@@ -22,7 +22,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.EliminarRegistro
         {
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             await _editarIngresoSalidaRSReadOnlyRepository.EliminarRegistroIngresoSalidaRS(Id_Ingreso_Salida_RS, usuario.IdUsuario);
-            
+
         }
     }
 }

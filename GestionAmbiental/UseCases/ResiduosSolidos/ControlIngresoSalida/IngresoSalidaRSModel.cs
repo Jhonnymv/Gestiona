@@ -31,10 +31,12 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Tipo_Residuo { get; set; }
         [DisplayName("Nombre del Residuo:")]
+        [Required(ErrorMessage = "Debe seleccionar una opción")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Residuo_Solido { get; set; }
         [DisplayName("Cantidad Ingresada o Retirada (kg):")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        [Required(ErrorMessage = "Debe completar este campo")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad { get; set; }
         [DisplayName("Empresa que generó/retiró el residuo:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
@@ -43,7 +45,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Responsable_Marcobre { get; set; }
         [DisplayName("Comentarios:")]
-        [Required(ErrorMessage = "Debe ingresar una fecha")]
+        [Required(ErrorMessage = "Debe completar este campo")]
         public string Comentario { get; set; }
         public bool Permiso { get; set; }
         public bool Pendiente { get; set; }

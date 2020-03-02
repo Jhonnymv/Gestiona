@@ -1,4 +1,4 @@
-﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos;
+﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.ResiduosSolidos
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.ResiduosSolidos.ControlIngresoSalidaRS
 {
     public class GetIngresoSalidaRSRepository : IGetIngresoSalidaRSReadOnlyRepository
     {
@@ -31,11 +31,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 ids_residuos_solidos_tipo.Contains(x.Id_Residuo_Solido) &&
-                x.Fecha_Ingreso_Salida.Equals(fecha!=null ? fecha.Value : x.Fecha_Ingreso_Salida) &&
+                x.Fecha_Ingreso_Salida.Equals(fecha != null ? fecha.Value : x.Fecha_Ingreso_Salida) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(asesorMA != 0 ? asesorMA : x.Id_Responsable_Marcobre)&&
+                x.Id_Responsable_Marcobre.Equals(asesorMA != 0 ? asesorMA : x.Id_Responsable_Marcobre) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
-                .OrderByDescending(x=>x.Item)
+                .OrderByDescending(x => x.Item)
                 .ToList();
 
             var acr_cmrs_entities = await _context.ACR_CMRs.Where(x => x.Estado.Equals("ACT")).ToListAsync();
@@ -66,8 +66,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_model.Id_Motivo, motivo_model.Descripcion, motivo_model.Estado);
                 outputItem.Fecha_Ingreso_Salida = item.Fecha_Ingreso_Salida;
                 outputItem.Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
-                    residuo_solido_model.Id_Tipo_Residuo, 
-                    new Domain.ValueObjects.Tipo_Residuo(tipo_residuo_model.Id_Tipo_Residuo, tipo_residuo_model.Descripcion, tipo_residuo_model.Estado), 
+                    residuo_solido_model.Id_Tipo_Residuo,
+                    new Domain.ValueObjects.Tipo_Residuo(tipo_residuo_model.Id_Tipo_Residuo, tipo_residuo_model.Descripcion, tipo_residuo_model.Estado),
                     residuo_solido_model.Descripcion,
                     residuo_solido_model.Estado);
                 outputItem.Cantidad = item.Cantidad;
@@ -119,7 +119,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Id_Registrado_Por = data.Id_Registrado_Por;
                 output.Fecha_Registro = data.Fecha_Registro;
                 output.Estado = data.Estado;
-                }
+            }
             return output;
         }
         public async Task<string> GetLastItem()
@@ -128,7 +128,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (data != null)
                 return data.Item;
             else
-                return "";            
+                return "";
         }
     }
 }
