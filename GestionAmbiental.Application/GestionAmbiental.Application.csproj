@@ -12,9 +12,4 @@
     <ProjectReference Include="..\GestionAmbiental.Domain\GestionAmbiental.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UseCases\ResiduosSolidos\ControlManifiestoRS\EditarManifiestoRS\" />
-    <Folder Include="UseCases\ResiduosSolidos\ControlManifiestoRS\RegistrarManifiestoRS\" />
-  </ItemGroup>
-
 </Project>

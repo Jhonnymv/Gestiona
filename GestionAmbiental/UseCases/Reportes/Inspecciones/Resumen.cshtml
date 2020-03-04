@@ -69,11 +69,11 @@
             </div>            
             <div class="col-lg-2 col-md-6 col-sm-12 mb-2">
                 <div class="row ml-2">
-                    <div class="card border-left-pendiente shadow h-100">
+                    <div class="card border-left-rechazado shadow h-100">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Cantidad de inspecciones hasta la fecha </div>
+                                    <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Cantidad de inspecciones registradas hasta la fecha </div>
                                     <div id="InsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                 </div>
                             </div>
@@ -81,11 +81,11 @@
                     </div>
                 </div>
                 <div class="row ml-2 mt-2">
-                    <div class="card border-left-pendiente shadow h-100">
+                    <div class="card border-left-rechazado shadow h-100">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones hasta la fecha </div>
+                                    <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones registradas hasta la fecha </div>
                                     <div id="ObsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                 </div>
                             </div>
@@ -104,32 +104,33 @@
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones</h6>
             </div>
             <div class="card-body">
-                <div class="row justify-content-center">                    
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Pendientes (TBD)</div>
-                                        <div id="InsPendiente" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="row justify-content-center">
+                    <!--
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-pendiente shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Pendientes (TBD)</div>
+                        <div id="InsPendiente" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Registradas</div>
-                                        <div id="InsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
+        <div class="card border-left-pendiente shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Registradas</div>
+                        <div id="InsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
-                    
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
                     <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
                         <div class="card border-left-pendiente shadow h-100">
                             <div class="card-body">
@@ -155,7 +156,7 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registrados</h6>
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registradas</h6>
                     </div>
                     <div class="col-2">
                         <select id="sel_frec_insp_fecha" class="form-control">
@@ -192,7 +193,7 @@
                 <div class="row">
                     <div class="col-2"></div>
                     <div class="col-8">
-                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registrados</h6>
+                        <h6 class="m-0 font-weight-bold text-total" style="text-align:center">Cantidad de Observaciones Registradas</h6>
                     </div>
                     <div class="col-2">
                         <select id="sel_frec_obs_estado" class="form-control">
@@ -418,7 +419,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Reportes MA según Nivel de Riesgo</h4>
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Observaciones MA según Nivel de Riesgo</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -428,7 +429,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel de Riesgo Tolerable</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición de Nivel de Riesgo Tolerable</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -441,7 +442,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición del Nivel del Riesgo Alerta</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición del Nivel del Riesgo Alerta</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -454,7 +455,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipos de Condición de Nivel del Riesgo No Aceptable</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición de Nivel del Riesgo No Aceptable</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -473,7 +474,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de observaciones SSO según Nivel de Riesgo</h4>
+                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de Observaciones SSO según Nivel de Riesgo</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -483,7 +484,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Bajo</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Bajo</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -496,7 +497,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Medio</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Medio</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
@@ -509,7 +510,7 @@
                     <div class="col-xl-12 col-lg-12">
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Reportes por Tipo de Condición del Nivel de Riesgo Alto</h6>
+                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Alto</h6>
                             </div>
                             <div class="card-body">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>

@@ -15,7 +15,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-        public async Task EditarManifiestoRS(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS)
+        public async Task CompletarManifiestoRS(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS)
         {
             var entity = await _context.Manifiesto_RSs.FirstOrDefaultAsync(x => x.Id_Manifiesto_RS.Equals(manifiesto_RS.Id_Manifiesto_RS));
             entity.Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;

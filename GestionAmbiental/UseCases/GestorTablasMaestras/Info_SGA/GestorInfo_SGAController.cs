@@ -66,7 +66,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
 
                             filasTabla += "<tr>";
                             filasTabla += "<td>" + info.Tipo + "</td>";
-                            filasTabla += "<td><a href=\"/GestorUsuarios/DetalleUsuario?IdUsuario=" + info.IdInfo + "\">Detalle</a></td>";
                             filasTabla += "<td><a href=\"/GestorInfo_SGA/DetalleInfo_SGA?IdInfo=" + info.IdInfo + "\">Detalle</a></td>";
                             filasTabla += "</tr>";
                         }

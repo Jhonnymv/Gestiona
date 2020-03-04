@@ -21,18 +21,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP)
         {
-            var data = await _context.Manifiesto_RSs.Where(x =>
-                x.Num_Manifiesto.Contains(nManifiesto!=""?nManifiesto:x.Num_Manifiesto) &&
+            var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
+            var data = manifiestos.Where(x =>
+                x.Num_Manifiesto.Contains(nManifiesto != null ? nManifiesto : x.Num_Manifiesto) &&
                 x.Fecha_Emision_Manifiesto.Equals(fechaEmision != null ? fechaEmision.Value : x.Fecha_Emision_Manifiesto) &&
-                x.Observacion_Manifiesto.Equals(observacion!=""?observacion:x.Observacion_Manifiesto) &&
+                x.Observacion_Manifiesto.Equals(observacion!="0"?observacion:x.Observacion_Manifiesto) &&
                 x.Id_Residuo_Solido.Equals(residuoSolido!=0?residuoSolido:x.Id_Residuo_Solido)&&
                 x.Id_EO_RS_Salida.Equals(eors_salida!=0?eors_salida:x.Id_EO_RS_Salida)&&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada!=0? eors_llegada : x.Id_EO_RS_Llegada)&&
-                x.Id_Asesor_MAP.Equals(asesorMAP!=0?asesorMAP:x.Id_Asesor_MAP)&&
+                 x.Id_Asesor_MAP.Equals(asesorMAP!=0?asesorMAP:x.Id_Asesor_MAP)&&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
-                .OrderBy(x=>x.Num_Manifiesto)
-                .OrderBy(x=>x.Serie_Manifiesto)
-                .ToListAsync();
+                .OrderBy(x => x.Num_Manifiesto)
+                .OrderBy(x => x.Serie_Manifiesto)
+                .ToList();
             var residuosSolidos = await _context.Residuos_Solidos.ToListAsync();
             var tiposResiduosSolidos = await _context.Tipo_Residuos.ToListAsync();
             var eors = await _context.EO_RSs.ToArrayAsync();
@@ -77,7 +78,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Num_Autorizacion_Municipal_Llegada = item.Num_Autorizacion_Municipal_Llegada;
                 outputItem.Certificado_Trat_Disp = item.Certificado_Trat_Disp;
                 outputItem.Cantidad_RS_Dispuesto = item.Cantidad_RS_Dispuesto;
-                outputItem.Fecha_Devolucion = item.Fecha_Devolucion;
+                outputItem.Fecha_Devolucion = item.Fecha_Devolucion??item.Fecha_Devolucion.Value;
                 outputItem.Informe_Transporte = item.Informe_Transporte;
                 outputItem.Manifiesto = item.Manifiesto;
                 outputItem.Asesor_MAP = new Usuario(asesor.Id_Usuario, asesor.Id_Rol, asesor.Nombres, asesor.Apellidos, asesor.Email);
@@ -129,7 +130,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Num_Autorizacion_Municipal_Llegada = manifiesto.Num_Autorizacion_Municipal_Llegada;
             output.Certificado_Trat_Disp = manifiesto.Certificado_Trat_Disp;
             output.Cantidad_RS_Dispuesto = manifiesto.Cantidad_RS_Dispuesto;
-            output.Fecha_Devolucion = manifiesto.Fecha_Devolucion;
+            output.Fecha_Devolucion = manifiesto.Fecha_Devolucion??manifiesto.Fecha_Devolucion.Value;
             output.Informe_Transporte = manifiesto.Informe_Transporte;
             output.Manifiesto = manifiesto.Manifiesto;
             output.Asesor_MAP = new Usuario(asesor.Id_Usuario, asesor.Id_Rol, asesor.Nombres, asesor.Apellidos, asesor.Email);
@@ -138,6 +139,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Estado = manifiesto.Estado;
 
             return output;
+        }
+        public async Task<int> GetLastItem()
+        {
+            var data = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
+            if (data != null)
+                return data.Item;
+            else
+                return 0;
         }
     }
 }

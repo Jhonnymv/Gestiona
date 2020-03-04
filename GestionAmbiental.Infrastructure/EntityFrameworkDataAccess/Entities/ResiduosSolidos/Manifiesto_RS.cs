@@ -58,7 +58,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "decimal(6,2)")]
         public double Cantidad_RS_Dispuesto { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Devolucion { get; set; }
+        public DateTime? Fecha_Devolucion { get; set; }
         [Column(TypeName = "text")]
         public string Informe_Transporte { get; set; }
         [Column(TypeName = "text")]

@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlManif
 {
     public interface IEditarManifiestoRSReadOnlyRepository
     {
-        Task EditarManifiestoRS(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS);
+        Task CompletarManifiestoRS(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS);
     }
 }

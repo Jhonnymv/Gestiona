@@ -86,10 +86,10 @@ function Filtrar() {
 }
 //Para contador de inspecciones x estado
 function ActualizarContadorInsXEst(pend, reg, tot) {
-    $("#InsPendiente").html(pend);
-    $("#InsRegistrado").html(reg);
+    //$("#InsPendiente").html(pend);
+    //$("#InsRegistrado").html(reg);
     $("#InsTotal").html(tot);
-    $("#InsEncont").html(pend + reg);
+    $("#InsEncont").html(reg);
 }
 //Para contador de inspecciones x fecha
 $("#sel_frec_insp_fecha").on('change', function () {
@@ -259,8 +259,8 @@ function CrearGraficaContardorOxFecha(labels, data, stepSize) {
                     "label": "# Observaciones Registradas",
                     "data": data,
                     "fill": false,
-                    "backgroundColor": "rgb(46, 103, 147)",
-                    "borderColor": "rgb(46, 103, 147)",
+                    "backgroundColor": "#36b9cc",
+                    "borderColor": "#36b9cc",
                     "lineTension": 0.1
                 }]
             },
