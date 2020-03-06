@@ -126,7 +126,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Nombre_Conductor"></span>
-            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="10" disabled/>
+            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="250" disabled/>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -135,21 +135,21 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
             <span class="text-danger" asp-validation-for="Num_Licencia_Condutor"></span>
-            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" disabled/>
+            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="8" disabled/>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Placa_Vehiculo"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
             <span class="text-danger" asp-validation-for="Placa_Vehiculo"></span>
-            <input class="form-control" type="text" asp-for="Placa_Vehiculo" disabled/>
+            <input class="form-control" type="text" asp-for="Placa_Vehiculo" maxlength="7" disabled/>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Capacidad_Vehiculo"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
             <span class="text-danger" asp-validation-for="Capacidad_Vehiculo"></span>
-            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" min="0" disabled/>
+            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" min="0" max="999999" disabled/>
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -171,7 +171,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Registro_EO_RS_Llegada"></span>
-            <input class="form-control" type="text" asp-for="Registro_EO_RS_Llegada" disabled/>
+            <input class="form-control" type="text" asp-for="Registro_EO_RS_Llegada" maxlength="10" disabled/>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -187,7 +187,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Num_Autorizacion_Sanitaria_Llegada"></span>
-            <input class="form-control" type="text" asp-for="Num_Autorizacion_Sanitaria_Llegada" disabled/>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Sanitaria_Llegada" maxlength="10" disabled/>
         </div>
     </div>
     <div class="row mb-2 justify-content-start">
@@ -196,7 +196,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Llegada"></span>
-            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Llegada" disabled/>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Llegada" maxlength="10" disabled/>
         </div>
     </div>
     <div class="row mb-2 justify-content-end">

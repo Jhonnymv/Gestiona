@@ -68,9 +68,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 return View();
             //}
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string nManifiesto, string fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nManifiesto, string fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int pagina, int rpp)
         {
-            var datosTabla = await _consultarManifiestosRS.Execute(nManifiesto, fechaEmision, observacion, residuoSolido, eors_salida, eors_llegada, asesorMAP, pagina, rpp);
+            var datosTabla = await _consultarManifiestosRS.Execute(nManifiesto, fechaEmision, observacion, residuoSolido, eors_salida, eors_llegada,0, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.nManifiesto % rpp != 0 ? (datosTabla.nManifiesto / rpp) + 1 : datosTabla.nManifiesto / rpp;
@@ -83,8 +83,12 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     filasTabla += "<td><a href=\"/ManifiestoRS/EditarManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
                     filasTabla += "<td>" + fila.Serie_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Num_Manifiesto + "</td>";
-                    filasTabla += "<td>" + fila.Fecha_Emision_Manifiesto + "</td>";
-                    filasTabla += "<td>" + fila.Observacion_Manifiesto + "</td>";
+                    filasTabla += "<td>" + fila.Fecha_Emision_Manifiesto.ToString("dd/MM/yyyy") + "</td>";
+                    switch (fila.Observacion_Manifiesto)
+                    {
+                        case "1": filasTabla += "<td>" + "Conforme" + "</td>";break;
+                        case "2": filasTabla += "<td>" + "Anulado" + "</td>";break;
+                    }
                     filasTabla += "<td>" + fila.Residuo_Solido + "</td>";
                     filasTabla += "<td>" + fila.Cantidad_RS_Evacuado + "</td>";
                     filasTabla += "<td>" + fila.EO_RS_Salida + "</td>";

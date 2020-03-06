@@ -46,7 +46,11 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
-    <Folder Include="UseCases\ResiduosSolidos\ControlManifiestoRS\CompletarManifiestoRS\" />
+    <Folder Include="Views\CompletarManifiesto\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="UseCases\ResiduosSolidos\ControlManifiestoRS\CompletarManifiestoRS\Resumen.cshtml" />
   </ItemGroup>
   
 </Project>

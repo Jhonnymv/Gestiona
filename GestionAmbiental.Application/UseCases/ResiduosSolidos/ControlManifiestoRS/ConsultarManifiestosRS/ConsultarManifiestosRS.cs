@@ -20,13 +20,6 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             if (fechaEmision != null)
                 fechadt = Convert.ToDateTime(fechaEmision);
             
-            switch (observacion)
-            {
-                case "1": observacion = "Conforme"; break;
-                case "2": observacion = "Anulado"; break;
-                default: observacion = "0";break;
-            }
-
             var data = await _getManifiestosRSReadOnlyRepository.GetManifiestosRS(nManifiesto, fechadt, observacion, residuoSolido, eors_salida, eors_llegada, asesorMAP);
             var output = new ManifiestosRSOutput
             {

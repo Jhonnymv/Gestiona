@@ -55,14 +55,8 @@
             <select class="form-control" id="filtro_eors_llegada" asp-items="ViewBag.EO_RS"></select>
         </div>
     </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Asesor MA:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_asesores_ma" asp-items="ViewBag.AsesoresMA"></select>
-        </div>
-        <div class="col-lg-5 mt-1 d-flex justify-content-end">
+    <div class="row mb-2 justify-content-center">        
+        <div class="col-lg-12 mt-1 d-flex justify-content-center">
             <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
         </div>
     </div>
@@ -115,7 +109,7 @@
                     "residuoSolido": $("#filtro_residuos_solidos").val(),
                     "eors_salida": $("#filtro_eors_salida").val(),
                     "eors_llegada": $("#filtro_eors_llegada").val(),
-                    "asesorMAP": $("#filtro_asesores_ma").val()
+                    //"asesorMAP": $("#filtro_asesores_ma").val()
                 },
                 traditional: true,
                 success: (response) => {

@@ -20,8 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
         public async Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP)
-        {
-            
+        {            
             var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
             var data = manifiestos.Where(x =>
                 x.Num_Manifiesto.Contains(nManifiesto != null ? nManifiesto : x.Num_Manifiesto) &&
@@ -30,7 +29,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Residuo_Solido.Equals(residuoSolido!=0?residuoSolido:x.Id_Residuo_Solido)&&
                 x.Id_EO_RS_Salida.Equals(eors_salida!=0?eors_salida:x.Id_EO_RS_Salida)&&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada!=0? eors_llegada : x.Id_EO_RS_Llegada)&&
-                 x.Id_Asesor_MAP.Equals(asesorMAP!=0?asesorMAP:x.Id_Asesor_MAP)&&
+                x.Id_Asesor_MAP.Equals(asesorMAP!=0?asesorMAP:x.Id_Asesor_MAP)&&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
                 .OrderBy(x => x.Num_Manifiesto)
                 .OrderBy(x => x.Serie_Manifiesto)
