@@ -21,7 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(ingreso_Salida_RS.Id_Ingreso_Salida_RS));
 
-            entity.Item = ingreso_Salida_RS.Item;
+            //entity.Item = ingreso_Salida_RS.Item;
             entity.Id_ACR_CMRS = ingreso_Salida_RS.ACR_CMRS.Id_ACR_CMRS;
             entity.Responsable_ACR_CMRS = ingreso_Salida_RS.Responsable_ACR_CMRS;
             entity.Id_Ingreso_Salida = ingreso_Salida_RS.Ingreso_Salida.Id_Ingreso_Salida;
@@ -32,7 +32,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Empresa_RS = ingreso_Salida_RS.Empresa_RS.IdEmpresa;
             entity.Id_Responsable_Marcobre = ingreso_Salida_RS.Responsable_Marcobre.IdUsuario;
             entity.Comentario = ingreso_Salida_RS.Comentario;
-            entity.Estado = ingreso_Salida_RS.Estado;
+            //entity.Estado = ingreso_Salida_RS.Estado;
 
             _context.Ingresos_Salidas_RS.Update(entity);
             await _context.SaveChangesAsync();

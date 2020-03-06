@@ -85,7 +85,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
-            <select class="form-control" asp-items="@ViewBag.AsesoresMA" asp-for="Responsable_Marcobre"></select>
+            <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Responsable_Marcobre"></select>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Responsable_ACR_CMRS"></label>
@@ -105,7 +105,6 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
-            <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
             <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
         </div>
     </div>
@@ -139,10 +138,12 @@
                     break;
             }
         });
+        /*
         $("#btnGuardarEstado").on('click', function () {
             $("#opcion").val("GuardarEstado");
             $("#formIngresoSalida").submit();
         });
+        */
         $("#btnRegistrar").on('click', function () {
             $("#opcion").val("Registrar");
             $("#formIngresoSalida").submit();

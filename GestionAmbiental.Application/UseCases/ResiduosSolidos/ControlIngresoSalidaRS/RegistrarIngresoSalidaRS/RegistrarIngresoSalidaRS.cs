@@ -32,7 +32,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var input = new Ingreso_Salida_RS();
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
 
-            switch (opcion)
+            /*switch (opcion)
             {
                 case "Registrar":
                     input.Estado = EstadosResiduosSolidos.Registrado.ToString();
@@ -43,7 +43,11 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
                     input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
                     input.Item = "TBD";
                     break;
-            }
+            }*/
+
+            input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+            var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
+            input.Item = lastItem.Length > 0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
 
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();

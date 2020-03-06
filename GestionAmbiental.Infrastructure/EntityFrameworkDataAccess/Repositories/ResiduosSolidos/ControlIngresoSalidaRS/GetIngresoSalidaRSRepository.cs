@@ -44,7 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var residuo_solido_entities = await _context.Residuos_Solidos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             var tipo_residuo_entities = await _context.Tipo_Residuos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             var empresas_entities = await _context.Empresas.ToListAsync();
-            var asesoresMA_entities = await _context.Usuarios.Where(x => x.Id_Rol.Equals((int)RSRoles.AsesorMAP) && x.Estado.Equals("ACT")).ToListAsync();
+            var usuarios_entities = await _context.Usuarios.Where(x=>x.Estado.Equals("ACT")).ToListAsync();
 
             var output = new List<Ingreso_Salida_RS>();
             foreach (var item in data)
@@ -55,7 +55,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var residuo_solido_model = residuo_solido_entities.Find(x => x.Id_Residuo_Solido.Equals(item.Id_Residuo_Solido));
                 var tipo_residuo_model = tipo_residuo_entities.Find(x => x.Id_Tipo_Residuo.Equals(residuo_solido_model.Id_Tipo_Residuo));
                 var empresa_model = empresas_entities.Find(x => x.Id_Empresa.Equals(item.Id_Empresa_RS));
-                var asesorMA_model = asesoresMA_entities.Find(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
+                var asesorMA_model = usuarios_entities.Find(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
 
                 var outputItem = new Ingreso_Salida_RS();
                 outputItem.Item = item.Item;

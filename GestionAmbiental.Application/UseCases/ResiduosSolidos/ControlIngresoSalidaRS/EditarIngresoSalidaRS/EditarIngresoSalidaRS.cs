@@ -31,7 +31,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
-
+            /*
             switch (opcion)
             {
                 case "Registrar":
@@ -43,8 +43,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
                     input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
                     input.Item = "TBD";
                     break;
-            }
-
+            }*/
+                       
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();
             input.Motivo = new Motivo_Ingreso_Salida();

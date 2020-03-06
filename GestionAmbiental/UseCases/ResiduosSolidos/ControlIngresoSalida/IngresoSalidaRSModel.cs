@@ -45,9 +45,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Responsable_Marcobre { get; set; }
         [DisplayName("Comentarios:")]
-        [Required(ErrorMessage = "Debe completar este campo")]
         public string Comentario { get; set; }
         public bool Permiso { get; set; }
-        public bool Pendiente { get; set; }
     }
 }

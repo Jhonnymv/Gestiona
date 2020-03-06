@@ -24,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RS(Id_Ingreso_Salida_RS);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var output = new IngresoSalidaRSOutput(data);
-            if (data.Id_Registrado_Por.Equals(usuario.IdUsuario) || usuario.IdRol.Equals((int)RSRoles.AsesorMAP))
+            if (usuario.IdRol.Equals((int)RSRoles.AsesorMAP))
                 output.Permiso = true;
             else
                 output.Permiso = false;

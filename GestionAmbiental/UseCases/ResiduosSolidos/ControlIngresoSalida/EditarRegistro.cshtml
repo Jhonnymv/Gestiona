@@ -87,7 +87,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
-            <select class="form-control" asp-items="@ViewBag.AsesoresMA" asp-for="Responsable_Marcobre" disabled></select>
+            <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Responsable_Marcobre" disabled></select>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Responsable_ACR_CMRS"></label>
@@ -107,12 +107,11 @@
         </div>
         <div class="modal-footer">
 
-            @if (Model.Permiso && Model.Pendiente)
+            @if (Model.Permiso)
             {
                 <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
                 <a id="btnEliminar" class="btn btn-danger" asp-controller="IngresoSalidaRS" asp-action="EliminarRegistro" asp-route-IdRegistro="@Model.Encrypted_Id">Eliminar</a>
-                <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
-                <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+                <button id="btnRegistrar" type="button" class="btn btn-primary">Guardar</button>
             }
             else
             {
@@ -159,12 +158,14 @@
         });
         $(document).ready(function () {
             CargarValorResiduoSolido();
-            HabilitarInputs(@Model.Permiso.ToString().ToLower(), @Model.Pendiente.ToString().ToLower())
+            HabilitarInputs(@Model.Permiso.ToString().ToLower())
         });
+        /*
         $("#btnGuardarEstado").on('click', function () {
             $("#opcion").val("GuardarEstado");
             $("#formIngresoSalida").submit();
         });
+        */
         $("#btnRegistrar").on('click', function () {
             $("#opcion").val("Registrar");
             $("#formIngresoSalida").submit();
@@ -207,8 +208,8 @@
                     break;
             }           
         }
-        function HabilitarInputs(permiso,pendiente) {
-            if (permiso && pendiente) {
+        function HabilitarInputs(permiso) {
+            if (permiso) {
                 $("#ACR_CMRS").prop('disabled', false);
                 $("#Responsable_ACR_CMRS").prop('disabled', false);
                 $("#Ingreso_Salida").prop('disabled', false);
