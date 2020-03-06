@@ -11,8 +11,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
     {
         [Key]
         public int Id_Manifiesto_RS { get; set; }
-        [Column(TypeName = "int")]
-        public int Item { get; set; }
+        [Column(TypeName = "varchar(6)")]
+        public string Item { get; set; }
         [Column(TypeName = "int")]
         public int Serie_Manifiesto { get; set; }
         [Column(TypeName = "varchar(10)")]
@@ -39,10 +39,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Nombre_Conductor { get; set; }
         [Column(TypeName = "varchar(8)")]
         public string Num_Licencia_Condutor { get; set; }
-        [Column(TypeName = "varchar(6)")]
+        [Column(TypeName = "varchar(7)")]
         public string Placa_Vehiculo { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public double Capacidad_Vehiculo { get; set; }
+        public double? Capacidad_Vehiculo { get; set; }
         [Column(TypeName = "int")]
         public int Id_EO_RS_Llegada { get; set; }
         [Column(TypeName = "varchar(10)")]
@@ -64,7 +64,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "text")]
         public string Manifiesto { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Asesor_MAP { get; set; }
+        public int? Id_Asesor_MAP { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Registro { get; set; }
         [Column(TypeName = "int")]

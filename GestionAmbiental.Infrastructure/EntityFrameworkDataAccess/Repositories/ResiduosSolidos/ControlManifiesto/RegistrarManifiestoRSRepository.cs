@@ -22,8 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             
                 var manifiesto_entity = new Manifiesto_RS();
 
-                manifiesto_entity.Id_Manifiesto_RS = manifiesto_RS.Id_Manifiesto_RS;
-                manifiesto_entity.Item = manifiesto_RS.Item;
+                manifiesto_entity.Item = manifiesto_RS.Item.ToString();
                 manifiesto_entity.Serie_Manifiesto = manifiesto_RS.Serie_Manifiesto;
                 manifiesto_entity.Num_Manifiesto = manifiesto_RS.Num_Manifiesto;
                 manifiesto_entity.Fecha_Emision_Manifiesto = manifiesto_RS.Fecha_Emision_Manifiesto;
@@ -45,24 +44,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 manifiesto_entity.Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
                 manifiesto_entity.Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
             manifiesto_entity.Fecha_Devolucion = null;
-                /*manifiesto_entity.Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
-                manifiesto_entity.Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
-                manifiesto_entity.Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
-                manifiesto_entity.Informe_Transporte = manifiesto_RS.Informe_Transporte;
-                manifiesto_entity.Manifiesto = manifiesto_RS.Manifiesto;
-                manifiesto_entity.Id_Asesor_MAP = manifiesto_RS.Asesor_MAP.IdUsuario;*/
+            /*manifiesto_entity.Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
+            manifiesto_entity.Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
+            manifiesto_entity.Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
+            manifiesto_entity.Informe_Transporte = manifiesto_RS.Informe_Transporte;
+            manifiesto_entity.Manifiesto = manifiesto_RS.Manifiesto;
+            manifiesto_entity.Id_Asesor_MAP = manifiesto_RS.Asesor_MAP.IdUsuario;*/
+            //manifiesto_entity.Id_Asesor_MAP = null;
                 manifiesto_entity.Id_Registrado_Por = manifiesto_RS.Id_Registrado_Por;
                 manifiesto_entity.Fecha_Registro = DateTime.Now;
                 manifiesto_entity.Estado = manifiesto_RS.Estado;
-            try
-            {
+
                 _context.Manifiesto_RSs.Add(manifiesto_entity);
-
                 await _context.SaveChangesAsync();
-            }catch(Exception e)
-            {
 
-            }
             var log = new Log_Manifiesto_RS();
             var bkp = JsonConvert.SerializeObject(manifiesto_entity);
             log.Bkp = bkp;

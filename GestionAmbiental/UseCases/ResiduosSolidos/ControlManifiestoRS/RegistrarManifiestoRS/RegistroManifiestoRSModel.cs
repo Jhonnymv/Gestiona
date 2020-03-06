@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.RegistrarManifiestoRS
 {
-    public class RegistroManifiestoRSModel
+    public class ManifiestoRSModel
     {
         public int Id_Manifiesto_RS { get; set; }
         public string opcion { get; set; }
@@ -46,16 +46,12 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
         [DisplayName("Nombre del Conductor:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Nombre_Conductor { get; set; }
         [DisplayName("N° Licencia Especial (A-4):")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Num_Licencia_Condutor { get; set; }
         [DisplayName("Placa del Vehículo:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Placa_Vehiculo { get; set; }
         [DisplayName("Capacidad de Vehículo TM:")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public double Capacidad_Vehiculo { get; set; }
         [DisplayName("Nombre de la EO-RS:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
@@ -72,5 +68,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         [DisplayName("N° Autorización Municipal:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
+        public string Estado { get; set; }
+        public bool Permiso { get; set; }
     }
 }

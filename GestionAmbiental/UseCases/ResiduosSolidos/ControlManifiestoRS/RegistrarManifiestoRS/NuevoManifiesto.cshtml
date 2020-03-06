@@ -1,4 +1,4 @@
-﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.RegistrarManifiestoRS.RegistroManifiestoRSModel
+﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.RegistrarManifiestoRS.ManifiestoRSModel
 @{
     ViewData["Title"] = "NuevoManifiesto";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
@@ -148,7 +148,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
             <span class="text-danger" asp-validation-for="Capacidad_Vehiculo"></span>
-            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" />
+            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" min="0" value="0"/>
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -199,10 +199,12 @@
         </div>
     </div>
     <div class="row mb-2 justify-content-end">
-        <div class="modal-footer">
-            <a class="btn btn-secondary" style="color:white" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
-            <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
-            <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+        <div class="col-12">
+            <div class="modal-footer">
+                <a class="btn btn-secondary" style="color:white" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+                <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+                <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+            </div>
         </div>
     </div>
 </form>

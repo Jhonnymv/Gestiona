@@ -21,6 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP)
         {
+            
             var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
             var data = manifiestos.Where(x =>
                 x.Num_Manifiesto.Contains(nManifiesto != null ? nManifiesto : x.Num_Manifiesto) &&
@@ -47,7 +48,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var itemTipoResSolid = tiposResiduosSolidos.FirstOrDefault(x => x.Id_Tipo_Residuo.Equals(itemResSolid.Id_Tipo_Residuo));
                 var itemEORS_Salida = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Salida));
                 var itemEORS_Llegada = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Llegada));
-                var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor_MAP));
+                //var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor_MAP));
 
                 var outputItem = new Manifiesto_RS();
                 outputItem.Id_Manifiesto_RS = item.Id_Manifiesto_RS;
@@ -70,18 +71,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Nombre_Conductor = item.Nombre_Conductor;
                 outputItem.Num_Licencia_Condutor = item.Num_Licencia_Condutor;
                 outputItem.Placa_Vehiculo = item.Placa_Vehiculo;
-                outputItem.Capacidad_Vehiculo = item.Capacidad_Vehiculo;
+                outputItem.Capacidad_Vehiculo = item.Capacidad_Vehiculo??0;
                 outputItem.EO_RS_Llegada = new EO_RS(itemEORS_Llegada.Id_EO_RS, itemEORS_Llegada.Razon_Social, itemEORS_Llegada.Estado);
                 outputItem.Registro_EO_RS_Llegada = item.Registro_EO_RS_Llegada;
                 outputItem.Fecha_Vencimiento_Registro_Llegada = item.Fecha_Vencimiento_Registro_Llegada;
                 outputItem.Num_Autorizacion_Sanitaria_Llegada = item.Num_Autorizacion_Sanitaria_Llegada;
                 outputItem.Num_Autorizacion_Municipal_Llegada = item.Num_Autorizacion_Municipal_Llegada;
+                /*
                 outputItem.Certificado_Trat_Disp = item.Certificado_Trat_Disp;
                 outputItem.Cantidad_RS_Dispuesto = item.Cantidad_RS_Dispuesto;
                 outputItem.Fecha_Devolucion = item.Fecha_Devolucion??item.Fecha_Devolucion.Value;
                 outputItem.Informe_Transporte = item.Informe_Transporte;
                 outputItem.Manifiesto = item.Manifiesto;
                 outputItem.Asesor_MAP = new Usuario(asesor.Id_Usuario, asesor.Id_Rol, asesor.Nombres, asesor.Apellidos, asesor.Email);
+                */
                 outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
                 outputItem.Fecha_Registro = item.Fecha_Registro;
                 outputItem.Estado = item.Estado;
@@ -122,31 +125,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Nombre_Conductor = manifiesto.Nombre_Conductor;
             output.Num_Licencia_Condutor = manifiesto.Num_Licencia_Condutor;
             output.Placa_Vehiculo = manifiesto.Placa_Vehiculo;
-            output.Capacidad_Vehiculo = manifiesto.Capacidad_Vehiculo;
+            output.Capacidad_Vehiculo = manifiesto.Capacidad_Vehiculo??0;
             output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Estado);
             output.Registro_EO_RS_Llegada = manifiesto.Registro_EO_RS_Llegada;
             output.Fecha_Vencimiento_Registro_Llegada = manifiesto.Fecha_Vencimiento_Registro_Llegada;
             output.Num_Autorizacion_Sanitaria_Llegada = manifiesto.Num_Autorizacion_Sanitaria_Llegada;
             output.Num_Autorizacion_Municipal_Llegada = manifiesto.Num_Autorizacion_Municipal_Llegada;
+            /*
             output.Certificado_Trat_Disp = manifiesto.Certificado_Trat_Disp;
             output.Cantidad_RS_Dispuesto = manifiesto.Cantidad_RS_Dispuesto;
             output.Fecha_Devolucion = manifiesto.Fecha_Devolucion??manifiesto.Fecha_Devolucion.Value;
             output.Informe_Transporte = manifiesto.Informe_Transporte;
             output.Manifiesto = manifiesto.Manifiesto;
             output.Asesor_MAP = new Usuario(asesor.Id_Usuario, asesor.Id_Rol, asesor.Nombres, asesor.Apellidos, asesor.Email);
+            */
             output.Id_Registrado_Por = manifiesto.Id_Registrado_Por;
             output.Fecha_Registro = manifiesto.Fecha_Registro;
             output.Estado = manifiesto.Estado;
 
             return output;
         }
-        public async Task<int> GetLastItem()
+        public async Task<string> GetLastItem()
         {
             var data = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
             if (data != null)
                 return data.Item;
             else
-                return 0;
+                return "0";
         }
     }
 }

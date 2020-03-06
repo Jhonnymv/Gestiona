@@ -50,29 +50,20 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         {
             var input = new Domain.ResiduosSolidos.Manifiesto_RS();
 
-            input.Item = await _getManifiestosRSReadOnlyRepository.GetLastItem()+1;
-            input.Id_Registrado_Por = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
+            
             switch (opcion)
             {
                 case "Registrar":
-                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+                    input.Estado = EstadosResiduosSolidos.Registrado.ToString(); 
+                    input.Item = (Convert.ToInt32(await _getManifiestosRSReadOnlyRepository.GetLastItem()) + 1).ToString();
                     break;
                 case "GuardarEstado":
                     input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
+                    input.Item = "TBD";
                     break;
             }
-            /*switch (opcion)
-            {
-                case "Registrar":
-                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
-                    //var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
-                    //input.Item = lastItem.Length > 0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
-                    break;
-                case "GuardarEstado":
-                    input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
-                    input.Item = 1;
-                    break;
-            }*/
+
+            input.Id_Registrado_Por = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
             input.Serie_Manifiesto = Serie_Manifiesto;
             input.Num_Manifiesto = Num_Manifiesto;
             input.Fecha_Emision_Manifiesto = Fecha_Emision_Manifiesto;
