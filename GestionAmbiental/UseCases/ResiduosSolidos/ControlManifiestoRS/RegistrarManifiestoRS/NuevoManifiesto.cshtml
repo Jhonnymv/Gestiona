@@ -1,0 +1,220 @@
+﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.RegistrarManifiestoRS.RegistroManifiestoRSModel
+@{
+    ViewData["Title"] = "NuevoManifiesto";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Nuevo Manifiesto de Residuos Sólidos Peligrosos</h2>
+    </div>
+</div>
+<form id="formManifiestoRS" class="form-group" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="opcion" />
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DEL MANIFIESTO</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Serie_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Serie_Manifiesto"></span>
+            <input class="form-control" type="number" asp-for="Serie_Manifiesto" min="1" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Manifiesto"></span>
+            <input class="form-control" type="text" asp-for="Num_Manifiesto" maxlength="10"/>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Emision_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Emision_Manifiesto"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Emision_Manifiesto" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Observacion_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Observacion_Manifiesto"></span>
+            <select class="form-control" asp-for="Observacion_Manifiesto">
+                <option value="0">--SELECCIONE--</option>
+                <option value="1">Conforme</option>
+                <option value="2">Anulado</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DEL RESIDUO PELIGROSO</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_Residuo_Solido"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_Residuo_Solido"></span>
+            <select class="form-control" asp-items="ViewBag.ResiduosSolidos" asp-for="Id_Residuo_Solido">
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Cantidad_RS_Evacuado"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Cantidad_RS_Evacuado"></span>
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="1" max="999999" />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DE LA EO-RS: RECOLECCIÓN Y TRANSPORTE</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_EO_RS_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_EO_RS_Salida"></span>
+            <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Salida">
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Registro_EO_RS_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Registro_EO_RS_Salida"></span>
+            <input class="form-control" type="text" asp-for="Registro_EO_RS_Salida" maxlength="10"/>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Vencimiento_Registro_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Salida"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Salida" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Municipal_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Salida"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Salida" maxlength="10"/>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Hoja_Ruta"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Hoja_Ruta"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Hoja_Ruta" maxlength="10"/>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Nombre_Conductor"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Nombre_Conductor"></span>
+            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="10"/>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Licencia_Condutor"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Num_Licencia_Condutor"></span>
+            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Placa_Vehiculo"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Placa_Vehiculo"></span>
+            <input class="form-control" type="text" asp-for="Placa_Vehiculo" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Capacidad_Vehiculo"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Capacidad_Vehiculo"></span>
+            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DE LA EO-RS: DESTINO FINAL Y/O COMERCIALIZACIÓN</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_EO_RS_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_EO_RS_Llegada"></span>
+            <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Llegada">
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Registro_EO_RS_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Registro_EO_RS_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Registro_EO_RS_Llegada" />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Vencimiento_Registro_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Llegada"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Llegada" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Sanitaria_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Sanitaria_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Sanitaria_Llegada" />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-start">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Municipal_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Llegada" />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-end">
+        <div class="modal-footer">
+            <a class="btn btn-secondary" style="color:white" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+            <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+            <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+        </div>
+    </div>
+</form>
+@section Scripts{ 
+<script type="text/javascript">
+     $("#btnGuardarEstado").on('click', function () {
+            $("#opcion").val("GuardarEstado");
+            $("#formManifiestoRS").submit();
+        });
+        $("#btnRegistrar").on('click', function () {
+            $("#opcion").val("Registrar");
+            $("#formManifiestoRS").submit();
+        });
+</script>
+}
