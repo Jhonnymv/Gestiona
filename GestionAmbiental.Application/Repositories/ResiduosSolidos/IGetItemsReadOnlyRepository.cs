@@ -16,5 +16,7 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos
         Task<List<Residuo_Solido>> GetResiduos_Solidos();
         Task<List<Tipo_Residuo>> GetTipos_Residuo();
         Task<List<Usuario>> GetUsuarios();
+        Task<List<Responsable_ARC_CRMS>> GetResponsables_ARC_CRM();
+        Task<List<Gerencia>> GetGerencias();
     }
 }

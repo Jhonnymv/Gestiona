@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
 {
     public interface IRegistrarIngresoSalidaRS
     {
-        Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red);
+        Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, int responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red);
     }
 }

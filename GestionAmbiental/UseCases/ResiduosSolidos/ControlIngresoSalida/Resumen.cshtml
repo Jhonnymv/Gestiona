@@ -43,13 +43,13 @@
             <label>Empresa Genera o Retira el Residuo:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_emrpesa" asp-items="ViewBag.Empresa"></select>
+            <select class="form-control" id="filtro_empresa" asp-items="ViewBag.Empresa"></select>
         </div>
         <div class="col-lg-2 mt-1">
-            <label>Responsable Marcobre que entrega o retira residuo:</label>
+            <label>Gerencia de Marcobre que entrega o retira residuo:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_resp" asp-items="ViewBag.Usuarios"></select>
+            <select class="form-control" id="filtro_gerencia" asp-items="ViewBag.Gerencias"></select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -105,8 +105,8 @@
                     "ingreso_salida": $('#filtro_ing_sal').val(),
                     "tipo": $('#filtro_tipoResiduo').val(),
                     "fecha": $("#filtro_fecha").val(),
-                    "empresa": $("#filtro_emrpesa").val(),
-                    "asesorMA":$("#filtro_resp").val()
+                    "empresa": $("#filtro_empresa").val(),
+                    "gerencia":$("#filtro_gerencia").val()
                 },
                 traditional: true,
                 success: (response) => {

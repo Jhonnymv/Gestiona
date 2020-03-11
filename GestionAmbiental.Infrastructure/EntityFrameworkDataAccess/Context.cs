@@ -27,6 +27,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Ingreso_Salida> Ingresos_Salidas { get; set; }
         public DbSet<Manifiesto_RS> Manifiesto_RSs { get; set; }
         public DbSet<Motivo_Ingreso_Salida> Motivos_Ingreso_Salida { get; set; }
+        public DbSet<Responsable_ACR_CRMS> Responsables_ACR_CRM { get; set; }
         public DbSet<Ingreso_Salida_RS> Ingresos_Salidas_RS { get; set; }
         public DbSet<Residuo_Solido> Residuos_Solidos { get; set; }
         public DbSet<Tipo_Residuo> Tipo_Residuos { get; set; }
@@ -63,6 +64,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_EO_RS");
             modelBuilder.Entity<Ingreso_Salida>()
                 .ToTable("Tb_Ingreso_Salida");
+            modelBuilder.Entity<Responsable_ACR_CRMS>()
+                .ToTable("Tb_Responsable_ACR_CRMS");
             modelBuilder.Entity<Manifiesto_RS>()
                 .ToTable("Tb_Manifiesto_RS");
             modelBuilder.Entity<Motivo_Ingreso_Salida>()

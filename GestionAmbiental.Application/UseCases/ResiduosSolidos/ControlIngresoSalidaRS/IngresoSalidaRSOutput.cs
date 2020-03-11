@@ -10,6 +10,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
         public int Id_Ingreso_Salida_RS { get; set; }
         public string ACR_CMRS { get; set; }
         public int Id_ACR_CMRS { get; set; }
+        public int Id_Responsable_ACR_CMRS { get; set; }
         public string Responsable_ACR_CMRS { get; set; }
         public string Ingreso_Salida { get; set; }
         public int Id_Ingreso_Salida { get; set; }
@@ -23,8 +24,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
         public double Cantidad { get; set; }
         public string Empresa { get; set; }
         public int Id_Empresa { get; set; }
-        public string Responsable_Marcobre { get; set; }
-        public int Id_Responsable_Marcobre { get; set; }
+        public string Gerencia { get; set; }
+        public int Id_Gerencia { get; set; }
         public string Comentario { get; set; }
         public string Estado { get; set; }
         public int Id_Registrado_Por { get; set; }
@@ -48,9 +49,10 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             Id_Motivo = item.Motivo.Id_Motivo;
             Residuo_Solido = item.Residuo_Solido.Descripcion;
             Id_Residuo_Solido = item.Residuo_Solido.Id_Residuo_Solido;
-            Responsable_ACR_CMRS = item.Responsable_ACR_CMRS;
-            Responsable_Marcobre = item.Responsable_Marcobre.Nombres + " " + item.Responsable_Marcobre.Apellidos;
-            Id_Responsable_Marcobre = item.Responsable_Marcobre.IdUsuario;
+            Id_Responsable_ACR_CMRS = item.Responsable_ACR_CMRS.Id_Responsable_ACR_CRMS;
+            Responsable_ACR_CMRS = item.Responsable_ACR_CMRS.Nombres+ " "+item.Responsable_ACR_CMRS.Apellidos;
+            Gerencia = item.Gerencia.Descripcion;
+            Id_Gerencia= item.Gerencia.IdGerencia;
             Tipo_Residuo = item.Residuo_Solido.Tipo_Residuo.Descripcion;
             Id_Tipo_Residuo = item.Residuo_Solido.Tipo_Residuo.Id_Tipo_Residuo;
             Id_Registrado_Por = item.Id_Registrado_Por;

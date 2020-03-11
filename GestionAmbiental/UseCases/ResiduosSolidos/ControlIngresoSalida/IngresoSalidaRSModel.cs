@@ -16,8 +16,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int ACR_CMRS { get; set; }
         [DisplayName("Responsable del ACR/CMRS que recibe/entrega el residuo:")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
-        public string Responsable_ACR_CMRS { get; set; }
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        public int Responsable_ACR_CMRS { get; set; }
         [DisplayName("Ingreso o Salida de Residuos:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Ingreso_Salida { get; set; }
@@ -41,9 +41,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         [DisplayName("Empresa que generó/retiró el residuo:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Empresa { get; set; }
-        [DisplayName("Responsable de Marcobre que entrega/retira el residuo:")]
+        [DisplayName("Gerencia de Marcobre que entrega/retira el residuo:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
-        public int Responsable_Marcobre { get; set; }
+        public int Gerencia { get; set; }
         [DisplayName("Comentarios:")]
         public string Comentario { get; set; }
         public bool Permiso { get; set; }

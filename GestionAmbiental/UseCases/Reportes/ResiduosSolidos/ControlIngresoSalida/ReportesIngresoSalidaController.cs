@@ -45,25 +45,25 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
             empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+            gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
             ViewBag.ACR_CMRS = acr_cmrs;
             ViewBag.IngresoSalida = ingreso_salida;
             ViewBag.Motivo = motivo;
             ViewBag.TipoResiduo = tipo_residuo;
             ViewBag.Empresa = empresa;
-            ViewBag.Usuarios = usuarios;
+            ViewBag.Gerencias = gerencias;
             ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
             ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> GetRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int responsable, int empresa, string frecuencia)
+        public async Task<IActionResult> GetRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa, string frecuencia)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
-            var nRegistros = await _getRegistroEntreFechas.Execute(acr_cmrs,ingreso_salida,tipo_residuo,motivo, fechaInicio, fechaFin, responsable,empresa, frecuencia);
+            var nRegistros = await _getRegistroEntreFechas.Execute(acr_cmrs,ingreso_salida,tipo_residuo,motivo, fechaInicio, fechaFin, gerencia,empresa, frecuencia);
 
             dynamic response = new
             {
@@ -72,10 +72,10 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetRegistrosACR_CRMS(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int responsable, int empresa)
+        public async Task<IActionResult> GetRegistrosACR_CRMS(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
-            var nRegistros = await _getRegistroACR_CMRS.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, responsable, empresa);
+            var nRegistros = await _getRegistroACR_CMRS.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
             {
@@ -84,10 +84,10 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetRegistrosIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int responsable, int empresa)
+        public async Task<IActionResult> GetRegistrosIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
-            var nRegistros = await _getRegistrosIngresoSalida.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, responsable, empresa);
+            var nRegistros = await _getRegistrosIngresoSalida.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
             {
@@ -96,10 +96,10 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetRegistrosTipoResiduo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int responsable, int empresa)
+        public async Task<IActionResult> GetRegistrosTipoResiduo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
-            var nRegistros = await _getRegistrosTipoResiduo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, responsable, empresa);
+            var nRegistros = await _getRegistrosTipoResiduo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
             {
@@ -108,10 +108,10 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetRegistrosMotivo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int responsable, int empresa)
+        public async Task<IActionResult> GetRegistrosMotivo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
-            var nRegistros = await _getRegistrosMotivo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, responsable, empresa);
+            var nRegistros = await _getRegistrosMotivo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
             {

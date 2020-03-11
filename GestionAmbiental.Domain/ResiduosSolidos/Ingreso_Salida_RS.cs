@@ -10,14 +10,14 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public string Item { get; set; }
         public int Id_Ingreso_Salida_RS { get; set; }
         public ACR_CMRS ACR_CMRS { get; set; }
-        public string Responsable_ACR_CMRS { get; set; }
+        public Responsable_ARC_CRMS Responsable_ACR_CMRS { get; set; }
         public Ingreso_Salida Ingreso_Salida { get; set; }
         public Motivo_Ingreso_Salida Motivo { get; set; }
         public DateTime Fecha_Ingreso_Salida { get; set; }
         public Residuo_Solido Residuo_Solido { get; set; }
         public double Cantidad { get; set; }
         public Empresa Empresa_RS { get; set; }
-        public Usuario Responsable_Marcobre { get; set; }
+        public Gerencia Gerencia { get; set; }
         public string Comentario { get; set; }
         public int Id_Registrado_Por { get; set; }
         public DateTime Fecha_Registro { get; set; }
@@ -28,10 +28,10 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         }
 
         public Ingreso_Salida_RS(
-            int id_Ingreso_Salida_RS, string item, ACR_CMRS aCR_CMRS, string responsable_ACR_CMRS, 
+            int id_Ingreso_Salida_RS, string item, ACR_CMRS aCR_CMRS, Responsable_ARC_CRMS responsable_ACR_CMRS, 
             Ingreso_Salida ingreso_Salida, Motivo_Ingreso_Salida motivo, 
             DateTime fecha_Ingreso_Salida, Residuo_Solido residuo_Solido, double cantidad, 
-            Empresa id_Empresa_RS, Usuario responsable_Marcobre, string comentario,
+            Empresa id_Empresa_RS, Gerencia gerencia, string comentario,
             int id_Registrado_Por,DateTime fecha_Registro, string estado)
         {
             Item = item;
@@ -44,7 +44,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             Residuo_Solido = residuo_Solido;
             Cantidad = cantidad;
             Empresa_RS = id_Empresa_RS;
-            Responsable_Marcobre = responsable_Marcobre;
+            Gerencia = gerencia;
             Comentario = comentario;
             Id_Registrado_Por = id_Registrado_Por;
             Fecha_Registro = fecha_Registro;

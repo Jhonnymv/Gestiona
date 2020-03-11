@@ -63,6 +63,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;*/
 
+            
+
                 var items = await _getSelectItems.Execute();
                 var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
                 acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -72,20 +74,22 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
+                var responsable_arc_cmrs = items.ItemsResponsableACR_CMRS.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Responsable_ACR_CRMS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
                 ViewBag.ACR_CMRS = acr_cmrs;
                 ViewBag.IngresoSalida = ingreso_salida;
                 ViewBag.TipoResiduo = tipo_residuo;
                 ViewBag.Empresa = empresa;
-                ViewBag.Usuarios = usuarios;
+                ViewBag.Gerencias = gerencias;
                 return View();
             //}
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int asesorMA, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int gerencia, int pagina, int rpp)
         {
-            var datosTabla = await _consultarIngresoSalidaRSs.Execute(acr_cmrs, ingreso_salida, tipo, fecha, empresa, asesorMA, pagina, rpp);
+            var datosTabla = await _consultarIngresoSalidaRSs.Execute(acr_cmrs, ingreso_salida, tipo, fecha, empresa, gerencia, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -157,8 +161,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
                 residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var responsable_arc_cmrs = items.ItemsResponsableACR_CMRS.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Responsable_ACR_CRMS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion}).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.ACR_CMRS = acr_cmrs;
                 ViewBag.IngresoSalida = ingreso_salida;
@@ -167,7 +173,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ViewBag.TiposResiduo = tipos_residuos;
                 ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
                 ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
-                ViewBag.Usuarios = usuarios;
+                ViewBag.ResponsablesARC_CMRS = responsable_arc_cmrs;
+                ViewBag.Gerencias = gerencias;
                 return View();
             //}
         }
@@ -182,7 +189,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                     NombreUsuario = "kevin"
                 };
 
-                var IdIngresoSalida = await _registrarIngresoSalidaRS.Execute(model.opcion,model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa,model.Responsable_Marcobre,model.Comentario,userInfo.NombreUsuario);
+                var IdIngresoSalida = await _registrarIngresoSalidaRS.Execute(model.opcion,model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa,model.Gerencia,model.Comentario,userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoRegistro");
@@ -223,18 +230,21 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 residuos_solidos_p.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var residuos_solidos_np = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.NoPeligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
                 residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var responsable_arc_cmrs = items.ItemsResponsableACR_CMRS.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Responsable_ACR_CRMS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
 
-                ViewBag.ACR_CMRS = acr_cmrs;
+            ViewBag.ACR_CMRS = acr_cmrs;
                 ViewBag.IngresoSalida = ingreso_salida;
                 ViewBag.Motivo = motivo;
                 ViewBag.Empresa = empresa;
                 ViewBag.TiposResiduo = tipos_residuos;
                 ViewBag.ResiduosSolidosPelig = residuos_solidos_p;
                 ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
-                ViewBag.Usuarios = usuarios;
+            ViewBag.ResponsablesARC_CMRS = responsable_arc_cmrs;
+            ViewBag.Gerencias = gerencias;
 
                 var model = new IngresoSalidaRSModel();
                 model.Encrypted_Id = IdRegistro;
@@ -244,11 +254,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 model.Motivo = data.Id_Motivo;
                 model.Residuo_Solido = data.Id_Residuo_Solido;
                 model.Tipo_Residuo = data.Id_Tipo_Residuo;
-                model.Responsable_ACR_CMRS = data.Responsable_ACR_CMRS;
+                model.Responsable_ACR_CMRS = data.Id_Responsable_ACR_CMRS;
                 model.Comentario = data.Comentario;
                 model.Empresa = data.Id_Empresa;
                 model.Fecha = data.Fecha_Ingreso_Salida.ToString("yyyy-MM-dd");
-                model.Responsable_Marcobre = data.Id_Responsable_Marcobre;
+                model.Gerencia = data.Id_Gerencia;
                 model.Cantidad = data.Cantidad;
                 model.Residuo_Solido = data.Id_Residuo_Solido;
                 model.Permiso = data.Permiso;
@@ -267,7 +277,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                     NombreUsuario = "kevin"
                 };
 
-                await _editarIngresoSalidaRS.Execute(model.Id_Ingreso_Salida_RS,model.opcion, model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa, model.Responsable_Marcobre, model.Comentario, userInfo.NombreUsuario);
+                await _editarIngresoSalidaRS.Execute(model.Id_Ingreso_Salida_RS,model.opcion, model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa, model.Gerencia, model.Comentario, userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             var IdEncrypted = _protector.Protect(model.Id_Ingreso_Salida_RS.ToString());

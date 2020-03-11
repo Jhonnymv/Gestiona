@@ -69,7 +69,7 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" min="0"/>
+            <input type="number" class="form-control" asp-for="Cantidad" min="0" max="999999"/>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Empresa"></label>
@@ -81,18 +81,18 @@
     </div>
     <div class="row mb-2 justify-content-center">
         <div class="col-sm-12 col-md-12 col-lg-3">
-            <label asp-for="Responsable_Marcobre"></label>
+            <label asp-for="Gerencia"></label>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
-            <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
-            <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Responsable_Marcobre"></select>
+            <span class="text-danger" asp-validation-for="Gerencia"></span>
+            <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Gerencia"></select>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <label asp-for="Responsable_ACR_CMRS"></label>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-3">
             <span class="text-danger" asp-validation-for="Responsable_ACR_CMRS"></span>
-            <input type="text" class="form-control" asp-for="Responsable_ACR_CMRS" />
+            <select class="form-control" asp-items="@ViewBag.ResponsablesARC_CMRS" asp-for="Responsable_ACR_CMRS"></select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">

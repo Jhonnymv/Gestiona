@@ -5,7 +5,7 @@
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Dashboard de Reportes de Acto y Condición Subestándar</h2>
+        <h2>Dashboard de Ingreso/Salida de Residuos Sólidos</h2>
     </div>
 </div>
 <form autocomplete="off">
@@ -57,10 +57,10 @@
                 </div>
                 <div class="row mb-2 justify-content-center">
                     <div class="col-lg-2 mt-1">
-                        <label asp-for="IdResponsableMarcobre"></label>
+                        <label asp-for="Gerencia"></label>
                     </div>
                     <div class="col-lg-4 mt-1">
-                        <select class="form-control" asp-for="IdResponsableMarcobre" asp-items="@ViewBag.Usuarios"></select>
+                        <select class="form-control" asp-for="Gerencia" asp-items="@ViewBag.Gerencias"></select>
                     </div>
                     <div class="col-lg-2 mt-1">
                         <label asp-for="Empresa"></label>

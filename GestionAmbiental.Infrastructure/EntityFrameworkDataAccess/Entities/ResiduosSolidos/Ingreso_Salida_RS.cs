@@ -15,8 +15,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Item { get; set; }
         [Column(TypeName = "int")]
         public int Id_ACR_CMRS { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string Responsable_ACR_CMRS { get; set; }
+        [Column(TypeName = "int")]
+        public int Id_Responsable_ARC_CRMS { get; set; }
         [Column(TypeName = "int")]
         public int Id_Ingreso_Salida { get; set; }
         [Column(TypeName = "int")]
@@ -29,7 +29,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "int")]
         public int Id_Empresa_RS { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Responsable_Marcobre { get; set; }
+        public int Id_Gerencia { get; set; }
         [Column(TypeName = "text")]
         public string Comentario { get; set; }
         [Column(TypeName = "int")]

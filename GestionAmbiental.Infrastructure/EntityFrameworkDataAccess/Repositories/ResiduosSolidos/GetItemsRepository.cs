@@ -108,5 +108,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Responsable_ARC_CRMS>> GetResponsables_ARC_CRM()
+        {
+            var data = await _context.Responsables_ACR_CRM.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            var output = new List<Responsable_ARC_CRMS>();
+            foreach (var item in data)
+            {
+                output.Add(new Responsable_ARC_CRMS(item.Id_Responsable_ARC_CRMS, item.Nombres,item.Apellidos, item.Estado));
+            }
+            return output;
+        }
+        public async Task<List<Gerencia>> GetGerencias()
+        {
+            var data = await _context.Gerencias.ToListAsync();
+            var output = new List<Gerencia>();
+            foreach (var item in data)
+            {
+                output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
+            }
+            return output;
+        }
     }
 }

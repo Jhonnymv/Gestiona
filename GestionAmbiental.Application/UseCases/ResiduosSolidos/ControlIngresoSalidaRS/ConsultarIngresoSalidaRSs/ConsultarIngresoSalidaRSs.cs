@@ -15,13 +15,13 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
         {
             _getIngresoSalidaRSReadOnlyRepository = getIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(getIngresoSalidaRSReadOnlyRepository));
         }
-        public async Task<IngresoSalidaRSsOutput> Execute(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int asesorMA, int pagina, int rpp)
+        public async Task<IngresoSalidaRSsOutput> Execute(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int gerencia, int pagina, int rpp)
         {
             DateTime? fechadt = null;
             if (fecha != null)
                 fechadt = Convert.ToDateTime(fecha);
 
-            var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RSs(acr_cmrs, ingreso_salida, tipo, fechadt, empresa, asesorMA);
+            var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RSs(acr_cmrs, ingreso_salida, tipo, fechadt, empresa, gerencia);
 
             var output = new IngresoSalidaRSsOutput
             {

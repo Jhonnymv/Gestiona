@@ -18,8 +18,8 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         public int Motivo { get; set; }
         [DisplayName("Empresa que Generó/Retiró el Residuo:")]
         public int Empresa { get; set; }
-        [DisplayName("Responsable de Marcobre que Entrega/Retira el Residuo:")]
-        public int IdResponsableMarcobre { get; set; }
+        [DisplayName("Gerencia de Marcobre que Entrega/Retira el Residuo:")]
+        public int Gerencia { get; set; }
         [DisplayName("Fecha de Inicio (Ingreso o Salida de Residuo):")]
         public string FInicio { get; set; }
         [DisplayName("Fecha de Fin (Ingreso o Salida de Residuo):")]

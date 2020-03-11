@@ -20,14 +20,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
 
-        public async Task<List<Dimension>> GetNRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa,string frecuencia)
+        public async Task<List<List<Dimension>>> GetNRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa,string frecuencia)
         {
-            var output = new List<Dimension>();
+            var output = new List<List<Dimension>>();
+            var ingreso = new List<Dimension>();
+            var salida = new List<Dimension>();
+
             var residuosSolido = await _context.Residuos_Solidos.Where(x=>
                 x.Estado.Equals("ACT")&&
                 x.Id_Tipo_Residuo.Equals(tipo_residuo!=0?tipo_residuo:x.Id_Tipo_Residuo))
-                .Select(x=>x.Id_Residuo_Solido)
+                .Select(y => y.Id_Residuo_Solido)
                 .ToListAsync();
+
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString())&&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -35,7 +39,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(responsable != 0 ? responsable : x.Id_Responsable_Marcobre) &&
+                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .ToListAsync();
@@ -52,7 +56,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     nDias = FechaFin.DayOfYear - FechaInicio.DayOfYear;
 
                 var lstDiasSinValor = new List<Dimension>();
-                var lstDiasConValor = new List<Dimension>();
+                var lstDiasConValorIngreso = new List<Dimension>();
+                var lstDiasConValorSalida = new List<Dimension>();
                 for (int i = nDias; i >= 0; i--)
                 {
                     var diaAnio = FechaFin.AddDays(-i).DayOfYear;
@@ -61,22 +66,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 foreach (var item in frec)
                 {
                     var diaAnio = item.Key.DayOfYear;
-                    lstDiasConValor.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Sum(x=>x.Cantidad), (item.Key.Year * 1000) + item.Key.DayOfYear));
+                    if (item.Where(x => x.Id_Ingreso_Salida.Equals(1)).ToList().Count > 0)
+                        lstDiasConValorIngreso.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Where(x => x.Id_Ingreso_Salida.Equals(1)).Sum(x => x.Cantidad), (item.Key.Year * 1000) + item.Key.DayOfYear));
+                    if (item.Where(x => x.Id_Ingreso_Salida.Equals(2)).ToList().Count > 0)
+                        lstDiasConValorSalida.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Where(x => x.Id_Ingreso_Salida.Equals(2)).Sum(x => x.Cantidad), (item.Key.Year * 1000) + item.Key.DayOfYear));
                 }
-                var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
+                var distinctIngreso = lstDiasSinValor.Where(x => !lstDiasConValorIngreso.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                ingreso = distinctIngreso.Union(lstDiasConValorIngreso).OrderBy(x => x.Index).ToList();
+                var distinctSalida = lstDiasSinValor.Where(x => !lstDiasConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                salida = distinctSalida.Union(lstDiasConValorSalida).OrderBy(x => x.Index).ToList();
             }
             else if (frecuencia.Equals("Semanal"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = registros.Select(x => new { woy = cul.Calendar.GetWeekOfYear(x.Fecha_Ingreso_Salida, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha_Ingreso_Salida.ToString("yyyy"),cantidad = x.Cantidad }).ToList();
+                var data = registros.Select(x => new { woy = cul.Calendar.GetWeekOfYear(x.Fecha_Ingreso_Salida, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha_Ingreso_Salida.ToString("yyyy"),cantidad = x.Cantidad,ingreso_salida = x.Id_Ingreso_Salida }).ToList();
                 var frec = data.GroupBy(x => x.woy).ToList();
 
                 int nSemInicial = cul.Calendar.GetWeekOfYear(FechaInicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
                 int nSemFinal = cul.Calendar.GetWeekOfYear(FechaFin, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
                 var lstSemSinValor = new List<Dimension>();
-                var lstSemConValor = new List<Dimension>();
+                var lstSemConValorIngreso = new List<Dimension>();
+                var lstSemConValorSalida = new List<Dimension>();
 
                 int nSem = 0;
                 //Mismo año
@@ -91,11 +102,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     {
                         var week = Convert.ToInt32(item.Key.Substring(0, 2));
                         var year = Convert.ToInt32(item.Key.Substring(3, 4));
-                        lstSemConValor.Add(new Dimension("Sem " + week + " - " + year, item.Sum(x=>x.cantidad), year * 100 + week));
+                        if (item.Where(x => x.ingreso_salida.Equals(1)).ToList().Count > 0)
+                            lstSemConValorIngreso.Add(new Dimension("Sem " + week + " - " + year, item.Where(x=>x.ingreso_salida.Equals(1)).Sum(x => x.cantidad), year * 100 + week));
+                        if (item.Where(x => x.ingreso_salida.Equals(2)).ToList().Count > 0)
+                            lstSemConValorSalida.Add(new Dimension("Sem " + week + " - " + year, item.Where(x => x.ingreso_salida.Equals(2)).Sum(x => x.cantidad), year * 100 + week));
                     }
-                    var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    output = output.OrderBy(x => x.Index).ToList();
+                    var distinctIngreso = lstSemSinValor.Where(x => !lstSemConValorIngreso.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    ingreso = distinctIngreso.Union(lstSemConValorIngreso).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    ingreso = ingreso.OrderBy(x => x.Index).ToList();
+
+                    var distinctSalida = lstSemSinValor.Where(x => !lstSemConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    salida = distinctSalida.Union(lstSemConValorSalida).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    salida = salida.OrderBy(x => x.Index).ToList();
                 }
                 //Diferentes años
                 else
@@ -138,24 +156,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         var nombre = "Sem " + semAct + " - " + anioAct.ToString().Substring(2, 2);
                         if (semAnt > semAct)
                             nAnio++;
-                        //lstSemConValor.Add(new Dimension("Sem " + semAct + " - " + (FechaInicio.Year + nAnio).ToString().Substring(2, 2), item.Count(), ((FechaInicio.Year + nAnio) * 100) + item.Key));
-                        lstSemConValor.Add(new Dimension(nombre, item.Sum(x=>x.cantidad), (anioAct * 100) + semAct));
+                        if (item.Where(x => x.ingreso_salida.Equals(1)).ToList().Count > 0)
+                            lstSemConValorIngreso.Add(new Dimension(nombre, item.Where(x => x.ingreso_salida.Equals(1)).Sum(x => x.cantidad), (anioAct * 100) + semAct));
+                        if (item.Where(x => x.ingreso_salida.Equals(2)).ToList().Count > 0)
+                            lstSemConValorSalida.Add(new Dimension(nombre, item.Where(x => x.ingreso_salida.Equals(2)).Sum(x => x.cantidad), (anioAct * 100) + semAct));
                         semAnt = semAct;
                     }
-                    var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    output = output.OrderBy(x => x.Index).ToList();
+                    var distinctIngreso = lstSemSinValor.Where(x => !lstSemConValorIngreso.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    ingreso = distinctIngreso.Union(lstSemConValorIngreso).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    ingreso = ingreso.OrderBy(x => x.Index).ToList();
+
+                    var distinctSalida = lstSemSinValor.Where(x => !lstSemConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    salida = distinctSalida.Union(lstSemConValorSalida).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    salida = salida.OrderBy(x => x.Index).ToList();
                 }
             }
             else if (frecuencia.Equals("Mensual"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = registros.Select(x => new { date = x.Fecha_Ingreso_Salida.ToString("MM yyyy"), cantidad = x.Cantidad }).ToList();
-                var frec_cabeceras = data.GroupBy(x => x.date).ToList();
+                var data = registros.Select(x => new { date = x.Fecha_Ingreso_Salida.ToString("MM yyyy"), cantidad = x.Cantidad, ingreso_salida=x.Id_Ingreso_Salida }).ToList();
+                var frec = data.GroupBy(x => x.date).ToList();
 
                 int nMeses;
                 var lstMesSinValor = new List<Dimension>();
-                var lstMesConValor = new List<Dimension>();
+                var lstMesConValorIngreso = new List<Dimension>();
+                var lstMesConValorSalida = new List<Dimension>();
 
                 if (FechaInicio.Year == FechaFin.Year)
                 {
@@ -204,20 +229,30 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     }
                 }
 
-                foreach (var item in frec_cabeceras)
+                foreach (var item in frec)
                 {
                     var mes = Convert.ToInt32(item.Key.Substring(0, 2));
                     var anio = Convert.ToInt32(item.Key.Substring(3, 4));
                     var fecha = new DateTime(anio, mes, 1);
                     var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
-                    lstMesConValor.Add(new Dimension(nombre, item.Sum(x=>x.cantidad), anio * 100 + mes));
+
+                    if (item.Where(x => x.ingreso_salida.Equals(1)).ToList().Count > 0)
+                        lstMesConValorIngreso.Add(new Dimension(nombre, item.Where(x=>x.ingreso_salida.Equals(1)).Sum(x => x.cantidad), anio * 100 + mes));
+                    if (item.Where(x => x.ingreso_salida.Equals(2)).ToList().Count > 0)
+                        lstMesConValorSalida.Add(new Dimension(nombre, item.Where(x => x.ingreso_salida.Equals(2)).Sum(x => x.cantidad), anio * 100 + mes));
+
                 }
-                var distinct = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                output = distinct.Union(lstMesConValor).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();                
+                var distinctIngreso = lstMesSinValor.Where(x => !lstMesConValorIngreso.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                ingreso = distinctIngreso.Union(lstMesConValorIngreso).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();        
+
+                var distinctSalida = lstMesSinValor.Where(x => !lstMesConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                salida = distinctSalida.Union(lstMesConValorSalida).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();                
             }
+            output.Add(ingreso);
+            output.Add(salida);
             return output;
         }
-        public async Task<List<Dimension>> GetNRegistrosACR_CMRS(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa)
+        public async Task<List<Dimension>> GetNRegistrosACR_CMRS(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
         {
             var output = new List<Dimension>();
             var residuosSolido = await _context.Residuos_Solidos.Where(x =>
@@ -232,7 +267,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(responsable != 0 ? responsable : x.Id_Responsable_Marcobre) &&
+                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x=>x.Id_ACR_CMRS)
@@ -246,7 +281,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetNRegistrosIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa)
+        public async Task<List<Dimension>> GetNRegistrosIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
         {
             var output = new List<Dimension>();
             var residuosSolido = await _context.Residuos_Solidos.Where(x =>
@@ -261,7 +296,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(responsable != 0 ? responsable : x.Id_Responsable_Marcobre) &&
+                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x => x.Id_Ingreso_Salida)
@@ -275,7 +310,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetNRegistrosMotivo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa)
+        public async Task<List<Dimension>> GetNRegistrosMotivo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
         {
             var output = new List<Dimension>();
             var residuosSolido = await _context.Residuos_Solidos.Where(x =>
@@ -290,7 +325,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(responsable != 0 ? responsable : x.Id_Responsable_Marcobre) &&
+                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x => x.Id_Motivo)
@@ -308,7 +343,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetNRegistrosTipoResiduo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa)
+        public async Task<List<Dimension>> GetNRegistrosTipoResiduo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
         {
             var output = new List<Dimension>();
             var residuosSolido = await _context.Residuos_Solidos.Where(x =>
@@ -323,7 +358,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Select(y=>y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Responsable_Marcobre.Equals(responsable != 0 ? responsable : x.Id_Responsable_Marcobre) &&
+                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .Select(x => new { tipo = rsAgrupados.FirstOrDefault(y=>y.Select(z=>z.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido)).Key, Cantidad=x.Cantidad })

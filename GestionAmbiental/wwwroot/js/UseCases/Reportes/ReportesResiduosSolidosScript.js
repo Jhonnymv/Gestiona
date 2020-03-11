@@ -4,12 +4,13 @@ var tipo_residuo = $("#TipoResiduo").val();
 var motivo = $("#Motivo").val();
 var fechaInicio = "";
 var fechaFin = "";
-var responsable = $("#IdResponsableMarcobre").val();
+var gerencia = $("#Gerencia").val();
 var empresa = $("#Empresa").val();
 var frecuencia = $("#frecuencia").val();
 
 //Variables gráfico Cantidad X Fecha
-var data_cant_fechas = [];
+var data_cant_fechas_ingreso = [];
+var data_cant_fechas_salida = [];
 var graph_cant_fechas;
 //Variable gráfico Cantidad X ACR_CMRS
 var data_acr_vs_cmrs = [];
@@ -24,6 +25,9 @@ var graph_tipo_residuo;
 var data_motivo = [];
 var graph_motivo;
 
+$(document).ready(function () {
+    Filtrar();
+});
 function Filtrar() {
 
     acr_cmrs = $("#ACR_CMRS").val();
@@ -32,7 +36,7 @@ function Filtrar() {
     motivo = $("#Motivo").val();
     fechaInicio = $("#FInicio").val();
     fechaFin = $("#FFin").val();
-    responsable = $("#IdResponsableMarcobre").val();
+    gerencia = $("#Gerencia").val();
     empresa = $("#Empresa").val();
     frecuencia = $("#frecuencia").val();
     if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
@@ -57,60 +61,80 @@ function ActualizarContadorxFecha() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#IdResponsableMarcobre").val(),
+            responsable: $("#Gerencia").val(),
             empresa: $("#Empresa").val(),
             frecuencia: $("#frecuencia").val()
         },
         traditional: true,
         success: (response) => {
-
-
-            if (data_cant_fechas.length > 0) {
+            console.log(response);
+            if (data_cant_fechas_ingreso.length > 0 || data_cant_fechas_salida.length > 0) {
                 //Actualizar contador
-                data_cant_fechas = response.nRegistros;
+                data_cant_fechas_ingreso = response.nRegistros[0];
+                data_cant_fechas_salida = response.nRegistros[1];
 
                 var labels = [];
-                var data = [];
-                for (var i = 0; i < data_cant_fechas.length; i++) {
-                    labels.push(data_cant_fechas[i].nombre);
-                    data.push(data_cant_fechas[i].valor);
+                var dataIngreso = [];
+                var dataSalida = [];
+                for (var i = 0; i < data_cant_fechas_ingreso.length; i++) {
+                    labels.push(data_cant_fechas_ingreso[i].nombre);
+                    dataIngreso.push(data_cant_fechas_ingreso[i].valor);
+                }
+                for (var i = 0; i < data_cant_fechas_salida.length; i++) {
+                    dataSalida.push(data_cant_fechas_salida[i].valor);
                 }
                 //Actualizar gráfica
                 graph_cant_fechas.data.labels = labels;
-                graph_cant_fechas.data.datasets[0].data = data;
-                graph_cant_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                graph_cant_fechas.data.datasets[0].data = dataIngreso;
+                graph_cant_fechas.data.datasets[1].data = dataSalida;
+                graph_cant_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(dataIngreso) / 10;
                 graph_cant_fechas.update();
             } else {
                 //Actualizar contador
-                data_cant_fechas = response.nRegistros;
+                data_cant_fechas_ingreso = response.nRegistros[0];
+                data_cant_fechas_salida = response.nRegistros[1];
 
                 var labels = [];
-                var data = [];
-                for (var i = 0; i < data_cant_fechas.length; i++) {
-                    labels.push(data_cant_fechas[i].nombre);
-                    data.push(data_cant_fechas[i].valor);
+                var dataIngreso = [];
+                var dataSalida = [];
+                for (var i = 0; i < data_cant_fechas_ingreso.length; i++) {
+                    labels.push(data_cant_fechas_ingreso[i].nombre);
+                    dataIngreso.push(data_cant_fechas_ingreso[i].valor);
+                }
+                for (var i = 0; i < data_cant_fechas_salida.length; i++) {
+                    dataSalida.push(data_cant_fechas_salida[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorxFecha(labels, data, Math.max(data) / 10);
+                CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, Math.max(dataIngreso) / 10);
             }
         }
     });
 }
-function CrearGraficaContardorxFecha(labels, data, stepSize) {
+function CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, stepSize) {
     graph_cant_fechas = new Chart(
         document.getElementById("chart_cant_fechas"),
         {
             "type": "bar",
             "data": {
                 "labels": labels,
-                "datasets": [{
-                    "label": "# Cantidad de Residuos Sólido Ingresado/Retirado (kg)",
-                    "data": data,
-                    "fill": false,
-                    "backgroundColor": "rgb(46, 103, 147)",
-                    "borderColor": "rgb(46, 103, 147)",
-                    "lineTension": 0.1
-                }]
+                "datasets": [
+                    {
+                        "label": "# Cantidad de Residuos Sólido Ingresado (kg)",
+                        "data": dataIngreso,
+                        "fill": false,
+                        "backgroundColor": "rgb(46, 103, 147)",
+                        "borderColor": "rgb(46, 103, 147)",
+                        "lineTension": 0.1
+                    },
+                    {
+                        "label": "# Cantidad de Residuos Sólido Retirado (kg)",
+                        "data": dataSalida,
+                        "fill": false,
+                        "backgroundColor": "rgb(255, 99, 99)",
+                        "borderColor": "rgb(255, 99, 99)",
+                        "lineTension": 0.1
+                    }
+                ]
             },
             "options": {
                 "scales": {
@@ -136,7 +160,6 @@ function CrearGraficaContardorxFecha(labels, data, stepSize) {
             }
         });
 }
-
 //Para gráfico ACR vs CMRS
 function ActualizarDatosGraficoACR_CMRS() {
     $.ajax({
@@ -149,7 +172,7 @@ function ActualizarDatosGraficoACR_CMRS() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#IdResponsableMarcobre").val(),
+            responsable: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
@@ -238,12 +261,12 @@ function ActualizarDatosGraficoIngresoSalida() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#IdResponsableMarcobre").val(),
+            responsable: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
         success: (response) => {
-            console.log(response)
+            
             if (data_ing_vs_sal.length > 0) {
                 //Actualizar contador
                 data_ing_vs_sal = response.nRegistros;
@@ -316,7 +339,7 @@ function CrearGraficoIngresoSalida(labels, data) {
         }
     );
 }
-//Para gráfico Ingreso vs Salida
+//Para gráfico Peligroso vs No Peligroso
 function ActualizarDatosGraficoTipoResiduo() {
     $.ajax({
         type: "POST",
@@ -328,12 +351,12 @@ function ActualizarDatosGraficoTipoResiduo() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#IdResponsableMarcobre").val(),
+            responsable: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
         success: (response) => {
-            console.log(response)
+            
             if (data_tipo_residuo.length > 0) {
                 //Actualizar contador
                 data_tipo_residuo = response.nRegistros;
@@ -375,7 +398,7 @@ function CrearGraficoTipoResiduo(labels, data) {
                     "label": "# Cantidad Ingreso/Salida (kg)",
                     "data": data,
                     "backgroundColor": [
-                        '#2e6793',
+                        '#FF6363',
                         '#1cc88a'
                     ],
                     "lineTension": 0.1
@@ -406,7 +429,7 @@ function CrearGraficoTipoResiduo(labels, data) {
         }
     );
 }
-//Para gráfico Ingreso vs Salida
+//Para gráfico Motivo
 function ActualizarDatosGraficoMotivo() {
     $.ajax({
         type: "POST",
@@ -418,12 +441,12 @@ function ActualizarDatosGraficoMotivo() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#IdResponsableMarcobre").val(),
+            responsable: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
         success: (response) => {
-            console.log(response)
+            
             if (data_motivo.length > 0) {
                 //Actualizar contador
                 data_motivo = response.nRegistros;
@@ -466,7 +489,13 @@ function CrearGraficoMotivo(labels, data) {
                     "data": data,
                     "backgroundColor": [
                         '#2e6793',
-                        '#1cc88a'
+                        '#1cc88a',
+                        '#FF6363',
+                        '#EEC408',
+                        '#797D7F',
+                        '#5202A2',
+                        '#A20248',
+                        '#FF6A32'
                     ],
                     "lineTension": 0.1
                 }]

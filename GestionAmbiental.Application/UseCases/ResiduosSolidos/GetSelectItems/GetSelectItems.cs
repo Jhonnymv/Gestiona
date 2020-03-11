@@ -25,6 +25,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems
             var tipos = await _getItemsReadOnlyRepository.GetTipos_Residuo();
             var empresas = await _getItemsReadOnlyRepository.GetEmpresa();
             var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
+            var responsables_arc_cmrs = await _getItemsReadOnlyRepository.GetResponsables_ARC_CRM();
+            var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var output = new SelectItemsOutput();
             output.ItemsACR_CMRS = acr_cmrs;
             output.ItemsEO_RS = eo_rs;
@@ -35,6 +37,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems
             output.ItemsUsuarios = usuarios;
             output.ItemsEmpresa = empresas;
             output.ItemsAsesoresMA = usuarios.Where(x => x.IdRol.Equals((int)RSRoles.AsesorMAP)).ToList();
+            output.ItemsResponsableACR_CMRS = responsables_arc_cmrs;
+            output.ItemsGerencia = gerencias;
             return output;
         }
     }

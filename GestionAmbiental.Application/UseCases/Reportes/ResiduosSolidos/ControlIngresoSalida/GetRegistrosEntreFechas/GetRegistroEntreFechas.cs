@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
             _getReportesResiduosSolidosReadOnlyRepository = getReportesResiduosSolidosReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesResiduosSolidosReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int responsable, int empresa, string frecuencia)
+        public async Task<List<List<DimensionOutput>>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int responsable, int empresa, string frecuencia)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -31,11 +31,21 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
             //Obtener valores
             var data = await _getReportesResiduosSolidosReadOnlyRepository.GetNRegistrosEntreFechas(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fInicio, fFinal,responsable,empresa,frecuencia);
 
-            var output = new List<DimensionOutput>();
-            foreach (var item in data)
+            var output = new List<List<DimensionOutput>>();
+            var ingreso = new List<DimensionOutput>();
+            var salida = new List<DimensionOutput>();
+            //Ingreso
+            foreach (var item in data[0])
             {
-                output.Add(new DimensionOutput(item));
+                ingreso.Add(new DimensionOutput(item));
             }
+            //Salida
+            foreach (var item in data[1])
+            {
+                salida.Add(new DimensionOutput(item));
+            }
+            output.Add(ingreso);
+            output.Add(salida);
             return output;
         }
     }

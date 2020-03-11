@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, string responsable, double cantidad, int empresa, int responsable_marc, string comentario, string usuario_red)
+        public async Task<int> Execute(string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, int responsable, double cantidad, int empresa, int gerencia, string comentario, string usuario_red)
         {
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
@@ -54,17 +54,18 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             input.Motivo = new Motivo_Ingreso_Salida();
             input.Residuo_Solido = new Residuo_Solido();
             input.Empresa_RS = new Empresa();
-            input.Responsable_Marcobre = new Usuario();
+            input.Gerencia = new Gerencia();
+            input.Responsable_ACR_CMRS = new Responsable_ARC_CRMS();
 
             input.ACR_CMRS.Id_ACR_CMRS = arc_cmrs;
             input.Ingreso_Salida.Id_Ingreso_Salida = ingreso_salida;
             input.Motivo.Id_Motivo = motivo;
             input.Residuo_Solido.Id_Residuo_Solido = residuo_solido;
             input.Fecha_Ingreso_Salida = fecha_format;
-            input.Responsable_ACR_CMRS = responsable;
+            input.Responsable_ACR_CMRS.Id_Responsable_ACR_CRMS = responsable;
             input.Cantidad = cantidad;
             input.Empresa_RS.IdEmpresa = empresa;
-            input.Responsable_Marcobre.IdUsuario = responsable_marc;
+            input.Gerencia.IdGerencia = gerencia;
             input.Comentario = comentario;
             input.Fecha_Registro = DateTime.Now;
             input.Id_Registrado_Por = usuario.IdUsuario;

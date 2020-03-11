@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
 {
     public interface IGetRegistrosIngresoSalida
     {
-        Task<List<DimensionOutput>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int responsable, int empresa);
+        Task<List<DimensionOutput>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int gerencia, int empresa);
     }
 }

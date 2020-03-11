@@ -16,5 +16,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems
         public List<Tipo_Residuo> ItemsTipoResiduo { get; set; }
         public List<Usuario> ItemsUsuarios { get; set; }
         public List<Usuario> ItemsAsesoresMA { get; set; }
+        public List<Responsable_ARC_CRMS> ItemsResponsableACR_CMRS { get; set; }
+        public List<Gerencia> ItemsGerencia { get; set; }
     }
 }
