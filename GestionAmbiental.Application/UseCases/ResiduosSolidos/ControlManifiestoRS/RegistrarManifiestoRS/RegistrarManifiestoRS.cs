@@ -49,8 +49,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             string usuario_red)
         {
             var input = new Domain.ResiduosSolidos.Manifiesto_RS();
-
-            
+                        
             switch (opcion)
             {
                 case "Registrar":

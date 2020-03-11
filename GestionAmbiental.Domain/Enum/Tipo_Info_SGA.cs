@@ -12,6 +12,9 @@ namespace GestionAmbiental.Domain.Enum
         FileEncryption = 4,
         FTPConnectionEvidenciaRACR = 5,
         FTPConnectionEvidenciaRACI = 6,
-        LDAPConnection = 7
+        LDAPConnection = 7,
+        FTPConnectionEvidenciaRSC = 1007,
+        FTPConnectionEvidenciaRSI = 1008,
+        FTPConnectionEvidenciaRSM = 1009
     }
 }

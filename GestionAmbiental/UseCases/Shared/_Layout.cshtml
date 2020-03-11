@@ -44,8 +44,8 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reporte de Acto y Condición Subestándar</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rac" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reporte de Acto y Condición Subestándar</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_rac">
                                 <a class="dropdown-item" asp-controller="RegistroRAC" asp-action="Resumen">RAC</a>
                                 <a class="dropdown-item" asp-controller="ImplementacionRAC" asp-action="Resumen">Pendientes de Implementación</a>
                                 @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
@@ -70,6 +70,15 @@
                     }
                     @if (ViewBag.Rol == null)
                     {
+                        <li class="nav-item dropdown dropleft">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Residuos Sólidos</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                                <a class="dropdown-item" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
+                                <a class="dropdown-item" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
+                                <a class="dropdown-item" asp-controller="ManifiestoRS" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos</a>
+                                <a class="dropdown-item" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
+                            </div>
+                        </li>
                         <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin">Iniciar Sesión</a></li>
                     }
                     else

@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
 
             var data = await _getManifiestosRSReadOnlyRepository
                 .GetManifiestosRS(nManifiesto, fechadt, observacion, residuoSolido, eors_salida, eors_llegada, asesorMAP);
-            data = data.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).ToList();
+            data = data.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString()) || x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())).OrderByDescending(x=>x.Item).ToList();
             var output = new ManifiestosRSOutput
             {
                 manifiestosRS = new List<ManifiestoRSOutput>(),

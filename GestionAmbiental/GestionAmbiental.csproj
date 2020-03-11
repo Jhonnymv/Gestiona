@@ -46,11 +46,16 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="UseCases\Reportes\ResiduosSolidos\ControlManifiestoRS\" />
     <Folder Include="Views\CompletarManifiesto\" />
+    <Folder Include="Views\ReportesIngresoSalida\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="UseCases\ResiduosSolidos\ControlManifiestoRS\CompletarManifiestoRS\Resumen.cshtml" />
+    <None Include="UseCases\ResiduosSolidos\ControlManifiestoRS\CompletarManifiestoRS\CompletarManifiesto.cshtml" />
+    <None Include="UseCases\ResiduosSolidos\ControlManifiestoRS\CompletarManifiestoRS\DetalleManifiesto.cshtml" />
+    <None Include="UseCases\Reportes\ResiduosSolidos\ControlIngresoSalida\Resumen.cshtml" />
   </ItemGroup>
   
 </Project>

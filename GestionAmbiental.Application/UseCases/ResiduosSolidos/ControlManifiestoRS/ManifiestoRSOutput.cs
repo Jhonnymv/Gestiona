@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -33,11 +34,11 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
-        public string Certificado_Trat_Disp { get; set; }
+        public List<string> Certificado_Trat_Disp { get; set; }
         public double Cantidad_RS_Dispuesto { get; set; }
         public DateTime? Fecha_Devolucion { get; set; }
-        public string Informe_Transporte { get; set; }
-        public string Manifiesto { get; set; }
+        public List<string> Informe_Transporte { get; set; }
+        public List<string> Manifiesto { get; set; }
         public int Id_Asesor_MAP { get; set; }
         public string Asesor_MAP { get; set; }
         public DateTime Fecha_Registro { get; set; }
@@ -73,14 +74,40 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
             Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
             Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
-            /*Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
+            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            {
+                var certificados = JArray.Parse(manifiesto_RS.Certificado_Trat_Disp);
+                Certificado_Trat_Disp = new List<string>();
+                foreach (var evidencia in certificados)
+                {
+                    Certificado_Trat_Disp.Add((string)evidencia);
+                }
+            }
+            
             Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
             Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
-            Informe_Transporte = manifiesto_RS.Informe_Transporte;
-            Manifiesto = manifiesto_RS.Manifiesto;
-            Id_Asesor_MAP = manifiesto_RS.Asesor_MAP.IdUsuario;
+            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            {
+                var informes = JArray.Parse(manifiesto_RS.Informe_Transporte);
+                Informe_Transporte = new List<string>();
+                foreach (var evidencia in informes)
+                {
+                    Informe_Transporte.Add((string)evidencia);
+                }
+            }
+            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            {
+                var manifiestos = JArray.Parse(manifiesto_RS.Manifiesto);
+                Manifiesto = new List<string>();
+                foreach (var evidencia in manifiestos)
+                {
+                    Manifiesto.Add((string)evidencia);
+                }
+            }
+            Id_Asesor_MAP = manifiesto_RS.Asesor_MAP !=null? manifiesto_RS.Asesor_MAP.IdUsuario:0;
             Asesor_MAP = manifiesto_RS.Asesor_MAP!=null?manifiesto_RS.Asesor_MAP.Nombres + " " + manifiesto_RS.Asesor_MAP.Apellidos:"";
-            Fecha_Registro = manifiesto_RS.Fecha_Registro;*/
+            
+            Fecha_Registro = manifiesto_RS.Fecha_Registro;
             Id_Registrado_Por = manifiesto_RS.Id_Registrado_Por;
             Estado = manifiesto_RS.Estado;
         }

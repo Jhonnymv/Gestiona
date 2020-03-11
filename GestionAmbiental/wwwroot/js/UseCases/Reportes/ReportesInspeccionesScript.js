@@ -68,9 +68,9 @@ function Filtrar() {
                 var nObs = response.nInspecciones;
                 ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor);
 
-                ActualizarContadorRxFecha();
+                ActualizarContadorxFecha();
                 ActualizarContadorOxFecha();
-                ActualizarDatosGraficoMAP_SSO();
+                ActualizarDatosGraficoACR_CMRS();
                 GetDataContadorOxE();
                 ActualizarDatosGraficoMAP_SSO_Estado();
                 ActualizarDatosGraficoMA_NR();
@@ -93,15 +93,15 @@ function ActualizarContadorInsXEst(pend, reg, tot) {
 }
 //Para contador de inspecciones x fecha
 $("#sel_frec_insp_fecha").on('change', function () {
-    ActualizarContadorRxFecha();
-    ActualizarDatosGraficoMAP_SSO();
+    ActualizarContadorxFecha();
+    ActualizarDatosGraficoACR_CMRS();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
     ActualizarDatosGraficoMA_Clas();
     ActualizarDatosGraficoSSO_Clas();
 });
-function ActualizarContadorRxFecha() {
+function ActualizarContadorxFecha() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarInspeccionesXFecha",
@@ -142,13 +142,13 @@ function ActualizarContadorRxFecha() {
                     data.push(data_insp_fechas[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorIxFecha(labels, data, Math.max(data) / 10);
+                CrearGraficaContardorxFecha(labels, data, Math.max(data) / 10);
             }
             ActualizarContadorOxFecha();
         }
     });
 }
-function CrearGraficaContardorIxFecha(labels, data, stepSize) {
+function CrearGraficaContardorxFecha(labels, data, stepSize) {
     graph_insp_fechas = new Chart(
         document.getElementById("chart_insp_fechas"),
         {
@@ -192,7 +192,7 @@ function CrearGraficaContardorIxFecha(labels, data, stepSize) {
 $("#sel_frec_obs_estado").on('change', function () {
     ActualizarContadorOxFecha();
     GetDataContadorOxE();
-    ActualizarDatosGraficoMAP_SSO();
+    ActualizarDatosGraficoACR_CMRS();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
@@ -244,7 +244,7 @@ function ActualizarContadorOxFecha() {
                 //Crear gráfica
                 CrearGraficaContardorOxFecha(labels, data, Math.max(data) / 10);
             }
-            ActualizarDatosGraficoMAP_SSO()
+            ActualizarDatosGraficoACR_CMRS()
         }
     });
 }
@@ -329,7 +329,7 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     $("#ObsEncont").html(reg + imp + apr + rec + ven + amp );
 }
 //Para gráfico MAP vs SSO
-function ActualizarDatosGraficoMAP_SSO() {
+function ActualizarDatosGraficoACR_CMRS() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsMAPvsSSO",
@@ -369,12 +369,12 @@ function ActualizarDatosGraficoMAP_SSO() {
                     data.push(data_map_vs_sso[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoMAP_SSO(labels, data);
+                CrearGraficoACR_CMRS(labels, data);
             }
         }
     });
 }
-function CrearGraficoMAP_SSO(labels, data) {
+function CrearGraficoACR_CMRS(labels, data) {
     graph_map_vs_sso = new Chart(
         document.getElementById("chart_MAP_vs_SSO"),
         {

@@ -10,6 +10,7 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlManif
     {
         Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP);
         Task<Manifiesto_RS> GetManifiestoRS(int IdManifiestoRS);
+        Task<Manifiesto_RS> GetManifiesto_RS_Completo(int IdManifiesto);
         Task<string> GetLastItem();
     }
 }

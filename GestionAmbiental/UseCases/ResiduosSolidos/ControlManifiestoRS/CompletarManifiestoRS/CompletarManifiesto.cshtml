@@ -1,0 +1,415 @@
+﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.CompletarManifiestoRS.CompletarManifiestoRSModel
+@{
+    ViewData["Title"] = "CompletarManifiesto";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Completar Manifiesto de Residuos Sólidos Peligrosos</h2>
+    </div>
+</div>
+<form id="formCompletarManifiesto" class="form-group" asp-action="CompletarManifiesto" asp-controller="CompletarManifiesto" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="Id_Manifiesto_RS" />
+    <input type="hidden" asp-for="opcion" />
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DEL MANIFIESTO</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Serie_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Serie_Manifiesto"></span>
+            <input class="form-control" type="number" asp-for="Serie_Manifiesto" min="1" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Manifiesto"></span>
+            <input class="form-control" type="text" asp-for="Num_Manifiesto" maxlength="10" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Emision_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Emision_Manifiesto"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Emision_Manifiesto" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Observacion_Manifiesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Observacion_Manifiesto"></span>
+            <select class="form-control" asp-for="Observacion_Manifiesto" disabled>
+                <option value="0">--SELECCIONE--</option>
+                <option value="1">Conforme</option>
+                <option value="2">Anulado</option>
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DEL RESIDUO PELIGROSO</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_Residuo_Solido"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_Residuo_Solido"></span>
+            <select class="form-control" asp-items="ViewBag.ResiduosSolidos" asp-for="Id_Residuo_Solido" disabled>
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Cantidad_RS_Evacuado"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Cantidad_RS_Evacuado"></span>
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="1" max="999999" disabled />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DE LA EO-RS: RECOLECCIÓN Y TRANSPORTE</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_EO_RS_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_EO_RS_Salida"></span>
+            <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Salida" disabled>
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Registro_EO_RS_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Registro_EO_RS_Salida"></span>
+            <input class="form-control" type="text" asp-for="Registro_EO_RS_Salida" maxlength="10" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Vencimiento_Registro_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Salida"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Salida" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Municipal_Salida"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Salida"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Salida" maxlength="10" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Hoja_Ruta"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Hoja_Ruta"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Hoja_Ruta" maxlength="10" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Nombre_Conductor"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Nombre_Conductor"></span>
+            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="250" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Licencia_Condutor"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Num_Licencia_Condutor"></span>
+            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="8" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Placa_Vehiculo"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Placa_Vehiculo"></span>
+            <input class="form-control" type="text" asp-for="Placa_Vehiculo" maxlength="7" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Capacidad_Vehiculo"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-2">
+            <span class="text-danger" asp-validation-for="Capacidad_Vehiculo"></span>
+            <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" min="0" max="999999" disabled />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">DATOS DE LA EO-RS: DESTINO FINAL Y/O COMERCIALIZACIÓN</h5>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_EO_RS_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_EO_RS_Llegada"></span>
+            <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Llegada" disabled>
+            </select>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Registro_EO_RS_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Registro_EO_RS_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Registro_EO_RS_Llegada" maxlength="10" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Vencimiento_Registro_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Llegada"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Llegada" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Sanitaria_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Sanitaria_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Sanitaria_Llegada" maxlength="10" disabled />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Num_Autorizacion_Municipal_Llegada"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Llegada"></span>
+            <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Llegada" maxlength="10" disabled />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Id_Asesor"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Id_Asesor"></span>
+            <select class="form-control" asp-items="ViewBag.AsesoresMAP" asp-for="Id_Asesor">
+            </select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Fecha_Devolucion"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Fecha_Devolucion"></span>
+            <input class="form-control" type="date" asp-for="Fecha_Devolucion" />
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Cantidad_RS_Dispuesto"></label>
+        </div>
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <span class="text-danger" asp-validation-for="Cantidad_RS_Dispuesto"></span>
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Dispuesto" min="0" max="999999" />
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-start">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Certificado"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Certificado" data-valmsg-replace="true">
+                <span id="danger_certificado" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Certificado">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Certificado" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+        </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label id="archivos_certificado">0 Archivos</label>
+            </div>
+        </div>
+    <div class="row mb-2 justify-content-start">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Informe_Transporte"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Informe_Transporte" data-valmsg-replace="true">
+                <span id="danger_informe" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Informe_Transporte">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Informe_Transporte" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label id="archivos_informe">0 Archivos</label>
+            </div>
+        </div>
+    <div class="row mb-2 justify-content-start">
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <label asp-for="Manifiesto_Doc"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Manifiesto_Doc" data-valmsg-replace="true">
+                <span id="danger_manifiesto" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Manifiesto_Doc">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Manifiesto_Doc" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label id="archivos_manifiesto">0 Archivos</label>
+            </div>
+        </div>
+    <div class="row mb-2 justify-content-end">
+        <div class="col-12">
+            <div class="modal-footer">
+                <a class="btn btn-secondary" style="color:white" asp-controller="CompletarManifiesto" asp-action="Resumen">Cancelar</a>
+                @if (Model.Estado.Equals("Registrado") && Model.Permiso)
+                {
+                    <button id="btnRegistrar" type="submit" class="btn btn-primary">Enviar</button>
+                }
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts{
+    <script type="text/javascript">       
+    $("#Certificado").change(function () {
+        $("#danger_certificado").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Certificado").data('max-size');
+        var archivos = $("#Certificado").get(0).files;
+        
+        if (archivos.length > 0) {
+            var fileSize = 0
+            if (fileSize > maxSize) {                
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_certificado").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#archivos_certificado").text(filesname);
+                        $("#danger_certificado").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#archivos_certificado").html(filesName) : null;
+        }
+    });
+    $("#Informe_Transporte").change(function () {
+        $("#danger_informe").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Informe_Transporte").data('max-size');
+        var archivos = $("#Informe_Transporte").get(0).files;
+        
+        if (archivos.length > 0) {
+            var fileSize = 0
+            if (fileSize > maxSize) {                
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_informe").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#archivos_informe").text(filesname);
+                        $("#danger_informe").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#archivos_informe").html(filesName) : null;
+        }
+    });
+    $("#Manifiesto_Doc").change(function () {
+        $("#danger_manifiesto").html("");
+        //Validacion del tamaño del archivo
+        var maxSize = $("#Manifiesto_Doc").data('max-size');
+        var archivos = $("#Manifiesto_Doc").get(0).files;
+        
+        if (archivos.length > 0) {
+            var fileSize = 0
+            if (fileSize > maxSize) {                
+                this.value = '';
+                var filesname = this.files.length + " Archivos";
+                $("#danger_manifiesto").html("El  archivo supera el límite permitido de 8MB<br/>");
+                return;
+            }
+            var filesName = "";
+            for (var i = 0; i < archivos.length; i++) {
+                fileSize += archivos[i].size;
+                switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                    case 'jpg':
+                    case 'JPG':
+                    case 'jpeg':
+                    case 'JPEG':
+                    case 'png':
+                    case 'PNG':
+                    case 'xls':
+                    case 'xlsx':
+                    case 'doc':
+                    case 'docx':
+                    case 'pdf':
+                        filesName += archivos[i].name + "<br/>";
+                        break;
+                    default:
+                        this.value = '';
+                        var filesname = this.files.length + " Archivos";
+                        $("#archivos_manifiesto").text(filesname);
+                        $("#danger_manifiesto").html("No se admiten este tipo de archivos<br/>");
+                        return;
+                }
+            }
+            filesName.length > 0 ? $("#archivos_manifiesto").html(filesName) : null;
+        }
+    });
+    function getExt(fileName) {
+        return (fileName.lastIndexOf('.') < 1) ? null : fileName.split('.').slice(-1);
+    }
+    </script>
+}

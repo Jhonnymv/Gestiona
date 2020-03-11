@@ -52,7 +52,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         }
         public async Task<IActionResult> Resumen()
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
@@ -61,7 +61,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.Usuario = userInfo.NombreUsuario;*/
+
                 var items = await _getSelectItems.Execute();
                 var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
                 acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -80,7 +81,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ViewBag.Empresa = empresa;
                 ViewBag.Usuarios = usuarios;
                 return View();
-            }
+            //}
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(int acr_cmrs, int ingreso_salida, int tipo, string fecha, int empresa, int asesorMA, int pagina, int rpp)
         {
@@ -131,7 +132,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         }
         public async Task<IActionResult> NuevoRegistro()
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
@@ -140,7 +141,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.Usuario = userInfo.NombreUsuario;*/
                 var items = await _getSelectItems.Execute();
                 var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
                 acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -168,14 +169,18 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ViewBag.ResiduosSolidosNoPelig = residuos_solidos_np;
                 ViewBag.Usuarios = usuarios;
                 return View();
-            }
+            //}
         }
         [HttpPost]
         public async Task<IActionResult> NuevoRegistro(IngresoSalidaRSModel model)
         {
             if (ModelState.IsValid)
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = new
+                {
+                    NombreUsuario = "kevin"
+                };
 
                 var IdIngresoSalida = await _registrarIngresoSalidaRS.Execute(model.opcion,model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa,model.Responsable_Marcobre,model.Comentario,userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
@@ -184,7 +189,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         }
         public async Task<IActionResult> EditarRegistro(string IdRegistro)
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
@@ -193,7 +198,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.Usuario = userInfo.NombreUsuario;*/
+            var userInfo = new
+            {
+                NombreUsuario = "kevin"
+            };
                 
                 var id_decrypted = Convert.ToInt32(_protector.Unprotect(IdRegistro));
 
@@ -245,14 +254,18 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 model.Permiso = data.Permiso;
 
                 return View(model);
-            }
+            //}
         }
         [HttpPost]
         public async Task<IActionResult> EditarRegistro(IngresoSalidaRSModel model)
         {
             if (ModelState.IsValid)
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = new
+                {
+                    NombreUsuario = "kevin"
+                };
 
                 await _editarIngresoSalidaRS.Execute(model.Id_Ingreso_Salida_RS,model.opcion, model.ACR_CMRS, model.Ingreso_Salida, model.Motivo, model.Residuo_Solido, model.Fecha, model.Responsable_ACR_CMRS, model.Cantidad, model.Empresa, model.Responsable_Marcobre, model.Comentario, userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
@@ -264,8 +277,12 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         {
             if (ModelState.IsValid)
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
+                var userInfo = new
+                {
+                    NombreUsuario = "kevin"
+                };
                 var decrypted_id = Convert.ToInt32(_protector.Unprotect(IdRegistro));
                 await _eliminarRegistroIngresoSalidaRS.Execute(decrypted_id, userInfo.NombreUsuario);
                

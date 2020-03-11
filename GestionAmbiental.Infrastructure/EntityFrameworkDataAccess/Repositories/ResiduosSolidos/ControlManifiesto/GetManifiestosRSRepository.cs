@@ -144,6 +144,67 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<Manifiesto_RS> GetManifiesto_RS_Completo(int IdManifiesto)
+        {
+            var manifiesto = await _context.Manifiesto_RSs.FirstOrDefaultAsync(x => x.Id_Manifiesto_RS.Equals(IdManifiesto));
+
+            var manifiestoResSolid = await _context.Residuos_Solidos.FirstOrDefaultAsync(x => x.Id_Residuo_Solido.Equals(manifiesto.Id_Residuo_Solido));
+            var manifiestoTipoResSolid = await _context.Tipo_Residuos.FirstOrDefaultAsync(x => x.Id_Tipo_Residuo.Equals(manifiestoResSolid.Id_Tipo_Residuo));
+            var manifiestoEORS_Salida = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Salida));
+            var manifiestoEORS_Llegada = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Llegada));
+            var asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(manifiesto.Id_Asesor_MAP));
+
+            var output = new Manifiesto_RS();
+
+            output.Id_Manifiesto_RS = manifiesto.Id_Manifiesto_RS;
+            output.Item = manifiesto.Item;
+            output.Serie_Manifiesto = manifiesto.Serie_Manifiesto;
+            output.Num_Manifiesto = manifiesto.Num_Manifiesto;
+            output.Fecha_Emision_Manifiesto = manifiesto.Fecha_Emision_Manifiesto;
+            output.Observacion_Manifiesto = manifiesto.Observacion_Manifiesto;
+            output.Residuo_Solido = new Residuo_Solido(
+                manifiestoResSolid.Id_Residuo_Solido,
+                new Tipo_Residuo(manifiestoTipoResSolid.Id_Tipo_Residuo, manifiestoTipoResSolid.Descripcion, manifiestoTipoResSolid.Estado),
+                manifiestoResSolid.Descripcion,
+                manifiestoResSolid.Estado);
+            output.Cantidad_RS_Evacuado = manifiesto.Cantidad_RS_Evacuado;
+            output.EO_RS_Salida = new EO_RS(manifiestoEORS_Salida.Id_EO_RS, manifiestoEORS_Salida.Razon_Social, manifiestoEORS_Salida.Estado);
+            output.Registro_EO_RS_Salida = manifiesto.Registro_EO_RS_Salida;
+            output.Fecha_Vencimiento_Registro_Salida = manifiesto.Fecha_Vencimiento_Registro_Salida;
+            output.Num_Autorizacion_Municipal_Salida = manifiesto.Num_Autorizacion_Municipal_Salida;
+            output.Num_Autorizacion_Hoja_Ruta = manifiesto.Num_Autorizacion_Hoja_Ruta;
+            output.Nombre_Conductor = manifiesto.Nombre_Conductor;
+            output.Num_Licencia_Condutor = manifiesto.Num_Licencia_Condutor;
+            output.Placa_Vehiculo = manifiesto.Placa_Vehiculo;
+            output.Capacidad_Vehiculo = manifiesto.Capacidad_Vehiculo ?? 0;
+            output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Estado);
+            output.Registro_EO_RS_Llegada = manifiesto.Registro_EO_RS_Llegada;
+            output.Fecha_Vencimiento_Registro_Llegada = manifiesto.Fecha_Vencimiento_Registro_Llegada;
+            output.Num_Autorizacion_Sanitaria_Llegada = manifiesto.Num_Autorizacion_Sanitaria_Llegada;
+            output.Num_Autorizacion_Municipal_Llegada = manifiesto.Num_Autorizacion_Municipal_Llegada;
+            
+            output.Certificado_Trat_Disp = manifiesto.Certificado_Trat_Disp;
+            output.Cantidad_RS_Dispuesto = manifiesto.Cantidad_RS_Dispuesto;
+            
+            if (manifiesto.Fecha_Devolucion != null)
+                output.Fecha_Devolucion = manifiesto.Fecha_Devolucion.Value;
+            else
+                output.Fecha_Devolucion = null;
+            
+            output.Informe_Transporte = manifiesto.Informe_Transporte;
+            output.Manifiesto = manifiesto.Manifiesto;
+
+            if (asesor != null)
+                output.Asesor_MAP = new Usuario(asesor.Id_Usuario, asesor.Id_Rol, asesor.Nombres, asesor.Apellidos, asesor.Email);
+            else
+                output.Asesor_MAP = null;
+            
+            output.Id_Registrado_Por = manifiesto.Id_Registrado_Por;
+            output.Fecha_Registro = manifiesto.Fecha_Registro;
+            output.Estado = manifiesto.Estado;
+
+            return output;
+        }
         public async Task<string> GetLastItem()
         {
             var data = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();

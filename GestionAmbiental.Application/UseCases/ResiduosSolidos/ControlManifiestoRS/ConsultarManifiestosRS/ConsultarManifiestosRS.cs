@@ -21,6 +21,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
                 fechadt = Convert.ToDateTime(fechaEmision);
             
             var data = await _getManifiestosRSReadOnlyRepository.GetManifiestosRS(nManifiesto, fechadt, observacion, residuoSolido, eors_salida, eors_llegada, asesorMAP);
+            data = data.OrderByDescending(x => x.Item).ToList();
             var output = new ManifiestosRSOutput
             {
                 manifiestosRS = new List<ManifiestoRSOutput>(),
