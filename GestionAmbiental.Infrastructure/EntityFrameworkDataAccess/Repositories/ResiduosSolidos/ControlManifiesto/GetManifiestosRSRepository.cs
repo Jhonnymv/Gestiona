@@ -20,7 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
         public async Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP)
-        {            
+        {
             var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
             var data = manifiestos.Where(x =>
                 x.Num_Manifiesto.Contains(nManifiesto != null ? nManifiesto : x.Num_Manifiesto) &&
@@ -38,6 +38,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var tiposResiduosSolidos = await _context.Tipo_Residuos.ToListAsync();
             var eors = await _context.EO_RSs.ToArrayAsync();
             var usuarios = await _context.Usuarios.ToArrayAsync();
+            var conductores = await _context.Condutores_RS.ToListAsync();
+            var vehiculos = await _context.Vehiculos_RS.ToListAsync();
 
             var output = new List<Manifiesto_RS>();
 
@@ -47,6 +49,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var itemTipoResSolid = tiposResiduosSolidos.FirstOrDefault(x => x.Id_Tipo_Residuo.Equals(itemResSolid.Id_Tipo_Residuo));
                 var itemEORS_Salida = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Salida));
                 var itemEORS_Llegada = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Llegada));
+                var itemConductor = conductores.FirstOrDefault(x => x.Id_Conductor_RS.Equals(item.Id_Conductor_RS));
+                var itemVehiculo = vehiculos.FirstOrDefault(x => x.Id_Vehiculo_RS.Equals(item.Id_Vehiculo_RS));
+
                 //var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor_MAP));
 
                 var outputItem = new Manifiesto_RS();
@@ -62,16 +67,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     itemResSolid.Descripcion,
                     itemResSolid.Estado);
                 outputItem.Cantidad_RS_Evacuado = item.Cantidad_RS_Evacuado;
-                outputItem.EO_RS_Salida = new EO_RS(itemEORS_Salida.Id_EO_RS, itemEORS_Salida.Razon_Social, itemEORS_Salida.Estado);
+                outputItem.EO_RS_Salida = new EO_RS(itemEORS_Salida.Id_EO_RS, itemEORS_Salida.Razon_Social,itemEORS_Salida.Registro, itemEORS_Salida.Fecha_Vencimiento_Registro, itemEORS_Salida.Estado);
                 outputItem.Registro_EO_RS_Salida = item.Registro_EO_RS_Salida;
                 outputItem.Fecha_Vencimiento_Registro_Salida = item.Fecha_Vencimiento_Registro_Salida;
                 outputItem.Num_Autorizacion_Municipal_Salida = item.Num_Autorizacion_Municipal_Salida;
                 outputItem.Num_Autorizacion_Hoja_Ruta = item.Num_Autorizacion_Hoja_Ruta;
-                outputItem.Nombre_Conductor = item.Nombre_Conductor;
+                outputItem.Conductor = itemConductor != null ? new Conductor_RS(itemConductor.Id_Conductor_RS,itemConductor.Nombres,itemConductor.Apellidos,itemConductor.NLicencia,itemConductor.Estado) : new Conductor_RS();
                 outputItem.Num_Licencia_Condutor = item.Num_Licencia_Condutor;
-                outputItem.Placa_Vehiculo = item.Placa_Vehiculo;
+                outputItem.Vehiculo = itemVehiculo != null ? new Vehiculo_RS(itemVehiculo.Id_Vehiculo_RS, itemVehiculo.Placa, itemVehiculo.Capacidad, itemVehiculo.Estado) : new Vehiculo_RS();
                 outputItem.Capacidad_Vehiculo = item.Capacidad_Vehiculo??0;
-                outputItem.EO_RS_Llegada = new EO_RS(itemEORS_Llegada.Id_EO_RS, itemEORS_Llegada.Razon_Social, itemEORS_Llegada.Estado);
+                outputItem.EO_RS_Llegada = new EO_RS(itemEORS_Llegada.Id_EO_RS, itemEORS_Llegada.Razon_Social, itemEORS_Llegada.Registro, itemEORS_Llegada.Fecha_Vencimiento_Registro, itemEORS_Llegada.Estado);
                 outputItem.Registro_EO_RS_Llegada = item.Registro_EO_RS_Llegada;
                 outputItem.Fecha_Vencimiento_Registro_Llegada = item.Fecha_Vencimiento_Registro_Llegada;
                 outputItem.Num_Autorizacion_Sanitaria_Llegada = item.Num_Autorizacion_Sanitaria_Llegada;
@@ -101,6 +106,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var manifiestoEORS_Salida = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Salida));
             var manifiestoEORS_Llegada = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Llegada));
             var asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(manifiesto.Id_Asesor_MAP));
+            var conductor = await _context.Condutores_RS.FirstOrDefaultAsync(x => x.Id_Conductor_RS.Equals(manifiesto.Id_Conductor_RS));
+            var vehiculo = await _context.Vehiculos_RS.FirstOrDefaultAsync(x => x.Id_Vehiculo_RS.Equals(manifiesto.Id_Vehiculo_RS));
 
             var output = new Manifiesto_RS();
 
@@ -116,16 +123,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 manifiestoResSolid.Descripcion,
                 manifiestoResSolid.Estado);
             output.Cantidad_RS_Evacuado = manifiesto.Cantidad_RS_Evacuado;
-            output.EO_RS_Salida = new EO_RS(manifiestoEORS_Salida.Id_EO_RS, manifiestoEORS_Salida.Razon_Social, manifiestoEORS_Salida.Estado);
+            output.EO_RS_Salida = new EO_RS(manifiestoEORS_Salida.Id_EO_RS, manifiestoEORS_Salida.Razon_Social, manifiestoEORS_Salida.Registro, manifiestoEORS_Salida.Fecha_Vencimiento_Registro, manifiestoEORS_Salida.Estado);
             output.Registro_EO_RS_Salida = manifiesto.Registro_EO_RS_Salida;
             output.Fecha_Vencimiento_Registro_Salida = manifiesto.Fecha_Vencimiento_Registro_Salida;
             output.Num_Autorizacion_Municipal_Salida = manifiesto.Num_Autorizacion_Municipal_Salida;
             output.Num_Autorizacion_Hoja_Ruta = manifiesto.Num_Autorizacion_Hoja_Ruta;
-            output.Nombre_Conductor = manifiesto.Nombre_Conductor;
+            output.Conductor = conductor != null ? new Conductor_RS(conductor.Id_Conductor_RS,conductor.Nombres,conductor.Apellidos,conductor.NLicencia,conductor.Estado) : new Conductor_RS();
             output.Num_Licencia_Condutor = manifiesto.Num_Licencia_Condutor;
-            output.Placa_Vehiculo = manifiesto.Placa_Vehiculo;
+            output.Vehiculo = vehiculo != null ? new Vehiculo_RS(vehiculo.Id_Vehiculo_RS, vehiculo.Placa, vehiculo.Capacidad, vehiculo.Estado):new Vehiculo_RS();
             output.Capacidad_Vehiculo = manifiesto.Capacidad_Vehiculo??0;
-            output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Estado);
+            output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Registro, manifiestoEORS_Llegada.Fecha_Vencimiento_Registro, manifiestoEORS_Llegada.Estado);
             output.Registro_EO_RS_Llegada = manifiesto.Registro_EO_RS_Llegada;
             output.Fecha_Vencimiento_Registro_Llegada = manifiesto.Fecha_Vencimiento_Registro_Llegada;
             output.Num_Autorizacion_Sanitaria_Llegada = manifiesto.Num_Autorizacion_Sanitaria_Llegada;
@@ -153,6 +160,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var manifiestoEORS_Salida = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Salida));
             var manifiestoEORS_Llegada = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(manifiesto.Id_EO_RS_Llegada));
             var asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(manifiesto.Id_Asesor_MAP));
+            var conductor = await _context.Condutores_RS.FirstOrDefaultAsync(x => x.Id_Conductor_RS.Equals(manifiesto.Id_Conductor_RS));
+            var vehiculo = await _context.Vehiculos_RS.FirstOrDefaultAsync(x => x.Id_Vehiculo_RS.Equals(manifiesto.Id_Vehiculo_RS));
 
             var output = new Manifiesto_RS();
 
@@ -168,16 +177,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 manifiestoResSolid.Descripcion,
                 manifiestoResSolid.Estado);
             output.Cantidad_RS_Evacuado = manifiesto.Cantidad_RS_Evacuado;
-            output.EO_RS_Salida = new EO_RS(manifiestoEORS_Salida.Id_EO_RS, manifiestoEORS_Salida.Razon_Social, manifiestoEORS_Salida.Estado);
+            output.EO_RS_Salida = new EO_RS(manifiestoEORS_Salida.Id_EO_RS, manifiestoEORS_Salida.Razon_Social, manifiestoEORS_Salida.Registro, manifiestoEORS_Salida.Fecha_Vencimiento_Registro, manifiestoEORS_Salida.Estado);
             output.Registro_EO_RS_Salida = manifiesto.Registro_EO_RS_Salida;
             output.Fecha_Vencimiento_Registro_Salida = manifiesto.Fecha_Vencimiento_Registro_Salida;
             output.Num_Autorizacion_Municipal_Salida = manifiesto.Num_Autorizacion_Municipal_Salida;
             output.Num_Autorizacion_Hoja_Ruta = manifiesto.Num_Autorizacion_Hoja_Ruta;
-            output.Nombre_Conductor = manifiesto.Nombre_Conductor;
+            output.Conductor = conductor != null ? new Conductor_RS(conductor.Id_Conductor_RS, conductor.Nombres, conductor.Apellidos, conductor.NLicencia, conductor.Estado) : new Conductor_RS();
             output.Num_Licencia_Condutor = manifiesto.Num_Licencia_Condutor;
-            output.Placa_Vehiculo = manifiesto.Placa_Vehiculo;
+            output.Vehiculo = vehiculo != null ? new Vehiculo_RS(vehiculo.Id_Vehiculo_RS, vehiculo.Placa, vehiculo.Capacidad, vehiculo.Estado) : new Vehiculo_RS();
             output.Capacidad_Vehiculo = manifiesto.Capacidad_Vehiculo ?? 0;
-            output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Estado);
+            output.EO_RS_Llegada = new EO_RS(manifiestoEORS_Llegada.Id_EO_RS, manifiestoEORS_Llegada.Razon_Social, manifiestoEORS_Llegada.Registro, manifiestoEORS_Llegada.Fecha_Vencimiento_Registro, manifiestoEORS_Llegada.Estado);
             output.Registro_EO_RS_Llegada = manifiesto.Registro_EO_RS_Llegada;
             output.Fecha_Vencimiento_Registro_Llegada = manifiesto.Fecha_Vencimiento_Registro_Llegada;
             output.Num_Autorizacion_Sanitaria_Llegada = manifiesto.Num_Autorizacion_Sanitaria_Llegada;

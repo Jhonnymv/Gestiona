@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository;
     }
-        public async Task<InspeccionCabecera> Execute(int idCabecera,string usuario_red)
+        public async Task<InspeccionCabecera> Execute(int idCabecera, string usuario_red)
         {
             var output = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(idCabecera);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);

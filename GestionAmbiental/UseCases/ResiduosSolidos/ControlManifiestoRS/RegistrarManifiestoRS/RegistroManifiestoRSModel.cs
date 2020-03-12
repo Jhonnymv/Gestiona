@@ -46,11 +46,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
         [DisplayName("Nombre del Conductor:")]
-        public string Nombre_Conductor { get; set; }
+        public int Id_Conductor { get; set; }
         [DisplayName("N° Licencia Especial (A-4):")]
         public string Num_Licencia_Condutor { get; set; }
         [DisplayName("Placa del Vehículo:")]
-        public string Placa_Vehiculo { get; set; }
+        public int Id_Vehiculo { get; set; }
         [DisplayName("Capacidad de Vehículo TM:")]
         public double Capacidad_Vehiculo { get; set; }
         [DisplayName("Nombre de la EO-RS:")]

@@ -37,9 +37,9 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             DateTime Fecha_Vencimiento_Registro_Salida,
             string Num_Autorizacion_Municipal_Salida, 
             string Num_Autorizacion_Hoja_Ruta, 
-            string Nombre_Conductor, 
+            int Id_Conductor,
             string Num_Licencia_Condutor, 
-            string Placa_Vehiculo, 
+            int Id_Vehiculo, 
             double Capacidad_Vehiculo,
             int Id_EO_RS_Llegada,
             string Registro_EO_RS_Llegada,
@@ -76,9 +76,11 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             input.Fecha_Vencimiento_Registro_Salida = Fecha_Vencimiento_Registro_Salida;
             input.Num_Autorizacion_Municipal_Salida = Num_Autorizacion_Municipal_Salida;
             input.Num_Autorizacion_Hoja_Ruta = Num_Autorizacion_Hoja_Ruta;
-            input.Nombre_Conductor = Nombre_Conductor;
+            input.Conductor = new Domain.ValueObjects.Conductor_RS();
+            input.Conductor.Id_Conductor_RS = Id_Conductor;
             input.Num_Licencia_Condutor = Num_Licencia_Condutor;
-            input.Placa_Vehiculo = Placa_Vehiculo;
+            input.Vehiculo = new Domain.ValueObjects.Vehiculo_RS();
+            input.Vehiculo.Id_Vehiculo_RS = Id_Vehiculo;
             input.Capacidad_Vehiculo = Capacidad_Vehiculo;
             input.EO_RS_Llegada = new Domain.ValueObjects.EO_RS();
             input.EO_RS_Llegada.Id_EO_RS = Id_EO_RS_Llegada;

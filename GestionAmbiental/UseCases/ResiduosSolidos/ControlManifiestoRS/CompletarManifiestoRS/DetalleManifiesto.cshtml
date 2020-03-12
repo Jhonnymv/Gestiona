@@ -121,11 +121,12 @@
             <input class="form-control" type="text" asp-for="Num_Autorizacion_Hoja_Ruta" maxlength="10" disabled />
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Nombre_Conductor"></label>
+            <label asp-for="Id_Conductor"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
-            <span class="text-danger" asp-validation-for="Nombre_Conductor"></span>
-            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="250" disabled />
+            <span class="text-danger" asp-validation-for="Id_Conductor"></span>
+            <select class="form-control" asp-items="ViewBag.Conductores" asp-for="Id_Conductor" disabled>
+            </select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -137,11 +138,12 @@
             <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="8" disabled />
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Placa_Vehiculo"></label>
+            <label asp-for="Id_Vehiculo"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
-            <span class="text-danger" asp-validation-for="Placa_Vehiculo"></span>
-            <input class="form-control" type="text" asp-for="Placa_Vehiculo" maxlength="7" disabled />
+            <span class="text-danger" asp-validation-for="Id_Vehiculo"></span>
+            <select class="form-control" asp-items="ViewBag.Vehiculos" asp-for="Id_Vehiculo" disabled>
+            </select>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Capacidad_Vehiculo"></label>

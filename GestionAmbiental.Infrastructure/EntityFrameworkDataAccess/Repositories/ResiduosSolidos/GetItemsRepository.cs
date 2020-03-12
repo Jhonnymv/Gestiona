@@ -46,7 +46,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<EO_RS>();
             foreach (var item in data)
             {
-                output.Add(new EO_RS(item.Id_EO_RS, item.Razon_Social, item.Estado));
+                output.Add(new EO_RS(item.Id_EO_RS, item.Razon_Social,item.Registro,item.Fecha_Vencimiento_Registro, item.Estado));
             }
             return output;
         }
@@ -125,6 +125,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in data)
             {
                 output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
+            }
+            return output;
+        }
+        public async Task<List<Conductor_RS>> GetConductores_RS()
+        {
+            try { var temp = await _context.Condutores_RS.ToListAsync(); } catch(Exception e) { }
+            var data = await _context.Condutores_RS.ToListAsync();
+            var output = new List<Conductor_RS>();
+            foreach (var item in data)
+            {
+                output.Add(new Conductor_RS(item.Id_Conductor_RS,item.Nombres,item.Apellidos,item.NLicencia, item.Estado));
+            }
+            return output;
+        }
+        public async Task<List<Vehiculo_RS>> GetVehiculos_RS()
+        {
+            try { var temp = await _context.Vehiculos_RS.ToListAsync(); } catch(Exception e) { }
+            var data = await _context.Vehiculos_RS.ToListAsync();
+            var output = new List<Vehiculo_RS>();
+            foreach (var item in data)
+            {
+                output.Add(new Vehiculo_RS(item.Id_Vehiculo_RS,item.Placa,item.Capacidad,item.Estado));
             }
             return output;
         }

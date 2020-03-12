@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos
 {
@@ -35,12 +33,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
-        [Column(TypeName = "varchar(250)")]
-        public string Nombre_Conductor { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Conductor_RS { get; set; }
         [Column(TypeName = "varchar(8)")]
         public string Num_Licencia_Condutor { get; set; }
-        [Column(TypeName = "varchar(7)")]
-        public string Placa_Vehiculo { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Vehiculo_RS { get; set; }
         [Column(TypeName = "decimal(6,2)")]
         public double? Capacidad_Vehiculo { get; set; }
         [Column(TypeName = "int")]

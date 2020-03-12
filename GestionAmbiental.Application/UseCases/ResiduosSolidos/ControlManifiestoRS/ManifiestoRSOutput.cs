@@ -24,9 +24,9 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
-        public string Nombre_Conductor { get; set; }
+        public int Id_Conductor { get; set; }
         public string Num_Licencia_Condutor { get; set; }
-        public string Placa_Vehiculo { get; set; }
+        public int Id_Vehiculo { get; set; }
         public double Capacidad_Vehiculo { get; set; }
         public int Id_EO_RS_Llegada { get; set; }
         public string EO_RS_Llegada { get; set; }
@@ -64,9 +64,9 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
             Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
             Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
-            Nombre_Conductor = manifiesto_RS.Nombre_Conductor;
+            Id_Conductor = manifiesto_RS.Conductor.Id_Conductor_RS;
             Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
-            Placa_Vehiculo = manifiesto_RS.Placa_Vehiculo;
+            Id_Vehiculo = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
             Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
             EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Razon_Social;
             Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;

@@ -62,9 +62,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 manifiesto_entity.Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
                 manifiesto_entity.Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
                 manifiesto_entity.Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
-                manifiesto_entity.Nombre_Conductor = manifiesto_RS.Nombre_Conductor;
+                manifiesto_entity.Id_Conductor_RS = manifiesto_RS.Conductor.Id_Conductor_RS;
                 manifiesto_entity.Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
-                manifiesto_entity.Placa_Vehiculo = manifiesto_RS.Placa_Vehiculo;
+                manifiesto_entity.Id_Vehiculo_RS = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
                 manifiesto_entity.Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
                 manifiesto_entity.Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;
                 manifiesto_entity.Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;

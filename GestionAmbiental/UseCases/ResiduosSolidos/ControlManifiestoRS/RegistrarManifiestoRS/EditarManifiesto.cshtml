@@ -47,9 +47,9 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Observacion_Manifiesto"></span>
             <select class="form-control" asp-for="Observacion_Manifiesto" disabled>
-                <option value="0">--SELECCIONE--</option>
-                <option value="1">Conforme</option>
-                <option value="2">Anulado</option>
+                <option value="">--SELECCIONE--</option>
+                <option value="Conforme">Conforme</option>
+                <option value="Anulado">Anulado</option>
             </select>
         </div>
     </div>
@@ -122,11 +122,12 @@
             <input class="form-control" type="text" asp-for="Num_Autorizacion_Hoja_Ruta" maxlength="10" disabled/>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Nombre_Conductor"></label>
+            <label asp-for="Id_Conductor"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
-            <span class="text-danger" asp-validation-for="Nombre_Conductor"></span>
-            <input class="form-control" type="text" asp-for="Nombre_Conductor" maxlength="250" disabled/>
+            <span class="text-danger" asp-validation-for="Id_Conductor"></span>
+            <select class="form-control" asp-items="ViewBag.Conductores" asp-for="Id_Conductor" disabled>
+            </select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -138,11 +139,12 @@
             <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="8" disabled/>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Placa_Vehiculo"></label>
+            <label asp-for="Id_Vehiculo"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
-            <span class="text-danger" asp-validation-for="Placa_Vehiculo"></span>
-            <input class="form-control" type="text" asp-for="Placa_Vehiculo" maxlength="7" disabled/>
+            <span class="text-danger" asp-validation-for="Id_Vehiculo"></span>
+            <select class="form-control" asp-items="ViewBag.Vehiculos" asp-for="Id_Vehiculo" disabled>
+            </select>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Capacidad_Vehiculo"></label>
@@ -200,13 +202,15 @@
         </div>
     </div>
     <div class="row mb-2 justify-content-end">
-        <div class="modal-footer">
-            <a class="btn btn-secondary" style="color:white" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
-            @if (Model.Estado.Equals("Pendiente") && Model.Permiso)
-            {
-                <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
-                <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
-            }
+        <div class="col-12">
+            <div class="modal-footer">
+                <a class="btn btn-secondary" style="color:white" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+                @if (Model.Estado.Equals("Pendiente") && Model.Permiso)
+                {
+                    <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+                    <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+                }
+            </div>
         </div>
     </div>
 </form>
@@ -228,9 +232,9 @@
             $("#Fecha_Vencimiento_Registro_Salida").prop('disabled', false);
             $("#Num_Autorizacion_Municipal_Salida").prop('disabled', false);
             $("#Num_Autorizacion_Hoja_Ruta").prop('disabled', false);
-            $("#Nombre_Conductor").prop('disabled', false);
+            $("#Id_Conductor").prop('disabled', false);
             $("#Num_Licencia_Condutor").prop('disabled', false);
-            $("#Placa_Vehiculo").prop('disabled', false);
+            $("#Id_Vehiculo").prop('disabled', false);
             $("#Capacidad_Vehiculo").prop('disabled', false);
             $("#Id_EO_RS_Llegada").prop('disabled', false);
             $("#Registro_EO_RS_Llegada").prop('disabled', false);
@@ -245,9 +249,9 @@
         });
     $("#btnRegistrar").on('click', function () {
         ReiniciarValMsg();
-        var conductor = $("#Nombre_Conductor").val() != "";
+        var conductor = $("#Id_Conductor").val() != 0;
         var licencia = $("#Num_Licencia_Condutor").val()!="";
-        var placa = $("#Placa_Vehiculo").val() != "";
+        var placa = $("#Id_Vehiculo").val() != 0;
         var capacidad = $("#Capacidad_Vehiculo").val() > 0;
 
         if (conductor && licencia && placa && capacidad) {
@@ -255,11 +259,11 @@
             $("#formManifiestoRS").submit();
         } else {
             if (!conductor)
-                $("[data-valmsg-for='Nombre_Conductor']").html("Debe completar este campo");
+                $("[data-valmsg-for='Id_Conductor']").html("Debe completar este campo");
             if (!licencia)
                 $("[data-valmsg-for='Num_Licencia_Condutor']").html("Debe completar este campo");
             if (!placa)
-                $("[data-valmsg-for='Placa_Vehiculo']").html("Debe completar este campo");
+                $("[data-valmsg-for='Id_Vehiculo']").html("Debe completar este campo");
             if (!capacidad)
                 $("[data-valmsg-for='Capacidad_Vehiculo']").html("Debe completar este campo");
         }

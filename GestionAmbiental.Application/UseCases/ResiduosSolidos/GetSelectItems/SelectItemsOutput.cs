@@ -18,5 +18,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems
         public List<Usuario> ItemsAsesoresMA { get; set; }
         public List<Responsable_ARC_CRMS> ItemsResponsableACR_CMRS { get; set; }
         public List<Gerencia> ItemsGerencia { get; set; }
+        public List<Conductor_RS> ItemsConductor { get; set; }
+        public List<Vehiculo_RS> ItemsVehiculo { get; set; }
     }
 }

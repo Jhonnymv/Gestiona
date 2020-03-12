@@ -84,11 +84,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     filasTabla += "<td>" + fila.Serie_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Num_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Fecha_Emision_Manifiesto.ToString("dd/MM/yyyy") + "</td>";
-                    switch (fila.Observacion_Manifiesto)
-                    {
-                        case "1": filasTabla += "<td>" + "Conforme" + "</td>";break;
-                        case "2": filasTabla += "<td>" + "Anulado" + "</td>";break;
-                    }
+                    filasTabla += "<td>" + fila.Observacion_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Residuo_Solido + "</td>";
                     filasTabla += "<td>" + fila.Cantidad_RS_Evacuado + "</td>";
                     filasTabla += "<td>" + fila.EO_RS_Salida + "</td>";
@@ -135,7 +131,21 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                ViewBag.ResiduosSolidos = residuos_solidos;
+            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres+" "+g.Apellidos }).ToList();
+            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            //Complementos de vehiculo (Para completar automáticamente los demás campos)
+            var compVehiculos = items.ItemsVehiculo.Select(x => new { Id_Vehiculo_RS = x.Id_Vehiculo_RS, Capacidad = x.Capacidad}).ToList();
+            //Complementos de conductor (Para completar automáticamente los demás campos)
+            var compConductores = items.ItemsConductor.Select(x => new { Id_Conductor_RS = x.Id_Conductor_RS,NLicencia = x.NLicencia }).ToList();
+            //Complementos de EO-RS (Para completar automáticamente los demás campos)
+            var compEO_RS = items.ItemsEO_RS.Select(x => new { Id_EO_RS = x.Id_EO_RS, Registro = x.Registro, Fecha_Vencimiento_Registro = x.Fecha_Vencimiento_Registro}).ToList();
+
+            ViewBag.Conductores = conductores;
+            ViewBag.Vehiculos = vehiculos;
+            ViewBag.ResiduosSolidos = residuos_solidos;
                 ViewBag.EO_RS = eo_rs;
 
                 return View();
@@ -161,9 +171,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     model.Fecha_Vencimiento_Registro_Salida,
                     model.Num_Autorizacion_Municipal_Salida,
                     model.Num_Autorizacion_Hoja_Ruta,
-                    model.Nombre_Conductor,
+                    model.Id_Conductor,
                     model.Num_Licencia_Condutor,
-                    model.Placa_Vehiculo,
+                    model.Id_Vehiculo,
                     model.Capacidad_Vehiculo,
                     model.Id_EO_RS_Llegada,
                     model.Registro_EO_RS_Llegada,
@@ -204,9 +214,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
             model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
             model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
             //Conductor
-            model.Nombre_Conductor = data.Nombre_Conductor;
+            model.Id_Conductor = data.Id_Conductor;
             model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
-            model.Placa_Vehiculo = data.Placa_Vehiculo;
+            model.Id_Vehiculo = data.Id_Vehiculo;
             model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
             model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
             model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
@@ -222,7 +232,14 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                ViewBag.ResiduosSolidos = residuos_solidos;
+            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.Conductores = conductores;
+            ViewBag.Vehiculos = vehiculos;
+            ViewBag.ResiduosSolidos = residuos_solidos;
                 ViewBag.EO_RS = eo_rs;
 
 
@@ -250,9 +267,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     model.Fecha_Vencimiento_Registro_Salida,
                     model.Num_Autorizacion_Municipal_Salida,
                     model.Num_Autorizacion_Hoja_Ruta,
-                    model.Nombre_Conductor,
+                    model.Id_Conductor,
                     model.Num_Licencia_Condutor,
-                    model.Placa_Vehiculo,
+                    model.Id_Vehiculo,
                     model.Capacidad_Vehiculo,
                     model.Id_EO_RS_Llegada,
                     model.Registro_EO_RS_Llegada,

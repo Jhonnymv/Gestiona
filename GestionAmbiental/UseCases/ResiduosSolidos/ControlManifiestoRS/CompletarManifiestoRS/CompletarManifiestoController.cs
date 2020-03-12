@@ -147,9 +147,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
             model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
             //Conductor
-            model.Nombre_Conductor = data.Nombre_Conductor;
+            model.Id_Conductor = data.Id_Conductor;
             model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
-            model.Placa_Vehiculo = data.Placa_Vehiculo;
+            model.Id_Vehiculo = data.Id_Vehiculo;
             model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
             model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
             model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
@@ -210,9 +210,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
             model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
             //Conductor
-            model.Nombre_Conductor = data.Nombre_Conductor;
+            model.Id_Conductor = data.Id_Conductor;
             model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
-            model.Placa_Vehiculo = data.Placa_Vehiculo;
+            model.Id_Vehiculo = data.Id_Vehiculo;
             model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
             model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
             model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;

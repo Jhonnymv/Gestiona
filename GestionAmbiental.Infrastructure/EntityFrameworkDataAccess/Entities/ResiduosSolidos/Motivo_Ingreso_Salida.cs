@@ -15,6 +15,5 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Descripcion { get; set; }
         [Column(TypeName = "varchar(6)")]
         public string Estado { get; set; }
-
     }
 }
