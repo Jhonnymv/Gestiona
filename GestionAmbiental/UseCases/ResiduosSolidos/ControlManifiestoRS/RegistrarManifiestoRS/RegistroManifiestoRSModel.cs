@@ -28,7 +28,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Residuo_Solido { get; set; }
         [DisplayName("Cantidad Residuo Evacuado y Transportado TM:")]
-        [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad_RS_Evacuado { get; set; }
         [DisplayName("Nombre de EO-RS:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]

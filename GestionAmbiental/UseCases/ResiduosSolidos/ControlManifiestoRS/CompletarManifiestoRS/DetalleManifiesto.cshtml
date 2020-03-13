@@ -46,9 +46,9 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Observacion_Manifiesto"></span>
             <select class="form-control" asp-for="Observacion_Manifiesto" disabled>
-                <option value="0">--SELECCIONE--</option>
-                <option value="1">Conforme</option>
-                <option value="2">Anulado</option>
+                <option value="">--SELECCIONE--</option>
+                <option value="Conforme">Conforme</option>
+                <option value="Anulado">Anulado</option>
             </select>
         </div>
     </div>
@@ -204,7 +204,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Id_Asesor"></span>
-            <select class="form-control" asp-items="ViewBag.AsesoresMAP" asp-for="Id_Asesor">
+            <select class="form-control" asp-items="ViewBag.AsesoresMAP" asp-for="Id_Asesor" disabled>
             </select>
         </div>
     </div>
@@ -214,14 +214,14 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Fecha_Devolucion"></span>
-            <input class="form-control" type="date" asp-for="Fecha_Devolucion" />
+            <input class="form-control" type="date" asp-for="Fecha_Devolucion"disabled />
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Cantidad_RS_Dispuesto"></label>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Cantidad_RS_Dispuesto"></span>
-            <input class="form-control" type="number" asp-for="Cantidad_RS_Dispuesto" min="0" max="999999" />
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Dispuesto" min="0" max="999999" disabled/>
         </div>
     </div>
     <div class="row mb-2 justify-content-start">

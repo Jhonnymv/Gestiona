@@ -22,10 +22,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Manifiesto_RS>> GetManifiestosRS(string nManifiesto, DateTime? fechaEmision, string observacion, int residuoSolido, int eors_salida, int eors_llegada, int asesorMAP)
         {
             var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
+           
             var data = manifiestos.Where(x =>
                 x.Num_Manifiesto.Contains(nManifiesto != null ? nManifiesto : x.Num_Manifiesto) &&
                 x.Fecha_Emision_Manifiesto.Equals(fechaEmision != null ? fechaEmision.Value : x.Fecha_Emision_Manifiesto) &&
-                x.Observacion_Manifiesto.Equals(observacion!="0"?observacion:x.Observacion_Manifiesto) &&
+                x.Observacion_Manifiesto.Equals(observacion!=null?observacion:x.Observacion_Manifiesto) &&
                 x.Id_Residuo_Solido.Equals(residuoSolido!=0?residuoSolido:x.Id_Residuo_Solido)&&
                 x.Id_EO_RS_Salida.Equals(eors_salida!=0?eors_salida:x.Id_EO_RS_Salida)&&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada!=0? eors_llegada : x.Id_EO_RS_Llegada)&&
@@ -216,7 +217,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetLastItem()
         {
-            var data = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
+            var data = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString()) || x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())).OrderBy(x => x.Item).LastOrDefaultAsync();
             if (data != null)
                 return data.Item;
             else

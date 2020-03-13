@@ -138,15 +138,18 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
 
             //Complementos de vehiculo (Para completar automáticamente los demás campos)
             var compVehiculos = items.ItemsVehiculo.Select(x => new { Id_Vehiculo_RS = x.Id_Vehiculo_RS, Capacidad = x.Capacidad}).ToList();
+            ViewBag.ComVehiculos = JsonConvert.SerializeObject(compVehiculos);
             //Complementos de conductor (Para completar automáticamente los demás campos)
             var compConductores = items.ItemsConductor.Select(x => new { Id_Conductor_RS = x.Id_Conductor_RS,NLicencia = x.NLicencia }).ToList();
+            ViewBag.CompConductores = JsonConvert.SerializeObject(compConductores);
             //Complementos de EO-RS (Para completar automáticamente los demás campos)
-            var compEO_RS = items.ItemsEO_RS.Select(x => new { Id_EO_RS = x.Id_EO_RS, Registro = x.Registro, Fecha_Vencimiento_Registro = x.Fecha_Vencimiento_Registro}).ToList();
+            var compEO_RS = items.ItemsEO_RS.Select(x => new { Id_EO_RS = x.Id_EO_RS, Registro = x.Registro, Fecha_Vencimiento_Registro = x.Fecha_Vencimiento_Registro.ToString("yyyy-MM-dd")}).ToList();
+            ViewBag.CompEORS = JsonConvert.SerializeObject(compEO_RS);
 
             ViewBag.Conductores = conductores;
             ViewBag.Vehiculos = vehiculos;
             ViewBag.ResiduosSolidos = residuos_solidos;
-                ViewBag.EO_RS = eo_rs;
+            ViewBag.EO_RS = eo_rs;
 
                 return View();
             //}

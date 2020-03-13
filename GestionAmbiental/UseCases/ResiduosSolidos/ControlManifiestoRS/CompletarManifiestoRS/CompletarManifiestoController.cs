@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestoRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestosRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EditarManifiestoRS.CompletarManifiestoRS;
@@ -18,6 +10,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Renci.SshNet;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.CompletarManifiestoRS
 {
@@ -74,20 +74,21 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 {
                     var id_encriptado = _protector.Protect(fila.Id_Manifiesto_RS.ToString());
                     filasTabla += "<tr>";
-
                     if (fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()))
+                    {
+                        filasTabla += "<td></td>";
                         filasTabla += "<td><a href=\"/CompletarManifiesto/DetalleManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
+                    }
                     else
+                    {
+                        filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                         filasTabla += "<td><a href=\"/CompletarManifiesto/CompletarManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
+                    }
 
                     filasTabla += "<td>" + fila.Serie_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Num_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Fecha_Emision_Manifiesto.ToString("dd/MM/yyyy") + "</td>";
-                    switch (fila.Observacion_Manifiesto)
-                    {
-                        case "1": filasTabla += "<td>" + "Conforme" + "</td>"; break;
-                        case "2": filasTabla += "<td>" + "Anulado" + "</td>"; break;
-                    }
+                    filasTabla += "<td>" + fila.Observacion_Manifiesto + "</td>";
                     filasTabla += "<td>" + fila.Residuo_Solido + "</td>";
                     filasTabla += "<td>" + fila.Cantidad_RS_Evacuado + "</td>";
                     filasTabla += "<td>" + fila.EO_RS_Salida + "</td>";
@@ -165,7 +166,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Certificado = data.Certificado_Trat_Disp;
             model.Informe_Transporte = data.Informe_Transporte;
             model.Manifiesto_Doc = data.Manifiesto;
-            
+
             var items = await _getSelectItems.Execute();
             var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
             residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -174,6 +175,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
             asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.Conductores = conductores;
+            ViewBag.Vehiculos = vehiculos;
             ViewBag.ResiduosSolidos = residuos_solidos;
             ViewBag.EO_RS = eo_rs;
             ViewBag.AsesoresMAP = asesores_map;
@@ -220,16 +228,30 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
             model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
             model.Estado = data.Estado;
-            model.Permiso = data.Permiso;              
-            
+            model.Permiso = data.Permiso;
+            //Asesor
+            model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto > 0 ? data.Cantidad_RS_Dispuesto : 0;
+            model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
+            model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
+            //INICIALIZAR VARIABLE CON UN VALOR
+            model.Certificado_Lleno = data.Certificado_Trat_Disp;
+            model.Informe_Transporte_Lleno = data.Informe_Transporte;
+            model.Manifiesto_Doc_Lleno = data.Manifiesto;
+
             var items = await _getSelectItems.Execute();
             var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
             residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
             eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesores_map = items.ItemsAsesoresMA.OrderBy(x=>x.Nombres).Select(x=> new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres+ " "+x.Apellidos }).ToList();
+            var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
             asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            ViewBag.Conductores = conductores;
+            ViewBag.Vehiculos = vehiculos;
             ViewBag.ResiduosSolidos = residuos_solidos;
             ViewBag.EO_RS = eo_rs;
             ViewBag.AsesoresMAP = asesores_map;
@@ -243,14 +265,14 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             if (ModelState.IsValid)
             {
                 //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
+
                 var certificados = new List<string>();
                 var informes = new List<string>();
                 var manifiesto = new List<string>();
+                var max_file_size = 8388608;
 
-                if (model.Certificado != null && model.Informe_Transporte != null && model.Manifiesto_Doc != null)
+                if (model.Certificado != null)
                 {
-                    var max_file_size = 8388608;
                     for (int i = 0; i < model.Certificado.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Certificado[i].FileName);
@@ -260,10 +282,17 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         if (allowed_extensions.Contains(extension) && model.Certificado[i].Length < max_file_size)
                         {
                             var newfileName = CreateUniqueFileName("cert") + ".zip";
-                            var filePath = await UploadZipFileAsync(model.Certificado[i], newfileName,"cert");
+                            var filePath = await UploadZipFileAsync(model.Certificado[i], newfileName, "cert");
                             certificados.Add(filePath);
                         }
                     }
+                }
+                else if(model.Certificado_Lleno!=null && model.Certificado_Lleno.Count > 0)
+                {
+                    certificados.AddRange(model.Certificado_Lleno);
+                }
+                if (model.Informe_Transporte != null)
+                {
                     for (int i = 0; i < model.Informe_Transporte.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Informe_Transporte[i].FileName);
@@ -277,6 +306,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                             informes.Add(filePath);
                         }
                     }
+                }
+                else if (model.Informe_Transporte_Lleno != null && model.Informe_Transporte_Lleno.Count > 0)
+                {
+                    informes.AddRange(model.Informe_Transporte_Lleno);
+                }
+                if (model.Manifiesto_Doc != null)
+                {
                     for (int i = 0; i < model.Manifiesto_Doc.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Manifiesto_Doc[i].FileName);
@@ -291,20 +327,44 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
+                else if (model.Manifiesto_Doc_Lleno != null && model.Manifiesto_Doc_Lleno.Count > 0)
+                {
+                    manifiesto.AddRange(model.Manifiesto_Doc_Lleno);
+                }
 
                 await _completarManifiestoRS.Execute(
                     model.Id_Manifiesto_RS,
+                    model.opcion,
+                    model.Serie_Manifiesto,
+                    model.Num_Manifiesto,
+                    model.Fecha_Emision_Manifiesto,
+                    model.Observacion_Manifiesto,
+                    model.Id_Residuo_Solido,
+                    model.Cantidad_RS_Evacuado,
+                    model.Id_EO_RS_Salida,
+                    model.Registro_EO_RS_Salida,
+                    model.Fecha_Vencimiento_Registro_Salida,
+                    model.Num_Autorizacion_Municipal_Salida,
+                    model.Num_Autorizacion_Hoja_Ruta,
+                    model.Id_Conductor,
+                    model.Num_Licencia_Condutor,
+                    model.Id_Vehiculo,
+                    model.Capacidad_Vehiculo,
+                    model.Id_EO_RS_Llegada,
+                    model.Registro_EO_RS_Llegada,
+                    model.Fecha_Vencimiento_Registro_Llegada,
+                    model.Num_Autorizacion_Sanitaria_Llegada,
+                    model.Num_Autorizacion_Municipal_Llegada,
                     certificados,
                     model.Cantidad_RS_Dispuesto,
                     model.Fecha_Devolucion,
                     informes,
                     manifiesto,
                     model.Id_Asesor,
-                    "kevin"
-                    );                
+                    "kevin");
                 return RedirectToAction("Resumen");
             }
-            return RedirectToAction("NuevoManifiesto");
+            return RedirectToAction("CompletarManifiesto",new { IdManifiesto = model.Id_Encriptado });
         }
 
         private string CreateUniqueFileName(string tipo)
@@ -340,7 +400,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 {".zip","application/zip" }
             };
         }
-        public async Task<IActionResult> Download(string fileName,string tipo)
+        public async Task<IActionResult> Download(string fileName, string tipo)
         {
             /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -355,36 +415,36 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 NombreUsuario = "kevin",
 
             };
-                try
+            try
+            {
+                var encryptedFile = await DownloadFTPFileAsync(fileName, tipo);
+
+                /* Save encrypted file in temp path*/
+                var tempPath = Path.GetTempPath();
+
+                var SGATempPath = tempPath + "SGA-Marcobre\\";
+                if (!Directory.Exists(SGATempPath))
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName,tipo);
-
-                    /* Save encrypted file in temp path*/
-                    var tempPath = Path.GetTempPath();
-
-                    var SGATempPath = tempPath + "SGA-Marcobre\\";
-                    if (!Directory.Exists(SGATempPath))
-                    {
-                        Directory.CreateDirectory(SGATempPath);
-                    }
-                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-
-                    /*decrypt file*/
-                    var decryptedFileName = "desencriptado.zip";
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
-                    /*read decrypted file*/
-                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
-
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    Directory.CreateDirectory(SGATempPath);
                 }
-                catch (Exception e)
-                {
-                    return Content("No se encontró el archivo: " + e.Message);
-                }
+                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                /*decrypt file*/
+                var decryptedFileName = "desencriptado.zip";
+                await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                /*read decrypted file*/
+                FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                return File(stream, GetContentType(decryptedFileName), fileName);
+            }
+            catch (Exception e)
+            {
+                return Content("No se encontró el archivo: " + e.Message);
+            }
             //}
         }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName,string tipo)
+        public async Task<string> UploadFTPFileAsync(string path, string newFileName, string tipo)
         {
             /*if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return "NoAutorizado";
@@ -393,39 +453,39 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             Tipo_Info_SGA directorio;
             switch (tipo)
             {
-                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC;break;
-                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI;break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM;break;
+                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
             }
-                var serverInfo = await _info_SGA.Execute(directorio);
+            var serverInfo = await _info_SGA.Execute(directorio);
 
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
                 {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
                 }
+            }
 
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+                using (FileStream fs = System.IO.File.OpenRead(path))
                 {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();
+                    sftp.UploadFile(fs, newFileName, true);
                 }
-                return newFileName;
+                sftp.Dispose();
+            }
+            return newFileName;
             //}
         }
-        public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName,string tipo)
+        public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
         {
             /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -438,49 +498,50 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;*/
 
-            var userInfo = new {
+            var userInfo = new
+            {
                 NombreUsuario = "kevin"
             };
 
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath + "SGA-Marcobre/";
+            if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+            var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
+            var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath, true);
+            }
+            if (Directory.Exists(archivePath))
+            {
+                Directory.Delete(archivePath, true);
+            }
 
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
+            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(archivePath);
 
-                var fileName = filePath + file.FileName;
-                if (file.Length > 0)
-                {
-                    var stream = new FileStream(fileName, FileMode.Create);
-                    //CopyToAsync corrompe los archivos
-                    file.CopyTo(stream);
-                    stream.Close();
-                }
-                ZipFile.CreateFromDirectory(filePath, archiveFile);
+            var fileName = filePath + file.FileName;
+            if (file.Length > 0)
+            {
+                var stream = new FileStream(fileName, FileMode.Create);
+                //CopyToAsync corrompe los archivos
+                file.CopyTo(stream);
+                stream.Close();
+            }
+            ZipFile.CreateFromDirectory(filePath, archiveFile);
 
-                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
-                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
-                
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName,tipo);
-           // }
+            var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
+            await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
+
+            return await UploadFTPFileAsync(encryptedArchiveFile, newFileName, tipo);
+            // }
         }
-        public async Task<string> DownloadFTPFileAsync(string fileName,string tipo)
+        public async Task<string> DownloadFTPFileAsync(string fileName, string tipo)
         {
             /*if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -493,66 +554,66 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             {
                 NombreUsuario = "kevin"
             };
-                Tipo_Info_SGA directorio;
-                switch (tipo)
+            Tipo_Info_SGA directorio;
+            switch (tipo)
+            {
+                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
+            }
+            var serverInfo = await _info_SGA.Execute(directorio);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
                 {
-                    case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
-                    case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
-                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
                 }
-                var serverInfo = await _info_SGA.Execute(directorio);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+            }
 
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+            /* Save file in application server to decrypt */
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath + "SGA-Marcobre/";
+            if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+            var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath, true);
+            }
+            if (Directory.Exists(archivePath))
+            {
+                Directory.Delete(archivePath, true);
+            }
 
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
+            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(archivePath);
+            /*New file downloaded name*/
+            var downloadedFilePath = archivePath + fileName;
+            /*Copy data to new temp file*/
+            var fileStream = System.IO.File.Create(downloadedFilePath);
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
 
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
+                //Descargar archivo de sftp a nuevo archivo temporal creado
+                sftp.DownloadFile(fileName, fileStream);
 
-                    sftp.Dispose();
-                }
-                //ftpStream.CopyTo(fileStream);
-                fileStream.Close();
+                sftp.Dispose();
+            }
+            //ftpStream.CopyTo(fileStream);
+            fileStream.Close();
 
-                return downloadedFilePath;
+            return downloadedFilePath;
             //}
         }
         private async Task EncryptFileAsync(string inputFile, string outputFile)

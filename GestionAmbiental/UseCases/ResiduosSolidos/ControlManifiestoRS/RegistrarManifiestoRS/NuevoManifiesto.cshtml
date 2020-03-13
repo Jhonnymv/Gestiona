@@ -210,6 +210,41 @@
 </form>
 @section Scripts{ 
 <script type="text/javascript">
+    $("#Id_EO_RS_Salida").on('change', function () {
+        var eors = '@ViewBag.CompEORS'
+        var arrEORS = JSON.parse(eors.replace(/&quot;/g, '"'));
+        for (var i = 0; i < arrEORS.length; i++)
+            if (arrEORS[i].Id_EO_RS == $("#Id_EO_RS_Salida").val()) {
+                $("#Registro_EO_RS_Salida").val(arrEORS[i].Registro)
+                $("#Fecha_Vencimiento_Registro_Salida").val(arrEORS[i].Fecha_Vencimiento_Registro)
+            }
+    });
+    $("#Id_EO_RS_Llegada").on('change', function () {
+        var eors = '@ViewBag.CompEORS'
+        var arrEORS = JSON.parse(eors.replace(/&quot;/g, '"'));
+        for (var i = 0; i < arrEORS.length; i++)
+            if (arrEORS[i].Id_EO_RS == $("#Id_EO_RS_Llegada").val()) {
+                $("#Registro_EO_RS_Llegada").val(arrEORS[i].Registro)
+                $("#Fecha_Vencimiento_Registro_Llegada").val(arrEORS[i].Fecha_Vencimiento_Registro)
+            }
+    });
+    $("#Id_Vehiculo").on('change', function () {
+        var Vehiculos = '@ViewBag.ComVehiculos'
+        var arrVehiculos = JSON.parse(Vehiculos.replace(/&quot;/g,'"'))
+        for (var i = 0; i < arrVehiculos.length; i++)
+            if (arrVehiculos[i].Id_Vehiculo_RS == $("#Id_Vehiculo").val()) {
+                $("#Capacidad_Vehiculo").val(arrVehiculos[i].Capacidad)
+            }
+    });
+    $("#Id_Conductor").on('change', function () {
+        var Conductor = '@ViewBag.CompConductores'
+        var arrConductor = JSON.parse(Conductor.replace(/&quot;/g, '"'))
+        for (var i = 0; i < arrConductor.length; i++)
+            if (arrConductor[i].Id_Conductor_RS == $("#Id_Conductor").val()) {
+                $("#Num_Licencia_Condutor").val(arrConductor[i].NLicencia)
+            }
+    });
+
      $("#btnGuardarEstado").on('click', function () {
             $("#opcion").val("GuardarEstado");
             $("#formManifiestoRS").submit();
