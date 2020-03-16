@@ -289,6 +289,7 @@
                 <a class="btn btn-secondary" style="color:white" asp-controller="CompletarManifiesto" asp-action="Resumen">Cancelar</a>
                 @if (Model.Estado.Equals("Registrado") && Model.Permiso)
                 {
+                    <a id="btnEliminar" class="btn btn-danger" asp-controller="CompletarManifiesto" asp-action="EliminarManifiesto" asp-route-IdManifiesto="@Model.Id_Encriptado">Eliminar</a>
                     <button id="btnGuardar" type="button" class="btn btn-primary">Guardar Estado</button>
                     <button id="btnCompletar" type="button" class="btn btn-primary">Completar</button>
                 }
@@ -464,7 +465,19 @@
             $("#formCompletarManifiesto").submit();
         });
         $("#btnCompletar").click(function () {
-            if (($("#Certificado").val() != "" && $("#Informe_Transporte").val() != "" && $("#Manifiesto_Doc") != "")) {
+            var certificado = false;
+            var informe = false;
+            var manifiesto = false;
+
+            if ($("#Certificado").val() != "" || $("#Certificado_Lleno").val() != "")
+                certificado = true;
+            if ($("#Informe_Transporte").val() != "" || $("#Informe_Transporte_Lleno").val() != "")
+                informe = true;
+            if ($("#Manifiesto_Doc").val() != "" || $("#Manifiesto_Doc_Lleno").val() != "")
+                manifiesto = true;
+
+
+            if (certificado && informe && manifiesto) {
                 $("#opcion").val("Completar");
                 $("#formCompletarManifiesto").submit();
             }

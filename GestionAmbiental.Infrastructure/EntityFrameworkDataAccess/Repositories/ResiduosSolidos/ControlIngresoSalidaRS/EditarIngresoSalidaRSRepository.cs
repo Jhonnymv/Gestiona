@@ -1,7 +1,9 @@
 ﻿using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.ResiduosSolidos;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-        public async Task EditarIngresoSalidaRS(Ingreso_Salida_RS ingreso_Salida_RS, int Id_Editado_Por)
+        public async Task EditarIngresoSalidaRS(Domain.ResiduosSolidos.Ingreso_Salida_RS ingreso_Salida_RS, int Id_Editado_Por)
         {
             var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(ingreso_Salida_RS.Id_Ingreso_Salida_RS));
 
@@ -46,6 +48,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Ingresos_Salidas_RS.Update(entity);
             await _context.SaveChangesAsync();
 
+            var log = new Log_Ingreso_Salida_RS();
+            var bkp = JsonConvert.SerializeObject(entity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Ingreso_Salida_RS = entity.Id_Ingreso_Salida_RS;
+            log.Id_Usuario = Id_Editado_Por;
+            log.Tipo = TipoAccion.DELETE.ToString();
+
+            _context.Log_Ingreso_Salida_RSs.Add(log);
+            await _context.SaveChangesAsync();
 
         }
 

@@ -2,6 +2,7 @@
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestoRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestosRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EditarManifiestoRS.CompletarManifiestoRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EliminarManifiestoRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
@@ -27,6 +28,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         private readonly IConsultarManifiestosRSCierre _consultarManifiestosRS;
         private readonly IConsultarManifiestoRSCierre _consultarManifiestoRS;
         private readonly ICompletarManifiestoRS _completarManifiestoRS;
+        private readonly IEliminarManifiestoRS _eliminarManifiestoRS;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
 
@@ -36,12 +38,14 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             IConsultarManifiestoRSCierre consultarManifiestoRS,
             ICompletarManifiestoRS completarManifiestoRS,
             IDataProtectionProvider dataProtectionProvider,
+            IEliminarManifiestoRS eliminarManifiestoRS,
             IGetInfo_SGA info_SGA,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getSelectItems = getSelectItems;
             _consultarManifiestosRS = consultarManifiestosRS;
             _consultarManifiestoRS = consultarManifiestoRS;
+            _eliminarManifiestoRS = eliminarManifiestoRS;
             _info_SGA = info_SGA;
             _completarManifiestoRS = completarManifiestoRS;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoResiduosPeligrosSIdRouteValue);
@@ -366,7 +370,12 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             }
             return RedirectToAction("CompletarManifiesto",new { IdManifiesto = model.Id_Encriptado });
         }
-
+        public async Task<IActionResult> EliminarManifiesto(string IdManifiesto)
+        {
+            var Id_Decrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
+            await _eliminarManifiestoRS.Execute(Id_Decrypted, "kevin");
+            return RedirectToAction("Resumen");
+        }
         private string CreateUniqueFileName(string tipo)
         {
             switch (tipo)
