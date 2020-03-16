@@ -86,7 +86,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             
             Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
             Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
-            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            if (manifiesto_RS.Informe_Transporte != null)
             {
                 var informes = JArray.Parse(manifiesto_RS.Informe_Transporte);
                 Informe_Transporte = new List<string>();
@@ -95,7 +95,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
                     Informe_Transporte.Add((string)evidencia);
                 }
             }
-            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            if (manifiesto_RS.Manifiesto != null)
             {
                 var manifiestos = JArray.Parse(manifiesto_RS.Manifiesto);
                 Manifiesto = new List<string>();

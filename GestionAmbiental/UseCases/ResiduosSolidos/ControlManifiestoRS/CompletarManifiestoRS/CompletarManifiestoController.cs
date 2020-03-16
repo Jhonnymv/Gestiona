@@ -233,10 +233,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto > 0 ? data.Cantidad_RS_Dispuesto : 0;
             model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
             model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
-            //INICIALIZAR VARIABLE CON UN VALOR
-            model.Certificado_Lleno = data.Certificado_Trat_Disp;
-            model.Informe_Transporte_Lleno = data.Informe_Transporte;
-            model.Manifiesto_Doc_Lleno = data.Manifiesto;
+            
+            model.Certificado_Lleno = data.Certificado_Trat_Disp.Count>0? data.Certificado_Trat_Disp:null;
+            model.Informe_Transporte_Lleno = data.Informe_Transporte.Count>0?data.Informe_Transporte:null;
+            model.Manifiesto_Doc_Lleno = data.Manifiesto.Count>0?data.Manifiesto:null;
 
             var items = await _getSelectItems.Execute();
             var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();

@@ -11,7 +11,7 @@
 </div>
 <form id="formCompletarManifiesto" class="form-group" asp-action="CompletarManifiesto" asp-controller="CompletarManifiesto" method="post" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" asp-for="Id_Manifiesto_RS" />
-    <input type="hidden" asp-for="Id_Encriptado"/>
+    <input type="hidden" asp-for="Id_Encriptado" />
     <input type="hidden" asp-for="opcion" />
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
@@ -240,9 +240,9 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_certificado">0 Archivos</label>
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Certificado_Lleno!=null)
+        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Certificado_Lleno != null)
         {
-            <input type="hidden" asp-for="@Model.Certificado_Lleno"/>
+            <input type="hidden" asp-for="@Model.Certificado_Lleno" />
             <div class="col-sm-12 col-md-4 col-lg-4">
                 @foreach (var item in Model.Certificado_Lleno)
                 {
@@ -266,7 +266,7 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_informe">0 Archivos</label>
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Informe_Transporte_Lleno!=null)
+        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Informe_Transporte_Lleno != null)
         {
             <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
             <div class="col-sm-12 col-md-4 col-lg-4">
@@ -291,7 +291,7 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_manifiesto">0 Archivos</label>
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Manifiesto_Doc_Lleno!=null)
+        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Manifiesto_Doc_Lleno != null)
         {
             <input type="hidden" asp-for="@Model.Manifiesto_Doc_Lleno" />
             <div class="col-sm-12 col-md-4 col-lg-4">
