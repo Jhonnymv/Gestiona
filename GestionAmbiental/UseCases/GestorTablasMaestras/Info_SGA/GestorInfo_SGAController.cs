@@ -28,7 +28,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
 
         public IActionResult Info_SGA()
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
             else
             {
@@ -40,13 +40,13 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                     ViewBag.Rol = userInfo.Rol.ToString();
                     return View();
                 }
-            }
+            }*/
             return View();
         }
         [HttpPost]
         public async Task<IActionResult> Info_SGA(string filtro, int pagina, int rpp)
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
             else
             {
@@ -54,7 +54,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
                     return RedirectToAction("NoAutorizado", "Home");
                 else
-                {
+                {*/
                     var data = await _getInfo_SGAs.Execute(filtro, pagina, rpp);
                     var filasTabla = "";
                     var paginador = "";
@@ -90,12 +90,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                         Paginador = paginador
                     };
                     return Ok(response);
-                }
-            }
+                //}
+            //}
         }
         public async Task<IActionResult> DetalleInfo_SGA(int IdInfo)
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
             else
             {
@@ -104,7 +104,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                     return RedirectToAction("NoAutorizado", "Home");
                 else
                 {
-                    ViewBag.Rol = userInfo.Rol.ToString();
+                    ViewBag.Rol = userInfo.Rol.ToString();*/
                     var info = (Tipo_Info_SGA)Enum.ToObject(typeof(Tipo_Info_SGA), IdInfo);
                     var data = await _getInfo_SGA.Execute(info);
                     var infoJson = "";
@@ -124,8 +124,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                         Tipo = data.Tipo
                     };
                     return View(model);
-                 }
-            }
+                 //}
+            //}
         }
         [HttpPost]
         public async Task<IActionResult> EditarInfo_SGA(Info_SGAModel model)

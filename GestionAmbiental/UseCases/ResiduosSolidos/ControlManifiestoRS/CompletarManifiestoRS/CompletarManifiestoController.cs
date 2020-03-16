@@ -233,10 +233,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto > 0 ? data.Cantidad_RS_Dispuesto : 0;
             model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
             model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
-            
-            model.Certificado_Lleno = data.Certificado_Trat_Disp.Count>0? data.Certificado_Trat_Disp:null;
-            model.Informe_Transporte_Lleno = data.Informe_Transporte.Count>0?data.Informe_Transporte:null;
-            model.Manifiesto_Doc_Lleno = data.Manifiesto.Count>0?data.Manifiesto:null;
+
+            model.Certificado_Lleno = data.Certificado_Trat_Disp != null ? JsonConvert.SerializeObject(data.Certificado_Trat_Disp):null;
+            model.Informe_Transporte_Lleno = data.Informe_Transporte != null ? JsonConvert.SerializeObject(data.Informe_Transporte):null;
+            model.Manifiesto_Doc_Lleno = data.Manifiesto != null? JsonConvert.SerializeObject(data.Manifiesto) : null;
 
             var items = await _getSelectItems.Execute();
             var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
@@ -287,9 +287,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if(model.Certificado_Lleno!=null && model.Certificado_Lleno.Count > 0)
+                else if(model.Certificado_Lleno!=null)
                 {
-                    certificados.AddRange(model.Certificado_Lleno);
+                    certificados.AddRange( new List<string>(model.Certificado_Lleno.Split(',')));
                 }
                 if (model.Informe_Transporte != null)
                 {
@@ -307,9 +307,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if (model.Informe_Transporte_Lleno != null && model.Informe_Transporte_Lleno.Count > 0)
+                else if (model.Informe_Transporte_Lleno != null)
                 {
-                    informes.AddRange(model.Informe_Transporte_Lleno);
+                    informes.AddRange(new List<string>(model.Informe_Transporte_Lleno.Split(',')));
                 }
                 if (model.Manifiesto_Doc != null)
                 {
@@ -327,9 +327,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if (model.Manifiesto_Doc_Lleno != null && model.Manifiesto_Doc_Lleno.Count > 0)
+                else if (model.Manifiesto_Doc_Lleno != null)
                 {
-                    manifiesto.AddRange(model.Manifiesto_Doc_Lleno);
+                    manifiesto.AddRange(new List<string>(model.Manifiesto_Doc_Lleno.Split(',')));
                 }
 
                 await _completarManifiestoRS.Execute(

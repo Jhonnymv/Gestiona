@@ -74,7 +74,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         [DisplayName("Certificado de Tratamiento y/o Disposición Final")]
         public List<IFormFile> Certificado { get; set; }
-        public List<string> Certificado_Lleno { get; set; }
+        public string Certificado_Lleno { get; set; }
         [DisplayName("Cantidad del Residuo Dispuesto (TM):")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad_RS_Dispuesto { get; set; }
@@ -83,10 +83,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         public string Fecha_Devolucion { get; set; }
         [DisplayName("Informe de Transporte (Incluye guía de remisión remitente)")]
         public List<IFormFile> Informe_Transporte { get; set; }
-        public List<string> Informe_Transporte_Lleno { get; set; }
+        public string Informe_Transporte_Lleno { get; set; }
         [DisplayName("Manifiesto")]
         public List<IFormFile> Manifiesto_Doc { get; set; }
-        public List<string> Manifiesto_Doc_Lleno { get; set; }
+        public string Manifiesto_Doc_Lleno { get; set; }
         [DisplayName("Asesor MAP Responsable de la Recepción de Documentos:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Asesor { get; set; }

@@ -239,18 +239,11 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_certificado">0 Archivos</label>
+        </div>  
+        <input type="hidden" asp-for="@Model.Certificado_Lleno" />
+        <div class="col-sm-12 col-md-4 col-lg-4" id="Certificado_Lleno_Lista">                
+            @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="cert">Certificado</a></p>*@
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Certificado_Lleno != null)
-        {
-            <input type="hidden" asp-for="@Model.Certificado_Lleno" />
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                @foreach (var item in Model.Certificado_Lleno)
-                {
-                    <p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="cert">Certificado</a></p>
-                }
-            </div>
-        }
-
     </div>
     <div class="row mb-2 justify-content-start">
         <div class="col-sm-12 col-md-2 col-lg-2">
@@ -266,16 +259,10 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_informe">0 Archivos</label>
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Informe_Transporte_Lleno != null)
-        {
-            <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                @foreach (var item in Model.Informe_Transporte_Lleno)
-                {
-                    <p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="inf">Informe de Transporte</a></p>
-                }
-            </div>
-        }
+        <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
+        <div class="col-sm-12 col-md-4 col-lg-4" id="Informe_Transporte_Lleno_Lista">
+            @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="inf">Informe de Transporte</a></p>*@
+        </div>
     </div>
     <div class="row mb-2 justify-content-start">
         <div class="col-sm-12 col-md-2 col-lg-2">
@@ -291,16 +278,10 @@
         <div class="col-sm-12 col-md-4 col-lg-4">
             <label id="archivos_manifiesto">0 Archivos</label>
         </div>
-        @if (Model.Estado.Equals("Registrado") && Model.Permiso && Model.Manifiesto_Doc_Lleno != null)
-        {
-            <input type="hidden" asp-for="@Model.Manifiesto_Doc_Lleno" />
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                @foreach (var item in Model.Manifiesto_Doc_Lleno)
-                {
-                    <p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="man">Manifiesto</a></p>
-                }
-            </div>
-        }
+        <input type="hidden" asp-for="@Model.Manifiesto_Doc_Lleno" />
+        <div class="col-sm-12 col-md-4 col-lg-4" id="Manifiesto_Doc_Lleno_Lista">
+            @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="man">Manifiesto</a></p>*@
+        </div>
     </div>
     <div class="row mb-2 justify-content-end">
         <div class="col-12">
@@ -317,6 +298,38 @@
 </form>
 @section Scripts{
     <script type="text/javascript">
+        $(document).ready(function () {
+            var certificado = '@Model.Certificado_Lleno';
+            var informe = '@Model.Informe_Transporte_Lleno';
+            var manifiesto = '@Model.Manifiesto_Doc_Lleno';
+
+            var certificado_valores = JSON.parse(certificado.replace(/&quot;/g, '"'));
+            var informe_valores = JSON.parse(informe.replace(/&quot;/g, '"'));
+            var manifiesto_valores = JSON.parse(manifiesto.replace(/&quot;/g, '"'));
+
+            var html_certificado = ""
+            var html_informe = ""
+            var html_manifiesto = ""
+            
+            for (var i = 0; i < certificado_valores.length; i++) {
+               html_certificado+="<p><a href=\"/CompletarManifiesto/Download?fileName="+certificado_valores[i]+"&tipo=cert\">Certificado</a></p>"
+            }
+            for (var i = 0; i < informe_valores.length; i++) {
+               html_informe+="<p><a href=\"/CompletarManifiesto/Download?fileName="+informe_valores[i]+"&tipo=inf\">Informe de Transpote</a></p>"
+            }
+            for (var i = 0; i < manifiesto_valores.length; i++) {
+               html_manifiesto+="<p><a href=\"/CompletarManifiesto/Download?fileName="+manifiesto_valores[i]+"&tipo=man\">Manifiesto</a></p>"
+            }
+                       
+            $("#Certificado_Lleno_Lista").html(html_certificado);
+            $("#Informe_Transporte_Lleno_Lista").html(html_informe);
+            $("#Manifiesto_Doc_Lleno_Lista").html(html_manifiesto);
+
+            $("#Certificado_Lleno").val(certificado_valores);
+            $("#Informe_Transporte_Lleno").val(informe_valores);
+            $("#Manifiesto_Doc_Lleno").val(manifiesto_valores);
+
+        });
         $("#Certificado").change(function () {
             $("#danger_certificado").html("");
             //Validacion del tamaño del archivo
