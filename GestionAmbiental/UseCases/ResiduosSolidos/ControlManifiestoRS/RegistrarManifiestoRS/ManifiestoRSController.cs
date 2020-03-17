@@ -161,7 +161,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
             {
                 //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var IdIngresoSalida = await _registrarManifiestoRS.Execute(
+                var IdManifiesto = await _registrarManifiestoRS.Execute(
                     model.opcion,
                     model.Serie_Manifiesto,
                     model.Num_Manifiesto,
@@ -184,7 +184,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     model.Num_Autorizacion_Sanitaria_Llegada,
                     model.Num_Autorizacion_Municipal_Llegada,
                     "kevin");
-                return RedirectToAction("Resumen");
+                if (model.opcion.Equals("Registrar"))
+                    return RedirectToAction("NotificarRegistroRS", "NotificacionesRS", new { Id_Manifiesto = IdManifiesto });
+                else
+                    return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoManifiesto");
         }
@@ -280,7 +283,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     model.Num_Autorizacion_Sanitaria_Llegada,
                     model.Num_Autorizacion_Municipal_Llegada,
                     "kevin");
-                return RedirectToAction("Resumen");
+                if (model.opcion.Equals("Registrar"))
+                    return RedirectToAction("NotificarRegistroRS", "NotificacionesRS", new { Id_Manifiesto = model.Id_Manifiesto_RS });
+                else
+                    return RedirectToAction("Resumen");
             }
             return RedirectToAction("NuevoManifiesto");
         }

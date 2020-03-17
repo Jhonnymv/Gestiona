@@ -33,7 +33,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoResiduosPeligrosSIdRouteValue);
             _info_SGA = info_SGA;
         }
-        public async Task<IActionResult> MotificarRegistroRS(int Id_Manifiesto)
+        public async Task<IActionResult> NotificarRegistroRS(int Id_Manifiesto)
         {
             var info = await _consultarManifiestoRSCierre.Execute(Id_Manifiesto);
             var IdEncriptado = _protector.Protect(info.Id_Manifiesto_RS.ToString());
@@ -82,7 +82,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -98,7 +98,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             mail.Dispose();
             msg.Dispose();
 
-            return RedirectToAction("CompletarManifiesto", "Resumen");
+            return RedirectToAction("Resumen", "ManifiestoRS");
         }
     }
 }
