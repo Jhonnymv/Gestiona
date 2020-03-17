@@ -1,0 +1,186 @@
+﻿@model GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS.FiltroManifiestoRSModel
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Dashboard de Ingreso/Salida de Residuos Sólidos</h2>
+    </div>
+</div>
+<form autocomplete="off">
+    <div class="container-fluid">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-10 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="Observacion"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="Observacion">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Conforme">Conforme</option>
+                            <option value="Anulado">Anulado</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="Residuo_Solido"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="Residuo_Solido" asp-items="@ViewBag.ResiduoSolido"></select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="EO_RS_Salida"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="EO_RS_Salida" asp-items="@ViewBag.EORS"></select>
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="EO_RS_Llegada"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="EO_RS_Llegada" asp-items="@ViewBag.EORS"></select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FInicio"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FFin"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--Cantidad de RS por fecha-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-2"></div>
+                    <div class="col-8">
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Manifiestos Registrados</h6>
+                    </div>
+                    <div class="col-2">
+                        <select id="frecuencia" class="form-control">
+                            <option value="Diario" selected>Diario</option>
+                            <option value="Semanal">Semanal</option>
+                            <option value="Mensual">Mensual</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart-area">
+                    <div class="chartjs-size-monitor">
+                        <div class="chartjs-size-monitor-expand">
+                            <div class="">
+                            </div>
+                        </div>
+                        <div class="chartjs-size-monitor-shrink">
+                            <div class="">
+                            </div>
+                        </div>
+                    </div>
+                    <canvas id="chart_man_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cantidad de RS por Observacion - Camion-->
+<div class="row mb-2">
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Comparativo Estado Manifiesto</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_observacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Comparativo Transporte R.S. Peligroso por Camion</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_camion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cantidad de RS por Tipo Salida-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Comparativo Tipo de Residuo Salida</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_tipo_salida" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cantidad de RS por Tipo Llegada-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Comparativo Tipo de Residuo Llegada</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_tipo_llegada" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    @*Script de la página*@
+    <script src="~/js/UseCases/Reportes/ReportesManifiestoRSScript.js" type="text/javascript"></script>
+}

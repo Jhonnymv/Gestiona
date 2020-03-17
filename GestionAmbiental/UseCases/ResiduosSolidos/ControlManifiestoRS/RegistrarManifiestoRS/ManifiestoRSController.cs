@@ -127,7 +127,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;*/
                 var items = await _getSelectItems.Execute();
-                var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                var residuos_solidos = items.ItemsResiduoSolido.Where(x=>x.Tipo_Residuo.Id_Tipo_Residuo.Equals(1)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -234,7 +234,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
 
 
                 var items = await _getSelectItems.Execute();
-                var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                var residuos_solidos = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals(1)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));

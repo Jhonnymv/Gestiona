@@ -17,7 +17,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-               
+
+        public async Task<int> AddACR_CMRS(ACR_CMRS acr_cmrs)
+        {
+            var entity = new Entities.ResiduosSolidos.ACR_CMRS
+            {
+                Descripcion = acr_cmrs.Descripcion,
+                Estado = "ACT"
+            };
+            _context.ACR_CMRs.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_ACR_CMRS;
+        }
+
+        public async Task<int> AddConductor_RS(Conductor_RS conductor_RS)
+        {
+            var entity = new Entities.ResiduosSolidos.Conductor_RS
+            {
+                Nombres = conductor_RS.Nombres,
+                Apellidos = conductor_RS.Apellidos,
+                NLicencia = conductor_RS.NLicencia,
+                Estado = "ACT"
+            };
+            _context.Condutores_RS.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Conductor_RS;
+        }
+
         public async Task<int> AddEmpresa(Empresa empresa)
         {
             var empresaEntity = new Entities.Empresa
@@ -28,7 +54,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return empresaEntity.Id_Empresa;
         }
-               
+
+        public async Task<int> AddEO_RS(EO_RS eors)
+        {
+            var entity = new Entities.ResiduosSolidos.EO_RS
+            {
+                Razon_Social = eors.Razon_Social,
+                Registro = eors.Registro,
+                Fecha_Vencimiento_Registro = eors.Fecha_Vencimiento_Registro,
+                Estado = "ACT"
+            };
+            _context.EO_RSs.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_EO_RS;
+        }
+
         public async Task<int> AddGerencia(Gerencia gerencia)
         {
             var gerenciaEntity = new Entities.Gerencia
@@ -39,7 +79,45 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return gerenciaEntity.Id_Gerencia;
         }
-               
+
+        public async Task<int> AddMotivo_Ingreso_Salida(Motivo_Ingreso_Salida motivo)
+        {
+            var entity = new Entities.ResiduosSolidos.Motivo_Ingreso_Salida
+            {
+                Descripcion = motivo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Motivos_Ingreso_Salida.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Motivo;
+        }
+
+        public async Task<int> AddResiduo_Solido(Residuo_Solido residuo_solido)
+        {
+            var entity = new Entities.ResiduosSolidos.Residuo_Solido
+            {
+                Descripcion = residuo_solido.Descripcion,
+                Id_Tipo_Residuo = residuo_solido.Id_Residuo_Solido,
+                Estado = "ACT"
+            };
+            _context.Residuos_Solidos.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Residuo_Solido;
+        }
+
+        public async Task<int> AddResponsable_ARC_CRMS(Responsable_ARC_CRMS responsable)
+        {
+            var entity = new Entities.ResiduosSolidos.Responsable_ACR_CRMS
+            {
+                Nombres = responsable.Nombres,
+                Apellidos = responsable.Apellidos,
+                Estado = "ACT"
+            };
+            _context.Responsables_ACR_CRM.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Responsable_ARC_CRMS;
+        }
+
         public async Task<int> AddTipoCondicion(TipoCondicion tipoCondicion)
         {
             var tipoCondicionEntity = new Entities.Tipo_Condicion
@@ -51,7 +129,64 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return tipoCondicionEntity.Id_Tipo_Condicion;
         }
-               
+
+        public async Task<int> AddVehiculo_RS(Vehiculo_RS vehiculo_rs)
+        {
+            var entity = new Entities.ResiduosSolidos.Vehiculo_RS
+            {
+                Placa = vehiculo_rs.Placa,
+                Capacidad = vehiculo_rs.Capacidad,
+                Estado = "ACT"
+            };
+            _context.Vehiculos_RS.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Vehiculo_RS;
+        }
+        public async Task<List<ACR_CMRS>> GetACR_CMRS(string filtro)
+        {
+            var entities = await _context.ACR_CMRs.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<ACR_CMRS>();
+            foreach (var item in entities)
+                output.Add(new ACR_CMRS(item.Id_ACR_CMRS,item.Descripcion,item.Estado));
+            return output;
+        }
+
+        public async Task<ACR_CMRS> GetACR_CMRS(int id_acr_cmrs)
+        {
+            var entity = await _context.ACR_CMRs.FirstOrDefaultAsync(x => x.Id_ACR_CMRS.Equals(id_acr_cmrs));
+            var output = new ACR_CMRS
+            {
+                Id_ACR_CMRS = entity.Id_ACR_CMRS,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
+        public async Task<List<Conductor_RS>> GetConductor_RS(string filtro)
+        {
+            var entities = await _context.Condutores_RS.Where(x => x.Nombres.Contains(filtro == null ? x.Nombres : filtro) || x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)).OrderBy(x => x.Nombres).ToListAsync();
+
+            var output = new List<Conductor_RS>();
+            foreach (var item in entities)
+                output.Add(new Conductor_RS(item.Id_Conductor_RS,item.Nombres,item.Apellidos,item.NLicencia,item.Estado));
+            return output;
+        }
+
+        public async Task<Conductor_RS> GetConductor_RS(int id_conductor)
+        {
+            var entity = await _context.Condutores_RS.FirstOrDefaultAsync(x => x.Id_Conductor_RS.Equals(id_conductor));
+            var output = new Conductor_RS
+            {
+                Id_Conductor_RS = entity.Id_Conductor_RS,
+                Nombres = entity.Nombres,
+                Apellidos = entity.Apellidos,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
         /*public async Task<int> AddUsuario(Usuario usuario)
         {
             var usuarioEntity = new Entities.Usuario
@@ -68,7 +203,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return usuarioEntity.Id_Usuario;
         }*/
-               
+
         public async Task<Empresa> GetEmpresa(int idEmpresa)
         {
             var empresa = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(idEmpresa));
@@ -89,7 +224,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
             return output;
         }
-               
+
+        public async Task<List<EO_RS>> GetEO_RS(string filtro)
+        {
+            var entities = await _context.EO_RSs.Where(x => x.Razon_Social.Contains(filtro == null ? x.Razon_Social : filtro)).OrderBy(x => x.Razon_Social).ToListAsync();
+
+            var output = new List<EO_RS>();
+            foreach (var item in entities)
+                output.Add(new EO_RS(item.Id_EO_RS,item.Razon_Social,item.Registro,item.Fecha_Vencimiento_Registro,item.Estado));
+            return output;
+        }
+
+        public async Task<EO_RS> GetEO_RS(int idEO_RS)
+        {
+            var entity = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(idEO_RS));
+            var output = new EO_RS
+            {
+                Id_EO_RS = entity.Id_EO_RS,
+                Razon_Social = entity.Razon_Social,
+                Fecha_Vencimiento_Registro = entity.Fecha_Vencimiento_Registro,
+                Registro = entity.Registro,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
         public async Task<Gerencia> GetGerencia(int idGerencia)
         {
             var gerencia = await _context.Gerencias.FirstOrDefaultAsync(x => x.Id_Gerencia.Equals(idGerencia));
@@ -109,7 +268,81 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
             return output;
         }
-               
+
+        public async Task<List<Motivo_Ingreso_Salida>> GetMotivo_Ingreso_Salida(string filtro)
+        {
+            var entities = await _context.Motivos_Ingreso_Salida.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Motivo_Ingreso_Salida>();
+            foreach (var item in entities)
+                output.Add(new Motivo_Ingreso_Salida(item.Id_Motivo,item.Descripcion,item.Estado));
+            return output;
+        }
+
+        public async Task<Motivo_Ingreso_Salida> GetMotivo_Ingreso_Salida(int id_motivo)
+        {
+            var entity = await _context.Motivos_Ingreso_Salida.FirstOrDefaultAsync(x => x.Id_Motivo.Equals(id_motivo));
+            var output = new Motivo_Ingreso_Salida
+            {
+                Id_Motivo = entity.Id_Motivo,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
+        public async Task<List<Residuo_Solido>> GetResiduo_Solido(string filtro)
+        {
+            var entities = await _context.Residuos_Solidos.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+            var tipos_residuo = await _context.Tipo_Residuos.ToListAsync();
+
+            var output = new List<Residuo_Solido>();
+            foreach (var item in entities)
+            {
+                var tipo_residuo = tipos_residuo.FirstOrDefault(x => x.Id_Tipo_Residuo.Equals(item.Id_Tipo_Residuo));
+                output.Add(new Residuo_Solido(item.Id_Residuo_Solido,new Tipo_Residuo(tipo_residuo.Id_Tipo_Residuo,tipo_residuo.Descripcion,tipo_residuo.Estado),item.Descripcion,item.Estado));
+            }
+                
+            return output;
+        }
+
+        public async Task<Residuo_Solido> GetResiduo_Solido(int id_residuo_solido)
+        {
+            var entity = await _context.Residuos_Solidos.FirstOrDefaultAsync(x => x.Id_Residuo_Solido.Equals(id_residuo_solido));
+            var tipo = await _context.Tipo_Residuos.FirstOrDefaultAsync(x => x.Id_Tipo_Residuo.Equals(entity.Id_Tipo_Residuo));
+            var output = new Residuo_Solido
+            {
+                Id_Residuo_Solido = entity.Id_Residuo_Solido,
+                Descripcion = entity.Descripcion,
+                Tipo_Residuo = new Tipo_Residuo(tipo.Id_Tipo_Residuo,tipo.Descripcion,tipo.Estado),
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
+        public async Task<List<Responsable_ARC_CRMS>> GetResponsable_ARC_CRMS(string filtro)
+        {
+            var entities = await _context.Responsables_ACR_CRM.Where(x => x.Nombres.Contains(filtro == null ? x.Nombres : filtro)|| x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)).OrderBy(x => x.Nombres).ToListAsync();
+
+            var output = new List<Responsable_ARC_CRMS>();
+            foreach (var item in entities)
+                output.Add(new Responsable_ARC_CRMS(item.Id_Responsable_ARC_CRMS,item.Nombres,item.Apellidos,item.Estado));
+            return output;
+        }
+
+        public async Task<Responsable_ARC_CRMS> GetResponsable_ARC_CRMS(int id_responsable)
+        {
+            var entity = await _context.Responsables_ACR_CRM.FirstOrDefaultAsync(x => x.Id_Responsable_ARC_CRMS.Equals(id_responsable));
+            var output = new Responsable_ARC_CRMS
+            {
+                Id_Responsable_ACR_CRMS = entity.Id_Responsable_ARC_CRMS,
+                Nombres = entity.Nombres,
+                Apellidos = entity.Apellidos,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
         public async Task<TipoCondicion> GetTipoCondicion(int idTipoCondicion)
         {
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(idTipoCondicion));
@@ -162,7 +395,50 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new Usuario(item.Id_Usuario,item.Id_Rol,item.usuario_red,item.Nombres,item.Apellidos,item.Email,item.Id_Superior,item.Estado));
             return output;
         }
-               
+
+        public async Task<List<Vehiculo_RS>> GetVehiculo_RS(string filtro)
+        {
+            var entities = await _context.Vehiculos_RS.Where(x => x.Placa.Contains(filtro == null ? x.Placa : filtro)).OrderBy(x => x.Placa).ToListAsync();
+
+            var output = new List<Vehiculo_RS>();
+            foreach (var item in entities)
+                output.Add(new Vehiculo_RS(item.Id_Vehiculo_RS,item.Placa,item.Capacidad, item.Estado));
+            return output;
+        }
+
+        public async Task<Vehiculo_RS> GetVehiculo_RS(int id_vehiculo_rs)
+        {
+            var entity = await _context.Vehiculos_RS.FirstOrDefaultAsync(x => x.Id_Vehiculo_RS.Equals(id_vehiculo_rs));
+            var output = new Vehiculo_RS
+            {
+                Id_Vehiculo_RS = entity.Id_Vehiculo_RS,
+                Placa = entity.Placa,
+                Capacidad = entity.Capacidad,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+
+        public async Task UpdateACR_CMRS(ACR_CMRS acr_cmrs)
+        {
+            var entity = await _context.ACR_CMRs.FirstOrDefaultAsync(x => x.Id_ACR_CMRS.Equals(acr_cmrs.Id_ACR_CMRS));
+            entity.Descripcion = acr_cmrs.Descripcion;
+            entity.Estado = acr_cmrs.Estado;
+            _context.ACR_CMRs.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateConductor_RS(Conductor_RS conductor_RS)
+        {
+            var entity = await _context.Condutores_RS.FirstOrDefaultAsync(x => x.Id_Conductor_RS.Equals(conductor_RS.Id_Conductor_RS));
+            entity.Nombres = conductor_RS.Nombres;
+            entity.Apellidos = conductor_RS.Apellidos;
+            entity.NLicencia = conductor_RS.NLicencia;
+            entity.Estado = conductor_RS.Estado;
+            _context.Condutores_RS.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateEmpresa(Empresa empresa)
         {
             var empresaEntity = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(empresa.IdEmpresa));
@@ -170,7 +446,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Empresas.Update(empresaEntity);
             await _context.SaveChangesAsync();
         }
-               
+
+        public async Task UpdateEO_RS(EO_RS eors)
+        {
+            var entity = await _context.EO_RSs.FirstOrDefaultAsync(x => x.Id_EO_RS.Equals(eors.Id_EO_RS));
+            entity.Razon_Social = eors.Razon_Social;
+            entity.Registro = eors.Registro;
+            entity.Fecha_Vencimiento_Registro = eors.Fecha_Vencimiento_Registro;
+            entity.Estado = eors.Estado;
+            _context.EO_RSs.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateGerencia(Gerencia gerencia)
         {
             var gerenciaEntity = await _context.Gerencias.FirstOrDefaultAsync(x => x.Id_Gerencia.Equals(gerencia.IdGerencia));
@@ -178,7 +465,36 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Gerencias.Update(gerenciaEntity);
             await _context.SaveChangesAsync();
         }
-               
+
+        public async Task UpdateMotivo_Ingreso_Salida(Motivo_Ingreso_Salida motivo)
+        {
+            var entity = await _context.Motivos_Ingreso_Salida.FirstOrDefaultAsync(x => x.Id_Motivo.Equals(motivo.Id_Motivo));
+            entity.Descripcion = motivo.Descripcion;
+            entity.Estado = motivo.Estado;
+            _context.Motivos_Ingreso_Salida.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateResiduo_Solido(Residuo_Solido residuo_solido)
+        {
+            var entity = await _context.Residuos_Solidos.FirstOrDefaultAsync(x => x.Id_Residuo_Solido.Equals(residuo_solido.Id_Residuo_Solido));
+            entity.Descripcion = residuo_solido.Descripcion;
+            entity.Id_Tipo_Residuo = residuo_solido.Tipo_Residuo.Id_Tipo_Residuo;
+            entity.Estado = residuo_solido.Estado;
+            _context.Residuos_Solidos.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateResponsable_ARC_CRMS(Responsable_ARC_CRMS responsable)
+        {
+            var entity = await _context.Responsables_ACR_CRM.FirstOrDefaultAsync(x => x.Id_Responsable_ARC_CRMS.Equals(responsable.Id_Responsable_ACR_CRMS));
+            entity.Nombres = responsable.Nombres;
+            entity.Apellidos = responsable.Apellidos;
+            entity.Estado = responsable.Estado;
+            _context.Responsables_ACR_CRM.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task UpdateTipoCondicion(TipoCondicion tipoCondicion)
         {
             var tipoCondicionEntity = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(tipoCondicion.IdTipoCondicion));
@@ -200,6 +516,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             usuarioEntity.Estado = usuario.Estado;
 
             _context.Usuarios.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateVehiculo_RS(Vehiculo_RS vehiculo_rs)
+        {
+            var entity = await _context.Vehiculos_RS.FirstOrDefaultAsync(x => x.Id_Vehiculo_RS.Equals(vehiculo_rs.Id_Vehiculo_RS));
+            entity.Placa = vehiculo_rs.Placa;
+            entity.Capacidad = vehiculo_rs.Capacidad;
+            entity.Estado = vehiculo_rs.Estado;
+            _context.Vehiculos_RS.Update(entity);
             await _context.SaveChangesAsync();
         }
     }

@@ -9,8 +9,8 @@ var empresa = $("#Empresa").val();
 var frecuencia = $("#frecuencia").val();
 
 //Variables gráfico Cantidad X Fecha
-var data_cant_fechas_ingreso = [];
-var data_cant_fechas_salida = [];
+var data_cant_fechas_conforme = [];
+var data_cant_fechas_anulado = [];
 var graph_cant_fechas;
 //Variable gráfico Cantidad X ACR_CMRS
 var data_acr_vs_cmrs = [];
@@ -68,20 +68,20 @@ function ActualizarContadorxFecha() {
         traditional: true,
         success: (response) => {
             console.log(response);
-            if (data_cant_fechas_ingreso.length > 0 || data_cant_fechas_salida.length > 0) {
+            if (data_cant_fechas_conforme.length > 0 || data_cant_fechas_anulado.length > 0) {
                 //Actualizar contador
-                data_cant_fechas_ingreso = response.nRegistros[0];
-                data_cant_fechas_salida = response.nRegistros[1];
+                data_cant_fechas_conforme = response.nRegistros[0];
+                data_cant_fechas_anulado = response.nRegistros[1];
 
                 var labels = [];
                 var dataIngreso = [];
                 var dataSalida = [];
-                for (var i = 0; i < data_cant_fechas_ingreso.length; i++) {
-                    labels.push(data_cant_fechas_ingreso[i].nombre);
-                    dataIngreso.push(data_cant_fechas_ingreso[i].valor);
+                for (var i = 0; i < data_cant_fechas_conforme.length; i++) {
+                    labels.push(data_cant_fechas_conforme[i].nombre);
+                    dataIngreso.push(data_cant_fechas_conforme[i].valor);
                 }
-                for (var i = 0; i < data_cant_fechas_salida.length; i++) {
-                    dataSalida.push(data_cant_fechas_salida[i].valor);
+                for (var i = 0; i < data_cant_fechas_anulado.length; i++) {
+                    dataSalida.push(data_cant_fechas_anulado[i].valor);
                 }
                 //Actualizar gráfica
                 graph_cant_fechas.data.labels = labels;
@@ -91,18 +91,18 @@ function ActualizarContadorxFecha() {
                 graph_cant_fechas.update();
             } else {
                 //Actualizar contador
-                data_cant_fechas_ingreso = response.nRegistros[0];
-                data_cant_fechas_salida = response.nRegistros[1];
+                data_cant_fechas_conforme = response.nRegistros[0];
+                data_cant_fechas_anulado = response.nRegistros[1];
 
                 var labels = [];
                 var dataIngreso = [];
                 var dataSalida = [];
-                for (var i = 0; i < data_cant_fechas_ingreso.length; i++) {
-                    labels.push(data_cant_fechas_ingreso[i].nombre);
-                    dataIngreso.push(data_cant_fechas_ingreso[i].valor);
+                for (var i = 0; i < data_cant_fechas_conforme.length; i++) {
+                    labels.push(data_cant_fechas_conforme[i].nombre);
+                    dataIngreso.push(data_cant_fechas_conforme[i].valor);
                 }
-                for (var i = 0; i < data_cant_fechas_salida.length; i++) {
-                    dataSalida.push(data_cant_fechas_salida[i].valor);
+                for (var i = 0; i < data_cant_fechas_anulado.length; i++) {
+                    dataSalida.push(data_cant_fechas_anulado[i].valor);
                 }
                 //Crear gráfica
                 CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, Math.max(dataIngreso) / 10);
