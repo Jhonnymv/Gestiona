@@ -15,13 +15,14 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.Edita
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task Execute(int IdEO_RS, string Razon_Social, string Registro, string Fecha_Vencimiento_Registro)
+        public async Task Execute(int IdEO_RS, string Razon_Social, string Registro, string Fecha_Vencimiento_Registro, string Estado)
         {
             var eors = new Domain.ValueObjects.EO_RS();
             eors.Id_EO_RS = IdEO_RS;
             eors.Razon_Social = Razon_Social;
             eors.Registro = Registro;
             eors.Fecha_Vencimiento_Registro = DateTime.Parse(Fecha_Vencimiento_Registro);
+            eors.Estado = Estado;
             await _gestorTablasMaestrasReadOnlyRepository.UpdateEO_RS(eors);
         }
     }

@@ -41,6 +41,7 @@
     <Folder Include="logs\" />
     <Folder Include="UseCases\Notificaciones\Inspecciones\" />
     <Folder Include="UseCases\Notificaciones\RAC\" />
+    <Folder Include="Views\GestorIngresoSalidaRS\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
   </ItemGroup>
 

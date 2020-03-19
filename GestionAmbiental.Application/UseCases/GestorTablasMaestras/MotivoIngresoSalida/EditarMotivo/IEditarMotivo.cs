@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.MotivoIngre
 {
     public interface IEditarMotivo
     {
-        Task Execute(int IdMotivo, string Descripcion);
+        Task Execute(int IdMotivo, string Descripcion,string Estado);
     }
 }

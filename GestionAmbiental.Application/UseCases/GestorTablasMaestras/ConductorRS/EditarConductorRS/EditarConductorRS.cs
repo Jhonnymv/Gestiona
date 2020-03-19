@@ -15,13 +15,14 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConductorRS
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task Execute(int IdConductor, string Nombres, string Apellidos, string NLicencia)
+        public async Task Execute(int IdConductor, string Nombres, string Apellidos, string NLicencia, string Estado)
         {
             var conductor = new Domain.ValueObjects.Conductor_RS();
             conductor.Id_Conductor_RS = IdConductor;
             conductor.Nombres = Nombres;
             conductor.Apellidos = Apellidos;
             conductor.NLicencia = NLicencia;
+            conductor.Estado = Estado;
             await _gestorTablasMaestrasReadOnlyRepository.UpdateConductor_RS(conductor);
         }
     }

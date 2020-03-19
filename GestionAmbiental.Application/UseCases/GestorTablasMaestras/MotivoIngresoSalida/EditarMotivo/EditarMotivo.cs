@@ -15,11 +15,12 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.MotivoIngre
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task Execute(int IdMotivo, string Descripcion)
+        public async Task Execute(int IdMotivo, string Descripcion, string Estado)
         {
             var motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida();
             motivo.Id_Motivo = IdMotivo;
             motivo.Descripcion = Descripcion;
+            motivo.Estado = Estado;
             await _gestorTablasMaestrasReadOnlyRepository.UpdateMotivo_Ingreso_Salida(motivo);
         }
     }

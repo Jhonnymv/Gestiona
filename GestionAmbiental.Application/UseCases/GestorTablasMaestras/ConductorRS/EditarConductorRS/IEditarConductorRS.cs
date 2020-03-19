@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConductorRS
 {
     public interface IEditarConductorRS
     {
-        Task Execute(int IdConductor, string Nombres, string Apellidos, string NLicencia);
+        Task Execute(int IdConductor, string Nombres, string Apellidos, string NLicencia,string Estado);
     }
 }

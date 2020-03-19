@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+    <div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="listItems">
+                <li class="nav-item">
+                    <a class="nav-link active" id="ACR_CMRS">ACR_CMRS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Motivo">Motivo de Ingreso/Salida</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Tipo">Tipo de Residuo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Responsable">Responsable ARC/CMRS</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2 justify-content-center">
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                    <label>Buscar:</label>
+                </div>
+                <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                    <input type="text" class="form-control" id="filtro">
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                    <button class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+            <div class="row">
+
+            </div>
+            
+        </div>
+    </div>
+@section Scripts{ 
+<script type="text/javascript">
+    $("#ACR_CMRS").on('click', function (e) {
+        $(this).tab('show');
+    });
+    $("#Motivo").on('click', function (e) {
+        $(this).tab('show');
+    });
+    $("#Tipo").on('click', function (e) {
+        $(this).tab('show');
+    });
+    $("#Responsable").on('click', function (e) {
+        $(this).tab('show');
+    });
+
+//    $('#listItems a').on('click', function (e) {
+//        e.preventDefault();
+//        $(this).tab('show');
+//})
+</script>
+}

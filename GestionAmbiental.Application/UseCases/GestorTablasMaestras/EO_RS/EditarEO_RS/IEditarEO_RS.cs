@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.Edita
 {
     public interface IEditarEO_RS
     {
-        Task Execute(int IdEO_RS, string Razon_Social, string Registro, string Fecha_Vencimiento_Registro);
+        Task Execute(int IdEO_RS, string Razon_Social, string Registro, string Fecha_Vencimiento_Registro, string Estado);
     }
 }

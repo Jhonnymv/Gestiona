@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ACR_CMRS.Ed
 {
     public interface IEditarACR_CMRS
     {
-        Task Execute(int idACR_CMRS, string descripcion);
+        Task Execute(int idACR_CMRS, string descripcion,string estado);
     }
 }
