@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.Notificaciones.ResiduosSolidos.GetUsuariosNotificar;
 using GestionAmbiental.Application.UseCases.Notificaciones.ResiduosSolidos.ManifiestoRSRegistrado;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
@@ -19,6 +20,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
     {
         private IHostingEnvironment _hostingEnvironment;
         private readonly IGetManifiestoRSRegistrado _consultarManifiestoRSCierre;
+        private readonly IGetUsuariosNotificar _getUsuariosNotificar;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
 
@@ -26,16 +28,19 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             IHostingEnvironment hostingEnvironment,
             IGetManifiestoRSRegistrado consultarManifiestoRSCierre,
             IDataProtectionProvider dataProtectionProvider,
+            IGetUsuariosNotificar getUsuariosNotificar,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings, IGetInfo_SGA info_SGA)
         {
             _hostingEnvironment = hostingEnvironment;
             _consultarManifiestoRSCierre = consultarManifiestoRSCierre;
+            _getUsuariosNotificar = getUsuariosNotificar;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoResiduosPeligrosSIdRouteValue);
             _info_SGA = info_SGA;
         }
         public async Task<IActionResult> NotificarRegistroRS(int Id_Manifiesto)
         {
             var info = await _consultarManifiestoRSCierre.Execute(Id_Manifiesto);
+            var usuarios = await _getUsuariosNotificar.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Manifiesto_RS.ToString());
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "ResiduosSolidos", "NuevoRegistroManifiesto.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
@@ -86,7 +91,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
-            msg.To.Add(new MailAddress("kevinorh@hotmail.com"));
+            foreach(var item in usuarios)
+                msg.To.Add(new MailAddress(item.Email));
             msg.Subject = "Nuevo Registro de Manifiesto de Residuo Sólido Peligroso";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;

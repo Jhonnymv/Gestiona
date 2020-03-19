@@ -60,6 +60,7 @@
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-danger" onclick="Descargar()">Descargar</button>
                     <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
                 </div>
             </div>
@@ -183,4 +184,13 @@
 @section Scripts{
     @*Script de la página*@
     <script src="~/js/UseCases/Reportes/ReportesManifiestoRSScript.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        function Descargar() {
+            var fInicio = $("#FInicio").val();
+            var fFin = $("#FFin").val();
+            if (fInicio < fFin || (fInicio == "" && fFin == "")) {
+               window.location.assign("/DescargarManifiestoRS/DescargarManifiestoRS?fechaInicio="+fInicio+"&fechaFin="+fFin)
+            }
+        }
+    </script>
 }

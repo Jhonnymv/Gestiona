@@ -35,6 +35,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Vehiculo_RS> Vehiculos_RS { get; set; }
         public DbSet<Log_Ingreso_Salida_RS> Log_Ingreso_Salida_RSs { get; set; }
         public DbSet<Log_Manifiesto_RS>Log_Manifiesto_RS { get; set; }
+        public DbSet<Usuario_Notificar_RS> Usuarios_Notificar_RS { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -86,6 +88,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Log_Ingreso_Salida_RS");
             modelBuilder.Entity<Log_Manifiesto_RS>()
                 .ToTable("Tb_Log_Manifiesto_RS");
+            modelBuilder.Entity<Usuario_Notificar_RS>()
+                .ToTable("Tb_Usuarios_Notificar_RS");
         }
     }
 }

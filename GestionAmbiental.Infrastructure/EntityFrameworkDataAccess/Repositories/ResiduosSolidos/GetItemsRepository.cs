@@ -130,7 +130,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Conductor_RS>> GetConductores_RS()
         {
-            try { var temp = await _context.Condutores_RS.ToListAsync(); } catch(Exception e) { }
             var data = await _context.Condutores_RS.ToListAsync();
             var output = new List<Conductor_RS>();
             foreach (var item in data)
@@ -141,7 +140,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Vehiculo_RS>> GetVehiculos_RS()
         {
-            try { var temp = await _context.Vehiculos_RS.ToListAsync(); } catch(Exception e) { }
             var data = await _context.Vehiculos_RS.ToListAsync();
             var output = new List<Vehiculo_RS>();
             foreach (var item in data)

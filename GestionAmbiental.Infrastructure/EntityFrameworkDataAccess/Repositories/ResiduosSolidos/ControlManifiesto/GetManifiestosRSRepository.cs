@@ -215,6 +215,81 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<List<Manifiesto_RS>> GetManifiestosRSDescarga(DateTime fechaInicio, DateTime fechaFin)
+        {
+            var manifiestos = await _context.Manifiesto_RSs.ToListAsync();
+
+            var data = manifiestos.Where(x => 
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString())&&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString())&&
+                x.Fecha_Emision_Manifiesto>fechaInicio && 
+                x.Fecha_Emision_Manifiesto<fechaFin)
+                .OrderBy(x=>Convert.ToInt32(x.Item))
+                .ToList();
+
+            var residuosSolidos = await _context.Residuos_Solidos.ToListAsync();
+            var tiposResiduosSolidos = await _context.Tipo_Residuos.ToListAsync();
+            var eors = await _context.EO_RSs.ToArrayAsync();
+            var usuarios = await _context.Usuarios.ToArrayAsync();
+            var conductores = await _context.Condutores_RS.ToListAsync();
+            var vehiculos = await _context.Vehiculos_RS.ToListAsync();
+
+            var output = new List<Manifiesto_RS>();
+
+            foreach (var item in data)
+            {
+                var itemResSolid = residuosSolidos.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Id_Residuo_Solido));
+                var itemTipoResSolid = tiposResiduosSolidos.FirstOrDefault(x => x.Id_Tipo_Residuo.Equals(itemResSolid.Id_Tipo_Residuo));
+                var itemEORS_Salida = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Salida));
+                var itemEORS_Llegada = eors.FirstOrDefault(x => x.Id_EO_RS.Equals(item.Id_EO_RS_Llegada));
+                var itemConductor = conductores.FirstOrDefault(x => x.Id_Conductor_RS.Equals(item.Id_Conductor_RS));
+                var itemVehiculo = vehiculos.FirstOrDefault(x => x.Id_Vehiculo_RS.Equals(item.Id_Vehiculo_RS));
+                var itemAsesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor_MAP));
+                //var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor_MAP));
+
+                var outputItem = new Manifiesto_RS();
+                outputItem.Id_Manifiesto_RS = item.Id_Manifiesto_RS;
+                outputItem.Item = item.Item;
+                outputItem.Serie_Manifiesto = item.Serie_Manifiesto;
+                outputItem.Num_Manifiesto = item.Num_Manifiesto;
+                outputItem.Fecha_Emision_Manifiesto = item.Fecha_Emision_Manifiesto;
+                outputItem.Observacion_Manifiesto = item.Observacion_Manifiesto;
+                outputItem.Residuo_Solido = new Residuo_Solido(
+                    itemResSolid.Id_Residuo_Solido,
+                    new Tipo_Residuo(itemTipoResSolid.Id_Tipo_Residuo, itemTipoResSolid.Descripcion, itemTipoResSolid.Estado),
+                    itemResSolid.Descripcion,
+                    itemResSolid.Estado);
+                outputItem.Cantidad_RS_Evacuado = item.Cantidad_RS_Evacuado;
+                outputItem.EO_RS_Salida = new EO_RS(itemEORS_Salida.Id_EO_RS, itemEORS_Salida.Razon_Social, itemEORS_Salida.Registro, itemEORS_Salida.Fecha_Vencimiento_Registro, itemEORS_Salida.Estado);
+                outputItem.Registro_EO_RS_Salida = item.Registro_EO_RS_Salida;
+                outputItem.Fecha_Vencimiento_Registro_Salida = item.Fecha_Vencimiento_Registro_Salida;
+                outputItem.Num_Autorizacion_Municipal_Salida = item.Num_Autorizacion_Municipal_Salida;
+                outputItem.Num_Autorizacion_Hoja_Ruta = item.Num_Autorizacion_Hoja_Ruta;
+                outputItem.Conductor = itemConductor != null ? new Conductor_RS(itemConductor.Id_Conductor_RS, itemConductor.Nombres, itemConductor.Apellidos, itemConductor.NLicencia, itemConductor.Estado) : new Conductor_RS();
+                outputItem.Num_Licencia_Condutor = item.Num_Licencia_Condutor;
+                outputItem.Vehiculo = itemVehiculo != null ? new Vehiculo_RS(itemVehiculo.Id_Vehiculo_RS, itemVehiculo.Placa, itemVehiculo.Capacidad, itemVehiculo.Estado) : new Vehiculo_RS();
+                outputItem.Capacidad_Vehiculo = item.Capacidad_Vehiculo ?? 0;
+                outputItem.EO_RS_Llegada = new EO_RS(itemEORS_Llegada.Id_EO_RS, itemEORS_Llegada.Razon_Social, itemEORS_Llegada.Registro, itemEORS_Llegada.Fecha_Vencimiento_Registro, itemEORS_Llegada.Estado);
+                outputItem.Registro_EO_RS_Llegada = item.Registro_EO_RS_Llegada;
+                outputItem.Fecha_Vencimiento_Registro_Llegada = item.Fecha_Vencimiento_Registro_Llegada;
+                outputItem.Num_Autorizacion_Sanitaria_Llegada = item.Num_Autorizacion_Sanitaria_Llegada;
+                outputItem.Num_Autorizacion_Municipal_Llegada = item.Num_Autorizacion_Municipal_Llegada;                
+                
+                outputItem.Certificado_Trat_Disp = item.Certificado_Trat_Disp;
+                outputItem.Cantidad_RS_Dispuesto = item.Cantidad_RS_Dispuesto;
+                outputItem.Fecha_Devolucion = item.Fecha_Devolucion??item.Fecha_Devolucion;
+                outputItem.Informe_Transporte = item.Informe_Transporte;
+                outputItem.Manifiesto = item.Manifiesto;
+                outputItem.Asesor_MAP = itemAsesor!=null?new Usuario(itemAsesor.Id_Usuario, itemAsesor.Id_Rol, itemAsesor.Nombres, itemAsesor.Apellidos, itemAsesor.Email):new Usuario();
+                
+                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
+                outputItem.Fecha_Registro = item.Fecha_Registro;
+                outputItem.Estado = item.Estado;
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
         public async Task<string> GetLastItem()
         {
             var lista = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString()) || x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())).ToListAsync();
