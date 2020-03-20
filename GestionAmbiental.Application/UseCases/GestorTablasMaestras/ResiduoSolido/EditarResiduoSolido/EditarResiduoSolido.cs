@@ -19,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ResiduoSoli
         {
             var residuo_solido = new Domain.ValueObjects.Residuo_Solido();
             residuo_solido.Id_Residuo_Solido = Id_Residuo_Solido;
+            residuo_solido.Tipo_Residuo = new Domain.ValueObjects.Tipo_Residuo();
             residuo_solido.Tipo_Residuo.Id_Tipo_Residuo = Id_Tipo_Residuo;
             residuo_solido.Descripcion = Descripcion;
             residuo_solido.Estado = Estado;

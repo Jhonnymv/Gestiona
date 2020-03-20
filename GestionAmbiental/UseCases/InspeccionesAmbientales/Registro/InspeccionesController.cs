@@ -235,7 +235,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [HttpPost]
         public async Task<IActionResult> NuevaInspeccion(NuevaInspeccionModel model)
         {
-
             if (ModelState.IsValid)
             {
                 if (HttpContext.Session.GetString("SessionUser") != null)

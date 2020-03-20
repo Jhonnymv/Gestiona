@@ -14,7 +14,7 @@
                     <a class="nav-link" id="Motivo">Motivo de Ingreso/Salida</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="Tipo">Tipo de Residuo</a>
+                    <a class="nav-link" id="ResiduosSolidos">Tipo de Residuo</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" id="Responsable">Responsable ARC/CMRS</a>
@@ -33,30 +33,116 @@
                     <button class="btn btn-primary">Enviar</button>
                 </div>
             </div>
-            <div class="row">
-
+            <div class="row justify-content-start mt-2">
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+                </div>
             </div>
-            
+            <div class="row" id="tab_content">
+            </div>
+            <div class="row justify-content-center" id="paginado">
+            </div>
         </div>
     </div>
 @section Scripts{ 
 <script type="text/javascript">
+    $(document).ready(function () {
+        FiltrarACR_CMRS(1);
+        $("#btn_agregar").prop("href", "/GestorIngresoSalidaRS/AgregarACR_CMRS");
+    });
+
     $("#ACR_CMRS").on('click', function (e) {
         $(this).tab('show');
+        $("#btn_agregar").prop("href", "/GestorIngresoSalidaRS/AgregarACR_CMRS");
+        FiltrarACR_CMRS(1);
     });
     $("#Motivo").on('click', function (e) {
         $(this).tab('show');
+        $("#btn_agregar").prop("href", "/GestorIngresoSalidaRS/AgregarMotivo");
+        FiltrarMotivo(1);
     });
-    $("#Tipo").on('click', function (e) {
+    $("#ResiduosSolidos").on('click', function (e) {
         $(this).tab('show');
+        $("#btn_agregar").prop("href", "/GestorIngresoSalidaRS/AgregarResiduosSolidos");
+        FiltrarResiduosSolidos(1);
     });
     $("#Responsable").on('click', function (e) {
         $(this).tab('show');
+        $("#btn_agregar").prop("href", "/GestorIngresoSalidaRS/AgregarResponsablesACR_CRMS");
+        FiltrarResponsablesACR_CRMS(1);
     });
 
-//    $('#listItems a').on('click', function (e) {
-//        e.preventDefault();
-//        $(this).tab('show');
-//})
+    function FiltrarACR_CMRS(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/GestorIngresoSalidaRS/FiltrarACR_CMRS",
+            data: {
+                "pagina": pag,
+                "rpp":10,
+                "filtro": $('#filtro').val(),
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tab_content').empty()
+                $('#tab_content').html(response.tabla)
+                $('#paginado').html(response.paginador)
+                /*$('#nRegistros').html(response.nRegistros)*/
+            }
+        });
+    }
+    function FiltrarMotivo(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/GestorIngresoSalidaRS/FiltrarMotivo",
+            data: {
+                "pagina": pag,
+                "rpp":10,
+                "filtro": $('#filtro').val(),
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tab_content').empty()
+                $('#tab_content').html(response.tabla)
+                $('#paginado').html(response.paginador)
+                /*$('#nRegistros').html(response.nRegistros)*/
+            }
+        });
+    }
+    function FiltrarResponsablesACR_CRMS(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/GestorIngresoSalidaRS/FiltrarResponsablesACR_CRMS",
+            data: {
+                "pagina": pag,
+                "rpp":10,
+                "filtro": $('#filtro').val(),
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tab_content').empty()
+                $('#tab_content').html(response.tabla)
+                $('#paginado').html(response.paginador)
+                /*$('#nRegistros').html(response.nRegistros)*/
+            }
+        });
+    }
+    function FiltrarResiduosSolidos(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/GestorIngresoSalidaRS/FiltrarResiduosSolidos",
+            data: {
+                "pagina": pag,
+                "rpp":10,
+                "filtro": $('#filtro').val(),
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tab_content').empty()
+                $('#tab_content').html(response.tabla)
+                $('#paginado').html(response.paginador)
+                /*$('#nRegistros').html(response.nRegistros)*/
+            }
+        });
+    }
 </script>
 }

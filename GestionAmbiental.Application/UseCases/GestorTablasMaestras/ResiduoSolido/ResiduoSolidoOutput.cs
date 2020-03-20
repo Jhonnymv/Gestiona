@@ -8,6 +8,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ResiduoSoli
     {
         public int Id_Residuo_Solido { get; set; }
         public int Id_Tipo_Residuo { get; set; }
+        public string Tipo_Residuo { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
 
@@ -18,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ResiduoSoli
         {
             Id_Residuo_Solido = residuo_solido.Id_Residuo_Solido;
             Id_Tipo_Residuo = residuo_solido.Tipo_Residuo.Id_Tipo_Residuo;
+            Tipo_Residuo = residuo_solido.Tipo_Residuo.Descripcion;
             Descripcion = residuo_solido.Descripcion;
             Estado = residuo_solido.Estado;
         }

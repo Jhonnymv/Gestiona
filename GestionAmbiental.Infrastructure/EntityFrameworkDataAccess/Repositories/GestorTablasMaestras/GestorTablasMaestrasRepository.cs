@@ -97,7 +97,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = new Entities.ResiduosSolidos.Residuo_Solido
             {
                 Descripcion = residuo_solido.Descripcion,
-                Id_Tipo_Residuo = residuo_solido.Id_Residuo_Solido,
+                Id_Tipo_Residuo = residuo_solido.Tipo_Residuo.Id_Tipo_Residuo,
                 Estado = "ACT"
             };
             _context.Residuos_Solidos.Add(entity);

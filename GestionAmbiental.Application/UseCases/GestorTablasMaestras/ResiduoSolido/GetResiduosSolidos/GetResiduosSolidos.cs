@@ -27,6 +27,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ResiduoSoli
                 temp.Id_Residuo_Solido = item.Id_Residuo_Solido;
                 temp.Descripcion = item.Descripcion;
                 temp.Id_Tipo_Residuo = item.Tipo_Residuo.Id_Tipo_Residuo;
+                temp.Tipo_Residuo = item.Tipo_Residuo.Descripcion;
                 temp.Estado = item.Estado;
                 outputs.Add(temp);
             }

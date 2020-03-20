@@ -26,6 +26,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ACR_CMRS.Ge
                 var temp = new ACR_CMRSOutput();
                 temp.Id_ACR_CMRS = item.Id_ACR_CMRS;
                 temp.Descripcion = item.Descripcion;
+                temp.Estado = item.Estado;
                 outputs.Add(temp);
             }
             var output = new ACR_CMRSsOutput

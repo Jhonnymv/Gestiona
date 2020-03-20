@@ -1,0 +1,44 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlIngresoSalida.ResponsablesACR_CRMSModel
+@{
+    ViewData["Title"] = "AgregarResponsablesACR_CRMS";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar Responsable ACR/CMRS</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorIngresoSalidaRS" asp-action="AgregarResponsablesACR_CRMS">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Nombres"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Nombres"></span>
+                    <input type="text" class="form-control" asp-for="Nombres">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Apellidos"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Apellidos"></span>
+                    <input type="text" class="form-control" asp-for="Apellidos">
+                </div>
+                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorIngresoSalidaRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+

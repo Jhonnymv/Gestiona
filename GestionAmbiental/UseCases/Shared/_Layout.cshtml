@@ -64,6 +64,7 @@
                                 <a class="dropdown-item" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
                                 <a class="dropdown-item" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Acto/Condición</a>
                                 <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
+                                <a class="dropdown-item" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">Residuos Sólidos</a>
                             </div>
                         </li>
 
@@ -78,6 +79,12 @@
                                 <a class="dropdown-item" asp-controller="ManifiestoRS" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos</a>
                                 <a class="dropdown-item" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
                                 <a class="dropdown-item" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown dropleft">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Gestor Tablas Maestras</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                                <a class="dropdown-item" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">Ingreso Salida RS</a>
                             </div>
                         </li>
                         <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin">Iniciar Sesión</a></li>
