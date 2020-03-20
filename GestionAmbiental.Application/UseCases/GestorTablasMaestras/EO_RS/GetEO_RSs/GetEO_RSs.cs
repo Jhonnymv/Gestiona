@@ -24,6 +24,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.GetEO
             foreach (var item in eorss)
             {
                 var temp = new EO_RSOutput();
+                temp.Id_EO_RS = item.Id_EO_RS;
                 temp.Razon_Social = item.Razon_Social;
                 temp.Registro = item.Registro;
                 temp.Fecha_Vencimiento_Registro = item.Fecha_Vencimiento_Registro;

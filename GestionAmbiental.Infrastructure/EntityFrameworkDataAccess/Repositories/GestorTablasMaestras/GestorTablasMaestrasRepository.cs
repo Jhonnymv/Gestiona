@@ -130,6 +130,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return tipoCondicionEntity.Id_Tipo_Condicion;
         }
 
+        public async Task<int> AddUsuario_Notificar_RS(int Id_Usuario_AD)
+        {
+            var temp_entity = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(Id_Usuario_AD));
+            var entity = new Entities.ResiduosSolidos.Usuario_Notificar_RS
+            {
+                Nombres = temp_entity.Nombres,
+                Apellidos = temp_entity.Apellidos,
+                Email = temp_entity.Email,
+                Estado = "ACT",
+                Id_Rol = temp_entity.Id_Rol,
+                usuario_red = temp_entity.usuario_red
+            };
+            _context.Usuarios_Notificar_RS.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Usuarios_Notificar_RS;
+        }
+
         public async Task<int> AddVehiculo_RS(Vehiculo_RS vehiculo_rs)
         {
             var entity = new Entities.ResiduosSolidos.Vehiculo_RS
@@ -182,6 +199,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Id_Conductor_RS = entity.Id_Conductor_RS,
                 Nombres = entity.Nombres,
                 Apellidos = entity.Apellidos,
+                NLicencia = entity.NLicencia,
                 Estado = entity.Estado
             };
             return output;
@@ -396,6 +414,35 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
+        public async Task<List<Usuario_Notificar_RS>> GetUsuario_Notificar_RS(string filtro)
+        {
+            var usuarios = await _context.Usuarios_Notificar_RS.Where(x =>
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
+            ).OrderBy(x => x.Nombres)
+            .ToListAsync();
+
+            var output = new List<Usuario_Notificar_RS>();
+            foreach (var item in usuarios)
+                output.Add(new Usuario_Notificar_RS(item.Id_Usuarios_Notificar_RS, item.Id_Rol,  item.Nombres, item.Apellidos, item.usuario_red, item.Email, item.Estado));
+            return output;
+        }
+
+        public async Task<Usuario_Notificar_RS> GetUsuario_Notificar_RS(int id_usuario_notificar)
+        {
+            var usuario = await _context.Usuarios_Notificar_RS.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_RS.Equals(id_usuario_notificar));
+            var output = new Usuario_Notificar_RS
+            {
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Id_Rol = usuario.Id_Rol,
+                usuario_red = usuario.usuario_red,
+                Estado = usuario.Estado
+            };
+            return output;
+        }
+
         public async Task<List<Vehiculo_RS>> GetVehiculo_RS(string filtro)
         {
             var entities = await _context.Vehiculos_RS.Where(x => x.Placa.Contains(filtro == null ? x.Placa : filtro)).OrderBy(x => x.Placa).ToListAsync();
@@ -516,6 +563,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             usuarioEntity.Estado = usuario.Estado;
 
             _context.Usuarios.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUsuario_Notificar_RS(Usuario_Notificar_RS usuario_notifcar)
+        {
+            var usuarioEntity = await _context.Usuarios_Notificar_RS.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_RS.Equals(usuario_notifcar.Id_Usuario_Notificar_RS));
+            usuarioEntity.Nombres = usuario_notifcar.Nombres;
+            usuarioEntity.Apellidos = usuario_notifcar.Apellidos;
+            usuarioEntity.Email = usuario_notifcar.Email;
+            usuarioEntity.Id_Rol = usuario_notifcar.Id_Rol;
+            usuarioEntity.usuario_red = usuario_notifcar.usuario_red;
+            usuarioEntity.Estado = usuario_notifcar.Estado;
+
+            _context.Usuarios_Notificar_RS.Update(usuarioEntity);
             await _context.SaveChangesAsync();
         }
 

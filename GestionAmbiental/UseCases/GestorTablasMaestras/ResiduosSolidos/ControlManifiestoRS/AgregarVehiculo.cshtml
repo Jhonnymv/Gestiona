@@ -1,0 +1,46 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlManifiestoRS.VehiculoModel
+@{
+    ViewData["Title"] = "AgregarVehiculo";
+    Layout = "~/UseCases/Shared/_Layout.cshtml"; 
+    }
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Agregar de Vehículo</h2>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorManifiestoRS" asp-action="AgregarVehiculo">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Placa"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Placa"></span>
+                        <input type="text" class="form-control" asp-for="Placa">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Capacidad"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Capacidad"></span>
+                        <input type="number" class="form-control" asp-for="Capacidad">
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+
+
+

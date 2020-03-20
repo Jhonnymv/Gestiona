@@ -1,0 +1,50 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlManifiestoRS.EO_RSModel
+@{
+    ViewData["Title"] = "AgregarEO_RS";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar de EO-RS</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorManifiestoRS" asp-action="AgregarEO_RS">
+
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Razon_Social"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Razon_Social"></span>
+                    <input type="text" class="form-control" asp-for="Razon_Social" maxlength="100">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Registro"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Registro"></span>
+                    <input type="text" class="form-control" asp-for="Registro" maxlength="10">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Fecha_Vencimiento_Registro"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro"></span>
+                    <input type="date" class="form-control" asp-for="Fecha_Vencimiento_Registro">
+                </div>
+                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+

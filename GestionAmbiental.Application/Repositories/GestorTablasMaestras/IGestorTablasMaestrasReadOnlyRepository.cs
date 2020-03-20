@@ -63,5 +63,10 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<Vehiculo_RS> GetVehiculo_RS(int id_vehiculo_rs);
         Task UpdateVehiculo_RS(Vehiculo_RS vehiculo_rs);
         Task<int> AddVehiculo_RS(Vehiculo_RS vehiculo_rs);
+        //Tb_Usuario_Notificar_RS
+        Task<List<Usuario_Notificar_RS>> GetUsuario_Notificar_RS(string filtro);
+        Task<Usuario_Notificar_RS> GetUsuario_Notificar_RS(int id_usuario_notificar);
+        Task UpdateUsuario_Notificar_RS(Usuario_Notificar_RS usuario_notifcar);
+        Task<int> AddUsuario_Notificar_RS(int Id_Usuario_AD);
     }
 }
