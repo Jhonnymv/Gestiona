@@ -15,6 +15,7 @@ using GestionAmbiental.Application.UseCases.RAC.Registro.AmpliarFechaRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
+using GestionAmbiental.Application.UseCases.RAC.Registro.EliminarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Domain.Enum;
@@ -36,6 +37,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IConsultarRAC _consultarRAC;
         private readonly IGetUsuario _getUsuario;
         private readonly IAmpliarFechaRAC _ampliarFechaRAC;
+        private readonly IEliminarRAC _eliminarRAC;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
@@ -46,6 +48,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             IRegistrarRAC registrarRAC,
             IGetUsuario getUsuario,
             IAmpliarFechaRAC ampliarFechaRAC,
+            IEliminarRAC eliminarRAC,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -56,6 +59,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _registrarRAC = registrarRAC;
             _getUsuario = getUsuario;
             _ampliarFechaRAC = ampliarFechaRAC;
+            _eliminarRAC = eliminarRAC;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -272,7 +276,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
-                var reporte = await _consultarRAC.Execute(IdDescencriptado);
+                var reporte = await _consultarRAC.Execute(IdDescencriptado,userInfo.NombreUsuario);
                 var model = new DetallerRACModel
                 {
                     Id_RAC = reporte.Id_RAC,
@@ -299,6 +303,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Evidencia_Obs = reporte.Evidencia_Obs,
                     Estado = reporte.Estado                   
                 };
+                ViewBag.Permiso = reporte.Permiso;
+
                 return View(model);
             }
         }
@@ -309,6 +315,13 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             var IdDescencriptado = Int32.Parse(_protector.Unprotect(idRAC));
             await _ampliarFechaRAC.Execute(IdDescencriptado, fecha, userInfo.NombreUsuario);
             return RedirectToAction("DetalleRAC", new { IdRAC = idRAC });
+        }
+        public async Task<IActionResult> EliminarRAC(string IdRAC)
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+            await _eliminarRAC.Execute(IdDescencriptado, userInfo.NombreUsuario);
+            return RedirectToAction("Resumen");
         }
         private string CreateUniqueFileName(int nFile)
         {

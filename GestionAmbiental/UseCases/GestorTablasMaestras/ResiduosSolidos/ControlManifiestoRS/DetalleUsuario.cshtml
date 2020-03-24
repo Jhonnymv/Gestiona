@@ -42,6 +42,15 @@
             </div>
             <div class="row mb-2">
                 <div class="col-lg-4">
+                    <label asp-for="Email"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Email"></span>
+                    <input type="text" class="form-control" asp-for="Email" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
                     <label asp-for="Id_Rol"></label>
                 </div>
                 <div class="col-lg-8">

@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-lg-8">
                     <span class="text-danger" asp-validation-for="NLicencia"></span>
-                    <input type="text" class="form-control" asp-for="NLicencia" disabled>
+                    <input type="text" class="form-control" asp-for="NLicencia" maxlength="10" disabled>
                 </div>
             </div>
             <div class="row mb-2">
@@ -58,7 +58,7 @@
                 <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
             </div>
             <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorIngresoSalidaRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
                 <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
             </div>
         </form>

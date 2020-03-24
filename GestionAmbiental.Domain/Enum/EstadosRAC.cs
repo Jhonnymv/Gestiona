@@ -12,5 +12,6 @@ namespace GestionAmbiental.Domain.Enum
         Rechazado = 4,
         Vencido = 5,
         Ampliado = 6,
+        Eliminado = 7
     }
 }

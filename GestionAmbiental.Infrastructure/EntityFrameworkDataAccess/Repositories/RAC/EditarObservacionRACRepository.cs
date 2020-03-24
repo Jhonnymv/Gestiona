@@ -41,5 +41,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task EliminarRAC(int idRAC,int idUsuario)
+        {
+            var rac_entity = await _context.RACs.FirstOrDefaultAsync(x => x.Id_RAC.Equals(idRAC));
+            if (rac_entity != null)
+            {
+                rac_entity.Estado = EstadosRAC.Eliminado.ToString();
+                _context.RACs.Update(rac_entity);
+                await _context.SaveChangesAsync();
+
+                var log = new Log_RAC();
+                var bkp = JsonConvert.SerializeObject(rac_entity);
+                log.Bkp = bkp;
+                log.Fecha = DateTime.Now;
+                log.Id_RAC = rac_entity.Id_RAC;
+                log.Id_Usuario = idUsuario;
+                log.Tipo = TipoAccion.DELETE.ToString();
+
+                _context.Log_RACs.Add(log);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

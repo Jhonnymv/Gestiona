@@ -9,8 +9,10 @@ using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ManifiestoR
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ManifiestoRS.GetManifiestosTipoLlegada;
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ManifiestoRS.GetManifiestosTipoSalida;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS
 {
@@ -37,21 +39,32 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _getSelectItems.Execute();
-            var residuo_solido = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();            
-            residuo_solido.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _getSelectItems.Execute();
+                var residuo_solido = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuo_solido.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
 
-            var eors = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
-            eors.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            ViewBag.ResiduoSolido = residuo_solido;
-            ViewBag.ResiduoSolidoMensual = residuo_solido.Where(x=>Convert.ToInt32(x.Value)>0);
-            ViewBag.EORS = eors;
-            ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
-            ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
-            return View();
+                var eors = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
+                eors.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.ResiduoSolido = residuo_solido;
+                ViewBag.ResiduoSolidoMensual = residuo_solido.Where(x => Convert.ToInt32(x.Value) > 0);
+                ViewBag.EORS = eors;
+                ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+                ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> GetRegistrosEntreFechas(string fechaInicio, string fechaFin, string observacion,int residuo_solido,int eors_salida, int eors_llegada, string frecuencia)

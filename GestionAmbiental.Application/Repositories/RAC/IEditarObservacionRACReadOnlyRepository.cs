@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.Repositories.RAC
     public interface IEditarObservacionRACReadOnlyRepository
     {
         Task AmpliarFechaObservacionRAC(int idRAC, DateTime nuevaFecha,int idUsuario);
+        Task EliminarRAC(int idRAC, int idUsuario);
     }
 }

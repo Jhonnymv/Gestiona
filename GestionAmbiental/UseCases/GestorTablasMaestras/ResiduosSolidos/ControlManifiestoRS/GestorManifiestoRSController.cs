@@ -21,8 +21,10 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.Get
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.GetVehiculos_RS;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.DeleteUsuarios;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlManifiestoRS
 {
@@ -78,7 +80,19 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
 
         public IActionResult Resumen()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         public async Task<IActionResult> FiltrarEO_RS(string filtro, int pagina, int rpp)
         {
@@ -136,24 +150,57 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleEO_RS(int IdEO_RS)
         {
-            var EO_RS = await _getEO_RS.Execute(IdEO_RS);
-            var model = new EO_RSModel();
-            model.Id_EO_RS = EO_RS.Id_EO_RS;
-            model.Razon_Social = EO_RS.Razon_Social;
-            model.Registro = EO_RS.Registro;
-            model.Fecha_Vencimiento_Registro = EO_RS.Fecha_Vencimiento_Registro.ToString("yyyy-MM-dd");
-            model.Estado = EO_RS.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var EO_RS = await _getEO_RS.Execute(IdEO_RS);
+                var model = new EO_RSModel();
+                model.Id_EO_RS = EO_RS.Id_EO_RS;
+                model.Razon_Social = EO_RS.Razon_Social;
+                model.Registro = EO_RS.Registro;
+                model.Fecha_Vencimiento_Registro = EO_RS.Fecha_Vencimiento_Registro.ToString("yyyy-MM-dd");
+                model.Estado = EO_RS.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarEO_RS(EO_RSModel model)
         {
-            if (ModelState.IsValid)
-                await _editarEO_RS.Execute(model.Id_EO_RS,model.Razon_Social,model.Registro,model.Fecha_Vencimiento_Registro, model.Estado);
-            return RedirectToAction("DetalleEO_RS", new { IdEO_RS = model.Id_EO_RS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarEO_RS.Execute(model.Id_EO_RS, model.Razon_Social, model.Registro, model.Fecha_Vencimiento_Registro, model.Estado);
+                return RedirectToAction("DetalleEO_RS", new { IdEO_RS = model.Id_EO_RS });
+            }
         }
         public async Task<IActionResult> AgregarEO_RS()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarEO_RS(EO_RSModel model)
@@ -221,24 +268,60 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleConductor(int IdConductor)
         {
-            var Conductor = await _getConductorRS.Execute(IdConductor);
-            var model = new ConductorModel();
-            model.Id_Conductor_RS = Conductor.Id_Conductor_RS;
-            model.Nombres = Conductor.Nombres;
-            model.Apellidos = Conductor.Apellidos;
-            model.NLicencia = Conductor.NLicencia;
-            model.Estado = Conductor.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var Conductor = await _getConductorRS.Execute(IdConductor);
+                var model = new ConductorModel();
+                model.Id_Conductor_RS = Conductor.Id_Conductor_RS;
+                model.Nombres = Conductor.Nombres;
+                model.Apellidos = Conductor.Apellidos;
+                model.NLicencia = Conductor.NLicencia;
+                model.Estado = Conductor.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarConductor(ConductorModel model)
         {
-            if (ModelState.IsValid)
-                await _editarConductorRS.Execute(model.Id_Conductor_RS, model.Nombres, model.Apellidos, model.NLicencia, model.Estado);
-            return RedirectToAction("DetalleConductor", new { IdConductor = model.Id_Conductor_RS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                    await _editarConductorRS.Execute(model.Id_Conductor_RS, model.Nombres, model.Apellidos, model.NLicencia, model.Estado);
+                return RedirectToAction("DetalleConductor", new { IdConductor = model.Id_Conductor_RS });
+            }
         }
         public async Task<IActionResult> AgregarConductor()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarConductor(ConductorModel model)
@@ -305,23 +388,59 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleVehiculo(int IdVehiculo)
         {
-            var Vehiculo = await _getVehiculo_RS.Execute(IdVehiculo);
-            var model = new VehiculoModel();
-            model.Id_Vehiculo_RS = Vehiculo.Id_Vehiculo_RS;
-            model.Placa = Vehiculo.Placa;
-            model.Capacidad = Vehiculo.Capacidad;
-            model.Estado = Vehiculo.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var Vehiculo = await _getVehiculo_RS.Execute(IdVehiculo);
+                var model = new VehiculoModel();
+                model.Id_Vehiculo_RS = Vehiculo.Id_Vehiculo_RS;
+                model.Placa = Vehiculo.Placa;
+                model.Capacidad = Vehiculo.Capacidad;
+                model.Estado = Vehiculo.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarVehiculo(VehiculoModel model)
         {
-            if (ModelState.IsValid)
-                await _editarVehiculo_RS.Execute(model.Id_Vehiculo_RS,model.Placa,model.Capacidad, model.Estado);
-            return RedirectToAction("DetalleVehiculo", new { IdVehiculo = model.Id_Vehiculo_RS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                    await _editarVehiculo_RS.Execute(model.Id_Vehiculo_RS, model.Placa, model.Capacidad, model.Estado);
+                return RedirectToAction("DetalleVehiculo", new { IdVehiculo = model.Id_Vehiculo_RS });
+            }
         }
         public async Task<IActionResult> AgregarVehiculo()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarVehiculo(VehiculoModel model)
@@ -393,40 +512,75 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleUsuario(int IdUsuario)
         {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
-            roles.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
 
-            ViewBag.Roles = roles;
+                var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
+                roles.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            var Usuario = await _getUsuario_RS.Execute(IdUsuario);
-            var model = new UsuarioModel();
-            model.Id_Usuario_Notificar_RS = Usuario.IdUsuario;
-            model.Id_Rol = Usuario.IdRol;
-            model.Nombres = Usuario.Nombres;
-            model.Apellidos = Usuario.Apellidos;
-            model.usuario_red = Usuario.UsuarioRed;
-            model.Email = Usuario.Email;
-            model.Estado = Usuario.Estado;
-            return View(model);
+                ViewBag.Roles = roles;
+
+                var Usuario = await _getUsuario_RS.Execute(IdUsuario);
+                var model = new UsuarioModel();
+                model.Id_Usuario_Notificar_RS = Usuario.IdUsuario;
+                model.Id_Rol = Usuario.IdRol;
+                model.Nombres = Usuario.Nombres;
+                model.Apellidos = Usuario.Apellidos;
+                model.usuario_red = Usuario.UsuarioRed;
+                model.Email = Usuario.Email;
+                model.Estado = Usuario.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarUsuario(UsuarioModel model)
         {
-            if (ModelState.IsValid)
-                await _editarUsuario_RS.Execute(model.Id_Usuario_Notificar_RS,model.Nombres,model.Apellidos,model.Id_Rol,model.Email,model.usuario_red, model.Estado);
-            return RedirectToAction("DetalleUsuario", new { IdUsuario = model.Id_Usuario_Notificar_RS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                    await _editarUsuario_RS.Execute(model.Id_Usuario_Notificar_RS, model.Nombres, model.Apellidos, model.Id_Rol, model.Email, model.usuario_red, model.Estado);
+                return RedirectToAction("DetalleUsuario", new { IdUsuario = model.Id_Usuario_Notificar_RS });
+            }
         }
         public async Task<IActionResult> AgregarUsuario()
         {
-            var UsuariosAD = await _getUsuarios.Execute();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            var usuarios = UsuariosAD.Usuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos }).ToList();
-            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            
-            ViewBag.ListUsuarios = usuarios;
-            return View();
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var UsuariosAD = await _getUsuarios.Execute();
+
+                var usuarios = UsuariosAD.Usuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.ListUsuarios = usuarios;
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarUsuario(UsuarioModel model)
@@ -440,8 +594,20 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> QuitarUsuario(int Id_Usuario)
         {
-            await _deleteUsuario.Execute(Id_Usuario);
-            return RedirectToAction("Resumen");
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                await _deleteUsuario.Execute(Id_Usuario);
+                return RedirectToAction("Resumen");
+            }
         }
     }
 }

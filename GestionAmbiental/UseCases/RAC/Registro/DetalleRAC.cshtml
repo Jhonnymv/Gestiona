@@ -176,6 +176,10 @@
         {
             <a class="btn btn-primary" style="color:white" onclick="ampliarInspeccion()">Ampliar Fecha</a>
         }
+        @if (ViewBag.Permiso)
+        {
+            <a class="btn btn-danger" style="color:white" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
+        }
         <a class="btn btn-danger" style="color:white" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
         <a class="btn btn-secondary" style="color:white" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
     </div>

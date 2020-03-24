@@ -53,18 +53,29 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _getSelectItems.Execute();
-            var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
-            eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            ViewBag.ResiduosSolidos = residuos_solidos;
-            ViewBag.EO_RS = eo_rs;
-            ViewBag.AsesoresMA = asesoresMA;
-            return View();
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var items = await _getSelectItems.Execute();
+                var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
+                eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesoresMA = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.ResiduosSolidos = residuos_solidos;
+                ViewBag.EO_RS = eo_rs;
+                ViewBag.AsesoresMA = asesoresMA;
+                return View();
+            }
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string nManifiesto, string fechaEmision, string observacion, int residuoSolido, int asesorMAP, int eors_salida, int eors_llegada, int pagina, int rpp)
         {
@@ -125,7 +136,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         }
         public async Task<IActionResult> DetalleManifiesto(string IdManifiesto)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
@@ -134,68 +145,70 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;*/
-            var IdDecrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
-            var data = await _consultarManifiestoRS.Execute(IdDecrypted, "kevin");
-            var model = new DetalleManifiestoRSModel();
-            model.Id_Encriptado = IdManifiesto;
-            model.Id_Manifiesto_RS = IdDecrypted;
-            model.Serie_Manifiesto = data.Serie_Manifiesto;
-            model.Num_Manifiesto = data.Num_Manifiesto;
-            model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto;
-            model.Observacion_Manifiesto = data.Observacion_Manifiesto;
-            model.Id_Residuo_Solido = data.Id_Resido_Solido;
-            model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
-            model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
-            model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
-            model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida;
-            model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
-            model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
-            //Conductor
-            model.Id_Conductor = data.Id_Conductor;
-            model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
-            model.Id_Vehiculo = data.Id_Vehiculo;
-            model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
-            model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
-            model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
-            model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada;
-            model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
-            model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
-            model.Permiso = data.Permiso;
-            model.Estado = data.Estado;
-            //Asesor
-            model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto;
-            model.Fecha_Devolucion = data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd");
-            model.Id_Asesor = data.Id_Asesor_MAP;
-            model.Certificado = data.Certificado_Trat_Disp;
-            model.Informe_Transporte = data.Informe_Transporte;
-            model.Manifiesto_Doc = data.Manifiesto;
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            var items = await _getSelectItems.Execute();
-            var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
-            eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
-            asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var IdDecrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
+                var data = await _consultarManifiestoRS.Execute(IdDecrypted, userInfo.NombreUsuario);
 
-            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
-            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var model = new DetalleManifiestoRSModel();
+                model.Id_Encriptado = IdManifiesto;
+                model.Id_Manifiesto_RS = IdDecrypted;
+                model.Serie_Manifiesto = data.Serie_Manifiesto;
+                model.Num_Manifiesto = data.Num_Manifiesto;
+                model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto;
+                model.Observacion_Manifiesto = data.Observacion_Manifiesto;
+                model.Id_Residuo_Solido = data.Id_Resido_Solido;
+                model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
+                model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
+                model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
+                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida;
+                model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
+                model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
+                //Conductor
+                model.Id_Conductor = data.Id_Conductor;
+                model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
+                model.Id_Vehiculo = data.Id_Vehiculo;
+                model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
+                model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
+                model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
+                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada;
+                model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
+                model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
+                model.Permiso = data.Permiso;
+                model.Estado = data.Estado;
+                //Asesor
+                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto;
+                model.Fecha_Devolucion = data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd");
+                model.Id_Asesor = data.Id_Asesor_MAP;
+                model.Certificado = data.Certificado_Trat_Disp;
+                model.Informe_Transporte = data.Informe_Transporte;
+                model.Manifiesto_Doc = data.Manifiesto;
 
-            ViewBag.Conductores = conductores;
-            ViewBag.Vehiculos = vehiculos;
-            ViewBag.ResiduosSolidos = residuos_solidos;
-            ViewBag.EO_RS = eo_rs;
-            ViewBag.AsesoresMAP = asesores_map;
+                var items = await _getSelectItems.Execute();
+                var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
+                eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
+                asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            return View(model);
-            //}
+                var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+                vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Conductores = conductores;
+                ViewBag.Vehiculos = vehiculos;
+                ViewBag.ResiduosSolidos = residuos_solidos;
+                ViewBag.EO_RS = eo_rs;
+                ViewBag.AsesoresMAP = asesores_map;
+
+                return View(model);
+            }
         }
         public async Task<IActionResult> CompletarManifiesto(string IdManifiesto)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
@@ -204,71 +217,71 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;*/
-            var IdDecrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
-            var data = await _consultarManifiestoRS.Execute(IdDecrypted, "kevin");
-            var model = new CompletarManifiestoRSModel();
-            model.Id_Encriptado = IdManifiesto;
-            model.Id_Manifiesto_RS = IdDecrypted;
-            model.Serie_Manifiesto = data.Serie_Manifiesto;
-            model.Num_Manifiesto = data.Num_Manifiesto;
-            model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto;
-            model.Observacion_Manifiesto = data.Observacion_Manifiesto;
-            model.Id_Residuo_Solido = data.Id_Resido_Solido;
-            model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
-            model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
-            model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
-            model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida;
-            model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
-            model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
-            //Conductor
-            model.Id_Conductor = data.Id_Conductor;
-            model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
-            model.Id_Vehiculo = data.Id_Vehiculo;
-            model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
-            model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
-            model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
-            model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada;
-            model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
-            model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
-            model.Estado = data.Estado;
-            model.Permiso = data.Permiso;
-            //Asesor
-            model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto > 0 ? data.Cantidad_RS_Dispuesto : 0;
-            model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
-            model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var IdDecrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
+                var data = await _consultarManifiestoRS.Execute(IdDecrypted, userInfo.NombreUsuario);
+                var model = new CompletarManifiestoRSModel();
+                model.Id_Encriptado = IdManifiesto;
+                model.Id_Manifiesto_RS = IdDecrypted;
+                model.Serie_Manifiesto = data.Serie_Manifiesto;
+                model.Num_Manifiesto = data.Num_Manifiesto;
+                model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto;
+                model.Observacion_Manifiesto = data.Observacion_Manifiesto;
+                model.Id_Residuo_Solido = data.Id_Resido_Solido;
+                model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
+                model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
+                model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
+                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida;
+                model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
+                model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
+                //Conductor
+                model.Id_Conductor = data.Id_Conductor;
+                model.Num_Licencia_Condutor = data.Num_Licencia_Condutor;
+                model.Id_Vehiculo = data.Id_Vehiculo;
+                model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
+                model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
+                model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
+                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada;
+                model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
+                model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
+                model.Estado = data.Estado;
+                model.Permiso = data.Permiso;
+                //Asesor
+                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto > 0 ? data.Cantidad_RS_Dispuesto : 0;
+                model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
+                model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
 
-            model.Certificado_Lleno = data.Certificado_Trat_Disp != null ? JsonConvert.SerializeObject(data.Certificado_Trat_Disp):null;
-            model.Informe_Transporte_Lleno = data.Informe_Transporte != null ? JsonConvert.SerializeObject(data.Informe_Transporte):null;
-            model.Manifiesto_Doc_Lleno = data.Manifiesto != null? JsonConvert.SerializeObject(data.Manifiesto) : null;
+                model.Certificado_Lleno = data.Certificado_Trat_Disp != null ? JsonConvert.SerializeObject(data.Certificado_Trat_Disp) : null;
+                model.Informe_Transporte_Lleno = data.Informe_Transporte != null ? JsonConvert.SerializeObject(data.Informe_Transporte) : null;
+                model.Manifiesto_Doc_Lleno = data.Manifiesto != null ? JsonConvert.SerializeObject(data.Manifiesto) : null;
 
-            var items = await _getSelectItems.Execute();
-            var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-            residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
-            eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
-            asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-            conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
-            vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var items = await _getSelectItems.Execute();
+                var residuos_solidos = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
+                eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesores_map = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(x => new SelectListItem() { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToList();
+                asesores_map.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
+                vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            ViewBag.Conductores = conductores;
-            ViewBag.Vehiculos = vehiculos;
-            ViewBag.ResiduosSolidos = residuos_solidos;
-            ViewBag.EO_RS = eo_rs;
-            ViewBag.AsesoresMAP = asesores_map;
+                ViewBag.Conductores = conductores;
+                ViewBag.Vehiculos = vehiculos;
+                ViewBag.ResiduosSolidos = residuos_solidos;
+                ViewBag.EO_RS = eo_rs;
+                ViewBag.AsesoresMAP = asesores_map;
 
-            return View(model);
-            //}
+                return View(model);
+            }
         }
         [HttpPost]
         public async Task<IActionResult> CompletarManifiesto(CompletarManifiestoRSModel model)
         {
             if (ModelState.IsValid)
             {
-                //var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var certificados = new List<string>();
                 var informes = new List<string>();
@@ -291,9 +304,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if(model.Certificado_Lleno!=null)
+                else if (model.Certificado_Lleno != null)
                 {
-                    certificados.AddRange( new List<string>(model.Certificado_Lleno.Split(',')));
+                    certificados.AddRange(new List<string>(model.Certificado_Lleno.Split(',')));
                 }
                 if (model.Informe_Transporte != null)
                 {
@@ -365,15 +378,16 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     informes,
                     manifiesto,
                     model.Id_Asesor,
-                    "kevin");
+                    userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
             return RedirectToAction("CompletarManifiesto",new { IdManifiesto = model.Id_Encriptado });
         }
         public async Task<IActionResult> EliminarManifiesto(string IdManifiesto)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var Id_Decrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
-            await _eliminarManifiestoRS.Execute(Id_Decrypted, "kevin");
+            await _eliminarManifiestoRS.Execute(Id_Decrypted, userInfo.NombreUsuario);
             return RedirectToAction("Resumen");
         }
         private string CreateUniqueFileName(string tipo)

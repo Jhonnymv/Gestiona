@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC
 {
     public interface IConsultarRAC
     {
-        Task<RACOutput> Execute(int Id_RAC);
+        Task<RACOutput> Execute(int Id_RAC,string usuario_red);
     }
 }

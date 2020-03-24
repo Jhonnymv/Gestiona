@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 
 namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarCabeceras
@@ -25,6 +26,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
                 output.Permiso = true;
             else
                 output.Permiso = false;
+            if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                output.PermisoAdmin = true;
+            else
+                output.PermisoAdmin = false;
 
                 return output;
         }

@@ -141,27 +141,31 @@
             </div>
         }
 
-        <div class="buttons d-flex justify-content-end">
-            @if (Model.Estado.Equals("Registrado"))
+    <div class="buttons d-flex justify-content-end">
+        @if (Model.Estado.Equals("Registrado"))
+        {
+            <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+            <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
+            if (ViewBag.PermisoAdmin)
             {
-                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
-                <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
+                <button id="eliminar" type="button" class="btn btn-danger ml-2">Eliminar Inspección</button>
             }
-            @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
+        }
+        @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
+        {
+            <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+            <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
+            <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+            @if (ViewBag.nObservacioness > 0)
             {
-                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>                
-                <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
-                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-                @if (ViewBag.nObservacioness > 0)
-                {
-                    <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
-                }
+                <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
             }
-            else if(Model.Estado.Equals("Pendiente"))
-            {
-                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
-            }
-        </div>
+        }
+        else if (Model.Estado.Equals("Pendiente"))
+        {
+            <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+        }
+    </div>
         <input type="hidden" asp-for="opcion" />
         <input type="hidden" asp-for="Estado" />
     </form>
@@ -247,6 +251,18 @@
         });
         $("#eliminar").click(function () {     
             if (window.confirm("¿Seguro que desea eliminar esta inspección?")) {
+                //disable inputs
+                $('#Id_Gerencia_Ejecutora').prop('disabled', false);
+                $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Responsable_Lugar').prop('disabled', false);
+                $('#Id_Responsable_MA').prop('disabled', false);
+                $('#Lugar_Inspeccionado').prop('disabled', false);
+                $('#Inspectores').prop('disabled', false);
+                $('#Hora_Inspeccion').prop('disabled', false);
+                $('#Fecha_Inspeccion').prop('disabled', false);
+                $('#Responsable_Inspeccion').prop('disabled', false);
+                $('#Objetivo').prop('disabled', false);
+               $('#Tipo_Inspeccion').prop('disabled', false);
                 $("#opcion").val("Eliminar");
                 $("#form_nuevaInspeccion").submit();
             }

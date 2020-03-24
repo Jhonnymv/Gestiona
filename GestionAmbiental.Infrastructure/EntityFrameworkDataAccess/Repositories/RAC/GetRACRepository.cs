@@ -18,7 +18,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
         public async Task<Domain.RAC.RAC> GetRAC(int Id_RAC)
         {
             var registro = await _context.RACs.FirstOrDefaultAsync(x => x.Id_RAC.Equals(Id_RAC));
@@ -69,11 +68,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-
         public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fecha, string codigo, int id_Usuario, int filtroGerenciaObs)
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var registros = await _context.RACs.Where(c =>
+                !c.Estado.Equals(EstadosRAC.Eliminado.ToString())&&
                 c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Id_Registrado_Por.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Registrado_Por)
@@ -135,6 +134,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var registros = await _context.RACs.Where(c =>
+                !c.Estado.Equals(EstadosRAC.Eliminado.ToString()) &&
                 c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Id_Responsable_Cierre.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Responsable_Cierre)
@@ -201,6 +201,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var registros = await _context.RACs.Where(c =>
+                !c.Estado.Equals(EstadosRAC.Eliminado.ToString()) &&
                 c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Id_Supervisor.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Supervisor)

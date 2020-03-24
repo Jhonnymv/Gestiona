@@ -416,6 +416,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     }
 
                     ViewBag.Permiso = cabecera.Permiso;
+                    ViewBag.PermisoAdmin = cabecera.PermisoAdmin;
+
                     foreach (var observacion in observaciones)
                     {
                         var evidencia = "";
@@ -480,9 +482,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             if (ModelState.IsValid)
             {
-                if (model.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
-                {                   
-                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                     
                     await _editarInspeccionCabecera.Execute(
                     model.Id_Inspeccion_Cabecera,
@@ -502,7 +502,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         return RedirectToAction("NotificarInspeccion","Notificaciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                     else if(model.opcion.Equals("Eliminar"))
                         return RedirectToAction("Resumen");
-                }                
             }
             return RedirectToAction("Resumen");
         }

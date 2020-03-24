@@ -18,7 +18,9 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Responsable_ACR
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Responsable_ACR_CMRS.EditarResponsable_ACR_CMRS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Responsable_ACR_CMRS.GetResponsable_ACR_CMRS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Responsable_ACR_CMRS.GetResponsables_ACR_CMRS;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlIngresoSalida
 {
@@ -71,7 +73,18 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
 
         public IActionResult Resumen()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
+            }
         }
         public async Task<IActionResult> FiltrarACR_CMRS(string filtro, int pagina, int rpp)
         {
@@ -125,22 +138,55 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleACR_CMRS(int IdACR_CMRS)
         {
-            var acr_cmrs = await _getACR_CMRS.Execute(IdACR_CMRS);
-            var model = new ACR_CMRSModel();
-            model.Id_ACR_CMRS = acr_cmrs.Id_ACR_CMRS;
-            model.Descripcion = acr_cmrs.Descripcion;
-            model.Estado = acr_cmrs.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var acr_cmrs = await _getACR_CMRS.Execute(IdACR_CMRS);
+                var model = new ACR_CMRSModel();
+                model.Id_ACR_CMRS = acr_cmrs.Id_ACR_CMRS;
+                model.Descripcion = acr_cmrs.Descripcion;
+                model.Estado = acr_cmrs.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarACR_CMRS(ACR_CMRSModel model)
         {
-            if(ModelState.IsValid)
-                await _editarACR_CMRS.Execute(model.Id_ACR_CMRS, model.Descripcion, model.Estado);
-            return RedirectToAction("DetalleACR_CMRS",new { IdACR_CMRS = model.Id_ACR_CMRS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarACR_CMRS.Execute(model.Id_ACR_CMRS, model.Descripcion, model.Estado);
+                return RedirectToAction("DetalleACR_CMRS", new { IdACR_CMRS = model.Id_ACR_CMRS });
+            }
         }
         public async Task<IActionResult> AgregarACR_CMRS()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarACR_CMRS(ACR_CMRSModel model)
@@ -204,22 +250,55 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleMotivo(int IdMotivo)
         {
-            var motivo = await _getMotivo.Execute(IdMotivo);
-            var model = new MotivoModel();
-            model.Id_Motivo = motivo.Id_Motivo;
-            model.Descripcion = motivo.Descripcion;
-            model.Estado = motivo.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var motivo = await _getMotivo.Execute(IdMotivo);
+                var model = new MotivoModel();
+                model.Id_Motivo = motivo.Id_Motivo;
+                model.Descripcion = motivo.Descripcion;
+                model.Estado = motivo.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarMotivo(MotivoModel model)
         {
-            if (ModelState.IsValid)
-                await _editarMotivo.Execute(model.Id_Motivo, model.Descripcion, model.Estado);
-            return RedirectToAction("DetalleMotivo", new { IdMotivo = model.Id_Motivo });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarMotivo.Execute(model.Id_Motivo, model.Descripcion, model.Estado);
+                return RedirectToAction("DetalleMotivo", new { IdMotivo = model.Id_Motivo });
+            }
         }
         public async Task<IActionResult> AgregarMotivo()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarMotivo(MotivoModel model)
@@ -285,23 +364,57 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleResiduosSolidos(int IdResiduoSolido)
         {
-            var residuo_solido = await _getResiduoSolido.Execute(IdResiduoSolido);
-            var model = new ResiduosSolidosModel();
-            model.Id_Residuo_Solido = residuo_solido.Id_Residuo_Solido;
-            model.Id_Tipo_Residuo = residuo_solido.Id_Tipo_Residuo;
-            model.Descripcion = residuo_solido.Descripcion;
-            model.Estado = residuo_solido.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var residuo_solido = await _getResiduoSolido.Execute(IdResiduoSolido);
+                var model = new ResiduosSolidosModel();
+                model.Id_Residuo_Solido = residuo_solido.Id_Residuo_Solido;
+                model.Id_Tipo_Residuo = residuo_solido.Id_Tipo_Residuo;
+                model.Descripcion = residuo_solido.Descripcion;
+                model.Estado = residuo_solido.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarResiduosSolidos(ResiduosSolidosModel model)
         {
-            if (ModelState.IsValid)
-                await _editarResiduoSolido.Execute(model.Id_Residuo_Solido,model.Id_Tipo_Residuo, model.Descripcion, model.Estado);
-            return RedirectToAction("DetalleResiduosSolidos", new { IdResiduoSolido = model.Id_Residuo_Solido });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarResiduoSolido.Execute(model.Id_Residuo_Solido, model.Id_Tipo_Residuo, model.Descripcion, model.Estado);
+                return RedirectToAction("DetalleResiduosSolidos", new { IdResiduoSolido = model.Id_Residuo_Solido });
+            }
         }
         public async Task<IActionResult> AgregarResiduosSolidos()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarResiduosSolidos(ResiduosSolidosModel model)
@@ -367,23 +480,58 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         }
         public async Task<IActionResult> DetalleResponsablesACR_CRMS(int IdResponsable)
         {
-            var responsable = await _getResponsableACR_CMRS.Execute(IdResponsable);
-            var model = new ResponsablesACR_CRMSModel();
-            model.Id_Responsable_ACR_CRMS = responsable.Id_Responsable_ACR_CRMS;
-            model.Nombres = responsable.Nombres;
-            model.Apellidos = responsable.Apellidos;
-            model.Estado = responsable.Estado;
-            return View(model);
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var responsable = await _getResponsableACR_CMRS.Execute(IdResponsable);
+                var model = new ResponsablesACR_CRMSModel();
+                model.Id_Responsable_ACR_CRMS = responsable.Id_Responsable_ACR_CRMS;
+                model.Nombres = responsable.Nombres;
+                model.Apellidos = responsable.Apellidos;
+                model.Estado = responsable.Estado;
+                return View(model);
+            }
         }
         public async Task<IActionResult> EditarResponsablesACR_CRMS(ResponsablesACR_CRMSModel model)
         {
-            if (ModelState.IsValid)
-                await _editarResponsableARC_CMRS.Execute(model.Id_Responsable_ACR_CRMS, model.Nombres, model.Apellidos, model.Estado);
-            return RedirectToAction("DetalleResponsablesACR_CRMS", new { IdResponsable = model.Id_Responsable_ACR_CRMS });
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarResponsableARC_CMRS.Execute(model.Id_Responsable_ACR_CRMS, model.Nombres, model.Apellidos, model.Estado);
+                return RedirectToAction("DetalleResponsablesACR_CRMS", new { IdResponsable = model.Id_Responsable_ACR_CRMS });
+            }
         }
         public async Task<IActionResult> AgregarResponsablesACR_CRMS()
         {
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> AgregarResponsablesACR_CRMS(ResponsablesACR_CRMSModel model)

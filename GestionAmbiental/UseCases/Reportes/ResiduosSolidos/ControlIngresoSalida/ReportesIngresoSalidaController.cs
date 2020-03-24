@@ -8,8 +8,10 @@ using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngr
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetRegistrosMotivo;
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetRegistrosTipoResiduo;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida
 {
@@ -34,30 +36,41 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _getSelectItems.Execute();
-            var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
-            acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
-            ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
-            motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var tipo_residuo = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
-            tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-            empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-            var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-            gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            ViewBag.ACR_CMRS = acr_cmrs;
-            ViewBag.IngresoSalida = ingreso_salida;
-            ViewBag.Motivo = motivo;
-            ViewBag.TipoResiduo = tipo_residuo;
-            ViewBag.Empresa = empresa;
-            ViewBag.Gerencias = gerencias;
-            ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
-            ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+                var items = await _getSelectItems.Execute();
+                var acr_cmrs = items.ItemsACR_CMRS.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_ACR_CMRS.ToString(), Text = g.Descripcion }).ToList();
+                acr_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var ingreso_salida = items.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
+                ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
+                motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var tipo_residuo = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
+                tipo_residuo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-            return View();
+                ViewBag.ACR_CMRS = acr_cmrs;
+                ViewBag.IngresoSalida = ingreso_salida;
+                ViewBag.Motivo = motivo;
+                ViewBag.TipoResiduo = tipo_residuo;
+                ViewBag.Empresa = empresa;
+                ViewBag.Gerencias = gerencias;
+                ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+                ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> GetRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa, string frecuencia)
