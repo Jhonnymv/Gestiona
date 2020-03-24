@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlManifiestoRS;
+using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             var data = await _getManifiestosRSReadOnlyRepository.GetManifiestoRS(Id_Manifiesto);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var output = new ManifiestoRSOutput(data);
-            if (data.Id_Registrado_Por.Equals(usuario.IdUsuario))
+            if (data.Id_Registrado_Por.Equals(usuario.IdUsuario)||usuario.IdRol.Equals((int)InspeccionRol.Admin))
                 output.Permiso = true;
             else
                 output.Permiso = false;

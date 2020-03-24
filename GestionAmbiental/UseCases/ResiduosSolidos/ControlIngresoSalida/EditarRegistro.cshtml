@@ -110,7 +110,7 @@
             @if (Model.Permiso)
             {
                 <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
-                <a id="btnEliminar" class="btn btn-danger" asp-controller="IngresoSalidaRS" asp-action="EliminarRegistro" asp-route-IdRegistro="@Model.Encrypted_Id">Eliminar</a>
+                <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
                 <button id="btnRegistrar" type="button" class="btn btn-primary">Guardar</button>
             }
             else
@@ -160,14 +160,13 @@
             CargarValorResiduoSolido();
             HabilitarInputs(@Model.Permiso.ToString().ToLower())
         });
-        /*
-        $("#btnGuardarEstado").on('click', function () {
-            $("#opcion").val("GuardarEstado");
-            $("#formIngresoSalida").submit();
-        });
-        */
         $("#btnRegistrar").on('click', function () {
             $("#opcion").val("Registrar");
+            $("#formIngresoSalida").submit();
+        });
+        $("#btnEliminar").on('click', function () {
+            $("#opcion").val("Eliminar");
+            HabilitarInputs(@Model.Permiso.ToString().ToLower())
             $("#formIngresoSalida").submit();
         });
         function CargarValorResiduoSolido() {

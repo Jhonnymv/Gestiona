@@ -26,12 +26,16 @@ namespace GestionAmbiental.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if(HttpContext.Session.GetString("SessionUser")!= null)
+
+            var userInfo = new UserInfo { NombreUsuario = "kevin", Rol = InspeccionRol.Admin };
+            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+
+            /*if (HttpContext.Session.GetString("SessionUser")!= null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-            }
+            }*/
             return View();
         }
 

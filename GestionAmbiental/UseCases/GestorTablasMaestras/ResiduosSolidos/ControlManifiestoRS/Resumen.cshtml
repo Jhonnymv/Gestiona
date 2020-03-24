@@ -33,7 +33,7 @@
                 <button class="btn btn-primary">Enviar</button>
             </div>
         </div>
-        <div class="row justify-content-start mt-2">
+        <div class="row justify-content-start mt-2 mb-2">
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                 <a class="btn btn-danger" id="btn_agregar">Agregar</a>
             </div>
@@ -68,7 +68,7 @@
     });
     $("#Usuarios").on('click', function (e) {
         $(this).tab('show');
-        //$("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarUsuarios");
+        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarUsuario");
         FiltrarUsuarios(1);
     });
 
@@ -111,7 +111,7 @@
     function FiltrarUsuarios(pag) {
         $.ajax({
             type: "POST",
-            url: "/GestorManifiestoRS/FiltrarUsuarios",
+            url: "/GestorManifiestoRS/FiltrarUsuario",
             data: {
                 "pagina": pag,
                 "rpp":10,

@@ -209,6 +209,10 @@
                 {
                     <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
                     <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+                    <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
+                }else if(Model.Permiso )
+                {
+                    <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
                 }
             </div>
         </div>
@@ -274,5 +278,31 @@
         $("[data-valmsg-for='Placa_Vehiculo']").html("");
         $("[data-valmsg-for='Capacidad_Vehiculo']").html("");
     }
+     $("#btnEliminar").on('click', function () {
+         $("#opcion").val("Eliminar");
+
+         $("#Serie_Manifiesto").prop('disabled', false);
+         $("#Num_Manifiesto").prop('disabled', false);
+         $("#Fecha_Emision_Manifiesto").prop('disabled', false);
+         $("#Observacion_Manifiesto").prop('disabled', false);
+         $("#Id_Residuo_Solido").prop('disabled', false);
+         $("#Cantidad_RS_Evacuado").prop('disabled', false);
+         $("#Id_EO_RS_Salida").prop('disabled', false);
+         $("#Registro_EO_RS_Salida").prop('disabled', false);
+         $("#Fecha_Vencimiento_Registro_Salida").prop('disabled', false);
+         $("#Num_Autorizacion_Municipal_Salida").prop('disabled', false);
+         $("#Num_Autorizacion_Hoja_Ruta").prop('disabled', false);
+         $("#Id_Conductor").prop('disabled', false);
+         $("#Num_Licencia_Condutor").prop('disabled', false);
+         $("#Id_Vehiculo").prop('disabled', false);
+         $("#Capacidad_Vehiculo").prop('disabled', false);
+         $("#Id_EO_RS_Llegada").prop('disabled', false);
+         $("#Registro_EO_RS_Llegada").prop('disabled', false);
+         $("#Fecha_Vencimiento_Registro_Llegada").prop('disabled', false);
+         $("#Num_Autorizacion_Sanitaria_Llegada").prop('disabled', false);
+         $("#Num_Autorizacion_Municipal_Llegada").prop('disabled', false);
+
+         $("#formManifiestoRS").submit();
+        });
 </script>
 }

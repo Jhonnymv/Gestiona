@@ -434,25 +434,26 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/Inspecciones/EditarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Editar" + "</a></td>";
                             filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado+ "&IdCabecera="+IdCabecera+"\">" + "Eliminar" + "</a></td>";
                         }
-                        else { 
-                                filaObservacion += "<td></td>";
-                                filaObservacion += "<td></td>";
-                            }
-                            filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
-                            filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
-                            filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
-                            filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
-                            filaObservacion += "<td>" + evidencia + "</td>";
-                            switch (observacion.NivelRiesgo)
-                            {
-                                case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
-                                default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.NivelRiesgo + "</span>"; break;
-                            }
+                        else 
+                        { 
+                            filaObservacion += "<td></td>";
+                            filaObservacion += "<td></td>";
+                        }
+                        filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
+                        filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
+                        filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
+                        filaObservacion += "<td>" + evidencia + "</td>";
+                        switch (observacion.NivelRiesgo)
+                        {
+                            case "Tolerable": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Alerta": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "No Aceptable": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Bajo": filaObservacion += "<td><span class=\"badge badge-success\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Medio": filaObservacion += "<td><span class=\"badge badge-warning\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            case "Alto": filaObservacion += "<td><span class=\"badge badge-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
+                            default: filaObservacion += "<td><span class=\"badge badge-secondary\">" + observacion.NivelRiesgo + "</span>"; break;
+                        }
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";

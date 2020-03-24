@@ -67,6 +67,7 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<List<Usuario_Notificar_RS>> GetUsuario_Notificar_RS(string filtro);
         Task<Usuario_Notificar_RS> GetUsuario_Notificar_RS(int id_usuario_notificar);
         Task UpdateUsuario_Notificar_RS(Usuario_Notificar_RS usuario_notifcar);
+        Task QuitarUsuario_Notificar_RS(int id_usuario_notificar);
         Task<int> AddUsuario_Notificar_RS(int Id_Usuario_AD);
     }
 }

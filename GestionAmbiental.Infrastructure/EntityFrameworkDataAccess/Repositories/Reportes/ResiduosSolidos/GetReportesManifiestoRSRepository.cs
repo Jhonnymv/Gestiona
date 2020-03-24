@@ -357,5 +357,93 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Dimension>> GetManifiestosResiduoSolidoMensual(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada)
+        {
+            var output = new List<Dimension>();
+            //Tipo_Residuo = Peligroso (1)
+            var list_residuo_solido = await _context.Residuos_Solidos.Where(x => x.Id_Tipo_Residuo.Equals(1)).ToListAsync();
+
+            var registros = await _context.Manifiesto_RSs.Where(x =>
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+                x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+                x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
+                x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
+                x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
+                x.Fecha_Emision_Manifiesto >= FechaInicio &&
+                x.Fecha_Emision_Manifiesto <= FechaFin)
+                .ToListAsync();
+
+            CultureInfo cul = CultureInfo.CurrentCulture;
+            var data = registros.Select(x => new { date = x.Fecha_Emision_Manifiesto.ToString("MM yyyy"), observacion = x.Observacion_Manifiesto, cantidad = x.Cantidad_RS_Evacuado, id = x.Id_Manifiesto_RS }).ToList();
+            var frec = data.GroupBy(x => x.date).ToList();
+
+            int nMeses;
+            var lstMesSinValor = new List<Dimension>();
+            var lstMesConValor = new List<Dimension>();
+
+            if (FechaInicio.Year == FechaFin.Year)
+            {
+                nMeses = FechaFin.Month - FechaInicio.Month + 1;
+
+                for (int i = 1; i <= nMeses; i++)
+                {
+                    var anio = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
+                    var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(2, 2));
+                    var nombre = FechaInicio.AddMonths(i - 1).ToString("MMMM").Substring(0, 3) + " " + FechaInicio.AddMonths(i - 1).ToString("yyyy");
+                    lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + i));
+                }
+            }
+            else
+            {
+                int nAnios = FechaFin.Year - FechaInicio.Year + 1;
+
+                int contador = 0;
+                //Los primeros mese del último anio
+                for (int i = FechaInicio.Month; i <= 12; i++)
+                {
+                    var nombre = FechaInicio.AddMonths(contador).ToString("MMMM").Substring(0, 3) + " " + FechaInicio.AddMonths(contador).ToString("yyyy");
+                    lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + i));
+                    contador++;
+                }
+                //Si son 3 años o más
+                if (nAnios > 2)
+                {
+                    //Considerar todos los años menos el de la fecha inicial y final
+                    for (int j = 1; j <= nAnios - 2; j++)
+                    {
+                        for (int i = 1; i <= 12; i++)
+                        {
+                            var fecha = new DateTime(FechaInicio.Year + j, i, 1);
+                            var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
+                            lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.AddYears(j).Year * 100) + i));
+                        }
+                    }
+                }
+                //Los últimos meses del último anio
+                for (int i = 1; i <= FechaFin.Month; i++)
+                {
+                    var fecha = new DateTime(FechaFin.Year, i, 1);
+                    var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
+                    lstMesSinValor.Add(new Dimension(nombre, 0, (FechaFin.Year * 100) + i));
+                }
+            }
+
+            foreach (var item in frec)
+            {
+                var mes = Convert.ToInt32(item.Key.Substring(0, 2));
+                var anio = Convert.ToInt32(item.Key.Substring(3, 4));
+                var fecha = new DateTime(anio, mes, 1);
+                var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
+
+                if (item.Where(x => x.observacion.Equals("Conforme")).ToList().Count > 0)
+                    lstMesConValor.Add(new Dimension(nombre, item.Where(x => x.observacion.Equals("Conforme")).Sum(x=>x.cantidad), anio * 100 + mes));
+
+            }
+            var distinctConforme = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+            output = distinctConforme.Union(lstMesConValor).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();
+
+            return output;
+        }
     }
 }

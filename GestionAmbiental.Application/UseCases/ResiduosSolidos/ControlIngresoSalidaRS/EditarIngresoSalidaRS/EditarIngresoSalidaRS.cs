@@ -28,19 +28,12 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
-            /*
-            switch (opcion)
+            
+            if(opcion.Equals("Eliminar"))
             {
-                case "Registrar":
-                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
-                    var lastItem = await _getIngresoSalidaRSReadOnlyRepository.GetLastItem();
-                    input.Item = lastItem.Length > 0 ? (Convert.ToInt32(lastItem) + 1).ToString() : "1";
-                    break;
-                case "GuardarEstado":
-                    input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
-                    input.Item = "TBD";
-                    break;
-            }*/
+                input.Item = "0";
+                input.Estado = EstadosResiduosSolidos.Eliminado.ToString();
+            }
                        
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();

@@ -59,6 +59,10 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
                     input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
                     input.Item = "TBD";
                     break;
+                case "Eliminar":
+                    input.Estado = EstadosResiduosSolidos.Eliminado.ToString();
+                    input.Item = "TBD";
+                    break;
             }
 
             input.Id_Manifiesto_RS = Id_Manifiesto_RS;

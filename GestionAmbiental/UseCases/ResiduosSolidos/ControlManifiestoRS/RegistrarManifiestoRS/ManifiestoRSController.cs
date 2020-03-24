@@ -232,12 +232,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
             model.Estado = data.Estado;
             model.Permiso = data.Permiso;
 
-
-                var items = await _getSelectItems.Execute();
-                var residuos_solidos = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals(1)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
-                residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
-                eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var items = await _getSelectItems.Execute();
+            var residuos_solidos = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals(1)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+            residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
+            eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
             var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
@@ -246,10 +245,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
             ViewBag.Conductores = conductores;
             ViewBag.Vehiculos = vehiculos;
             ViewBag.ResiduosSolidos = residuos_solidos;
-                ViewBag.EO_RS = eo_rs;
-
-
-                return View(model);
+            ViewBag.EO_RS = eo_rs;
+            
+            return View(model);
             //}
         }
         [HttpPost]

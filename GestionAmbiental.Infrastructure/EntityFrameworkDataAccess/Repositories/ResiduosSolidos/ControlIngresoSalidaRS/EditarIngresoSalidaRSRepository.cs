@@ -22,8 +22,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task EditarIngresoSalidaRS(Domain.ResiduosSolidos.Ingreso_Salida_RS ingreso_Salida_RS, int Id_Editado_Por)
         {
             var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(ingreso_Salida_RS.Id_Ingreso_Salida_RS));
+            if (ingreso_Salida_RS.Estado.Equals(EstadosInspeccion.Eliminado.ToString()))
+            {
+                entity.Item = ingreso_Salida_RS.Item;
+                entity.Estado = ingreso_Salida_RS.Estado;
+            }
 
-            //entity.Item = ingreso_Salida_RS.Item;
             entity.Id_ACR_CMRS = ingreso_Salida_RS.ACR_CMRS.Id_ACR_CMRS;
             entity.Id_Responsable_ARC_CRMS = ingreso_Salida_RS.Responsable_ACR_CMRS.Id_Responsable_ACR_CRMS;
             entity.Id_Ingreso_Salida = ingreso_Salida_RS.Ingreso_Salida.Id_Ingreso_Salida;
@@ -34,9 +38,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Empresa_RS = ingreso_Salida_RS.Empresa_RS.IdEmpresa;
             entity.Id_Gerencia = ingreso_Salida_RS.Gerencia.IdGerencia;
             entity.Comentario = ingreso_Salida_RS.Comentario;
-            //entity.Estado = ingreso_Salida_RS.Estado;
 
             _context.Ingresos_Salidas_RS.Update(entity);
+            await _context.SaveChangesAsync();
+
+            var log = new Log_Ingreso_Salida_RS();
+            var bkp = JsonConvert.SerializeObject(entity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Ingreso_Salida_RS = entity.Id_Ingreso_Salida_RS;
+            log.Id_Usuario = Id_Editado_Por;
+            if (ingreso_Salida_RS.Estado.Equals(EstadosInspeccion.Eliminado.ToString()))
+                log.Tipo = TipoAccion.DELETE.ToString();
+            else
+                log.Tipo = TipoAccion.UPDATE.ToString();
+
+            _context.Log_Ingreso_Salida_RSs.Add(log);
             await _context.SaveChangesAsync();
         }
         public async Task EliminarRegistroIngresoSalidaRS(int Id_Ingreso_Salida_RS, int Id_Editado_Por)

@@ -10,6 +10,7 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.AgregarEO
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.EditarEO_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.GetEO_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.EO_RS.GetEO_RSs;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_RS.AgregarUsuario_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_RS.EditarUsuario_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_RS.GetUsuario_RS;
@@ -18,7 +19,10 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.Agr
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.EditarVehiculo_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.GetVehiculo_RS;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Vehiculo_RS.GetVehiculos_RS;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.DeleteUsuarios;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.ControlManifiestoRS
 {
@@ -47,8 +51,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         private readonly IEditarUsuario_RS _editarUsuario_RS;
         private readonly IGetUsuario_RS _getUsuario_RS;
         private readonly IGetUsuarios_RS _getUsuarios_RS;
+        private readonly IGetUsuarios _getUsuarios;
+        private readonly IDeleteUsuario _deleteUsuario;
 
-        public GestorManifiestoRSController(IAgregarEO_RS agregarEO_RS, IEditarEO_RS editarEO_RS, IGetEO_RS getEO_RS, IGetEO_RSs getEO_RSs, IAgregarConductorRS agregarConductorRS, IEditarConductorRS editarConductorRS, IGetConductoresRS getConductoresRS, IGetConductorRS getConductorRS, IAgregarVehiculo_RS agregarVehiculo_RS, IEditarVehiculo_RS editarVehiculo_RS, IGetVehiculo_RS getVehiculo_RS, IGetVehiculos_RS getVehiculos_RS, IAgregarUsuario_RS agregarUsuario_RS, IEditarUsuario_RS editarUsuario_RS, IGetUsuario_RS getUsuario_RS, IGetUsuarios_RS getUsuarios_RS)
+        public GestorManifiestoRSController(IAgregarEO_RS agregarEO_RS, IEditarEO_RS editarEO_RS, IGetEO_RS getEO_RS, IGetEO_RSs getEO_RSs, IAgregarConductorRS agregarConductorRS, IEditarConductorRS editarConductorRS, IGetConductoresRS getConductoresRS, IGetConductorRS getConductorRS, IAgregarVehiculo_RS agregarVehiculo_RS, IEditarVehiculo_RS editarVehiculo_RS, IGetVehiculo_RS getVehiculo_RS, IGetVehiculos_RS getVehiculos_RS, IAgregarUsuario_RS agregarUsuario_RS, IEditarUsuario_RS editarUsuario_RS, IGetUsuario_RS getUsuario_RS, IGetUsuarios_RS getUsuarios_RS, IGetUsuarios getUsuarios, IDeleteUsuario deleteUsuarios)
         {
             _agregarEO_RS = agregarEO_RS;
             _editarEO_RS = editarEO_RS;
@@ -66,6 +72,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
             _editarUsuario_RS = editarUsuario_RS;
             _getUsuario_RS = getUsuario_RS;
             _getUsuarios_RS = getUsuarios_RS;
+            _getUsuarios = getUsuarios;
+            _deleteUsuario = deleteUsuarios;
         }
 
         public IActionResult Resumen()
@@ -324,6 +332,116 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleVehiculo", new { IdVehiculo = id });
             }
             return RedirectToAction("AgregarVehiculo");
+        }
+        public async Task<IActionResult> FiltrarUsuario(string filtro, int pagina, int rpp)
+        {
+            var data = await _getUsuarios_RS.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Nombres</th>";
+            tabla += "<th>Apellidos</th>";
+            tabla += "<th>Usuario de Red</th>";
+            tabla += "<th>Email</th>";
+            tabla += "<th>Rol</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.nUsuarios % rpp != 0 ? (data.nUsuarios / rpp) + 1 : data.nUsuarios / rpp;
+            if (data.nUsuarios > 0)
+            {
+                foreach (var fila in data.Usuarios)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Nombres + "</td>";
+                    filasTabla += "<td>" + fila.Apellidos + "</td>";
+                    filasTabla += "<td>" + fila.UsuarioRed + "</td>";
+                    filasTabla += "<td>" + fila.Email + "</td>";
+                    filasTabla += "<td>" + fila.Rol + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorManifiestoRS/DetalleUsuario?IdUsuario=" + fila.IdUsuario + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                for (int i = 1; i <= nPaginas; i++)
+                {
+                    if (i == pagina)
+                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                    else
+                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                }
+                paginador += "</ul>";
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleUsuario(int IdUsuario)
+        {
+
+            var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
+
+            var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
+            roles.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            ViewBag.Roles = roles;
+
+            var Usuario = await _getUsuario_RS.Execute(IdUsuario);
+            var model = new UsuarioModel();
+            model.Id_Usuario_Notificar_RS = Usuario.IdUsuario;
+            model.Id_Rol = Usuario.IdRol;
+            model.Nombres = Usuario.Nombres;
+            model.Apellidos = Usuario.Apellidos;
+            model.usuario_red = Usuario.UsuarioRed;
+            model.Email = Usuario.Email;
+            model.Estado = Usuario.Estado;
+            return View(model);
+        }
+        public async Task<IActionResult> EditarUsuario(UsuarioModel model)
+        {
+            if (ModelState.IsValid)
+                await _editarUsuario_RS.Execute(model.Id_Usuario_Notificar_RS,model.Nombres,model.Apellidos,model.Id_Rol,model.Email,model.usuario_red, model.Estado);
+            return RedirectToAction("DetalleUsuario", new { IdUsuario = model.Id_Usuario_Notificar_RS });
+        }
+        public async Task<IActionResult> AgregarUsuario()
+        {
+            var UsuariosAD = await _getUsuarios.Execute();
+
+            var usuarios = UsuariosAD.Usuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos }).ToList();
+            usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            
+            ViewBag.ListUsuarios = usuarios;
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarUsuario(UsuarioModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = await _agregarUsuario_RS.Execute(model.Id_Usuario_Notificar_RS);
+                return RedirectToAction("DetalleUsuario", new { IdUsuario = id });
+            }
+            return RedirectToAction("AgregarUsuario");
+        }
+        public async Task<IActionResult> QuitarUsuario(int Id_Usuario)
+        {
+            await _deleteUsuario.Execute(Id_Usuario);
+            return RedirectToAction("Resumen");
         }
     }
 }

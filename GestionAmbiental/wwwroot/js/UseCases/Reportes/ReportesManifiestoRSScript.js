@@ -22,6 +22,9 @@ var graph_cant_tipo_salida;
 //Variable gráfico Tipo Llegada
 var data_cant_tipo_llegada = [];
 var graph_cant_tipo_llegada;
+//Variables gráfico RS X Mes
+var data_cant_rs_mes = [];
+var graph_cant_rs_mes;
 
 $(document).ready(function () {
     Filtrar();
@@ -42,6 +45,7 @@ function Filtrar() {
         ActualizarDatosGraficoCamion();
         ActualizarDatosGraficoTipoSalida();
         ActualizarDatosGraficoTipoLlegada();
+        ActualizarRSxMes();
     } else {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
@@ -544,4 +548,91 @@ function CrearGraficoTipoLlegada(labels, data) {
             }
         }
     );
+}
+//Para gráfico Residuos Solido Mensual
+function ActualizarRSxMes() {
+    $.ajax({
+        type: "POST",
+        url: "/ReportesManifiestoRS/GetManifiestosResiduoSolidoMensual",
+        data: {
+            observacion: $("#Observacion").val(),
+            residuo_solido: $("#selectResiduoSolido").val(),
+            eors_salida: $("#EO_RS_Salida").val(),
+            eors_llegada: $("#EO_RS_Llegada").val(),
+            fechaInicio: $("#FInicio").val(),
+            fechaFin: $("#FFin").val()
+        },
+        traditional: true,
+        success: (response) => {
+            console.log(response)
+            if (data_cant_rs_mes.length > 0) {
+                //Actualizar contador
+                data_cant_rs_mes = response.nRegistros;
+
+                var labels = [];
+                var data = [];
+                for (var i = 0; i < data_cant_rs_mes.length; i++) {
+                    labels.push(data_cant_rs_mes[i].nombre);
+                    data.push(data_cant_rs_mes[i].valor);
+                }
+                //Actualizar gráfica
+                graph_cant_rs_mes.data.labels = labels;
+                graph_cant_rs_mes.data.datasets[0].data = data;
+                graph_cant_rs_mes.update();
+            } else {
+                //Actualizar contador
+                data_cant_rs_mes = response.nRegistros;
+
+                var labels = [];
+                var data = [];
+                for (var i = 0; i < data_cant_rs_mes.length; i++) {
+                    labels.push(data_cant_rs_mes[i].nombre);
+                    data.push(data_cant_rs_mes[i].valor);
+                }
+                //Crear gráfica
+                CrearGraficaRSxMes(labels, data);
+            }
+        }
+    });
+}
+function CrearGraficaRSxMes(labels, data) {
+    graph_cant_rs_mes = new Chart(
+        document.getElementById("chart_rs_mensual"),
+        {
+            "type": "bar",
+            "data": {
+                "labels": labels,
+                "datasets": [
+                    {
+                        "label": "# Cantidad (TM)",
+                        "data": data,
+                        "fill": false,
+                        "backgroundColor": "rgb(46, 103, 147)",
+                        "borderColor": "rgb(46, 103, 147)",
+                        "lineTension": 0.1
+                    }
+                ]
+            },
+            "options": {
+                "scales": {
+                    'yAxes': [{
+                        'ticks': {
+                            'beginAtZero': true
+                        }
+                    }]
+                },
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        });
 }

@@ -433,6 +433,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var usuario = await _context.Usuarios_Notificar_RS.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_RS.Equals(id_usuario_notificar));
             var output = new Usuario_Notificar_RS
             {
+                Id_Usuario_Notificar_RS = usuario.Id_Usuarios_Notificar_RS,
                 Nombres = usuario.Nombres,
                 Apellidos = usuario.Apellidos,
                 Email = usuario.Email,
@@ -464,6 +465,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Estado = entity.Estado
             };
             return output;
+        }
+
+        public async Task QuitarUsuario_Notificar_RS(int id_usuario_notificar)
+        {
+            var entity = await _context.Usuarios_Notificar_RS.FirstOrDefaultAsync(x=>x.Id_Usuarios_Notificar_RS.Equals(id_usuario_notificar));
+            _context.Usuarios_Notificar_RS.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateACR_CMRS(ACR_CMRS acr_cmrs)

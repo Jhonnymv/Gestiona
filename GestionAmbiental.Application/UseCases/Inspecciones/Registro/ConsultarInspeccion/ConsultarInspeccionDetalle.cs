@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using Newtonsoft.Json;
 

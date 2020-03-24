@@ -234,8 +234,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-
+            
             ViewBag.ACR_CMRS = acr_cmrs;
                 ViewBag.IngresoSalida = ingreso_salida;
                 ViewBag.Motivo = motivo;
