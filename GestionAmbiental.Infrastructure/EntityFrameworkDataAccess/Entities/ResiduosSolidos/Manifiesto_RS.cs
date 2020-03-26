@@ -25,13 +25,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public double Cantidad_RS_Evacuado { get; set; }
         [Column(TypeName = "int")]
         public int Id_EO_RS_Salida { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Registro_EO_RS_Salida { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Municipal_Salida { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Conductor_RS { get; set; }
@@ -43,13 +43,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public double? Capacidad_Vehiculo { get; set; }
         [Column(TypeName = "int")]
         public int Id_EO_RS_Llegada { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Registro_EO_RS_Llegada { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         [Column(TypeName = "text")]
         public string Certificado_Trat_Disp { get; set; }

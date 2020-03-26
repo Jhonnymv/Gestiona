@@ -125,15 +125,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                     var usuario = await _getUsuario.Execute(IdUsuario);
                     var usuarios = await _getUsuarios.Execute();
 
-                    var roles = new List<SelectListItem>
-                    {
-                        new SelectListItem("--SELECCIONE--", "0", true),
-                        new SelectListItem(InspeccionRol.Inspector.ToString(), ((int)InspeccionRol.Inspector).ToString(), false),
-                        new SelectListItem(InspeccionRol.AsesorMAP.ToString(), ((int)InspeccionRol.AsesorMAP).ToString(), false),
-                        new SelectListItem(InspeccionRol.AsesorSSO.ToString(), ((int)InspeccionRol.AsesorSSO).ToString(), false),
-                        new SelectListItem(InspeccionRol.Admin.ToString(), ((int)InspeccionRol.Admin).ToString(), false)
-                    };
+                    var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
 
+                    var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
+                    
                     var listUsuarios = new List<SelectListItem>();
                     listUsuarios.Add(new SelectListItem("Ninguno", "0", true));
                     listUsuarios.AddRange(usuarios.Usuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList());

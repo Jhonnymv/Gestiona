@@ -28,7 +28,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("Nombre del Residuo (Nombre que va en el manifiesto):")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Residuo_Solido { get; set; }
-        [DisplayName("Cantidad Residuo Evacuado y Transportado TM:")]
+        [DisplayName("Cantidad Residuo Evacuado y Transportado TN:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad_RS_Evacuado { get; set; }
         [DisplayName("Nombre de EO-RS:")]
@@ -75,7 +75,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("Certificado de Tratamiento y/o Disposición Final")]
         public List<IFormFile> Certificado { get; set; }
         public string Certificado_Lleno { get; set; }
-        [DisplayName("Cantidad del Residuo Dispuesto (TM):")]
+        [DisplayName("Cantidad del Residuo Dispuesto (TN):")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad_RS_Dispuesto { get; set; }
         [DisplayName("Fecha de Devolución (debe ser <15 días después de su emisión:")]
