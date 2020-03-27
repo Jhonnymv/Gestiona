@@ -40,7 +40,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         public string Num_Licencia_Condutor { get; set; }
         [DisplayName("Placa del Vehículo:")]
         public int Id_Vehiculo { get; set; }
-        [DisplayName("Capacidad de Vehículo TM:")]
+        [DisplayName("Capacidad de Vehículo (t):")]
         public double Capacidad_Vehiculo { get; set; }
         [DisplayName("Nombre de la EO-RS:")]
         public int Id_EO_RS_Llegada { get; set; }
@@ -54,7 +54,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         [DisplayName("Certificado de Tratamiento y/o Disposición Final")]
         public List<string> Certificado { get; set; }
-        [DisplayName("Cantidad del Residuo Dispuesto (TM):")]
+        [DisplayName("Cantidad del Residuo Dispuesto (t):")]
         public double Cantidad_RS_Dispuesto { get; set; }
         [DisplayName("Fecha de Devolución (debe ser <15 días después de su emisión:")]
         public string Fecha_Devolucion { get; set; }

@@ -87,7 +87,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;

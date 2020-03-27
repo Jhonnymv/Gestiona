@@ -146,10 +146,6 @@
         {
             <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
             <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
-            if (ViewBag.PermisoAdmin)
-            {
-                <button id="eliminar" type="button" class="btn btn-danger ml-2">Eliminar Inspección</button>
-            }
         }
         @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
         {
@@ -164,6 +160,10 @@
         else if (Model.Estado.Equals("Pendiente"))
         {
             <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+        }
+        @if (ViewBag.PermisoAdmin)
+        {
+        <button id="eliminar" type="button" class="btn btn-danger ml-2">Eliminar Inspección</button>
         }
     </div>
         <input type="hidden" asp-for="opcion" />

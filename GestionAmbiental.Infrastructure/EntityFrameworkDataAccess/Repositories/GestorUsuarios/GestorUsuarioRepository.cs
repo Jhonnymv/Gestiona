@@ -24,14 +24,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             
             if (usuario != null)
             {
-                if (usuario.Id_Rol.Equals((int)InspeccionRol.Admin))
+                var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
+
+                return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
+
+                /*if (usuario.Id_Rol.Equals((int)InspeccionRol.Admin))
                     return InspeccionRol.Admin;
                 else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorMAP))
                     return InspeccionRol.AsesorMAP;
                 else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorSSO))
                     return InspeccionRol.AsesorSSO;
                 else
-                    return InspeccionRol.Inspector;
+                    return InspeccionRol.Inspector;*/
             }
             else
                 return null;

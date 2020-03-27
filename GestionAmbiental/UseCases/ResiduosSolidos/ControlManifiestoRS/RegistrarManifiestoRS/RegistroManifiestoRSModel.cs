@@ -27,7 +27,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         [DisplayName("Nombre del Residuo (Nombre que va en el manifiesto):")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Residuo_Solido { get; set; }
-        [DisplayName("Cantidad Residuo Evacuado y Transportado TM:")]
+        [DisplayName("Cantidad Residuo Evacuado y Transportado (t):")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Cantidad_RS_Evacuado { get; set; }
         [DisplayName("Nombre de EO-RS:")]
@@ -51,7 +51,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         public string Num_Licencia_Condutor { get; set; }
         [DisplayName("Placa del Vehículo:")]
         public int Id_Vehiculo { get; set; }
-        [DisplayName("Capacidad de Vehículo TM:")]
+        [DisplayName("Capacidad de Vehículo (t):")]
         public double Capacidad_Vehiculo { get; set; }
         [DisplayName("Nombre de la EO-RS:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]

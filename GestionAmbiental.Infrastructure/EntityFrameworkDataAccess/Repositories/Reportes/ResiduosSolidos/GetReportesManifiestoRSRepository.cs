@@ -304,7 +304,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var registros = await _context.Manifiesto_RSs.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
-                x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+                x.Observacion_Manifiesto.Equals("Conforme") &&
                 x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
@@ -335,7 +335,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var registros = await _context.Manifiesto_RSs.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
-                x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+                x.Observacion_Manifiesto.Equals("Conforme") &&
                 x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
@@ -366,7 +366,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var registros = await _context.Manifiesto_RSs.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
-                x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+                x.Observacion_Manifiesto.Equals("Conforme") &&
                 x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
