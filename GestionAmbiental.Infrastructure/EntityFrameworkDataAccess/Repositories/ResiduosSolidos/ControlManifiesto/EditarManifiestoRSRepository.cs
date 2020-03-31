@@ -26,40 +26,45 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Num_Manifiesto = manifiesto_RS.Num_Manifiesto;
             entity.Fecha_Emision_Manifiesto = manifiesto_RS.Fecha_Emision_Manifiesto;
             entity.Observacion_Manifiesto = manifiesto_RS.Observacion_Manifiesto;
-            entity.Id_Residuo_Solido = manifiesto_RS.Residuo_Solido.Id_Residuo_Solido;
-            entity.Cantidad_RS_Evacuado = manifiesto_RS.Cantidad_RS_Evacuado;
-            entity.Id_EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Id_EO_RS;
-            entity.Registro_EO_RS_Salida = manifiesto_RS.Registro_EO_RS_Salida;
-            entity.Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
-            entity.Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
-            entity.Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
-            if (manifiesto_RS.Conductor.Id_Conductor_RS != 0)
-                entity.Id_Conductor_RS = manifiesto_RS.Conductor.Id_Conductor_RS;
-            else
-                entity.Id_Conductor_RS = null;
-            entity.Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
-            if (manifiesto_RS.Vehiculo.Id_Vehiculo_RS != 0)
-                entity.Id_Vehiculo_RS = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
-            else
-                entity.Id_Vehiculo_RS = null;
 
-            entity.Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
-            entity.Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;
-            entity.Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;
-            entity.Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
-            entity.Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
-            entity.Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
+            if (manifiesto_RS.Observacion_Manifiesto.Equals("Conforme"))
+            {
+                entity.Id_Residuo_Solido = manifiesto_RS.Residuo_Solido.Id_Residuo_Solido;
+                entity.Cantidad_RS_Evacuado = manifiesto_RS.Cantidad_RS_Evacuado;
+                entity.Id_EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Id_EO_RS;
+                entity.Registro_EO_RS_Salida = manifiesto_RS.Registro_EO_RS_Salida;
+                entity.Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
+                entity.Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
+                entity.Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
+                if (manifiesto_RS.Conductor.Id_Conductor_RS != 0)
+                    entity.Id_Conductor_RS = manifiesto_RS.Conductor.Id_Conductor_RS;
+                else
+                    entity.Id_Conductor_RS = null;
+                entity.Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
+                if (manifiesto_RS.Vehiculo.Id_Vehiculo_RS != 0)
+                    entity.Id_Vehiculo_RS = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
+                else
+                    entity.Id_Vehiculo_RS = null;
 
-            entity.Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
-            entity.Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
-            entity.Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
-            entity.Informe_Transporte = manifiesto_RS.Informe_Transporte;
+                entity.Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
+                entity.Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;
+                entity.Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;
+                entity.Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
+                entity.Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
+                entity.Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
+
+                entity.Certificado_Trat_Disp = manifiesto_RS.Certificado_Trat_Disp;
+                entity.Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
+                entity.Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion??manifiesto_RS.Fecha_Devolucion;
+                entity.Informe_Transporte = manifiesto_RS.Informe_Transporte;
+            }            
             entity.Manifiesto = manifiesto_RS.Manifiesto;
             entity.Id_Asesor_MAP = manifiesto_RS.Asesor_MAP.IdUsuario;
             //entity.Estado = EstadosResiduosSolidos.Cerrado.ToString();
             entity.Estado = manifiesto_RS.Estado;
 
             _context.Manifiesto_RSs.Update(entity);
+            
             await _context.SaveChangesAsync();
 
             var log = new Log_Manifiesto_RS();

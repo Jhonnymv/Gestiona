@@ -36,7 +36,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarManifiestoRS
                 var manifiestos = await _consultarManifiestoRSDescarga.Execute(fechaInicio, fechaFin);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "ResiduoSolido");
-                string sFileName = @"JU-MAP-PRO-003-F002 CONTROL INGRESO Y SALIDA RESIDUOS SÓLIDOS ACR O CMRS.xlsx";
+                string sFileName = @"JU-MAP-PRO-003-F003 CONTROL INGRESO Y SALIDA RESIDUOS SÓLIDOS ACR O CMRS.xlsx";
                 string sFilePath = Path.Combine(sWebRootFolder, sFileName);
                 FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
 
@@ -89,7 +89,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarManifiestoRS
                     row.CreateCell(8).SetCellValue(manifiestos[i].Registro_EO_RS_Salida);
                     row.GetCell(8).CellStyle = customCellStyle;
 
-                    row.CreateCell(9).SetCellValue(manifiestos[i].Fecha_Vencimiento_Registro_Salida.ToString("dd/MM/yyyy"));
+                    row.CreateCell(9).SetCellValue(manifiestos[i].Fecha_Vencimiento_Registro_Salida!=null? manifiestos[i].Fecha_Vencimiento_Registro_Salida.Value.ToString("dd/MM/yyyy"):"");
                     row.GetCell(9).CellStyle = customCellStyle;
 
                     row.CreateCell(10).SetCellValue(manifiestos[i].Num_Autorizacion_Municipal_Salida);
@@ -116,7 +116,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarManifiestoRS
                     row.CreateCell(17).SetCellValue(manifiestos[i].Registro_EO_RS_Llegada);
                     row.GetCell(17).CellStyle = customCellStyle;
 
-                    row.CreateCell(18).SetCellValue(manifiestos[i].Fecha_Vencimiento_Registro_Llegada.ToString("dd/MM/yyyy"));
+                    row.CreateCell(18).SetCellValue(manifiestos[i].Fecha_Vencimiento_Registro_Llegada!=null? manifiestos[i].Fecha_Vencimiento_Registro_Llegada.Value.ToString("dd/MM/yyyy"):"");
                     row.GetCell(18).CellStyle = customCellStyle;
 
                     row.CreateCell(19).SetCellValue(manifiestos[i].Num_Autorizacion_Sanitaria_Llegada);
@@ -125,19 +125,25 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarManifiestoRS
                     row.CreateCell(20).SetCellValue(manifiestos[i].Num_Autorizacion_Municipal_Llegada);
                     row.GetCell(20).CellStyle = customCellStyle;
 
-                    row.CreateCell(21).SetCellValue("Ver en la plataforma");
+                    row.CreateCell(21);
+                    if (manifiestos[i].Observacion_Manifiesto!="Anulado"&& manifiestos[i].Certificado_Trat_Disp !=null)
+                        row.GetCell(21).SetCellValue("Ver en la plataforma");
                     row.GetCell(21).CellStyle = customCellStyle;
 
-                    row.CreateCell(22).SetCellValue(manifiestos[i].Cantidad_RS_Dispuesto);
+                    row.CreateCell(22).SetCellValue(manifiestos[i].Cantidad_RS_Dispuesto!=null? manifiestos[i].Cantidad_RS_Dispuesto.Value:0);
                     row.GetCell(22).CellStyle = customCellStyle;
 
                     row.CreateCell(23).SetCellValue(manifiestos[i].Fecha_Devolucion != null ? manifiestos[i].Fecha_Devolucion.Value.ToString("dd/MM/yyyy") : "");
                     row.GetCell(23).CellStyle = customCellStyle;
 
-                    row.CreateCell(24).SetCellValue("Ver en la plataforma");
+                    row.CreateCell(24);
+                    if (manifiestos[i].Observacion_Manifiesto != "Anulado" && manifiestos[i].Informe_Transporte != null)
+                        row.GetCell(24).SetCellValue("Ver en la plataforma");
                     row.GetCell(24).CellStyle = customCellStyle;
 
-                    row.CreateCell(25).SetCellValue("Ver en la plataforma");
+                    row.CreateCell(25);
+                    if (manifiestos[i].Manifiesto != null)
+                        row.GetCell(25).SetCellValue("Ver en la plataforma");
                     row.GetCell(25).CellStyle = customCellStyle;
 
                     row.CreateCell(26).SetCellValue(manifiestos[i].Asesor_MAP);

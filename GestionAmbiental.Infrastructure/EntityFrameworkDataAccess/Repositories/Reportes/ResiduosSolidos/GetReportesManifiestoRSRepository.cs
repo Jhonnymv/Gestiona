@@ -291,7 +291,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             foreach (var item in registros)
             {
-                output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x => x.Cantidad_RS_Evacuado);
+                output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x => x.Cantidad_RS_Evacuado.Value);
             }
             return output;
         }
@@ -322,7 +322,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 //output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x=>x.Cantidad_RS_Evacuado);
                 var res_solid = list_residuo_solido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key));
-                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x=>x.Cantidad_RS_Evacuado), item.Key));
+                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x=>x.Cantidad_RS_Evacuado.Value), item.Key.Value));
             }
             return output;
         }
@@ -353,7 +353,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 //output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x => x.Cantidad_RS_Dispuesto);
                 var res_solid = list_residuo_solido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key)); 
-                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x => x.Cantidad_RS_Dispuesto), item.Key));
+                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x => x.Cantidad_RS_Dispuesto.Value), item.Key.Value));
             }
             return output;
         }
@@ -437,7 +437,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
 
                 if (item.Where(x => x.observacion.Equals("Conforme")).ToList().Count > 0)
-                    lstMesConValor.Add(new Dimension(nombre, item.Where(x => x.observacion.Equals("Conforme")).Sum(x=>x.cantidad), anio * 100 + mes));
+                    lstMesConValor.Add(new Dimension(nombre, item.Where(x => x.observacion.Equals("Conforme")).Sum(x=>x.cantidad.Value), anio * 100 + mes));
 
             }
             var distinctConforme = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();

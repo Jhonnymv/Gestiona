@@ -49,9 +49,9 @@
 @section Scripts{ 
 <script type="text/javascript">
     $(document).ready(function () {
-            Filtrar(1);
+            filtrar(1);
         });
-    function Filtrar(pag) {
+    function filtrar(pag) {
         $.ajax({
                 type: "POST",
                 url: "/ReportesInspecciones/GetTablaObservacionesxEstado",

@@ -94,13 +94,21 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 }
 
                 paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina-2; i <= pagina+2; i++)
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    if (i > 0 && i<=nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    }                   
                 }
+                if (pagina <= nPaginas-4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -186,7 +194,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                     model.Num_Autorizacion_Sanitaria_Llegada,
                     model.Num_Autorizacion_Municipal_Llegada,
                     userInfo.NombreUsuario);
-                if (model.opcion.Equals("Registrar"))
+                if (model.opcion.Equals("Registrar") && model.Observacion_Manifiesto.Equals("Conforme"))
                     return RedirectToAction("NotificarRegistroRS", "NotificacionesRS", new { Id_Manifiesto = IdManifiesto });
                 else
                     return RedirectToAction("Resumen");
@@ -213,13 +221,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 model.Id_Manifiesto_RS = IdDecrypted;
                 model.Serie_Manifiesto = data.Serie_Manifiesto;
                 model.Num_Manifiesto = data.Num_Manifiesto;
-                model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto;
+                model.Fecha_Emision_Manifiesto = data.Fecha_Emision_Manifiesto.ToString("yyyy-MM-dd");
                 model.Observacion_Manifiesto = data.Observacion_Manifiesto;
                 model.Id_Residuo_Solido = data.Id_Resido_Solido;
                 model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
                 model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
                 model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
-                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida;
+                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida != null ? data.Fecha_Vencimiento_Registro_Salida.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
                 model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
                 //Conductor
@@ -229,7 +237,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
                 model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
                 model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
-                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada;
+                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada!=null?data.Fecha_Vencimiento_Registro_Llegada.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Estado = data.Estado;

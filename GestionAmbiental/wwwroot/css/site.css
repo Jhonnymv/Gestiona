@@ -256,3 +256,8 @@ td {
 .text-contador {
     color: #2e6793;
 }
+
+@import "../lib/bootstrap/dist/css/bootstrap.min.css";
+.pagination{
+    @extend .dflex, .flex-wrap, .justify-content-center;
+}

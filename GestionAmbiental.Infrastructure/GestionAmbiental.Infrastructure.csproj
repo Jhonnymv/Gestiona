@@ -20,4 +20,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EntityFrameworkDataAccess\Entities\Incidentes\InvestigacionFinal\" />
+  </ItemGroup>
+
 </Project>

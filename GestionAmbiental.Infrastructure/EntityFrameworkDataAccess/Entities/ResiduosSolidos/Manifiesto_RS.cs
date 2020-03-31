@@ -20,15 +20,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "varchar(10)")]
         public string Observacion_Manifiesto { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Residuo_Solido { get; set; }
+        public int? Id_Residuo_Solido { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public double Cantidad_RS_Evacuado { get; set; }
+        public double? Cantidad_RS_Evacuado { get; set; }
         [Column(TypeName = "int")]
-        public int Id_EO_RS_Salida { get; set; }
+        public int? Id_EO_RS_Salida { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Registro_EO_RS_Salida { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Salida { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -42,11 +42,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "decimal(6,2)")]
         public double? Capacidad_Vehiculo { get; set; }
         [Column(TypeName = "int")]
-        public int Id_EO_RS_Llegada { get; set; }
+        public int? Id_EO_RS_Llegada { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Registro_EO_RS_Llegada { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Llegada { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
         [Column(TypeName = "varchar(25)")]
@@ -54,7 +54,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         [Column(TypeName = "text")]
         public string Certificado_Trat_Disp { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public double Cantidad_RS_Dispuesto { get; set; }
+        public double? Cantidad_RS_Dispuesto { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Devolucion { get; set; }
         [Column(TypeName = "text")]

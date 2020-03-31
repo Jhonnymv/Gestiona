@@ -402,9 +402,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var usuarios = await _context.Usuarios.Where(x =>
             x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
-            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
-            //x.Estado.Contains(filtro) ||
-            //x.Email.Contains(filtro)
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro) ||
+            x.usuario_red.Contains(filtro == null ? x.usuario_red : filtro)
             ).OrderBy(x=>x.Nombres)
             .ToListAsync();
             

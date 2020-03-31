@@ -101,14 +101,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                         }
 
                         paginador += "<ul class=\"pagination\">";
-                        for (int i = 1; i <= nPaginas; i++)
+                        if (pagina >= 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                        for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
-                            if (i == pagina)
-                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
-                            else
-                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
+                            if (i > 0 && i <= nPaginas)
+                            {
+                                if (i == pagina)
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
+                                else
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
+                            }
                         }
+                        if (pagina <= nPaginas - 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
+
                     }
                     else
                     {
@@ -227,14 +236,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             filasTabla += "</tr>";
                         }
 
+
                         paginador += "<ul class=\"pagination\">";
-                        for (int i = 1; i <= nPaginas; i++)
+                        if (pagina >= 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                        for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
-                            if (i == pagina)
-                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
-                            else
-                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                            if (i > 0 && i <= nPaginas)
+                            {
+                                if (i == pagina)
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                                else
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                            }
                         }
+                        if (pagina <= nPaginas - 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else
@@ -355,13 +373,21 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                         }
 
                         paginador += "<ul class=\"pagination\">";
-                        for (int i = 1; i <= nPaginas; i++)
+                        if (pagina >= 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                        for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
-                            if (i == pagina)
-                                paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
-                            else
-                                paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                            if (i > 0 && i <= nPaginas)
+                            {
+                                if (i == pagina)
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                                else
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                            }
                         }
+                        if (pagina <= nPaginas - 4 && nPaginas > 5)
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else

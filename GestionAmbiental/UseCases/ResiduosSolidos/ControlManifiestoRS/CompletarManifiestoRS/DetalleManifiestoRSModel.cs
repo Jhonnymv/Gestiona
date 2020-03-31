@@ -17,7 +17,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("N° Manifiesto:")]
         public string Num_Manifiesto { get; set; }
         [DisplayName("Fecha Emisión:")]
-        public DateTime Fecha_Emision_Manifiesto { get; set; }
+        public string Fecha_Emision_Manifiesto { get; set; }
         [DisplayName("Observación Manifiesto:")]
         public string Observacion_Manifiesto { get; set; }
         [DisplayName("Nombre del Residuo (Nombre que va en el manifiesto):")]
@@ -29,7 +29,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("Registro de la EO-RS:")]
         public string Registro_EO_RS_Salida { get; set; }
         [DisplayName("Fecha de Vencimiento Registro:")]
-        public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
+        public string Fecha_Vencimiento_Registro_Salida { get; set; }
         [DisplayName("N° Autorización Municipal:")]
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         [DisplayName("N° Autorización de Hoja Ruta:")]
@@ -47,7 +47,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("Registro de la EO-RS:")]
         public string Registro_EO_RS_Llegada { get; set; }
         [DisplayName("Fecha de Vencimiento Registro EO-RS:")]
-        public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
+        public string Fecha_Vencimiento_Registro_Llegada { get; set; }
         [DisplayName("N° Autorización Sanitaria:")]
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
         [DisplayName("N° Autorización Municipal:")]

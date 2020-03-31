@@ -125,16 +125,24 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                     filasTabla += "<td><a href=\"/GestorManifiestoRS/DetalleEO_RS?IdEO_RS=" + fila.Id_EO_RS + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
-
                 paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + i + ")\">" + i + "</a></li>";
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + i + ")\">" + i + "</a></li>";
+                    }
                 }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEO_RS(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
+               
             }
 
             tabla += filasTabla;
@@ -243,16 +251,24 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                     filasTabla += "<td><a href=\"/GestorManifiestoRS/DetalleConductor?IdConductor=" + fila.Id_Conductor_RS + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
-
                 paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + i + ")\">" + i + "</a></li>";
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + i + ")\">" + i + "</a></li>";
+                    }
                 }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarConductor(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
+
             }
 
             tabla += filasTabla;
@@ -339,9 +355,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
             var tabla = "<table class=\"table\">";
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
-            tabla += "<th>Nombres</th>";
-            tabla += "<th>Apellidos</th>";
-            tabla += "<th>N° Licencia</th>";
+            tabla += "<th>Placa</th>";
+            tabla += "<th>Capacidad</th>";
             tabla += "<th>Estado</th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -365,14 +380,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 }
 
                 paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + i + ")\">" + i + "</a></li>";
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + i + ")\">" + i + "</a></li>";
+                    }
                 }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarVehiculo(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
+
             }
 
             tabla += filasTabla;
@@ -489,13 +513,21 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 }
 
                 paginador += "<ul class=\"pagination\">";
-                for (int i = 1; i <= nPaginas; i++)
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
-                    if (i == pagina)
-                        paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
-                    else
-                        paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                    }
                 }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
             }
 

@@ -226,44 +226,48 @@
             <input class="form-control" type="number" asp-for="Cantidad_RS_Dispuesto" min="0" max="999999" />
         </div>
     </div>
-    <div class="row mb-2 justify-content-start">
-        <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Certificado"></label>
+
+    @if (Model.Observacion_Manifiesto != "Anulado")
+    {
+        <div class="row mb-2 justify-content-start">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Certificado"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger field-validation-error" data-valmsg-for="Certificado" data-valmsg-replace="true">
+                    <span id="danger_certificado" class=""></span>
+                </span>
+                <label class="btn btn-primary" for="Certificado">Seleccione</label>
+                <input type="file" style="visibility:hidden; display:none" asp-for="Certificado" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <label id="archivos_certificado">0 Archivos</label>
+            </div>
+            <input type="hidden" asp-for="@Model.Certificado_Lleno" />
+            <div class="col-sm-12 col-md-4 col-lg-4" id="Certificado_Lleno_Lista">
+                @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="cert">Certificado</a></p>*@
+            </div>
         </div>
-        <div class="col-sm-12 col-md-2 col-lg-2">
-            <span class="text-danger field-validation-error" data-valmsg-for="Certificado" data-valmsg-replace="true">
-                <span id="danger_certificado" class=""></span>
-            </span>
-            <label class="btn btn-primary" for="Certificado">Seleccione</label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Certificado" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+        <div class="row mb-2 justify-content-start">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Informe_Transporte"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger field-validation-error" data-valmsg-for="Informe_Transporte" data-valmsg-replace="true">
+                    <span id="danger_informe" class=""></span>
+                </span>
+                <label class="btn btn-primary" for="Informe_Transporte">Seleccione</label>
+                <input type="file" style="visibility:hidden; display:none" asp-for="Informe_Transporte" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <label id="archivos_informe">0 Archivos</label>
+            </div>
+            <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
+            <div class="col-sm-12 col-md-4 col-lg-4" id="Informe_Transporte_Lleno_Lista">
+                @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="inf">Informe de Transporte</a></p>*@
+            </div>
         </div>
-        <div class="col-sm-12 col-md-4 col-lg-4">
-            <label id="archivos_certificado">0 Archivos</label>
-        </div>  
-        <input type="hidden" asp-for="@Model.Certificado_Lleno" />
-        <div class="col-sm-12 col-md-4 col-lg-4" id="Certificado_Lleno_Lista">                
-            @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="cert">Certificado</a></p>*@
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-start">
-        <div class="col-sm-12 col-md-2 col-lg-2">
-            <label asp-for="Informe_Transporte"></label>
-        </div>
-        <div class="col-sm-12 col-md-2 col-lg-2">
-            <span class="text-danger field-validation-error" data-valmsg-for="Informe_Transporte" data-valmsg-replace="true">
-                <span id="danger_informe" class=""></span>
-            </span>
-            <label class="btn btn-primary" for="Informe_Transporte">Seleccione</label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Informe_Transporte" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4">
-            <label id="archivos_informe">0 Archivos</label>
-        </div>
-        <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
-        <div class="col-sm-12 col-md-4 col-lg-4" id="Informe_Transporte_Lleno_Lista">
-            @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="inf">Informe de Transporte</a></p>*@
-        </div>
-    </div>
+    }
     <div class="row mb-2 justify-content-start">
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Manifiesto_Doc"></label>
@@ -303,35 +307,42 @@
             var certificado = '@Model.Certificado_Lleno';
             var informe = '@Model.Informe_Transporte_Lleno';
             var manifiesto = '@Model.Manifiesto_Doc_Lleno';
-
-            var certificado_valores = JSON.parse(certificado.replace(/&quot;/g, '"'));
-            var informe_valores = JSON.parse(informe.replace(/&quot;/g, '"'));
-            var manifiesto_valores = JSON.parse(manifiesto.replace(/&quot;/g, '"'));
-
-            var html_certificado = ""
-            var html_informe = ""
-            var html_manifiesto = ""
             
-            for (var i = 0; i < certificado_valores.length; i++) {
-               html_certificado+="<p><a href=\"/CompletarManifiesto/Download?fileName="+certificado_valores[i]+"&tipo=cert\">Certificado</a></p>"
-            }
-            for (var i = 0; i < informe_valores.length; i++) {
-               html_informe+="<p><a href=\"/CompletarManifiesto/Download?fileName="+informe_valores[i]+"&tipo=inf\">Informe de Transpote</a></p>"
-            }
-            for (var i = 0; i < manifiesto_valores.length; i++) {
-               html_manifiesto+="<p><a href=\"/CompletarManifiesto/Download?fileName="+manifiesto_valores[i]+"&tipo=man\">Manifiesto</a></p>"
-            }
-                       
-            $("#Certificado_Lleno_Lista").html(html_certificado);
-            $("#Informe_Transporte_Lleno_Lista").html(html_informe);
-            $("#Manifiesto_Doc_Lleno_Lista").html(html_manifiesto);
+            if (certificado.length > 0) {
+                var certificado_valores = JSON.parse(certificado.replace(/&quot;/g, '"'));
+                var html_certificado = "";
+                for (var i = 0; i < certificado_valores.length; i++)
+                    html_certificado += "<p><a href=\"/CompletarManifiesto/Download?fileName=" + certificado_valores[i] + "&tipo=cert\">Certificado</a></p>";
 
-            $("#Certificado_Lleno").val(certificado_valores);
-            $("#Informe_Transporte_Lleno").val(informe_valores);
-            $("#Manifiesto_Doc_Lleno").val(manifiesto_valores);
+                $("#Certificado_Lleno_Lista").html(html_certificado);
+                $("#Certificado_Lleno").val(certificado_valores);
+            }
+            if (informe.length > 0) {
+                var informe_valores = JSON.parse(informe.replace(/&quot;/g, '"'));
+                var html_informe = "";
+                for (var i = 0; i < informe_valores.length; i++)
+                    html_informe += "<p><a href=\"/CompletarManifiesto/Download?fileName=" + informe_valores[i] + "&tipo=inf\">Informe de Transpote</a></p>";
 
+                $("#Informe_Transporte_Lleno_Lista").html(html_informe);
+                $("#Informe_Transporte_Lleno").val(informe_valores);
+            }
+            if (manifiesto.length > 0) {
+                var manifiesto_valores = JSON.parse(manifiesto.replace(/&quot;/g, '"'));
+                var html_manifiesto = "";
+                for (var i = 0; i < manifiesto_valores.length; i++)
+                    html_manifiesto += "<p><a href=\"/CompletarManifiesto/Download?fileName=" + manifiesto_valores[i] + "&tipo=man\">Manifiesto</a></p>";
+
+                $("#Manifiesto_Doc_Lleno_Lista").html(html_manifiesto);
+                $("#Manifiesto_Doc_Lleno").val(manifiesto_valores);
+            }
+
+            if ("@Model.Observacion_Manifiesto" == "Anulado") {
+                changeAvailableInputs(true);
+            }
         });
         $("#Certificado").change(function () {
+            console.log($("#Certificado").val())
+
             $("#danger_certificado").html("");
             //Validacion del tamaño del archivo
             var maxSize = $("#Certificado").data('max-size');
@@ -339,6 +350,9 @@
 
             if (archivos.length > 0) {
                 var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
                 if (fileSize > maxSize) {
                     this.value = '';
                     var filesname = this.files.length + " Archivos";
@@ -347,7 +361,6 @@
                 }
                 var filesName = "";
                 for (var i = 0; i < archivos.length; i++) {
-                    fileSize += archivos[i].size;
                     switch (this.value.match(/\.([^\.]+)$/)[1]) {
                         case 'jpg':
                         case 'JPG':
@@ -381,6 +394,9 @@
 
             if (archivos.length > 0) {
                 var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
                 if (fileSize > maxSize) {
                     this.value = '';
                     var filesname = this.files.length + " Archivos";
@@ -389,7 +405,6 @@
                 }
                 var filesName = "";
                 for (var i = 0; i < archivos.length; i++) {
-                    fileSize += archivos[i].size;
                     switch (this.value.match(/\.([^\.]+)$/)[1]) {
                         case 'jpg':
                         case 'JPG':
@@ -423,6 +438,9 @@
 
             if (archivos.length > 0) {
                 var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
                 if (fileSize > maxSize) {
                     this.value = '';
                     var filesname = this.files.length + " Archivos";
@@ -431,7 +449,6 @@
                 }
                 var filesName = "";
                 for (var i = 0; i < archivos.length; i++) {
-                    fileSize += archivos[i].size;
                     switch (this.value.match(/\.([^\.]+)$/)[1]) {
                         case 'jpg':
                         case 'JPG':
@@ -462,6 +479,7 @@
         }
         $("#btnGuardar").click(function () {
             $("#opcion").val("Pendiente")
+            changeAvailableInputs(false)
             $("#formCompletarManifiesto").submit();
         });
         $("#btnCompletar").click(function () {
@@ -479,9 +497,34 @@
 
             if (certificado && informe && manifiesto) {
                 $("#opcion").val("Completar");
+                changeAvailableInputs(false);
                 $("#formCompletarManifiesto").submit();
             }
         });
-
+        function changeAvailableInputs(estado) {
+            $("#Serie_Manifiesto").prop('disabled', estado);
+            $("#Num_Manifiesto").prop('disabled', estado);
+            $("#Fecha_Emision_Manifiesto").prop('disabled', estado);
+            $("#Observacion_Manifiesto").prop('disabled', estado);
+            $("#Id_Residuo_Solido").prop('disabled', estado);
+            $("#Cantidad_RS_Evacuado").prop('disabled', estado);
+            $("#Id_EO_RS_Salida").prop('disabled', estado);
+            $("#Registro_EO_RS_Salida").prop('disabled', estado);
+            $("#Fecha_Vencimiento_Registro_Salida").prop('disabled', estado);
+            $("#Num_Autorizacion_Municipal_Salida").prop('disabled', estado);
+            $("#Num_Autorizacion_Hoja_Ruta").prop('disabled', estado);
+            $("#Id_Conductor").prop('disabled', estado);
+            $("#Num_Licencia_Condutor").prop('disabled', estado);
+            $("#Id_Vehiculo").prop('disabled', estado);
+            $("#Capacidad_Vehiculo").prop('disabled', estado);
+            $("#Id_EO_RS_Llegada").prop('disabled', estado);
+            $("#Registro_EO_RS_Llegada").prop('disabled', estado);
+            $("#Fecha_Vencimiento_Registro_Llegada").prop('disabled', estado);
+            $("#Num_Autorizacion_Sanitaria_Llegada").prop('disabled', estado);
+            $("#Num_Autorizacion_Municipal_Llegada").prop('disabled', estado);
+            //$("#Id_Asesor").prop('disabled', estado);
+            $("#Fecha_Devolucion").prop('disabled', estado);
+            $("#Cantidad_RS_Dispuesto").prop('disabled', estado);
+        }
     </script>
 }

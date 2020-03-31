@@ -17,7 +17,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public double Cantidad_RS_Evacuado { get; set; }
         public EO_RS EO_RS_Salida { get; set; }
         public string Registro_EO_RS_Salida { get; set; }
-        public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Salida { get; set; }
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
         public Conductor_RS Conductor { get; set; }
@@ -26,11 +26,11 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
         public double Capacidad_Vehiculo { get; set; }
         public EO_RS EO_RS_Llegada { get; set; }
         public string Registro_EO_RS_Llegada { get; set; }
-        public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Llegada { get; set; }
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         public string Certificado_Trat_Disp { get; set; }
-        public double Cantidad_RS_Dispuesto { get; set; }
+        public double? Cantidad_RS_Dispuesto { get; set; }
         public DateTime? Fecha_Devolucion { get; set; }
         public string Informe_Transporte { get; set; }
         public string Manifiesto { get; set; }
@@ -50,7 +50,7 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             double cantidad_RS_Evacuado,
             EO_RS eO_RS_Salida, 
             string registro_EO_RS_Salida,
-            DateTime fecha_Vencimiento_Registro_Salida,
+            DateTime? fecha_Vencimiento_Registro_Salida,
             string num_Autorizacion_Municipal_Salida,
             string num_Autorizacion_Hoja_Ruta,
             Conductor_RS conductor,
@@ -59,11 +59,11 @@ namespace GestionAmbiental.Domain.ResiduosSolidos
             double capacidad_Vehiculo,
             EO_RS eO_RS_Llegada,
             string registro_EO_RS_Llegada, 
-            DateTime fecha_Vencimiento_Registro_Llegada,
+            DateTime? fecha_Vencimiento_Registro_Llegada,
             string num_Autorizacion_Sanitaria_Llegada,
             string num_Autorizacion_Municipal_Llegada, 
             string certificado_Trat_Disp,
-            double cantidad_RS_Dispuesto,
+            double? cantidad_RS_Dispuesto,
             DateTime? fecha_Devolucion,
             string informe_Transporte,
             string manifiesto,

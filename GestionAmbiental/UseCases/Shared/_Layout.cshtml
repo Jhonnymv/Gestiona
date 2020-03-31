@@ -31,6 +31,19 @@
                 <ul class="navbar-nav">
                     @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
                     {
+
+                        @if (ViewBag.Rol == "AsesorMAP")
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Residuos Sólidos</a>
+                                <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                                    <a class="dropdown-item" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
+                                    <a class="dropdown-item" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
+                                    <a class="dropdown-item" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
+                                    <a class="dropdown-item" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
+                                </div>
+                            </li>
+                        }
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_inspecciones" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Inspecciones</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
@@ -55,18 +68,6 @@
                                 }
                             </div>
                         </li>
-                        @if (ViewBag.Rol == "AsesorMAP")
-                        {
-                            <li class="nav-item dropdown dropleft">
-                                <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Residuos Sólidos</a>
-                                <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
-                                    <a class="dropdown-item" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
-                                    <a class="dropdown-item" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
-                                    <a class="dropdown-item" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
-                                    <a class="dropdown-item" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
-                                </div>
-                            </li>
-                        }
                     }
                     @if (ViewBag.Rol == "Admin")
                     {
@@ -88,19 +89,23 @@
                     @if (ViewBag.Rol == "Contratista")
                     {
                         <li class="nav-item dropdown dropleft">
-                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Residuos Sólidos</a>
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ingreso y Salida de Residuos Sólidos</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
                                 <a class="dropdown-item" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
-                                <a class="dropdown-item" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
-                                <a class="dropdown-item" asp-controller="ManifiestoRS" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos</a>
-                                <a class="dropdown-item" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
+                                <a class="dropdown-item" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown dropleft">
+                            <a class="nav-link dropdown-toggle text-white" id="dropdown_rs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Control de Manifiestos de Residuos Sólidos</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown_inspecciones">
+                                <a class="dropdown-item" asp-controller="ManifiestoRS" asp-action="Resumen">Residuos Sólidos Peligrosos</a>
+                                <a class="dropdown-item" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos</a>
                             </div>
                         </li>
                     }
                     @if (ViewBag.Rol == null)
                     {
                         <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin">Iniciar Sesión</a></li>
-
                     }
                     else
                     {

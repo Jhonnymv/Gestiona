@@ -26,13 +26,13 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             string opcion,
             int Serie_Manifiesto, 
             string Num_Manifiesto,
-            DateTime Fecha_Emision_Manifiesto, 
+            string Fecha_Emision_Manifiesto, 
             string Observacion_Manifiesto, 
             int Id_Residuo_Solido, 
             double Cantidad_RS_Evacuado,
             int Id_EO_RS_Salida,
             string Registro_EO_RS_Salida,
-            DateTime Fecha_Vencimiento_Registro_Salida,
+            string Fecha_Vencimiento_Registro_Salida,
             string Num_Autorizacion_Municipal_Salida,
             string Num_Autorizacion_Hoja_Ruta, 
             int Id_Conductor, 
@@ -41,7 +41,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             double Capacidad_Vehiculo,
             int Id_EO_RS_Llegada,
             string Registro_EO_RS_Llegada,
-            DateTime Fecha_Vencimiento_Registro_Llegada,
+            string Fecha_Vencimiento_Registro_Llegada,
             string Num_Autorizacion_Sanitaria_Llegada, 
             string Num_Autorizacion_Municipal_Llegada, 
             string usuario_red)
@@ -65,11 +65,28 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
                     break;
             }
 
+            DateTime? fEmisionManifiesto, fVencRegSalida, fVencRegLlegada;
+
+            if (Fecha_Emision_Manifiesto != null)
+                fEmisionManifiesto = Convert.ToDateTime(Fecha_Emision_Manifiesto);
+            else
+                fEmisionManifiesto = null;
+
+            if (Fecha_Vencimiento_Registro_Salida != null)
+                fVencRegSalida = Convert.ToDateTime(Fecha_Vencimiento_Registro_Salida);
+            else
+                fVencRegSalida = null;
+
+            if (Fecha_Vencimiento_Registro_Llegada != null)
+                fVencRegLlegada = Convert.ToDateTime(Fecha_Vencimiento_Registro_Llegada);
+            else
+                fVencRegLlegada = null;
+
             input.Id_Manifiesto_RS = Id_Manifiesto_RS;
             input.Id_Registrado_Por = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
             input.Serie_Manifiesto = Serie_Manifiesto;
             input.Num_Manifiesto = Num_Manifiesto;
-            input.Fecha_Emision_Manifiesto = Fecha_Emision_Manifiesto;
+            input.Fecha_Emision_Manifiesto = fEmisionManifiesto.Value;
             input.Observacion_Manifiesto = Observacion_Manifiesto;
             input.Residuo_Solido = new Domain.ValueObjects.Residuo_Solido();
             input.Residuo_Solido.Id_Residuo_Solido = Id_Residuo_Solido;
@@ -77,7 +94,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             input.EO_RS_Salida = new Domain.ValueObjects.EO_RS();
             input.EO_RS_Salida.Id_EO_RS = Id_EO_RS_Salida;
             input.Registro_EO_RS_Salida = Registro_EO_RS_Salida;
-            input.Fecha_Vencimiento_Registro_Salida = Fecha_Vencimiento_Registro_Salida;
+            input.Fecha_Vencimiento_Registro_Salida = fVencRegSalida;
             input.Num_Autorizacion_Municipal_Salida = Num_Autorizacion_Municipal_Salida;
             input.Num_Autorizacion_Hoja_Ruta = Num_Autorizacion_Hoja_Ruta;
             input.Conductor = new Domain.ValueObjects.Conductor_RS();
@@ -89,7 +106,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             input.EO_RS_Llegada = new Domain.ValueObjects.EO_RS();
             input.EO_RS_Llegada.Id_EO_RS = Id_EO_RS_Llegada;
             input.Registro_EO_RS_Llegada = Registro_EO_RS_Llegada;
-            input.Fecha_Vencimiento_Registro_Llegada = Fecha_Vencimiento_Registro_Llegada;
+            input.Fecha_Vencimiento_Registro_Llegada = fVencRegLlegada;
             input.Num_Autorizacion_Sanitaria_Llegada = Num_Autorizacion_Sanitaria_Llegada;
             input.Num_Autorizacion_Municipal_Llegada = Num_Autorizacion_Municipal_Llegada;
 

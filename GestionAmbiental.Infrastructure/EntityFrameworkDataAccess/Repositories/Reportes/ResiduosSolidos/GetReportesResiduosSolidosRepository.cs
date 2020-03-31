@@ -374,5 +374,63 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Dimension>> GetCantidadResiduoNoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
+        {
+            var output = new List<Dimension>();
+            //Tipo_Residuo = No Peligroso (2)
+            var residuosSolido = await _context.Residuos_Solidos.Where(x =>
+               x.Estado.Equals("ACT") &&
+               x.Id_Tipo_Residuo.Equals(2))
+               .ToListAsync();
+
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+               !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+               x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
+               x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
+               residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
+               x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
+               x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
+               x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Ingreso_Salida >= FechaInicio &&
+               x.Fecha_Ingreso_Salida <= FechaFin)
+               .GroupBy(x => x.Id_Residuo_Solido)
+               .ToListAsync();
+
+            foreach (var item in registros)
+            {
+                var res_solid = residuosSolido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key));
+                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x => x.Cantidad), item.Key));
+            }
+            return output;
+        }
+        public async Task<List<Dimension>> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
+        {
+            var output = new List<Dimension>();
+            //Tipo_Residuo = Peligroso (1)
+            var residuosSolido = await _context.Residuos_Solidos.Where(x =>
+               x.Estado.Equals("ACT") &&
+               x.Id_Tipo_Residuo.Equals(1))
+               .ToListAsync();
+
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+               !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+               x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
+               x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
+               residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
+               x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
+               x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
+               x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
+               x.Fecha_Ingreso_Salida >= FechaInicio &&
+               x.Fecha_Ingreso_Salida <= FechaFin)
+               .GroupBy(x => x.Id_Residuo_Solido)
+               .ToListAsync();
+
+            foreach (var item in registros)
+            {
+                var res_solid = residuosSolido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key));
+                output.Add(new Dimension(res_solid.Descripcion, item.Sum(x => x.Cantidad), item.Key));
+            }
+            return output;
+        }
     }
 }

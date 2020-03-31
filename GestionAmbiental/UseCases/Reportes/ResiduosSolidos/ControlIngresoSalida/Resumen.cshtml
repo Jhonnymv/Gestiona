@@ -70,6 +70,7 @@
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-danger mr-2" onclick="Descargar()">Descargar</button></a>
                     <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
                 </div>
             </div>
@@ -187,7 +188,56 @@
         </div>
     </div>
 </div>
+<!--Cantidad de RS por Tipo Llegada-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Residuos Sólidos No Peligrosos</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_rs_no_peligrosos" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Cantidad de RS por Tipo Llegada-->
+<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Residuos Sólidos Peligrosos</h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_rs_peligrosos" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     @*Script de la página*@
     <script src="~/js/UseCases/Reportes/ReportesResiduosSolidosScript.js" type="text/javascript"></script>
+<script type="text/javascript">
+        function Descargar() {
+            var fInicio = $("#FInicio").val();
+            var fFin = $("#FFin").val();
+            if (fInicio < fFin || (fInicio == "" && fFin == "")) {
+               window.location.assign("/DescargaIngresoSalida/DescargarIngresoSalida?fechaInicio="+fInicio+"&fechaFin="+fFin)
+            }
+        }
+    </script>
 }

@@ -32,8 +32,8 @@ namespace GestionAmbiental.Controllers
             HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
 
             ViewBag.Rol = userInfo.Rol.ToString();
-            ViewBag.Usuario = userInfo.NombreUsuario;*/
-           
+            ViewBag.Usuario = userInfo.NombreUsuario;
+           */
            if (HttpContext.Session.GetString("SessionUser")!= null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));

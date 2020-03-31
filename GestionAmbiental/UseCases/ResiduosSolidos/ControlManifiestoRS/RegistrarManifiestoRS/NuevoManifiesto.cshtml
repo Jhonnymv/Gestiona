@@ -29,7 +29,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Num_Manifiesto"></span>
-            <input class="form-control" type="text" asp-for="Num_Manifiesto" maxlength="25"/>
+            <input class="form-control" type="text" asp-for="Num_Manifiesto" maxlength="10"/>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -253,5 +253,43 @@
             $("#opcion").val("Registrar");
             $("#formManifiestoRS").submit();
         });
+    $("#Observacion_Manifiesto").on('change', function () {
+        if ($("#Observacion_Manifiesto").val() == "Anulado") {
+            $("#Id_Residuo_Solido").prop('disabled', true);
+            $("#Cantidad_RS_Evacuado").prop('disabled', true);
+            $("#Id_EO_RS_Salida").prop('disabled', true);
+            $("#Registro_EO_RS_Salida").prop('disabled', true);
+            $("#Fecha_Vencimiento_Registro_Salida").prop('disabled', true);
+            $("#Num_Autorizacion_Municipal_Salida").prop('disabled', true);
+            $("#Num_Autorizacion_Hoja_Ruta").prop('disabled', true);
+            $("#Id_Conductor").prop('disabled', true);
+            $("#Num_Licencia_Condutor").prop('disabled', true);
+            $("#Id_Vehiculo").prop('disabled', true);
+            $("#Capacidad_Vehiculo").prop('disabled', true);
+            $("#Id_EO_RS_Llegada").prop('disabled', true);
+            $("#Registro_EO_RS_Llegada").prop('disabled', true);
+            $("#Fecha_Vencimiento_Registro_Llegada").prop('disabled', true);
+            $("#Num_Autorizacion_Sanitaria_Llegada").prop('disabled', true);
+            $("#Num_Autorizacion_Municipal_Llegada").prop('disabled', true);
+        }
+        else {            
+            $("#Id_Residuo_Solido").prop('disabled', false);
+            $("#Cantidad_RS_Evacuado").prop('disabled', false);
+            $("#Id_EO_RS_Salida").prop('disabled', false);
+            $("#Registro_EO_RS_Salida").prop('disabled', false);
+            $("#Fecha_Vencimiento_Registro_Salida").prop('disabled', false);
+            $("#Num_Autorizacion_Municipal_Salida").prop('disabled', false);
+            $("#Num_Autorizacion_Hoja_Ruta").prop('disabled', false);
+            $("#Id_Conductor").prop('disabled', false);
+            $("#Num_Licencia_Condutor").prop('disabled', false);
+            $("#Id_Vehiculo").prop('disabled', false);
+            $("#Capacidad_Vehiculo").prop('disabled', false);
+            $("#Id_EO_RS_Llegada").prop('disabled', false);
+            $("#Registro_EO_RS_Llegada").prop('disabled', false);
+            $("#Fecha_Vencimiento_Registro_Llegada").prop('disabled', false);
+            $("#Num_Autorizacion_Sanitaria_Llegada").prop('disabled', false);
+            $("#Num_Autorizacion_Municipal_Llegada").prop('disabled', false);
+        }
+    });
 </script>
 }

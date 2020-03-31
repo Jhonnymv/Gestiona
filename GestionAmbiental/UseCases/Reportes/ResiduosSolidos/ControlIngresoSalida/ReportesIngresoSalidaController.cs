@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetCantidadResiduoNoPeligroso;
+using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetCantidadResiduoPeligroso;
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetRegistrosACR_CMRS;
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetRegistrosEntreFechas;
 using GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalida.GetRegistrosIngresoSalida;
@@ -23,8 +25,10 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         private readonly IGetRegistrosTipoResiduo _getRegistrosTipoResiduo;
         private readonly IGetRegistroACR_CMRS _getRegistroACR_CMRS;
         private readonly IGetRegistrosIngresoSalida _getRegistrosIngresoSalida;
+        private readonly IGetCantidadResiduoNoPeligroso _getCantidadResiduoNoPeligroso;
+        private readonly IGetCantidadResiduoPeligroso _getCantidadResiduoPeligroso;
 
-        public ReportesIngresoSalidaController(IGetSelectItems getSelectItems, IGetRegistroEntreFechas getRegistroEntreFechas, IGetRegistrosMotivo getRegistrosMotivo, IGetRegistrosTipoResiduo getRegistrosTipoResiduo, IGetRegistroACR_CMRS getRegistroACR_CMRS, IGetRegistrosIngresoSalida getRegistrosIngresoSalida)
+        public ReportesIngresoSalidaController(IGetSelectItems getSelectItems, IGetRegistroEntreFechas getRegistroEntreFechas, IGetRegistrosMotivo getRegistrosMotivo, IGetRegistrosTipoResiduo getRegistrosTipoResiduo, IGetRegistroACR_CMRS getRegistroACR_CMRS, IGetRegistrosIngresoSalida getRegistrosIngresoSalida, IGetCantidadResiduoNoPeligroso getCantidadResiduoNoPeligroso, IGetCantidadResiduoPeligroso getCantidadResiduoPeligroso)
         {
             _getSelectItems = getSelectItems;
             _getRegistroEntreFechas = getRegistroEntreFechas;
@@ -32,6 +36,8 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             _getRegistrosTipoResiduo = getRegistrosTipoResiduo;
             _getRegistroACR_CMRS = getRegistroACR_CMRS;
             _getRegistrosIngresoSalida = getRegistrosIngresoSalida;
+            _getCantidadResiduoNoPeligroso = getCantidadResiduoNoPeligroso;
+            _getCantidadResiduoPeligroso = getCantidadResiduoPeligroso;
         }
 
         public async Task<IActionResult> Resumen()
@@ -75,7 +81,6 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         [HttpPost]
         public async Task<IActionResult> GetRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa, string frecuencia)
         {
-            //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nRegistros = await _getRegistroEntreFechas.Execute(acr_cmrs,ingreso_salida,tipo_residuo,motivo, fechaInicio, fechaFin, gerencia,empresa, frecuencia);
 
             dynamic response = new
@@ -87,7 +92,6 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         [HttpPost]
         public async Task<IActionResult> GetRegistrosACR_CRMS(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
-            //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nRegistros = await _getRegistroACR_CMRS.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
@@ -99,7 +103,6 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         [HttpPost]
         public async Task<IActionResult> GetRegistrosIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
-            //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nRegistros = await _getRegistrosIngresoSalida.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
@@ -111,7 +114,7 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         [HttpPost]
         public async Task<IActionResult> GetRegistrosTipoResiduo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
-            //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
+            
             var nRegistros = await _getRegistrosTipoResiduo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
@@ -123,7 +126,6 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
         [HttpPost]
         public async Task<IActionResult> GetRegistrosMotivo(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
         {
-            //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nRegistros = await _getRegistrosMotivo.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
 
             dynamic response = new
@@ -132,5 +134,28 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             };
             return Ok(response);
         }
+        [HttpPost]
+        public async Task<IActionResult> GetCantidadResiduoNoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
+        {
+            var nRegistros = await _getCantidadResiduoNoPeligroso.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
+
+            dynamic response = new
+            {
+                nRegistros = nRegistros
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
+        {
+            var nRegistros = await _getCantidadResiduoPeligroso.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
+
+            dynamic response = new
+            {
+                nRegistros = nRegistros
+            };
+            return Ok(response);
+        }
+
     }
 }

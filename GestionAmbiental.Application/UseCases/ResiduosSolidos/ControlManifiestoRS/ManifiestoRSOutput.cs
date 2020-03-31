@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public int Id_EO_RS_Salida { get; set; }
         public string EO_RS_Salida { get; set; }
         public string Registro_EO_RS_Salida { get; set; }
-        public DateTime Fecha_Vencimiento_Registro_Salida { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Salida { get; set; }
         public string Num_Autorizacion_Municipal_Salida { get; set; }
         public string Num_Autorizacion_Hoja_Ruta { get; set; }
         public int Id_Conductor { get; set; }
@@ -33,11 +33,11 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public int Id_EO_RS_Llegada { get; set; }
         public string EO_RS_Llegada { get; set; }
         public string Registro_EO_RS_Llegada { get; set; }
-        public DateTime Fecha_Vencimiento_Registro_Llegada { get; set; }
+        public DateTime? Fecha_Vencimiento_Registro_Llegada { get; set; }
         public string Num_Autorizacion_Sanitaria_Llegada { get; set; }
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         public List<string> Certificado_Trat_Disp { get; set; }
-        public double Cantidad_RS_Dispuesto { get; set; }
+        public double? Cantidad_RS_Dispuesto { get; set; }
         public DateTime? Fecha_Devolucion { get; set; }
         public List<string> Informe_Transporte { get; set; }
         public List<string> Manifiesto { get; set; }
@@ -55,50 +55,53 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             Num_Manifiesto = manifiesto_RS.Num_Manifiesto;
             Fecha_Emision_Manifiesto = manifiesto_RS.Fecha_Emision_Manifiesto;
             Observacion_Manifiesto = manifiesto_RS.Observacion_Manifiesto;
-            Id_Tipo_Residuo_Solido = manifiesto_RS.Residuo_Solido.Tipo_Residuo.Id_Tipo_Residuo;
-            Tipo_Residuo_Solido = manifiesto_RS.Residuo_Solido.Tipo_Residuo.Descripcion;
-            Id_Resido_Solido = manifiesto_RS.Residuo_Solido.Id_Residuo_Solido;
-            Residuo_Solido = manifiesto_RS.Residuo_Solido.Descripcion;
-            Cantidad_RS_Evacuado = manifiesto_RS.Cantidad_RS_Evacuado;
-            Id_EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Id_EO_RS;
-            EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Razon_Social;
-            Registro_EO_RS_Salida = manifiesto_RS.Registro_EO_RS_Salida;
-            Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
-            Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
-            Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
-            Id_Conductor = manifiesto_RS.Conductor.Id_Conductor_RS;
-            Nombre_Conductor = manifiesto_RS.Conductor.Nombres + " " + manifiesto_RS.Conductor.Apellidos;
-            Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
-            Id_Vehiculo = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
-            Placa_Vehiculo = manifiesto_RS.Vehiculo.Placa;
-            Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
-            EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Razon_Social;
-            Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;
-            Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;
-            Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
-            Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
-            Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
-            if (manifiesto_RS.Certificado_Trat_Disp != null)
+            if (manifiesto_RS.Observacion_Manifiesto.Equals("Conforme"))
             {
-                var certificados = JArray.Parse(manifiesto_RS.Certificado_Trat_Disp);
-                Certificado_Trat_Disp = new List<string>();
-                foreach (var evidencia in certificados)
+                Id_Tipo_Residuo_Solido = manifiesto_RS.Residuo_Solido.Tipo_Residuo.Id_Tipo_Residuo;
+                Tipo_Residuo_Solido = manifiesto_RS.Residuo_Solido.Tipo_Residuo.Descripcion;
+                Id_Resido_Solido = manifiesto_RS.Residuo_Solido.Id_Residuo_Solido;
+                Residuo_Solido = manifiesto_RS.Residuo_Solido.Descripcion;
+                Cantidad_RS_Evacuado = manifiesto_RS.Cantidad_RS_Evacuado;
+                Id_EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Id_EO_RS;
+                EO_RS_Salida = manifiesto_RS.EO_RS_Salida.Razon_Social;
+                Registro_EO_RS_Salida = manifiesto_RS.Registro_EO_RS_Salida;
+                Fecha_Vencimiento_Registro_Salida = manifiesto_RS.Fecha_Vencimiento_Registro_Salida;
+                Num_Autorizacion_Municipal_Salida = manifiesto_RS.Num_Autorizacion_Municipal_Salida;
+                Num_Autorizacion_Hoja_Ruta = manifiesto_RS.Num_Autorizacion_Hoja_Ruta;
+                Id_Conductor = manifiesto_RS.Conductor.Id_Conductor_RS;
+                Nombre_Conductor = manifiesto_RS.Conductor.Nombres + " " + manifiesto_RS.Conductor.Apellidos;
+                Num_Licencia_Condutor = manifiesto_RS.Num_Licencia_Condutor;
+                Id_Vehiculo = manifiesto_RS.Vehiculo.Id_Vehiculo_RS;
+                Placa_Vehiculo = manifiesto_RS.Vehiculo.Placa;
+                Capacidad_Vehiculo = manifiesto_RS.Capacidad_Vehiculo;
+                EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Razon_Social;
+                Id_EO_RS_Llegada = manifiesto_RS.EO_RS_Llegada.Id_EO_RS;
+                Registro_EO_RS_Llegada = manifiesto_RS.Registro_EO_RS_Llegada;
+                Fecha_Vencimiento_Registro_Llegada = manifiesto_RS.Fecha_Vencimiento_Registro_Llegada;
+                Num_Autorizacion_Sanitaria_Llegada = manifiesto_RS.Num_Autorizacion_Sanitaria_Llegada;
+                Num_Autorizacion_Municipal_Llegada = manifiesto_RS.Num_Autorizacion_Municipal_Llegada;
+                if (manifiesto_RS.Certificado_Trat_Disp != null)
                 {
-                    Certificado_Trat_Disp.Add((string)evidencia);
+                    var certificados = JArray.Parse(manifiesto_RS.Certificado_Trat_Disp);
+                    Certificado_Trat_Disp = new List<string>();
+                    foreach (var evidencia in certificados)
+                    {
+                        Certificado_Trat_Disp.Add((string)evidencia);
+                    }
                 }
-            }
-            
-            Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
-            Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
-            if (manifiesto_RS.Informe_Transporte != null)
-            {
-                var informes = JArray.Parse(manifiesto_RS.Informe_Transporte);
-                Informe_Transporte = new List<string>();
-                foreach (var evidencia in informes)
+
+                Cantidad_RS_Dispuesto = manifiesto_RS.Cantidad_RS_Dispuesto;
+                Fecha_Devolucion = manifiesto_RS.Fecha_Devolucion;
+                if (manifiesto_RS.Informe_Transporte != null)
                 {
-                    Informe_Transporte.Add((string)evidencia);
+                    var informes = JArray.Parse(manifiesto_RS.Informe_Transporte);
+                    Informe_Transporte = new List<string>();
+                    foreach (var evidencia in informes)
+                    {
+                        Informe_Transporte.Add((string)evidencia);
+                    }
                 }
-            }
+            }            
             if (manifiesto_RS.Manifiesto != null)
             {
                 var manifiestos = JArray.Parse(manifiesto_RS.Manifiesto);
