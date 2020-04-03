@@ -1,4 +1,7 @@
 ﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.Items;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.ReportePreliminar;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
@@ -36,6 +39,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Log_Ingreso_Salida_RS> Log_Ingreso_Salida_RSs { get; set; }
         public DbSet<Log_Manifiesto_RS>Log_Manifiesto_RS { get; set; }
         public DbSet<Usuario_Notificar_RS> Usuarios_Notificar_RS { get; set; }
+
+        public DbSet<Componente_Ambiental> Componente_Ambiental { get; set; }
+        public DbSet<Especie_Fauna> Especie_Fauna { get; set; }
+        public DbSet<Especie_Flora> Especie_Flora { get; set; }
+        public DbSet<Estado_Equipo_Incidente> Estado_Equipo_Incidente { get; set; }
+        public DbSet<Lugar_Disposicion> Lugar_Disposicion { get; set; }
+        public DbSet<Nivel_Incidente> Nivel_Incidente { get; set; }
+        public DbSet<Producto_Incidente> Producto_Incidente { get; set; }
+        public DbSet<Tipo_Agua> Tipo_Agua { get; set; }
+        public DbSet<Tipo_Incidente> Tipo_Incidente { get; set; }
+        public DbSet<Tipo_Producto_Incidente> Tipo_Producto_Incidente { get; set; }
+        public DbSet<Tipo_Suelo> Tipo_Suelo { get; set; }
+        public DbSet<Unidad_Medida> Unidad_Medida { get; set; }
+
+        public DbSet<Reporte_Preliminar_Incidente> Reporte_Preliminar_Incidente { get; set; }
+
+        public DbSet<Accion_Correctiva_Incidente> Accion_Correctiva_Incidente { get; set; }
+        public DbSet<Causa_Incidente> Causa_Incidente { get; set; }
+        public DbSet<Impacto_Ambiental_Incidente> Impacto_Ambiental_Incidente { get; set; }
+        public DbSet<Investigacion_Final_Incidente> Investigacion_Final_Incidente { get; set; }
+        public DbSet<Involucrado_Incidente> Involucrado_Incidente { get; set; }
+        public DbSet<Producto_Derramado_Incidente> Producto_Derramado_Incidente { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -90,6 +115,47 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Log_Manifiesto_RS");
             modelBuilder.Entity<Usuario_Notificar_RS>()
                 .ToTable("Tb_Usuarios_Notificar_RS");
+
+            modelBuilder.Entity<Componente_Ambiental>()
+                .ToTable("Tb_Componente_Ambiental");
+            modelBuilder.Entity<Especie_Fauna>()
+                .ToTable("Tb_Especie_Fauna");
+            modelBuilder.Entity<Especie_Flora>()
+                .ToTable("Tb_Especie_Flora");
+            modelBuilder.Entity<Estado_Equipo_Incidente>()
+                .ToTable("Tb_Estado_Equipo_Incidente");
+            modelBuilder.Entity<Lugar_Disposicion>()
+                .ToTable("Tb_Lugar_Disposicion");
+            modelBuilder.Entity<Nivel_Incidente>()
+                .ToTable("Tb_Nivel_Incidente");
+            modelBuilder.Entity<Producto_Incidente>()
+                .ToTable("Tb_Producto_Incidente");
+            modelBuilder.Entity<Tipo_Agua>()
+                .ToTable("Tb_Tipo_Agua");
+            modelBuilder.Entity<Tipo_Incidente>()
+                .ToTable("Tb_Tipo_Incidente");
+            modelBuilder.Entity<Tipo_Producto_Incidente>()
+                .ToTable("Tb_Tipo_Producto_Incidente");
+            modelBuilder.Entity<Tipo_Suelo>()
+                .ToTable("Tb_Tipo_Suelo");
+            modelBuilder.Entity<Unidad_Medida>()
+                .ToTable("Tb_Unidad_Medida");
+
+            modelBuilder.Entity<Reporte_Preliminar_Incidente>()
+                .ToTable("Tb_Reporte_Preliminar_Incidente");
+
+            modelBuilder.Entity<Accion_Correctiva_Incidente>()
+                .ToTable("Tb_Accion_Correctiva_Incidente");
+            modelBuilder.Entity<Causa_Incidente>()
+                .ToTable("Tb_Causa_Incidente");
+            modelBuilder.Entity<Impacto_Ambiental_Incidente>()
+                .ToTable("Tb_Impacto_Ambiental_Incidente");
+            modelBuilder.Entity<Investigacion_Final_Incidente>()
+                .ToTable("Tb_Investigacion_Final_Incidente");
+            modelBuilder.Entity<Involucrado_Incidente>()
+                .ToTable("Tb_Involucrado_Incidente");
+            modelBuilder.Entity<Producto_Derramado_Incidente>()
+                .ToTable("Tb_Producto_Derramado_Incidente");
         }
     }
 }

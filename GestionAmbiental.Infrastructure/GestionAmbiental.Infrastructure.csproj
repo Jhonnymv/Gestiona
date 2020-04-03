@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EntityFrameworkDataAccess\Entities\Incidentes\InvestigacionFinal\" />
+    <Folder Include="EntityFrameworkDataAccess\Repositories\Incidentes\ReportePreliminar\" />
   </ItemGroup>
 
 </Project>

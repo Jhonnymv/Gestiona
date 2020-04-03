@@ -11,9 +11,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
     {
         [Key]
         public int Id_Tipo_Producto_Incidente { get; set; }
-        [Column(TypeName = "varchar(10)")]
-        public int Descripcion { get; set; }
-        [Column(TypeName = "varchar(10)")]
-        public int Estado { get; set; }
+        [Column(TypeName = "varchar(250)")]
+        public string Descripcion { get; set; }
+        [Column(TypeName = "varchar(3)")]
+        public string Estado { get; set; }
     }
 }
