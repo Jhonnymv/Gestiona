@@ -128,7 +128,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    var obsAvance = fila.NObsImplementadas + fila.NObsRechazadas + fila.NObsAprobadas;
+                    var obsAvance = fila.NObsAprobadas;
                     double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NObservaciones * 100, 1) : 0;
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
@@ -433,7 +433,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
                         {
                             if (i == 0)
-                            evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
+                                evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">Evidencia</a>";
                             else
                                 evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
                         }
@@ -468,7 +468,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.Permisos)
+                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.Permisos||observacion.PermisosAdmin))
                         {
                             filaObservacion += "<td><a class=\"btn btn-primary\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
                         }
@@ -698,7 +698,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -766,7 +766,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -828,7 +828,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

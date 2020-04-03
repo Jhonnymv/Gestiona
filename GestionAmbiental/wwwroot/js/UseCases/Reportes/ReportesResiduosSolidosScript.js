@@ -69,7 +69,7 @@ function ActualizarContadorxFecha() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#Gerencia").val(),
+            gerencia: $("#Gerencia").val(),
             empresa: $("#Empresa").val(),
             frecuencia: $("#frecuencia").val()
         },
@@ -180,7 +180,7 @@ function ActualizarDatosGraficoACR_CMRS() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#Gerencia").val(),
+            gerencia: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
@@ -269,7 +269,7 @@ function ActualizarDatosGraficoIngresoSalida() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#Gerencia").val(),
+            gerencia: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
@@ -359,7 +359,7 @@ function ActualizarDatosGraficoTipoResiduo() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#Gerencia").val(),
+            gerencia: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
@@ -449,7 +449,7 @@ function ActualizarDatosGraficoMotivo() {
             motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
-            responsable: $("#Gerencia").val(),
+            gerencia: $("#Gerencia").val(),
             empresa: $("#Empresa").val()
         },
         traditional: true,
@@ -535,16 +535,19 @@ function CrearGraficoMotivo(labels, data) {
 }
 //Para gráfico Residuos Solido No Peligroso
 function ActualizarDatosGraficoResiduoNoPeligroso() {
+    console.log($("#IngresoSalida").val())
     $.ajax({
         type: "POST",
         url: "/ReportesIngresoSalida/GetCantidadResiduoNoPeligroso",
         data: {
-            observacion: $("#Observacion").val(),
-            residuo_solido: $("#Residuo_Solido").val(),
-            eors_salida: $("#EO_RS_Salida").val(),
-            eors_llegada: $("#EO_RS_Llegada").val(),
+            acr_cmrs: $("#ACR_CMRS").val(),
+            ingreso_salida: $("#IngresoSalida").val(),
+            tipo_residuo: $("#TipoResiduo").val(),
+            motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
-            fechaFin: $("#FFin").val()
+            fechaFin: $("#FFin").val(),
+            gerencia: $("#Gerencia").val(),
+            empresa: $("#Empresa").val()
         },
         traditional: true,
         success: (response) => {
@@ -640,12 +643,14 @@ function ActualizarDatosGraficoResiduoPeligroso() {
         type: "POST",
         url: "/ReportesIngresoSalida/GetCantidadResiduoPeligroso",
         data: {
-            observacion: $("#Observacion").val(),
-            residuo_solido: $("#Residuo_Solido").val(),
-            eors_salida: $("#EO_RS_Salida").val(),
-            eors_llegada: $("#EO_RS_Llegada").val(),
+            acr_cmrs: $("#ACR_CMRS").val(),
+            ingreso_salida: $("#IngresoSalida").val(),
+            tipo_residuo: $("#TipoResiduo").val(),
+            motivo: $("#Motivo").val(),
             fechaInicio: $("#FInicio").val(),
-            fechaFin: $("#FFin").val()
+            fechaFin: $("#FFin").val(),
+            gerencia: $("#Gerencia").val(),
+            empresa: $("#Empresa").val()
         },
         traditional: true,
         success: (response) => {

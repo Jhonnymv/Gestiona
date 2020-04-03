@@ -32,6 +32,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public string ComentarioVerificacion { get; set; }
         public string Estado { get; set; }
         public bool Permisos { get; set; }
+        public bool PermisosAdmin { get; set; }
 
         public InspeccionDetalleOutput(InspeccionDetalle detalle,bool permisosImplentar)
         {

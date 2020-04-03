@@ -20,7 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
 
-        public async Task<List<List<Dimension>>> GetNRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa,string frecuencia)
+        public async Task<List<List<Dimension>>> GetNRegistrosEntreFechas(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa,string frecuencia)
         {
             var output = new List<List<Dimension>>();
             var ingreso = new List<Dimension>();
@@ -39,7 +39,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
                 x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
-                x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
+                x.Id_Gerencia.Equals(responsable != 0 ? responsable : x.Id_Gerencia) &&
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .ToListAsync();

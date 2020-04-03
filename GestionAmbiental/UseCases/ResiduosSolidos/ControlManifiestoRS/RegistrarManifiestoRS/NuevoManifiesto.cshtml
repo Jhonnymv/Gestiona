@@ -71,7 +71,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Cantidad_RS_Evacuado"></span>
-            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="1" max="999999" />
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="0" max="999999" />
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -134,7 +134,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-2">
             <span class="text-danger" asp-validation-for="Num_Licencia_Condutor"></span>
-            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="8"/>
+            <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="10"/>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-2">
             <label asp-for="Id_Vehiculo"></label>
@@ -245,14 +245,35 @@
             }
     });
 
-     $("#btnGuardarEstado").on('click', function () {
-            $("#opcion").val("GuardarEstado");
-            $("#formManifiestoRS").submit();
-        });
-        $("#btnRegistrar").on('click', function () {
-            $("#opcion").val("Registrar");
-            $("#formManifiestoRS").submit();
-        });
+    $("#btnGuardarEstado").on('click', function () {
+        resetValidationMessage();
+        if ($("#Observacion_Manifiesto").val() != "Anulado") {
+            if (checkValidationInputs()) {
+                $("#opcion").val("GuardarEstado");
+                $("#formManifiestoRS").submit();
+            }
+        } else {
+            if (checkValidationInputsAnulado()) {
+                $("#opcion").val("GuardarEstado");
+                $("#formManifiestoRS").submit();
+            }
+        }
+     });
+    $("#btnRegistrar").on('click', function () {
+        resetValidationMessage();
+        if ($("#Observacion_Manifiesto").val() != "Anulado") {
+            if (checkValidationInputs()) {
+                $("#opcion").val("Registrar");
+                $("#formManifiestoRS").submit();
+            }
+        } else {
+            if (checkValidationInputsAnulado()) {
+                $("#opcion").val("Registrar");
+                $("#formManifiestoRS").submit();
+            }
+        }
+
+    });
     $("#Observacion_Manifiesto").on('change', function () {
         if ($("#Observacion_Manifiesto").val() == "Anulado") {
             $("#Id_Residuo_Solido").prop('disabled', true);
@@ -291,5 +312,61 @@
             $("#Num_Autorizacion_Municipal_Llegada").prop('disabled', false);
         }
     });
+
+    function checkValidationInputs() {
+        if ($("#Serie_Manifiesto").val() == "") { $("[data-valmsg-for='Serie_Manifiesto']").html("Debe completar este campo"); return false; }
+        if ($("#Num_Manifiesto").val() == "") { $("[data-valmsg-for='Num_Manifiesto']").html("Debe completar este campo"); return false; };
+        if ($("#Fecha_Emision_Manifiesto").val() == "") { $("[data-valmsg-for='Fecha_Emision_Manifiesto']").html("Debe completar este campo"); return false; };
+        if ($("#Observacion_Manifiesto").val() == "") { $("[data-valmsg-for='Observacion_Manifiesto']").html("Debe completar este campo"); return false; };
+        if ($("#Id_Residuo_Solido").val() == 0) { $("[data-valmsg-for='Id_Residuo_Solido']").html("Debe seleccionar una opción"); return false; };
+        if ($("#Cantidad_RS_Evacuado").val() == "") { $("[data-valmsg-for='Cantidad_RS_Evacuado']").html("Debe completar este campo"); return false; };
+        if ($("#Id_EO_RS_Salida").val() == 0) { $("[data-valmsg-for='Id_EO_RS_Salida']").html("Debe seleccionar una opción"); return false; };
+        if ($("#Registro_EO_RS_Salida").val() == "") { $("[data-valmsg-for='Registro_EO_RS_Salida']").html("Debe completar este campo"); return false; };
+        if ($("#Fecha_Vencimiento_Registro_Salida").val() == "") { $("[data-valmsg-for='Fecha_Vencimiento_Registro_Salida']").html("Debe completar este campo"); return false; };
+        if ($("#Num_Autorizacion_Municipal_Salida").val() == "") { $("[data-valmsg-for='Num_Autorizacion_Municipal_Salida']").html("Debe completar este campo"); return false; };
+        if ($("#Num_Autorizacion_Hoja_Ruta").val() == "") { $("[data-valmsg-for='Num_Autorizacion_Hoja_Ruta']").html("Debe completar este campo"); return false; };
+        if ($("#Id_Conductor").val() == 0) { $("[data-valmsg-for='Id_Conductor']").html("Debe seleccionar una opción"); return false; };
+        if ($("#Num_Licencia_Condutor").val() == "") { $("[data-valmsg-for='Num_Licencia_Condutor']").html("Debe completar este campo"); return false; };
+        if ($("#Id_Vehiculo").val() == 0) { $("[data-valmsg-for='Id_Vehiculo']").html("Debe seleccionar una opción"); return false; };
+        if ($("#Capacidad_Vehiculo").val() == "") { $("[data-valmsg-for='Capacidad_Vehiculo']").html("Debe completar este campo"); return false; };
+        if ($("#Id_EO_RS_Llegada").val() == 0) { $("[data-valmsg-for='Id_EO_RS_Llegada']").html("Debe seleccionar una opción"); return false; };
+        if ($("#Registro_EO_RS_Llegada").val() == "") { $("[data-valmsg-for='Registro_EO_RS_Llegada']").html("Debe completar este campo"); return false; };
+        if ($("#Fecha_Vencimiento_Registro_Llegada").val() == "") { $("[data-valmsg-for='Fecha_Vencimiento_Registro_Llegada']").html("Debe completar este campo"); return false; };
+        if ($("#Num_Autorizacion_Sanitaria_Llegada").val() == "") { $("[data-valmsg-for='Num_Autorizacion_Sanitaria_Llegada']").html("Debe completar este campo"); return false; };
+        if ($("#Num_Autorizacion_Municipal_Llegada").val() == "") { $("[data-valmsg-for='Num_Autorizacion_Municipal_Llegada']").html("Debe completar este campo"); return false; };
+        return true;
+    }
+    function resetValidationMessage() {
+        $("[data-valmsg-for='Serie_Manifiesto']").html("");
+        $("[data-valmsg-for='Num_Manifiesto']").html("");
+        $("[data-valmsg-for='Fecha_Emision_Manifiesto']").html("");
+        $("[data-valmsg-for='Observacion_Manifiesto']").html("");
+        $("[data-valmsg-for='Id_Residuo_Solido']").html("");
+        $("[data-valmsg-for='Cantidad_RS_Evacuado']").html("");
+        $("[data-valmsg-for='Id_EO_RS_Salida']").html("");
+        $("[data-valmsg-for='Registro_EO_RS_Salida']").html("");
+        $("[data-valmsg-for='Fecha_Vencimiento_Registro_Salida']").html("");
+        $("[data-valmsg-for='Num_Autorizacion_Municipal_Salida']").html("");
+        $("[data-valmsg-for='Num_Autorizacion_Hoja_Ruta']").html("");
+        $("[data-valmsg-for='Id_Conductor']").html("");
+        $("[data-valmsg-for='Num_Licencia_Condutor']").html("");
+        $("[data-valmsg-for='Id_Vehiculo']").html("");
+        $("[data-valmsg-for='Capacidad_Vehiculo']").html("");
+        $("[data-valmsg-for='Id_EO_RS_Llegada']").html("");
+        $("[data-valmsg-for='Registro_EO_RS_Llegada']").html("");
+        $("[data-valmsg-for='Fecha_Vencimiento_Registro_Llegada']").html("");
+        $("[data-valmsg-for='Num_Autorizacion_Sanitaria_Llegada']").html("");
+        $("[data-valmsg-for='Num_Autorizacion_Municipal_Llegada']").html("");
+
+    }
+
+    function checkValidationInputsAnulado() {
+        if ($("#Serie_Manifiesto").val() == "") { $("[data-valmsg-for='Serie_Manifiesto']").html("Debe completar este campo"); return false; }
+        if ($("#Num_Manifiesto").val() == "") { $("[data-valmsg-for='Num_Manifiesto']").html("Debe completar este campo"); return false; };
+        if ($("#Fecha_Emision_Manifiesto").val() == "") { $("[data-valmsg-for='Fecha_Emision_Manifiesto']").html("Debe completar este campo"); return false; };
+        if ($("#Observacion_Manifiesto").val() == "") { $("[data-valmsg-for='Observacion_Manifiesto']").html("Debe completar este campo"); return false; };
+        
+        return true;
+    }
 </script>
 }

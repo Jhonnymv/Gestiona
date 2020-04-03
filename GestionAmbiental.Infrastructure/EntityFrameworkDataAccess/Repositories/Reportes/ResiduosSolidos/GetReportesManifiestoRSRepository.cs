@@ -23,18 +23,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<List<Dimension>>();
             var anulado = new List<Dimension>();
             var conforme = new List<Dimension>();
-            
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+
+            var anulados_conformes = await _context.Manifiesto_RSs.Where(x =>
+            !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+            !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+            x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+            x.Fecha_Emision_Manifiesto >= FechaInicio &&
+            x.Fecha_Emision_Manifiesto <= FechaFin).ToListAsync();
+
+            var registros = anulados_conformes.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
-                x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
                 x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
-                .ToListAsync();
-
+                .ToList();
 
             if (frecuencia.Equals("Diario"))
             {
@@ -246,7 +251,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Dimension>> GetNManifiestosObservacion(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada)
         {
             var output = new List<Dimension>();
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+
+            var anulados_conformes = await _context.Manifiesto_RSs.Where(x =>
+            !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+            !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+            x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
+            x.Fecha_Emision_Manifiesto >= FechaInicio &&
+            x.Fecha_Emision_Manifiesto <= FechaFin).ToListAsync();
+
+            var registros = anulados_conformes.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Observacion_Manifiesto.Equals(observacion != null ? observacion : x.Observacion_Manifiesto) &&
@@ -256,7 +269,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
                 .GroupBy(x => x.Observacion_Manifiesto)
-                .ToListAsync();
+                .ToList();
 
             output.Add(new Dimension("Conforme", 0, 1));
             output.Add(new Dimension("Anulado", 0, 2));

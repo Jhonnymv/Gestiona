@@ -73,7 +73,7 @@
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <span class="text-danger" asp-validation-for="Cantidad_RS_Evacuado"></span>
-            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="1" max="999999" />
+            <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="0" max="999999" />
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -226,7 +226,13 @@
             <input class="form-control" type="number" asp-for="Cantidad_RS_Dispuesto" min="0" max="999999" />
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-6">
+            <span class="text-danger field-validation-error" data-valmsg-replace="true">
+                <span id="danger_archivos" class=""></span>
+            </span>
+        </div>
+    </div>
     @if (Model.Observacion_Manifiesto != "Anulado")
     {
         <div class="row mb-2 justify-content-start">
@@ -245,7 +251,6 @@
             </div>
             <input type="hidden" asp-for="@Model.Certificado_Lleno" />
             <div class="col-sm-12 col-md-4 col-lg-4" id="Certificado_Lleno_Lista">
-                @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="cert">Certificado</a></p>*@
             </div>
         </div>
         <div class="row mb-2 justify-content-start">
@@ -264,7 +269,6 @@
             </div>
             <input type="hidden" asp-for="@Model.Informe_Transporte_Lleno" />
             <div class="col-sm-12 col-md-4 col-lg-4" id="Informe_Transporte_Lleno_Lista">
-                @*<p><a asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@item" asp-route-tipo="inf">Informe de Transporte</a></p>*@
             </div>
         </div>
     }
@@ -301,13 +305,31 @@
         </div>
     </div>
 </form>
+
+<!-- Modal Cargando Archivos-->
+<div class="modal fade" id="Modal_Cargando_Archivos" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br/>
+                    <label>  Guardando Cambios</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             var certificado = '@Model.Certificado_Lleno';
             var informe = '@Model.Informe_Transporte_Lleno';
             var manifiesto = '@Model.Manifiesto_Doc_Lleno';
-            
+
             if (certificado.length > 0) {
                 var certificado_valores = JSON.parse(certificado.replace(/&quot;/g, '"'));
                 var html_certificado = "";
@@ -478,8 +500,10 @@
             return (fileName.lastIndexOf('.') < 1) ? null : fileName.split('.').slice(-1);
         }
         $("#btnGuardar").click(function () {
-            $("#opcion").val("Pendiente")
-            changeAvailableInputs(false)
+            resetValidationMessage();
+            $("#opcion").val("Pendiente");
+            changeAvailableInputs(false);
+            $("#Modal_Cargando_Archivos").modal('show');
             $("#formCompletarManifiesto").submit();
         });
         $("#btnCompletar").click(function () {
@@ -488,17 +512,32 @@
             var manifiesto = false;
 
             if ($("#Certificado").val() != "" || $("#Certificado_Lleno").val() != "")
-                certificado = true;
-            if ($("#Informe_Transporte").val() != "" || $("#Informe_Transporte_Lleno").val() != "")
-                informe = true;
-            if ($("#Manifiesto_Doc").val() != "" || $("#Manifiesto_Doc_Lleno").val() != "")
-                manifiesto = true;
+                    certificado = true;
+                if ($("#Informe_Transporte").val() != "" || $("#Informe_Transporte_Lleno").val() != "")
+                    informe = true;
+                if ($("#Manifiesto_Doc").val() != "" || $("#Manifiesto_Doc_Lleno").val() != "")
+                    manifiesto = true;
 
-
-            if (certificado && informe && manifiesto) {
-                $("#opcion").val("Completar");
-                changeAvailableInputs(false);
-                $("#formCompletarManifiesto").submit();
+            resetValidationMessage();
+            if ($("#Observacion_Manifiesto").val() != "Anulado") {
+                if (certificado && informe && manifiesto && checkValidationInputs()) {
+                    $("#opcion").val("Completar");
+                    changeAvailableInputs(false);
+                    $("#Modal_Cargando_Archivos").modal('show');
+                    $("#formCompletarManifiesto").submit();
+                } else {
+                    $("#danger_archivos").html("Debe cargar todos los archivos requeridos")
+                }
+            } else {
+                if (checkValidationInputsAnulado() && manifiesto) {
+                    $("#opcion").val("Completar");
+                    changeAvailableInputs(false);
+                    $("#Modal_Cargando_Archivos").modal('show');
+                    $("#formCompletarManifiesto").submit();
+                }
+                else {
+                    $("#danger_archivos").html("Debe cargar todos los archivos requeridos")
+                }             
             }
         });
         function changeAvailableInputs(estado) {
@@ -525,6 +564,23 @@
             //$("#Id_Asesor").prop('disabled', estado);
             $("#Fecha_Devolucion").prop('disabled', estado);
             $("#Cantidad_RS_Dispuesto").prop('disabled', estado);
+        }
+        function checkValidationInputs() {
+            if ($("#Id_Asesor").val() == 0) { $("[data-valmsg-for='Id_Asesor']").html("Debe seleccionar una opción"); return false; }
+            if ($("#Fecha_Devolucion").val() == "") { $("[data-valmsg-for='Fecha_Devolucion']").html("Debe completar este campo"); return false; }
+            if ($("#Cantidad_RS_Dispuesto").val() == "") { $("[data-valmsg-for='Cantidad_RS_Dispuesto']").html("Debe completar este campo"); return false; }
+            return true;
+        }
+        function resetValidationMessage() {
+            $("[data-valmsg-for='Id_Asesor']").html("");
+            $("[data-valmsg-for='Fecha_Devolucion']").html("");
+            $("[data-valmsg-for='Cantidad_RS_Dispuesto']").html("");
+            $("#danger_archivos").html("");
+        }
+        
+        function checkValidationInputsAnulado() {
+            if ($("#Id_Asesor").val() == 0) { $("[data-valmsg-for='Id_Asesor']").html("Debe seleccionar una opción"); return false; }            
+            return true;
         }
     </script>
 }

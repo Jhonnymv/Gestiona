@@ -34,6 +34,10 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
                 input.Item = "0";
                 input.Estado = EstadosResiduosSolidos.Eliminado.ToString();
             }
+            else
+            {
+                input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+            }
                        
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();

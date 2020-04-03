@@ -61,10 +61,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             foreach (var item in observaciones)
             {
-                if (usuario.IdUsuario.Equals(cabecera.IdRegistradoPor))
-                    output.Add(new InspeccionDetalleOutput(item, true));
+                var outputItem = new InspeccionDetalleOutput(item, usuario.IdUsuario.Equals(cabecera.IdRegistradoPor)? true:false);
+
+                if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                    outputItem.PermisosAdmin = true;
                 else
-                    output.Add(new InspeccionDetalleOutput(item, false));
+                    outputItem.PermisosAdmin = false;
+
+                output.Add(outputItem);
             }
             return output;
         }

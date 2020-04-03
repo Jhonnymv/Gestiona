@@ -238,6 +238,9 @@
             if (fInicio < fFin || (fInicio == "" && fFin == "")) {
                window.location.assign("/DescargaIngresoSalida/DescargarIngresoSalida?fechaInicio="+fInicio+"&fechaFin="+fFin)
             }
-        }
+    }
+    $("#frecuencia").on("change", function () {
+            ActualizarContadorxFecha();
+        });
     </script>
 }

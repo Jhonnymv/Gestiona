@@ -234,8 +234,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = manifiestos.Where(x => 
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString())&&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString())&&
-                x.Fecha_Emision_Manifiesto>fechaInicio && 
-                x.Fecha_Emision_Manifiesto<fechaFin)
+                x.Fecha_Emision_Manifiesto>=fechaInicio && 
+                x.Fecha_Emision_Manifiesto<=fechaFin)
                 .OrderBy(x=>Convert.ToInt32(x.Item))
                 .ToList();
 
@@ -304,11 +304,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<string> GetLastItem()
         {
             var lista = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString()) || x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())).ToListAsync();
-            var data = lista.Select(x=>Convert.ToInt32(x.Item)).OrderBy(x=>x).LastOrDefault();
-            if (data != null)
-                return data.ToString();
-            else
-                return "0";
+            var data = lista.Select(x=>Convert.ToInt32(x.Item)).OrderBy(x=>x).LastOrDefault();            
+            return data.ToString();
         }
     }
 }
