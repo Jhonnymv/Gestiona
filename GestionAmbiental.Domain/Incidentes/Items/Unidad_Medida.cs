@@ -8,7 +8,7 @@ namespace GestionAmbiental.Domain.Incidentes.Items
 {
     public class Unidad_Medida
     {
-        public int Id_Unidad_Medida { get; set; }
+        public int? Id_Unidad_Medida { get; set; }
         public string Descripcion { get; set; }
         public string Tipo { get; set; }
         public string Estado { get; set; }

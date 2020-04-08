@@ -8,7 +8,7 @@ namespace GestionAmbiental.Domain.Incidentes.Items
 {
     public class Especie_Flora
     {
-        public int Id_Especie_Flora { get; set; }
+        public int? Id_Especie_Flora { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
     }

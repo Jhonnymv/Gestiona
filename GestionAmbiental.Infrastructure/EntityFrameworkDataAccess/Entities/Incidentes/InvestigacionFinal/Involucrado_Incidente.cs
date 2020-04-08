@@ -14,13 +14,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Column(TypeName = "int")]
         public int Id_Reporte_Preliminar { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Investigacion_Final { get; set; }
+        public int? Id_Investigacion_Final { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Usuario { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Nombres { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Apellidos { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Email { get; set; }
+        [Column(TypeName = "varchar(12)")]
+        public string Celular { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Doc_Identidad { get; set; }
         [Column(TypeName = "int")]
@@ -31,11 +35,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Empresa { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Turno { get; set; }
-        [Column(TypeName = "varchar(250)")]
-        public string Descripcion { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(25)")]
         public string Tipo_Involucrado { get; set; }
-        [Column(TypeName = "varchar(3)")]
+        [Column(TypeName = "varchar(10)")]
         public string Estado { get; set; }
     }
 }

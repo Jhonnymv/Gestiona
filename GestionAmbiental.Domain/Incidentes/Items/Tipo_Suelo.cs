@@ -8,7 +8,7 @@ namespace GestionAmbiental.Domain.Incidentes.Items
 {
     public class Tipo_Suelo
     {
-        public int Id_Tipo_Suelo { get; set; }
+        public int? Id_Tipo_Suelo { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
     }

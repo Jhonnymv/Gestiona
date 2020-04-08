@@ -14,14 +14,14 @@ namespace GestionAmbiental.Domain.Incidentes.ReportePreliminar
         public string RUC_Contratista { get; set; }
         public string Actividad_Contratista { get; set; }
         public string Domicilio_Contratista { get; set; }
-        public int Num_Trabajadores_Contratista { get; set; }
+        public int? Num_Trabajadores_Contratista { get; set; }
         public Tipo_Incidente Tipo_Incidente { get; set; }
         public Nivel_Incidente Nivel_Incidente { get; set; }
-        public DateTime Fecha_Incidente { get; set; }
+        public DateTime? Fecha_Incidente { get; set; }
         public string Producto_Derramado { get; set; }
-        public double Cantidad_Derramado { get; set; }
+        public double? Cantidad_Derramado { get; set; }
         public Unidad_Medida Unidad_Cantidad_Derramado { get; set; }
-        public double Area_Afectada { get; set; }
+        public double? Area_Afectada { get; set; }
         public Unidad_Medida Unidad_Area_Afectada { get; set; }
         public string Lugar_Incidente { get; set; }
         public string Equipo_Involucrado { get; set; }

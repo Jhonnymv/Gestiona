@@ -12,7 +12,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Key]
         public int Id_Accion_Correctiva_Incidente { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Investigacion_Final { get; set; }
+        public int? Id_Investigacion_Final { get; set; }
         [Column(TypeName = "int")]
         public int Id_Reporte_Preliminar { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -29,7 +29,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public DateTime? Fecha_Verificacion { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Comentarios_Verificacion { get; set; }
-        [Column(TypeName = "varchar(3)")]
+        [Column(TypeName = "varchar(10)")]
         public string Estado { get; set; }
     }
 }

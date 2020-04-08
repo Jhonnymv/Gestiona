@@ -8,7 +8,7 @@ namespace GestionAmbiental.Domain.Incidentes.Items
 {
     public class Producto_Incidente
     {
-        public int Id_Producto_Incidente { get; set; }
+        public int? Id_Producto_Incidente { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
     }

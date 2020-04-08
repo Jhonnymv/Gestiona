@@ -39,8 +39,10 @@
 
   <ItemGroup>
     <Folder Include="logs\" />
+    <Folder Include="UseCases\Incidentes\InvestigacionFinal\" />
     <Folder Include="UseCases\Notificaciones\Inspecciones\" />
     <Folder Include="UseCases\Notificaciones\RAC\" />
+    <Folder Include="Views\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
   </ItemGroup>
 

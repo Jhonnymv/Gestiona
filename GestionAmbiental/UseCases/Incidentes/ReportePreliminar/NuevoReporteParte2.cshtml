@@ -1,0 +1,382 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.ReportePreliminar.ReporteParte2Model
+@{
+    ViewData["Title"] = "NuevoReporteParte2";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Nuevo Reporte Preliminar - Involucrados</h2>
+        </div>
+    </div>
+    <form class="form-group" id="form_nuevoReporte" asp-action="NuevoReporte" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
+        <input type="hidden" asp-for="Opcion" />
+        <!-- DATOS DE LOS INVOLUCRADOS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DE LOS INVOLUCRADOS</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Gerencia_Responsable"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-8">
+                <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
+                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <button id="btn_nuevo_involucrado" type="button" class="btn btn-danger">Agregar Involucrado</button>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_involucrados" style="display:table">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Nombres y Apellidos</th>
+                            <th>Correo Electrónico</th>
+                            <th>Celular</th>
+                            <th>Puesto de Trabajo</th>
+                            <th>Turno</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ACCIONES TOMADAS POST INCIDENTE -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">ACCIONES TOMADAS POST INCIDENTE</h5>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <button id="btn_nueva_accion" type="button" class="btn btn-danger">Agregar Acción</button>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_acciones" style="display:table">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Acción Inmediata</th>
+                            <th>Responsable</th>
+                            <th>Fecha</th>
+                            <th>Estatus</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Comentario_Accion"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
+                <input type="text" class="form-control" asp-for="Comentario_Accion" />
+            </div>
+        </div>
+        <!-- ACCIONES TOMADAS POST INCIDENTE -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">SEGIMIENTO</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Supervisor"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <label asp-for="Evidencias"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <span class="text-danger field-validation-error" data-valmsg-for="Nueva_Evidencia" data-valmsg-replace="true">
+                    <span id="danger_evidencia" class=""></span>
+                </span>
+                <label class="btn btn-primary" for="Nueva_Evidencia">Seleccione</label>
+                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520">
+                <label id="files_name">0 Archivos</label>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-end">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
+                <button id="boton_siguiente" type="button" class="btn btn-primary">Siguiente</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Modal Nuevo Involucrado-->
+<div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_involucrado">
+                    Agregar involucrado
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Tipo de Involucrado:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_tipo_involucrado">
+                            <option value="0">--SELECCIONE--</option>
+                            <option value="Titular Minero">Titular Minero</option>
+                            <option value="Contratista">Contratista</option>
+                            <option value="Involucrado Interno">Involucrado Interno</option>
+                            <option value="Involucrado Externo">Involucrado Externo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
+                        <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
+                        <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_correo" style="display:none">Correo Electrónico:</label>
+                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="email" class="form-control" id="input_correo" style="display:none" />
+                        <input type="text" class="form-control" id="input_puesto" style="display:none" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_celular" style="display:none">Celular:</label>
+                        <label id="label_turno" style="display:none">Turno:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_celular" style="display:none" />
+                        <select class="form-control" id="select_turno" style="display:none">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Dia">Día</option>
+                            <option value="Noche">Noche</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_involucrado">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nuevo Acciones Post Incidente-->
+<div class="modal fade" id="modal_accion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_accion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_accion">
+                    Agregar Acción Inmediata
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Descripción:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <textarea class="form-control" rows="2" id="input_descripcion_accion"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Responsable Marcobre:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Responsable Contratista:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Fecha:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="date" class="form-control" id="input_fecha_accion" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Estatus:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_estatus">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $("#btn_nuevo_involucrado").on("click", function () {
+            $("#modal_involucrado").modal('show');
+        });
+        $("#btn_nueva_accion").on("click", function () {
+            $("#modal_accion").modal('show');
+        });
+        function ResetInputsInvolucrado() {
+            $("#select_usuarios").val("0");
+            $("#input_nombres").val("");
+            $("#input_apellidos").val("");
+            $("#input_correo").val("");
+            $("#input_puesto").val("");
+            $("#input_celular").val("");
+            $("#select_turno").val("");
+        }
+        function HideInputsInvolucrado() {
+            $("#label_nobmres_apellidos").hide();
+            $("#select_usuarios").hide();
+            $("#input_nombres").hide();
+            $("#input_apellidos").hide();
+            $("#label_correo").hide();
+            $("#input_correo").hide();
+            $("#label_puesto").hide();
+            $("#input_puesto").hide();
+            $("#label_celular").hide();
+            $("#input_celular").hide();
+            $("#label_turno").hide();
+            $("#select_turno").hide();
+        }
+        $("#select_tipo_involucrado").on("change", function () {
+            HideInputsInvolucrado();
+            ResetInputsInvolucrado();
+            if ($("#select_tipo_involucrado").val() == "Titular Minero") {
+                $("#label_nobmres_apellidos").show();
+                $("#select_usuarios").show();
+                $("#label_celular").show();
+                $("#input_celular").show();
+            }
+            if ($("#select_tipo_involucrado").val() == "Contratista") {
+                $("#label_nobmres_apellidos").show();
+                $("#input_nombres").show();
+                $("#input_apellidos").show();
+                $("#label_correo").show();
+                $("#input_correo").show();
+                $("#label_celular").show();
+                $("#input_celular").show();
+            }
+            if ($("#select_tipo_involucrado").val() == "Involucrado Interno") {
+                $("#label_nobmres_apellidos").show();
+                $("#select_usuarios").show();
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#label_turno").show();
+                $("#select_turno").show();
+            }
+            if ($("#select_tipo_involucrado").val() == "Involucrado Externo") {
+                $("#label_nobmres_apellidos").show();
+                $("#input_nombres").show();
+                $("#input_apellidos").show();
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#label_turno").show();
+                $("#select_turno").show();
+            }
+        });
+        $("#btn_guardar_involucrado").on("click", function () {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/NuevoInvolucrado",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val(),
+                    tipo: $("#select_tipo_involucrado").val(),
+                    usuario: $('#select_usuarios').val(),
+                    nombres: $('#input_nombres').val(),
+                    apellidos: $('#input_apellidos').val(),
+                    correo: $('#input_correo').val(),
+                    puesto: $("#input_puesto").val(),
+                    celular: $("#input_celular").val(),
+                    turno: $("#select_turno").val()
+                },
+                success: (response) => {
+                    HideInputsInvolucrado();
+                    ResetInputsInvolucrado();
+                    $("#modal_involucrado").modal('hide');
+                    $('#tabla_involucrados tbody').empty()
+                    $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                }
+            });
+        });
+
+        function ResetInputsAccion() {
+            $('#input_descripcion_accion').val("");
+            $('#select_usuarios_accion').val(0);
+            $('#input_contratista_accion').val("");
+            $('#input_fecha_accion').val("");
+            $('#select_estatus').val("");
+        }
+        $("#btn_guardar_accion").on("click", function () {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/NuevaAccion",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val(),
+                    descripcion: $("#input_descripcion_accion").val(),
+                    usuario: $('#select_usuarios_accion').val(),
+                    contratista: $('#input_contratista_accion').val(),
+                    fecha: $('#input_fecha_accion').val(),
+                    estado: $('#select_estatus').val()
+                },
+                success: (response) => {
+                    ResetInputsInvolucrado();
+                    $("#modal_accion").modal('hide');
+                    $('#tabla_acciones tbody').empty();
+                    $('#tabla_acciones tbody').html(response.filas_involucrados);
+                }
+            });
+        });
+    </script>
+}
