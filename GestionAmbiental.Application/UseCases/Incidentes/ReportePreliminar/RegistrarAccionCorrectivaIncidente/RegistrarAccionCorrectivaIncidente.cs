@@ -23,7 +23,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             var accion = new Accion_Correctiva_Incidente();
             accion.Id_Reporte_Preliminar = IdReporte;
             accion.Accion_Inmediata = descripcion;
-            accion.Id_Usuario = usuario;
+            if(usuario!=0)
+                accion.Id_Usuario = usuario;
             accion.Responsable = contratista;
             accion.Fecha = fechaAccion;
             accion.Estatus = estado;

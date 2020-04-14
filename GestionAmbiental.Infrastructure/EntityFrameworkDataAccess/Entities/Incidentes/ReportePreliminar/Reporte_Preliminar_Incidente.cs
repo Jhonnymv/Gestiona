@@ -11,6 +11,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
     {
         [Key]
         public int Id_Reporte_Preliminar { get; set; }
+        [Column(TypeName = "varchar(10)")]
+        public string Codigo { get; set; }
         [Column(TypeName = "int")]
         public int Num_Trabajadores { get; set; }
         [Column(TypeName = "varchar(250)")]

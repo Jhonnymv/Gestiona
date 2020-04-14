@@ -12,5 +12,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
         Task<int> RegistrarReportePreliminarParte1(Reporte_Preliminar_Incidente reporte);
         Task<int> RegistrarInvolucradoReportePreliminar(Involucrado_Incidente involucrado);
         Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Correctiva_Incidente accion);
+        Task<int> RegistrarReportePreliminarParte2(Reporte_Preliminar_Incidente reporte);
+        Task<string> GetUltimoCodigo();
     }
 }

@@ -22,6 +22,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
             foreach (var item in items)
             {
                 var outputItem = new InvolucradoIncidenteOutput();
+                outputItem.Id_Involucrado_Incidente = item.Id_Involucrado_Incidente;
                 outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
                 outputItem.Tipo_Involucrado = item.Tipo_Involucrado;
                 outputItem.Id_Usuario = item.Id_Usuario;

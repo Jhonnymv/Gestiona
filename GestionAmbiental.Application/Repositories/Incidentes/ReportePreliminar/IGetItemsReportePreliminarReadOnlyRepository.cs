@@ -9,5 +9,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
     public interface IGetItemsReportePreliminarReadOnlyRepository
     {
         Task<List<Involucrado_Incidente>> GetInvolucradosReporte(int IdReportePreliminar);
+        Task<List<Accion_Correctiva_Incidente>> GetAccionesReporte(int IdReportePreliminar);
     }
 }

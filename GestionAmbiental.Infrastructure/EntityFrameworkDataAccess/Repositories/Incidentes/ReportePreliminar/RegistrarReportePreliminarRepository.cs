@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
+using Microsoft.EntityFrameworkCore;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.Incidentes.ReportePreliminar
 {
@@ -20,6 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> RegistrarReportePreliminarParte1(Reporte_Preliminar_Incidente reporte)
         {
             var entity = new Entities.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente();
+            entity.Codigo = reporte.Codigo;
             entity.Num_Trabajadores = reporte.Num_Trabajadores;
             entity.Razon_Social_Contratista = reporte.Razon_Social_Contratista;
             entity.RUC_Contratista = reporte.RUC_Contratista;
@@ -42,7 +45,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 entity.Id_Causa_Incidente = reporte.Causa_Incidente.IdTipoCondicion;
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
 
-            entity.Estado = EstadosIncidentes.Registrado.ToString();
+            entity.Estado = EstadosIncidentes.Pendiente.ToString();
 
             _context.Reporte_Preliminar_Incidente.Add(entity);            
             await _context.SaveChangesAsync();            
@@ -68,7 +71,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Involucrado_Incidente;
         }
-        public async Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Correctiva_Incidente accion)        
+        public async Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Correctiva_Incidente accion)
         {
             var entity = new Entities.Incidentes.InvestigacionFinal.Accion_Correctiva_Incidente();
             entity.Id_Reporte_Preliminar = accion.Id_Reporte_Preliminar;
@@ -85,6 +88,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             
 
             return entity.Id_Accion_Correctiva_Incidente;
+        }
+        public async Task<int> RegistrarReportePreliminarParte2(Reporte_Preliminar_Incidente reporte)
+        {
+            var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(reporte.Id_Reporte_Preliminar));
+            entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
+            entity.Evidencia = reporte.Evidencia;
+            entity.Comentario_Accion = reporte.Comentario_Accion;
+            entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
+            entity.Estado = reporte.Estado;
+
+            _context.Reporte_Preliminar_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Reporte_Preliminar;
+        }
+        public async Task<string> GetUltimoCodigo()
+        {
+            var codigo = await _context.Reporte_Preliminar_Incidente
+                .Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
+                .OrderBy(x => x.Codigo).Select(x => x.Codigo)
+                .LastOrDefaultAsync();
+            return codigo;
         }
     }
 }

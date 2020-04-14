@@ -9,9 +9,11 @@
             <h2>Nuevo Reporte Preliminar - Involucrados</h2>
         </div>
     </div>
-    <form class="form-group" id="form_nuevoReporte" asp-action="NuevoReporte" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
+    <form class="form-group" id="form_nuevoReporteParte2" asp-action="NuevoReporteParte2" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
         <input type="hidden" asp-for="Opcion" />
+        <input type="hidden" asp-for="NInvolucrados" />
+        <input type="hidden" asp-for="NAcciones" />
         <!-- DATOS DE LOS INVOLUCRADOS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
@@ -67,7 +69,8 @@
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Acción Inmediata</th>
-                            <th>Responsable</th>
+                            <th>Responsable Marcobre</th>
+                            <th>Responsable Contratista</th>
                             <th>Fecha</th>
                             <th>Estatus</th>
                         </tr>
@@ -106,18 +109,18 @@
                 <label asp-for="Evidencias"></label>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6">
-                <span class="text-danger field-validation-error" data-valmsg-for="Nueva_Evidencia" data-valmsg-replace="true">
+                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
                     <span id="danger_evidencia" class=""></span>
                 </span>
-                <label class="btn btn-primary" for="Nueva_Evidencia">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520">
+                <label class="btn btn-primary" for="Evidencias">Seleccione</label>
+                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
                 <label id="files_name">0 Archivos</label>
             </div>
         </div>
         <div class="row mb-2 justify-content-end">
-            <div class="col-sm-12 col-md-2 col-lg-2">
+            <div class="col-sm-12 col-md-3 col-lg-3">
                 <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
-                <button id="boton_siguiente" type="button" class="btn btn-primary">Siguiente</button>
+                <button id="boton_completar" type="button" class="btn btn-primary">Completar Reporte Preliminar</button>
             </div>
         </div>
     </form>
@@ -260,123 +263,5 @@
     </div>
 </div>
 @section Scripts{
-    <script type="text/javascript">
-        $("#btn_nuevo_involucrado").on("click", function () {
-            $("#modal_involucrado").modal('show');
-        });
-        $("#btn_nueva_accion").on("click", function () {
-            $("#modal_accion").modal('show');
-        });
-        function ResetInputsInvolucrado() {
-            $("#select_usuarios").val("0");
-            $("#input_nombres").val("");
-            $("#input_apellidos").val("");
-            $("#input_correo").val("");
-            $("#input_puesto").val("");
-            $("#input_celular").val("");
-            $("#select_turno").val("");
-        }
-        function HideInputsInvolucrado() {
-            $("#label_nobmres_apellidos").hide();
-            $("#select_usuarios").hide();
-            $("#input_nombres").hide();
-            $("#input_apellidos").hide();
-            $("#label_correo").hide();
-            $("#input_correo").hide();
-            $("#label_puesto").hide();
-            $("#input_puesto").hide();
-            $("#label_celular").hide();
-            $("#input_celular").hide();
-            $("#label_turno").hide();
-            $("#select_turno").hide();
-        }
-        $("#select_tipo_involucrado").on("change", function () {
-            HideInputsInvolucrado();
-            ResetInputsInvolucrado();
-            if ($("#select_tipo_involucrado").val() == "Titular Minero") {
-                $("#label_nobmres_apellidos").show();
-                $("#select_usuarios").show();
-                $("#label_celular").show();
-                $("#input_celular").show();
-            }
-            if ($("#select_tipo_involucrado").val() == "Contratista") {
-                $("#label_nobmres_apellidos").show();
-                $("#input_nombres").show();
-                $("#input_apellidos").show();
-                $("#label_correo").show();
-                $("#input_correo").show();
-                $("#label_celular").show();
-                $("#input_celular").show();
-            }
-            if ($("#select_tipo_involucrado").val() == "Involucrado Interno") {
-                $("#label_nobmres_apellidos").show();
-                $("#select_usuarios").show();
-                $("#label_puesto").show();
-                $("#input_puesto").show();
-                $("#label_turno").show();
-                $("#select_turno").show();
-            }
-            if ($("#select_tipo_involucrado").val() == "Involucrado Externo") {
-                $("#label_nobmres_apellidos").show();
-                $("#input_nombres").show();
-                $("#input_apellidos").show();
-                $("#label_puesto").show();
-                $("#input_puesto").show();
-                $("#label_turno").show();
-                $("#select_turno").show();
-            }
-        });
-        $("#btn_guardar_involucrado").on("click", function () {
-            $.ajax({
-                type: "POST",
-                url: "/ReportePreliminar/NuevoInvolucrado",
-                data: {
-                    IdReporte: $("#Id_Reporte_Preliminar").val(),
-                    tipo: $("#select_tipo_involucrado").val(),
-                    usuario: $('#select_usuarios').val(),
-                    nombres: $('#input_nombres').val(),
-                    apellidos: $('#input_apellidos').val(),
-                    correo: $('#input_correo').val(),
-                    puesto: $("#input_puesto").val(),
-                    celular: $("#input_celular").val(),
-                    turno: $("#select_turno").val()
-                },
-                success: (response) => {
-                    HideInputsInvolucrado();
-                    ResetInputsInvolucrado();
-                    $("#modal_involucrado").modal('hide');
-                    $('#tabla_involucrados tbody').empty()
-                    $('#tabla_involucrados tbody').html(response.filas_involucrados)
-                }
-            });
-        });
-
-        function ResetInputsAccion() {
-            $('#input_descripcion_accion').val("");
-            $('#select_usuarios_accion').val(0);
-            $('#input_contratista_accion').val("");
-            $('#input_fecha_accion').val("");
-            $('#select_estatus').val("");
-        }
-        $("#btn_guardar_accion").on("click", function () {
-            $.ajax({
-                type: "POST",
-                url: "/ReportePreliminar/NuevaAccion",
-                data: {
-                    IdReporte: $("#Id_Reporte_Preliminar").val(),
-                    descripcion: $("#input_descripcion_accion").val(),
-                    usuario: $('#select_usuarios_accion').val(),
-                    contratista: $('#input_contratista_accion').val(),
-                    fecha: $('#input_fecha_accion').val(),
-                    estado: $('#select_estatus').val()
-                },
-                success: (response) => {
-                    ResetInputsInvolucrado();
-                    $("#modal_accion").modal('hide');
-                    $('#tabla_acciones tbody').empty();
-                    $('#tabla_acciones tbody').html(response.filas_involucrados);
-                }
-            });
-        });
-    </script>
+    <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/NuevoReporteParte2.js"></script>
 }

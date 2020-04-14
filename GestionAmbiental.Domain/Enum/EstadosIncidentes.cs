@@ -6,6 +6,7 @@ namespace GestionAmbiental.Domain.Enum
 {
     public enum EstadosIncidentes
     {
-        Registrado = 1
+        Registrado = 1,
+        Pendiente = 2,
     }
 }

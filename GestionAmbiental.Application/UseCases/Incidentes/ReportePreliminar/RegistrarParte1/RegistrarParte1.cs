@@ -41,6 +41,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             string Otra_Causa_Incidente)
         {
             var reporteDomain = new Reporte_Preliminar_Incidente();
+
+            reporteDomain.Codigo = "TBD";
             reporteDomain.Num_Trabajadores = Num_Trabajadores;
             reporteDomain.Razon_Social_Contratista = Razon_Social_Contratista;
             reporteDomain.RUC_Contratista = RUC_Contratista;

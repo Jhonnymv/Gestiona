@@ -9,6 +9,7 @@ namespace GestionAmbiental.Domain.Incidentes.ReportePreliminar
     public class Reporte_Preliminar_Incidente
     {
         public int Id_Reporte_Preliminar { get; set; }
+        public string Codigo { get; set; }
         public int Num_Trabajadores { get; set; }
         public string Razon_Social_Contratista { get; set; }
         public string RUC_Contratista { get; set; }
