@@ -9,9 +9,12 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Incidentes.Items;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetAccionesIncidente;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetInvolucradosIncidente;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportesPreliminares;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarAccionCorrectivaIncidente;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarInvolucradoIncidente;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte1;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.RegistrarParte2;
@@ -37,6 +40,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         private readonly IRegistrarAccionCorrectivaIncidente _registrarAccionCorrectivaIncidente;
         private readonly IGetAccionesIncidente _getAccionesIncidente;
         private readonly IGetReportePreliminar _getReportePreliminar;
+        private readonly IGetCausaIncidenteReporte _getCausaIncidenteReporte;
+        private readonly IRegistrarCausaIncidenteReporte _registrarCausaIncidenteReporte;
+        private readonly IEditarReportePreliminar _editarReportePreliminar;
         private readonly IGetInfo_SGA _info_SGA;
 
         public ReportePreliminarController(
@@ -49,6 +55,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IRegistrarAccionCorrectivaIncidente registrarAccionCorrectivaIncidente,
             IGetAccionesIncidente getAccionesIncidente,
             IGetReportePreliminar getReportePreliminar,
+            IGetCausaIncidenteReporte getCausaIncidenteReporte,
+            IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
+            IEditarReportePreliminar editarReportePreliminar,
             IGetInfo_SGA info_SGA)
         {
             _registrarReporteParte1 = registrarReporteParte1;
@@ -60,6 +69,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _registrarAccionCorrectivaIncidente = registrarAccionCorrectivaIncidente;
             _getAccionesIncidente = getAccionesIncidente;
             _getReportePreliminar = getReportePreliminar;
+            _getCausaIncidenteReporte = getCausaIncidenteReporte;
+            _registrarCausaIncidenteReporte = registrarCausaIncidenteReporte;
+            _editarReportePreliminar = editarReportePreliminar;
             _info_SGA = info_SGA;
         }
         public async Task<IActionResult> Resumen()
@@ -88,8 +100,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 {
                     //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + fila.Id_Reporte_Preliminar + "\">" + fila.Codigo + "</a></td>";
-                    //filasTabla += "<td style=\"width: 115px;\">" + fila.Codigo + "</td>";
+                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + fila.Id_Reporte_Preliminar + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Nivel_Incidente + "</td>";
                     filasTabla += "<td style=\"width: 150px;\">";
@@ -206,9 +217,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Lugar_Incidente,
                     model.Equipo_Involucrado,
                     model.Id_Componente_Ambiental,
-                    model.Descripcion_Incidente,
-                    model.Id_Causa_Incidente,
-                    model.Otra_Causa_Incidente);
+                    model.Descripcion_Incidente);
                 if(model.Opcion.Equals("Guardar"))
                     return RedirectToAction("NuevoReporte");
                 else
@@ -229,9 +238,17 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            actos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var condiciones = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
             ViewBag.Gerencias = gerencias;
             ViewBag.Supervisor = supervisores;
             ViewBag.Usuario = usuario;
+            ViewBag.Actos = actos;
+            ViewBag.Condiciones = condiciones;
 
             var model = new ReporteParte2Model();
             model.Id_Reporte_Preliminar = IdReporte;
@@ -294,6 +311,31 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             await _registrarAccionCorrectivaIncidente.Execute(IdReporte, descripcion, usuario, contratista, fecha, estado);
             return await ListarAcciones(IdReporte);
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListarCausas(int IdReporte)
+        {
+            var acciones = await _getCausaIncidenteReporte.Execute(IdReporte);
+            var filas_causas = "";
+            foreach (var fila in acciones)
+            {
+                filas_causas += "<tr>";
+                filas_causas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+                filas_causas += "<td>" + fila.Acto_Condicion + "</td>";
+                filas_causas += "</tr>";
+            }
+            dynamic response = new
+            {
+                filas_acciones = filas_causas,
+                nAcciones = acciones.Count
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> NuevaCausa(int IdReporte, int IdActoCondicion, string Acto_Condicion)
+        {
+            await _registrarCausaIncidenteReporte.Execute(IdReporte, IdActoCondicion, Acto_Condicion);
+            return await ListarCausas(IdReporte);
         }
         [HttpPost]
         public async Task<IActionResult> NuevoReporteParte2(ReporteParte2Model model)
@@ -374,7 +416,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             ViewBag.Unidad_Derramado = unidad_Derramado;
             ViewBag.Unidad_Area = unidad_Area;
             ViewBag.Componente_Ambiental = componente_Ambiental;
-            ViewBag.Causa_Incidente = causa_Incidente; 
+            ViewBag.Causa_Incidente = causa_Incidente;
             ViewBag.Gerencias = gerencias;
             ViewBag.Supervisor = supervisores;
             ViewBag.Usuario = usuario;
@@ -389,9 +431,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             model.Actividad_Contratista = reporte.Actividad_Contratista;
             model.Domicilio_Contratista = reporte.Domicilio_Contratista;
             model.Num_Trabajadores_Contratista = reporte.Num_Trabajadores_Contratista;
-            model.Id_Tipo_Incidente = reporte.Id_Tipo_Incidente.HasValue?reporte.Id_Tipo_Incidente.Value:0;
+            model.Id_Tipo_Incidente = reporte.Id_Tipo_Incidente.HasValue ? reporte.Id_Tipo_Incidente.Value : 0;
             model.Id_Nivel_Incidente = reporte.Id_Nivel_Incidente.HasValue ? reporte.Id_Nivel_Incidente.Value : 0;
-            model.Fecha_Incidente = reporte.Fecha_Incidente !=null ? reporte.Fecha_Incidente.Value.ToString("yyyy-MM-dd") : "";
+            model.Fecha_Incidente = reporte.Fecha_Incidente != null ? reporte.Fecha_Incidente.Value.ToString("yyyy-MM-dd") : "";
             model.Hora_Incidente = reporte.Fecha_Incidente != null ? reporte.Fecha_Incidente.Value.ToString("HH:mm") : "";
             model.Producto_Derramado = reporte.Producto_Derramado;
             model.Cantidad_Derramado = reporte.Cantidad_Derramado;
@@ -407,10 +449,71 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             model.Id_Gerencia_Responsable = reporte.Id_Gerencia_Responsable;
             model.Comentario_Accion = reporte.Comentario_Accion;
             model.Id_Supervisor = reporte.Id_Supervisor_MA;
+            model.Evidencias_Completas = reporte.Evidencia != null ? JsonConvert.SerializeObject(reporte.Evidencia) : null;
+            model.Estado = reporte.Estado;
 
             return View(model);
         }
+        [HttpPost]
+        public async Task<IActionResult> EditarReportePreliminar(EditarReporteModel model) {
+            if (ModelState.IsValid)
+            {
+                var evidencias = new List<string>();
+                if (model.Evidencias != null)
+                {                       
+                    for (int i = 0; i < model.Evidencias.Count; i++)
+                    {
+                        var extension = Path.GetExtension(model.Evidencias[i].FileName);
+                        var max_file_size = 8388608;
 
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName() + ".zip";
+                            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
+                            evidencias.Add(filePath);
+                        }
+                    }
+                }
+                else if(model.Evidencias_Completas != null)
+                {
+                    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+                }
+
+                await _editarReportePreliminar.Execute(
+                    model.Id_Reporte_Preliminar,
+                    model.Num_Trabajadores,
+                    model.Razon_Social_Contratista,
+                    model.RUC_Contratista,
+                    model.Actividad_Contratista,
+                    model.Domicilio_Contratista,
+                    model.Num_Trabajadores_Contratista,
+                    model.Id_Tipo_Incidente,
+                    model.Id_Nivel_Incidente,
+                    model.Fecha_Incidente,
+                    model.Hora_Incidente,
+                    model.Producto_Derramado,
+                    model.Cantidad_Derramado,
+                    model.Id_Unidad_Cantidad_Derramado,
+                    model.Area_Afectada,
+                    model.Id_Unidad_Area_Afectada,
+                    model.Lugar_Incidente,
+                    model.Equipo_Involucrado,
+                    model.Id_Componente_Ambiental,
+                    model.Descripcion_Incidente,
+                    model.Id_Causa_Incidente,
+                    model.Otra_Causa_Incidente,
+                    model.Id_Gerencia_Responsable,
+                    evidencias,
+                    model.Comentario_Accion,
+                    model.Id_Supervisor,
+                    model.Opcion);
+                return RedirectToAction("Resumen");
+            }
+            return RedirectToAction("EditarReportePreliminar",new { IdReporte = model.Id_Reporte_Preliminar } );
+
+        }
 
         //Carga y descarga de archivos
         private string CreateUniqueFileName()

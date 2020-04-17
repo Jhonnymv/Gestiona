@@ -37,7 +37,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Turno { get; set; }
         [Column(TypeName = "varchar(25)")]
         public string Tipo_Involucrado { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }
 }

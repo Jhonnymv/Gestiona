@@ -28,7 +28,6 @@ namespace GestionAmbiental.Domain.Incidentes.ReportePreliminar
         public string Equipo_Involucrado { get; set; }
         public Componente_Ambiental Componente_Ambiental { get; set; }
         public string Descripcion_Incidente { get; set; }
-        public TipoCondicion Causa_Incidente { get; set; }
         public string Otra_Causa_Incidente { get; set; }
         public Gerencia Gerencia_Responsable { get; set; }
         public string Comentario_Accion { get; set; }

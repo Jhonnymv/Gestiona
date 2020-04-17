@@ -40,9 +40,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Lugar_Incidente = reporte.Lugar_Incidente;
             entity.Equipo_Involucrado = reporte.Equipo_Involucrado;
             entity.Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental;
-            entity.Descripcion_Incidente = reporte.Descripcion_Incidente;
-            if (reporte.Causa_Incidente.IdTipoCondicion != 0)
-                entity.Id_Causa_Incidente = reporte.Causa_Incidente.IdTipoCondicion;
+            entity.Descripcion_Incidente = reporte.Descripcion_Incidente;            
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
 
             entity.Estado = EstadosIncidentes.Pendiente.ToString();
@@ -84,8 +82,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             _context.Accion_Correctiva_Incidente.Add(entity);
 
-            await _context.SaveChangesAsync();
-            
+            await _context.SaveChangesAsync();            
 
             return entity.Id_Accion_Correctiva_Incidente;
         }
@@ -108,7 +105,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
                 .OrderBy(x => x.Codigo).Select(x => x.Codigo)
                 .LastOrDefaultAsync();
-            return codigo;
+            if (codigo != null)
+                return codigo;
+            else
+                return "IA-00000000";
+        }
+
+        public async Task<int> RegistrarCausaIncidenteReporte(Causa_Incidente causa)
+        {
+            var entity = new Entities.Incidentes.InvestigacionFinal.Causa_Incidente();
+            entity.Id_Reporte_Preliminar = causa.Id_Reporte_Preliminar;
+            entity.Id_Acto_Condicion = causa.Id_Acto_Condicion;
+            entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion;
+            entity.Estado = EstadosIncidentes.Registrado.ToString();
+
+            _context.Causa_Incidente.Add(entity);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }catch(Exception e) { }
+
+            return entity.Id_Causa_Incidente;
         }
     }
 }

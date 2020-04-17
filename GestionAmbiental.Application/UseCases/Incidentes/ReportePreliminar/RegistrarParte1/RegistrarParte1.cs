@@ -36,9 +36,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             string Lugar_Incidente, 
             string Equipo_Involucrado, 
             int Id_Componente_Ambiental, 
-            string Descripcion_Incidente,
-            int Id_Causa_Incidente,
-            string Otra_Causa_Incidente)
+            string Descripcion_Incidente)
         {
             var reporteDomain = new Reporte_Preliminar_Incidente();
 
@@ -84,12 +82,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
                 reporteDomain.Componente_Ambiental.Id_Componente_Ambiental = Id_Componente_Ambiental;
 
             reporteDomain.Descripcion_Incidente = Descripcion_Incidente;
-
-            reporteDomain.Causa_Incidente = new Domain.ValueObjects.TipoCondicion();
-            if (Id_Causa_Incidente != 0)
-                reporteDomain.Causa_Incidente.IdTipoCondicion = Id_Causa_Incidente;
-
-            reporteDomain.Otra_Causa_Incidente = Otra_Causa_Incidente;
+                        
 
             return await _registrarReportePreliminarReadOnlyRepository.RegistrarReportePreliminarParte1(reporteDomain);
         }

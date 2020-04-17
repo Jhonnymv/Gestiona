@@ -31,7 +31,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public decimal? Cantidad_Recuperado { get; set; }
         [Column(TypeName = "decimal(6,2)")]
         public decimal? Cantidad_No_Recuperado { get; set; }
-        [Column(TypeName = "varchar(3)")]
+        [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }
 }

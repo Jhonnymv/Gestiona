@@ -56,13 +56,14 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [DisplayName("Escribir otra causa inmediata:")]
         public string Otra_Causa_Incidente { get; set; }
         [DisplayName("Gerencia Responsable (Titular Minero):")]
-        public int? Id_Gerencia_Responsable { get; set; }
+        public int Id_Gerencia_Responsable { get; set; }
         [DisplayName("Comentario:")]
         public string Comentario_Accion { get; set; }
         [DisplayName("Supervisor de Medio Ambiente encargado del seguimiento:")]
-        public int? Id_Supervisor { get; set; }
-        [DisplayName("Evidencias: Fotografías, planos, diagramas, entre otros que aporten información sobre el incidente (deben contemplar fecha, hora y georeferencia en UTM DATUM WGS84)")]
+        public int Id_Supervisor { get; set; }
+        [DisplayName("Evidencias:")]
         public List<IFormFile> Evidencias { get; set; }
+        public string Evidencias_Completas { get; set; }
         public int NInvolucrados { get; set; }
         public int NAcciones { get; set; }
         public string Estado { get; set; }

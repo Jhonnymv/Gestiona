@@ -26,8 +26,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             string Lugar_Incidente,
             string Equipo_Involucrado,
             int Id_Componente_Ambiental, 
-            string Descripcion_Incidente,
-            int Id_Causa_Incidente,
-            string Otra_Causa_Incidente);
+            string Descripcion_Incidente);
     }
 }

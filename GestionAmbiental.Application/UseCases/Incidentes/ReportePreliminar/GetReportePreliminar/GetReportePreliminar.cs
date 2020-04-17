@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar
+namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar
 {
-    public class GetReportePreliminar: IGetReportePreliminar
+    public class GetReportePreliminar : IGetReportePreliminar
     {
         private readonly IGetReportePreliminarReadOnlyRepository _getReportePreliminarReadOnlyRepository;
 

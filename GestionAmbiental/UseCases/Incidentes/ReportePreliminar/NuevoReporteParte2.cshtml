@@ -12,8 +12,48 @@
     <form class="form-group" id="form_nuevoReporteParte2" asp-action="NuevoReporteParte2" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
         <input type="hidden" asp-for="Opcion" />
+        <input type="hidden" asp-for="NCausas" />
         <input type="hidden" asp-for="NInvolucrados" />
         <input type="hidden" asp-for="NAcciones" />
+        <!-- CAUSAS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">CAUSAS DEL INCIDENTE</h5>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <button id="btn_nueva_causa" type="button" class="btn btn-danger">Agregar Causa</button>
+            </div>
+        </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" id="alert_causas"></span>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_causas">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Acto/Condición Subestándar</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Otra_Causa"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Otra_Causa"></span>
+                <input type="text" class="form-control" asp-for="Otra_Causa" />
+            </div>
+        </div>
         <!-- DATOS DE LOS INVOLUCRADOS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
@@ -29,6 +69,11 @@
                 <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
             </div>
         </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" id="alert_involucrados"></span>
+            </div>
+        </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <button id="btn_nuevo_involucrado" type="button" class="btn btn-danger">Agregar Involucrado</button>
@@ -36,7 +81,7 @@
         </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
-                <table class="table" id="tabla_involucrados" style="display:table">
+                <table class="table" id="tabla_involucrados">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Tipo</th>
@@ -63,9 +108,14 @@
                 <button id="btn_nueva_accion" type="button" class="btn btn-danger">Agregar Acción</button>
             </div>
         </div>
+        <div class="row mb-1 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" id="alert_acciones"></span>
+            </div>
+        </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
-                <table class="table" id="tabla_acciones" style="display:table">
+                <table class="table" id="tabla_acciones">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Acción Inmediata</th>
@@ -92,7 +142,7 @@
         <!-- ACCIONES TOMADAS POST INCIDENTE -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">SEGIMIENTO</h5>
+                <h5 style="color:white;margin:4px;">SEGUIMIENTO</h5>
             </div>
         </div>
         <div class="row mb-2">
@@ -104,8 +154,14 @@
                 <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
             </div>
         </div>
+        <!-- EVIDENCIAS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">Evidencias: Fotografías, planos, diagramas, entre otros que aporten información sobre el incidente (deben contemplar fecha, hora y georeferencia en UTM DATUM WGS84)</h5>
+            </div>
+        </div>
         <div class="row mb-2">
-            <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="col-sm-12 col-md-2 col-lg-2">
                 <label asp-for="Evidencias"></label>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-6">
@@ -258,6 +314,57 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nueva Causas-->
+<div class="modal fade" id="modal_causa" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_causa"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_causa">
+                    Agregar Causa del Incidente
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Tipo de Causa del Incidente:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_acto_condicion">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Acto">Acto Subestándar</option>
+                            <option value="Condicion">Condición Subestándar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="actos_subestandar" style="display:none">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Acto Subestándar:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
+                    </div>
+                </div>
+                <div class="row mb-2"  id="condiciones_subestandar" style="display:none">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Condición Subestándar:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
             </div>
         </div>
     </div>

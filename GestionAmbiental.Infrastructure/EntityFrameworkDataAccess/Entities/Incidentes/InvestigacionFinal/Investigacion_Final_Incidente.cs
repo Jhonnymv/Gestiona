@@ -70,7 +70,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public int? Id_Supervisor_MA { get; set; }        
         [Column(TypeName = "text")]
         public string Evidencia { get; set; }        
-        [Column(TypeName = "varchar(3)")]
+        [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
         
     }

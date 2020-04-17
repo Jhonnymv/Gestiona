@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,9 +38,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
         public int Id_Gerencia_Responsable { get; set; }
         public string Gerencia_Responsable { get; set; }
         public string Comentario_Accion { get; set; }
-        public int? Id_Supervisor_MA { get; set; }
+        public int Id_Supervisor_MA { get; set; }
         public string Supervisor_MA { get; set; }
-        public string Evidencia { get; set; }
+        public List<string> Evidencia { get; set; }
         public string Estado { get; set; }
 
         public ReportePreliminarOutput()
@@ -89,11 +90,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
                 Componente_Ambiental = reporte.Componente_Ambiental.Descripcion;
             }
             Descripcion_Incidente = reporte.Descripcion_Incidente;
-            if (reporte.Causa_Incidente != null)
-            {
-                Id_Causa_Incidente = reporte.Causa_Incidente.IdTipoCondicion;
-                Causa_Incidente = reporte.Causa_Incidente.Descripcion;
-            }
+            
             Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             if (reporte.Gerencia_Responsable != null)
             {
@@ -106,7 +103,16 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
                 Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
                 Supervisor_MA = reporte.Supervisor_MA.Nombres + " " + reporte.Supervisor_MA.Apellidos;
             }
-            Evidencia = reporte.Evidencia;
+            Evidencia = new List<string>();
+            if (reporte.Evidencia != null)
+            {
+                var evidencias = JArray.Parse(reporte.Evidencia);
+
+                foreach (var evidencia in evidencias)
+                {
+                    Evidencia.Add((string)evidencia);
+                }
+            }
             Estado = reporte.Estado;
         }
     }

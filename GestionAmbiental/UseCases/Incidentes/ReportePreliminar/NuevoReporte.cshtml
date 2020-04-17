@@ -204,22 +204,6 @@
                     <textarea class="form-control" asp-for="Descripcion_Incidente" rows="2"></textarea>
                 </div>
             </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <label asp-for="Id_Causa_Incidente"></label>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <span class="text-danger" asp-validation-for="Id_Causa_Incidente"></span>
-                    <select class="form-control" asp-items="@ViewBag.Causa_Incidente" asp-for="Id_Causa_Incidente"></select>
-                </div>
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <label asp-for="Otra_Causa_Incidente"></label>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <span class="text-danger" asp-validation-for="Otra_Causa_Incidente"></span>
-                    <input type="text" class="form-control" asp-for="Otra_Causa_Incidente" />
-                </div>
-            </div>
             <div class="row mb-2 justify-content-end">
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
@@ -258,7 +242,6 @@
         if ($("#Equipo_Involucrado").val() == "") { $("[data-valmsg-for='Equipo_Involucrado']").html("Debe completar este campo"); return false; }
         if ($("#Id_Componente_Ambiental").val() == 0) { $("[data-valmsg-for='Id_Componente_Ambiental']").html("Debe seleccionar una opción"); return false; }
         if ($("#Descripcion_Incidente").val() == "") { $("[data-valmsg-for='Descripcion_Incidente']").html("Debe completar este campo"); return false; }
-        if ($("#Id_Causa_Incidente").val() == 0) { $("[data-valmsg-for='Id_Causa_Incidente']").html("Debe seleccionar una opción"); return false; }
         return true;
     }
     function resetValidationMessage() {
@@ -276,7 +259,6 @@
         $("[data-valmsg-for='Equipo_Involucrado']").html("");
         $("[data-valmsg-for='Id_Componente_Ambiental']").html("");
         $("[data-valmsg-for='Descripcion_Incidente']").html("");
-        $("[data-valmsg-for='Id_Causa_Incidente']").html("");
     }
 </script>
 } 

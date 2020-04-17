@@ -29,7 +29,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public DateTime? Fecha_Verificacion { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Comentarios_Verificacion { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }
 }

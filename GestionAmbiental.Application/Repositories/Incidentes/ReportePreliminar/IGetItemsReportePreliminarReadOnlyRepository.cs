@@ -10,5 +10,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
     {
         Task<List<Involucrado_Incidente>> GetInvolucradosReporte(int IdReportePreliminar);
         Task<List<Accion_Correctiva_Incidente>> GetAccionesReporte(int IdReportePreliminar);
+        Task<List<Causa_Incidente>> GetCausasReporte(int IdReportePreliminar);
     }
 }

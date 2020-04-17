@@ -1,8 +1,4 @@
-﻿$(document).ready(function () {
-    GetInvolucrados();
-    GetAcciones();
-});
-$("#btn_nuevo_involucrado").on("click", function () {
+﻿$("#btn_nuevo_involucrado").on("click", function () {
     $("#modal_involucrado").modal('show');
 });
 $("#btn_nueva_accion").on("click", function () {
@@ -120,33 +116,3 @@ $("#btn_guardar_accion").on("click", function () {
         }
     });
 });
-function GetInvolucrados() {
-    $.ajax({
-        type: "POST",
-        url: "/ReportePreliminar/ListarInvolucrados",
-        data: {
-            IdReporte: $("#Id_Reporte_Preliminar").val()
-        },
-        success: (response) => {
-            console.log(response);
-            $('#tabla_involucrados tbody').empty()
-            $('#tabla_involucrados tbody').html(response.filas_involucrados)
-            $('#NInvolucrados').val(response.nInvolucrados);
-        }
-    });
-}
-function GetAcciones() {
-    $.ajax({
-        type: "POST",
-        url: "/ReportePreliminar/ListarAcciones",
-        data: {
-            IdReporte: $("#Id_Reporte_Preliminar").val()
-        },
-        success: (response) => {
-            console.log(response);
-            $('#tabla_acciones tbody').empty();
-            $('#tabla_acciones tbody').html(response.filas_acciones);
-            $('#NAcciones').val(response.nAcciones);
-        }
-    });
-}

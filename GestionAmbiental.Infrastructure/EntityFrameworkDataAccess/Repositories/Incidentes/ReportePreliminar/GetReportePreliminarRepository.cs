@@ -117,17 +117,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 outputItem.Descripcion_Incidente = item.Descripcion_Incidente;
 
-                if (item.Id_Causa_Incidente != null)
-                {
-                    var causaIncidente = causasIncidente.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Causa_Incidente));
-                    outputItem.Causa_Incidente = new Domain.ValueObjects.TipoCondicion
-                    {
-                        IdTipoCondicion = causaIncidente.Id_Tipo_Condicion,
-                        Descripcion = causaIncidente.Descripcion,
-                        Grupo = causaIncidente.Grupo
-                    };
-                }
-
                 outputItem.Otra_Causa_Incidente = item.Otra_Causa_Incidente;
 
                 if (item.Id_Gerencia_Responsable != null)
@@ -243,17 +232,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
 
             output.Descripcion_Incidente = reporte.Descripcion_Incidente;
-
-            if (reporte.Id_Causa_Incidente != null)
-            {
-                var causaIncidente = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(reporte.Id_Causa_Incidente));
-                output.Causa_Incidente = new Domain.ValueObjects.TipoCondicion
-                {
-                    IdTipoCondicion = causaIncidente.Id_Tipo_Condicion,
-                    Descripcion = causaIncidente.Descripcion,
-                    Grupo = causaIncidente.Grupo
-                };
-            }
 
             output.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
 

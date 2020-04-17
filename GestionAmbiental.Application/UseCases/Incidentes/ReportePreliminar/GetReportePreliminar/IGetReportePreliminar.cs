@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar
+namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar
 {
     public interface IGetReportePreliminar
     {

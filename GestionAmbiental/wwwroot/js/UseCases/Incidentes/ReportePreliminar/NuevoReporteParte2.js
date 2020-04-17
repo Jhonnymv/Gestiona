@@ -122,9 +122,78 @@ $("#boton_guardar_estado").on("click", function () {
     $("#Opcion").val("GuardarEstado");
     $("#form_nuevoReporteParte2").submit();
 });
+
+$("#btn_nueva_causa").on("click", function () {
+    $("#modal_causa").modal('show');
+});
+function ResetInputsCausa() {
+    $('#select_actos').val(0);
+    $('#select_condiciones').val(0);
+}
+function HideInputsCausa() {
+    $("#actos_subestandar").hide();
+    $("#condiciones_subestandar").hide();
+}
+$("#select_acto_condicion").on("change", function () {
+    ResetInputsCausa();
+    HideInputsCausa();
+    if ($("#select_acto_condicion").val() == "Acto") {       
+        $("#actos_subestandar").show();
+    }
+    if ($("#select_acto_condicion").val() == "Condicion") {
+        $("#condiciones_subestandar").show();
+    }
+});
+$("#btn_guardar_causa").on("click", function () {
+    var IdActoCondicion = 0;
+    var ActoCondicion = "";
+    if ($("#select_acto_condicion").val() == "Acto") {
+        IdActoCondicion = $("#select_actos").val();
+        ActoCondicion = "Acto Subestándar";
+    }else if ($("#select_acto_condicion").val() == "Condicion") {
+        IdActoCondicion = $("#select_condiciones").val();
+        ActoCondicion = "Condición Subestándar";
+    }
+    console.log(IdActoCondicion)
+    $.ajax({
+        type: "POST",
+        url: "/ReportePreliminar/NuevaCausa",
+        data: {
+            IdReporte: $("#Id_Reporte_Preliminar").val(),
+            IdActoCondicion: IdActoCondicion,
+            Acto_Condicion: ActoCondicion
+        },
+        success: (response) => {
+            HideInputsInvolucrado();
+            ResetInputsInvolucrado();
+            $("#modal_causa").modal('hide');
+            $('#tabla_causas tbody').empty()
+            $('#tabla_causas tbody').html(response.filas_acciones)
+            $('#NCausas').val(response.nAcciones);
+        }
+    });
+});
+
 $("#boton_completar").on("click", function () {
+
+    $("#alert_causas").html("");
+    $("#alert_involucrados").html("");
+    $("#alert_acciones").html("");
+
     $("#Opcion").val("Completar");
-    $("#form_nuevoReporteParte2").submit();
+    var nCausas = $("#NCausas").val();
+    var nAcciones = $("#NAcciones").val();
+    var nInvolucrado = $("#NInvolucrados").val();
+    if (nCausas > 0 && nAcciones > 0 && nInvolucrado > 0)
+        $("#form_nuevoReporteParte2").submit();
+    else {
+        if (nCausas == 0)
+            $("#alert_causas").html("Debe agregar causas del incidente");
+        if (nInvolucrado == 0)
+            $("#alert_involucrados").html("Debe agregar involucrados en el incidente");
+        if (nAcciones == 0)
+            $("#alert_acciones").html("Debe agregar acciones correctivas inmediatas");
+    }
 });
 $("#Evidencias").change(function () {
     console.log($("#Evidencias").val())

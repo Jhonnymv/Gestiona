@@ -63,5 +63,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+
+        public async Task<List<Causa_Incidente>> GetCausasReporte(int IdReportePreliminar)
+        {
+            var causas = await _context.Causa_Incidente.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+            var output = new List<Causa_Incidente>();
+            foreach (var item in causas)
+            {
+                var outputItem = new Causa_Incidente();
+
+                outputItem.Id_Causa_Incidente = item.Id_Causa_Incidente;
+                outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
+                outputItem.Id_Acto_Condicion = item.Id_Acto_Condicion;
+                outputItem.Id_Investigacion_Final = item.Id_Investigacion_Final;
+                outputItem.Tipo_Acto_Condicion = item.Tipo_Acto_Condicion;
+                outputItem.Descripcion = item.Descripcion;
+                outputItem.Estado = item.Estado;
+
+                output.Add(outputItem);
+            }
+            return output;
+        }
     }
 }

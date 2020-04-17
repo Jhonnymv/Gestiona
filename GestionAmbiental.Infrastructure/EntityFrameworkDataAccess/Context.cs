@@ -56,6 +56,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Reporte_Preliminar_Incidente> Reporte_Preliminar_Incidente { get; set; }
 
         public DbSet<Accion_Correctiva_Incidente> Accion_Correctiva_Incidente { get; set; }
+        public DbSet<Factor_Causa_Incidente> Factor_Causa_Incidente { get; set; }
         public DbSet<Causa_Incidente> Causa_Incidente { get; set; }
         public DbSet<Impacto_Ambiental_Incidente> Impacto_Ambiental_Incidente { get; set; }
         public DbSet<Investigacion_Final_Incidente> Investigacion_Final_Incidente { get; set; }
@@ -146,6 +147,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<Accion_Correctiva_Incidente>()
                 .ToTable("Tb_Accion_Correctiva_Incidente");
+            modelBuilder.Entity<Factor_Causa_Incidente>()
+                .ToTable("Tb_Factor_Causa_Incidente");
             modelBuilder.Entity<Causa_Incidente>()
                 .ToTable("Tb_Causa_Incidente");
             modelBuilder.Entity<Impacto_Ambiental_Incidente>()

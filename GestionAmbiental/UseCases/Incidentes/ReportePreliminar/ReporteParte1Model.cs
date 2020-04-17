@@ -48,8 +48,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public int Id_Componente_Ambiental { get; set; }
         [DisplayName("Descripción preliminar del incidente:")]
         public string Descripcion_Incidente { get; set; }
-        [DisplayName("Causa inmediata")]
-        public int Id_Causa_Incidente { get; set; }
         [DisplayName("Escribir otra causa inmediata:")]
         public string Otra_Causa_Incidente { get; set; }
         public string Estado { get; set; }
