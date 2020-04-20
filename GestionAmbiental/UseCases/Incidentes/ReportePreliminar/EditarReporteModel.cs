@@ -51,8 +51,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public int Id_Componente_Ambiental { get; set; }
         [DisplayName("Descripción preliminar del incidente:")]
         public string Descripcion_Incidente { get; set; }
-        [DisplayName("Causa inmediata")]
-        public int Id_Causa_Incidente { get; set; }
         [DisplayName("Escribir otra causa inmediata:")]
         public string Otra_Causa_Incidente { get; set; }
         [DisplayName("Gerencia Responsable (Titular Minero):")]
@@ -66,6 +64,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public string Evidencias_Completas { get; set; }
         public int NInvolucrados { get; set; }
         public int NAcciones { get; set; }
+        public int NCausas { get; set; }
         public string Estado { get; set; }
         public string Opcion { get; set; }
     }

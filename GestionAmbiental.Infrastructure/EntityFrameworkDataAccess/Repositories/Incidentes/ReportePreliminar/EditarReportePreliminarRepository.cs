@@ -41,10 +41,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Descripcion_Incidente = reporte.Descripcion_Incidente;
 
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
-            entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
+            if(reporte.Gerencia_Responsable != null)
+                entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
             entity.Evidencia = reporte.Evidencia;
             entity.Comentario_Accion = reporte.Comentario_Accion;
-            entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
+            if(reporte.Supervisor_MA != null)
+                entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
             entity.Estado = reporte.Estado;
 
             _context.Reporte_Preliminar_Incidente.Update(entity);

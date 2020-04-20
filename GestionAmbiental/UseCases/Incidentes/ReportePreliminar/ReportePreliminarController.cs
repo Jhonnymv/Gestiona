@@ -315,9 +315,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> ListarCausas(int IdReporte)
         {
-            var acciones = await _getCausaIncidenteReporte.Execute(IdReporte);
+            var causas = await _getCausaIncidenteReporte.Execute(IdReporte);
             var filas_causas = "";
-            foreach (var fila in acciones)
+            foreach (var fila in causas)
             {
                 filas_causas += "<tr>";
                 filas_causas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
@@ -326,8 +326,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             }
             dynamic response = new
             {
-                filas_acciones = filas_causas,
-                nAcciones = acciones.Count
+                filas_causas = filas_causas,
+                nCausas = causas.Count
             };
             return Ok(response);
         }
@@ -411,6 +411,12 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
             usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+            var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            actos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+            var condiciones = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+            condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
             ViewBag.Tipo_Incidente = tipo_Incidente;
             ViewBag.Nivel_Incidente = nivel_Incidente;
             ViewBag.Unidad_Derramado = unidad_Derramado;
@@ -420,6 +426,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             ViewBag.Gerencias = gerencias;
             ViewBag.Supervisor = supervisores;
             ViewBag.Usuario = usuario;
+            ViewBag.Actos = actos;
+            ViewBag.Condiciones = condiciones;
 
             var reporte = await _getReportePreliminar.Execute(IdReporte);
             var model = new EditarReporteModel();
@@ -444,7 +452,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             model.Equipo_Involucrado = reporte.Equipo_Involucrado;
             model.Id_Componente_Ambiental = reporte.Id_Componente_Ambiental.HasValue ? reporte.Id_Componente_Ambiental.Value : 0;
             model.Descripcion_Incidente = reporte.Descripcion_Incidente;
-            model.Id_Causa_Incidente = reporte.Id_Causa_Incidente.HasValue ? reporte.Id_Causa_Incidente.Value : 0;
             model.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             model.Id_Gerencia_Responsable = reporte.Id_Gerencia_Responsable;
             model.Comentario_Accion = reporte.Comentario_Accion;
@@ -476,7 +483,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                         }
                     }
                 }
-                else if(model.Evidencias_Completas != null)
+                if(model.Evidencias_Completas != null)
                 {
                     evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
                 }
@@ -502,7 +509,6 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Equipo_Involucrado,
                     model.Id_Componente_Ambiental,
                     model.Descripcion_Incidente,
-                    model.Id_Causa_Incidente,
                     model.Otra_Causa_Incidente,
                     model.Id_Gerencia_Responsable,
                     evidencias,

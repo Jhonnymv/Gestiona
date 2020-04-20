@@ -27,6 +27,17 @@ function HideInputsInvolucrado() {
     $("#label_turno").hide();
     $("#select_turno").hide();
 }
+function ValidateInputsInvolucrado(tipo_involucrado) {
+    var result = true;
+    switch (tipo_involucrado) {
+        case "Titular Minero": if ($("#select_usuarios").val() == 0 || $("#input_celular").val() == "") result = false; break;
+        case "Contratista": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_correo").val() == "" || $("#input_celular").val() == "") result = false; break;
+        case "Involucrado Interno": if ($("#select_usuarios").val() == 0 || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;
+        case "Involucrado Externo": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;     
+        case "": result = false; break;
+    }
+    return result;
+}
 $("#select_tipo_involucrado").on("change", function () {
     HideInputsInvolucrado();
     ResetInputsInvolucrado();
@@ -64,29 +75,33 @@ $("#select_tipo_involucrado").on("change", function () {
     }
 });
 $("#btn_guardar_involucrado").on("click", function () {
-    $.ajax({
-        type: "POST",
-        url: "/ReportePreliminar/NuevoInvolucrado",
-        data: {
-            IdReporte: $("#Id_Reporte_Preliminar").val(),
-            tipo: $("#select_tipo_involucrado").val(),
-            usuario: $('#select_usuarios').val(),
-            nombres: $('#input_nombres').val(),
-            apellidos: $('#input_apellidos').val(),
-            correo: $('#input_correo').val(),
-            puesto: $("#input_puesto").val(),
-            celular: $("#input_celular").val(),
-            turno: $("#select_turno").val()
-        },
-        success: (response) => {
-            HideInputsInvolucrado();
-            ResetInputsInvolucrado();
-            $("#modal_involucrado").modal('hide');
-            $('#tabla_involucrados tbody').empty()
-            $('#tabla_involucrados tbody').html(response.filas_involucrados)
-            $('#NInvolucrados').val(response.nInvolucrados);
-        }
-    });
+    $("#danger_involucrado").html("");
+    if (ValidateInputsInvolucrado($("#select_tipo_involucrado").val()))
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/NuevoInvolucrado",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                tipo: $("#select_tipo_involucrado").val(),
+                usuario: $('#select_usuarios').val(),
+                nombres: $('#input_nombres').val(),
+                apellidos: $('#input_apellidos').val(),
+                correo: $('#input_correo').val(),
+                puesto: $("#input_puesto").val(),
+                celular: $("#input_celular").val(),
+                turno: $("#select_turno").val()
+            },
+            success: (response) => {
+                HideInputsInvolucrado();
+                ResetInputsInvolucrado();
+                $("#modal_involucrado").modal('hide');
+                $('#tabla_involucrados tbody').empty()
+                $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                $('#NInvolucrados').val(response.nInvolucrados);
+            }
+        });
+    else
+        $("#danger_involucrado").html("Debe completar todos los campos");
 });
 
 function ResetInputsAccion() {
@@ -96,26 +111,40 @@ function ResetInputsAccion() {
     $('#input_fecha_accion').val("");
     $('#select_estatus').val("");
 }
+function ValidateInputsAccion() {
+    var result = true;
+    if ($('#input_descripcion_accion').val() == "" ||
+        $('#select_usuarios_accion').val() == 0 ||
+        $('#input_contratista_accion').val() == "" ||
+        $('#input_fecha_accion').val() == "" ||
+        $('#select_estatus').val() == "")
+        result = false;
+    return result;
+}
 $("#btn_guardar_accion").on("click", function () {
-    $.ajax({
-        type: "POST",
-        url: "/ReportePreliminar/NuevaAccion",
-        data: {
-            IdReporte: $("#Id_Reporte_Preliminar").val(),
-            descripcion: $("#input_descripcion_accion").val(),
-            usuario: $('#select_usuarios_accion').val(),
-            contratista: $('#input_contratista_accion').val(),
-            fecha: $('#input_fecha_accion').val(),
-            estado: $('#select_estatus').val()
-        },
-        success: (response) => {
-            ResetInputsInvolucrado();
-            $("#modal_accion").modal('hide');
-            $('#tabla_acciones tbody').empty();
-            $('#tabla_acciones tbody').html(response.filas_acciones);
-            $('#NAcciones').val(response.nAcciones);
-        }
-    });
+    $("#danger_accion").html("");
+    if (ValidateInputsAccion())
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/NuevaAccion",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                descripcion: $("#input_descripcion_accion").val(),
+                usuario: $('#select_usuarios_accion').val(),
+                contratista: $('#input_contratista_accion').val(),
+                fecha: $('#input_fecha_accion').val(),
+                estado: $('#select_estatus').val()
+            },
+            success: (response) => {
+                ResetInputsInvolucrado();
+                $("#modal_accion").modal('hide');
+                $('#tabla_acciones tbody').empty();
+                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#NAcciones').val(response.nAcciones);
+            }
+        });
+    else
+        $("#danger_accion").html("Debe completar todos los campos");
 });
 
 $("#boton_guardar_estado").on("click", function () {
@@ -133,6 +162,15 @@ function ResetInputsCausa() {
 function HideInputsCausa() {
     $("#actos_subestandar").hide();
     $("#condiciones_subestandar").hide();
+}
+function ValidateInputsCausa(actoCondicion) {
+    var result = true;
+    switch (actoCondicion) {
+        case "Acto": if ($('#select_actos').val() == 0) result = false; break;
+        case "Condicion": if ($('#select_condiciones').val() == 0) result = false; break;
+        case "": result = false; break;
+    }
+    return result;
 }
 $("#select_acto_condicion").on("change", function () {
     ResetInputsCausa();
@@ -154,26 +192,39 @@ $("#btn_guardar_causa").on("click", function () {
         IdActoCondicion = $("#select_condiciones").val();
         ActoCondicion = "Condición Subestándar";
     }
-    console.log(IdActoCondicion)
-    $.ajax({
-        type: "POST",
-        url: "/ReportePreliminar/NuevaCausa",
-        data: {
-            IdReporte: $("#Id_Reporte_Preliminar").val(),
-            IdActoCondicion: IdActoCondicion,
-            Acto_Condicion: ActoCondicion
-        },
-        success: (response) => {
-            HideInputsInvolucrado();
-            ResetInputsInvolucrado();
-            $("#modal_causa").modal('hide');
-            $('#tabla_causas tbody').empty()
-            $('#tabla_causas tbody').html(response.filas_acciones)
-            $('#NCausas').val(response.nAcciones);
-        }
-    });
+    $("#danger_causa").html("");
+    if (ValidateInputsCausa($("#select_acto_condicion").val()))
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/NuevaCausa",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdActoCondicion: IdActoCondicion,
+                Acto_Condicion: ActoCondicion
+            },
+            success: (response) => {
+                HideInputsCausa();
+                ResetInputsCausa();
+                $("#modal_causa").modal('hide');
+                $('#tabla_causas tbody').empty()
+                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#NCausas').val(response.nCausas);
+            }
+        });
+    else
+        $("#danger_causa").html("Debe completar todos los campos");
 });
 
+function ValidateInputsCompletar() {
+    $("[data-valmsg-for='Id_Gerencia_Responsable']").html("")
+    $("[data-valmsg-for='Id_Supervisor']").html("")
+    $("#danger_evidencia").html("")
+    var result = true;
+    if ($("#Id_Gerencia_Responsable").val() == 0) { $("[data-valmsg-for='Id_Asesor']").html("Debe seleccionar una opción");result = false; }
+    if ($("#Id_Supervisor").val() == 0) { $("[data-valmsg-for='Id_Supervisor']").html("Debe seleccionar una opción"); result = false; }
+    if ($("#Evidencias").get(0).files.length == 0) { $("#danger_evidencia").html("Debe cargar evidencia"); result = false; }
+    return result;
+}
 $("#boton_completar").on("click", function () {
 
     $("#alert_causas").html("");
@@ -184,7 +235,7 @@ $("#boton_completar").on("click", function () {
     var nCausas = $("#NCausas").val();
     var nAcciones = $("#NAcciones").val();
     var nInvolucrado = $("#NInvolucrados").val();
-    if (nCausas > 0 && nAcciones > 0 && nInvolucrado > 0)
+    if (nCausas > 0 && nAcciones > 0 && nInvolucrado > 0 && ValidateInputsCompletar())
         $("#form_nuevoReporteParte2").submit();
     else {
         if (nCausas == 0)
@@ -195,8 +246,8 @@ $("#boton_completar").on("click", function () {
             $("#alert_acciones").html("Debe agregar acciones correctivas inmediatas");
     }
 });
+
 $("#Evidencias").change(function () {
-    console.log($("#Evidencias").val())
 
     $("#danger_evidencia").html("");
     //Validacion del tamaño del archivo
@@ -240,4 +291,25 @@ $("#Evidencias").change(function () {
         }
         filesName.length > 0 ? $("#files_name").html(filesName) : null;
     }
+});
+
+//Restrict to integer
+function setInputFilter(textbox, inputFilter) {
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function (event) {
+        textbox.addEventListener(event, function () {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    });
+}
+setInputFilter(document.getElementById("input_celular"), function (value) {
+    return /^-?\d*$/.test(value);
 });

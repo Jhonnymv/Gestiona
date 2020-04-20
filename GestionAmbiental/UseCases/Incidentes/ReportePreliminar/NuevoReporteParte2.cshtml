@@ -196,16 +196,21 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <span class="text-danger" id="danger_involucrado"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label>Tipo de Involucrado:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
                         <select class="form-control" id="select_tipo_involucrado">
-                            <option value="0">--SELECCIONE--</option>
-                            <option value="Titular Minero">Titular Minero</option>
-                            <option value="Contratista">Contratista</option>
-                            <option value="Involucrado Interno">Involucrado Interno</option>
-                            <option value="Involucrado Externo">Involucrado Externo</option>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Titular Minero">Supervisor Inmediato (Titular Minero)</option>
+                            <option value="Contratista">Supervisor Inmediato (Contratista)</option>
+                            <option value="Involucrado Interno">Involucrado Marcobre</option>
+                            <option value="Involucrado Externo">Involucrado Contratista o SubContratista</option>
                         </select>
                     </div>
                 </div>
@@ -235,7 +240,7 @@
                         <label id="label_turno" style="display:none">Turno:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_celular" style="display:none" />
+                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
                         <select class="form-control" id="select_turno" style="display:none">
                             <option value="">--SELECCIONE--</option>
                             <option value="Dia">Día</option>
@@ -264,6 +269,11 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <span class="text-danger" id="danger_accion"></span>
+                </div>
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
@@ -334,6 +344,11 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <span class="text-danger" id="danger_causa"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label>Tipo de Causa del Incidente:</label>
                     </div>
@@ -353,7 +368,7 @@
                         <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
                     </div>
                 </div>
-                <div class="row mb-2"  id="condiciones_subestandar" style="display:none">
+                <div class="row mb-2" id="condiciones_subestandar" style="display:none">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label>Condición Subestándar:</label>
                     </div>
