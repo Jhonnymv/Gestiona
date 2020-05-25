@@ -11,6 +11,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
     {
         [Key]
         public int Id_Investigacion_Final { get; set; }
+        [Column(TypeName = "int")]
+        public int Id_Reporte_Preliminar { get; set; }
+        [Column(TypeName = "varhcar(10)")]
+        public string Codigo { get; set; }
         //Titular minero
         [Column(TypeName = "int")]
         public int Num_Trabajadores { get; set; }
@@ -61,7 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public DateTime? Fecha_Inicio_Investigacion { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Turno { get; set; }
-        [Column(TypeName = "varchar(250)")]
+        [Column(TypeName = "varchar(600)")]
         public string Descripcion_Incidente { get; set; }
         //Involucrados
         [Column(TypeName = "int")]
@@ -69,8 +73,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Column(TypeName = "int")]
         public int? Id_Supervisor_MA { get; set; }        
         [Column(TypeName = "text")]
-        public string Evidencia { get; set; }        
-        [Column(TypeName = "varchar(15)")]
+        public string Evidencia_Papel { get; set; }   
+        [Column(TypeName = "text")]
+        public string Evidencia_Persona { get; set; }   
+        [Column(TypeName = "text")]
+        public string Evidencia_Posicion { get; set; }   
+        [Column(TypeName = "text")]
+        public string Evidencia_Parte { get; set; }        
+        [Column(TypeName = "varchar(20)")]
         public string Estado { get; set; }
         
     }

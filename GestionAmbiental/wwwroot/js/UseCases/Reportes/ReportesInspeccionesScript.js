@@ -42,10 +42,10 @@ var graph_sso_alt_tipo;
 
 
 $(document).ready(function () {
-    Filtrar();
+    ActualizarInvestigacionesFecha();
 });
 
-function Filtrar() {
+function ActualizarInvestigacionesFecha() {
     gerencia = $("#IdGerencia").val();
     empresa = $("#IdEmpresa").val();
     asesor = $("#IdAsesor").val();
@@ -68,9 +68,9 @@ function Filtrar() {
                 var nObs = response.nInspecciones;
                 ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor);
 
-                ActualizarContadorxFecha();
+                ActualizarProductoInvestigacion();
                 ActualizarContadorOxFecha();
-                ActualizarDatosGraficoACR_CMRS();
+                ActualizaImpactoAgua();
                 GetDataContadorOxE();
                 ActualizarDatosGraficoMAP_SSO_Estado();
                 ActualizarDatosGraficoMA_NR();
@@ -93,15 +93,15 @@ function ActualizarContadorInsXEst(pend, reg, tot) {
 }
 //Para contador de inspecciones x fecha
 $("#sel_frec_insp_fecha").on('change', function () {
-    ActualizarContadorxFecha();
-    ActualizarDatosGraficoACR_CMRS();
+    ActualizarProductoInvestigacion();
+    ActualizaImpactoAgua();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
     ActualizarDatosGraficoMA_Clas();
     ActualizarDatosGraficoSSO_Clas();
 });
-function ActualizarContadorxFecha() {
+function ActualizarProductoInvestigacion() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarInspeccionesXFecha",
@@ -142,13 +142,13 @@ function ActualizarContadorxFecha() {
                     data.push(data_insp_fechas[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorxFecha(labels, data, Math.max(data) / 10);
+                CrearGraficaInvestigacionesFecha(labels, data, Math.max(data) / 10);
             }
             ActualizarContadorOxFecha();
         }
     });
 }
-function CrearGraficaContardorxFecha(labels, data, stepSize) {
+function CrearGraficaInvestigacionesFecha(labels, data, stepSize) {
     graph_insp_fechas = new Chart(
         document.getElementById("chart_insp_fechas"),
         {
@@ -192,7 +192,7 @@ function CrearGraficaContardorxFecha(labels, data, stepSize) {
 $("#sel_frec_obs_estado").on('change', function () {
     ActualizarContadorOxFecha();
     GetDataContadorOxE();
-    ActualizarDatosGraficoACR_CMRS();
+    ActualizaImpactoAgua();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
@@ -244,7 +244,7 @@ function ActualizarContadorOxFecha() {
                 //Crear gráfica
                 CrearGraficaContardorOxFecha(labels, data, Math.max(data) / 10);
             }
-            ActualizarDatosGraficoACR_CMRS()
+            ActualizaImpactoAgua()
         }
     });
 }
@@ -329,7 +329,7 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     $("#ObsEncont").html(reg + imp + apr + rec + ven + amp );
 }
 //Para gráfico MAP vs SSO
-function ActualizarDatosGraficoACR_CMRS() {
+function ActualizaImpactoAgua() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsMAPvsSSO",
@@ -369,12 +369,12 @@ function ActualizarDatosGraficoACR_CMRS() {
                     data.push(data_map_vs_sso[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoACR_CMRS(labels, data);
+                CrearGraficoImpactoAgua(labels, data);
             }
         }
     });
 }
-function CrearGraficoACR_CMRS(labels, data) {
+function CrearGraficoImpactoAgua(labels, data) {
     graph_map_vs_sso = new Chart(
         document.getElementById("chart_MAP_vs_SSO"),
         {
@@ -884,7 +884,7 @@ function CrearGraficoSSO_Clas(labels, data) {
 
 
 function ActualizarDatosGraficoMA_NR_Tipo() {
-    Filtrar();
+    ActualizarInvestigacionesFecha();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoMA",
@@ -1084,7 +1084,7 @@ function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
 }
 
 function ActualizarDatosGraficoSSO_NR_Tipo() {
-    Filtrar();
+    ActualizarInvestigacionesFecha();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoSSO",

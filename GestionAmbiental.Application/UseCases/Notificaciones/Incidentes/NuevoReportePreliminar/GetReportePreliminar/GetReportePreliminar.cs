@@ -1,0 +1,25 @@
+﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.Application.UseCases.Notificaciones.Incidentes.NuevoReportePreliminar.GetReportePreliminar
+{
+    public class GetReportePreliminar : IGetReportePreliminar
+    {
+        private readonly IGetReportePreliminarReadOnlyRepository _getReportePreliminarReadOnlyRepository;
+
+        public GetReportePreliminar(IGetReportePreliminarReadOnlyRepository getReportePreliminarReadOnlyRepository)
+        {
+            _getReportePreliminarReadOnlyRepository = getReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportePreliminarReadOnlyRepository));
+        }
+
+        public async Task<ReportePreliminarOutput> Execute(int IdReporte)
+        {
+            var reporte = await _getReportePreliminarReadOnlyRepository.GetReporte(IdReporte);
+            var output = new ReportePreliminarOutput(reporte);
+            return output;
+        }
+    }
+}

@@ -1,8 +1,11 @@
-﻿$("#btn_nuevo_involucrado").on("click", function () {
+﻿//Involucrados
+$("#btn_nuevo_involucrado").on("click", function () {
+    $("#select_tipo_involucrado").val("");
+    ResetInputsInvolucrado();
+    HideInputsInvolucrado();
+    $("#btn_editar_involucrado").hide();
+    $("#btn_guardar_involucrado").show();
     $("#modal_involucrado").modal('show');
-});
-$("#btn_nueva_accion").on("click", function () {
-    $("#modal_accion").modal('show');
 });
 function ResetInputsInvolucrado() {
     $("#select_usuarios").val("0");
@@ -30,24 +33,157 @@ function HideInputsInvolucrado() {
 function ValidateInputsInvolucrado(tipo_involucrado) {
     var result = true;
     switch (tipo_involucrado) {
-        case "Titular Minero": if ($("#select_usuarios").val() == 0 || $("#input_celular").val() == "") result = false; break;
-        case "Contratista": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_correo").val() == "" || $("#input_celular").val() == "") result = false; break;
-        case "Involucrado Interno": if ($("#select_usuarios").val() == 0 || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;
-        case "Involucrado Externo": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;     
+        case "Supervisor Inmediato (Titular Minero)": if ($("#select_usuarios").val() == 0 || $("#input_celular").val() == "" || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;
+        case "Supervisor Inmediato (Contratista)": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_correo").val() == "" || $("#input_celular").val() == ""  || $("#input_puesto").val() == "" || $("#select_turno").val() == "") result = false; break;
+        case "Supervisor Marcobre": if ($("#select_usuarios").val() == 0 || $("#input_celular").val() == "" || $("#input_puesto").val() == "" || $("#select_turno").val() == 0) result = false; break;
+        case "Otro Involucrado": if ($("#input_nombres").val() == "" || $("#input_apellidos").val() == "" || $("#input_correo").val() == "" || $("#input_celular").val() == "" || $("#input_puesto").val() == "" || $("#select_turno").val() == "") result = false; break;     
         case "": result = false; break;
     }
     return result;
 }
-$("#select_tipo_involucrado").on("change", function () {
-    HideInputsInvolucrado();
+function EditarInvolucrado(idInvolucrado) {
+    $("#Id_Involucrado").val(0);
     ResetInputsInvolucrado();
-    if ($("#select_tipo_involucrado").val() == "Titular Minero") {
+    HideInputsInvolucrado()
+    $.ajax({
+        type: "GET",
+        url: "/ReportePreliminar/EditarInvolucrado",
+        data: {
+            IdInvolucrado: idInvolucrado
+        },
+        success: (response) => {
+            $("#modal_involucrado").modal('show');
+            $("#btn_editar_involucrado").show();
+            $("#btn_guardar_involucrado").hide();
+            $("#Id_Involucrado").val(response.idInvolucrado);
+
+            if (response.tipo == "Supervisor Inmediato (Titular Minero)") {
+                $("#select_tipo_involucrado").val("Supervisor Inmediato (Titular Minero)");
+                $("#label_nobmres_apellidos").show();
+                $("#select_usuarios").show();                
+                $("#select_usuarios").val(response.idUsuario);
+
+                $("#label_correo").show();
+                $("#input_correo").show();
+                $("#input_correo").val(response.email);
+
+                $("#label_celular").show();
+                $("#input_celular").show();
+                $("#input_celular").val(response.celular);
+
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#input_puesto").val(response.puesto);
+
+                $("#label_turno").show();
+                $("#select_turno").show();
+                $("#select_turno").val(response.turno);
+            }
+            if (response.tipo == "Supervisor Inmediato (Contratista)") {
+                $("#select_tipo_involucrado").val("Supervisor Inmediato (Contratista)");
+                $("#label_nobmres_apellidos").show();
+                $("#input_nombres").show();                
+                $("#input_apellidos").show();                
+                $("#input_nombres").val(response.nombres);
+                $("#input_apellidos").val(response.apellidos);
+
+                $("#label_correo").show();
+                $("#input_correo").show();
+                $("#input_correo").val(response.email);
+
+                $("#label_celular").show();
+                $("#input_celular").show();
+                $("#input_celular").val(response.celular);
+
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#input_puesto").val(response.puesto);
+
+                $("#label_turno").show();
+                $("#select_turno").show();
+                $("#select_turno").val(response.turno);
+            }
+            if (response.tipo == "Supervisor Marcobre") {
+                $("#select_tipo_involucrado").val("Supervisor Marcobre");
+                $("#label_nobmres_apellidos").show();
+                $("#select_usuarios").show();
+                $("#select_usuarios").val(response.idUsuario);
+
+                $("#label_correo").show();
+                $("#input_correo").show();
+                $("#input_correo").val(response.email);
+
+                $("#label_celular").show();
+                $("#input_celular").show();
+                $("#input_celular").val(response.celular);
+
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#input_puesto").val(response.puesto);
+
+                $("#label_turno").show();
+                $("#select_turno").show();
+                $("#select_turno").val(response.turno);
+            }
+            if (response.tipo == "Otro Involucrado") {
+                $("#select_tipo_involucrado").val("Otro Involucrado");
+                $("#label_nobmres_apellidos").show();
+                $("#input_nombres").show();
+                $("#input_apellidos").show();
+                $("#input_nombres").val(response.nombres);
+                $("#input_apellidos").val(response.apellidos);
+
+                $("#label_correo").show();
+                $("#input_correo").show();
+                $("#input_correo").val(response.email);
+
+                $("#label_celular").show();
+                $("#input_celular").show();
+                $("#input_celular").val(response.celular);
+
+                $("#label_puesto").show();
+                $("#input_puesto").show();
+                $("#input_puesto").val(response.puesto);
+
+                $("#label_turno").show();
+                $("#select_turno").show();
+                $("#select_turno").val(response.turno);
+            }
+
+        }
+    });
+}
+function EliminarInvolucrado(idInvolucrado) {
+    if (confirm('¿Está seguro que desea eliminar este involucrado?')) {
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EliminarInvolucrado",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdInvolucrado: idInvolucrado,
+            },
+            success: (response) => {
+                $('#tabla_involucrados tbody').empty()
+                $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                $('#NInvolucrados').val(response.nInvolucrados);
+            }
+        });
+    }
+}
+$("#select_tipo_involucrado").on("change", function () {
+    ResetInputsInvolucrado();
+    HideInputsInvolucrado();
+    if ($("#select_tipo_involucrado").val() == "Supervisor Inmediato (Titular Minero)") {
         $("#label_nobmres_apellidos").show();
         $("#select_usuarios").show();
         $("#label_celular").show();
         $("#input_celular").show();
+        $("#label_puesto").show();
+        $("#input_puesto").show();
+        $("#label_turno").show();
+        $("#select_turno").show();
     }
-    if ($("#select_tipo_involucrado").val() == "Contratista") {
+    if ($("#select_tipo_involucrado").val() == "Supervisor Inmediato (Contratista)") {
         $("#label_nobmres_apellidos").show();
         $("#input_nombres").show();
         $("#input_apellidos").show();
@@ -55,19 +191,29 @@ $("#select_tipo_involucrado").on("change", function () {
         $("#input_correo").show();
         $("#label_celular").show();
         $("#input_celular").show();
-    }
-    if ($("#select_tipo_involucrado").val() == "Involucrado Interno") {
-        $("#label_nobmres_apellidos").show();
-        $("#select_usuarios").show();
         $("#label_puesto").show();
         $("#input_puesto").show();
         $("#label_turno").show();
         $("#select_turno").show();
     }
-    if ($("#select_tipo_involucrado").val() == "Involucrado Externo") {
+    if ($("#select_tipo_involucrado").val() == "Supervisor Marcobre") {
+        $("#label_nobmres_apellidos").show();
+        $("#select_usuarios").show();
+        $("#label_celular").show();
+        $("#input_celular").show();
+        $("#label_puesto").show();
+        $("#input_puesto").show();
+        $("#label_turno").show();
+        $("#select_turno").show();
+    }
+    if ($("#select_tipo_involucrado").val() == "Otro Involucrado") {
         $("#label_nobmres_apellidos").show();
         $("#input_nombres").show();
         $("#input_apellidos").show();
+        $("#label_correo").show();
+        $("#input_correo").show();
+        $("#label_celular").show();
+        $("#input_celular").show();
         $("#label_puesto").show();
         $("#input_puesto").show();
         $("#label_turno").show();
@@ -92,6 +238,7 @@ $("#btn_guardar_involucrado").on("click", function () {
                 turno: $("#select_turno").val()
             },
             success: (response) => {
+                $("#tabla_involucrados").show();
                 HideInputsInvolucrado();
                 ResetInputsInvolucrado();
                 $("#modal_involucrado").modal('hide');
@@ -103,7 +250,52 @@ $("#btn_guardar_involucrado").on("click", function () {
     else
         $("#danger_involucrado").html("Debe completar todos los campos");
 });
-
+$("#btn_editar_involucrado").on("click", function () {
+    var IdActoCondicion = 0;
+    var ActoCondicion = "";
+    if ($("#select_acto_condicion").val() == "Acto") {
+        IdActoCondicion = $("#select_actos").val();
+        ActoCondicion = "Acto Subestándar";
+    } else if ($("#select_acto_condicion").val() == "Condicion") {
+        IdActoCondicion = $("#select_condiciones").val();
+        ActoCondicion = "Condición Subestándar";
+    }
+    $("#danger_involucrado").html("");
+    if (ValidateInputsInvolucrado($("#select_tipo_involucrado").val()) && ($("#Id_Involucrado").val() != "" || $("#Id_Involucrado").val() != 0))
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EditarInvolucrado",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdInvolucrado: $("#Id_Involucrado").val(),
+                tipo: $("#select_tipo_involucrado").val(),
+                usuario: $('#select_usuarios').val(),
+                nombres: $('#input_nombres').val(),
+                apellidos: $('#input_apellidos').val(),
+                correo: $('#input_correo').val(),
+                puesto: $("#input_puesto").val(),
+                celular: $("#input_celular").val(),
+                turno: $("#select_turno").val()
+            },
+            success: (response) => {
+                HideInputsInvolucrado();
+                ResetInputsInvolucrado();
+                $("#modal_involucrado").modal('hide');
+                $('#tabla_involucrados tbody').empty()
+                $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                $('#NInvolucrados').val(response.nInvolucrados);
+            }
+        });
+    else
+        $("#danger_involucrado").html("Debe completar todos los campos");
+});
+//Accion
+$("#btn_nueva_accion").on("click", function () {
+    ResetInputsAccion();
+    $("#btn_editar_accion").hide();
+    $("#btn_guardar_accion").show();
+    $("#modal_accion").modal('show');
+});
 function ResetInputsAccion() {
     $('#input_descripcion_accion').val("");
     $('#select_usuarios_accion').val(0);
@@ -114,12 +306,53 @@ function ResetInputsAccion() {
 function ValidateInputsAccion() {
     var result = true;
     if ($('#input_descripcion_accion').val() == "" ||
-        $('#select_usuarios_accion').val() == 0 ||
-        $('#input_contratista_accion').val() == "" ||
         $('#input_fecha_accion').val() == "" ||
         $('#select_estatus').val() == "")
         result = false;
+    if ($('#select_usuarios_accion').val() == 0 &&
+        $('#input_contratista_accion').val() == "")
+        result = false;
     return result;
+}
+function EditarAccion(idAccion) {
+    $("#Id_Accion").val(0);
+    ResetInputsAccion();
+    $.ajax({
+        type: "GET",
+        url: "/ReportePreliminar/EditarAccion",
+        data: {
+            IdAccion: idAccion
+        },
+        success: (response) => {
+            $("#modal_accion").modal('show');
+            $("#btn_editar_accion").show();
+            $("#btn_guardar_accion").hide();
+
+            $("#Id_Accion").val(response.idAccion);
+            $("#input_descripcion_accion").val(response.accion);
+            $("#select_usuarios_accion").val(response.idUsuario);
+            $("#input_contratista_accion").val(response.responsableCon);
+            $("#input_fecha_accion").val(response.fecha);
+            $("#select_estatus").val(response.estatus);
+        }
+    });
+}
+function EliminarAccion(idAccion) {
+    if (confirm('¿Está seguro que desea eliminar esta acción?')) {
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EliminarAccion",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdAccion: idAccion,
+            },
+            success: (response) => {
+                $('#tabla_acciones tbody').empty();
+                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#NAcciones').val(response.nAcciones);
+            }
+        });
+    }
 }
 $("#btn_guardar_accion").on("click", function () {
     $("#danger_accion").html("");
@@ -128,6 +361,33 @@ $("#btn_guardar_accion").on("click", function () {
             type: "POST",
             url: "/ReportePreliminar/NuevaAccion",
             data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                descripcion: $("#input_descripcion_accion").val(),
+                usuario: $('#select_usuarios_accion').val(),
+                contratista: $('#input_contratista_accion').val(),
+                fecha: $('#input_fecha_accion').val(),
+                estado: $('#select_estatus').val()
+            },
+            success: (response) => {
+                $("#tabla_acciones").show();
+                ResetInputsAccion();
+                $("#modal_accion").modal('hide');
+                $('#tabla_acciones tbody').empty();
+                $('#tabla_acciones tbody').html(response.filas_acciones);
+                $('#NAcciones').val(response.nAcciones);
+            }
+        });
+    else
+        $("#danger_accion").html("Debe completar todos los campos");
+});
+$("#btn_editar_accion").on("click", function () {
+    $("#danger_accion").html("");
+    if (ValidateInputsAccion() && ($("#IdAccion").val() != "" || $("#IdAccion").val() != 0))
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EditarAccion",
+            data: {
+                IdAccion: $("#Id_Accion").val(),
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
                 descripcion: $("#input_descripcion_accion").val(),
                 usuario: $('#select_usuarios_accion').val(),
@@ -146,15 +406,7 @@ $("#btn_guardar_accion").on("click", function () {
     else
         $("#danger_accion").html("Debe completar todos los campos");
 });
-
-$("#boton_guardar_estado").on("click", function () {
-    $("#Opcion").val("GuardarEstado");
-    $("#form_nuevoReporteParte2").submit();
-});
-
-$("#btn_nueva_causa").on("click", function () {
-    $("#modal_causa").modal('show');
-});
+//Causas
 function ResetInputsCausa() {
     $('#select_actos').val(0);
     $('#select_condiciones').val(0);
@@ -172,6 +424,62 @@ function ValidateInputsCausa(actoCondicion) {
     }
     return result;
 }
+function EditarCausa(idCausa) {
+    $("#Id_Causa").val(0);
+    ResetInputsCausa();
+    HideInputsCausa()
+    $.ajax({
+        type: "GET",
+        url: "/ReportePreliminar/EditarCausa",
+        data: {
+            IdCausa: idCausa
+        },
+        success: (response) => {;
+
+            $("#modal_causa").modal('show');
+            $("#btn_editar_causa").show();
+            $("#btn_guardar_causa").hide();
+
+            $("#Id_Causa").val(response.idCausa);
+            if (response.tipoActoCondicion == "Acto Subestándar") {
+                $("#actos_subestandar").show();
+                $("#select_acto_condicion").val("Acto");
+                $("#select_actos").val(response.idActoCondicion);
+            }
+            else if (response.tipoActoCondicion == "Condición Subestándar") {
+                $("#select_acto_condicion").val("Condicion");
+                $("#condiciones_subestandar").show();
+                $("#select_condiciones").val(response.idActoCondicion);
+            }
+
+        }
+    });
+}
+function EliminarCausa(idCausa) {
+    if (confirm('¿Está seguro que desea eliminar esta causa?')) {
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EliminarCausa",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdCausa: idCausa,
+            },
+            success: (response) => {
+                $('#tabla_causas tbody').empty()
+                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#NCausas').val(response.nCausas);
+            }
+        });
+    }
+}
+$("#btn_nueva_causa").on("click", function () {
+    $("#select_acto_condicion").val("");
+    ResetInputsCausa();
+    HideInputsCausa();
+    $("#btn_editar_causa").hide();
+    $("#btn_guardar_causa").show();
+    $("#modal_causa").modal('show');
+});
 $("#select_acto_condicion").on("change", function () {
     ResetInputsCausa();
     HideInputsCausa();
@@ -199,6 +507,40 @@ $("#btn_guardar_causa").on("click", function () {
             url: "/ReportePreliminar/NuevaCausa",
             data: {
                 IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdActoCondicion: IdActoCondicion,
+                Acto_Condicion: ActoCondicion
+            },
+            success: (response) => {
+                $("#tabla_causas").show();
+                HideInputsCausa();
+                ResetInputsCausa();
+                $("#modal_causa").modal('hide');
+                $('#tabla_causas tbody').empty()
+                $('#tabla_causas tbody').html(response.filas_causas)
+                $('#NCausas').val(response.nCausas);
+            }
+        });
+    else
+        $("#danger_causa").html("Debe completar todos los campos");
+});
+$("#btn_editar_causa").on("click", function () {
+    var IdActoCondicion = 0;
+    var ActoCondicion = "";
+    if ($("#select_acto_condicion").val() == "Acto") {
+        IdActoCondicion = $("#select_actos").val();
+        ActoCondicion = "Acto Subestándar";
+    } else if ($("#select_acto_condicion").val() == "Condicion") {
+        IdActoCondicion = $("#select_condiciones").val();
+        ActoCondicion = "Condición Subestándar";
+    }
+    $("#danger_causa").html("");
+    if (ValidateInputsCausa($("#select_acto_condicion").val()) && ($("#Id_Causa").val() != "" || $("#Id_Causa").val() != 0))
+        $.ajax({
+            type: "POST",
+            url: "/ReportePreliminar/EditarCausa",
+            data: {
+                IdReporte: $("#Id_Reporte_Preliminar").val(),
+                IdCausa: $("#Id_Causa").val(),
                 IdActoCondicion: IdActoCondicion,
                 Acto_Condicion: ActoCondicion
             },
@@ -246,9 +588,12 @@ $("#boton_completar").on("click", function () {
             $("#alert_acciones").html("Debe agregar acciones correctivas inmediatas");
     }
 });
+$("#boton_guardar_estado").on("click", function () {
+    $("#Opcion").val("GuardarEstado");
+    $("#form_nuevoReporteParte2").submit();
+});
 
 $("#Evidencias").change(function () {
-
     $("#danger_evidencia").html("");
     //Validacion del tamaño del archivo
     var maxSize = $("#Evidencias").data('max-size');

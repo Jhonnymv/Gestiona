@@ -50,9 +50,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Reporte_Preliminar;
         }
-        public async Task<int> RegistrarInvolucradoReportePreliminar(Involucrado_Incidente involucrado)
+        public async Task<int> RegistrarInvolucradoReportePreliminar(Involucrado_Incidente_Reporte involucrado)
         {
-            var entity = new Entities.Incidentes.InvestigacionFinal.Involucrado_Incidente();
+            var entity = new Entities.Incidentes.ReportePreliminar.Involucrado_Incidente_Reporte();
             entity.Id_Reporte_Preliminar = involucrado.Id_Reporte_Preliminar;
             entity.Id_Usuario = involucrado.Id_Usuario;
             entity.Nombres = involucrado.Nombres;
@@ -64,14 +64,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Tipo_Involucrado = involucrado.Tipo_Involucrado;
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
-            _context.Involucrado_Incidente.Add(entity);
+            _context.Involucrado_Incidente_Reporte.Add(entity);
+            
             await _context.SaveChangesAsync();
 
-            return entity.Id_Involucrado_Incidente;
+            return entity.Id_Involucrado_Incidente_Reporte;
         }
-        public async Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Correctiva_Incidente accion)
+        public async Task<int> RegistrarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
         {
-            var entity = new Entities.Incidentes.InvestigacionFinal.Accion_Correctiva_Incidente();
+            var entity = new Entities.Incidentes.ReportePreliminar.Accion_Incidente_Reporte();
             entity.Id_Reporte_Preliminar = accion.Id_Reporte_Preliminar;
             entity.Accion_Inmediata = accion.Accion_Inmediata;
             entity.Id_Usuario = accion.Id_Usuario;
@@ -80,16 +81,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Estatus = accion.Estatus;
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
-            _context.Accion_Correctiva_Incidente.Add(entity);
+            _context.Accion_Incidente_Reporte.Add(entity);
 
             await _context.SaveChangesAsync();            
 
-            return entity.Id_Accion_Correctiva_Incidente;
+            return entity.Id_Accion_Incidente_Reporte;
         }
         public async Task<int> RegistrarReportePreliminarParte2(Reporte_Preliminar_Incidente reporte)
         {
             var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(reporte.Id_Reporte_Preliminar));
             entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
+            entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             entity.Evidencia = reporte.Evidencia;
             entity.Comentario_Accion = reporte.Comentario_Accion;
             entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
@@ -102,7 +104,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<string> GetUltimoCodigo()
         {
             var codigo = await _context.Reporte_Preliminar_Incidente
-                .Where(x => x.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
+                .Where(x => x.Estado.Equals(EstadosIncidentes.Difundido.ToString())|| x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
                 .OrderBy(x => x.Codigo).Select(x => x.Codigo)
                 .LastOrDefaultAsync();
             if (codigo != null)
@@ -110,22 +112,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else
                 return "IA-00000000";
         }
-
-        public async Task<int> RegistrarCausaIncidenteReporte(Causa_Incidente causa)
+        public async Task<int> RegistrarCausaIncidenteReporte(Causa_Incidente_Reporte causa)
         {
-            var entity = new Entities.Incidentes.InvestigacionFinal.Causa_Incidente();
+            var entity = new Entities.Incidentes.ReportePreliminar.Causa_Incidente_Reporte();
             entity.Id_Reporte_Preliminar = causa.Id_Reporte_Preliminar;
             entity.Id_Acto_Condicion = causa.Id_Acto_Condicion;
             entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion;
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
-            _context.Causa_Incidente.Add(entity);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }catch(Exception e) { }
+            _context.Causa_Incidente_Reporte.Add(entity);
+            
+            await _context.SaveChangesAsync();
 
-            return entity.Id_Causa_Incidente;
+            return entity.Id_Causa_Incidente_Reporte;
         }
     }
 }

@@ -11,6 +11,8 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
     public class Investigacion_Final_Incidente
     {
         public int Id_Investigacion_Final { get; set; }
+        public int Id_Reporte_Preliminar { get; set; }
+        public string Codigo { get; set; }
         //Titular minero
         public int Num_Trabajadores { get; set; }
         //Contratista - opcional
@@ -41,7 +43,10 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
         //Involucrados
         public Gerencia Gerencia_Responsable { get; set; }
         public Usuario Supervisor_MA { get; set; }
-        public string Evidencia { get; set; }
-        public string Estado { get; set; }        
+        public string Evidencia_Papel { get; set; }
+        public string Evidencia_Posicion { get; set; }
+        public string Evidencia_Persona { get; set; }
+        public string Evidencia_Parte { get; set; }
+        public string Estado { get; set; }       
     }
 }

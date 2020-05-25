@@ -9,6 +9,8 @@ namespace GestionAmbiental.Domain.Enum
         General = 1,
         Sustancia = 2,
         Peso = 3,
-        Area = 4
+        Area = 4,
+        Unidad = 5,
+        Volumen = 6
     }
 }

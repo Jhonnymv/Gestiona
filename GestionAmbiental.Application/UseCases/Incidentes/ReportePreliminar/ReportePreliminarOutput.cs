@@ -32,8 +32,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
         public int? Id_Componente_Ambiental { get; set; }
         public string Componente_Ambiental { get; set; }
         public string Descripcion_Incidente { get; set; }
-        public int? Id_Causa_Incidente { get; set; }
-        public string Causa_Incidente { get; set; }
         public string Otra_Causa_Incidente { get; set; }
         public int Id_Gerencia_Responsable { get; set; }
         public string Gerencia_Responsable { get; set; }

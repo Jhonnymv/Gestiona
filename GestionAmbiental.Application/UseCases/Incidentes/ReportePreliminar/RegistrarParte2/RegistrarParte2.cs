@@ -17,24 +17,27 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             _registrarReportePreliminarReadOnlyRepository = registrarReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarReportePreliminarReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int Id_Reporte_Preliminar, int Id_Gerencia_Responsable, List<string> Evidencia, string Comentario_Accion, int Id_Supervisor_MA, string Opcion)
+        public async Task<int> Execute(int Id_Reporte_Preliminar,string Otra_Causa, int Id_Gerencia_Responsable, List<string> Evidencia, string Comentario_Accion, int Id_Supervisor_MA, string Opcion)
         {
             var input = new Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente();
-
+            /*
             switch (Opcion)
             {
                 case "Completar":
                     input.Estado = EstadosIncidentes.Registrado.ToString();
                     var codigoAnterior = await _registrarReportePreliminarReadOnlyRepository.GetUltimoCodigo();
-                    input.Codigo = (Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(5, '0');
+                    input.Codigo = "IA-" + (Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(7, '0');
                     break;
                 case "GuardarEstado":
                     input.Estado = EstadosIncidentes.Pendiente.ToString();
                     input.Codigo = "TBD";
                     break;
             }
+            */
 
             input.Id_Reporte_Preliminar = Id_Reporte_Preliminar;
+            input.Codigo = "TBD";
+            input.Otra_Causa_Incidente = Otra_Causa;
             if (Id_Gerencia_Responsable != 0)
             {
                 input.Gerencia_Responsable = new Domain.ValueObjects.Gerencia();
@@ -49,6 +52,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
                 input.Supervisor_MA = new Domain.ValueObjects.Usuario();
                 input.Supervisor_MA.IdUsuario = Id_Supervisor_MA;
             }
+            input.Estado = EstadosIncidentes.Pendiente.ToString();
 
             return await _registrarReportePreliminarReadOnlyRepository.RegistrarReportePreliminarParte2(input);
         }

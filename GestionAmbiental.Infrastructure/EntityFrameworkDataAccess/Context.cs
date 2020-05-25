@@ -55,13 +55,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
         public DbSet<Reporte_Preliminar_Incidente> Reporte_Preliminar_Incidente { get; set; }
 
-        public DbSet<Accion_Correctiva_Incidente> Accion_Correctiva_Incidente { get; set; }
+        public DbSet<Accion_Incidente_Investigacion> Accion_Incidente_Investigacion { get; set; }
         public DbSet<Factor_Causa_Incidente> Factor_Causa_Incidente { get; set; }
-        public DbSet<Causa_Incidente> Causa_Incidente { get; set; }
+        public DbSet<Causa_Incidente_Investigacion> Causa_Incidente_Investigacion { get; set; }
         public DbSet<Impacto_Ambiental_Incidente> Impacto_Ambiental_Incidente { get; set; }
         public DbSet<Investigacion_Final_Incidente> Investigacion_Final_Incidente { get; set; }
-        public DbSet<Involucrado_Incidente> Involucrado_Incidente { get; set; }
+        public DbSet<Involucrado_Incidente_Investigacion> Involucrado_Incidente_Investigacion { get; set; }
         public DbSet<Producto_Derramado_Incidente> Producto_Derramado_Incidente { get; set; }
+        public DbSet<Accion_Incidente_Reporte> Accion_Incidente_Reporte { get; set; }
+        public DbSet<Causa_Incidente_Reporte> Causa_Incidente_Reporte { get; set; }
+        public DbSet<Involucrado_Incidente_Reporte> Involucrado_Incidente_Reporte { get; set; }
+        public DbSet<Usuario_Notificar_Incidente> Usuario_Notificar_Incidente { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -145,20 +150,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
             modelBuilder.Entity<Reporte_Preliminar_Incidente>()
                 .ToTable("Tb_Reporte_Preliminar_Incidente");
 
-            modelBuilder.Entity<Accion_Correctiva_Incidente>()
-                .ToTable("Tb_Accion_Correctiva_Incidente");
+            modelBuilder.Entity<Accion_Incidente_Investigacion>()
+                .ToTable("Tb_Accion_Incidente_Investigacion");
             modelBuilder.Entity<Factor_Causa_Incidente>()
                 .ToTable("Tb_Factor_Causa_Incidente");
-            modelBuilder.Entity<Causa_Incidente>()
-                .ToTable("Tb_Causa_Incidente");
+            modelBuilder.Entity<Causa_Incidente_Investigacion>()
+                .ToTable("Tb_Causa_Incidente_Investigacion");
             modelBuilder.Entity<Impacto_Ambiental_Incidente>()
                 .ToTable("Tb_Impacto_Ambiental_Incidente");
             modelBuilder.Entity<Investigacion_Final_Incidente>()
                 .ToTable("Tb_Investigacion_Final_Incidente");
-            modelBuilder.Entity<Involucrado_Incidente>()
-                .ToTable("Tb_Involucrado_Incidente");
+            modelBuilder.Entity<Involucrado_Incidente_Investigacion>()
+                .ToTable("Tb_Involucrado_Incidente_Investigacion");
             modelBuilder.Entity<Producto_Derramado_Incidente>()
                 .ToTable("Tb_Producto_Derramado_Incidente");
+            modelBuilder.Entity<Accion_Incidente_Reporte>()
+                .ToTable("Tb_Accion_Incidente_Reporte");
+            modelBuilder.Entity<Causa_Incidente_Reporte>()
+                .ToTable("Tb_Causa_Incidente_Reporte");
+            modelBuilder.Entity<Involucrado_Incidente_Reporte>()
+                .ToTable("Tb_Involucrado_Incidente_Reporte");
+            modelBuilder.Entity<Usuario_Notificar_Incidente>()
+                .ToTable("Tb_Usuarios_Notificar_Incidente");
         }
     }
 }

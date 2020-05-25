@@ -1,4 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using GestionAmbiental.Domain.ValueObjects;
@@ -19,14 +21,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<Reporte_Preliminar_Incidente>> GetReportes(DateTime? fecha, int id_Usuario, int id_Gerencia)
+        public async Task<List<Reporte_Preliminar_Incidente>> GetReportes(DateTime? fecha,int id_Asesor, int id_Usuario, int id_Gerencia)
         {
+            var reportes_titulares_minero = await _context.Involucrado_Incidente_Reporte.Where(x =>
+            x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
+            x.Id_Usuario.Equals(id_Usuario != 0 ? id_Usuario : x.Id_Usuario)).Select(x=>x.Id_Reporte_Preliminar).ToListAsync();
+
             var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x=>x.Codigo).ToListAsync();
             var reportesFiltro = reportes.Where(x =>
             x.Fecha_Incidente.Equals(fecha.HasValue?fecha.Value:x.Fecha_Incidente) &&   
-            x.Id_Supervisor_MA.Equals(id_Usuario!=0?id_Usuario:x.Id_Supervisor_MA)&&
+            x.Id_Supervisor_MA.Equals(id_Asesor != 0?id_Asesor:x.Id_Supervisor_MA)&&
             x.Id_Gerencia_Responsable.Equals(id_Gerencia!=0?id_Gerencia:x.Id_Gerencia_Responsable))
                 .ToList();
+
+            if (reportes_titulares_minero.Count > 0 && id_Usuario!=0)
+                reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
             var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();
@@ -264,6 +273,158 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             output.Evidencia = reporte.Evidencia;
             output.Estado = reporte.Estado;
+
+            return output;
+        }
+
+        public async Task<string> GetEstadoReporte(int IdReporte)
+        {
+            var output = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
+            return output.Estado;
+        }
+
+        public async Task<List<Reporte_Preliminar_Incidente>> GetReportesMA(DateTime? fecha, int id_Asesor, int id_Gerencia,int id_Usuario)
+        {
+            var reportes_titulares_minero = await _context.Involucrado_Incidente_Reporte.Where(x =>
+            x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
+            x.Id_Usuario.Equals(id_Usuario != 0 ? id_Usuario : x.Id_Usuario)).Select(x => x.Id_Reporte_Preliminar).ToListAsync();
+
+            var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x => x.Codigo).ToListAsync();
+
+            var reportesFiltro = reportes.Where(x =>
+            x.Fecha_Incidente.Equals(fecha.HasValue ? fecha.Value : x.Fecha_Incidente) &&
+            x.Id_Supervisor_MA.Equals(id_Asesor != 0 ? id_Asesor : x.Id_Supervisor_MA) &&
+            x.Id_Gerencia_Responsable.Equals(id_Gerencia != 0 ? id_Gerencia : x.Id_Gerencia_Responsable) &&
+            (x.Estado.Equals(EstadosIncidentes.Registrado.ToString()) ||
+             x.Estado.Equals(EstadosIncidentes.Difundido.ToString()) ||
+             x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) ))
+                .ToList();
+
+            if (reportes_titulares_minero.Count > 0 && id_Usuario != 0)
+                reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
+
+            var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
+            var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();
+            var unidadesMedida = await _context.Unidad_Medida.ToListAsync();
+            var componentesAmbientales = await _context.Componente_Ambiental.ToListAsync();
+            var causasIncidente = await _context.Tipos_Condicion.ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var usuarios = await _context.Usuarios.ToListAsync();
+
+            var output = new List<Reporte_Preliminar_Incidente>();
+
+            foreach (var item in reportesFiltro)
+            {
+                var outputItem = new Reporte_Preliminar_Incidente();
+
+                outputItem.Id_Reporte_Preliminar = item.Id_Reporte_Preliminar;
+                outputItem.Codigo = item.Codigo;
+                outputItem.Num_Trabajadores = item.Num_Trabajadores;
+                outputItem.Razon_Social_Contratista = item.Razon_Social_Contratista;
+                outputItem.RUC_Contratista = item.RUC_Contratista;
+                outputItem.Actividad_Contratista = item.Actividad_Contratista;
+                outputItem.Domicilio_Contratista = item.Domicilio_Contratista;
+                outputItem.Num_Trabajadores_Contratista = item.Num_Trabajadores_Contratista;
+
+                if (item.Id_Tipo_Incidente != null)
+                {
+                    var tipoIncidente = tiposIncidente.FirstOrDefault(x => x.Id_Tipo_Incidente.Equals(item.Id_Tipo_Incidente));
+                    outputItem.Tipo_Incidente = new Tipo_Incidente
+                    {
+                        Id_Tipo_Incidente = tipoIncidente.Id_Tipo_Incidente,
+                        Descripcion = tipoIncidente.Descripcion,
+                        Estado = tipoIncidente.Estado
+                    };
+                }
+                if (item.Id_Nivel_Incidente != null)
+                {
+                    var nivelIncidente = nivelesIncidente.FirstOrDefault(x => x.Id_Nivel_Incidente.Equals(item.Id_Nivel_Incidente));
+                    outputItem.Nivel_Incidente = new Nivel_Incidente
+                    {
+                        Id_Nivel_Incidente = nivelIncidente.Id_Nivel_Incidente,
+                        Descripcion = nivelIncidente.Descripcion,
+                        Estado = nivelIncidente.Estado
+                    };
+                }
+
+                outputItem.Fecha_Incidente = item.Fecha_Incidente;
+                outputItem.Producto_Derramado = item.Producto_Derramado;
+
+                outputItem.Cantidad_Derramado = item.Cantidad_Derramado;
+                if (item.Id_Unidad_Cantidad_Derramado != null)
+                {
+                    var unidadMedida = unidadesMedida.FirstOrDefault(x => x.Id_Unidad_Medida.Equals(item.Id_Unidad_Cantidad_Derramado));
+                    outputItem.Unidad_Cantidad_Derramado = new Unidad_Medida
+                    {
+                        Id_Unidad_Medida = unidadMedida.Id_Unidad_Medida,
+                        Tipo = unidadMedida.Tipo,
+                        Descripcion = unidadMedida.Descripcion,
+                        Estado = unidadMedida.Estado
+                    };
+                }
+
+                outputItem.Area_Afectada = item.Area_Afectada;
+                if (item.Id_Unidad_Area_Afectada != null)
+                {
+                    var unidadMedida = unidadesMedida.FirstOrDefault(x => x.Id_Unidad_Medida.Equals(item.Id_Unidad_Area_Afectada));
+                    outputItem.Unidad_Area_Afectada = new Unidad_Medida
+                    {
+                        Id_Unidad_Medida = unidadMedida.Id_Unidad_Medida,
+                        Tipo = unidadMedida.Tipo,
+                        Descripcion = unidadMedida.Descripcion,
+                        Estado = unidadMedida.Estado
+                    };
+                }
+
+                outputItem.Lugar_Incidente = item.Lugar_Incidente;
+                outputItem.Equipo_Involucrado = item.Equipo_Involucrado;
+
+                if (item.Id_Componente_Ambiental != null)
+                {
+                    var componenteAmbiental = componentesAmbientales.FirstOrDefault(x => x.Id_Componente_Ambiental.Equals(item.Id_Componente_Ambiental));
+                    outputItem.Componente_Ambiental = new Componente_Ambiental
+                    {
+                        Id_Componente_Ambiental = componenteAmbiental.Id_Componente_Ambiental,
+                        Descripcion = componenteAmbiental.Descripcion,
+                        Estado = componenteAmbiental.Estado
+                    };
+                }
+
+                outputItem.Descripcion_Incidente = item.Descripcion_Incidente;
+
+                outputItem.Otra_Causa_Incidente = item.Otra_Causa_Incidente;
+
+                if (item.Id_Gerencia_Responsable != null)
+                {
+                    var gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
+                    outputItem.Gerencia_Responsable = new Gerencia
+                    {
+                        IdGerencia = gerencia.Id_Gerencia,
+                        Descripcion = gerencia.Descripcion
+                    };
+                }
+
+                outputItem.Comentario_Accion = item.Comentario_Accion;
+                if (item.Id_Supervisor_MA != null)
+                {
+                    var supervisor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Supervisor_MA));
+                    outputItem.Supervisor_MA = new Usuario
+                    {
+                        IdUsuario = supervisor.Id_Usuario,
+                        Nombres = supervisor.Nombres,
+                        Apellidos = supervisor.Apellidos,
+                        Email = supervisor.Email,
+                        IdRol = supervisor.Id_Rol,
+                        UsuarioRed = supervisor.usuario_red,
+                        Estado = supervisor.Estado
+                    };
+                }
+
+                outputItem.Evidencia = item.Evidencia;
+                outputItem.Estado = item.Estado;
+
+                output.Add(outputItem);
+            }
 
             return output;
         }

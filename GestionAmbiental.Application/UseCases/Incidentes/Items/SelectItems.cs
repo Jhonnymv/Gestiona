@@ -34,6 +34,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.Items
             output.ItemsGerencia = await _getItemsReadOnlyRepository.GetListGerencia();
             output.ItemsUsuarioMA = await _getItemsReadOnlyRepository.GetListUsuarioMA();
             output.ItemsUsuario = await _getItemsReadOnlyRepository.GetListUsuarios();
+            output.ItemsFactores = await _getItemsReadOnlyRepository.GetListFactores();
 
             return output;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionAmbiental.Domain.Incidentes.Items;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -10,15 +11,15 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
     {
         public int Id_Producto_Derramado_Incidente { get; set; }
         public int Id_Investigacion_Final { get; set; }
-        public int? Id_Producto_Incidente { get; set; }
-        public int? Id_Tipo_Producto { get; set; }
+        public Producto_Incidente Producto_Incidente { get; set; }
+        public Tipo_Producto_Incidente Tipo_Producto { get; set; }
         public string Estado_Producto { get; set; }
-        public decimal? Cantidad_Derramada { get; set; }
-        public int? Id_Unidad { get; set; }
+        public double? Cantidad_Derramada { get; set; }
+        public Unidad_Medida Unidad { get; set; }
         public string Equipo_Responsable { get; set; }
-        public int? Id_Estado_Equipo_Responsable { get; set; }
-        public decimal? Cantidad_Recuperado { get; set; }
-        public decimal? Cantidad_No_Recuperado { get; set; }
+        public Estado_Equipo_Incidente Estado_Equipo_Responsable { get; set; }
+        public double? Cantidad_Recuperado { get; set; }
+        public double? Cantidad_No_Recuperado { get; set; }
         public string Estado { get; set; }
     }
 }

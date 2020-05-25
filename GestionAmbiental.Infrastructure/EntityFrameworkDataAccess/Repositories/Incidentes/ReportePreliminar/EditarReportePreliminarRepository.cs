@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -15,8 +16,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public EditarReportePreliminarRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-
+        }        
         public async Task<int> EditarReportePreliminar(Reporte_Preliminar_Incidente reporte)
         {
             var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(reporte.Id_Reporte_Preliminar));
@@ -52,6 +52,54 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Reporte_Preliminar_Incidente.Update(entity);
             await _context.SaveChangesAsync();
             return entity.Id_Reporte_Preliminar;
+        }
+        public async Task<int> EditarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
+        {
+            var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
+            entity.Accion_Inmediata = accion.Accion_Inmediata;
+            entity.Id_Usuario = accion.Id_Usuario;
+            entity.Responsable = accion.Responsable;
+            entity.Fecha = accion.Fecha != null ? accion.Fecha : entity.Fecha;
+            entity.Estatus = accion.Estatus != null ? accion.Estatus : entity.Estatus;
+            entity.Estado = accion.Estado;
+
+            _context.Accion_Incidente_Reporte.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Accion_Incidente_Reporte;
+        }
+        public async Task<int> EditarCausaIncidenteReporte(Causa_Incidente_Reporte causa)
+        {
+            var entity = await _context.Causa_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Causa_Incidente_Reporte.Equals(causa.Id_Causa_Incidente_Reporte));
+            entity.Id_Acto_Condicion = causa.Id_Acto_Condicion;
+            entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion;
+            entity.Estado = causa.Estado;
+
+            _context.Causa_Incidente_Reporte.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Causa_Incidente_Reporte;
+        }
+        public async Task<int> EditarInvolucradoReportePreliminar(Involucrado_Incidente_Reporte involucrado)
+        {
+            var entity = await _context.Involucrado_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Involucrado_Incidente_Reporte.Equals(involucrado.Id_Involucrado_Incidente_Reporte));
+            entity.Id_Reporte_Preliminar = involucrado.Id_Reporte_Preliminar != null ? involucrado.Id_Reporte_Preliminar : entity.Id_Reporte_Preliminar;
+            entity.Id_Usuario = involucrado.Id_Usuario != null ? involucrado.Id_Usuario : entity.Id_Usuario;
+            entity.Nombres = involucrado.Nombres != null ? involucrado.Nombres : entity.Nombres;
+            entity.Apellidos = involucrado.Apellidos != null ? involucrado.Apellidos : entity.Apellidos;
+            entity.Email = involucrado.Email;
+            entity.Puesto_Trabajo = involucrado.Puesto_Trabajo != null ? involucrado.Puesto_Trabajo : entity.Puesto_Trabajo;
+            entity.Celular = involucrado.Celular;
+            entity.Turno = involucrado.Turno;
+            entity.Tipo_Involucrado = involucrado.Tipo_Involucrado != null ? involucrado.Tipo_Involucrado : entity.Tipo_Involucrado;
+            entity.Estado = involucrado.Estado;
+
+            _context.Involucrado_Incidente_Reporte.Update(entity);
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Involucrado_Incidente_Reporte;
         }
     }
 }

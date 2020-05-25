@@ -1,0 +1,891 @@
+﻿@model GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA.EditarReporteModel
+@{
+    ViewData["Title"] = "EditarReportePreliminarMA";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Editar Reporte Preliminar</h2>
+        </div>
+    </div>
+    <form class="form-group" id="form_editarReporte" asp-action="EditarReportePreliminarMA" asp-controller="ReportePreliminarMA" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
+        <input type="hidden" asp-for="Opcion" />
+        <input type="hidden" asp-for="NInvolucrados" />
+        <input type="hidden" asp-for="NAcciones" />
+        <input type="hidden" asp-for="NCausas" />
+        <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+        <!-- DATOS DEL TITULAR MINERO -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DEL TITULAR MINERO</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label>Razón Social</label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <input type="text" class="form-control" value="Marcobre SAC" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label>RUC</label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <input type="text" class="form-control" value="20508972734" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label>Actividad</label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <input type="text" class="form-control" value="Mineria" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label>Domicilio Legal</label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label>Unidad Minera</label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <input type="text" class="form-control" value="Mina Justa" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Num_Trabajadores"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
+                <input type="number" class="form-control" asp-for="Num_Trabajadores" disabled />
+            </div>
+        </div>
+        <!-- DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero) -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero)</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Razon_Social_Contratista"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Razon_Social_Contratista"></span>
+                <input type="text" class="form-control" asp-for="Razon_Social_Contratista" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="RUC_Contratista"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="RUC_Contratista"></span>
+                <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Actividad_Contratista"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Actividad_Contratista"></span>
+                <input type="text" class="form-control" asp-for="Actividad_Contratista" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Domicilio_Contratista"></label>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+                <span class="text-danger" asp-validation-for="Domicilio_Contratista"></span>
+                <input type="text" class="form-control" asp-for="Domicilio_Contratista" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Num_Trabajadores_Contratista"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Num_Trabajadores_Contratista"></span>
+                <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" disabled />
+            </div>
+        </div>
+        <!-- DATOS DEL INCIDENTE AMBIENTAL -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DEL INCIDENTE AMBIENTAL</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Tipo_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <span class="text-danger" asp-validation-for="Id_Tipo_Incidente"></span>
+                <select class="form-control" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Nivel_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <span class="text-danger" asp-validation-for="Id_Nivel_Incidente"></span>
+                <select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente" disabled></select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Fecha_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
+                <input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <label asp-for="Hora_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <span class="text-danger" asp-validation-for="Hora_Incidente"></span>
+                <input type="time" class="form-control" asp-for="Hora_Incidente" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Producto_Derramado"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <span class="text-danger" asp-validation-for="Producto_Derramado"></span>
+                <input type="text" class="form-control" asp-for="Producto_Derramado" disabled />
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Cantidad_Derramado"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <span class="text-danger" asp-validation-for="Cantidad_Derramado"></span>
+                <input type="number" class="form-control" asp-for="Cantidad_Derramado" disabled />
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <span class="text-danger" asp-validation-for="Id_Unidad_Cantidad_Derramado"></span>
+                <select class="form-control" asp-items="@ViewBag.Unidad_Derramado" asp-for="Id_Unidad_Cantidad_Derramado" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Area_Afectada"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3">
+                <span class="text-danger" asp-validation-for="Area_Afectada"></span>
+                <input type="number" class="form-control" asp-for="Area_Afectada" disabled />
+            </div>
+            <div class="col-sm-12 col-md-1 col-lg-1">
+                <span class="text-danger" asp-validation-for="Id_Unidad_Area_Afectada"></span>
+                <select class="form-control" asp-items="@ViewBag.Unidad_Area" asp-for="Id_Unidad_Area_Afectada" disabled></select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Lugar_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Lugar_Incidente"></span>
+                <input type="text" class="form-control" asp-for="Lugar_Incidente" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Equipo_Involucrado"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Equipo_Involucrado"></span>
+                <input type="text" class="form-control" asp-for="Equipo_Involucrado" disabled />
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Componente_Ambiental"></label>
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <span class="text-danger" asp-validation-for="Id_Componente_Ambiental"></span>
+                <select class="form-control" asp-items="@ViewBag.Componente_Ambiental" asp-for="Id_Componente_Ambiental" disabled></select>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Descripcion_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Descripcion_Incidente"></span>
+                <textarea class="form-control" asp-for="Descripcion_Incidente" rows="3" maxlength="600" disabled></textarea>
+            </div>
+        </div>
+        <!-- CAUSAS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">CAUSAS DEL INCIDENTE</h5>
+            </div>
+        </div>
+        @if (Model.Estado == "Registrado")
+        {
+            <div class="row mb-2 justify-content-center">
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <button id="btn_nueva_causa" type="button" class="btn btn-danger">Agregar Causa</button>
+                </div>
+            </div>
+        }
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_causas">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Acto/Condición Subestándar</th>
+                            <th>Descripción</th>
+                            @if (Model.Estado == "Registrado")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Otra_Causa_Incidente"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Otra_Causa_Incidente"></span>
+                <textarea class="form-control" asp-for="Otra_Causa_Incidente" maxlength="300" rows="3" disabled></textarea>
+            </div>
+        </div>
+        <!-- DATOS DE LOS INVOLUCRADOS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">DATOS DE LOS INVOLUCRADOS</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Gerencia_Responsable"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-8">
+                <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
+                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable" disabled></select>
+            </div>
+        </div>
+        @if (Model.Estado == "Registrado")
+        {
+            <div class="row mb-2 justify-content-center">
+                <div class="col-sm-12 col-md-10 col-lg-10">
+
+                    <button id="btn_nuevo_involucrado" type="button" class="btn btn-danger">Agregar Involucrado</button>
+
+                </div>
+            </div>
+        }
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_involucrados">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Nombres y Apellidos</th>
+                            <th>Correo Electrónico</th>
+                            <th>Celular</th>
+                            <th>Puesto de Trabajo</th>
+                            <th>Turno</th>
+                            @if (Model.Estado == "Registrado")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- ACCIONES TOMADAS POST INCIDENTE -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">ACCIONES INMEDIATAS</h5>
+            </div>
+        </div>
+        @if (Model.Estado == "Registrado")
+        {
+            <div class="row mb-2 justify-content-center">
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <button id="btn_nueva_accion" type="button" class="btn btn-danger">Agregar Acción</button>
+                </div>
+            </div>
+        }
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <table class="table" id="tabla_acciones">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Acción Inmediata</th>
+                            <th>Responsable Marcobre</th>
+                            <th>Responsable Contratista</th>
+                            <th>Fecha</th>
+                            <th>Estatus</th>
+                            @if (Model.Estado == "Registrado")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Comentario_Accion"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
+                <input type="text" class="form-control" asp-for="Comentario_Accion" disabled />
+            </div>
+        </div>
+        <!-- ACCIONES TOMADAS POST INCIDENTE -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">SEGUIMIENTO</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Id_Supervisor"></label>
+            </div>
+            <div class="col-sm-12 col-md-10 col-lg-10">
+                <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor" disabled></select>
+            </div>
+        </div>
+        <!-- EVIDENCIAS -->
+        <div class="row mb-2" style="background-color:#2e6793">
+            <div class="col-12" style="text-align:center">
+                <h5 style="color:white;margin:4px;">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</h5>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-2 col-lg-2">
+                <label asp-for="Evidencias"></label>
+            </div>
+            @if (Model.Estado == "Registrado")
+            {
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="Evidencias">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                </div>
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label id="files_name">0 Archivos</label>
+                </div>
+            }
+            <input type="hidden" asp-for="Evidencias_Completas" />
+            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista">
+            </div>
+        </div>
+        @if (Model.Estado == "Registrado")
+        {
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-2 col-lg-2">
+                    <label asp-for="Investigacion"></label>
+                </div>
+                <div class="col-sm-12 col-md-10 col-lg-10">
+                    <div class="form-check">
+                        <input class="form-check-input position-static" type="checkbox" asp-for="Investigacion">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2 justify-content-end">
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
+                    <button id="boton_difundir" type="button" class="btn btn-primary">Difundir</button>
+                </div>
+            </div>
+        }
+    </form>
+</div>
+<!-- Modal Nuevo Involucrado-->
+<div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_involucrado">
+                    Agregar involucrado
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <input type="hidden" id="Id_Involucrado" />
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <span class="text-danger" id="danger_involucrado"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Tipo de Involucrado:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_tipo_involucrado">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
+                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
+                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
+                            <option value="Otro Involucrado">Otro Involucrado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
+                        <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
+                        <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_correo" style="display:none">Correo Electrónico:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="email" class="form-control" id="input_correo" style="display:none" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_puesto" style="display:none" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_turno" style="display:none">Turno:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_turno" style="display:none">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Dia">Día</option>
+                            <option value="Noche">Noche</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_celular" style="display:none">Celular:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_involucrado">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_involucrado" style="display:none">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Nuevo Acciones Post Incidente-->
+<div class="modal fade" id="modal_accion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_accion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_accion">
+                    Agregar Acción Inmediata
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <span class="text-danger" id="danger_accion"></span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Id_Accion" />
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Descripción:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <textarea class="form-control" rows="2" id="input_descripcion_accion"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Responsable Marcobre:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Responsable Contratista:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Fecha:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="date" class="form-control" id="input_fecha_accion" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Estatus:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_estatus">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="En Proceso">En Proceso</option>
+                            <option value="Cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_accion">Editar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nueva Causas-->
+<div class="modal fade" id="modal_causa" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_causa"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_causa">
+                    Agregar Causa del Incidente
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Id_Causa" />
+                <div class="row mb-2">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <span class="text-danger" id="danger_causa"></span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Tipo de Causa del Incidente:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" id="select_acto_condicion">
+                            <option value="">--SELECCIONE--</option>
+                            <option value="Acto">Acto Subestándar</option>
+                            <option value="Condicion">Condición Subestándar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="actos_subestandar" style="display:none">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Acto Subestándar:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
+                    </div>
+                </div>
+                <div class="row mb-2" id="condiciones_subestandar" style="display:none">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label>Condición Subestándar:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Editar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/EditarReportePreliminarMA.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetInvolucrados();
+            GetAcciones();
+            GetCausas();
+            if ('@Model.Estado' == "Registrado")
+                HabilitarInputs();
+
+            var evidencia = '@Model.Evidencias_Completas';
+            var html_evidencia = "";
+            if (evidencia.length > 0) {
+                var evidencia_valores = JSON.parse(evidencia.replace(/&quot;/g, '"'));
+                for (var i = 0; i < evidencia_valores.length; i++)
+                    html_evidencia += "<p><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+
+                $("#Evidencias_Lista").html(html_evidencia);
+                $("#Evidencias_Completas").val(evidencia_valores);
+            }
+        });
+        function GetInvolucrados() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminarMA/ListarInvolucrados",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val()
+                },
+                success: (response) => {
+                    $('#tabla_involucrados tbody').empty()
+                    $('#tabla_involucrados tbody').html(response.filas_involucrados)
+                    $('#NInvolucrados').val(response.nInvolucrados);
+                }
+            });
+        }
+        function GetAcciones() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminarMA/ListarAcciones",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val()
+                },
+                success: (response) => {
+                    $('#tabla_acciones tbody').empty();
+                    $('#tabla_acciones tbody').html(response.filas_acciones);
+                    $('#NAcciones').val(response.nAcciones);
+                }
+            });
+        }
+        function GetCausas() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminarMA/ListarCausas",
+                data: {
+                    IdReporte: $("#Id_Reporte_Preliminar").val()
+                },
+                success: (response) => {
+                    $('#tabla_causas tbody').empty();
+                    $('#tabla_causas tbody').html(response.filas_causas);
+                    $('#NCausas').val(response.nCausas);
+                }
+            });
+        }
+        $("#boton_guardar_estado").on("click", function () {
+            HabilitarInputs();
+            $("#Opcion").val("Completar");
+            $("#form_editarReporte").submit();
+        });
+        $("#boton_difundir").on("click", function () {
+            HabilitarInputs();
+            if (ValidarInputs()) {
+                $("#Opcion").val("Difundir");
+                $("#form_editarReporte").submit();
+            }
+        });
+
+        function HabilitarInputs() {
+            $("#Num_Trabajadores").prop("disabled", false)
+            $("#Razon_Social_Contratista").prop("disabled", false)
+            $("#RUC_Contratista").prop("disabled", false)
+            $("#Actividad_Contratista").prop("disabled", false)
+            $("#Domicilio_Contratista").prop("disabled", false)
+            $("#Num_Trabajadores_Contratista").prop("disabled", false)
+            $("#Id_Tipo_Incidente").prop("disabled", false)
+            $("#Id_Nivel_Incidente").prop("disabled", false)
+            $("#Fecha_Incidente").prop("disabled", false)
+            $("#Hora_Incidente").prop("disabled", false)
+            $("#Producto_Derramado").prop("disabled", false)
+            $("#Cantidad_Derramado").prop("disabled", false)
+            $("#Id_Unidad_Cantidad_Derramado").prop("disabled", false)
+            $("#Area_Afectada").prop("disabled", false)
+            $("#Id_Unidad_Area_Afectada").prop("disabled", false)
+            $("#Lugar_Incidente").prop("disabled", false)
+            $("#Equipo_Involucrado").prop("disabled", false)
+            $("#Id_Componente_Ambiental").prop("disabled", false)
+            $("#Descripcion_Incidente").prop("disabled", false)
+            $("#Otra_Causa_Incidente").prop("disabled", false)
+            $("#Id_Gerencia_Responsable").prop("disabled", false)
+            $("#Comentario_Accion").prop("disabled", false)
+            $("#Id_Supervisor").prop("disabled", false)
+        }
+        function ValidarInputs() {
+            var result = true;
+            $("[data-valmsg-for='Num_Trabajadores']").html("");
+            $("[data-valmsg-for='Num_Trabajadores']").html("");
+            $("[data-valmsg-for='Razon_Social_Contratista']").html("");
+            $("[data-valmsg-for='RUC_Contratista']").html("");
+            $("[data-valmsg-for='Actividad_Contratista']").html("");
+            $("[data-valmsg-for='Domicilio_Contratista']").html("");
+            $("[data-valmsg-for='Num_Trabajadores_Contratista']").html("");
+            $("[data-valmsg-for='Id_Tipo_Incidente']").html("");
+            $("[data-valmsg-for='Id_Nivel_Incidente']").html("");
+            $("[data-valmsg-for='Fecha_Incidente']").html("");
+            $("[data-valmsg-for='Hora_Incidente']").html("");
+            $("[data-valmsg-for='Producto_Derramado']").html("");
+            $("[data-valmsg-for='Cantidad_Derramado']").html("");
+            $("[data-valmsg-for='Id_Unidad_Cantidad_Derramado']").html("");
+            $("[data-valmsg-for='Area_Afectada']").html("");
+            $("[data-valmsg-for='Id_Unidad_Area_Afectada']").html("");
+            $("[data-valmsg-for='Lugar_Incidente']").html("");
+            $("[data-valmsg-for='Equipo_Involucrado']").html("");
+            $("[data-valmsg-for='Id_Componente_Ambiental']").html("");
+            $("[data-valmsg-for='Descripcion_Incidente']").html("");
+            $("[data-valmsg-for='Otra_Causa_Incidente']").html("");
+            $("[data-valmsg-for='Id_Gerencia_Responsable']").html("");
+            $("[data-valmsg-for='Comentario_Accion']").html("");
+            $("[data-valmsg-for='Id_Supervisor']").html("");
+
+            if ($("#Num_Trabajadores").val() == "") {
+                $("#Num_Trabajadores").focus();
+                $("[data-valmsg-for='Num_Trabajadores']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Razon_Social_Contratista").val() != ""
+                || $("#RUC_Contratista").val() != ""
+                || $("#Actividad_Contratista").val() != ""
+                || $("#Domicilio_Contratista").val() != ""
+                || $("#Num_Trabajadores_Contratista").val() != "")
+            {
+                if ($("#Razon_Social_Contratista").val() == "")
+                {
+                    $("#Razon_Social_Contratista").focus();
+                    $("[data-valmsg-for='Razon_Social_Contratista']").html("Debe completar este campo");
+                    result = false;
+                }
+                if ($("#RUC_Contratista").val() == "")
+                {
+                    $("#RUC_Contratista").focus();
+                    $("[data-valmsg-for='RUC_Contratista']").html("Debe completar este campo");
+                    result = false;
+                }
+                if ($("#Actividad_Contratista").val() == "")
+                {
+                    $("#Actividad_Contratista").focus();
+                    $("[data-valmsg-for='Actividad_Contratista']").html("Debe completar este campo");
+                    result = false;
+                }
+                if ($("#Domicilio_Contratista").val() == "")
+                {
+                    $("#Domicilio_Contratista").focus();
+                    $("[data-valmsg-for='Domicilio_Contratista']").html("Debe completar este campo");
+                    result = false;
+                }
+                if ($("#Num_Trabajadores_Contratista").val() == "")
+                {
+                    $("#Num_Trabajadores_Contratista").focus();
+                    $("[data-valmsg-for='Num_Trabajadores_Contratista']").html("Debe completar este campo");
+                    result = false;
+                }
+            }
+            if ($("#Id_Tipo_Incidente").val() == 0) {
+                $("#Id_Tipo_Incidente").focus();
+                $("[data-valmsg-for='Id_Tipo_Incidente']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Id_Nivel_Incidente").val() == 0) {
+                $("#Id_Nivel_Incidente").focus();
+                $("[data-valmsg-for='Id_Nivel_Incidente']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Fecha_Incidente").val() == "") {
+                $("#Fecha_Incidente").focus();
+                $("[data-valmsg-for='Fecha_Incidente']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Producto_Derramado").val() == "") {
+                $("#Producto_Derramado").focus();
+                $("[data-valmsg-for='Producto_Derramado']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Cantidad_Derramado").val() == "") {
+                $("#Cantidad_Derramado").focus();
+                $("[data-valmsg-for='Cantidad_Derramado']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Id_Unidad_Cantidad_Derramado").val() == 0) {
+                $("#Id_Unidad_Cantidad_Derramado").focus();
+                $("[data-valmsg-for='Id_Unidad_Cantidad_Derramado']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Area_Afectada").val() == "") {
+                $("#Area_Afectada").focus();
+                $("[data-valmsg-for='Area_Afectada']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Id_Unidad_Area_Afectada").val() == 0) {
+                $("#Id_Unidad_Area_Afectada").focus();
+                $("[data-valmsg-for='Id_Unidad_Area_Afectada']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Lugar_Incidente").val() == "") {
+                $("#Lugar_Incidente").focus();
+                $("[data-valmsg-for='Lugar_Incidente']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Lugar_Incidente").val() == "") {
+                $("#Lugar_Incidente").focus();
+                $("[data-valmsg-for='Equipo_Involucrado']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Id_Componente_Ambiental").val() == 0) {
+                $("#Id_Componente_Ambiental").focus();
+                $("[data-valmsg-for='Id_Componente_Ambiental']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Descripcion_Incidente").val() == "") {
+                $("#Descripcion_Incidente").focus();
+                $("[data-valmsg-for='Descripcion_Incidente']").html("Debe completar este campo");
+                result = false;
+            }
+            if ($("#Id_Gerencia_Responsable").val() == 0) {
+                $("#Id_Gerencia_Responsable").focus();
+                $("[data-valmsg-for='Id_Gerencia_Responsable']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#Id_Supervisor").val() == 0) {
+                $("#Id_Supervisor").focus();
+                $("[data-valmsg-for='Id_Supervisor']").html("Debe seleccionar una opción");
+                result = false;
+            }
+            if ($("#NCausas").val() == 0) {
+                $("#alert_causas").html("Debe agregar causas del incidente");
+                result = false;
+            }
+            if ($("#NInvolucrados").val() == 0) {
+                $("#alert_involucrados").html("Debe agregar involucrados en el incidente");
+                result = false;
+            }
+            if ($("#NAcciones").val() == 0) {
+                $("#alert_acciones").html("Debe agregar acciones correctivas inmediatas");
+                result = false;
+            }
+
+            return result;
+        }
+    </script>
+}

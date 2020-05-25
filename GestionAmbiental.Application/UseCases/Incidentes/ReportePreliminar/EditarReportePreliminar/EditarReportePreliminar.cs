@@ -52,20 +52,21 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Edi
             var reporteDomain = new Reporte_Preliminar_Incidente();
 
             reporteDomain.Id_Reporte_Preliminar = Id_Reporte_Preliminar;
-
+            reporteDomain.Codigo = "TBD";
             switch (Opcion)
             {
-                case "Completar":
-                    reporteDomain.Estado = EstadosIncidentes.Registrado.ToString();
-                    var codigoAnterior = await _registrarReportePreliminarReadOnlyRepository.GetUltimoCodigo();
-                    reporteDomain.Codigo = "RP-"+(Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(7, '0');
-                    break;
                 case "GuardarEstado":
                     reporteDomain.Estado = EstadosIncidentes.Pendiente.ToString();
-                    reporteDomain.Codigo = "TBD";
+                    break;
+                case "Completar":
+                    reporteDomain.Estado = EstadosIncidentes.Registrado.ToString();
+                    break;
+                case "Difundir":
+                    var codigoAnterior = await _registrarReportePreliminarReadOnlyRepository.GetUltimoCodigo();
+                    reporteDomain.Codigo = "IA-" + (Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(7, '0');
+                    reporteDomain.Estado = EstadosIncidentes.Difundido.ToString();
                     break;
             }
-
             reporteDomain.Num_Trabajadores = Num_Trabajadores;
             reporteDomain.Razon_Social_Contratista = Razon_Social_Contratista;
             reporteDomain.RUC_Contratista = RUC_Contratista;

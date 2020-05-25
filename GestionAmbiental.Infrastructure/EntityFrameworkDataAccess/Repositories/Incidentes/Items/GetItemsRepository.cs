@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.Items;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -257,6 +258,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Email = item.Email;
                 outputItem.IdRol = item.Id_Rol;
                 outputItem.UsuarioRed = item.usuario_red;
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<Factor_Causa_Incidente>> GetListFactores()
+        {
+            var output = new List<Factor_Causa_Incidente>();
+            var items = await _context.Factor_Causa_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            foreach (var item in items)
+            {
+                var outputItem = new Factor_Causa_Incidente();
+                outputItem.Id_Factor_Causa_Incidente = item.Id_Factor_Causa_Incidente;
+                outputItem.Tipo_Factor = item.Tipo_Factor;
+                outputItem.Descripcion = item.Descripcion;
+                outputItem.Estado = item.Estado;
                 output.Add(outputItem);
             }
             return output;

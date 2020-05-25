@@ -17,5 +17,10 @@ namespace GestionAmbiental.Domain.Enum
         FTPConnectionEvidenciaRSI = 9,
         FTPConnectionEvidenciaRSM = 10,
         FTPConnectionEvidenciaIncR = 1010,
+        FTPConnectionEvidenciaIncInvPapel = 1011,
+        FTPConnectionEvidenciaIncInvPersona = 1012,
+        FTPConnectionEvidenciaIncInvPosicion = 1013,
+        FTPConnectionEvidenciaIncInvPartes = 1014,
+        FTPConnectionEvidenciaIncInvAccion = 1015,
     }
 }

@@ -33,11 +33,13 @@
         </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
-                <table class="table" id="tabla_causas">
+                <table class="table" id="tabla_causas" style="display: none;">
                     <thead class="thead-mcolor">
-                        <tr>
+                        <tr>                            
                             <th>Acto/Condición Subestándar</th>
                             <th>Descripción</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +53,7 @@
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <span class="text-danger" asp-validation-for="Otra_Causa"></span>
-                <input type="text" class="form-control" asp-for="Otra_Causa" />
+                <textarea class="form-control" asp-for="Otra_Causa" maxlength="300" rows="3"></textarea>
             </div>
         </div>
         <!-- DATOS DE LOS INVOLUCRADOS -->
@@ -81,7 +83,7 @@
         </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
-                <table class="table" id="tabla_involucrados">
+                <table class="table" id="tabla_involucrados" style="display: none;">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Tipo</th>
@@ -90,6 +92,8 @@
                             <th>Celular</th>
                             <th>Puesto de Trabajo</th>
                             <th>Turno</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -100,7 +104,7 @@
         <!-- ACCIONES TOMADAS POST INCIDENTE -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">ACCIONES TOMADAS POST INCIDENTE</h5>
+                <h5 style="color:white;margin:4px;">ACCIONES INMEDIATAS</h5>
             </div>
         </div>
         <div class="row mb-2 justify-content-center">
@@ -115,7 +119,7 @@
         </div>
         <div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
-                <table class="table" id="tabla_acciones">
+                <table class="table" id="tabla_acciones" style="display: none;">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Acción Inmediata</th>
@@ -123,6 +127,8 @@
                             <th>Responsable Contratista</th>
                             <th>Fecha</th>
                             <th>Estatus</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -139,7 +145,7 @@
                 <input type="text" class="form-control" asp-for="Comentario_Accion" />
             </div>
         </div>
-        <!-- ACCIONES TOMADAS POST INCIDENTE -->
+        <!-- SEGUIMIENTO -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">SEGUIMIENTO</h5>
@@ -164,12 +170,14 @@
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <label asp-for="Evidencias"></label>
             </div>
-            <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="col-sm-12 col-md-2 col-lg-2">
                 <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
                     <span id="danger_evidencia" class=""></span>
                 </span>
                 <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>                
+            </div>
+            <div class="col-sm-12 col-md-2 col-lg-2">
                 <label id="files_name">0 Archivos</label>
             </div>
         </div>
@@ -179,7 +187,7 @@
                 <button id="boton_completar" type="button" class="btn btn-primary">Completar Reporte Preliminar</button>
             </div>
         </div>
-    </form>
+</form>
 </div>
 <!-- Modal Nuevo Involucrado-->
 <div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
@@ -196,6 +204,7 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
+                    <input type="hidden" id="Id_Involucrado" />
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <span class="text-danger" id="danger_involucrado"></span>
                     </div>
@@ -207,10 +216,10 @@
                     <div class="col-sm-6 col-md-8 col-lg-9">
                         <select class="form-control" id="select_tipo_involucrado">
                             <option value="">--SELECCIONE--</option>
-                            <option value="Titular Minero">Supervisor Inmediato (Titular Minero)</option>
-                            <option value="Contratista">Supervisor Inmediato (Contratista)</option>
-                            <option value="Involucrado Interno">Involucrado Marcobre</option>
-                            <option value="Involucrado Externo">Involucrado Contratista o SubContratista</option>
+                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
+                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
+                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
+                            <option value="Otro Involucrado">Otro Involucrado</option>
                         </select>
                     </div>
                 </div>
@@ -227,20 +236,24 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label id="label_correo" style="display:none">Correo Electrónico:</label>
-                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
                         <input type="email" class="form-control" id="input_correo" style="display:none" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
                         <input type="text" class="form-control" id="input_puesto" style="display:none" />
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_celular" style="display:none">Celular:</label>
                         <label id="label_turno" style="display:none">Turno:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
                         <select class="form-control" id="select_turno" style="display:none">
                             <option value="">--SELECCIONE--</option>
                             <option value="Dia">Día</option>
@@ -248,10 +261,19 @@
                         </select>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_celular" style="display:none">Celular:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_involucrado">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_involucrado" style="display:none">Aceptar</button>
             </div>
         </div>
     </div>
@@ -276,6 +298,7 @@
                 </div>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="Id_Accion" />
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label>Descripción:</label>
@@ -324,6 +347,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_accion">Aceptar</button>
             </div>
         </div>
     </div>
@@ -343,6 +367,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="Id_Causa" />
                 <div class="row mb-2">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <span class="text-danger" id="danger_causa"></span>
@@ -380,6 +405,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
             </div>
         </div>
     </div>

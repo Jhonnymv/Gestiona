@@ -84,7 +84,7 @@
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <span class="text-danger" asp-validation-for="RUC_Contratista"></span>
-                <input type="text" class="form-control" asp-for="RUC_Contratista" disabled />
+                <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" disabled />
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <label asp-for="Actividad_Contratista"></label>
@@ -140,7 +140,7 @@
                 <span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
                 <input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
             </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
+            <div class="col-sm-12 col-md-1 col-lg-1">
                 <label asp-for="Hora_Incidente"></label>
             </div>
             <div class="col-sm-12 col-md-1 col-lg-1">
@@ -150,7 +150,7 @@
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <label asp-for="Producto_Derramado"></label>
             </div>
-            <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-4 col-lg-4">
                 <span class="text-danger" asp-validation-for="Producto_Derramado"></span>
                 <input type="text" class="form-control" asp-for="Producto_Derramado" disabled />
             </div>
@@ -208,7 +208,7 @@
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <span class="text-danger" asp-validation-for="Descripcion_Incidente"></span>
-                <textarea class="form-control" asp-for="Descripcion_Incidente" rows="2" disabled></textarea>
+                <textarea class="form-control" asp-for="Descripcion_Incidente" rows="3" disabled></textarea>
             </div>
         </div>
         <!-- CAUSAS -->
@@ -232,6 +232,11 @@
                         <tr>
                             <th>Acto/Condición Subestándar</th>
                             <th>Descripción</th>
+                            @if (Model.Estado == "Pendiente")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -245,7 +250,7 @@
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <span class="text-danger" asp-validation-for="Otra_Causa_Incidente"></span>
-                <input type="text" class="form-control" asp-for="Otra_Causa_Incidente" disabled />
+                <textarea class="form-control" asp-for="Otra_Causa_Incidente" maxlength="300" rows="3" disabled></textarea>
             </div>
         </div>
         <!-- DATOS DE LOS INVOLUCRADOS -->
@@ -284,6 +289,11 @@
                             <th>Celular</th>
                             <th>Puesto de Trabajo</th>
                             <th>Turno</th>
+                            @if (Model.Estado == "Pendiente")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -294,7 +304,7 @@
         <!-- ACCIONES TOMADAS POST INCIDENTE -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">ACCIONES TOMADAS POST INCIDENTE</h5>
+                <h5 style="color:white;margin:4px;">ACCIONES INMEDIATAS</h5>
             </div>
         </div>
         @if (Model.Estado == "Pendiente")
@@ -315,6 +325,11 @@
                             <th>Responsable Contratista</th>
                             <th>Fecha</th>
                             <th>Estatus</th>
+                            @if (Model.Estado == "Pendiente")
+                            {
+                                <th></th>
+                                <th></th>
+                            }
                         </tr>
                     </thead>
                     <tbody>
@@ -349,7 +364,7 @@
         <!-- EVIDENCIAS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">Evidencias: Fotografías, planos, diagramas, entre otros que aporten información sobre el incidente (deben contemplar fecha, hora y georeferencia en UTM DATUM WGS84)</h5>
+                <h5 style="color:white;margin:4px;">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</h5>
             </div>
         </div>
         <div class="row mb-2">
@@ -382,6 +397,14 @@
                 </div>
             </div>
         }
+        else
+        {
+            <div class="row mb-2 justify-content-end">
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a class="btn btn-danger" asp-controller="DescargarReportePreliminar" asp-action="DescargarReportePreliminar" asp-route-IdReporte="@Model.Id_Reporte_Preliminar">Descargar Excel</a>
+                </div>
+            </div>
+        }
     </form>
 </div>
 <!-- Modal Nuevo Involucrado-->
@@ -399,6 +422,7 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
+                    <input type="hidden" id="Id_Involucrado" />
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <span class="text-danger" id="danger_involucrado"></span>
                     </div>
@@ -410,10 +434,10 @@
                     <div class="col-sm-6 col-md-8 col-lg-9">
                         <select class="form-control" id="select_tipo_involucrado">
                             <option value="">--SELECCIONE--</option>
-                            <option value="Titular Minero">Supervisor Inmediato (Titular Minero)</option>
-                            <option value="Contratista">Supervisor Inmediato (Contratista)</option>
-                            <option value="Involucrado Interno">Involucrado Marcobre</option>
-                            <option value="Involucrado Externo">Involucrado Contratista o SubContratista</option>
+                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
+                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
+                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
+                            <option value="Otro Involucrado">Otro Involucrado</option>
                         </select>
                     </div>
                 </div>
@@ -430,20 +454,24 @@
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label id="label_correo" style="display:none">Correo Electrónico:</label>
-                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
                         <input type="email" class="form-control" id="input_correo" style="display:none" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
                         <input type="text" class="form-control" id="input_puesto" style="display:none" />
                     </div>
                 </div>
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_celular" style="display:none">Celular:</label>
                         <label id="label_turno" style="display:none">Turno:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
                         <select class="form-control" id="select_turno" style="display:none">
                             <option value="">--SELECCIONE--</option>
                             <option value="Dia">Día</option>
@@ -451,10 +479,19 @@
                         </select>
                     </div>
                 </div>
+                <div class="row mb-2">
+                    <div class="col-sm-6 col-md-4 col-lg-3">
+                        <label id="label_celular" style="display:none">Celular:</label>
+                    </div>
+                    <div class="col-sm-6 col-md-8 col-lg-9">
+                        <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_involucrado">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_involucrado" style="display:none">Aceptar</button>
             </div>
         </div>
     </div>
@@ -473,12 +510,13 @@
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <span class="text-danger" id="danger_accion"></span>
-                    </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <span class="text-danger" id="danger_accion"></span>
                 </div>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="Id_Accion" />
                 <div class="row mb-2">
                     <div class="col-sm-6 col-md-4 col-lg-3">
                         <label>Descripción:</label>
@@ -527,6 +565,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_accion">Aceptar</button>
             </div>
         </div>
     </div>
@@ -546,6 +585,7 @@
                 </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="Id_Causa" />
                 <div class="row mb-2">
                     <div class="col-sm-12 col-md-12 col-lg-12">
                         <span class="text-danger" id="danger_causa"></span>
@@ -583,6 +623,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
             </div>
         </div>
     </div>
@@ -655,7 +696,6 @@
             $("#Opcion").val("GuardarEstado");
             $("#form_editarReporte").submit();
         });
-
         $("#boton_completar").on("click", function () {
             HabilitarInputs();
             if (ValidarInputs()) {

@@ -32,9 +32,9 @@ var data_rs_peligroso = [];
 var graph_rs_peligroso;
 
 $(document).ready(function () {
-    Filtrar();
+    ActualizarInvestigacionesFecha();
 });
-function Filtrar() {
+function ActualizarInvestigacionesFecha() {
 
     acr_cmrs = $("#ACR_CMRS").val();
     ingreso_salida = $("#IngresoSalida").val();
@@ -46,8 +46,8 @@ function Filtrar() {
     empresa = $("#Empresa").val();
     frecuencia = $("#frecuencia").val();
     if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
-        ActualizarContadorxFecha();
-        ActualizarDatosGraficoACR_CMRS();
+        ActualizarProductoInvestigacion();
+        ActualizaImpactoAgua();
         ActualizarDatosGraficoIngresoSalida();
         ActualizarDatosGraficoTipoResiduo();
         ActualizarDatosGraficoMotivo();
@@ -58,7 +58,7 @@ function Filtrar() {
     }
 }
 //Para gráfico Contador x Fecha
-function ActualizarContadorxFecha() {
+function ActualizarProductoInvestigacion() {
     $.ajax({
         type: "POST",
         url: "/ReportesIngresoSalida/GetRegistrosEntreFechas",
@@ -113,12 +113,12 @@ function ActualizarContadorxFecha() {
                     dataSalida.push(data_cant_fechas_anulado[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, Math.max(dataIngreso) / 10);
+                CrearGraficaInvestigacionesFecha(labels, dataIngreso, dataSalida, Math.max(dataIngreso) / 10);
             }
         }
     });
 }
-function CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, stepSize) {
+function CrearGraficaInvestigacionesFecha(labels, dataIngreso, dataSalida, stepSize) {
     graph_cant_fechas = new Chart(
         document.getElementById("chart_cant_fechas"),
         {
@@ -169,7 +169,7 @@ function CrearGraficaContardorxFecha(labels, dataIngreso, dataSalida, stepSize) 
         });
 }
 //Para gráfico ACR vs CMRS
-function ActualizarDatosGraficoACR_CMRS() {
+function ActualizaImpactoAgua() {
     $.ajax({
         type: "POST",
         url: "/ReportesIngresoSalida/GetRegistrosACR_CRMS",
@@ -210,12 +210,12 @@ function ActualizarDatosGraficoACR_CMRS() {
                     data.push(data_acr_vs_cmrs[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoACR_CMRS(labels, data);
+                CrearGraficoImpactoAgua(labels, data);
             }
         }
     });
 }
-function CrearGraficoACR_CMRS(labels, data) {
+function CrearGraficoImpactoAgua(labels, data) {
     graph_acr_vs_cmrs = new Chart(
         document.getElementById("chart_acr_cmrs"),
         {

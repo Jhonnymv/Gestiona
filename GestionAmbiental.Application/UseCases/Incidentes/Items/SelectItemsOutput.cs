@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Domain.Incidentes.Items;
+﻿using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -24,5 +25,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.Items
         public List<Gerencia> ItemsGerencia { get; set; }
         public List<Usuario> ItemsUsuarioMA { get; set; }
         public List<Usuario> ItemsUsuario { get; set; }
+        public List<Producto_Incidente> ItemsProducto { get; set; }
+        public List<Factor_Causa_Incidente> ItemsFactores { get; set; }
     }
 }

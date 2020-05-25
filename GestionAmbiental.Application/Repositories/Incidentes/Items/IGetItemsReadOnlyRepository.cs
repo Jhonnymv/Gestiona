@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Domain.Incidentes.Items;
+﻿using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.Items
         Task<List<Gerencia>> GetListGerencia();
         Task<List<Usuario>> GetListUsuarioMA();
         Task<List<Usuario>> GetListUsuarios();
+        Task<List<Factor_Causa_Incidente>> GetListFactores();
     }
 }

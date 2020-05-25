@@ -1,0 +1,106 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Reportes Preliminares de Incidentes Ambientales</h2>
+    </div>
+</div>
+<form autocomplete="off">
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <label>Fecha de Incidente:</label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <input type="date" class="form-control" id="filtro_fecha">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <label>Supervisor MA:</label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <select class="form-control" id="filtro_asesores" asp-items="ViewBag.Asesores"></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <label>Gerencia Involucrada:</label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <select class="form-control" id="filtro_gerencia" asp-items="ViewBag.Gerencias"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <label>Supervisor Inmediato (Titular Minero):</label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <select class="form-control" id="filtro_usuarios" asp-items="ViewBag.Usuarios"></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-sm-12 col-md-1 col-lg-1 mt-1">
+            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+        </div>
+    </div>
+</form>
+<div class="row mb-2 justify-content-start">
+    <div class="col-md mt-1">
+        <a class="btn btn-danger float-left" asp-action="NuevoReporte" asp-controller="ReportePreliminar"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Registro</a>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-md">
+        <table class="table" id="tabla_resumen_incidentes">
+            <thead class="thead-mcolor">
+                <tr>
+                    <th></th>
+                    <th>Código</th>
+                    <th>Tipo de Incidente</th>
+                    <th>Nivel de Incidente</th>
+                    <th>Fecha de Incidente</th>
+                    <th>Producto Derramado</th>
+                    <th>Cantidad Derramada</th>
+                    <th>Área Afectada</th>
+                    <th>Lugar del Incidente</th>
+                    <th>Equipo Involucrado</th>
+                    <th>Gerencia Involucrada</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <nav id="paginado" aria-label="pagination">
+    </nav>
+</div>
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            filtrar(1);
+        });
+        function filtrar(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminarMA/GetTablaResumenFiltrada",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "fecha": $("#filtro_fecha").val(),
+                    "id_asesor": $("#filtro_asesores").val(),
+                    "id_usuario": $("#filtro_usuarios").val(),
+                    "id_gerencia":$("#filtro_gerencia").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen_incidentes tbody').empty()
+                    $('#tabla_resumen_incidentes tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+    </script>
+}

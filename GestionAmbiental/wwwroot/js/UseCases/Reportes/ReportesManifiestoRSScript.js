@@ -27,10 +27,10 @@ var data_cant_rs_mes = [];
 var graph_cant_rs_mes;
 
 $(document).ready(function () {
-    Filtrar();
+    UpdateReportesFecha();
 });
 
-function Filtrar() {
+function UpdateReportesFecha() {
     observacion = $("#Observacion").val();
     residuo_solido = $("#Residuo_Solido").val();
     eors_salida = $("#EO_RS_Salida").val();
@@ -40,7 +40,7 @@ function Filtrar() {
     frecuencia = $("#frecuencia").val();
 
     if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
-        ActualizarContadorxFecha();
+        ActualizarProductoInvestigacion();
         ActualizarDatosGraficoObservacion();
         ActualizarDatosGraficoCamion();
         ActualizarDatosGraficoTipoSalida();
@@ -51,7 +51,7 @@ function Filtrar() {
     }
 }
 //Para gráfico Contador x Fecha
-function ActualizarContadorxFecha() {
+function ActualizarProductoInvestigacion() {
     $.ajax({
         type: "POST",
         url: "/ReportesManifiestoRS/GetRegistrosEntreFechas",
@@ -104,12 +104,12 @@ function ActualizarContadorxFecha() {
                     dataAnulado.push(data_cant_fechas_anulado[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorxFecha(labels, dataConforme, dataAnulado, Math.max(dataConforme) / 10);
+                CrearGraficaInvestigacionesFecha(labels, dataConforme, dataAnulado, Math.max(dataConforme) / 10);
             }
         }
     });
 }
-function CrearGraficaContardorxFecha(labels, dataConforme, dataAnulado, stepSize) {
+function CrearGraficaInvestigacionesFecha(labels, dataConforme, dataAnulado, stepSize) {
     graph_cant_fechas = new Chart(
         document.getElementById("chart_man_fechas"),
         {

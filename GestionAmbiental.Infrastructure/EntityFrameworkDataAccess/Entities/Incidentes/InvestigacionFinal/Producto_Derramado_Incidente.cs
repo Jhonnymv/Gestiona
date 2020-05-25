@@ -20,7 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Column(TypeName = "varchar(10)")]
         public string Estado_Producto { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public decimal? Cantidad_Derramada { get; set; }
+        public double? Cantidad_Derramada { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad { get; set; }
         [Column(TypeName = "varchar(100)")]
@@ -28,9 +28,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         [Column(TypeName = "int")]
         public int? Id_Estado_Equipo_Responsable { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public decimal? Cantidad_Recuperado { get; set; }
+        public double? Cantidad_Recuperado { get; set; }
         [Column(TypeName = "decimal(6,2)")]
-        public decimal? Cantidad_No_Recuperado { get; set; }
+        public double? Cantidad_No_Recuperado { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
     }

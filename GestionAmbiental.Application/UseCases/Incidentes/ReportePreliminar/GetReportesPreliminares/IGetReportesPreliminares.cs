@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
 {
     public interface IGetReportesPreliminares
     {
-        Task<ReportesPreliminaresOutput> Execute(string fecha, int id_Usuario, int id_Gerencia, int pagina, int rpp);
+        Task<ReportesPreliminaresOutput> Execute(string fecha, int id_Usuario, int id_Gerencia,int id_Asesor, int pagina, int rpp);
     }
 }

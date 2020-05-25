@@ -1,0 +1,97 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarInvestigacionFinal
+{
+    public interface IEditarInvestigacionFinal
+    {
+        Task<int> Execute(
+            int Id_Investigacion_Final,
+            int Num_Trabajadores,
+            string Razon_Social_Contratista,
+            string RUC_Contratista,
+            string Actividad_Contratista,
+            string Domicilio_Contratista,
+            int? Num_Trabajadores_Contratista,
+            string Razon_Social_SubContratista,
+            string RUC_SubContratista,
+            string Actividad_SubContratista,
+            string Domicilio_SubContratista,
+            int? Num_Trabajadores_SubContratista,
+            int Id_Tipo_Incidente,
+            int Id_Nivel_Incidente,
+            string Lugar_Incidente,
+            string Coordenada_Este,
+            string Coordenada_Norte,
+            string Localidad,
+            string Distrito,
+            string Provincia,
+            string Departamento,
+            string Fecha_Incidente,
+            string Hora_Incidente,
+            string Fecha_Inicio_Investigacion,
+            string Turno,
+            string Descripcion_Incidente,
+            int Id_Gerencia_Responsable,
+            int Id_Supervisor,
+            List<string> Evidencias_Papel,
+            List<string> Evidencias_Persona,
+            List<string> Evidencias_Posicion,
+            List<string> Evidencias_Partes,
+            //Impacto Ambiental
+            int Id_Impacto_Ambiental_Incidente,
+            int? Id_Tipo_Suelo,
+            double? Area_Suelo,
+            int? Id_Unidad_Area_Suelo,
+            double? Cantidad_Suelo,
+            int? Id_Unidad_Cantidad_Suelo,
+            int? Id_Lugar_Disposicion_Suelo,
+            int? Id_Especie_Flora,
+            double? Unidad_Flora,
+            int? Id_Unidad_Flora,
+            double? Cantidad_Residuo_Flora,
+            int? Id_Unidad_Residuo_Flora,
+            int? Id_Lugar_Disposicion_Flora,
+            int? Id_Especie_Fauna,
+            double? Unidad_Fauna,
+            int? Id_Unidad_Fauna,
+            double? Cantidad_Residuo_Fauna,
+            int? Id_Unidad_Residuo_Fauna,
+            int? Id_Lugar_Disposicion_Fauna,
+            int? Id_Tipo_Agua,
+            double? Volumen_Agua,
+            int? Id_Unidad_Agua,
+            double? Cantidad_Residuo_Agua,
+            int? Id_Unidad_Residuo_Agua,
+            int? Id_Lugar_Disposicion_Agua,
+            string Restos_Arq,
+            string Nombre_Resto_Arq,
+            string Cord_Este,
+            string Cord_Norte,
+            string Danio_Salud,
+            int? Personas_Afectadas,
+            double? Cantidad_RS,
+            int? Id_Unidad_Cantidad_RS,
+            double? Volumen_Rs,
+            int? Id_Unidad_Volumen_RS,
+            string EO_RS,
+            string Opcion
+            );
+    }
+}
+/*
+
+        public string Danio_Salud { get; set; }
+        [DisplayName("Número de personas afectadas:")]
+        public int? Personas_Afectadas { get; set; }
+        [DisplayName("Cantidad de Residuos Sólidos Generados:")]
+        public double? Cantidad_RS { get; set; }
+        public int? Id_Unidad_Cantidad_RS { get; set; }
+        [DisplayName("Volumen de residuos generados:")]
+        public double? Volumen_Rs { get; set; }
+        public int? Id_Unidad_Volumen_RS { get; set; }
+        [DisplayName("EO-RS (recolección, transporte y disposición):")]
+        public string EO_RS { get; set; }
+     */
