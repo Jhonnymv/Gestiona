@@ -33,7 +33,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
 
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
-                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString())&&
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString())&& 
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
@@ -261,7 +262,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .Select(x => x.Id_Residuo_Solido)
                 .ToListAsync();
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
-                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) && 
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
@@ -291,6 +293,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
@@ -320,6 +323,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 residuosSolido.Contains(x.Id_Residuo_Solido) &&
@@ -353,6 +357,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var rsAgrupados = residuosSolido.GroupBy(x => x.Id_Tipo_Residuo).ToList();
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                 x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                 residuosSolido.Select(y=>y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
@@ -385,6 +390,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
@@ -414,6 +420,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
                residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&

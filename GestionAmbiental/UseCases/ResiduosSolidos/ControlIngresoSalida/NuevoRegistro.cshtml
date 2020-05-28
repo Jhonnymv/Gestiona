@@ -105,6 +105,7 @@
         </div>
         <div class="modal-footer">
             <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
+            <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
             <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
         </div>
     </div>
@@ -138,12 +139,12 @@
                     break;
             }
         });
-        /*
+        
         $("#btnGuardarEstado").on('click', function () {
             $("#opcion").val("GuardarEstado");
             $("#formIngresoSalida").submit();
         });
-        */
+        
         $("#btnRegistrar").on('click', function () {
             $("#opcion").val("Registrar");
             $("#formIngresoSalida").submit();

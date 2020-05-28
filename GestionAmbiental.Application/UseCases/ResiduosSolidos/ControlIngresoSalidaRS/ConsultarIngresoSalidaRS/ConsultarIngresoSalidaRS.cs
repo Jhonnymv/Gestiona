@@ -24,10 +24,22 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var data = await _getIngresoSalidaRSReadOnlyRepository.GetIngreso_Salida_RS(Id_Ingreso_Salida_RS);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var output = new IngresoSalidaRSOutput(data);
-            if (usuario.IdRol.Equals((int)RSRoles.AsesorMAP)|| usuario.IdRol.Equals((int)RSRoles.Admin))
+
+            if (usuario.IdRol.Equals((int)RSRoles.AsesorMAP))
+                output.PermisoMA = true;
+            else
+                output.PermisoMA = false;
+
+            if (usuario.IdRol.Equals((int)RSRoles.Admin))
+                output.PermisoAdmin = true;
+            else
+                output.PermisoAdmin = false;
+
+            if (usuario.IdUsuario.Equals(data.Id_Registrado_Por))
                 output.Permiso = true;
             else
                 output.Permiso = false;
+
             return output;
         }
     }

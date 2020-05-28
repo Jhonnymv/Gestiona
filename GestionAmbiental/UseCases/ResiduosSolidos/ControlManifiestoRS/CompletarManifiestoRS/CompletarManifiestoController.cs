@@ -434,92 +434,87 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         }
         public async Task<IActionResult> Download(string fileName, string tipo)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return RedirectToAction("NoAutorizado", "Home");
             }
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                */
-            var userInfo = new
-            {
-                NombreUsuario = "kevin",
 
-            };
-            try
-            {
-                var encryptedFile = await DownloadFTPFileAsync(fileName, tipo);
-
-                /* Save encrypted file in temp path*/
-                var tempPath = Path.GetTempPath();
-
-                var SGATempPath = tempPath + "SGA-Marcobre\\";
-                if (!Directory.Exists(SGATempPath))
+                try
                 {
-                    Directory.CreateDirectory(SGATempPath);
+                    var encryptedFile = await DownloadFTPFileAsync(fileName, tipo);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado.zip";
+                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                    return File(stream, GetContentType(decryptedFileName), fileName);
                 }
-                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-
-                /*decrypt file*/
-                var decryptedFileName = "desencriptado.zip";
-                await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
-                /*read decrypted file*/
-                FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
-
-                return File(stream, GetContentType(decryptedFileName), fileName);
+                catch (Exception e)
+                {
+                    return Content("No se encontró el archivo: " + e.Message);
+                }
             }
-            catch (Exception e)
-            {
-                return Content("No se encontró el archivo: " + e.Message);
-            }
-            //}
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName, string tipo)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return "NoAutorizado";
             else
-            {*/
-            Tipo_Info_SGA directorio;
-            switch (tipo)
             {
-                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
-                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
-            }
-            var serverInfo = await _info_SGA.Execute(directorio);
-
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
+                Tipo_Info_SGA directorio;
+                switch (tipo)
                 {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
+                    case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                    case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
                 }
-            }
+                var serverInfo = await _info_SGA.Execute(directorio);
 
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-                using (FileStream fs = System.IO.File.OpenRead(path))
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
                 {
-                    sftp.UploadFile(fs, newFileName, true);
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
                 }
-                sftp.Dispose();
+
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+                    using (FileStream fs = System.IO.File.OpenRead(path))
+                    {
+                        sftp.UploadFile(fs, newFileName, true);
+                    }
+                    sftp.Dispose();
+                }
+                return newFileName;
             }
-            return newFileName;
-            //}
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return "NoAutorizado";
             }
@@ -528,125 +523,116 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;*/
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            var userInfo = new
-            {
-                NombreUsuario = "kevin"
-            };
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
 
-            var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "SGA-Marcobre/";
-            if (!Directory.Exists(SGATempPath))
-            {
-                Directory.CreateDirectory(SGATempPath);
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                var fileName = filePath + file.FileName;
+                if (file.Length > 0)
+                {
+                    var stream = new FileStream(fileName, FileMode.Create);
+                    //CopyToAsync corrompe los archivos
+                    file.CopyTo(stream);
+                    stream.Close();
+                }
+                ZipFile.CreateFromDirectory(filePath, archiveFile);
+
+                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
+                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
+
+                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName, tipo);
             }
-            var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-            var archiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/archive.zip";
-            var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-            if (Directory.Exists(filePath))
-            {
-                Directory.Delete(filePath, true);
-            }
-            if (Directory.Exists(archivePath))
-            {
-                Directory.Delete(archivePath, true);
-            }
-
-            Directory.CreateDirectory(filePath);
-            Directory.CreateDirectory(archivePath);
-
-            var fileName = filePath + file.FileName;
-            if (file.Length > 0)
-            {
-                var stream = new FileStream(fileName, FileMode.Create);
-                //CopyToAsync corrompe los archivos
-                file.CopyTo(stream);
-                stream.Close();
-            }
-            ZipFile.CreateFromDirectory(filePath, archiveFile);
-
-            var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
-            await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
-
-            return await UploadFTPFileAsync(encryptedArchiveFile, newFileName, tipo);
-            // }
         }
         public async Task<string> DownloadFTPFileAsync(string fileName, string tipo)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return "NoAutorizado";
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));*/
-            var userInfo = new
-            {
-                NombreUsuario = "kevin"
-            };
-            Tipo_Info_SGA directorio;
-            switch (tipo)
-            {
-                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
-                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
-            }
-            var serverInfo = await _info_SGA.Execute(directorio);
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                Tipo_Info_SGA directorio;
+                switch (tipo)
                 {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
+                    case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                    case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
                 }
+                var serverInfo = await _info_SGA.Execute(directorio);
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
+                }
+
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(fileName, fileStream);
+
+                    sftp.Dispose();
+                }
+                //ftpStream.CopyTo(fileStream);
+                fileStream.Close();
+
+                return downloadedFilePath;
             }
-
-            /* Save file in application server to decrypt */
-            var tempPath = Path.GetTempPath();
-            var SGATempPath = tempPath + "SGA-Marcobre/";
-            if (!Directory.Exists(SGATempPath))
-            {
-                Directory.CreateDirectory(SGATempPath);
-            }
-            var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-            var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-            if (Directory.Exists(filePath))
-            {
-                Directory.Delete(filePath, true);
-            }
-            if (Directory.Exists(archivePath))
-            {
-                Directory.Delete(archivePath, true);
-            }
-
-            Directory.CreateDirectory(filePath);
-            Directory.CreateDirectory(archivePath);
-            /*New file downloaded name*/
-            var downloadedFilePath = archivePath + fileName;
-            /*Copy data to new temp file*/
-            var fileStream = System.IO.File.Create(downloadedFilePath);
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-
-                //Descargar archivo de sftp a nuevo archivo temporal creado
-                sftp.DownloadFile(fileName, fileStream);
-
-                sftp.Dispose();
-            }
-            //ftpStream.CopyTo(fileStream);
-            fileStream.Close();
-
-            return downloadedFilePath;
-            //}
         }
         private async Task EncryptFileAsync(string inputFile, string outputFile)
         {

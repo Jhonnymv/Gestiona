@@ -46,6 +46,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
         public int Gerencia { get; set; }
         [DisplayName("Comentarios:")]
         public string Comentario { get; set; }
+        public string Estado { get; set; }
         public bool Permiso { get; set; }
+        public bool PermisoAdmin { get; set; }
+        public bool PermisoMA { get; set; }
     }
 }
