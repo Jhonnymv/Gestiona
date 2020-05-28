@@ -13,10 +13,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         //-Suelo
         [DisplayName("Tipo de suelo:")]
         public int? Id_Tipo_Suelo { get; set; }
-        [DisplayName("Área de suelo afectada:")]
+        [DisplayName("Área afectada:")]
         public double? Area_Suelo { get; set; }
         public int? Id_Unidad_Area_Suelo { get; set; }
-        [DisplayName("Cantidad de suelo impactado:")]
+        [DisplayName("Cantidad de tierra impregnada:")]
         public double? Cantidad_Suelo { get; set; }
         public int? Id_Unidad_Cantidad_Suelo { get; set; }
         [DisplayName("Lugar de disposición::")]

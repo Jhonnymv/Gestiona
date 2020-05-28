@@ -93,19 +93,19 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
 
             sheet.GetRow(7).GetCell(24).SetCellValue(investigacion.Num_Trabajadores);
 
-            sheet.GetRow(11).GetCell(2).SetCellValue(investigacion.Razon_Social_Contratista);
-            sheet.GetRow(11).GetCell(14).SetCellValue(investigacion.RUC_Contratista);
-            sheet.GetRow(11).GetCell(24).SetCellValue(investigacion.Actividad_Contratista);
+            sheet.GetRow(11).GetCell(2).SetCellValue(investigacion.Razon_Social_Contratista != null ? investigacion.Razon_Social_Contratista : "No Aplica");
+            sheet.GetRow(11).GetCell(14).SetCellValue(investigacion.RUC_Contratista != null ? investigacion.RUC_Contratista : "No Aplica");
+            sheet.GetRow(11).GetCell(24).SetCellValue(investigacion.Actividad_Contratista != null ? investigacion.Actividad_Contratista : "No Aplica");
 
-            sheet.GetRow(12).GetCell(2).SetCellValue(investigacion.Domicilio_Contratista);
-            sheet.GetRow(12).GetCell(24).SetCellValue(investigacion.Num_Trabajadores_Contratista != null ? investigacion.Num_Trabajadores_Contratista.ToString() : "");
+            sheet.GetRow(12).GetCell(2).SetCellValue(investigacion.Domicilio_Contratista != null ? investigacion.Domicilio_Contratista : "No Aplica");
+            sheet.GetRow(12).GetCell(24).SetCellValue(investigacion.Num_Trabajadores_Contratista != null ? investigacion.Num_Trabajadores_Contratista.ToString() : "No Aplica");
 
-            sheet.GetRow(14).GetCell(2).SetCellValue(investigacion.Razon_Social_Subcontratista);
-            sheet.GetRow(14).GetCell(14).SetCellValue(investigacion.RUC_Subcontratista);
-            sheet.GetRow(14).GetCell(24).SetCellValue(investigacion.Actividad_Subcontratista);
+            sheet.GetRow(14).GetCell(2).SetCellValue(investigacion.Razon_Social_Subcontratista != null ? investigacion.Razon_Social_Subcontratista : "No Aplica");
+            sheet.GetRow(14).GetCell(14).SetCellValue(investigacion.RUC_Subcontratista != null ? investigacion.RUC_Subcontratista : "No Aplica");
+            sheet.GetRow(14).GetCell(24).SetCellValue(investigacion.Actividad_Subcontratista != null ? investigacion.Actividad_Subcontratista : "No Aplica");
 
-            sheet.GetRow(15).GetCell(2).SetCellValue(investigacion.Domicilio_Subcontratista);
-            sheet.GetRow(15).GetCell(24).SetCellValue(investigacion.Num_Trabajadores_Subcontratista != null ? investigacion.Num_Trabajadores_Subcontratista.ToString() : "");
+            sheet.GetRow(15).GetCell(2).SetCellValue(investigacion.Domicilio_Subcontratista != null ? investigacion.Domicilio_Subcontratista : "No Aplica");
+            sheet.GetRow(15).GetCell(24).SetCellValue(investigacion.Num_Trabajadores_Subcontratista != null ? investigacion.Num_Trabajadores_Subcontratista.ToString() : "No Aplica");
 
             sheet.GetRow(19).GetCell(2).SetCellValue(investigacion.Tipo_Incidente);
             sheet.GetRow(19).GetCell(23).SetCellValue(investigacion.Nivel_Incidente);
@@ -231,10 +231,10 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
             sheet.GetRow(filaImpacto).GetCell(29).SetCellValue(impacto.Lugar_Disposicion_Agua != null ? impacto.Lugar_Disposicion_Agua : "No Aplica"); 
             filaImpacto++;
             //Restos Arqueológicos
-            sheet.GetRow(filaImpacto).GetCell(2).SetCellValue(impacto.Restos_Arq);
-            sheet.GetRow(filaImpacto).GetCell(12).SetCellValue(impacto.Nombre_Resto_Arq);
-            sheet.GetRow(filaImpacto).GetCell(23).SetCellValue(impacto.Cord_Este);
-            sheet.GetRow(filaImpacto).GetCell(29).SetCellValue(impacto.Cord_Norte);
+            sheet.GetRow(filaImpacto).GetCell(2).SetCellValue(impacto.Restos_Arq != null? impacto.Restos_Arq : "No");
+            sheet.GetRow(filaImpacto).GetCell(12).SetCellValue(impacto.Nombre_Resto_Arq != null ? impacto.Nombre_Resto_Arq : "No Aplica");
+            sheet.GetRow(filaImpacto).GetCell(23).SetCellValue(impacto.Cord_Este != null ? impacto.Cord_Este : "No Aplica");
+            sheet.GetRow(filaImpacto).GetCell(29).SetCellValue(impacto.Cord_Norte != null ? impacto.Cord_Norte : "No Aplica");
             filaImpacto++;
             //Personas
             sheet.GetRow(filaImpacto).GetCell(8).SetCellValue(impacto.Danio_Salud);
@@ -324,7 +324,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 row.GetCell(1).SetCellValue(accion.Accion_Inmediata);
                 row.GetCell(17).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
                 row.GetCell(21).SetCellValue(accion.Responsable_Marcobre);
-                row.GetCell(25).SetCellValue(accion.Responsable_Contratista);
+                row.GetCell(25).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
                 row.GetCell(29).SetCellValue(accion.Estatus);
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaAccionesInmediatas, filaAccionesInmediatas, 1, 16));

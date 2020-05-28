@@ -44,6 +44,9 @@ var graph_sso_alt_tipo;
 $(document).ready(function () {
     ActualizarInvestigacionesFecha();
 });
+function Filtrar() {
+    ActualizarInvestigacionesFecha();
+}
 
 function ActualizarInvestigacionesFecha() {
     gerencia = $("#IdGerencia").val();

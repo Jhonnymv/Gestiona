@@ -48,5 +48,7 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
         public string Evidencia_Persona { get; set; }
         public string Evidencia_Parte { get; set; }
         public string Estado { get; set; }       
+        public int NAccionesAprobadas { get; set; }
+        public int NAcciones { get; set; }
     }
 }

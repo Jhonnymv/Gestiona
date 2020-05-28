@@ -36,6 +36,8 @@ using Renci.SshNet;
 using System.IO.Compression;
 using System.Text;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarInvestigacionFinal;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.AmpliarFechaAccion;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
@@ -72,21 +74,23 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IEditarAccionIncidenteInvestigacion _editarAccionIncidenteInvestigacion;
         private readonly IEliminarAccionIncidenteInvestigacion _eliminarAccionIncidenteInvestigacion;
         private readonly IRegistrarAccionCorrectivaIncidenteInvestigacion _registrarAccionCorrectivaIncidenteInvestigacion;
+        private readonly IAmpliarFechaAccion _ampliarFechaAccion;
 
         private readonly IGetInfo_SGA _info_SGA;
+        private readonly IDataProtector _protector;
 
         public InvestigacionFinalController(
-            ISelectItems selectItems, 
-            IRegistrarInvestigacionFinal registrarInvestigacionFinal, 
+            ISelectItems selectItems,
+            IRegistrarInvestigacionFinal registrarInvestigacionFinal,
             IGetInvestigacionesFinales getInvestigacionesFinales,
             IGetInvestigacionFinal getInvestigacionFinal,
             IGetEstadoInvestigacion getEstadoInvestigacion,
             IGetImpactoAmbiental getImpactoAmbiental,
             IEditarInvestigacionFinal editarInvestigacionFinal,
 
-            IGetInvolucradosIncidente getInvolucradosIncidente, 
+            IGetInvolucradosIncidente getInvolucradosIncidente,
             IGetInvolucradoIncidente getInvolucradoIncidente,
-            IEditarInvolucradoIncidente editarInvolucradoIncidente, 
+            IEditarInvolucradoIncidente editarInvolucradoIncidente,
             IEliminarInvolucradoIncidente eliminarInvolucradoIncidente,
             IRegistrarInvolucradoIncidente registrarInvolucradoIncidente,
 
@@ -108,6 +112,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IEditarAccionIncidenteInvestigacion editarAccionIncidenteInvestigacion,
             IEliminarAccionIncidenteInvestigacion eliminarAccionIncidenteInvestigacion,
             IRegistrarAccionCorrectivaIncidenteInvestigacion registrarAccionCorrectivaIncidenteInvestigacion,
+            IAmpliarFechaAccion ampliarFechaAccion,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
 
             IGetInfo_SGA info_SGA
             )
@@ -143,7 +150,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             _editarAccionIncidenteInvestigacion = editarAccionIncidenteInvestigacion;
             _eliminarAccionIncidenteInvestigacion = eliminarAccionIncidenteInvestigacion;
             _registrarAccionCorrectivaIncidenteInvestigacion = registrarAccionCorrectivaIncidenteInvestigacion;
+            _ampliarFechaAccion = ampliarFechaAccion;
 
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
             _info_SGA = info_SGA;
         }
 
@@ -183,6 +192,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int id_asesor, int id_usuario, int id_gerencia, int rpp, int pagina)
         {
             var datosTabla = await _getInvestigacionesFinales.Execute(fecha, id_usuario, id_gerencia, id_asesor, pagina, rpp);
+
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NInvestigaciones % rpp != 0 ? (datosTabla.NInvestigaciones / rpp) + 1 : datosTabla.NInvestigaciones / rpp;
@@ -190,12 +200,19 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             {
                 foreach (var fila in datosTabla.Investigaciones)
                 {
-                    //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_Investigacion_Final.ToString());
+                    var obsAvance = fila.NAccionesAprobadas;
+                    double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NAcciones * 100, 1) : 0;
+
                     filasTabla += "<tr>";
-                    if(fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
-                        filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + fila.Id_Investigacion_Final + "\">" + fila.Codigo + "</a></td>";
+                    if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                        filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                     else
-                        filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/DetalleInvestigacion?IdInvestigacion=" + fila.Id_Investigacion_Final + "\">" + fila.Codigo + "</a></td>";
+                        filasTabla += "<td></td>";
+                    if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                        filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    else
+                        filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/DetalleInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Nivel_Incidente + "</td>";
                     filasTabla += "<td style=\"width: 150px;\">";
@@ -203,7 +220,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filasTabla += "</td>";
                     filasTabla += "<td>" + fila.Lugar_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
-                    filasTabla += "<td>" + fila.Supervisor_MA + "</td>";
+                    filasTabla += "<td>" + fila.Supervisor_MA + "</td>"; 
+                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance + "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -237,7 +255,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             };
             return Ok(response);
         }
-        public async Task<IActionResult> EditarInvestigacion(int IdInvestigacion)
+        public async Task<IActionResult> EditarInvestigacion(string IdInvestigacion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -259,7 +277,6 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 var unidad_Derramado = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Sustancia.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
                     .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
@@ -368,11 +385,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
-                var investigacion = await _getInvestigacionFinal.Execute(IdInvestigacion);
-                var impacto = await _getImpactoAmbiental.Execute(IdInvestigacion);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado);
+                var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
                 var model = new EditarInvestigacionModel();
                 model.Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
+                model.Id_Encriptado_Investigacion_Final = IdInvestigacion;
                 model.Id_Reporte_Preliminar = investigacion.Id_Reporte_Preliminar;
                 model.Codigo = investigacion.Codigo;
                 model.Num_Trabajadores = investigacion.Num_Trabajadores;
@@ -455,7 +474,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 return View(model);
             }
         }
-        public async Task<IActionResult> DetalleInvestigacion(int IdInvestigacion)
+        public async Task<IActionResult> DetalleInvestigacion(string IdInvestigacion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -477,7 +496,6 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 var unidad_Derramado = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Sustancia.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
                     .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
@@ -587,12 +605,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
-
-                var investigacion = await _getInvestigacionFinal.Execute(IdInvestigacion);
-                var impacto = await _getImpactoAmbiental.Execute(IdInvestigacion);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado);
+                var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
                 var model = new EditarInvestigacionModel();
                 model.Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
+                model.Id_Encriptado_Investigacion_Final = IdInvestigacion;
                 model.Id_Reporte_Preliminar = investigacion.Id_Reporte_Preliminar;
                 model.Codigo = investigacion.Codigo;
                 model.Num_Trabajadores = investigacion.Num_Trabajadores;
@@ -932,7 +951,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion, userInfo.NombreUsuario);
 
-                var nVerificado = acciones.Count(x => x.Estado.Equals("Aprobado"));
+                var nVerificado = acciones.Count(x => x.Estado.Equals(EstadosIncidentes.Aprobado.ToString()));
 
                 var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
 
@@ -955,12 +974,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones += "<td>_</td>";
                     filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones += "<td>" + fila.Estatus + "</td>";
-                    if(fila.Permiso_Implementacion && fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()))
+                    if(fila.Permiso_Implementacion && fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString()))
                         filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Implementar</a></td>";
                     else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
                         filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Verificar</a></td>";
                     else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
                         filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Detalle</a></td>";
+                    else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente +")\">Ampliar</button></td>";
                     else
                         filas_acciones += "<td></td>";
                     filas_acciones += "</tr>";
@@ -1077,6 +1098,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             await _eliminarAccionIncidenteInvestigacion.Execute(IdInvestigacion);
             return await ListarAcciones(IdInvestigacion);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AmpliarFechaAccion(int IdAccion, int IdInvestigacion, string fecha)
+        {
+            await _ampliarFechaAccion.Execute(IdAccion, fecha);
+            return await ListarAccionesVerificacion(IdInvestigacion);
         }
         [HttpPost]
         public async Task<IActionResult> EditarInvestigacion(EditarInvestigacionModel model)
@@ -1253,10 +1280,11 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     );
                 if (model.Opcion.Equals("Completar"))
                     return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
-                else
+                else 
                     return View("Resumen");
             }
-            return View("Resumen");
+            return View("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
+           
         }
         //Carga y descarga de archivos
         private string CreateUniqueFileName(string tipo)

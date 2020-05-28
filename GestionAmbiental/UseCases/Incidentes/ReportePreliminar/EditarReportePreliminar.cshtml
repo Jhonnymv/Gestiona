@@ -13,6 +13,7 @@
     </div>
     <form class="form-group" id="form_editarReporte" asp-action="EditarReportePreliminar" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
+        <input type="hidden" asp-for="Id_Encriptado_Reporte_Preliminar" value="@Model.Id_Encriptado_Reporte_Preliminar" />
         <input type="hidden" asp-for="Opcion" />
         <input type="hidden" asp-for="NInvolucrados" />
         <input type="hidden" asp-for="NAcciones" />
@@ -68,7 +69,7 @@
         <!-- DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero) -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero)</h5>
+                <h5 style="color:white;margin:4px;">DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</h5>
             </div>
         </div>
         <div class="row mb-2">
@@ -214,7 +215,7 @@
         <!-- CAUSAS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">CAUSAS DEL INCIDENTE</h5>
+                <h5 style="color:white;margin:4px;">CAUSAS INMEDIATAS DEL INCIDENTE</h5>
             </div>
         </div>
         @if (Model.Estado == "Pendiente")
@@ -378,7 +379,7 @@
                         <span id="danger_evidencia" class=""></span>
                     </span>
                     <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png" data-max-size="8971520" multiple>
                 </div>
                 <div class="col-sm-12 col-md-2 col-lg-2">
                     <label id="files_name">0 Archivos</label>
@@ -392,6 +393,7 @@
         {
             <div class="row mb-2 justify-content-end">
                 <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a asp-action="Resumen" asp-controller="ReportePreliminar" class="btn btn-primary">Volver</a>
                     <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
                     <button id="boton_completar" type="button" class="btn btn-primary">Completar</button>
                 </div>
@@ -401,6 +403,7 @@
         {
             <div class="row mb-2 justify-content-end">
                 <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a asp-action="Resumen" asp-controller="ReportePreliminar" class="btn btn-primary">Volver</a>
                     <a class="btn btn-danger" asp-controller="DescargarReportePreliminar" asp-action="DescargarReportePreliminar" asp-route-IdReporte="@Model.Id_Reporte_Preliminar">Descargar Excel</a>
                 </div>
             </div>
@@ -628,6 +631,24 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Notificando al Supervisor de Medio Ambiente</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/EditarReportePreliminar.js"></script>
     <script type="text/javascript">
@@ -700,6 +721,7 @@
             HabilitarInputs();
             if (ValidarInputs()) {
                 $("#Opcion").val("Completar");
+                $("#Modal_Enviando_Correo").modal("show");
                 $("#form_editarReporte").submit();
             }
         });

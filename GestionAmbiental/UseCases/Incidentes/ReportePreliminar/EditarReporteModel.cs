@@ -10,6 +10,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
     public class EditarReporteModel
     {
+        public string Id_Encriptado_Reporte_Preliminar { get; set; }
         public int Id_Reporte_Preliminar { get; set; }
         [DisplayName("Código:")]
         public string Codigo { get; set; }

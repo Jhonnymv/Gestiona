@@ -383,17 +383,24 @@ function CrearGraficoGerenciaIncidente(labels, data) {
     graph_rep_gerencia_incidente = new Chart(
         document.getElementById("chart_gerencia_incidente"),
         {
-            "type": "doughnut",
+            "type": "horizontalBar",
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "# Reportes Preliminares",
+                    "label": "# Registros",
                     "data": data,
                     "backgroundColor": coloR,
                     "lineTension": 0.1
                 }]
             },
             "options": {
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            beginAtZero: true
+                        }
+                    }]
+                },
                 "legend": {
                     "labels": {
                         fontColor: 'black'
@@ -402,7 +409,7 @@ function CrearGraficoGerenciaIncidente(labels, data) {
                 "plugins": {
                     datalabels: {
                         color: 'white',
-                        formatter: (value, ctx) => {
+                        /*formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
                             dataArr.map(data => {
@@ -410,7 +417,7 @@ function CrearGraficoGerenciaIncidente(labels, data) {
                             });
                             let percentage = (value * 100 / sum).toFixed(2) + "%";
                             return percentage;
-                        },
+                        },*/
                         defaultFontSize: 15
                     }
                 }

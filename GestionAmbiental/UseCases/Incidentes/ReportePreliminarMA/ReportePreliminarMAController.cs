@@ -32,6 +32,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EliminarInvolucrado;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 {
@@ -60,6 +61,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         private readonly IRegistrarInvestigacionFinal _registrarInvestigacionFinal;
         private readonly IGetInfo_SGA _info_SGA;
 
+        private readonly IDataProtector _protector;
         public ReportePreliminarMAController(
             ISelectItems selectItems,
             IGetReportesPreliminaresMA getReportesPreliminares, 
@@ -82,6 +84,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
             IEditarReportePreliminar editarReportePreliminar,
             IRegistrarInvestigacionFinal registrarInvestigacionFinal,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
             _selectItems = selectItems;
@@ -106,6 +110,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             _editarReportePreliminar = editarReportePreliminar;
             _registrarInvestigacionFinal = registrarInvestigacionFinal;
             _info_SGA = info_SGA;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
@@ -149,13 +154,13 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             {
                 foreach (var fila in datosTabla.Reportes)
                 {
-                    //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                     filasTabla += "<tr>";
                     if(fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
                         filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                     else
                         filasTabla += "<td></td>";
-                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminarMA/EditarReportePreliminarMA?IdReporte=" + fila.Id_Reporte_Preliminar + "\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminarMA/EditarReportePreliminarMA?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Nivel_Incidente + "</td>";
                     filasTabla += "<td style=\"width: 150px;\">";
@@ -200,7 +205,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             };
             return Ok(response);
         }
-        public async Task<IActionResult> EditarReportePreliminarMA(int IdReporte) 
+        public async Task<IActionResult> EditarReportePreliminarMA(string IdReporte) 
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -222,7 +227,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 
                 var unidad_Derramado = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Sustancia.ToString()) ||
+                    x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
                     .OrderBy(x => x.Descripcion)
                     .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
@@ -273,8 +278,11 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                 ViewBag.Actos = actos;
                 ViewBag.Condiciones = condiciones;
 
-                var reporte = await _getReportePreliminar.Execute(IdReporte);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
+
+                var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
+                model.Id_Encriptado_Reporte_Preliminar = IdReporte;
                 model.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
                 model.Codigo = reporte.Codigo;
                 model.Num_Trabajadores = reporte.Num_Trabajadores;
@@ -309,68 +317,77 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> EditarReportePreliminarMA(EditarReporteModel model)
         {
-            if (ModelState.IsValid)
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                var evidencias = new List<string>();
-                if (model.Evidencias != null)
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (ModelState.IsValid)
                 {
-                    for (int i = 0; i < model.Evidencias.Count; i++)
+                    var evidencias = new List<string>();
+                    if (model.Evidencias != null)
                     {
-                        var extension = Path.GetExtension(model.Evidencias[i].FileName);
-                        var max_file_size = 8388608;
-
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
-
-                        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                        for (int i = 0; i < model.Evidencias.Count; i++)
                         {
-                            var newfileName = CreateUniqueFileName() + ".zip";
-                            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
-                            evidencias.Add(filePath);
+                            var extension = Path.GetExtension(model.Evidencias[i].FileName);
+                            var max_file_size = 8388608;
+
+                            var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                            if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                            {
+                                var newfileName = CreateUniqueFileName() + ".zip";
+                                var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
+                                evidencias.Add(filePath);
+                            }
                         }
                     }
+                    if (model.Evidencias_Completas != null)
+                    {
+                        evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+                    }
+                    await _editarReportePreliminar.Execute(
+                        model.Id_Reporte_Preliminar,
+                        model.Num_Trabajadores,
+                        model.Razon_Social_Contratista,
+                        model.RUC_Contratista,
+                        model.Actividad_Contratista,
+                        model.Domicilio_Contratista,
+                        model.Num_Trabajadores_Contratista,
+                        model.Id_Tipo_Incidente,
+                        model.Id_Nivel_Incidente,
+                        model.Fecha_Incidente,
+                        model.Hora_Incidente,
+                        model.Producto_Derramado,
+                        model.Cantidad_Derramado,
+                        model.Id_Unidad_Cantidad_Derramado,
+                        model.Area_Afectada,
+                        model.Id_Unidad_Area_Afectada,
+                        model.Lugar_Incidente,
+                        model.Equipo_Involucrado,
+                        model.Id_Componente_Ambiental,
+                        model.Descripcion_Incidente,
+                        model.Otra_Causa_Incidente,
+                        model.Id_Gerencia_Responsable,
+                        evidencias,
+                        model.Comentario_Accion,
+                        model.Id_Supervisor,
+                        model.Opcion);
+                    if (model.Opcion.Equals("Difundir") && model.Investigacion)
+                        return RedirectToAction("IniciarInvestigacion", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
+                    else
+                        return RedirectToAction("Resumen");
                 }
-                if (model.Evidencias_Completas != null)
-                {
-                    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
-                }
-                await _editarReportePreliminar.Execute(
-                    model.Id_Reporte_Preliminar,
-                    model.Num_Trabajadores,
-                    model.Razon_Social_Contratista,
-                    model.RUC_Contratista,
-                    model.Actividad_Contratista,
-                    model.Domicilio_Contratista,
-                    model.Num_Trabajadores_Contratista,
-                    model.Id_Tipo_Incidente,
-                    model.Id_Nivel_Incidente,
-                    model.Fecha_Incidente,
-                    model.Hora_Incidente,
-                    model.Producto_Derramado,
-                    model.Cantidad_Derramado,
-                    model.Id_Unidad_Cantidad_Derramado,
-                    model.Area_Afectada,
-                    model.Id_Unidad_Area_Afectada,
-                    model.Lugar_Incidente,
-                    model.Equipo_Involucrado,
-                    model.Id_Componente_Ambiental,
-                    model.Descripcion_Incidente,
-                    model.Otra_Causa_Incidente,
-                    model.Id_Gerencia_Responsable,
-                    evidencias,
-                    model.Comentario_Accion,
-                    model.Id_Supervisor,
-                    model.Opcion);
-                if (model.Opcion.Equals("Difundir") && model.Investigacion)
-                    return RedirectToAction("IniciarInvestigacion", new { IdReporte = model.Id_Reporte_Preliminar });
-                else
-                    return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
+                return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Encriptado_Reporte_Preliminar });
             }
-            return RedirectToAction("EditarReportePreliminar", new { IdReporte = model.Id_Reporte_Preliminar });
         }
-        public async Task<IActionResult> IniciarInvestigacion(int IdReporte)
+        public async Task<IActionResult> IniciarInvestigacion(string IdReporte)
         {
-            var id_investigacion_final = await _registrarInvestigacionFinal.Execute(IdReporte);
-            return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = IdReporte });
+            int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
+            var id_investigacion_final = await _registrarInvestigacionFinal.Execute(IdDesencriptado);
+            return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = IdDesencriptado });
         }
         [HttpPost]
         public async Task<IActionResult> ListarInvolucrados(int IdReporte)

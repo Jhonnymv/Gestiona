@@ -18,7 +18,7 @@
         <!-- CAUSAS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">CAUSAS DEL INCIDENTE</h5>
+                <h5 style="color:white;margin:4px;">CAUSAS INMEDIATAS DEL INCIDENTE</h5>
             </div>
         </div>
         <div class="row mb-2 justify-content-center">
@@ -35,7 +35,7 @@
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <table class="table" id="tabla_causas" style="display: none;">
                     <thead class="thead-mcolor">
-                        <tr>                            
+                        <tr>
                             <th>Acto/Condición Subestándar</th>
                             <th>Descripción</th>
                             <th></th>
@@ -175,19 +175,20 @@
                     <span id="danger_evidencia" class=""></span>
                 </span>
                 <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>                
+                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpge,.png" data-max-size="8971520" multiple>
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <label id="files_name">0 Archivos</label>
             </div>
         </div>
         <div class="row mb-2 justify-content-end">
-            <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="col-sm-12 col-md-5 col-lg-3">
+                <a asp-action="Resumen" asp-controller="ReportePreliminar" class="btn btn-primary">Volver</a>
                 <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
-                <button id="boton_completar" type="button" class="btn btn-primary">Completar Reporte Preliminar</button>
+                <button id="boton_completar" type="button" class="btn btn-primary">Completar</button>
             </div>
         </div>
-</form>
+    </form>
 </div>
 <!-- Modal Nuevo Involucrado-->
 <div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
@@ -406,6 +407,24 @@
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
                 <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Notificando al Supervisor de Medio Ambiente</label>
+                </div>
             </div>
         </div>
     </div>

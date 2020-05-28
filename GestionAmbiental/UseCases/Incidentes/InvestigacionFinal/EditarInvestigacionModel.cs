@@ -10,6 +10,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
     public class EditarInvestigacionModel
     {
+        public string Id_Encriptado_Investigacion_Final { get; set; }
         public int Id_Investigacion_Final { get; set; }
         public int Id_Reporte_Preliminar { get; set; }
         [DisplayName("Código:")]

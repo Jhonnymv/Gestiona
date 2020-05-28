@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Reportes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Incidentes.Investigacio
                 fFinal = DateTime.MaxValue;
             //Obtener valores
             var data = await _getReportesInvestigacionIncidenteReadOnlyRepository.GetNInvestigacionesTipoIncidente(tipoIncidente, nivelIncidente, gerencia, supervisor, fInicio, fFinal);
-
+            data = data.OrderByDescending(x => x.Valor).ToList();
             var output = new List<DimensionOutput>();
             foreach (var item in data)
             {

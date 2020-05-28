@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
@@ -108,6 +109,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 }
 
                 outputItem.Estado = item.Estado;
+                var acciones = await _context.Accion_Incidente_Investigacion.Where(x =>x.Id_Investigacion_Final.Equals(item.Id_Investigacion_Final) && !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToListAsync();
+                outputItem.NAcciones = acciones.Count;
+                outputItem.NAccionesAprobadas = acciones.Count(x => x.Estado.Equals(EstadosIncidentes.Aprobado.ToString()));
+
 
                 output.Add(outputItem);
             }

@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -202,6 +203,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Comentarios_Verificacion = accion.Comentarios_Verificacion;
             entity.Estatus = accion.Estatus;
             entity.Fecha_Verificacion = accion.Fecha_Verificacion;
+            entity.Estado = accion.Estado;
+
+            _context.Accion_Incidente_Investigacion.Update(entity);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Accion_Incidente_Investigacion;
+        }
+        public async Task<int> AmpliarFechaAccion(Accion_Incidente_Investigacion accion)
+        {
+            var entity = await _context.Accion_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Investigacion.Equals(accion.Id_Accion_Incidente_Investigacion));
+            entity.Fecha = accion.Fecha;
             entity.Estado = accion.Estado;
 
             _context.Accion_Incidente_Investigacion.Update(entity);

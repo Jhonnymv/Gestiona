@@ -339,6 +339,17 @@ function ActualizaGerenciaIncidente() {
     });
 }
 function CrearGraficoGerenciaIncidente(labels, data) {
+    //Colores Aleatorios
+    var coloR = [];
+    var dynamicColors = function () {
+        var r = Math.floor(Math.random() * 255);
+        var g = Math.floor(Math.random() * 255);
+        var b = Math.floor(Math.random() * 255);
+        return "rgb(" + r + "," + g + "," + b + ")";
+    };
+    for (var i in data) {
+        coloR.push(dynamicColors());
+    }
     graph_gerencia = new Chart(
         document.getElementById("chart_gerencias"),
         {
@@ -348,7 +359,7 @@ function CrearGraficoGerenciaIncidente(labels, data) {
                 "datasets": [{
                     "label": "# Registros",
                     "data": data,
-                    "backgroundColor": '#2e6793',
+                    "backgroundColor": coloR,
                     "lineTension": 0.1
                 }]
             },
@@ -805,7 +816,7 @@ function CrearGraficoImpactoSuelo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Área de Suelo Afectado",
+                    "label": "Área Afectada (m2)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -897,7 +908,7 @@ function CrearGraficoImpactoFlora(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Unidad de Flora Afectado",
+                    "label": "Unidad de Flora Afectado (u)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -989,7 +1000,7 @@ function CrearGraficoImpactoFauna(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Unidad de Fauna Afectado",
+                    "label": "Unidad de Fauna Afectado (u)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1081,7 +1092,7 @@ function CrearGraficoImpactoAgua(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Volumen de Agua Afectado",
+                    "label": "Volumen de Agua Afectado (Gal)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1212,7 +1223,6 @@ function CrearGraficoImpactoPersona(labels, data) {
     );
 }
 
-
 //Para gráfico Residuo Suelo
 function ActualizaResiduoSuelo() {
     $.ajax({
@@ -1266,7 +1276,7 @@ function CrearGraficoResiduoSuelo(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Cantidad de Residuo Generado",
+                    "label": "Cantidad de Residuo Generado (Tn)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1357,7 +1367,7 @@ function CrearGraficoResiduoFlora(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Cantidad de Residuo Generado",
+                    "label": "Cantidad de Residuo Generado (Tn)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1448,7 +1458,7 @@ function CrearGraficoResiduoFauna(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Cantidad de Residuo Generado",
+                    "label": "Cantidad de Residuo Generado (Tn)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1539,7 +1549,7 @@ function CrearGraficoResiduoAgua(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Cantidad de Residuo Generado",
+                    "label": "Cantidad de Residuo Generado (Tn)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1

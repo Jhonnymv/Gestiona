@@ -13,6 +13,7 @@
     </div>
     <form class="form-group" id="formEditarInvestigacion" asp-action="EditarInvestigacion" asp-controller="InvestigacionFinal" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+        <input type="hidden" asp-for="Id_Encriptado_Investigacion_Final" value="@Model.Id_Encriptado_Investigacion_Final" />
         <input type="hidden" asp-for="Opcion" />
         <input type="hidden" asp-for="NInvolucrados" />
         <input type="hidden" asp-for="NProductos" />
@@ -70,14 +71,14 @@
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
-                    DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero)
+                    DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA
                 </h5>
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-12" style="text-align:center; background-color:#e97f7f;">
                 <h5 style="color:white;margin:4px;">
-                    Contratista
+                    Contratista (Llenar esta sección en caso el incidente haya sido ocasionado por un subcontratista)
                 </h5>
             </div>
         </div>
@@ -607,7 +608,7 @@
                 <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" disabled />
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Derramado" disabled>
+                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso" disabled>
                 </select>
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
@@ -826,13 +827,45 @@
 
         <div class="row mb-2 justify-content-end">
             <div class="col-sm-12 col-md-3 col-lg-3">
+                <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-primary">Volver</a>
                 <a class="btn btn-danger" asp-controller="DescargarInvestigacionFinal" asp-action="DescargarInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Final">Descargar Excel</a>
             </div>
         </div>
 
     </form>
 </div>
-@section Scripts{ 
+<!-- Modal Ampliar Fecha-->
+<div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_ampliacion">
+                    Ingrese Nueva Fecha para Implementación
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label>Nueva Fecha:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="hidden" class="form-control" id="idAccionAmpliacion" />
+                        <input type="date" class="form-control" id="nuevaFechaAmpliacion" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" style="color:white" onclick="AmpliarFechaAccion()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             GetInvolucrados();
@@ -880,7 +913,7 @@
                 var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
                 var html_partes = "";
                 for (var i = 0; i < partes_valores.length; i++)
-                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Persona</a></p>";
+                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
 
                 $("#Evidencias_Lista_Partes").html(html_partes);
                 $("#Evidencias_Completas_Partes").val(partes_valores);
@@ -954,6 +987,36 @@
                     IdInvestigacion: $("#Id_Investigacion_Final").val()
                 },
                 success: (response) => {
+                    $('#tabla_acciones tbody').empty();
+                    $('#tabla_acciones tbody').html(response.filas_acciones);
+                    var nAcciones = response.nAcciones;
+                    var nVerificado = response.nVerificado;
+                    var porcentaje = (nVerificado * 100 / nAcciones).toString() + "%";
+                    $('#progreso_vefirifacion').width(porcentaje);
+                    $('#progreso_vefirifacion').text(porcentaje);
+                }
+            });
+        }
+
+        function AmpliarFecha(idAccion) {
+            $("#idAccionAmpliacion").val(idAccion);
+            $("#modal_ampliacion").modal("show");
+        }
+        
+        function AmpliarFechaAccion() {
+            $.ajax({
+                type: "POST",
+                url: "/InvestigacionFinal/AmpliarFechaAccion",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                    IdAccion: $("#idAccionAmpliacion").val(),
+                    fecha: $("#nuevaFechaAmpliacion").val()
+                },
+                success: (response) => {
+                    $("#modal_ampliacion").modal("hide");
+                    $("#idAccionAmpliacion").val(0);
+                    $("#nuevaFechaAmpliacion").val("")
+
                     $('#tabla_acciones tbody').empty();
                     $('#tabla_acciones tbody').html(response.filas_acciones);
                     var nAcciones = response.nAcciones;

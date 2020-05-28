@@ -33,6 +33,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.EliminarInvolucrado;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
@@ -63,6 +64,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         private readonly IEditarReportePreliminar _editarReportePreliminar;
         private readonly IGetInfo_SGA _info_SGA;
 
+        private readonly IDataProtector _protector;
 
 
         public ReportePreliminarController(
@@ -88,6 +90,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IEliminarCausaIncidenteReporte eliminarCausaIncidenteReporte,
             IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
             IEditarReportePreliminar editarReportePreliminar,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
             _registrarReporteParte1 = registrarReporteParte1;
@@ -113,6 +117,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _registrarCausaIncidenteReporte = registrarCausaIncidenteReporte;
             _editarReportePreliminar = editarReportePreliminar;
             _info_SGA = info_SGA;
+
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
         public async Task<IActionResult> Resumen()
         {
@@ -154,9 +160,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             {
                 foreach (var fila in datosTabla.Reportes)
                 {
-                    //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
+                    var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + fila.Id_Reporte_Preliminar + "\">" + fila.Codigo + "</a></td>";
+                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Nivel_Incidente + "</td>";
                     filasTabla += "<td style=\"width: 150px;\">";
@@ -223,7 +229,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
                 var unidad_Derramado = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Sustancia.ToString()) ||
+                    x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()) ||
                     x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
                     .OrderBy(x => x.Descripcion)
                     .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
@@ -288,11 +294,14 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 if(model.Opcion.Equals("Guardar"))
                     return RedirectToAction("Resumen");
                 else
-                    return RedirectToAction("NuevoReporteParte2", new { IdReporte = IdReporte });
+                {
+                    var IdEncriptado = _protector.Protect(IdReporte.ToString());
+                    return RedirectToAction("NuevoReporteParte2", new { IdReporte = IdEncriptado });
+                }
             }
             return RedirectToAction("NuevoReporte");
         }
-        public async Task<IActionResult> NuevoReporteParte2(int IdReporte)
+        public async Task<IActionResult> NuevoReporteParte2(string IdReporte)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -328,7 +337,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 ViewBag.Condiciones = condiciones;
 
                 var model = new ReporteParte2Model();
-                model.Id_Reporte_Preliminar = IdReporte;
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
+                model.Id_Reporte_Preliminar = IdDesencriptado;
 
                 return View(model);
             }
@@ -554,7 +564,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     {
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        //var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG"};
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
@@ -569,7 +580,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             }
             return RedirectToAction("NuevoReporteParte2", new { IdReporte = model.Id_Reporte_Preliminar });
         }
-        public async Task<IActionResult> EditarReportePreliminar(int IdReporte)
+        public async Task<IActionResult> EditarReportePreliminar(string IdReporte)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -590,12 +601,12 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 nivel_Incidente.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var unidad_Derramado = items.ItemsUnidadMedida.Where(
-                    x => x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Sustancia.ToString()) ||
-                    x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
-                    .OrderBy(x => x.Descripcion)
-                    .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
-                unidad_Derramado.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                   x => x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
+                   x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()) ||
+                   x.Tipo.Equals(TiposUnidadMedida.Peso.ToString()))
+                   .OrderBy(x => x.Descripcion)
+                   .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
+                unidad_Derramado.Insert(0, new SelectListItem("--SELECCIONE--", "0", true)); ;
 
                 var unidad_Area = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.General.ToString()) ||
@@ -642,8 +653,11 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 ViewBag.Actos = actos;
                 ViewBag.Condiciones = condiciones;
 
-                var reporte = await _getReportePreliminar.Execute(IdReporte);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
+
+                var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
+                model.Id_Encriptado_Reporte_Preliminar = IdReporte;
                 model.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
                 model.Codigo = reporte.Codigo;
                 model.Num_Trabajadores = reporte.Num_Trabajadores;
@@ -687,7 +701,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
                         var max_file_size = 8388608;
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        //var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG"};
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
@@ -735,7 +750,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     return RedirectToAction("Resumen");
 
             }
-            return RedirectToAction("EditarReportePreliminar",new { IdReporte = model.Id_Reporte_Preliminar } );
+            return RedirectToAction("EditarReportePreliminar",new { IdReporte = model.Id_Encriptado_Reporte_Preliminar } );
         }
         //Carga y descarga de archivos
         private string CreateUniqueFileName()

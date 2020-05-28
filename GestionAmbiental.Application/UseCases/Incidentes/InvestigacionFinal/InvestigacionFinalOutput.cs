@@ -49,7 +49,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
         public List<string> Evidencia_Posicion { get; set; }
         public List<string> Evidencia_Parte { get; set; }
         public string Estado { get; set; }
-
+        public int NAccionesAprobadas { get; set; }
+        public int NAcciones { get; set; }
         public InvestigacionFinalOutput(Domain.Incidentes.InvestigacionFinal.Investigacion_Final_Incidente investigacion)
         {
             Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
@@ -129,7 +130,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
                     Evidencia_Parte.Add((string)evidencia);
                 }
             }
-
+            NAccionesAprobadas = investigacion.NAccionesAprobadas;
+            NAcciones = investigacion.NAcciones;
             Estado = investigacion.Estado;
         }
     } 

@@ -13,6 +13,7 @@
     </div>
     <form class="form-group" id="form_editarReporte" asp-action="EditarReportePreliminarMA" asp-controller="ReportePreliminarMA" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
+        <input type="hidden" asp-for="Id_Encriptado_Reporte_Preliminar" value="@Model.Id_Encriptado_Reporte_Preliminar" />
         <input type="hidden" asp-for="Opcion" />
         <input type="hidden" asp-for="NInvolucrados" />
         <input type="hidden" asp-for="NAcciones" />
@@ -68,7 +69,7 @@
         <!-- DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero) -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero)</h5>
+                <h5 style="color:white;margin:4px;">DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</h5>
             </div>
         </div>
         <div class="row mb-2">
@@ -214,7 +215,7 @@
         <!-- CAUSAS -->
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">CAUSAS DEL INCIDENTE</h5>
+                <h5 style="color:white;margin:4px;">CAUSAS INMEDIATAS DEL INCIDENTE</h5>
             </div>
         </div>
         @if (Model.Estado == "Registrado")
@@ -402,8 +403,18 @@
             </div>
             <div class="row mb-2 justify-content-end">
                 <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-primary">Volver</a>
                     <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
                     <button id="boton_difundir" type="button" class="btn btn-primary">Difundir</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row mb-2 justify-content-end">
+                <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a asp-action="Resumen" asp-controller="ReportePreliminarMA" class="btn btn-primary">Volver</a>
+                    <a class="btn btn-danger" asp-controller="DescargarReportePreliminar" asp-action="DescargarReportePreliminar" asp-route-IdReporte="@Model.Id_Reporte_Preliminar">Descargar Excel</a>
                 </div>
             </div>
         }
@@ -498,8 +509,6 @@
         </div>
     </div>
 </div>
-
-
 <!-- Modal Nuevo Acciones Post Incidente-->
 <div class="modal fade" id="modal_accion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_accion"
      aria-hidden="true" style="display: none;">
@@ -568,12 +577,11 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
-                <button type="button" class="btn btn-primary" id="btn_editar_accion">Editar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_accion">Aceptar</button>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Modal Nueva Causas-->
 <div class="modal fade" id="modal_causa" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_causa"
      aria-hidden="true" style="display: none;">
@@ -626,7 +634,25 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
-                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Editar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Difundiendo el Reporte Preliminar</label>
+                </div>
             </div>
         </div>
     </div>
@@ -704,6 +730,7 @@
             HabilitarInputs();
             if (ValidarInputs()) {
                 $("#Opcion").val("Difundir");
+                $("#Modal_Enviando_Correo").modal("show");
                 $("#form_editarReporte").submit();
             }
         });

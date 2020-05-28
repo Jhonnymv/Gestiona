@@ -574,6 +574,7 @@ $("#boton_completar").on("click", function () {
     $("#alert_acciones").html("");
 
     $("#Opcion").val("Completar");
+    $("#Modal_Enviando_Correo").modal("show");
     var nCausas = $("#NCausas").val();
     var nAcciones = $("#NAcciones").val();
     var nInvolucrado = $("#NInvolucrados").val();
@@ -619,11 +620,11 @@ $("#Evidencias").change(function () {
                 case 'JPEG':
                 case 'png':
                 case 'PNG':
-                case 'xls':
-                case 'xlsx':
-                case 'doc':
-                case 'docx':
-                case 'pdf':
+                //case 'xls':
+                //case 'xlsx':
+                //case 'doc':
+                //case 'docx':
+                //case 'pdf':
                     filesName += archivos[i].name + "<br/>";
                     break;
                 default:

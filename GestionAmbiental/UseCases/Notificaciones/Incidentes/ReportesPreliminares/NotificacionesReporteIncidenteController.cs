@@ -13,7 +13,9 @@ using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminares
 {
@@ -41,7 +43,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             _getReportePreliminar = getReportePreliminar;
             _getUsuariosNotificarIncidente = getUsuariosNotificarIncidente;
             _info_SGA = getInfo_SGA;
-            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IncidenteIdRouteValue);
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
             _reportePreliminarController = reportePreliminarController;
         }
 
@@ -98,6 +100,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
         }
         public async Task<IActionResult> DifundirNuevoReporte(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var info = await _getReportePreliminar.Execute(IdReporte);
             var usuarios = await _getUsuariosNotificarIncidente.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Reporte_Preliminar.ToString());
@@ -141,7 +144,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
             
-            var archivoReporte = await _reportePreliminarController.PrepararReportePreliminar(IdReporte);
+            var archivoReporte = await _reportePreliminarController.PrepararReportePreliminar(IdReporte, userInfo.NombreUsuario);
             msg.Attachments.Add(new Attachment(archivoReporte, "ReportePreliminarIncidente-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
 
             await mail.SendMailAsync(msg);

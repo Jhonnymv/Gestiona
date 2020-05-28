@@ -27,7 +27,10 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             if (Opcion.Equals("Rechazar"))
                 input.Estado = EstadosIncidentes.Rechazado.ToString();
             else if (Opcion.Equals("Aprobar"))
-                input.Estado = EstadosIncidentes.Aprobado.ToString();
+            {
+                input.Estado = EstadosIncidentes.Aprobado.ToString(); 
+                input.Estatus = "Cerrado";
+            }
 
             return await _editarInvestigacionFinalReadOnlyRepository.VerificarAccionCorrectivaInvestigacion(input);
         }

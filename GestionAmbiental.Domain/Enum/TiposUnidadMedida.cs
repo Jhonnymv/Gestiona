@@ -7,10 +7,9 @@ namespace GestionAmbiental.Domain.Enum
     public enum TiposUnidadMedida
     {
         General = 1,
-        Sustancia = 2,
-        Peso = 3,
-        Area = 4,
-        Unidad = 5,
-        Volumen = 6
+        Peso = 2,
+        Area = 3,
+        Unidad = 4,
+        Volumen = 5
     }
 }

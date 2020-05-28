@@ -69,14 +69,14 @@
         <div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
-                    DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero)
+                    DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA
                 </h5>
             </div>
         </div>
         <div class="row mb-2">
             <div class="col-12" style="text-align:center; background-color:#e97f7f;">
                 <h5 style="color:white;margin:4px;">
-                    Contratista
+                    Contratista (Llenar esta sección en caso el incidente haya sido ocasionado por un subcontratista)
                 </h5>
             </div>
         </div>
@@ -400,7 +400,7 @@
                 <div class="form-check align-self-center">
                     <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_suelo">
                     <label class="form-check-label font-weight-bold">SUELO</label>
-                </div>                
+                </div>
             </div>
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <div class="row mb-2 mt-2">
@@ -417,7 +417,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Area_Suelo"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Area_Suelo"></span>
@@ -431,7 +431,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Suelo"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
                     </div>
 
                     <div class="col-sm-12 col-md-2 col-lg-2">
@@ -474,7 +474,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Flora"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Flora"></span>
@@ -488,7 +488,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Flora"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
                     </div>
 
                     <div class="col-sm-12 col-md-2 col-lg-2">
@@ -531,7 +531,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Fauna"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Fauna"></span>
@@ -545,7 +545,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Fauna"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
                     </div>
 
                     <div class="col-sm-12 col-md-2 col-lg-2">
@@ -588,11 +588,11 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Volumen_Agua"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Agua"></span>
-                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Agua" asp-items="ViewBag.Unidad_Area" disabled>
+                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Agua" asp-items="ViewBag.Unidad_Volumen" disabled>
                         </select>
                     </div>
                 </div>
@@ -602,7 +602,7 @@
                     </div>
                     <div class="col-sm-12 col-md-2 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Agua"></span>
-                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled/>
+                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
                     </div>
 
                     <div class="col-sm-12 col-md-2 col-lg-2">
@@ -647,14 +647,14 @@
                     </div>
                     <div class="col-sm-12 col-md-1 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cord_Este"></span>
-                        <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Este" />
+                        <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Este" disabled />
                     </div>
                     <div class="col-sm-12 col-md-1 col-lg-1">
                         <label asp-for="ImpactoAmbiental.Cord_Norte"></label>
                     </div>
                     <div class="col-sm-12 col-md-1 col-lg-2">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cord_Norte"></span>
-                        <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Norte" />
+                        <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Norte" disabled />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -663,7 +663,7 @@
                     </div>
                     <div class="col-sm-12 col-md-10 col-lg-10">
                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Nombre_Resto_Arq"></span>
-                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Nombre_Resto_Arq" />
+                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Nombre_Resto_Arq" disabled />
                     </div>
                 </div>
             </div>
@@ -701,7 +701,7 @@
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Derramado">
+                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso">
                 </select>
             </div>
             <div class="col-sm-12 col-md-2 col-lg-2">
@@ -981,6 +981,7 @@
         {
             <div class="row mb-2 justify-content-end">
                 <div class="col-sm-12 col-md-3 col-lg-3">
+                    <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-primary">Volver</a>
                     <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
                     <button id="boton_completar" type="button" class="btn btn-primary">Completar</button>
                 </div>
@@ -1037,7 +1038,7 @@
                         <label id="label_doc_identidad" style="display:none">DNI/Pasaporte:</label>
                     </div>
                     <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_doc_identidad" style="display:none" maxlength="12"/>
+                        <input type="text" class="form-control" id="input_doc_identidad" style="display:none" maxlength="12" />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -1171,7 +1172,7 @@
                         <label>Cantidad de producto no recuperado:</label>
                     </div>
                     <div class="col-sm-6 col-md-4 col-lg-5">
-                        <input type="number" class="form-control" id="input_cantidad_no_recuperado" disabled/>
+                        <input type="number" class="form-control" id="input_cantidad_no_recuperado" disabled />
                     </div>
                     <div class="col-sm-6 col-md-4 col-lg-4">
                         <select class="form-control" id="select_cantidad_no_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
@@ -1356,12 +1357,29 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
-                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Editar</button>
+                <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Difundiendo la Investigación</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -1370,6 +1388,7 @@
             checkDataImpactoFlora();
             checkDataImpactoFauna();
             checkDataImpactoAgua();
+            checkDataImpactoArqueologico();
 
             GetInvolucrados();
             GetProductos();
@@ -1415,7 +1434,7 @@
                 var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
                 var html_partes = "";
                 for (var i = 0; i < partes_valores.length; i++)
-                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Persona</a></p>";
+                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
 
                 $("#Evidencias_Lista_Partes").html(html_partes);
                 $("#Evidencias_Completas_Partes").val(partes_valores);
@@ -1700,6 +1719,7 @@
 
         $("#boton_completar").click(function () {
             $("#Opcion").val("Completar");
+            $("#Modal_Enviando_Correo").modal("show");
             $("#formEditarInvestigacion").submit();
         });
 
@@ -1738,6 +1758,12 @@
             $("#ImpactoAmbiental_Cantidad_Residuo_Agua").prop("disabled", checked)
             $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").prop("disabled", checked)
             $("#ImpactoAmbiental_Id_Lugar_Disposicion_Agua").prop("disabled", checked)
+        });
+        $("#ImpactoAmbiental_Restos_Arq").change(function () {
+            var sino = $("#ImpactoAmbiental_Restos_Arq").val() == "SI" ? true : false;
+            $("#ImpactoAmbiental_Cord_Este").prop("disabled", !sino);
+            $("#ImpactoAmbiental_Cord_Norte").prop("disabled", !sino);
+            $("#ImpactoAmbiental_Nombre_Resto_Arq").prop("disabled", !sino);
         });
 
         function checkDataImpactoSuelo() {
@@ -1826,6 +1852,19 @@
                 cantidad.prop("disabled", false);
                 unidad_cantidad.prop("disabled", false);
                 lugar.prop("disabled", false);
+            }
+        }
+        function checkDataImpactoArqueologico() {
+            var este = $("#ImpactoAmbiental_Cord_Este");
+            var norte = $("#ImpactoAmbiental_Cord_Norte");
+            var nombre = $("#ImpactoAmbiental_Nombre_Resto_Arq");
+            if (este.val() != "" ||
+                norte.val() != "" ||
+                nombre.val() != "" ) {
+                $("#ImpactoAmbiental_Restos_Arq").val() == "SI";
+                este.prop("disabled", false);
+                norte.prop("disabled", false);
+                nombre.prop("disabled", false);
             }
         }
     </script>
