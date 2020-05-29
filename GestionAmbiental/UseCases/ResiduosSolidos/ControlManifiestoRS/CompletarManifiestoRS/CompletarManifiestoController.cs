@@ -169,7 +169,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
                 model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
                 model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
-                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida!=null? data.Fecha_Vencimiento_Registro_Salida.Value.ToString("yyyy-MM-dd") :"";
+                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida != null ? data.Fecha_Vencimiento_Registro_Salida.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
                 model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
                 //Conductor
@@ -179,14 +179,14 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
                 model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
                 model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
-                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada!= null ? data.Fecha_Vencimiento_Registro_Llegada.Value.ToString("yyyy-MM-dd"):"";
+                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada != null ? data.Fecha_Vencimiento_Registro_Llegada.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Permiso = data.Permiso;
                 model.Estado = data.Estado;
                 //Asesor
-                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto!=null? data.Cantidad_RS_Dispuesto.Value:0;
-                if(data.Fecha_Devolucion!=null)
+                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto != null ? data.Cantidad_RS_Dispuesto.Value : 0;
+                if (data.Fecha_Devolucion != null)
                     model.Fecha_Devolucion = data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd");
                 model.Id_Asesor = data.Id_Asesor_MAP;
                 model.Certificado = data.Certificado_Trat_Disp;
@@ -240,7 +240,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Cantidad_RS_Evacuado = data.Cantidad_RS_Evacuado;
                 model.Id_EO_RS_Salida = data.Id_EO_RS_Salida;
                 model.Registro_EO_RS_Salida = data.Registro_EO_RS_Salida;
-                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida!=null? data.Fecha_Vencimiento_Registro_Salida.Value.ToString("yyyy-MM-dd") : "";
+                model.Fecha_Vencimiento_Registro_Salida = data.Fecha_Vencimiento_Registro_Salida != null ? data.Fecha_Vencimiento_Registro_Salida.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Municipal_Salida = data.Num_Autorizacion_Municipal_Salida;
                 model.Num_Autorizacion_Hoja_Ruta = data.Num_Autorizacion_Hoja_Ruta;
                 //Conductor
@@ -250,13 +250,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Capacidad_Vehiculo = data.Capacidad_Vehiculo;
                 model.Id_EO_RS_Llegada = data.Id_EO_RS_Llegada;
                 model.Registro_EO_RS_Llegada = data.Registro_EO_RS_Llegada;
-                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada!=null? data.Fecha_Vencimiento_Registro_Llegada.Value.ToString("yyyy-MM-dd"):"";
+                model.Fecha_Vencimiento_Registro_Llegada = data.Fecha_Vencimiento_Registro_Llegada != null ? data.Fecha_Vencimiento_Registro_Llegada.Value.ToString("yyyy-MM-dd") : "";
                 model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Estado = data.Estado;
                 model.Permiso = data.Permiso;
                 //Asesor
-                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto!=null ? data.Cantidad_RS_Dispuesto.Value : 0;
+                model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto != null ? data.Cantidad_RS_Dispuesto.Value : 0;
                 model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
                 model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
 
@@ -390,7 +390,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     userInfo.NombreUsuario);
                 return RedirectToAction("Resumen");
             }
-            return RedirectToAction("CompletarManifiesto",new { IdManifiesto = model.Id_Encriptado });
+            return RedirectToAction("CompletarManifiesto", new { IdManifiesto = model.Id_Encriptado });
         }
         public async Task<IActionResult> EliminarManifiesto(string IdManifiesto)
         {
@@ -473,44 +473,44 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName, string tipo)
         {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return "NoAutorizado";
             else
-            {*/
-            Tipo_Info_SGA directorio;
-            switch (tipo)
             {
-                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
-                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
-            }
-            var serverInfo = await _info_SGA.Execute(directorio);
-
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
+                Tipo_Info_SGA directorio;
+                switch (tipo)
                 {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
+                    case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                    case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
                 }
-            }
+                var serverInfo = await _info_SGA.Execute(directorio);
 
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-                using (FileStream fs = System.IO.File.OpenRead(path))
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
                 {
-                    sftp.UploadFile(fs, newFileName, true);
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
                 }
-                sftp.Dispose();
+
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+                    using (FileStream fs = System.IO.File.OpenRead(path))
+                    {
+                        sftp.UploadFile(fs, newFileName, true);
+                    }
+                    sftp.Dispose();
+                }
+                return newFileName;
             }
-            return newFileName;
-            //}
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
         {
@@ -572,7 +572,6 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
                 Tipo_Info_SGA directorio;
                 switch (tipo)
                 {

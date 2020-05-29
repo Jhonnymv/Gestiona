@@ -14,13 +14,13 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
     {
         private readonly IEditarIngresoSalidaRSReadOnlyRepository _editarIngresoSalidaRSReadOnlyRepository;
         private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
+        private readonly IGetIngresoSalidaRSReadOnlyRepository _getIngresoSalidaRSReadOnlyRepository;
 
-        public EditarIngresoSalidaRS(
-            IEditarIngresoSalidaRSReadOnlyRepository editarIngresoSalidaRSReadOnlyRepository,
-            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
+        public EditarIngresoSalidaRS(IEditarIngresoSalidaRSReadOnlyRepository editarIngresoSalidaRSReadOnlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository, IGetIngresoSalidaRSReadOnlyRepository getIngresoSalidaRSReadOnlyRepository)
         {
             _editarIngresoSalidaRSReadOnlyRepository = editarIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarIngresoSalidaRSReadOnlyRepository));
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
+            _getIngresoSalidaRSReadOnlyRepository = getIngresoSalidaRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(getIngresoSalidaRSReadOnlyRepository));
         }
 
         public async Task Execute(int id_ingreso_salida_rs, string opcion, int arc_cmrs, int ingreso_salida, int motivo, int residuo_solido, string fecha, int responsable, double cantidad, int empresa, int gerencia, string comentario, string usuario_red)
@@ -28,8 +28,27 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             var fecha_format = DateTime.Parse(fecha);
             var input = new Ingreso_Salida_RS();
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
-            
-            if(opcion.Equals("Eliminar"))
+
+            switch (opcion)
+            {
+                case "Eliminar":
+                    input.Item = "0";
+                    input.Estado = EstadosResiduosSolidos.Eliminado.ToString();
+                    break;
+                case "Registrar":
+                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+                    input.Item = (Convert.ToInt32(await _getIngresoSalidaRSReadOnlyRepository.GetLastItem()) + 1).ToString();
+                    break;
+                case "GuardarEstado":
+                    input.Estado = EstadosResiduosSolidos.Pendiente.ToString();
+                    input.Item = "TBD";
+                    break;
+                case "Guardar":
+                    input.Estado = EstadosResiduosSolidos.Registrado.ToString();
+                    break;
+            }
+            /*
+            if (opcion.Equals("Eliminar"))
             {
                 input.Item = "0";
                 input.Estado = EstadosResiduosSolidos.Eliminado.ToString();
@@ -38,7 +57,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
             {
                 input.Estado = EstadosResiduosSolidos.Registrado.ToString();
             }
-                       
+            */      
             input.ACR_CMRS = new ACR_CMRS();
             input.Ingreso_Salida = new Ingreso_Salida();
             input.Motivo = new Motivo_Ingreso_Salida();

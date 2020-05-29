@@ -259,7 +259,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 model.Gerencia = data.Id_Gerencia;
                 model.Cantidad = data.Cantidad;
                 model.Residuo_Solido = data.Id_Residuo_Solido;
+                model.Estado = data.Estado;
                 model.Permiso = data.Permiso;
+                model.PermisoAdmin = data.PermisoAdmin;
+                model.PermisoMA = data.PermisoMA;
 
                 return View(model);
             }

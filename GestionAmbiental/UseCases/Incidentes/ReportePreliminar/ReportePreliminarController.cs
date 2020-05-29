@@ -797,7 +797,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -870,7 +870,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -934,7 +934,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

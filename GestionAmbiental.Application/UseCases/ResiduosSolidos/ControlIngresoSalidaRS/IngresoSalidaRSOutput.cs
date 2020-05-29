@@ -31,6 +31,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSa
         public int Id_Registrado_Por { get; set; }
         public DateTime Fecha_Registro { get; set; }
         public bool Permiso { get; set; }
+        public bool PermisoAdmin { get; set; }
+        public bool PermisoMA { get; set; }
         public IngresoSalidaRSOutput(Domain.ResiduosSolidos.Ingreso_Salida_RS item)
         {
             Item = item.Item;

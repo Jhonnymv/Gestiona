@@ -106,7 +106,10 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 {
                     var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+IdEncriptado+"\">" + fila.Codigo + "</a></label></td>";
+                    if(fila.Estado != EstadosRAC.Eliminado.ToString())
+                        filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+IdEncriptado+"\">" + fila.Codigo + "</a></label></td>";
+                    else
+                        filasTabla += "<td><label style=\"width:80px;\">" + fila.Codigo + "</label></td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Obs + "</td>";
                     filasTabla += "<td>" + fila.SSO_MA + "</td>";

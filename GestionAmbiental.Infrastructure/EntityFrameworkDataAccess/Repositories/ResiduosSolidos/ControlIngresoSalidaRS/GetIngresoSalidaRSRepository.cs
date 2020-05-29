@@ -35,7 +35,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
                 x.Id_Gerencia.Equals(gerencia != 0 ? gerencia : x.Id_Gerencia) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
-                .OrderByDescending(x => Convert.ToInt16(x.Item))
                 .ToList();
 
             var acr_cmrs_entities = await _context.ACR_CMRs.Where(x => x.Estado.Equals("ACT")).ToListAsync();
@@ -48,6 +47,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerencias = await _context.Gerencias.ToListAsync();
 
             var output = new List<Ingreso_Salida_RS>();
+            var tbd = new List<Ingreso_Salida_RS>();
+            var registrados = new List<Ingreso_Salida_RS>();
+
             foreach (var item in data)
             {
                 var acr_cmrs_model = acr_cmrs_entities.Find(x => x.Id_ACR_CMRS.Equals(item.Id_ACR_CMRS));
@@ -74,14 +76,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     residuo_solido_model.Estado);
                 outputItem.Cantidad = item.Cantidad;
                 outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Gerencia = new Domain.ValueObjects.Gerencia(gerencia_model.Id_Gerencia,gerencia_model.Descripcion);
+                outputItem.Gerencia = new Domain.ValueObjects.Gerencia(gerencia_model.Id_Gerencia, gerencia_model.Descripcion);
                 outputItem.Comentario = item.Comentario;
                 outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
                 outputItem.Fecha_Registro = item.Fecha_Registro;
                 outputItem.Estado = item.Estado;
 
-                output.Add(outputItem);
-            }
+                if (outputItem.Item == "TBD")
+                    tbd.Add(outputItem);
+                else
+                    registrados.Add(outputItem);
+            } 
+            registrados = registrados.OrderByDescending(x => Convert.ToInt32(x.Item)).ToList();
+
+            output.AddRange(tbd);
+            output.AddRange(registrados);
+
             return output;
         }
         public async Task<Ingreso_Salida_RS> GetIngreso_Salida_RS(int id_Ingreso_Salida_RS)
@@ -182,11 +192,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetLastItem()
         {
-            var data = await _context.Ingresos_Salidas_RS.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).OrderBy(x => Convert.ToInt32(x.Item)).LastOrDefaultAsync();
-            if (data != null)
-                return data.Item;
-            else
-                return "";
+            /*
+             var lista = await _context.Manifiesto_RSs.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString()) || x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())).ToListAsync();
+            var data = lista.Select(x=>Convert.ToInt32(x.Item)).OrderBy(x=>x).LastOrDefault();            
+            return data.ToString();
+             */
+
+            var lista = await _context.Ingresos_Salidas_RS.Where(x => x.Estado.Equals(EstadosResiduosSolidos.Registrado.ToString())).ToListAsync();
+            var data = lista.Select(x => Convert.ToInt32(x.Item)).OrderBy(x => x).LastOrDefault();
+            return data.ToString();
         }
     }
 }

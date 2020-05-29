@@ -106,12 +106,18 @@
             <textarea class="form-control" asp-for="Comentario" rows="3"  disabled></textarea>
         </div>
         <div class="modal-footer">
-
-            @if (Model.Permiso)
+            @if (Model.Estado.Equals("Pendiente") && Model.Permiso)
             {
                 <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
                 <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
-                <button id="btnRegistrar" type="button" class="btn btn-primary">Guardar</button>
+                <button id="btnGuardarEstado" type="button" class="btn btn-primary">Guardar Estado</button>
+                <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
+            }
+            else if (Model.Estado.Equals("Registrado") && (Model.PermisoAdmin || Model.PermisoMA))
+            {
+                <a class="btn btn-secondary" style="color:white" asp-controller="IngresoSalidaRS" asp-action="Resumen">Volver</a>
+                <button id="btnEliminar" type="button" class="btn btn-danger">Eliminar</button>
+                <button id="btnGuardar" type="button" class="btn btn-primary">Guardar</button>
             }
             else
             {
@@ -122,6 +128,10 @@
 </form>
 @section Scripts{
     <script type="text/javascript">
+        $(document).ready(function () {
+            CargarValorResiduoSolido();
+            HabilitarInputs(@Model.Permiso.ToString().ToLower(),@Model.PermisoMA.ToString().ToLower(),@Model.PermisoAdmin.ToString().ToLower(), '@Model.Estado')
+        });
         $("#Tipo_Residuo").on('change', function () {
             var selectedValue = $("#Tipo_Residuo").val();
             $(".Vacio").hide();
@@ -156,12 +166,16 @@
         $(".Peligroso").on('change', function () {
             $("#Residuo_Solido").val($(".Peligroso").val())
         });
-        $(document).ready(function () {
-            CargarValorResiduoSolido();
-            HabilitarInputs(@Model.Permiso.ToString().ToLower())
+        $("#btnGuardarEstado").on('click', function () {
+            $("#opcion").val("GuardarEstado");
+            $("#formIngresoSalida").submit();
         });
         $("#btnRegistrar").on('click', function () {
             $("#opcion").val("Registrar");
+            $("#formIngresoSalida").submit();
+        });
+        $("#btnGuardar").on('click', function () {
+            $("#opcion").val("Guardar");
             $("#formIngresoSalida").submit();
         });
         $("#btnEliminar").on('click', function () {
@@ -205,10 +219,11 @@
                     $(".Vacio").prop('disabled', false);
                     $("#Residuo_Solido").val("0")
                     break;
-            }           
+            }
         }
-        function HabilitarInputs(permiso) {
-            if (permiso) {
+        function HabilitarInputs(permiso, permisoMA, permisoAdmin,estado) {
+
+            if ((permiso && estado == "Pendiente") || permisoMA || permisoAdmin) {
                 $("#ACR_CMRS").prop('disabled', false);
                 $("#Responsable_ACR_CMRS").prop('disabled', false);
                 $("#Ingreso_Salida").prop('disabled', false);

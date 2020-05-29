@@ -72,7 +72,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
             var registros = await _context.RACs.Where(c =>
-                !c.Estado.Equals(EstadosRAC.Eliminado.ToString())&&
+                !(c.Estado.Equals(EstadosRAC.Eliminado.ToString())&& c.Codigo.Equals("TBD"))&&
                 c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
                 && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
                 && c.Id_Registrado_Por.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Registrado_Por)

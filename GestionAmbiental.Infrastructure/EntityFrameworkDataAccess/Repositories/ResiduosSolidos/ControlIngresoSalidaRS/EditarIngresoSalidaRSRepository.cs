@@ -22,11 +22,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task EditarIngresoSalidaRS(Domain.ResiduosSolidos.Ingreso_Salida_RS ingreso_Salida_RS, int Id_Editado_Por)
         {
             var entity = await _context.Ingresos_Salidas_RS.FirstOrDefaultAsync(x => x.Id_Ingreso_Salida_RS.Equals(ingreso_Salida_RS.Id_Ingreso_Salida_RS));
-            if (ingreso_Salida_RS.Estado.Equals(EstadosInspeccion.Eliminado.ToString()))
-            {
-                entity.Item = ingreso_Salida_RS.Item;
-                entity.Estado = ingreso_Salida_RS.Estado;
-            }
+
+            entity.Item = ingreso_Salida_RS.Item != null ? ingreso_Salida_RS.Item : entity.Item;
+            entity.Estado = ingreso_Salida_RS.Estado;
 
             entity.Id_ACR_CMRS = ingreso_Salida_RS.ACR_CMRS.Id_ACR_CMRS;
             entity.Id_Responsable_ARC_CRMS = ingreso_Salida_RS.Responsable_ACR_CMRS.Id_Responsable_ACR_CRMS;

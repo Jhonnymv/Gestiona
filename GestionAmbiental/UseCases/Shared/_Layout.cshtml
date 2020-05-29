@@ -71,11 +71,17 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_rac" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Incidentes Ambientales</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_rac">
-                                <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reportes Preliminares</a>
-                                <a class="dropdown-item" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reportes Preliminares Medio Ambiente</a>
-                                <a class="dropdown-item" asp-controller="InvestigacionFinal" asp-action="Resumen">Investigaciones</a>
-                                <a class="dropdown-item" asp-controller="ReportesIncidentesReportePreliminar" asp-action="Resumen">Reportes Estadísticos (Reporte Preliminar)</a>
-                                <a class="dropdown-item" asp-controller="ReportesIncidentesInvestigacion" asp-action="Resumen">Reportes Estadísticos (Investigacion)</a>
+                                @if (ViewBag.Rol == "Inspector")
+                                {
+                                <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar </a>
+                                }
+                                @if (ViewBag.Rol == "AsesorMAP")
+                                {
+                            <a class="dropdown-item" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar </a>
+                            <a class="dropdown-item" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
+                                    <a class="dropdown-item" asp-controller="ReportesIncidentesReportePreliminar" asp-action="Resumen">Reportes Estadísticos (Reporte Preliminar)</a>
+                                    <a class="dropdown-item" asp-controller="ReportesIncidentesInvestigacion" asp-action="Resumen">Reportes Estadísticos (Informe Investigación Final)</a>
+                                }
                             </div>
                         </li>
                     }
