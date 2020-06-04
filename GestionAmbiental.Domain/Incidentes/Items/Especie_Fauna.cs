@@ -11,5 +11,16 @@ namespace GestionAmbiental.Domain.Incidentes.Items
         public int? Id_Especie_Fauna { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
+
+        public Especie_Fauna()
+        {
+        }
+
+        public Especie_Fauna(int? id_Especie_Fauna, string descripcion, string estado)
+        {
+            Id_Especie_Fauna = id_Especie_Fauna;
+            Descripcion = descripcion;
+            Estado = estado;
+        }
     }
 }

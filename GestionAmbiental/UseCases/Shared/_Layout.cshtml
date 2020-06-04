@@ -73,12 +73,13 @@
                             <div class="dropdown-menu" aria-labelledby="dropdown_rac">
                                 @if (ViewBag.Rol == "Inspector")
                                 {
-                                <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar </a>
+                                    <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar </a>
                                 }
                                 @if (ViewBag.Rol == "AsesorMAP")
                                 {
-                            <a class="dropdown-item" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar </a>
-                            <a class="dropdown-item" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
+                                    <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar </a>
+                                    <a class="dropdown-item" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar MA</a>
+                                    <a class="dropdown-item" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
                                     <a class="dropdown-item" asp-controller="ReportesIncidentesReportePreliminar" asp-action="Resumen">Reportes Estadísticos (Reporte Preliminar)</a>
                                     <a class="dropdown-item" asp-controller="ReportesIncidentesInvestigacion" asp-action="Resumen">Reportes Estadísticos (Informe Investigación Final)</a>
                                 }
@@ -99,6 +100,8 @@
                                 <a class="dropdown-item" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
                                 <a class="dropdown-item" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">Ingreso/Salida Residuos Sólidos</a>
                                 <a class="dropdown-item" asp-controller="GestorManifiestoRS" asp-action="Resumen">Manifiesto Residuos Sólidos</a>
+                                <a class="dropdown-item" asp-controller="GestorIncidentes" asp-action="Resumen">Incidentes Ambientales</a>
+                                <a class="dropdown-item" asp-controller="GestorIncidentes" asp-action="ResumenImpacto">Impacto Ambiental</a>
                             </div>
                         </li>
                     }

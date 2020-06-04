@@ -1,0 +1,35 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes.ComponenteAmbientalModel
+@{
+    ViewData["Title"] = "AgregarComponenteAmbiental";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar Componente Ambiental</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorIncidentes" asp-action="AgregarComponenteAmbiental">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <input type="text" class="form-control" asp-for="Descripcion">
+                </div>
+            </div>
+            <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorIncidentes" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+

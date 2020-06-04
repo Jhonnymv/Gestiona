@@ -11,6 +11,7 @@
         </div>
         <form class="form-group" id="formImplementarAccion" asp-action="ImplementarAccion" asp-controller="ImplementarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+            <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
             <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
             <input type="hidden" asp-for="Estado" value="@Model.Estado" />
             <div class="row mb-2">

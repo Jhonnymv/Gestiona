@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewData["Title"] = "ResumenImpacto";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="listItems">
+            <li class="nav-item">
+                <a class="nav-link active" id="Suelo">Tipo Suelo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Flora">Especie Flora</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Fauna">Especie Fauna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Agua">Tipo Agua</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                <label>Buscar:</label>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro">
+            </div>
+            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                <button class="btn btn-primary" id="btn_enviar">Enviar</button>
+            </div>
+        </div>
+        <div class="row justify-content-start mt-2 mb-2">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+            </div>
+        </div>
+        <div class="row" id="tab_content">
+        </div>
+        <div class="row justify-content-center" id="paginado">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltrarTipoSuelo(1);
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarTipoSuelo");
+        });
+
+        $("#btn_enviar").on('click', function (e) {
+            if ($("#Suelo").hasClass("active")) {
+                FiltrarTipoSuelo(1);
+            }
+            if ($("#Flora").hasClass("active")) {
+                FiltrarEspecieFlora(1);
+            }
+            if ($("#Fauna").hasClass("active")) {
+                FiltrarEspecieFauna(1);
+            }
+            if ($("#Agua").hasClass("active")) {
+                FiltrarTipoAgua(1);
+            }
+        });
+
+        $("#Suelo").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarTipoSuelo");
+            FiltrarTipoSuelo(1);
+        });
+        $("#Flora").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarEspecieFlora");
+            FiltrarEspecieFlora(1);
+        });
+        $("#Fauna").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarEspecieFauna");
+            FiltrarEspecieFauna(1);
+        });
+        $("#Agua").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarTipoAgua");
+            FiltrarTipoAgua(1);
+        });
+
+        function FiltrarTipoSuelo(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarTipoSuelo",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarEspecieFlora(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarEspecieFlora",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarTipoAgua(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarTipoAgua",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarEspecieFauna(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarEspecieFauna",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+    </script>
+}
+

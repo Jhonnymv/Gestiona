@@ -1,4 +1,6 @@
-﻿using GestionAmbiental.Domain.ValueObjects;
+﻿using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Incidentes.Items;
+using GestionAmbiental.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -69,5 +71,88 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task UpdateUsuario_Notificar_RS(Usuario_Notificar_RS usuario_notifcar);
         Task QuitarUsuario_Notificar_RS(int id_usuario_notificar);
         Task<int> AddUsuario_Notificar_RS(int Id_Usuario_AD);
+
+        //Tb_Usuario_Notificar_Incidente
+        Task<List<Usuario_Notificar_Incidente>> GetUsuario_Notificar_Incidente(string filtro);
+        Task<Usuario_Notificar_Incidente> GetUsuario_Notificar_Incidente(int id_usuario_notificar);
+        Task UpdateUsuario_Notificar_Incidente(Usuario_Notificar_Incidente usuario_notifcar);
+        Task QuitarUsuario_Notificar_Incidente(int id_usuario_notificar);
+        Task<int> AddUsuario_Notificar_Incidente(int Id_Usuario_AD);
+        //Tb_Componente_Ambiental
+        Task<List<Componente_Ambiental>> GetComponente_Ambientales(string filtro);
+        Task<Componente_Ambiental> GetComponente_Ambiental(int id_componente);
+        Task<int> AddComponente_Ambiental(Componente_Ambiental componente);
+        Task UpdateComponente_Ambiental(Componente_Ambiental componente);
+
+        //Tb_Tipo_Incidente
+        Task<List<Tipo_Incidente>> GetTipos_Incidente(string filtro);
+        Task<Tipo_Incidente> GetTipo_Incidente(int id_tipo);
+        Task<int> AddTipo_Incidente(Tipo_Incidente tipo);
+        Task UpdateTipo_Incidente(Tipo_Incidente tipo);
+
+        //Tb_Unidad_Medida
+        Task<List<Unidad_Medida>> GetUnidad_Medida(string filtro);
+        Task<Unidad_Medida> GetUnidad_Medida(int id_unidad);
+        Task<int> AddUnidad_Medida(Unidad_Medida unidad);
+        Task UpdateUnidad_Medida(Unidad_Medida unidad);
+
+        //Tb_Nivel_Incidente
+        Task<List<Nivel_Incidente>> GetNivel_Incidente(string filtro);
+        Task<Nivel_Incidente> GetNivel_Incidente(int id_nivel);
+        Task<int> AddNivel_Incidente(Nivel_Incidente nivel);
+        Task UpdateNivel_Incidente(Nivel_Incidente nivel);
+
+        //Tb_Producto_Incidente
+        Task<List<Producto_Incidente>> GetProducto_Incidente(string filtro);
+        Task<Producto_Incidente> GetProducto_Incidente(int id_producto);
+        Task<int> AddProducto_Incidente(Producto_Incidente producto);
+        Task UpdateProducto_Incidente(Producto_Incidente producto);
+
+        //Tb_Tipo_Producto_Incidente
+        Task<List<Tipo_Producto_Incidente>> GetTipo_Producto_Incidente(string filtro);
+        Task<Tipo_Producto_Incidente> GetTipo_Producto_Incidente(int id_tipo);
+        Task<int> AddTipo_Producto_Incidente(Tipo_Producto_Incidente tipo);
+        Task UpdateTipo_Producto_Incidente(Tipo_Producto_Incidente tipo);
+
+        //Tb_Estado_Equipo_Incidente
+        Task<List<Estado_Equipo_Incidente>> GetEstado_Equipo_Incidente(string filtro);
+        Task<Estado_Equipo_Incidente> GetEstado_Equipo_Incidente(int id_tipo);
+        Task<int> AddEstado_Equipo_Incidente(Estado_Equipo_Incidente estado);
+        Task UpdateEstado_Equipo_Incidente(Estado_Equipo_Incidente estado);
+
+        //Tb_Lugar_Disposicion
+        Task<List<Lugar_Disposicion>> GetLugar_Disposicion(string filtro);
+        Task<Lugar_Disposicion> GetLugar_Disposicion(int id_lugar);
+        Task<int> AddLugar_Disposicion(Lugar_Disposicion estado);
+        Task UpdateLugar_Disposicion(Lugar_Disposicion estado);
+
+        //Tb_Tipo_Agua
+        Task<List<Tipo_Agua>> GetTipo_Agua(string filtro);
+        Task<Tipo_Agua> GetTipo_Agua(int id_tipo);
+        Task<int> AddTipo_Agua(Tipo_Agua tipo);
+        Task UpdateTipo_Agua(Tipo_Agua tipo);
+
+        //Tb_Tipo_Suelo
+        Task<List<Tipo_Suelo>> GetTipo_Suelo(string filtro);
+        Task<Tipo_Suelo> GetTipo_Suelo(int id_tipo);
+        Task<int> AddTipo_Suelo(Tipo_Suelo tipo);
+        Task UpdateTipo_Suelo(Tipo_Suelo tipo);
+
+        //Tb_Especie_Flora
+        Task<List<Especie_Flora>> GetEspecie_Flora(string filtro);
+        Task<Especie_Flora> GetEspecie_Flora(int id_tipo);
+        Task<int> AddEspecie_Flora(Especie_Flora tipo);
+        Task UpdateEspecie_Flora(Especie_Flora tipo);
+
+        //Tb_Especie_Fauna
+        Task<List<Especie_Fauna>> GetEspecie_Fauna(string filtro);
+        Task<Especie_Fauna> GetEspecie_Fauna(int id_tipo);
+        Task<int> AddEspecie_Fauna(Especie_Fauna tipo);
+        Task UpdateEspecie_Fauna(Especie_Fauna tipo);
+        //Tb_Factor_Causa_Incidente
+        Task<List<Factor_Causa_Incidente>> GetFactor_Causa_Incidente(string filtro);
+        Task<Factor_Causa_Incidente> GetFactor_Causa_Incidente(int id_factor);
+        Task<int> AddFactor_Causa_Incidente(Factor_Causa_Incidente factor);
+        Task UpdateFactor_Causa_Incidente(Factor_Causa_Incidente factor);
     }
 }

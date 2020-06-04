@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="listItems">
+            <li class="nav-item">
+                <a class="nav-link active" id="Factor_Causa">Causas Básicas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Lugar">Lugares Disposición</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Componente">Componentes Ambientales</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="EstadoEquipo">Estado Equipo</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="TipoProducto">Tipo Producto</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Producto">Productos Derramados</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                <label>Buscar:</label>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro">
+            </div>
+            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                <button class="btn btn-primary" id="btn_enviar">Enviar</button>
+            </div>
+        </div>
+        <div class="row justify-content-start mt-2 mb-2">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+            </div>
+        </div>
+        <div class="row" id="tab_content">
+        </div>
+        <div class="row justify-content-center" id="paginado">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltarFactorCausa(1);
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarFactorCausa");
+        });
+
+        $("#btn_enviar").on('click', function (e) {
+            if ($("#Factor_Causa").hasClass("active")) {
+                FiltarFactorCausa(1);
+            }
+            if ($("#Lugar").hasClass("active")) {
+                FiltrarLugarDiposicion(1);
+            }
+            if ($("#Componente").hasClass("active")) {
+                FiltarComponenteAmbiental(1);
+            }
+            if ($("#EstadoEquipo").hasClass("active")) {
+                FiltrarEstadoEquipo(1);
+            }
+            if ($("#TipoProducto").hasClass("active")) {
+                FiltrarTipoProducto(1);
+            }
+            if ($("#Producto").hasClass("active")) {
+                FiltrarProductoIncidente(1);
+            }
+            if ($("#Usuarios").hasClass("active")) {
+                FiltrarUsuarios(1);
+            }
+        });
+
+        $("#Factor_Causa").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarFactorCausa");
+            FiltarFactorCausa(1);
+        });
+        $("#Lugar").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarLugarDiposicion");
+            FiltrarLugarDiposicion(1);
+        });
+        $("#Componente").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarComponenteAmbiental");
+            FiltarComponenteAmbiental(1);
+        });
+        $("#EstadoEquipo").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarEstadoEquipo");
+            FiltrarEstadoEquipo(1);
+        });
+        $("#TipoProducto").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarTipoProducto");
+            FiltrarTipoProducto(1);
+        });
+        $("#Producto").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarProductoIncidente");
+            FiltrarProductoIncidente(1);
+        });
+        $("#Usuarios").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarUsuario");
+            FiltrarUsuarios(1);
+        });
+
+        function FiltarFactorCausa(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarFactorCausa",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarLugarDiposicion(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarLugarDiposicion",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarUsuarios(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarUsuario",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltarComponenteAmbiental(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarComponenteAmbiental",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarEstadoEquipo(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarEstadoEquipo",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarTipoProducto(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarTipoProducto",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarProductoIncidente(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarProductoIncidente",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+    </script>
+}
+
+

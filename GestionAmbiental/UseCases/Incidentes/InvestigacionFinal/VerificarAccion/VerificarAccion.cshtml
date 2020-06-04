@@ -12,6 +12,7 @@
     </div>
     <form class="form-group" id="formVerificarAccion" asp-action="VerificarAccion" asp-controller="VerificarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+        <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
         <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
         <input type="hidden" asp-for="Estado" value="@Model.Estado" />
         <input type="hidden" asp-for="Opcion"/>

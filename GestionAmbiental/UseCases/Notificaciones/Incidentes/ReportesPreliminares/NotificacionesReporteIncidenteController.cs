@@ -57,7 +57,13 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
 
             var msgBody = string.Format(templateReaded,
                 IdEncriptado,
-                info.Codigo
+                info.Codigo,
+                info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
+                info.Tipo_Incidente,
+                info.Nivel_Incidente,
+                info.Descripcion_Incidente,
+                info.Gerencia_Responsable,
+                info.Supervisor_MA
                 );
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
@@ -103,13 +109,19 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             var info = await _getReportePreliminar.Execute(IdReporte);
             var usuarios = await _getUsuariosNotificarIncidente.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Reporte_Preliminar.ToString());
-            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "ReportePreliminar", "NuevaReportePreliminar.html");
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "ReportePreliminar", "NuevaReportePreliminarMA.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
                 IdEncriptado,
-                info.Codigo
+                info.Codigo,
+                info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
+                info.Tipo_Incidente,
+                info.Nivel_Incidente,
+                info.Descripcion_Incidente,
+                info.Gerencia_Responsable,
+                info.Supervisor_MA
                 );
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);

@@ -11,5 +11,16 @@ namespace GestionAmbiental.Domain.Incidentes.Items
         public int? Id_Producto_Incidente { get; set; }
         public string Descripcion { get; set; }
         public string Estado { get; set; }
+
+        public Producto_Incidente()
+        {
+        }
+
+        public Producto_Incidente(int? id_Producto_Incidente, string descripcion, string estado)
+        {
+            Id_Producto_Incidente = id_Producto_Incidente;
+            Descripcion = descripcion;
+            Estado = estado;
+        }
     }
 }

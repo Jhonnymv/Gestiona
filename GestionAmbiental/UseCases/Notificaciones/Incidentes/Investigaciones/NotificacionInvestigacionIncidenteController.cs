@@ -52,7 +52,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         {
             var info = await _getInvestigacionFinal.Execute(IdInvestigacion);
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
-            var IdEncriptado = _protector.Protect(info.Id_Investigacion_Final.ToString());
+            
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "Investigacion", "NuevaAccionInvestigacion.html");
             
             StreamReader SourceReader = System.IO.File.OpenText(template);
@@ -73,6 +73,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             }
             foreach (var accion in acciones)
             {
+                var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
                 var msgBody = string.Format(templateReaded,
                     IdEncriptado,
                     info.Codigo,

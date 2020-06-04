@@ -556,7 +556,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             if (ModelState.IsValid)
             {
                 var evidencias = new List<string>();
-                var max_file_size = 8388608;
+                var max_file_size = 12000000;
 
                 if (model.Evidencias != null)
                 {
@@ -699,7 +699,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     for (int i = 0; i < model.Evidencias.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
-                        var max_file_size = 8388608;
+                        var max_file_size = 12000000;
 
                         //var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
                         var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG"};

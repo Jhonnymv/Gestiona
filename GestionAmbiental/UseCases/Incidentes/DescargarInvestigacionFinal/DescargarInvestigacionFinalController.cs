@@ -268,7 +268,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 }
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(causa.Acto_Condicion);
-                row.GetCell(17).SetCellValue(causa.Descripcion);
+                row.GetCell(17).SetCellValue(causa.Descripcion != null ? causa.Descripcion : "No Aplica");
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausasInmediatas, filaCausasInmediatas, 1, 16));
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausasInmediatas, filaCausasInmediatas, 17, 32));
@@ -295,7 +295,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 }
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(causa.Factor_Causa_Incidente);
-                row.GetCell(17).SetCellValue(causa.Descripcion);
+                row.GetCell(17).SetCellValue(causa.Descripcion != null ? causa.Descripcion : "No Aplica");
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausasBasicas, filaCausasBasicas, 1, 16));
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausasBasicas, filaCausasBasicas, 17, 32));
@@ -357,7 +357,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 row.GetCell(1).SetCellValue(accion.Accion_Inmediata);
                 row.GetCell(17).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
                 row.GetCell(21).SetCellValue(accion.Responsable_Marcobre);
-                row.GetCell(25).SetCellValue(accion.Responsable_Contratista);
+                row.GetCell(25).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
                 row.GetCell(29).SetCellValue(accion.Estatus);
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaAccionesCorrectivas, filaAccionesCorrectivas, 1, 16));

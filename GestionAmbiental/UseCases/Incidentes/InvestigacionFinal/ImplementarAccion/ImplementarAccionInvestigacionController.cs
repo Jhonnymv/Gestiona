@@ -10,6 +10,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.ImplementarAccion;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -22,15 +23,23 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
         private readonly IGetAccioIncidenteInvestigacion _getAccioIncidenteInvestigacion;
         private readonly IImplementarAccion _implementarAccion;
         private readonly IGetInfo_SGA _info_SGA;
+        private readonly IDataProtector _protector;
 
-        public ImplementarAccionInvestigacionController(IGetAccioIncidenteInvestigacion getAccioIncidenteInvestigacion, IImplementarAccion implementarAccion, IGetInfo_SGA info_SGA)
+        public ImplementarAccionInvestigacionController(
+            IGetAccioIncidenteInvestigacion getAccioIncidenteInvestigacion,
+            IImplementarAccion implementarAccion,
+            IGetInfo_SGA info_SGA,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getAccioIncidenteInvestigacion = getAccioIncidenteInvestigacion;
             _implementarAccion = implementarAccion;
             _info_SGA = info_SGA;
+
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
         }
 
-        public async Task<IActionResult> ImplementarAccion(int IdAccion)
+        public async Task<IActionResult> ImplementarAccion(string IdAccion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -42,9 +51,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                var accion = await _getAccioIncidenteInvestigacion.Execute(IdAccion);
+                int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
+
+                var accion = await _getAccioIncidenteInvestigacion.Execute(IdDesencriptado);
                 var model = new ImplementarAccionModel();
                 model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
+                model.Id_Encriptado = IdAccion;
                 model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
                 model.Tipo_Accion = accion.Tipo_Accion;
                 model.Accion_Inmediata = accion.Accion_Inmediata;
@@ -81,7 +93,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
                     }
                 }
                 await _implementarAccion.Execute(model.Id_Accion_Incidente_Investigacion, evidencias, model.Comentarios_Implementacion);
-                return RedirectToAction("DetalleInvestigacion", "InvestigacionFinal", new { IdInvestigacion = model.Id_Investigacion_Final });
+                return RedirectToAction("DetalleInvestigacion", "InvestigacionFinal", new { IdInvestigacion = model.Id_Encriptado });
             }
             return View();
         }

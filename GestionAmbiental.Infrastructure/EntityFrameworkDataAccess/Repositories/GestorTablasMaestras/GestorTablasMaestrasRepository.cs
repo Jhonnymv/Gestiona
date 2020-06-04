@@ -1,4 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorTablasMaestras;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -594,6 +596,642 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Capacidad = vehiculo_rs.Capacidad;
             entity.Estado = vehiculo_rs.Estado;
             _context.Vehiculos_RS.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Usuario_Notificar_Incidente
+        public async Task<List<Usuario_Notificar_Incidente>> GetUsuario_Notificar_Incidente(string filtro){
+            var usuarios = await _context.Usuario_Notificar_Incidente.Where(x =>
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
+            ).OrderBy(x => x.Nombres)
+            .ToListAsync();
+
+            var output = new List<Usuario_Notificar_Incidente>();
+            foreach (var item in usuarios)
+                output.Add(new Usuario_Notificar_Incidente(item.Id_Usuarios_Notificar_Incidente, item.Id_Rol, item.Nombres, item.Apellidos, item.usuario_red, item.Email, item.Estado));
+            return output;
+        }
+        public async Task<Usuario_Notificar_Incidente> GetUsuario_Notificar_Incidente(int id_usuario_notificar){
+            var usuario = await _context.Usuario_Notificar_Incidente.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Incidente.Equals(id_usuario_notificar));
+            var output = new Usuario_Notificar_Incidente
+            {
+                Id_Usuario_Notificar_Incidente = usuario.Id_Usuarios_Notificar_Incidente,
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Id_Rol = usuario.Id_Rol,
+                Usuario_Red = usuario.usuario_red,
+                Estado = usuario.Estado
+            };
+            return output;
+        }
+        public async Task UpdateUsuario_Notificar_Incidente(Usuario_Notificar_Incidente usuario_notifcar){
+            var usuarioEntity = await _context.Usuario_Notificar_Incidente.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Incidente.Equals(usuario_notifcar.Id_Usuario_Notificar_Incidente));
+            usuarioEntity.Nombres = usuario_notifcar.Nombres;
+            usuarioEntity.Apellidos = usuario_notifcar.Apellidos;
+            usuarioEntity.Email = usuario_notifcar.Email;
+            usuarioEntity.Id_Rol = usuario_notifcar.Id_Rol;
+            usuarioEntity.usuario_red = usuario_notifcar.Usuario_Red;
+            usuarioEntity.Estado = usuario_notifcar.Estado;
+
+            _context.Usuario_Notificar_Incidente.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task QuitarUsuario_Notificar_Incidente(int id_usuario_notificar){
+            var entity = await _context.Usuario_Notificar_Incidente.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Incidente.Equals(id_usuario_notificar));
+            _context.Usuario_Notificar_Incidente.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<int> AddUsuario_Notificar_Incidente(int Id_Usuario_AD){
+            var temp_entity = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(Id_Usuario_AD));
+            var entity = new Entities.Incidentes.Items.Usuario_Notificar_Incidente
+            {
+                Nombres = temp_entity.Nombres,
+                Apellidos = temp_entity.Apellidos,
+                Email = temp_entity.Email,
+                Estado = "ACT",
+                Id_Rol = temp_entity.Id_Rol,
+                usuario_red = temp_entity.usuario_red
+            };
+            _context.Usuario_Notificar_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Usuarios_Notificar_Incidente;
+        }
+
+        //Tb_Componente_Ambiental
+        public async Task<List<Componente_Ambiental>> GetComponente_Ambientales(string filtro)
+        {
+            var entities = await _context.Componente_Ambiental.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Componente_Ambiental>();
+            foreach (var item in entities)
+            {
+                output.Add(new Componente_Ambiental(item.Id_Componente_Ambiental,item.Descripcion,item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Componente_Ambiental> GetComponente_Ambiental(int id_componente)
+        {
+            var entity = await _context.Componente_Ambiental.FirstOrDefaultAsync(x => x.Id_Componente_Ambiental.Equals(id_componente));
+            var output = new Componente_Ambiental
+            {
+                Id_Componente_Ambiental = entity.Id_Componente_Ambiental,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddComponente_Ambiental(Componente_Ambiental componente)
+        {
+            var entity = new Entities.Incidentes.Items.Componente_Ambiental
+            {
+                Descripcion = componente.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Componente_Ambiental.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Componente_Ambiental;
+        }
+        public async Task UpdateComponente_Ambiental(Componente_Ambiental componente)
+        {
+            var entity = await _context.Componente_Ambiental.FirstOrDefaultAsync(x => x.Id_Componente_Ambiental.Equals(componente.Id_Componente_Ambiental));
+            entity.Descripcion = componente.Descripcion;
+            entity.Estado = componente.Estado;
+            _context.Componente_Ambiental.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Tipo_Incidente
+        public async Task<List<Tipo_Incidente>> GetTipos_Incidente(string filtro)
+        {
+            var entities = await _context.Tipo_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Tipo_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Tipo_Incidente(item.Id_Tipo_Incidente, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Tipo_Incidente> GetTipo_Incidente(int id_tipo)
+        {
+            var entity = await _context.Tipo_Incidente.FirstOrDefaultAsync(x => x.Id_Tipo_Incidente.Equals(id_tipo));
+            var output = new Tipo_Incidente
+            {
+                Id_Tipo_Incidente = entity.Id_Tipo_Incidente,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipo_Incidente(Tipo_Incidente tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Tipo_Incidente
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipo_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Incidente;
+        }
+        public async Task UpdateTipo_Incidente(Tipo_Incidente tipo)
+        {
+            var entity = await _context.Tipo_Incidente.FirstOrDefaultAsync(x => x.Id_Tipo_Incidente.Equals(tipo.Id_Tipo_Incidente));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Tipo_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Unidad_Medida
+        public async Task<List<Unidad_Medida>> GetUnidad_Medida(string filtro)
+        {
+            var entities = await _context.Unidad_Medida.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Unidad_Medida>();
+            foreach (var item in entities)
+            {
+                output.Add(new Unidad_Medida(item.Id_Unidad_Medida, item.Descripcion,item.Tipo, item.Estado));
+            }
+            return output;
+        }
+        public async Task<Unidad_Medida> GetUnidad_Medida(int id_unidad)
+        {
+            var entity = await _context.Unidad_Medida.FirstOrDefaultAsync(x => x.Id_Unidad_Medida.Equals(id_unidad));
+            var output = new Unidad_Medida
+            {
+                Id_Unidad_Medida = entity.Id_Unidad_Medida,
+                Descripcion = entity.Descripcion,
+                Tipo = entity.Tipo,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddUnidad_Medida(Unidad_Medida unidad)
+        {
+            var entity = new Entities.Incidentes.Items.Unidad_Medida
+            {
+                Descripcion = unidad.Descripcion,
+                Tipo = unidad.Tipo,
+                Estado = "ACT"
+            };
+            _context.Unidad_Medida.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Unidad_Medida;
+        }
+        public async Task UpdateUnidad_Medida(Unidad_Medida unidad)
+        {
+            var entity = await _context.Unidad_Medida.FirstOrDefaultAsync(x => x.Id_Unidad_Medida.Equals(unidad.Id_Unidad_Medida));
+            entity.Descripcion = unidad.Descripcion;
+            entity.Tipo = unidad.Tipo;
+            entity.Estado = unidad.Estado;
+            _context.Unidad_Medida.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Nivel_Incidente
+        public async Task<List<Nivel_Incidente>> GetNivel_Incidente(string filtro)
+        {
+            var entities = await _context.Nivel_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Nivel_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Nivel_Incidente(item.Id_Nivel_Incidente, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Nivel_Incidente> GetNivel_Incidente(int id_nivel)
+        {
+            var entity = await _context.Nivel_Incidente.FirstOrDefaultAsync(x => x.Id_Nivel_Incidente.Equals(id_nivel));
+            var output = new Nivel_Incidente
+            {
+                Id_Nivel_Incidente = entity.Id_Nivel_Incidente,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddNivel_Incidente(Nivel_Incidente nivel)
+        {
+            var entity = new Entities.Incidentes.Items.Nivel_Incidente
+            {
+                Descripcion = nivel.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Nivel_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Nivel_Incidente;
+        }
+        public async Task UpdateNivel_Incidente(Nivel_Incidente nivel)
+        {
+            var entity = await _context.Nivel_Incidente.FirstOrDefaultAsync(x => x.Id_Nivel_Incidente.Equals(nivel.Id_Nivel_Incidente));
+            entity.Descripcion = nivel.Descripcion;
+            entity.Estado = nivel.Estado;
+            _context.Nivel_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Producto_Incidente
+        public async Task<List<Producto_Incidente>> GetProducto_Incidente(string filtro)
+        {
+            var entities = await _context.Producto_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Producto_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Producto_Incidente(item.Id_Producto_Incidente, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Producto_Incidente> GetProducto_Incidente(int id_producto)
+        {
+            var entity = await _context.Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Producto_Incidente.Equals(id_producto));
+            var output = new Producto_Incidente
+            {
+                Id_Producto_Incidente = entity.Id_Producto_Incidente,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddProducto_Incidente(Producto_Incidente producto)
+        {
+            var entity = new Entities.Incidentes.Items.Producto_Incidente
+            {
+                Descripcion = producto.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Producto_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Producto_Incidente;
+        }
+        public async Task UpdateProducto_Incidente(Producto_Incidente producto)
+        {
+            var entity = await _context.Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Producto_Incidente.Equals(producto.Id_Producto_Incidente));
+            entity.Descripcion = producto.Descripcion;
+            entity.Estado = producto.Estado;
+            _context.Producto_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Tipo_Producto_Incidente
+        public async Task<List<Tipo_Producto_Incidente>> GetTipo_Producto_Incidente(string filtro)
+        {
+            var entities = await _context.Tipo_Producto_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Tipo_Producto_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Tipo_Producto_Incidente(item.Id_Tipo_Producto_Incidente, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Tipo_Producto_Incidente> GetTipo_Producto_Incidente(int id_tipo)
+        {
+            var entity = await _context.Tipo_Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Tipo_Producto_Incidente.Equals(id_tipo));
+            var output = new Tipo_Producto_Incidente
+            {
+                Id_Tipo_Producto_Incidente = entity.Id_Tipo_Producto_Incidente,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipo_Producto_Incidente(Tipo_Producto_Incidente tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Tipo_Producto_Incidente
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipo_Producto_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Producto_Incidente;
+        }
+        public async Task UpdateTipo_Producto_Incidente(Tipo_Producto_Incidente tipo)
+        {
+            var entity = await _context.Tipo_Producto_Incidente.FirstOrDefaultAsync(x => x.Id_Tipo_Producto_Incidente.Equals(tipo.Id_Tipo_Producto_Incidente));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Tipo_Producto_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Estado_Equipo_Incidente
+        public async Task<List<Estado_Equipo_Incidente>> GetEstado_Equipo_Incidente(string filtro)
+        {
+            var entities = await _context.Estado_Equipo_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Estado_Equipo_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Estado_Equipo_Incidente(item.Id_Estado_Equipo_Incidente, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Estado_Equipo_Incidente> GetEstado_Equipo_Incidente(int id_tipo)
+        {
+            var entity = await _context.Estado_Equipo_Incidente.FirstOrDefaultAsync(x => x.Id_Estado_Equipo_Incidente.Equals(id_tipo));
+            var output = new Estado_Equipo_Incidente
+            {
+                Id_Estado_Equipo_Incidente = entity.Id_Estado_Equipo_Incidente,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddEstado_Equipo_Incidente(Estado_Equipo_Incidente estado)
+        {
+            var entity = new Entities.Incidentes.Items.Estado_Equipo_Incidente
+            {
+                Descripcion = estado.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Estado_Equipo_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Estado_Equipo_Incidente;
+        }
+        public async Task UpdateEstado_Equipo_Incidente(Estado_Equipo_Incidente estado)
+        {
+            var entity = await _context.Estado_Equipo_Incidente.FirstOrDefaultAsync(x => x.Id_Estado_Equipo_Incidente.Equals(estado.Id_Estado_Equipo_Incidente));
+            entity.Descripcion = estado.Descripcion;
+            entity.Estado = estado.Estado;
+            _context.Estado_Equipo_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Lugar_Disposicion
+        public async Task<List<Lugar_Disposicion>> GetLugar_Disposicion(string filtro)
+        {
+            var entities = await _context.Lugar_Disposicion.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Lugar_Disposicion>();
+            foreach (var item in entities)
+            {
+                output.Add(new Lugar_Disposicion(item.Id_Lugar_Disposicion, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Lugar_Disposicion> GetLugar_Disposicion(int id_lugar)
+        {
+            var entity = await _context.Lugar_Disposicion.FirstOrDefaultAsync(x => x.Id_Lugar_Disposicion.Equals(id_lugar));
+            var output = new Lugar_Disposicion
+            {
+                Id_Lugar_Disposicion = entity.Id_Lugar_Disposicion,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddLugar_Disposicion(Lugar_Disposicion estado)
+        {
+            var entity = new Entities.Incidentes.Items.Lugar_Disposicion
+            {
+                Descripcion = estado.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Lugar_Disposicion.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Lugar_Disposicion;
+        }
+        public async Task UpdateLugar_Disposicion(Lugar_Disposicion estado)
+        {
+            var entity = await _context.Lugar_Disposicion.FirstOrDefaultAsync(x => x.Id_Lugar_Disposicion.Equals(estado.Id_Lugar_Disposicion));
+            entity.Descripcion = estado.Descripcion;
+            entity.Estado = estado.Estado;
+            _context.Lugar_Disposicion.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Tipo_Agua
+        public async Task<List<Tipo_Agua>> GetTipo_Agua(string filtro)
+        {
+            var entities = await _context.Tipo_Agua.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Tipo_Agua>();
+            foreach (var item in entities)
+            {
+                output.Add(new Tipo_Agua(item.Id_Tipo_Agua, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Tipo_Agua> GetTipo_Agua(int id_tipo)
+        {
+            var entity = await _context.Tipo_Agua.FirstOrDefaultAsync(x => x.Id_Tipo_Agua.Equals(id_tipo));
+            var output = new Tipo_Agua
+            {
+                Id_Tipo_Agua = entity.Id_Tipo_Agua,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipo_Agua(Tipo_Agua tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Tipo_Agua
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipo_Agua.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Agua;
+        }
+        public async Task UpdateTipo_Agua(Tipo_Agua tipo)
+        {
+            var entity = await _context.Tipo_Agua.FirstOrDefaultAsync(x => x.Id_Tipo_Agua.Equals(tipo.Id_Tipo_Agua));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Tipo_Agua.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Tipo_Suelo
+        public async Task<List<Tipo_Suelo>> GetTipo_Suelo(string filtro)
+        {
+            var entities = await _context.Tipo_Suelo.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Tipo_Suelo>();
+            foreach (var item in entities)
+            {
+                output.Add(new Tipo_Suelo(item.Id_Tipo_Suelo, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Tipo_Suelo> GetTipo_Suelo(int id_tipo)
+        {
+            var entity = await _context.Tipo_Suelo.FirstOrDefaultAsync(x => x.Id_Tipo_Suelo.Equals(id_tipo));
+            var output = new Tipo_Suelo
+            {
+                Id_Tipo_Suelo = entity.Id_Tipo_Suelo,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipo_Suelo(Tipo_Suelo tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Tipo_Suelo
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipo_Suelo.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Suelo;
+        }
+        public async Task UpdateTipo_Suelo(Tipo_Suelo tipo)
+        {
+            var entity = await _context.Tipo_Suelo.FirstOrDefaultAsync(x => x.Id_Tipo_Suelo.Equals(tipo.Id_Tipo_Suelo));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Tipo_Suelo.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Especie_Flora
+        public async Task<List<Especie_Flora>> GetEspecie_Flora(string filtro)
+        {
+            var entities = await _context.Especie_Flora.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Especie_Flora>();
+            foreach (var item in entities)
+            {
+                output.Add(new Especie_Flora(item.Id_Especie_Flora, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Especie_Flora> GetEspecie_Flora(int id_tipo)
+        {
+            var entity = await _context.Especie_Flora.FirstOrDefaultAsync(x => x.Id_Especie_Flora.Equals(id_tipo));
+            var output = new Especie_Flora
+            {
+                Id_Especie_Flora = entity.Id_Especie_Flora,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddEspecie_Flora(Especie_Flora tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Especie_Flora
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Especie_Flora.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Especie_Flora;
+        }
+        public async Task UpdateEspecie_Flora(Especie_Flora tipo)
+        {
+            var entity = await _context.Especie_Flora.FirstOrDefaultAsync(x => x.Id_Especie_Flora.Equals(tipo.Id_Especie_Flora));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Especie_Flora.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Especie_Fauna
+        public async Task<List<Especie_Fauna>> GetEspecie_Fauna(string filtro)
+        {
+            var entities = await _context.Especie_Fauna.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Especie_Fauna>();
+            foreach (var item in entities)
+            {
+                output.Add(new Especie_Fauna(item.Id_Especie_Fauna, item.Descripcion, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Especie_Fauna> GetEspecie_Fauna(int id_tipo)
+        {
+            var entity = await _context.Especie_Fauna.FirstOrDefaultAsync(x => x.Id_Especie_Fauna.Equals(id_tipo));
+            var output = new Especie_Fauna
+            {
+                Id_Especie_Fauna = entity.Id_Especie_Fauna,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddEspecie_Fauna(Especie_Fauna tipo)
+        {
+            var entity = new Entities.Incidentes.Items.Especie_Fauna
+            {
+                Descripcion = tipo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Especie_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Especie_Fauna;
+        }
+        public async Task UpdateEspecie_Fauna(Especie_Fauna tipo)
+        {
+            var entity = await _context.Especie_Fauna.FirstOrDefaultAsync(x => x.Id_Especie_Fauna.Equals(tipo.Id_Especie_Fauna));
+            entity.Descripcion = tipo.Descripcion;
+            entity.Estado = tipo.Estado;
+            _context.Especie_Fauna.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        //Tb_Factor_Causa_Incidente
+        public async Task<List<Factor_Causa_Incidente>> GetFactor_Causa_Incidente(string filtro)
+        {
+            var entities = await _context.Factor_Causa_Incidente.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<Factor_Causa_Incidente>();
+            foreach (var item in entities)
+            {
+                output.Add(new Factor_Causa_Incidente(item.Id_Factor_Causa_Incidente, item.Descripcion,item.Tipo_Factor, item.Estado));
+            }
+
+            return output;
+        }
+        public async Task<Factor_Causa_Incidente> GetFactor_Causa_Incidente(int id_factor)
+        {
+            var entity = await _context.Factor_Causa_Incidente.FirstOrDefaultAsync(x => x.Id_Factor_Causa_Incidente.Equals(id_factor));
+            var output = new Factor_Causa_Incidente
+            {
+                Id_Factor_Causa_Incidente = entity.Id_Factor_Causa_Incidente,
+                Descripcion = entity.Descripcion,
+                Tipo_Factor = entity.Tipo_Factor,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddFactor_Causa_Incidente(Factor_Causa_Incidente factor)
+        {
+            var entity = new Entities.Incidentes.InvestigacionFinal.Factor_Causa_Incidente
+            {
+                Descripcion = factor.Descripcion,
+                Tipo_Factor = factor.Tipo_Factor,
+                Estado = "ACT"
+            };
+            _context.Factor_Causa_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Factor_Causa_Incidente;
+        }
+        public async Task UpdateFactor_Causa_Incidente(Factor_Causa_Incidente factor)
+        {
+            var entity = await _context.Factor_Causa_Incidente.FirstOrDefaultAsync(x => x.Id_Factor_Causa_Incidente.Equals(factor.Id_Factor_Causa_Incidente));
+            entity.Descripcion = factor.Descripcion;
+            entity.Tipo_Factor = factor.Tipo_Factor;
+            entity.Estado = factor.Estado;
+            _context.Factor_Causa_Incidente.Update(entity);
             await _context.SaveChangesAsync();
         }
     }

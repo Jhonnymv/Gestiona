@@ -127,7 +127,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 }
                 //Completar la informacion
                 row.GetCell(5).SetCellValue(causa.Tipo_Acto_Condicion);
-                row.GetCell(15).SetCellValue(causa.Acto_Condicion);
+                row.GetCell(15).SetCellValue(causa.Acto_Condicion != null);
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 5, 14));
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 15, 25));
@@ -190,7 +190,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 //Completar la informacion
                 row.GetCell(5).SetCellValue(accion.Accion_Inmediata);
                 row.GetCell(15).SetCellValue(accion.Responsable_Marcobre);
-                row.GetCell(20).SetCellValue(accion.Responsable_Contratista);
+                row.GetCell(20).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
                 row.GetCell(23).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
                 row.GetCell(24).SetCellValue(accion.Estatus);
                 //Unir las celdas
