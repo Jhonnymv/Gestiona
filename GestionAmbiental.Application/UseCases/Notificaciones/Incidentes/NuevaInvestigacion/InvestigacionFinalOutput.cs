@@ -44,6 +44,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.Incidentes.NuevaI
         public string Gerencia_Responsable { get; set; }
         public int? Id_Supervisor_MA { get; set; }
         public string Supervisor_MA { get; set; }
+        public string Supervisor_MA_Email { get; set; }
         public List<string> Evidencia_Papel { get; set; }
         public List<string> Evidencia_Persona { get; set; }
         public List<string> Evidencia_Posicion { get; set; }
@@ -88,7 +89,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.Incidentes.NuevaI
             Gerencia_Responsable = investigacion.Gerencia_Responsable?.Descripcion;
             Id_Supervisor_MA = investigacion.Supervisor_MA?.IdUsuario;
             Supervisor_MA = investigacion.Supervisor_MA != null ? investigacion.Supervisor_MA.Nombres + " " + investigacion.Supervisor_MA.Apellidos : null;
-
+            Supervisor_MA_Email = investigacion.Supervisor_MA != null ? investigacion.Supervisor_MA.Email : null;
             //Papel
             if (investigacion.Evidencia_Papel != null)
             {

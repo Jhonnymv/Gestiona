@@ -959,6 +959,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 foreach (var fila in acciones)
                 {
+                    var IdEncriptado = _protector.Protect(fila.Id_Accion_Correctiva_Incidente.ToString());
+
                     filas_acciones += "<tr>";
                     if (fila.Accion_Inmediata != null)
                         filas_acciones += "<td>" + fila.Accion_Inmediata + "</td>";
@@ -975,13 +977,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones += "<td>" + fila.Estatus + "</td>";
                     if(fila.Permiso_Implementacion && fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString()))
-                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Implementar</a></td>";
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
                     else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
-                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Verificar</a></td>";
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
                     else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
-                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + fila.Id_Accion_Correctiva_Incidente + "\">Detalle</a></td>";
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
                     else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
-                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente +")\">Ampliar</button></td>";
+                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar</button></td>";
                     else
                         filas_acciones += "<td></td>";
                     filas_acciones += "</tr>";
@@ -1100,9 +1102,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpPost]
-        public async Task<IActionResult> AmpliarFechaAccion(int IdAccion, int IdInvestigacion, string fecha)
+        public async Task<IActionResult> AmpliarFechaAccion(string IdAccion, int IdInvestigacion, string fecha)
         {
-            await _ampliarFechaAccion.Execute(IdAccion, fecha);
+            var IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
+            await _ampliarFechaAccion.Execute(IdDesencriptado, fecha);
             return await ListarAccionesVerificacion(IdInvestigacion);
         }
         [HttpPost]
@@ -1128,7 +1131,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Papel[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("papel") + ".zip";
+                            var newfileName = CreateUniqueFileName(i+1,"papel") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Papel[i], newfileName, "papel");
                             papeles.Add(filePath);
                         }
@@ -1150,7 +1153,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Persona[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("persona") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "persona") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Persona[i], newfileName, "persona");
                             personas.Add(filePath);
                         }
@@ -1172,7 +1175,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Posicion[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("posicion") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "posicion") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Posicion[i], newfileName, "posicion");
                             posiciones.Add(filePath);
                         }
@@ -1194,7 +1197,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Partes[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("parte") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "parte") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Partes[i], newfileName, "parte");
                             partes.Add(filePath);
                         }
@@ -1287,14 +1290,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
            
         }
         //Carga y descarga de archivos
-        private string CreateUniqueFileName(string tipo)
+        private string CreateUniqueFileName(int index, string tipo)
         {
             switch (tipo)
             {
-                case "papel": return "Ev_Inc_Inv_Papel_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
-                case "persona": return "Ev_Inc_Inv_Persona_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
-                case "posicion": return "Ev_Inc_Inv_Posicion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
-                default: return "Ev_Inc_Inv_Parte_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
+                case "papel": return "Ev_Inc_Inv_Papel_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                case "persona": return "Ev_Inc_Inv_Persona_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                case "posicion": return "Ev_Inc_Inv_Posicion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                default: return "Ev_Inc_Inv_Parte_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
             }
         }
         private string GetContentType(string path)

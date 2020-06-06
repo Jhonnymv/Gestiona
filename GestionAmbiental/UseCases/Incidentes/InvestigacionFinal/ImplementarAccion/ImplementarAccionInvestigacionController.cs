@@ -57,6 +57,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
                 var model = new ImplementarAccionModel();
                 model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
                 model.Id_Encriptado = IdAccion;
+                model.Id_Investigacion_Encriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
                 model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
                 model.Tipo_Accion = accion.Tipo_Accion;
                 model.Accion_Inmediata = accion.Accion_Inmediata;
@@ -86,21 +87,21 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName() + ".zip";
+                            var newfileName = CreateUniqueFileName(i+1) + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                             evidencias.Add(filePath);
                         }
                     }
                 }
                 await _implementarAccion.Execute(model.Id_Accion_Incidente_Investigacion, evidencias, model.Comentarios_Implementacion);
-                return RedirectToAction("DetalleInvestigacion", "InvestigacionFinal", new { IdInvestigacion = model.Id_Encriptado });
+                return RedirectToAction("NotificarAccionImplementada", "NotificacionInvestigacionIncidente", new { IdAccion = model.Id_Accion_Incidente_Investigacion });
             }
-            return View();
+            return View(model);
         }
         //Carga y descarga de archivos
-        private string CreateUniqueFileName()
+        private string CreateUniqueFileName(int index)
         {
-            return "Ev_Inc_Inv_Acc" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            return "Ev_Inc_Inv_Acc" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")+"_"+index;
         }
         private string GetContentType(string path)
         {

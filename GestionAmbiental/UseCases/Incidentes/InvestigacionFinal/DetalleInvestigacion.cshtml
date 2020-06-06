@@ -754,7 +754,7 @@
                 <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
             </div>
         </div>
-        <!-- PROGRESO DE VVERIFICACION -->
+        <!-- PROGRESO DE VERIFICACION -->
         <div class="row mb-2 justify-content-center mb-2">
             <div class="col-sm-12 col-md-10 col-lg-10" style="text-align:center;">
                 <h4>Progreso de Verificación de Acciones</h4>
@@ -991,7 +991,7 @@
                     $('#tabla_acciones tbody').html(response.filas_acciones);
                     var nAcciones = response.nAcciones;
                     var nVerificado = response.nVerificado;
-                    var porcentaje = (nVerificado * 100 / nAcciones).toString() + "%";
+                    var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
                     $('#progreso_vefirifacion').width(porcentaje);
                     $('#progreso_vefirifacion').text(porcentaje);
                 }
@@ -1002,7 +1002,7 @@
             $("#idAccionAmpliacion").val(idAccion);
             $("#modal_ampliacion").modal("show");
         }
-        
+
         function AmpliarFechaAccion() {
             $.ajax({
                 type: "POST",
@@ -1021,11 +1021,24 @@
                     $('#tabla_acciones tbody').html(response.filas_acciones);
                     var nAcciones = response.nAcciones;
                     var nVerificado = response.nVerificado;
-                    var porcentaje = (nVerificado * 100 / nAcciones).toString() + "%";
+                    var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
                     $('#progreso_vefirifacion').width(porcentaje);
                     $('#progreso_vefirifacion').text(porcentaje);
                 }
             });
+        }
+
+        function roundNumber(num, scale) {
+            if (!("" + num).includes("e")) {
+                return +(Math.round(num + "e+" + scale) + "e-" + scale);
+            } else {
+                var arr = ("" + num).split("e");
+                var sig = ""
+                if (+arr[1] + scale > 0) {
+                    sig = "+";
+                }
+                return +(Math.round(+arr[0] + "e" + sig + (+arr[1] + scale)) + "e-" + scale);
+            }
         }
     </script>
 } 

@@ -13,9 +13,10 @@
     <form class="form-group" id="formVerificarAccion" asp-action="VerificarAccion" asp-controller="VerificarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
         <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
         <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+        <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
         <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
         <input type="hidden" asp-for="Estado" value="@Model.Estado" />
-        <input type="hidden" asp-for="Opcion"/>
+        <input type="hidden" asp-for="Opcion" />
         <div class="row mb-2">
             <div class="col-sm-12 col-md-4 col-lg-4">
                 <label asp-for="Tipo_Accion"></label>
@@ -102,8 +103,9 @@
             </div>
         </div>
         <div class="row mb-2 justify-content-end">
-            <div class="col-sm-12 col-md-6 col-lg-4" style="text-align:end">
-                <button id="boton_cancelar" type="button" class="btn btn-secondary">Cancelar</button>
+            <div class="col-sm-12 col-md-8 col-lg-5" style="text-align:end">
+                <a id="boton_cancelar" class="btn btn-secondary" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
+                <button id="boton_ampliar" type="button" class="btn btn-primary" onclick="AmpliarFecha()">Ampliar Fecha</button>
                 <button id="boton_rechazar" type="button" class="btn btn-danger" onclick="Rechazar()">Rechazar</button>
                 <button id="boton_aprobar" type="button" class="btn btn-primary" onclick="Aprobar()">Aprobar</button>
             </div>
@@ -111,6 +113,55 @@
     </form>
 </div>
 
+<!-- Modal Ampliar Fecha-->
+<div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_ampliacion">
+                    Ingrese Nueva Fecha para Implementación
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label>Nueva Fecha:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="hidden" class="form-control" id="idAccionAmpliacion" />
+                        <input type="date" class="form-control" id="nuevaFechaAmpliacion" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" style="color:white" onclick="AmpliarFechaAccion()">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>  Notificando al Responsable</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -127,13 +178,32 @@
             }
         });
         function Rechazar() {
-            $("#Opcion").val("Rechazar")
+            $("#Opcion").val("Rechazar");
+            $("#Modal_Enviando_Correo").modal("show");
             $("#formVerificarAccion").submit();
         }
         function Aprobar() {
             $("#Opcion").val("Aprobar")
             $("#formVerificarAccion").submit();
         }
+        function AmpliarFecha() {
+            $("#idAccionAmpliacion").val('@Model.Id_Encriptado');
+            $("#modal_ampliacion").modal("show");
+        }
 
+        function AmpliarFechaAccion() {
+            $.ajax({
+                type: "GET",
+                url: "/VerificarAccionInvestigacion/AmpliarFechaAccion",
+                data: {
+                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                    IdAccion: $("#idAccionAmpliacion").val(),
+                    fecha: $("#nuevaFechaAmpliacion").val()
+                },
+                success: (response) => {
+                    location.reload();
+                }
+            });
+        }
     </script>
 }

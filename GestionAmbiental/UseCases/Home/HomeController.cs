@@ -26,7 +26,7 @@ namespace GestionAmbiental.Controllers
 
         public async Task<IActionResult> Index()
         {
-            /*
+            /*            
             var rol = await _getRolUsuario.Execute("kevin");
 
             var userInfo = new UserInfo { NombreUsuario = "kevin", Rol = rol.Value };

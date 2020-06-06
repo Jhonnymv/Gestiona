@@ -21,7 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<int> RegistrarDeReportePreliminar(int IdReporte)
         {
-            var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));            
+            var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
 
             var entity = new Entities.Incidentes.InvestigacionFinal.Investigacion_Final_Incidente();
             entity.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
@@ -42,20 +42,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Gerencia_Responsable = reporte.Id_Gerencia_Responsable;
             entity.Id_Supervisor_MA = reporte.Id_Supervisor_MA;
             entity.Estado = EstadosIncidentes.PendienteInvestigacion.ToString();
-                        
+
             _context.Investigacion_Final_Incidente.Add(entity);
 
             reporte.Estado = EstadosIncidentes.PendienteInvestigacion.ToString();
             _context.Reporte_Preliminar_Incidente.Update(reporte);
-            
+
             await _context.SaveChangesAsync();
             var IdInvestigacion = entity.Id_Investigacion_Final;
-            
+
             //Involucrados
             var involucrados = await _context.Involucrado_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReporte) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
             var listInvolucrados = new List<Entities.Incidentes.InvestigacionFinal.Involucrado_Incidente_Investigacion>();
-            involucrados.ForEach(x => 
-            listInvolucrados.Add(new Entities.Incidentes.InvestigacionFinal.Involucrado_Incidente_Investigacion { 
+            involucrados.ForEach(x =>
+            listInvolucrados.Add(new Entities.Incidentes.InvestigacionFinal.Involucrado_Incidente_Investigacion
+            {
                 Id_Investigacion_Final = IdInvestigacion,
                 Id_Usuario = x.Id_Usuario,
                 Nombres = x.Nombres,
@@ -102,7 +103,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return IdInvestigacion;
         }
-        public async Task<int>RegistrarImpactoAmbiental(int IdInvestigacion)
+        public async Task<int> RegistrarImpactoAmbiental(int IdInvestigacion)
         {
             var entity = new Entities.Incidentes.InvestigacionFinal.Impacto_Ambiental_Incidente();
             entity.Id_Investigacion_Final = IdInvestigacion;
@@ -151,7 +152,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
             _context.Involucrado_Incidente_Investigacion.Add(entity);
-            
+
             await _context.SaveChangesAsync();
             return entity.Id_Involucrado_Incidente_Investigacion;
         }
@@ -186,7 +187,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
             _context.Causa_Incidente_Investigacion.Add(entity);
-            
+
             await _context.SaveChangesAsync();
 
             return entity.Id_Causa_Incidente_Investigacion;

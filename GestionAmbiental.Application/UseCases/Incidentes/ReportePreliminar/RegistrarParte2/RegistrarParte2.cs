@@ -20,20 +20,17 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
         public async Task<int> Execute(int Id_Reporte_Preliminar,string Otra_Causa, int Id_Gerencia_Responsable, List<string> Evidencia, string Comentario_Accion, int Id_Supervisor_MA, string Opcion)
         {
             var input = new Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente();
-            /*
+
             switch (Opcion)
             {
-                case "Completar":
-                    input.Estado = EstadosIncidentes.Registrado.ToString();
-                    var codigoAnterior = await _registrarReportePreliminarReadOnlyRepository.GetUltimoCodigo();
-                    input.Codigo = "IA-" + (Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(7, '0');
-                    break;
                 case "GuardarEstado":
                     input.Estado = EstadosIncidentes.Pendiente.ToString();
-                    input.Codigo = "TBD";
+                    break;
+                case "Completar":
+                    input.Estado = EstadosIncidentes.Registrado.ToString();
                     break;
             }
-            */
+
 
             input.Id_Reporte_Preliminar = Id_Reporte_Preliminar;
             input.Codigo = "TBD";
@@ -52,7 +49,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
                 input.Supervisor_MA = new Domain.ValueObjects.Usuario();
                 input.Supervisor_MA.IdUsuario = Id_Supervisor_MA;
             }
-            input.Estado = EstadosIncidentes.Pendiente.ToString();
 
             return await _registrarReportePreliminarReadOnlyRepository.RegistrarReportePreliminarParte2(input);
         }

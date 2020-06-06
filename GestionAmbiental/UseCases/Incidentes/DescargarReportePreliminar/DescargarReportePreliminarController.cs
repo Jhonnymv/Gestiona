@@ -127,7 +127,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 }
                 //Completar la informacion
                 row.GetCell(5).SetCellValue(causa.Tipo_Acto_Condicion);
-                row.GetCell(15).SetCellValue(causa.Acto_Condicion != null);
+                row.GetCell(15).SetCellValue(causa.Acto_Condicion);
                 //Unir las celdas
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 5, 14));
                 sheet.AddMergedRegion(new CellRangeAddress(filaCausas, filaCausas, 15, 25));

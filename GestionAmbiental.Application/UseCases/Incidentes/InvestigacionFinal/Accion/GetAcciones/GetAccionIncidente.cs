@@ -32,6 +32,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             {
                 var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(output.Id_Usuario.Value);
                 output.Responsable_Marcobre = usuario.Nombres + " " + usuario.Apellidos;
+                output.Responsable_Marcobre_Email = usuario.Email;
             }
 
             output.Responsable_Contratista = accion.Responsable;

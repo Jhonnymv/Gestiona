@@ -12,6 +12,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
     {
         public string Id_Encriptado { get; set; }
         public int Id_Accion_Incidente_Investigacion { get; set; }
+        public string Id_Investigacion_Encriptado { get; set; }
         public int? Id_Investigacion_Final { get; set; }
         [DisplayName("Tipo de Acción:")]
         public string Tipo_Accion { get; set; }

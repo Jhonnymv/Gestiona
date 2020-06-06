@@ -307,7 +307,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 
                         if (allowed_extensions.Contains(extension) && model.Certificado[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("cert") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "cert") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Certificado[i], newfileName, "cert");
                             certificados.Add(filePath);
                         }
@@ -327,7 +327,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 
                         if (allowed_extensions.Contains(extension) && model.Informe_Transporte[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("inf") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "inf") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Informe_Transporte[i], newfileName, "inf");
                             informes.Add(filePath);
                         }
@@ -347,7 +347,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 
                         if (allowed_extensions.Contains(extension) && model.Manifiesto_Doc[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName("man") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "man") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Manifiesto_Doc[i], newfileName, "man");
                             manifiesto.Add(filePath);
                         }
@@ -399,13 +399,13 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             await _eliminarManifiestoRS.Execute(Id_Decrypted, userInfo.NombreUsuario);
             return RedirectToAction("Resumen");
         }
-        private string CreateUniqueFileName(string tipo)
+        private string CreateUniqueFileName(int index,string tipo)
         {
             switch (tipo)
             {
-                case "cert": return "Ev_RS_Certi_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
-                case "inf": return "Ev_RS_Infor_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
-                default: return "Ev_RS_Manif_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss"); break;
+                case "cert": return "Ev_RS_Certi_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                case "inf": return "Ev_RS_Infor_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                default: return "Ev_RS_Manif_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
             }
         }
         private string GetContentType(string path)

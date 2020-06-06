@@ -338,7 +338,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 
                             if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                             {
-                                var newfileName = CreateUniqueFileName() + ".zip";
+                                var newfileName = CreateUniqueFileName(i+1) + ".zip";
                                 var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                                 evidencias.Add(filePath);
                             }
@@ -599,9 +599,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             return await ListarCausas(IdReporte);
         }
         //Carga y descarga de archivos
-        private string CreateUniqueFileName()
+        private string CreateUniqueFileName(int index)
         {
-            return "Ev_Inc_Rep_Pre" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            return "Ev_Inc_Rep_Pre" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")+"_"+index;
         }
         private string GetContentType(string path)
         {
