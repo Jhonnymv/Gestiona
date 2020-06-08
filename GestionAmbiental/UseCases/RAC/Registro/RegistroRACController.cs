@@ -312,6 +312,9 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Fecha_Cierre = reporte.Fecha_Cierre.ToString("dd/MM/yyyy"),
                     Supervisor = reporte.Supervisor,
                     Evidencia_Obs = reporte.Evidencia_Obs,
+                    Evidencia_Cierre = reporte.Evidencia_Cierre,
+                    Comentario_Cierre = reporte.Comentario_Cierre,
+                    Comentario_Verificacion = reporte.Comentario_Verificacion,
                     Estado = reporte.Estado                   
                 };
                 ViewBag.Permiso = reporte.Permiso;

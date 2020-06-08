@@ -50,6 +50,12 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         public string Supervisor { get; set; }
         [DisplayName("Evidencia de la Observación:")]
         public string Evidencia_Obs { get; set; }
+        [DisplayName("Evidencia del levantamiento de la observación:")]
+        public string Evidencia_Cierre { get; set; }
+        [DisplayName("Comentario del levantamiento de la observación:")]
+        public string Comentario_Cierre { get; set; }
+        [DisplayName("Comentario de la verificación de la observación:")]
+        public string Comentario_Verificacion { get; set; }
         public string Estado { get; set; }
     }
 }
