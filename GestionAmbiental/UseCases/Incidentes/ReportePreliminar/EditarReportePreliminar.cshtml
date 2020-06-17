@@ -649,6 +649,24 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Guardando Estado-->
+<div class="modal fade" id="Modal_Guardando_Estado" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Guardando Estado</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/EditarReportePreliminar.js"></script>
     <script type="text/javascript">
@@ -715,6 +733,7 @@
         $("#boton_guardar_estado").on("click", function () {
             HabilitarInputs();
             $("#Opcion").val("GuardarEstado");
+            $("#Modal_Guardando_Estado").modal("show");
             $("#form_editarReporte").submit();
         });
         $("#boton_completar").on("click", function () {

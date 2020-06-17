@@ -75,7 +75,15 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
                 {
                     var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario.Value);
                     outputItem.Responsable_Marcobre = usuario.Nombres + " " + usuario.Apellidos;
+                    
+                    if (item.Id_Usuario.Equals(info_usuario.IdUsuario))
+                        outputItem.Permiso_Implementacion = true;
+                    else
+                        outputItem.Permiso_Implementacion = false;
                 }
+                else
+                    outputItem.Permiso_Implementacion = false;
+
                 outputItem.Responsable_Contratista = item.Responsable;
                 outputItem.Fecha = item.Fecha;
                 outputItem.Comentarios_Verificacion = item.Comentarios_Verificacion;
@@ -83,12 +91,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
                 outputItem.Evidencia = item.Evidencia;
                 outputItem.Estatus = item.Estatus;
                 outputItem.Estado = item.Estado;
-
-                if (outputItem.Id_Usuario.Equals(info_usuario.IdUsuario))
-                    outputItem.Permiso_Implementacion = true;
-                else
-                    outputItem.Permiso_Implementacion = false;
-
+               
                 if(investigacion.Supervisor_MA.IdUsuario.Equals(info_usuario.IdUsuario))
                     outputItem.Permiso_Verificacion = true;
                 else

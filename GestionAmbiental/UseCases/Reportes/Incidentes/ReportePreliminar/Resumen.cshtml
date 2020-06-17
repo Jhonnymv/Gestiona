@@ -185,17 +185,8 @@
 
     <script src="~/js/UseCases/Reportes/ReportesIncidentesRPScript.js" type="text/javascript"></script>
     <script type="text/javascript">
-        /*
-        function Descargar() {
-            var fInicio = $("#FInicio").val();
-            var fFin = $("#FFin").val();
-            if (fInicio < fFin || (fInicio == "" && fFin == "")) {
-                window.location.assign("/DescargaIngresoSalida/DescargarIngresoSalida?fechaInicio=" + fInicio + "&fechaFin=" + fFin)
-            }
-        }
-        */
         $("#frecuencia").on("change", function () {
-            ActualizarReportesFecha();
+            ActualizarInvestigacionesFecha();
         });
     </script>
 

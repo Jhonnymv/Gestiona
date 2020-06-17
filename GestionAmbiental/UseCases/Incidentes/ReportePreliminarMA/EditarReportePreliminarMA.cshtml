@@ -669,16 +669,45 @@
                 HabilitarInputs();
 
             var evidencia = '@Model.Evidencias_Completas';
+            console.log("Evidencias Completas",evidencia)
             var html_evidencia = "";
             if (evidencia.length > 0) {
                 var evidencia_valores = JSON.parse(evidencia.replace(/&quot;/g, '"'));
-                for (var i = 0; i < evidencia_valores.length; i++)
-                    html_evidencia += "<p><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                for (var i = 0; i < evidencia_valores.length; i++) {
+                    if ($("#Estado").val() == "Registrado")
+                        html_evidencia += "<p> <img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia_valores[i] + "')><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                    else
+                        html_evidencia += "<p><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                }
 
                 $("#Evidencias_Lista").html(html_evidencia);
                 $("#Evidencias_Completas").val(evidencia_valores);
             }
         });
+        function EliminarEvidencia(evidencia) {
+            if ($("#Estado").val() == "Registrado")
+                if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
+                    $.ajax({
+                        type: "POST",
+                        url: "/ReportePreliminarMA/EliminarEvidencia",
+                        data: {
+                            IdReporte: $("#Id_Reporte_Preliminar").val(),
+                            Evidencia: evidencia
+                        },
+                        success: (response) => {
+                            var evidencia = response.evidencia;
+                            var html_evidencia = "";
+                            if (evidencia.length > 0) {
+                                for (var i = 0; i < evidencia.length; i++) {
+                                    html_evidencia += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "')><a href=\"/ReportePreliminar/Download?fileName=" + evidencia[i] + "\">Evidencia</a></p>";
+                                }
+
+                                $("#Evidencias_Lista").html(html_evidencia);
+                                $("#Evidencias_Completas").val(evidencia);
+                            }
+                        }
+                    });
+        }
         function GetInvolucrados() {
             $.ajax({
                 type: "POST",

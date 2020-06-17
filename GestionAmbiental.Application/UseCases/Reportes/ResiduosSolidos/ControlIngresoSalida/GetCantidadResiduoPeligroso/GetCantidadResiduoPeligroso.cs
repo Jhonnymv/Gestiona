@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
             _getReportesResiduosSolidosReadOnlyRepository = getReportesResiduosSolidosReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesResiduosSolidosReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int gerencia, int empresa)
+        public async Task<List<DimensionOutput>> Execute(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string FechaInicio, string FechaFin, int gerencia, int empresa,int[] residuos)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -29,7 +29,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            var data = await _getReportesResiduosSolidosReadOnlyRepository.GetCantidadResiduoPeligroso(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fInicio, fFinal, gerencia, empresa);
+            var data = await _getReportesResiduosSolidosReadOnlyRepository.GetCantidadResiduoPeligroso(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fInicio, fFinal, gerencia, empresa, residuos);
 
             var output = new List<DimensionOutput>();
             foreach (var item in data)

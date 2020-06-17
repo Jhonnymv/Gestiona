@@ -409,16 +409,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
+        public async Task<List<Dimension>> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa, int[] residuos)
         {
             var output = new List<Dimension>();
             //Tipo_Residuo = Peligroso (1)
+
             var residuosSolido = await _context.Residuos_Solidos.Where(x =>
                x.Estado.Equals("ACT") &&
                x.Id_Tipo_Residuo.Equals(1))
                .ToListAsync();
 
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            if (residuos.Length > 0)
+                residuosSolido = residuosSolido.Where(x => residuos.Contains(x.Id_Residuo_Solido)).ToList();
+
+                var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&

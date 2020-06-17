@@ -19,7 +19,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [DisplayName("Cantidad de tierra impregnada:")]
         public double? Cantidad_Suelo { get; set; }
         public int? Id_Unidad_Cantidad_Suelo { get; set; }
-        [DisplayName("Lugar de disposición::")]
+        [DisplayName("Lugar de disposición:")]
         public int? Id_Lugar_Disposicion_Suelo { get; set; }
         //-Flora
         [DisplayName("Especie:")]
@@ -30,7 +30,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [DisplayName("Cantidad de residuos generados:")]
         public double? Cantidad_Residuo_Flora { get; set; }
         public int? Id_Unidad_Residuo_Flora { get; set; }
-        [DisplayName("Lugar de disposición::")]
+        [DisplayName("Lugar de disposición:")]
         public int? Id_Lugar_Disposicion_Flora { get; set; }
         //-Fauna
         [DisplayName("Especie:")]
@@ -67,10 +67,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public string Danio_Salud { get; set; }
         [DisplayName("Número de personas afectadas:")]
         public int? Personas_Afectadas { get; set; }
-        [DisplayName("Cantidad de Residuos Sólidos Generados:")]
+        [DisplayName("Cantidad Total de Residuos Sólidos Generados:")]
         public double? Cantidad_RS { get; set; }
         public int? Id_Unidad_Cantidad_RS { get; set; }
-        [DisplayName("Cantidad de Residuos Líquidos Generados:")]
+        [DisplayName("Cantidad Total de Residuos Líquidos Generados:")]
         public double? Volumen_Rs { get; set; }
         public int? Id_Unidad_Volumen_RS { get; set; }
         [DisplayName("EO-RS (recolección, transporte y disposición):")]

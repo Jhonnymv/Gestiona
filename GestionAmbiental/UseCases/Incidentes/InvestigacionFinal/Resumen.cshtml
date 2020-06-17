@@ -74,6 +74,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             filtrar(1);
+            console.log('@ViewBag.Usuario')
         });
         function filtrar(pag) {
             $.ajax({
@@ -85,7 +86,8 @@
                     "fecha": $("#filtro_fecha").val(),
                     "id_asesor": $("#filtro_asesores").val(),
                     "id_usuario": $("#filtro_usuarios").val(),
-                    "id_gerencia": $("#filtro_gerencia").val()
+                    "id_gerencia": $("#filtro_gerencia").val(),
+                    "usuario_red": '@ViewBag.Usuario'
                 },
                 traditional: true,
                 success: (response) => {

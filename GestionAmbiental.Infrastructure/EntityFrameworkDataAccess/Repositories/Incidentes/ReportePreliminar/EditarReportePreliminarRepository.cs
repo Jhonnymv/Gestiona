@@ -2,6 +2,8 @@
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -100,6 +102,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id_Involucrado_Incidente_Reporte;
+        }
+        public async Task EliminarEvidencia(int IdReportePreliminar, string NombreArchivo)
+        {
+            var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar));
+            if (reporte != null && reporte.Evidencia!=null)
+            {
+                var evidencias = JArray.Parse(reporte.Evidencia);
+                var temp = new List<string>();
+                foreach (var evidencia in evidencias)
+                {
+                    temp.Add((string)evidencia);
+                }
+                temp.Remove(NombreArchivo);
+                reporte.Evidencia = JsonConvert.SerializeObject(temp);
+                _context.Reporte_Preliminar_Incidente.Update(reporte);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

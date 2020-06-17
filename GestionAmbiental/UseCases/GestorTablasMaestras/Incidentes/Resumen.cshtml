@@ -26,6 +26,9 @@
                 <a class="nav-link" id="Producto">Productos Derramados</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" id="Unidades">Unidades Medida</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
             </li>
         </ul>
@@ -79,6 +82,9 @@
             if ($("#Producto").hasClass("active")) {
                 FiltrarProductoIncidente(1);
             }
+            if ($("#Unidades").hasClass("active")) {
+                FiltrarUnidadMedida(1);
+            }
             if ($("#Usuarios").hasClass("active")) {
                 FiltrarUsuarios(1);
             }
@@ -113,6 +119,11 @@
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarProductoIncidente");
             FiltrarProductoIncidente(1);
+        });
+        $("#Unidades").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarUnidadMedida");
+            FiltrarUnidadMedida(1);
         });
         $("#Usuarios").on('click', function (e) {
             $(this).tab('show');
@@ -226,6 +237,23 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorIncidentes/FiltrarProductoIncidente",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarUnidadMedida(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarUnidadMedida",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

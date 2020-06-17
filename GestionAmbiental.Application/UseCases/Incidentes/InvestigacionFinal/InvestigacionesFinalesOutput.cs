@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
     {
         public List<InvestigacionFinalOutput> Investigaciones { get; set; }
         public int NInvestigaciones { get; set; }
+        public bool PermisoAdmin { get; set; }
     }
 }

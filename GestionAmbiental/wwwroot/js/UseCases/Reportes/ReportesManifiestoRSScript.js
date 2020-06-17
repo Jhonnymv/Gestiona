@@ -27,10 +27,10 @@ var data_cant_rs_mes = [];
 var graph_cant_rs_mes;
 
 $(document).ready(function () {
-    UpdateReportesFecha();
+    Filtrar();
 });
 
-function UpdateReportesFecha() {
+function Filtrar() {
     observacion = $("#Observacion").val();
     residuo_solido = $("#Residuo_Solido").val();
     eors_salida = $("#EO_RS_Salida").val();
@@ -40,7 +40,7 @@ function UpdateReportesFecha() {
     frecuencia = $("#frecuencia").val();
 
     if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
-        ActualizarProductoInvestigacion();
+        ActualizarContadorxFecha();
         ActualizarDatosGraficoObservacion();
         ActualizarDatosGraficoCamion();
         ActualizarDatosGraficoTipoSalida();
@@ -51,7 +51,7 @@ function UpdateReportesFecha() {
     }
 }
 //Para gráfico Contador x Fecha
-function ActualizarProductoInvestigacion() {
+function ActualizarContadorxFecha() {
     $.ajax({
         type: "POST",
         url: "/ReportesManifiestoRS/GetRegistrosEntreFechas",

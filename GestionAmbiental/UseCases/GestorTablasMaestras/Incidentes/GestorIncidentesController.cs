@@ -42,6 +42,10 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Tipo
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Tipo_Suelo.EditarTipoSuelo;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Tipo_Suelo.GetTiposSuelo;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Tipo_Suelo.GetTipoSuelo;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Unidad_Medida.AgregarUnidadMedida;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Unidad_Medida.EditarUnidadMedida;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Unidad_Medida.GetUnidadesMedida;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.Unidad_Medida.GetUnidadMedida;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Incidente.AgregarUsuarioIncidente;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Incidente.DeleteUsuarioIncidente;
@@ -121,10 +125,66 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
         private readonly IEditarProductoIncidente _editarProductoIncidente;
         private readonly IGetProductoIncidente _getProductoIncidente;
         private readonly IGetProductosIncidente _getProductosIncidente;
+        //Unidad Medida
+        private readonly IAgregarUnidadMedida _agregarUnidadMedida;
+        private readonly IEditarUnidadMedida _editarUnidadMedida;
+        private readonly IGetUnidadesMedida _getUnidadesMedida;
+        private readonly IGetUnidadMedida _getUnidadMedida;
         
         //public GestorIncidentesController() { }
 
-        public GestorIncidentesController(IAgregarTipoSuelo agregarTipoSuelo, IEditarTipoSuelo editarTipoSuelo, IGetTiposSuelo getTiposSuelo, IGetTipoSuelo getTipoSuelo, IAgregarEspecieFlora agregarEspecieFlora, IEditarEspecieFlora editarEspecieFlora, IGetEspecieFlora getEspecieFlora, IGetEspeciesFlora getEspeciesFlora, IAgregarEspecieFauna agregarEspecieFauna, IEditarEspecieFauna editarEspecieFauna, IGetEspecieFauna getEspecieFauna, IGetEspeciesFauna getEspeciesFauna, IAgregarTipoAgua agregarTipoAgua, IEditarTipoAgua editarTipoAgua, IGetTiposAgua getTiposAgua, IGetTipoAgua getTipoAgua, IAgregarFactorCausa agregarFactorCausa, IEditarFactorCausa editarFactorCausa, IGetFactorCausa getFactorCausa, IGetFactoresCausa getFactoresCausa, IAgregarLugarDisposicion agregarLugarDisposicion, IEditarLugarDisposicion editarLugarDisposicion, IGetLugarDisposicion getLugarDisposicion, IGetLugaresDisposicion getLugaresDisposicion, IAgregarComponenteAmbiental agregarComponenteAmbiental, IEditarComponenteAmbiental editarComponenteAmbiental, IGetComponenteAmbiental getComponenteAmbiental, IGetComponentesAmbientales getComponentesAmbientales, IAgregarUsuarioIncidente agregarUsuarioIncidente, IDeleteUsuarioIncidente deleteUsuarioIncidente, IEditarUsuarioIncidente editarUsuarioIncidente, IGetUsuarioIncidente getUsuarioIncidente, IGetUsuariosIncidente getUsuariosIncidente, IGetUsuarios getUsuarios, IAgregarEstadoEquipo agregarEstadoEquipo, IEditarEstadoEquipo editarEstadoEquipo, IGetEstadoEquipo getEstadoEquipo, IGetEstadosEquipos getEstadosEquipos, IAgregarTipoProducto agregarTipoProducto, IEditarTipoProducto editarTipoProducto, IGetTipoProducto getTipoProducto, IGetTiposProducto getTiposProducto, IAgregarProductoIncidente agregarProductoIncidente, IEditarProductoIncidente editarProductoIncidente, IGetProductoIncidente getProductoIncidente, IGetProductosIncidente getProductosIncidente)
+        public GestorIncidentesController(
+            IAgregarTipoSuelo agregarTipoSuelo,
+            IEditarTipoSuelo editarTipoSuelo,
+            IGetTiposSuelo getTiposSuelo,
+            IGetTipoSuelo getTipoSuelo, 
+            IAgregarEspecieFlora agregarEspecieFlora, 
+            IEditarEspecieFlora editarEspecieFlora, 
+            IGetEspecieFlora getEspecieFlora, 
+            IGetEspeciesFlora getEspeciesFlora,
+            IAgregarEspecieFauna agregarEspecieFauna,
+            IEditarEspecieFauna editarEspecieFauna,
+            IGetEspecieFauna getEspecieFauna, 
+            IGetEspeciesFauna getEspeciesFauna, 
+            IAgregarTipoAgua agregarTipoAgua,
+            IEditarTipoAgua editarTipoAgua,
+            IGetTiposAgua getTiposAgua, 
+            IGetTipoAgua getTipoAgua,
+            IAgregarFactorCausa agregarFactorCausa,
+            IEditarFactorCausa editarFactorCausa,
+            IGetFactorCausa getFactorCausa, 
+            IGetFactoresCausa getFactoresCausa,
+            IAgregarLugarDisposicion agregarLugarDisposicion, 
+            IEditarLugarDisposicion editarLugarDisposicion,
+            IGetLugarDisposicion getLugarDisposicion,
+            IGetLugaresDisposicion getLugaresDisposicion, 
+            IAgregarComponenteAmbiental agregarComponenteAmbiental,
+            IEditarComponenteAmbiental editarComponenteAmbiental, 
+            IGetComponenteAmbiental getComponenteAmbiental,
+            IGetComponentesAmbientales getComponentesAmbientales, 
+            IAgregarUsuarioIncidente agregarUsuarioIncidente, 
+            IDeleteUsuarioIncidente deleteUsuarioIncidente, 
+            IEditarUsuarioIncidente editarUsuarioIncidente,
+            IGetUsuarioIncidente getUsuarioIncidente, 
+            IGetUsuariosIncidente getUsuariosIncidente,
+            IGetUsuarios getUsuarios,
+            IAgregarEstadoEquipo agregarEstadoEquipo, 
+            IEditarEstadoEquipo editarEstadoEquipo,
+            IGetEstadoEquipo getEstadoEquipo,
+            IGetEstadosEquipos getEstadosEquipos,
+            IAgregarTipoProducto agregarTipoProducto,
+            IEditarTipoProducto editarTipoProducto, 
+            IGetTipoProducto getTipoProducto,
+            IGetTiposProducto getTiposProducto,
+            IAgregarProductoIncidente agregarProductoIncidente, 
+            IEditarProductoIncidente editarProductoIncidente,
+            IGetProductoIncidente getProductoIncidente,
+            IGetProductosIncidente getProductosIncidente,
+            IAgregarUnidadMedida agregarUnidadMedida,
+            IEditarUnidadMedida editarUnidadMedida,
+            IGetUnidadesMedida getUnidadesMedida,
+            IGetUnidadMedida getUnidadMedida
+            )
         {
             _agregarTipoSuelo = agregarTipoSuelo;
             _editarTipoSuelo = editarTipoSuelo;
@@ -172,6 +232,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             _editarProductoIncidente = editarProductoIncidente;
             _getProductoIncidente = getProductoIncidente;
             _getProductosIncidente = getProductosIncidente;
+            _agregarUnidadMedida = agregarUnidadMedida;
+            _editarUnidadMedida = editarUnidadMedida;
+            _getUnidadesMedida = getUnidadesMedida;
+            _getUnidadMedida = getUnidadMedida;
         }
 
         public IActionResult ResumenImpacto()
@@ -197,8 +261,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -320,8 +384,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -443,8 +507,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -566,8 +630,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -996,7 +1060,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -1120,7 +1183,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -1236,7 +1298,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             }
             return RedirectToAction("AgregarComponenteAmbiental");
         }
-
         //Estado Equipo
         public async Task<IActionResult> FiltrarEstadoEquipo(string filtro, int pagina, int rpp)
         {
@@ -1245,8 +1306,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -1368,8 +1429,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -1491,8 +1552,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
-            tabla += "<th>Tipo</th>";
             tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
             tabla += "</tr>";
             tabla += "</thead>";
             tabla += "<tbody>";
@@ -1605,6 +1666,146 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleProductoIncidente", new { IdProductoIncidente = id });
             }
             return RedirectToAction("AgregarProductoIncidente");
+        }
+        //Unidades Medida
+        public async Task<IActionResult> FiltrarUnidadMedida(string filtro, int pagina, int rpp)
+        {
+            var data = await _getUnidadesMedida.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Descripción</th>";
+            tabla += "<th>Tipo</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.NUnidades % rpp != 0 ? (data.NUnidades / rpp) + 1 : data.NUnidades / rpp;
+            if (data.NUnidades > 0)
+            {
+                foreach (var fila in data.Unidades)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Descripcion + "</td>";
+                    filasTabla += "<td>" + fila.Tipo + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorIncidentes/DetalleUnidadMedida?IdUnidadMedida=" + fila.Id_Unidad_Medida + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleUnidadMedida(int IdUnidadMedida)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                
+                var tipos = Enum.GetValues(typeof(TiposUnidadMedida)).Cast<TiposUnidadMedida>().Select(v => new SelectListItem
+                {
+                    Text = v.ToString(),
+                    Value = v.ToString()
+                }).ToList();
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.TiposUnidad = tipos;
+                var data = await _getUnidadMedida.Execute(IdUnidadMedida);
+                var model = new UnidadMedidaModel();
+                model.Id_Unidad_Medida = data.Id_Unidad_Medida;
+                model.Tipo = data.Tipo;
+                model.Descripcion = data.Descripcion;
+                model.Estado = data.Estado;
+                return View(model);
+            }
+        }
+        public async Task<IActionResult> EditarUnidadMedida(UnidadMedidaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarUnidadMedida.Execute(model.Id_Unidad_Medida, model.Descripcion, model.Tipo, model.Estado);
+                return RedirectToAction("DetalleUnidadMedida", new { IdUnidadMedida = model.Id_Unidad_Medida });
+            }
+        }
+        public async Task<IActionResult> AgregarUnidadMedida()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var tipos = Enum.GetValues(typeof(TiposUnidadMedida)).Cast<TiposUnidadMedida>().Select(v => new SelectListItem
+                {
+                    Text = v.ToString(),
+                    Value = v.ToString()
+                }).ToList();
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.TiposUnidad = tipos;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarUnidadMedida(UnidadMedidaModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = await _agregarUnidadMedida.Execute(model.Descripcion,model.Tipo);
+                return RedirectToAction("DetalleUnidadMedida", new { IdUnidadMedida = id });
+            }
+            return RedirectToAction("AgregarUnidadMedida");
         }
     }
 }

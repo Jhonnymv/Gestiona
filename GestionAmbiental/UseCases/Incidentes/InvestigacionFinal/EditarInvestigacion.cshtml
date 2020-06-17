@@ -830,11 +830,8 @@
                             <th>Responsable Contratista</th>
                             <th>Fecha</th>
                             <th>Estatus</th>
-                            @if (Model.Estado == "PendienteInvestigacion")
-                            {
-                                <th></th>
-                                <th></th>
-                            }
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -860,11 +857,8 @@
                             <th>Responsable Contratista</th>
                             <th>Fecha</th>
                             <th>Estatus</th>
-                            @if (Model.Estado == "PendienteInvestigacion")
-                            {
-                                <th></th>
-                                <th></th>
-                            }
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -980,10 +974,10 @@
         @if (Model.Estado == "PendienteInvestigacion")
         {
             <div class="row mb-2 justify-content-end">
-                <div class="col-sm-12 col-md-3 col-lg-3">
+                <div class="col-sm-12 col-md-6 col-lg-4">
                     <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-primary">Volver</a>
                     <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
-                    <button id="boton_completar" type="button" class="btn btn-primary">Completar</button>
+                    <button id="boton_completar" type="button" class="btn btn-primary">Completar y Difundir</button>
                 </div>
             </div>
         }
@@ -1380,6 +1374,24 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Guardando Estado-->
+<div class="modal fade" id="Modal_Guardando_Estado" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Guardando Estado</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -1403,9 +1415,12 @@
             if (papeles.length > 0) {
                 var papeles_valores = JSON.parse(papeles.replace(/&quot;/g, '"'));
                 var html_papeles = "";
-                for (var i = 0; i < papeles_valores.length; i++)
-                    html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel</a></p>";
-
+                for (var i = 0; i < papeles_valores.length; i++) {
+                    if ($("#Estado").val() == "PendienteInvestigacion")
+                        html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + papeles_valores[i] + "','Papel')><a href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel</a> </p>";
+                    else
+                        html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel</a></p>"
+                }
                 $("#Evidencias_Lista_Papel").html(html_papeles);
                 $("#Evidencias_Completas_Papel").val(papeles_valores);
             }
@@ -1414,7 +1429,10 @@
                 var personas_valores = JSON.parse(personas.replace(/&quot;/g, '"'));
                 var html_personas = "";
                 for (var i = 0; i < personas_valores.length; i++)
-                    html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona</a></p>";
+                    if ($("#Estado").val() == "PendienteInvestigacion")
+                        html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + personas_valores[i] + "','Persona')><a href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona</a></p>";
+                    else
+                        html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona</a></p>";
 
                 $("#Evidencias_Lista_Persona").html(html_personas);
                 $("#Evidencias_Completas_Persona").val(personas_valores);
@@ -1424,7 +1442,10 @@
                 var posiciones_valores = JSON.parse(posiciones.replace(/&quot;/g, '"'));
                 var html_posiciones = "";
                 for (var i = 0; i < posiciones_valores.length; i++)
-                    html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
+                    if ($("#Estado").val() == "PendienteInvestigacion")
+                        html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + posiciones_valores[i] + "','Posicion')><a href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
+                    else
+                        html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
 
                 $("#Evidencias_Lista_Posicion").html(html_posiciones);
                 $("#Evidencias_Completas_Posicion").val(posiciones_valores);
@@ -1434,7 +1455,10 @@
                 var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
                 var html_partes = "";
                 for (var i = 0; i < partes_valores.length; i++)
-                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                    if ($("#Estado").val() == "PendienteInvestigacion")
+                        html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + partes_valores[i] + "','Parte')><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                    else
+                        html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
 
                 $("#Evidencias_Lista_Partes").html(html_partes);
                 $("#Evidencias_Completas_Partes").val(partes_valores);
@@ -1499,6 +1523,69 @@
                     $('#NAcciones').val(response.nAcciones);
                 }
             });
+        }
+
+        function EliminarEvidencia(evidencia,tipo) {
+            if ($("#Estado").val() == "PendienteInvestigacion")
+                if (confirm('¿Está seguro que desea eliminar esta evidencia?'))
+                    $.ajax({
+                        type: "POST",
+                        url: "/InvestigacionFinal/EliminarEvidencia",
+                        data: {
+                            IdInvestigacion: $("#Id_Investigacion_Final").val(),
+                            Evidencia: evidencia,
+                            Tipo: tipo
+                        },
+                        success: (response) => {
+                            var evidencias = response.evidencia;
+                            switch (tipo) {
+                                case "Papel":
+                                    var html_papeles = "";
+                                    for (var i = 0; i < evidencias.length; i++) {
+                                        if ($("#Estado").val() == "PendienteInvestigacion")
+                                            html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "','Papel')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel</a></p>";
+                                        else
+                                            html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel</a></p>"
+                                    }
+                                    $("#Evidencias_Lista_Papel").html(html_papeles);
+                                    $("#Evidencias_Completas_Papel").val(evidencia);
+                                    break;
+                                case "Parte":
+                                    var html_personas = "";
+                                    for (var i = 0; i < evidencias.length; i++)
+                                        if ($("#Estado").val() == "PendienteInvestigacion")
+                                            html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Persona')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona</a> </p>";
+                                        else
+                                            html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona</a></p>";
+
+                                    $("#Evidencias_Lista_Persona").html(html_personas);
+                                    $("#Evidencias_Completas_Persona").val(evidencias);
+                                    break;
+                                case "Persona":
+                                    var html_posiciones = "";
+                                    for (var i = 0; i < evidencias.length; i++)
+                                        if ($("#Estado").val() == "PendienteInvestigacion")
+                                            html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Posicion')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición</a> </p>";
+                                        else
+                                            html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
+
+                                    $("#Evidencias_Lista_Posicion").html(html_posiciones);
+                                    $("#Evidencias_Completas_Posicion").val(evidencias);
+                                    break;
+                                case "Posicion":
+                                    var html_partes = "";
+                                    for (var i = 0; i < evidencias.length; i++)
+                                        if ($("#Estado").val() == "PendienteInvestigacion")
+                                            html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Parte')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                                        else
+                                            html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+
+                                    $("#Evidencias_Lista_Partes").html(html_partes);
+                                    $("#Evidencias_Completas_Partes").val(evidencias);
+                                    break;
+                            }
+                        }
+                    });
         }
 
         //Restrict to integer
@@ -1714,6 +1801,7 @@
 
         $("#boton_guardar_estado").click(function () {
             $("#Opcion").val("Pendiente");
+            $("#Modal_Guardando_Estado").modal("show");
             $("#formEditarInvestigacion").submit();
         });
 

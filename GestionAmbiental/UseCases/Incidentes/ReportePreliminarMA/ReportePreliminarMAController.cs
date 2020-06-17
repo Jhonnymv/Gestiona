@@ -33,6 +33,8 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
 using Microsoft.AspNetCore.DataProtection;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.EliminarEvindenciaReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.GetEvidenciaReportePreliminar;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 {
@@ -59,12 +61,14 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         private readonly IRegistrarCausaIncidenteReporte _registrarCausaIncidenteReporte;
         private readonly IEditarReportePreliminar _editarReportePreliminar;
         private readonly IRegistrarInvestigacionFinal _registrarInvestigacionFinal;
+        private readonly IEliminarEvindenciaReportePreliminar _eliminarEvindenciaReportePreliminar;
+        private readonly IGetEvidenciaReportePreliminar _getEvidenciaReportePreliminar;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
         public ReportePreliminarMAController(
             ISelectItems selectItems,
-            IGetReportesPreliminaresMA getReportesPreliminares, 
+            IGetReportesPreliminaresMA getReportesPreliminares,
             IGetReportePreliminar getReportePreliminar,
             IGetEstadoReportePreliminar getEstadoReportePreliminar,
             IGetInvolucradosIncidente getInvolucradosIncidente,
@@ -80,11 +84,13 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             IGetCausasIncidenteReporte getCausasIncidenteReporte,
             IGetCausaIncidenteReporte getCausaIncidenteReporte,
             IEditarCausaIncidenteReporte editarCausaIncidenteReporte,
-            IEliminarCausaIncidenteReporte eliminarCausaIncidenteReporte, 
+            IEliminarCausaIncidenteReporte eliminarCausaIncidenteReporte,
             IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
             IEditarReportePreliminar editarReportePreliminar,
             IRegistrarInvestigacionFinal registrarInvestigacionFinal,
-            IDataProtectionProvider dataProtectionProvider,
+            IEliminarEvindenciaReportePreliminar eliminarEvindenciaReportePreliminar,
+            IGetEvidenciaReportePreliminar getEvidenciaReportePreliminar,
+            IDataProtectionProvider dataProtectionProvider, 
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
@@ -109,6 +115,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             _registrarCausaIncidenteReporte = registrarCausaIncidenteReporte;
             _editarReportePreliminar = editarReportePreliminar;
             _registrarInvestigacionFinal = registrarInvestigacionFinal;
+            _eliminarEvindenciaReportePreliminar = eliminarEvindenciaReportePreliminar;
+            _getEvidenciaReportePreliminar = getEvidenciaReportePreliminar;
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
@@ -146,7 +154,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int id_asesor, int id_usuario, int id_gerencia, int rpp, int pagina)
         {
-            var datosTabla = await _getReportesPreliminares.Execute(fecha, id_usuario, id_gerencia, id_asesor, pagina, rpp);
+            var datosTabla = await _getReportesPreliminares.Execute(fecha, id_asesor, id_usuario, id_gerencia, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NReportes % rpp != 0 ? (datosTabla.NReportes / rpp) + 1 : datosTabla.NReportes / rpp;
@@ -598,6 +606,18 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             await _eliminarCausaIncidenteReporte.Execute(IdCausa);
             return await ListarCausas(IdReporte);
         }
+        [HttpPost]
+        public async Task<IActionResult> EliminarEvidencia(int IdReporte, string Evidencia)
+        {
+            await _eliminarEvindenciaReportePreliminar.Execute(IdReporte,Evidencia);
+            var nueva_evidencia = await _getEvidenciaReportePreliminar.Execute(IdReporte);
+            dynamic response = new
+            {
+                evidencia = nueva_evidencia
+            };
+            return Ok(response);
+        }
+
         //Carga y descarga de archivos
         private string CreateUniqueFileName(int index)
         {

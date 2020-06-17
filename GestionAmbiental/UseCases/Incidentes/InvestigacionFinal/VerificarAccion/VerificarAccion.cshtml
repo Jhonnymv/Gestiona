@@ -105,7 +105,6 @@
         <div class="row mb-2 justify-content-end">
             <div class="col-sm-12 col-md-8 col-lg-5" style="text-align:end">
                 <a id="boton_cancelar" class="btn btn-secondary" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
-                <button id="boton_ampliar" type="button" class="btn btn-primary" onclick="AmpliarFecha()">Ampliar Fecha</button>
                 <button id="boton_rechazar" type="button" class="btn btn-danger" onclick="Rechazar()">Rechazar</button>
                 <button id="boton_aprobar" type="button" class="btn btn-primary" onclick="Aprobar()">Aprobar</button>
             </div>
@@ -113,37 +112,6 @@
     </form>
 </div>
 
-<!-- Modal Ampliar Fecha-->
-<div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_ampliacion">
-                    Ingrese Nueva Fecha para Implementación
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <label>Nueva Fecha:</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="hidden" class="form-control" id="idAccionAmpliacion" />
-                        <input type="date" class="form-control" id="nuevaFechaAmpliacion" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" style="color:white" onclick="AmpliarFechaAccion()">Guardar</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Modal Enviando Correo-->
 <div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"

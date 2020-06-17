@@ -38,6 +38,9 @@ using System.Text;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarInvestigacionFinal;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.AmpliarFechaAccion;
 using Microsoft.AspNetCore.DataProtection;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EliminarEvidenciaInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciaInvestigacion;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
@@ -50,6 +53,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IGetEstadoInvestigacion _getEstadoInvestigacion;
         private readonly IGetImpactoAmbiental _getImpactoAmbiental;
         private readonly IEditarInvestigacionFinal _editarInvestigacionFinal;
+        private readonly IGetRolUsuario _getRolUsuario;
         //involucrados
         private readonly IGetInvolucradosIncidente _getInvolucradosIncidente;
         private readonly IGetInvolucradoIncidente _getInvolucradoIncidente;
@@ -76,6 +80,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IRegistrarAccionCorrectivaIncidenteInvestigacion _registrarAccionCorrectivaIncidenteInvestigacion;
         private readonly IAmpliarFechaAccion _ampliarFechaAccion;
 
+        private readonly IEliminarEvidenciaInvestigacion _eliminarEvidenciaInvestigacion;
+        private readonly IGetEvidenciaInvestigacion _getEvidenciaInvestigacion;
+
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
 
@@ -87,6 +94,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IGetEstadoInvestigacion getEstadoInvestigacion,
             IGetImpactoAmbiental getImpactoAmbiental,
             IEditarInvestigacionFinal editarInvestigacionFinal,
+            IGetRolUsuario getRolUsuario,
 
             IGetInvolucradosIncidente getInvolucradosIncidente,
             IGetInvolucradoIncidente getInvolucradoIncidente,
@@ -100,7 +108,6 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IEliminarProductoDerramado eliminarProductoDerramado,
             IRegistrarProductoDerramado registrarProductoDerramado,
 
-
             IGetCausasIncidenteInvestigacion getCausasIncidenteInvestigacion,
             IGetCausaIncidenteInvestigacion getCausaIncidenteInvestigacion,
             IEditarCausaIncidenteInvestigacion editarCausaIncidenteInvestigacion,
@@ -113,6 +120,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IEliminarAccionIncidenteInvestigacion eliminarAccionIncidenteInvestigacion,
             IRegistrarAccionCorrectivaIncidenteInvestigacion registrarAccionCorrectivaIncidenteInvestigacion,
             IAmpliarFechaAccion ampliarFechaAccion,
+
+            IEliminarEvidenciaInvestigacion eliminarEvidenciaInvestigacion,
+            IGetEvidenciaInvestigacion getEvidenciaInvestigacion,
+
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
 
@@ -152,6 +163,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             _registrarAccionCorrectivaIncidenteInvestigacion = registrarAccionCorrectivaIncidenteInvestigacion;
             _ampliarFechaAccion = ampliarFechaAccion;
 
+            _eliminarEvidenciaInvestigacion = eliminarEvidenciaInvestigacion;
+            _getEvidenciaInvestigacion = getEvidenciaInvestigacion;
+
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -189,9 +203,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int id_asesor, int id_usuario, int id_gerencia, int rpp, int pagina)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int id_asesor, int id_usuario, int id_gerencia, int rpp, int pagina,string usuario_red)
         {
-            var datosTabla = await _getInvestigacionesFinales.Execute(fecha, id_usuario, id_gerencia, id_asesor, pagina, rpp);
+            var datosTabla = await _getInvestigacionesFinales.Execute(fecha, id_usuario, id_gerencia, id_asesor, pagina, rpp,usuario_red);
 
             var filasTabla = "";
             var paginador = "";
@@ -210,6 +224,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     else
                         filasTabla += "<td></td>";
                     if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                        filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    else if(datosTabla.PermisoAdmin)
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/DetalleInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -976,10 +992,24 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones += "<td>_</td>";
                     filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones += "<td>" + fila.Estatus + "</td>";
-                    if(fila.Permiso_Implementacion && fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString()))
-                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
+                    //Estado
+                    switch (fila.Estado)
+                    {
+                        case "Registrado": filas_acciones += "<td><span class=\"badge badge-secondary\">" + fila.Estado + "</span></td>"; break;
+                        case "Aprobado": filas_acciones += "<td><span class=\"badge badge-success\">" + fila.Estado + "</span></td>"; break;
+                        case "Rechazado": filas_acciones += "<td><span class=\"badge badge-danger\">" + fila.Estado + "</span></td>"; break;
+                        case "Vencido": filas_acciones += "<td><span class=\"badge badge-danger\">" + fila.Estado + "</span></td>"; break;
+                        case "Ampliado": filas_acciones += "<td><span class=\"badge badge-warning\">" + fila.Estado + "</span></td>"; break;
+                        default: filas_acciones += "<td><span class=\"badge badge-secondary\">" + fila.Estado + "</span>"; break;
+                    }
+                    if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Implementar MA</a></td>";
+                    else if(fila.Permiso_Implementacion && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";                     
                     else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
-                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
+                        filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";                 
+                    else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
                     else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
                         filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
                     else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
@@ -1000,6 +1030,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> ListarAcciones(int IdInvestigacion)
         {
+            var rolUsuario = "";
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                rolUsuario = userInfo.Rol.ToString();
+            }
+
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_acciones_inmediatas = "";
@@ -1024,11 +1061,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_inmediatas += "<td>_</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
-                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) || rolUsuario.Equals(InspeccionRol.Admin.ToString()))
                     {
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                     }
+                    else
+                        filas_acciones_inmediatas += "<td></td><td></td>";
                     filas_acciones_inmediatas += "</tr>";
                 }
                 else if (fila.Tipo_Accion.Equals("Acción Correctiva"))
@@ -1048,11 +1087,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_correctivas += "<td>_</td>";
                     filas_acciones_correctivas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
-                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) || rolUsuario.Equals(RSRoles.Admin.ToString()))
                     {
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                     }
+                    else
+                        filas_acciones_correctivas += "<td></td><td></td>";
                     filas_acciones_correctivas += "</tr>";
                 }
             }
@@ -1102,11 +1143,24 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpPost]
-        public async Task<IActionResult> AmpliarFechaAccion(string IdAccion, int IdInvestigacion, string fecha)
+        public async Task<IActionResult> AmpliarFechaAccion(int IdAccion, int IdInvestigacion, string fecha)
         {
-            var IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
-            await _ampliarFechaAccion.Execute(IdDesencriptado, fecha);
+            await _ampliarFechaAccion.Execute(IdAccion, fecha);
             return await ListarAccionesVerificacion(IdInvestigacion);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarEvidencia(int IdInvestigacion, string Tipo, string Evidencia)
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+            await _eliminarEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo, Evidencia,userInfo.NombreUsuario);
+            var nueva_evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion,Tipo);
+            dynamic response = new
+            {
+                evidencia = nueva_evidencia,
+                tipo = Tipo
+            };
+            return Ok(response);            
         }
         [HttpPost]
         public async Task<IActionResult> EditarInvestigacion(EditarInvestigacionModel model)

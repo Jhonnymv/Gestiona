@@ -2,6 +2,8 @@
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -222,6 +224,40 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id_Accion_Incidente_Investigacion;
+        }
+        public async Task EliminarEvidenciaInvestigacion(int IdInvestigacion,string Tipo,string NombreArchivo)
+        {
+            var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
+            if (investigacion != null)
+            {
+                JArray evidencias = new JArray();
+
+                switch (Tipo)
+                {
+                    case "Papel": evidencias = JArray.Parse(investigacion.Evidencia_Papel); break;
+                    case "Parte": evidencias = JArray.Parse(investigacion.Evidencia_Parte); break;
+                    case "Persona": evidencias = JArray.Parse(investigacion.Evidencia_Persona); break;
+                    case "Posicion": evidencias = JArray.Parse(investigacion.Evidencia_Posicion); break;
+                }
+                
+                var temp = new List<string>();
+                foreach (var evidencia in evidencias)
+                {
+                    temp.Add((string)evidencia);
+                }
+                temp.Remove(NombreArchivo);
+
+                switch (Tipo)
+                {
+                    case "Papel": investigacion.Evidencia_Papel = JsonConvert.SerializeObject(temp); break;
+                    case "Parte": investigacion.Evidencia_Parte = JsonConvert.SerializeObject(temp); break;
+                    case "Persona": investigacion.Evidencia_Persona = JsonConvert.SerializeObject(temp); break;
+                    case "Posicion": investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(temp); break;
+                }
+
+                _context.Investigacion_Final_Incidente.Update(investigacion);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

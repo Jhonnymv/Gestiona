@@ -13,6 +13,8 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
         Task<List<Reporte_Preliminar_Incidente>> GetReportesMA(DateTime? fecha,int id_Asesor, int id_Gerencia, int id_Usuario);
         Task<Reporte_Preliminar_Incidente> GetReporte(int IdReporte);
         Task<string> GetEstadoReporte(int IdReporte);
-        
+        Task<string> GetEvidenciaReporteMA(int IdReporte);
+
+
     }
 }

@@ -428,5 +428,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<string> GetEvidenciaReporteMA(int IdReporte)
+        {
+            var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
+            return reporte.Evidencia;
+        }
     }
 }

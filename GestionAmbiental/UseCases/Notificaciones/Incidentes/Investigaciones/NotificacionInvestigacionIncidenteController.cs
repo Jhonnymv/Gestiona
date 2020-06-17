@@ -55,6 +55,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         {
             var info = await _getInvestigacionFinal.Execute(IdInvestigacion);
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
+            acciones = acciones.Where(x => !(x.Estatus.Equals("Cerrado") && x.Tipo_Accion.Equals("Acción Inmediata"))).ToList();
 
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes", "Investigacion", "NuevaAccionInvestigacion.html");
 
@@ -151,7 +152,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
 
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);

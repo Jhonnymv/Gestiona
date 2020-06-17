@@ -65,6 +65,7 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
                 empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var residuos = items.ItemsResiduoSolido.Where(x=>x.Tipo_Residuo.Descripcion.Equals("Peligroso")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
 
                 ViewBag.ACR_CMRS = acr_cmrs;
                 ViewBag.IngresoSalida = ingreso_salida;
@@ -74,7 +75,7 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
                 ViewBag.Gerencias = gerencias;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
-
+                ViewBag.Residuos = residuos;
                 return View();
             }
         }
@@ -146,9 +147,9 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlIngresoSalid
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa)
+        public async Task<IActionResult> GetCantidadResiduoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, string fechaInicio, string fechaFin, int gerencia, int empresa, int[] residuos)
         {
-            var nRegistros = await _getCantidadResiduoPeligroso.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa);
+            var nRegistros = await _getCantidadResiduoPeligroso.Execute(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fechaInicio, fechaFin, gerencia, empresa,residuos);
 
             dynamic response = new
             {

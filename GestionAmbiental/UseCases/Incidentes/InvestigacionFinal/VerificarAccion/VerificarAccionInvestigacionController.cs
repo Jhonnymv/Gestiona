@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.AmpliarFechaAccion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.GetAcciones;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.VerificarAccion;
+using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,19 +16,16 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
     {
         private readonly IGetAccioIncidenteInvestigacion _getAccioIncidenteInvestigacion;
         private readonly IVerificarAccion _verificarAccion;
-        private readonly IAmpliarFechaAccion _ampliarFechaAccion;
         private readonly IDataProtector _protector;
 
         public VerificarAccionInvestigacionController(
             IGetAccioIncidenteInvestigacion getAccioIncidenteInvestigacion,
             IVerificarAccion verificarAccion,
-            IAmpliarFechaAccion ampliarFechaAccion,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getAccioIncidenteInvestigacion = getAccioIncidenteInvestigacion;
             _verificarAccion = verificarAccion;
-            _ampliarFechaAccion = ampliarFechaAccion;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
         }
 
@@ -46,22 +43,30 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
                 var accion = await _getAccioIncidenteInvestigacion.Execute(IdDesencriptado);
-                var model = new VerificarAccionModel();
-                model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
-                model.Id_Encriptado = IdAccion;
-                model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
-                model.Id_Investigacion_Encriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
-                model.Tipo_Accion = accion.Tipo_Accion;
-                model.Accion_Inmediata = accion.Accion_Inmediata;
-                model.Responsable_Marcobre = accion.Responsable_Marcobre;
-                model.Responsable_Contratista = accion.Responsable_Contratista;
-                model.Fecha = accion.Fecha;
-                model.Evidencias = accion.Evidencia;
-                model.Comentarios_Implementacion = accion.Comentarios_Implementacion;
-                model.Estatus = accion.Estatus;
-                model.Estado = accion.Estado;
+                if (accion.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
+                {
+                    var model = new VerificarAccionModel();
+                    model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
+                    model.Id_Encriptado = IdAccion;
+                    model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
+                    model.Id_Investigacion_Encriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
+                    model.Tipo_Accion = accion.Tipo_Accion;
+                    model.Accion_Inmediata = accion.Accion_Inmediata;
+                    model.Responsable_Marcobre = accion.Responsable_Marcobre;
+                    model.Responsable_Contratista = accion.Responsable_Contratista;
+                    model.Fecha = accion.Fecha;
+                    model.Evidencias = accion.Evidencia;
+                    model.Comentarios_Implementacion = accion.Comentarios_Implementacion;
+                    model.Estatus = accion.Estatus;
+                    model.Estado = accion.Estado;
 
-                return View(model);
+                    return View(model);
+                }
+                else
+                {
+                    var IdEncriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
+                    return RedirectToAction("DetalleInvestigacion", "InvestigacionFinal", new { IdInvestigacion = IdEncriptado });
+                }
             }
         }
         [HttpPost]
@@ -113,12 +118,5 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> AmpliarFechaAccion(string IdAccion, int IdInvestigacion, string fecha)
-        {
-            var IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
-            await _ampliarFechaAccion.Execute(IdDesencriptado, fecha);
-            return RedirectToAction("VerificarAccion", new { IdAccion = IdAccion });
-        }
     }
 }

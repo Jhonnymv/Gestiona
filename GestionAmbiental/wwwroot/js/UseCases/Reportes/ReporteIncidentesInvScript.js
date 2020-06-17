@@ -70,9 +70,9 @@ function Filtrar() {
     ActualizaCausaInmediataIncidente();
     ActualizaCausaBasicaIncidente();
     ActualizaImpactoSuelo();
-    ActualizaImpactoFlora();
-    ActualizaImpactoFauna();
-    ActualizaImpactoAgua();
+    //ActualizaImpactoFlora();
+    //ActualizaImpactoFauna();
+    //ActualizaImpactoAgua();
     ActualizaImpactoPersona();
 
     ActualizaResiduoSuelo();
@@ -632,7 +632,7 @@ function CrearGraficoCausaInmediata(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "#Causas Inmediatas Registradas",
+                    "label": "#Causas Inmediatas",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -724,7 +724,7 @@ function CrearGraficoCausaBasica(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "# Causas Básicas Registradas",
+                    "label": "# Causas Básicas ",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -908,7 +908,7 @@ function CrearGraficoImpactoFlora(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Unidad de Flora Afectado (u)",
+                    "label": "#Especies Afectadas (u)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1
@@ -1000,7 +1000,7 @@ function CrearGraficoImpactoFauna(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "Unidad de Fauna Afectado (u)",
+                    "label": "#Especies Afectadas (u)",
                     "data": data,
                     "backgroundColor": '#2e6793',
                     "lineTension": 0.1

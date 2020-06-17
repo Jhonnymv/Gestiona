@@ -591,6 +591,7 @@ $("#boton_completar").on("click", function () {
 });
 $("#boton_guardar_estado").on("click", function () {
     $("#Opcion").val("GuardarEstado");
+    $("#Modal_Guardando_Estado").modal("show");
     $("#form_nuevoReporteParte2").submit();
 });
 

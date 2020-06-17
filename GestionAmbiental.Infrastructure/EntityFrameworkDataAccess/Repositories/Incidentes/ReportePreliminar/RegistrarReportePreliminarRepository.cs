@@ -90,7 +90,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> RegistrarReportePreliminarParte2(Reporte_Preliminar_Incidente reporte)
         {
             var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(reporte.Id_Reporte_Preliminar));
-            entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
+            entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable?.IdGerencia;
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             entity.Evidencia = reporte.Evidencia;
             entity.Comentario_Accion = reporte.Comentario_Accion;

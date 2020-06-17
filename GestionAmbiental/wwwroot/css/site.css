@@ -199,6 +199,10 @@ td {
         background-color: #bebebe;
         border-color: #bebebe;
 }
+.icon-btn:hover {
+    width: 30px;
+    width: 30px;
+}
 
 .progress{
     width: 100px;

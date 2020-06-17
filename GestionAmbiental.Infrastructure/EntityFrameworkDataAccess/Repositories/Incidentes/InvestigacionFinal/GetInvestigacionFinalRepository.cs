@@ -422,5 +422,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
             return investigacion.Estado;
         }
+        public async Task<string> GetEvidenciaInvestigacion(int IdInvestigacion,string Tipo)
+        {
+            var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
+            switch (Tipo)
+            {
+                case "Papel": return investigacion.Evidencia_Papel;
+                case "Parte": return investigacion.Evidencia_Parte;
+                case "Persona": return investigacion.Evidencia_Persona;
+                default: return investigacion.Evidencia_Posicion;
+            }
+        }
     }
 }

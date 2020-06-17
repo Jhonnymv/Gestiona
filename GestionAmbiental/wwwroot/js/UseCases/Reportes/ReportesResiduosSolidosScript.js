@@ -32,9 +32,9 @@ var data_rs_peligroso = [];
 var graph_rs_peligroso;
 
 $(document).ready(function () {
-    ActualizarInvestigacionesFecha();
+    Filtrar();
 });
-function ActualizarInvestigacionesFecha() {
+function Filtrar() {
 
     acr_cmrs = $("#ACR_CMRS").val();
     ingreso_salida = $("#IngresoSalida").val();
@@ -46,8 +46,8 @@ function ActualizarInvestigacionesFecha() {
     empresa = $("#Empresa").val();
     frecuencia = $("#frecuencia").val();
     if (fechaInicio < fechaFin || (fechaInicio == "" && fechaFin == "")) {
-        ActualizarProductoInvestigacion();
-        ActualizaImpactoAgua();
+        ActualizarContadorxFecha();
+        ActualizaACRvsCMRS();
         ActualizarDatosGraficoIngresoSalida();
         ActualizarDatosGraficoTipoResiduo();
         ActualizarDatosGraficoMotivo();
@@ -58,7 +58,7 @@ function ActualizarInvestigacionesFecha() {
     }
 }
 //Para gráfico Contador x Fecha
-function ActualizarProductoInvestigacion() {
+function ActualizarContadorxFecha() {
     $.ajax({
         type: "POST",
         url: "/ReportesIngresoSalida/GetRegistrosEntreFechas",
@@ -169,7 +169,7 @@ function CrearGraficaInvestigacionesFecha(labels, dataIngreso, dataSalida, stepS
         });
 }
 //Para gráfico ACR vs CMRS
-function ActualizaImpactoAgua() {
+function ActualizaACRvsCMRS() {
     $.ajax({
         type: "POST",
         url: "/ReportesIngresoSalida/GetRegistrosACR_CRMS",
@@ -210,12 +210,12 @@ function ActualizaImpactoAgua() {
                     data.push(data_acr_vs_cmrs[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoImpactoAgua(labels, data);
+                CrearGraficoACRvsCMRS(labels, data);
             }
         }
     });
 }
-function CrearGraficoImpactoAgua(labels, data) {
+function CrearGraficoACRvsCMRS(labels, data) {
     graph_acr_vs_cmrs = new Chart(
         document.getElementById("chart_acr_cmrs"),
         {
@@ -650,7 +650,8 @@ function ActualizarDatosGraficoResiduoPeligroso() {
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
             gerencia: $("#Gerencia").val(),
-            empresa: $("#Empresa").val()
+            empresa: $("#Empresa").val(),
+            residuos: $("#residuo_peligroso").val()
         },
         traditional: true,
         success: (response) => {

@@ -12,5 +12,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFina
         Task<Investigacion_Final_Incidente> GetInvestigacionFinal(int IdInvestigacion);
         Task<Impacto_Ambiental_Incidente> GetImpactoAmbiental(int IdInvestigacion);
         Task<string> GetEstadoInvestigacion(int IdInvestigacion);
+        Task<string> GetEvidenciaInvestigacion(int IdInvestigacion, string Tipo);
     }
 }

@@ -42,13 +42,13 @@ var graph_sso_alt_tipo;
 
 
 $(document).ready(function () {
-    ActualizarInvestigacionesFecha();
+    ActualizarInspeccionesFecha();
 });
 function Filtrar() {
-    ActualizarInvestigacionesFecha();
+    ActualizarInspeccionesFecha();
 }
 
-function ActualizarInvestigacionesFecha() {
+function ActualizarInspeccionesFecha() {
     gerencia = $("#IdGerencia").val();
     empresa = $("#IdEmpresa").val();
     asesor = $("#IdAsesor").val();
@@ -145,13 +145,13 @@ function ActualizarProductoInvestigacion() {
                     data.push(data_insp_fechas[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaInvestigacionesFecha(labels, data, Math.max(data) / 10);
+                CrearGraficaInspeccionesFecha(labels, data, Math.max(data) / 10);
             }
             ActualizarContadorOxFecha();
         }
     });
 }
-function CrearGraficaInvestigacionesFecha(labels, data, stepSize) {
+function CrearGraficaInspeccionesFecha(labels, data, stepSize) {
     graph_insp_fechas = new Chart(
         document.getElementById("chart_insp_fechas"),
         {
@@ -887,7 +887,7 @@ function CrearGraficoSSO_Clas(labels, data) {
 
 
 function ActualizarDatosGraficoMA_NR_Tipo() {
-    ActualizarInvestigacionesFecha();
+    ActualizarInspeccionesFecha();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoMA",
@@ -1087,7 +1087,7 @@ function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
 }
 
 function ActualizarDatosGraficoSSO_NR_Tipo() {
-    ActualizarInvestigacionesFecha();
+    ActualizarInspeccionesFecha();
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsTipoCondicionxNivelRiesgoSSO",

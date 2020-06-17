@@ -11,7 +11,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
     {
         [Key]
         public int Id_Unidad_Medida { get; set; }
-        [Column(TypeName = "varchar(5)")]
+        [Column(TypeName = "varchar(25)")]
         public string Descripcion { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Tipo { get; set; }

@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
 {
     public interface IGetInvestigacionesFinales
     {
-        Task<InvestigacionesFinalesOutput> Execute(string fecha, int id_Usuario, int id_Gerencia,int id_Asesor, int pagina, int rpp);
+        Task<InvestigacionesFinalesOutput> Execute(string fecha, int id_Usuario, int id_Gerencia,int id_Asesor, int pagina, int rpp,string usuarioRed);
     }
 }

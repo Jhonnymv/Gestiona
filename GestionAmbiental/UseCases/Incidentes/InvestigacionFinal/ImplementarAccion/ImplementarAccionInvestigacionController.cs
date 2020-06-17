@@ -54,20 +54,27 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
 
                 var accion = await _getAccioIncidenteInvestigacion.Execute(IdDesencriptado);
-                var model = new ImplementarAccionModel();
-                model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
-                model.Id_Encriptado = IdAccion;
-                model.Id_Investigacion_Encriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
-                model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
-                model.Tipo_Accion = accion.Tipo_Accion;
-                model.Accion_Inmediata = accion.Accion_Inmediata;
-                model.Responsable_Marcobre = accion.Responsable_Marcobre;
-                model.Responsable_Contratista = accion.Responsable_Contratista;
-                model.Fecha = accion.Fecha;
-                model.Estatus = accion.Estatus;
-                model.Estado = accion.Estado;
+                if (accion.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
+                {
+                    var model = new ImplementarAccionModel();
+                    model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;
+                    model.Id_Encriptado = IdAccion;
+                    model.Id_Investigacion_Encriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
+                    model.Id_Investigacion_Final = accion.Id_Investigacion_Final;
+                    model.Tipo_Accion = accion.Tipo_Accion;
+                    model.Accion_Inmediata = accion.Accion_Inmediata;
+                    model.Responsable_Marcobre = accion.Responsable_Marcobre;
+                    model.Responsable_Contratista = accion.Responsable_Contratista;
+                    model.Fecha = accion.Fecha;
+                    model.Estatus = accion.Estatus;
+                    model.Estado = accion.Estado;
 
-                return View(model);
+                    return View(model);
+                }
+                else {
+                    var IdEncriptado = _protector.Protect(accion.Id_Investigacion_Final.ToString());
+                    return RedirectToAction("DetalleInvestigacion", "InvestigacionFinal", new { IdInvestigacion = IdEncriptado });
+                }
             }
         }
         [HttpPost]
