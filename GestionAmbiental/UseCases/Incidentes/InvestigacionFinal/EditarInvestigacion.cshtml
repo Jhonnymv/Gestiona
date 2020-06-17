@@ -1854,6 +1854,46 @@
             $("#ImpactoAmbiental_Nombre_Resto_Arq").prop("disabled", !sino);
         });
 
+        $("#ImpactoAmbiental_Cantidad_Residuo_Flora").on('change', function () {
+            ActualizarResiduoSolido();
+            
+        });
+        $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").on('change', function () {
+            ActualizarResiduoSolido();
+        });
+        $("#ImpactoAmbiental_Cantidad_Residuo_Agua").on('change', function () {
+            ActualizarResiduoSolido();
+        });
+
+        $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").on('change', function () {
+            var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").val();
+            console.log(unidad);
+            $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+        })
+
+        $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").on('change', function () {
+            var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").val();
+            console.log(unidad);
+            $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+        })
+
+        $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").on('change', function () {
+            var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").val();
+            console.log(unidad);
+            $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
+        })
+        function ActualizarResiduoSolido() {
+            var res_flora = $("#ImpactoAmbiental_Cantidad_Residuo_Flora").val();
+            var res_fauna = $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").val();
+            var res_agua = $("#ImpactoAmbiental_Cantidad_Residuo_Agua").val();
+
+            res_flora = res_flora == "" ? "0" : res_flora;
+            res_fauna = res_fauna == "" ? "0" : res_fauna;
+            res_agua = res_agua == "" ? "0" : res_agua;
+
+            $("#ImpactoAmbiental_Cantidad_RS").val(parseInt(res_flora) + parseInt(res_fauna) + parseInt(res_agua));            
+        }
+
         function checkDataImpactoSuelo() {
             var tipo = $("#ImpactoAmbiental_Id_Tipo_Suelo");
             var area = $("#ImpactoAmbiental_Area_Suelo")

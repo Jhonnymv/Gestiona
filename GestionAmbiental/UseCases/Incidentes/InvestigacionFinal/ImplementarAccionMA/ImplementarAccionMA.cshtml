@@ -103,31 +103,12 @@
     </form>
 </div>
 
-
-<!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-                    <br />
-                    <label>  Notificando al Asesor de Medio Ambiente</label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @section Scripts{
     <script type="text/javascript">
 
         function Implementar() {
             if (ValidarEvidencia()) {
                 HabilitarInputs();
-                $("#Modal_Enviando_Correo").modal("show");
                 $("#formImplementarAccion").submit();
             }
         }

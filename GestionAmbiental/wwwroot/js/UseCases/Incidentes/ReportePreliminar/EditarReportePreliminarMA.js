@@ -395,7 +395,7 @@ $("#btn_editar_accion").on("click", function () {
                 estado: $('#select_estatus').val()
             },
             success: (response) => {
-                ResetInputsInvolucrado();
+                ResetInputsAccion();
                 $("#modal_accion").modal('hide');
                 $('#tabla_acciones tbody').empty();
                 $('#tabla_acciones tbody').html(response.filas_acciones);

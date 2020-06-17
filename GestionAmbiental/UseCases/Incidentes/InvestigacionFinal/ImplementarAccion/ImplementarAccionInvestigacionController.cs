@@ -54,7 +54,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdAccion));
 
                 var accion = await _getAccioIncidenteInvestigacion.Execute(IdDesencriptado);
-                if (accion.Estado.Equals(EstadosIncidentes.Registrado.ToString()))
+                if (accion.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || 
+                    accion.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) ||
+                    accion.Estado.Equals(EstadosIncidentes.Ampliado.ToString()))
                 {
                     var model = new ImplementarAccionModel();
                     model.Id_Accion_Incidente_Investigacion = accion.Id_Accion_Correctiva_Incidente;

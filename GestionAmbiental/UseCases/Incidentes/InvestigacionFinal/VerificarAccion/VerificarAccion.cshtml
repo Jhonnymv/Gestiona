@@ -154,24 +154,5 @@
             $("#Opcion").val("Aprobar")
             $("#formVerificarAccion").submit();
         }
-        function AmpliarFecha() {
-            $("#idAccionAmpliacion").val('@Model.Id_Encriptado');
-            $("#modal_ampliacion").modal("show");
-        }
-
-        function AmpliarFechaAccion() {
-            $.ajax({
-                type: "GET",
-                url: "/VerificarAccionInvestigacion/AmpliarFechaAccion",
-                data: {
-                    IdInvestigacion: $("#Id_Investigacion_Final").val(),
-                    IdAccion: $("#idAccionAmpliacion").val(),
-                    fecha: $("#nuevaFechaAmpliacion").val()
-                },
-                success: (response) => {
-                    location.reload();
-                }
-            });
-        }
     </script>
 }
