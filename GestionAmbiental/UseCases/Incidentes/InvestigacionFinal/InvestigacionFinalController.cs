@@ -1140,7 +1140,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> EliminarAccion(int IdAccion, int IdInvestigacion)
         {
-            await _eliminarAccionIncidenteInvestigacion.Execute(IdInvestigacion);
+            await _eliminarAccionIncidenteInvestigacion.Execute(IdAccion);
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpPost]
