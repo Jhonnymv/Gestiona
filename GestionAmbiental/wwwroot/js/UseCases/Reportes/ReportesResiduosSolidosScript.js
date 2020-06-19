@@ -547,7 +547,8 @@ function ActualizarDatosGraficoResiduoNoPeligroso() {
             fechaInicio: $("#FInicio").val(),
             fechaFin: $("#FFin").val(),
             gerencia: $("#Gerencia").val(),
-            empresa: $("#Empresa").val()
+            empresa: $("#Empresa").val(),
+            residuos: $("#residuo_no_peligroso").val()
         },
         traditional: true,
         success: (response) => {

@@ -188,12 +188,21 @@
         </div>
     </div>
 </div>
-<!--Cantidad de RS por Tipo Llegada-->
+<!--Cantidad de RS no peligrosos-->
 <div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Residuos Sólidos No Peligrosos</h6>
+                <div class="row">
+                    <div class="col-4">
+                        <select id="residuo_no_peligroso" class="selectpicker form-control" asp-items="ViewBag.ResiduosNoPeligrosos" multiple>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Residuos Sólido No Peligroso </h6>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -208,14 +217,14 @@
         </div>
     </div>
 </div>
-<!--Cantidad de RS por Tipo Llegada-->
+<!--Cantidad de RS peligrosos-->
 <div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <div class="row">
                     <div class="col-4">
-                        <select id="residuo_peligroso" class="selectpicker form-control" asp-items="ViewBag.Residuos" multiple>
+                        <select id="residuo_peligroso" class="selectpicker form-control" asp-items="ViewBag.ResiduosPeligrosos" multiple>
                         </select>
                     </div>
                     <div class="col-4">
@@ -251,6 +260,9 @@
         }
         $("#frecuencia").on("change", function () {
             ActualizarContadorxFecha();
+        });
+        $("#residuo_no_peligroso").on("change", function () {
+            ActualizarDatosGraficoResiduoNoPeligroso();
         });
         $("#residuo_peligroso").on("change", function () {
             ActualizarDatosGraficoResiduoPeligroso();

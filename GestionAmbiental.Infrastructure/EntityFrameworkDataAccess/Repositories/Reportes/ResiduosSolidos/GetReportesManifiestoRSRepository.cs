@@ -184,10 +184,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                     for (int i = 1; i <= nMeses; i++)
                     {
-                        var anio = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
-                        var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(2, 2));
+                        var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
                         var nombre = FechaInicio.AddMonths(i - 1).ToString("MMMM").Substring(0, 3) + " " + FechaInicio.AddMonths(i - 1).ToString("yyyy");
-                        lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + i));
+                        lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + mes));
                     }
                 }
                 else
@@ -348,6 +347,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var registros = await _context.Manifiesto_RSs.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+                x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()) &&
                 x.Observacion_Manifiesto.Equals("Conforme") &&
                 x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
@@ -370,22 +370,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetManifiestosResiduoSolidoMensual(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada)
+        public async Task<List<Dimension>> GetManifiestosResiduoSolidoMensual(DateTime FechaInicio, DateTime FechaFin, string observacion, int[] residuo_solido, int eors_salida, int eors_llegada)
         {
             var output = new List<Dimension>();
             //Tipo_Residuo = Peligroso (1)
             var list_residuo_solido = await _context.Residuos_Solidos.Where(x => x.Id_Tipo_Residuo.Equals(1)).ToListAsync();
-
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+            if (residuo_solido.Length > 0)
+                list_residuo_solido = list_residuo_solido.Where(x => residuo_solido.Contains(x.Id_Residuo_Solido)).ToList();
+                    
+             var registros = await _context.Manifiesto_RSs.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Observacion_Manifiesto.Equals("Conforme") &&
-                x.Id_Residuo_Solido.Equals(residuo_solido != 0 ? residuo_solido : x.Id_Residuo_Solido) &&
                 x.Id_EO_RS_Salida.Equals(eors_salida != 0 ? eors_salida : x.Id_EO_RS_Salida) &&
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
                 .ToListAsync();
+            registros = registros.Where(x =>
+                list_residuo_solido.Select(y => y.Id_Residuo_Solido).ToList().Contains(x.Id_Residuo_Solido.Value)).ToList();
 
             CultureInfo cul = CultureInfo.CurrentCulture;
             var data = registros.Select(x => new { date = x.Fecha_Emision_Manifiesto.ToString("MM yyyy"), observacion = x.Observacion_Manifiesto, cantidad = x.Cantidad_RS_Evacuado, id = x.Id_Manifiesto_RS }).ToList();
@@ -401,10 +404,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 for (int i = 1; i <= nMeses; i++)
                 {
-                    var anio = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
-                    var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(2, 2));
+                    var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
                     var nombre = FechaInicio.AddMonths(i - 1).ToString("MMMM").Substring(0, 3) + " " + FechaInicio.AddMonths(i - 1).ToString("yyyy");
-                    lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + i));
+                    lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100) + mes));
                 }
             }
             else

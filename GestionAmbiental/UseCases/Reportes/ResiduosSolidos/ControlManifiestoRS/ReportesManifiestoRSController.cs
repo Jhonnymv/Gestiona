@@ -50,16 +50,16 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var items = await _getSelectItems.Execute();
-                var residuo_solido = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                var residuo_solido = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();                
                 residuo_solido.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-
 
                 var eors = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eors.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var residuo_solido_mensual = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+
                 ViewBag.ResiduoSolido = residuo_solido;
-                ViewBag.ResiduoSolidoMensual = residuo_solido.Where(x => Convert.ToInt32(x.Value) > 0);
+                ViewBag.ResiduoSolidoMensual = residuo_solido_mensual;
                 ViewBag.EORS = eors;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
@@ -127,7 +127,7 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetManifiestosResiduoSolidoMensual(string fechaInicio, string fechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada)
+        public async Task<IActionResult> GetManifiestosResiduoSolidoMensual(string fechaInicio, string fechaFin, string observacion, int[] residuo_solido, int eors_salida, int eors_llegada)
         {
             //Observaciones x estado filtradas y ordenadas en funcion al Enum EstadosRAC
             var nRegistros = await _getManifiestosResiduoSolidoMensual.Execute(fechaInicio, fechaFin, observacion, residuo_solido, eors_salida, eors_llegada);

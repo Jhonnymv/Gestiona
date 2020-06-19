@@ -187,11 +187,13 @@
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-4">
+                        <select  class="selectpicker form-control" id="selectResiduoSolido" asp-items="@ViewBag.ResiduoSolidoMensual" multiple></select>
+                    </div>
+                    <div class="col-4">
                         <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Residuos Sólidos Mensual</h6>
                     </div>
-                    <div class="col-2">
-                        <select class="form-control" id="selectResiduoSolido" asp-items="@ViewBag.ResiduoSolidoMensual"></select>
+                    <div class="col-4">
                     </div>
                 </div>
             </div>
@@ -209,14 +211,14 @@
     </div>
 </div>
 @section Scripts{
-    @*Script de la página*@
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script src="~/js/UseCases/Reportes/ReportesManifiestoRSScript.js" type="text/javascript"></script>
     <script type="text/javascript">
         function Descargar() {
             var fInicio = $("#FInicio").val();
             var fFin = $("#FFin").val();
             if (fInicio < fFin || (fInicio == "" && fFin == "")) {
-               window.location.assign("/DescargarManifiestoRS/DescargarManifiestoRS?fechaInicio="+fInicio+"&fechaFin="+fFin)
+                window.location.assign("/DescargarManifiestoRS/DescargarManifiestoRS?fechaInicio=" + fInicio + "&fechaFin=" + fFin)
             }
         }
         $("#selectResiduoSolido").on("change", function () {

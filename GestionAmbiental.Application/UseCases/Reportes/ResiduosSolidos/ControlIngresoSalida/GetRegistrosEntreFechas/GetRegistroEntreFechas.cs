@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.Reportes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Control
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            var data = await _getReportesResiduosSolidosReadOnlyRepository.GetNRegistrosEntreFechas(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fInicio, fFinal,gerencia,empresa,frecuencia);
+            var data = await _getReportesResiduosSolidosReadOnlyRepository.GetNRegistrosEntreFechas(acr_cmrs, ingreso_salida, tipo_residuo, motivo, fInicio, fFinal,gerencia,empresa,frecuencia);            
 
             var output = new List<List<DimensionOutput>>();
             var ingreso = new List<DimensionOutput>();

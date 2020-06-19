@@ -189,10 +189,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                     for (int i = 1; i <= nMeses; i++)
                     {
-                        var anio = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
-                        var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(2, 2));
+                        var mes = Convert.ToInt32(FechaInicio.AddMonths(i - 1).ToString("MM yy").Substring(0, 2));
                         var nombre = FechaInicio.AddMonths(i - 1).ToString("MMMM").Substring(0, 3) + " " + FechaInicio.AddMonths(i - 1).ToString("yyyy");
-                        lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100)+i));
+                        lstMesSinValor.Add(new Dimension(nombre, 0, (FechaInicio.Year * 100)+ mes));
                     }
                 }
                 else
@@ -249,6 +248,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var distinctSalida = lstMesSinValor.Where(x => !lstMesConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                 salida = distinctSalida.Union(lstMesConValorSalida).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();                
             }
+            ingreso = ingreso.OrderBy(x => x.Index).ToList();
+            salida = salida.OrderBy(x => x.Index).ToList();
+
             output.Add(ingreso);
             output.Add(salida);
             return output;
@@ -379,7 +381,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetCantidadResiduoNoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa)
+        public async Task<List<Dimension>> GetCantidadResiduoNoPeligroso(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int gerencia, int empresa, int[] residuos)
         {
             var output = new List<Dimension>();
             //Tipo_Residuo = No Peligroso (2)
@@ -388,7 +390,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Id_Tipo_Residuo.Equals(2))
                .ToListAsync();
 
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            if (tipo_residuo != 0)
+            {
+                residuosSolido = residuosSolido.Where(x => x.Id_Tipo_Residuo.Equals(tipo_residuo)).ToList();
+            }
+
+            if (residuos.Length > 0)
+                residuosSolido = residuosSolido.Where(x => residuos.Contains(x.Id_Residuo_Solido)).ToList();
+
+                var registros = await _context.Ingresos_Salidas_RS.Where(x =>
                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -419,11 +429,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Id_Tipo_Residuo.Equals(1))
                .ToListAsync();
 
+            if (tipo_residuo != 0)
+            {
+                residuosSolido = residuosSolido.Where(x => x.Id_Tipo_Residuo.Equals(tipo_residuo)).ToList();
+            }
+
             if (residuos.Length > 0)
                 residuosSolido = residuosSolido.Where(x => residuos.Contains(x.Id_Residuo_Solido)).ToList();
 
-                var registros = await _context.Ingresos_Salidas_RS.Where(x =>
-               !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&

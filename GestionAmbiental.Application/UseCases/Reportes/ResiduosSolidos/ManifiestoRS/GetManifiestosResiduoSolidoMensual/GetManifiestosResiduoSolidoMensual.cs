@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ResiduosSolidos.Manifie
             _getReportesManifiestoRSReadOnlyRepository = getReportesManifiestoRSReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesManifiestoRSReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(string FechaInicio, string FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada)
+        public async Task<List<DimensionOutput>> Execute(string FechaInicio, string FechaFin, string observacion, int[] residuo_solido, int eors_salida, int eors_llegada)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;

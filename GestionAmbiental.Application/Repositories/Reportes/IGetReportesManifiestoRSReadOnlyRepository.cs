@@ -13,6 +13,6 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Dimension>> GetNManifiestosCamion(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada);
         Task<List<Dimension>> GetManifiestosTipoSalida(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada);
         Task<List<Dimension>> GetManifiestosTipoLlegada(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada);
-        Task<List<Dimension>> GetManifiestosResiduoSolidoMensual(DateTime FechaInicio, DateTime FechaFin, string observacion, int residuo_solido, int eors_salida, int eors_llegada);
+        Task<List<Dimension>> GetManifiestosResiduoSolidoMensual(DateTime FechaInicio, DateTime FechaFin, string observacion, int[] residuo_solido, int eors_salida, int eors_llegada);
     }
 }
