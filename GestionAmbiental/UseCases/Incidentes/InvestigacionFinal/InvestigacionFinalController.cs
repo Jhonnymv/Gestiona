@@ -402,92 +402,99 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
-                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado);
-                var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
+                if (investigacion.PermisoMA)
+                {
+                    var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
-                var model = new EditarInvestigacionModel();
-                model.Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
-                model.Id_Encriptado_Investigacion_Final = IdInvestigacion;
-                model.Id_Reporte_Preliminar = investigacion.Id_Reporte_Preliminar;
-                model.Codigo = investigacion.Codigo;
-                model.Num_Trabajadores = investigacion.Num_Trabajadores;
-                model.Razon_Social_Contratista = investigacion.Razon_Social_Contratista;
-                model.RUC_Contratista = investigacion.RUC_Contratista;
-                model.Actividad_Contratista = investigacion.Actividad_Contratista;
-                model.Domicilio_Contratista = investigacion.Domicilio_Contratista;
-                model.Num_Trabajadores_Contratista = investigacion.Num_Trabajadores_Contratista;
-                model.Razon_Social_SubContratista = investigacion.Razon_Social_Subcontratista;
-                model.RUC_SubContratista = investigacion.RUC_Subcontratista;
-                model.Actividad_SubContratista = investigacion.Actividad_Subcontratista;
-                model.Domicilio_SubContratista = investigacion.Domicilio_Subcontratista;
-                model.Num_Trabajadores_SubContratista = investigacion.Num_Trabajadores_Subcontratista;
-                model.Id_Tipo_Incidente = investigacion.Id_Tipo_Incidente != null ? investigacion.Id_Tipo_Incidente.Value : 0;
-                model.Id_Nivel_Incidente = investigacion.Id_Nivel_Incidente != null ? investigacion.Id_Nivel_Incidente.Value : 0;
-                model.Lugar_Incidente = investigacion.Lugar_Incidente;
-                model.Coordenada_Este = investigacion.Coordenada_Este;
-                model.Coordenada_Norte = investigacion.Coordenada_Norte;
-                model.Localidad = investigacion.Localidad;
-                model.Distrito = investigacion.Distrito;
-                model.Provincia = investigacion.Provincia;
-                model.Departamento = investigacion.Departamento;
-                model.Fecha_Incidente = investigacion.Fecha_Incidente != null ? investigacion.Fecha_Incidente.Value.ToString("yyyy-MM-dd") : "";
-                model.Hora_Incidente = investigacion.Fecha_Incidente != null ? investigacion.Fecha_Incidente.Value.ToString("HH:mm") : "";
-                model.Fecha_Inicio_Investigacion = investigacion.Fecha_Inicio_Investigacion != null ? investigacion.Fecha_Inicio_Investigacion.Value.ToString("yyyy-MM-dd") : "";
-                model.Turno = investigacion.Turno;
-                model.Descripcion_Incidente = investigacion.Descripcion_Incidente;
-                model.Id_Gerencia_Responsable = investigacion.Id_Gerencia_Responsable != null ? investigacion.Id_Gerencia_Responsable.Value : 0;
-                model.Id_Supervisor = investigacion.Id_Supervisor_MA != null ? investigacion.Id_Supervisor_MA.Value : 0;
-                model.Evidencias_Completas_Papel = investigacion.Evidencia_Papel != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Papel) : null;
-                model.Evidencias_Completas_Persona = investigacion.Evidencia_Persona != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Persona) : null;
-                model.Evidencias_Completas_Posicion = investigacion.Evidencia_Posicion != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Posicion) : null;
-                model.Evidencias_Completas_Partes = investigacion.Evidencia_Parte != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Parte) : null;
-                model.Estado = investigacion.Estado;
+                    var model = new EditarInvestigacionModel();
+                    model.Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
+                    model.Id_Encriptado_Investigacion_Final = IdInvestigacion;
+                    model.Id_Reporte_Preliminar = investigacion.Id_Reporte_Preliminar;
+                    model.Codigo = investigacion.Codigo;
+                    model.Num_Trabajadores = investigacion.Num_Trabajadores;
+                    model.Razon_Social_Contratista = investigacion.Razon_Social_Contratista;
+                    model.RUC_Contratista = investigacion.RUC_Contratista;
+                    model.Actividad_Contratista = investigacion.Actividad_Contratista;
+                    model.Domicilio_Contratista = investigacion.Domicilio_Contratista;
+                    model.Num_Trabajadores_Contratista = investigacion.Num_Trabajadores_Contratista;
+                    model.Razon_Social_SubContratista = investigacion.Razon_Social_Subcontratista;
+                    model.RUC_SubContratista = investigacion.RUC_Subcontratista;
+                    model.Actividad_SubContratista = investigacion.Actividad_Subcontratista;
+                    model.Domicilio_SubContratista = investigacion.Domicilio_Subcontratista;
+                    model.Num_Trabajadores_SubContratista = investigacion.Num_Trabajadores_Subcontratista;
+                    model.Id_Tipo_Incidente = investigacion.Id_Tipo_Incidente != null ? investigacion.Id_Tipo_Incidente.Value : 0;
+                    model.Id_Nivel_Incidente = investigacion.Id_Nivel_Incidente != null ? investigacion.Id_Nivel_Incidente.Value : 0;
+                    model.Lugar_Incidente = investigacion.Lugar_Incidente;
+                    model.Coordenada_Este = investigacion.Coordenada_Este;
+                    model.Coordenada_Norte = investigacion.Coordenada_Norte;
+                    model.Localidad = investigacion.Localidad;
+                    model.Distrito = investigacion.Distrito;
+                    model.Provincia = investigacion.Provincia;
+                    model.Departamento = investigacion.Departamento;
+                    model.Fecha_Incidente = investigacion.Fecha_Incidente != null ? investigacion.Fecha_Incidente.Value.ToString("yyyy-MM-dd") : "";
+                    model.Hora_Incidente = investigacion.Fecha_Incidente != null ? investigacion.Fecha_Incidente.Value.ToString("HH:mm") : "";
+                    model.Fecha_Inicio_Investigacion = investigacion.Fecha_Inicio_Investigacion != null ? investigacion.Fecha_Inicio_Investigacion.Value.ToString("yyyy-MM-dd") : "";
+                    model.Turno = investigacion.Turno;
+                    model.Descripcion_Incidente = investigacion.Descripcion_Incidente;
+                    model.Id_Gerencia_Responsable = investigacion.Id_Gerencia_Responsable != null ? investigacion.Id_Gerencia_Responsable.Value : 0;
+                    model.Id_Supervisor = investigacion.Id_Supervisor_MA != null ? investigacion.Id_Supervisor_MA.Value : 0;
+                    model.Evidencias_Completas_Papel = investigacion.Evidencia_Papel != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Papel) : null;
+                    model.Evidencias_Completas_Persona = investigacion.Evidencia_Persona != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Persona) : null;
+                    model.Evidencias_Completas_Posicion = investigacion.Evidencia_Posicion != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Posicion) : null;
+                    model.Evidencias_Completas_Partes = investigacion.Evidencia_Parte != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Parte) : null;
+                    model.Estado = investigacion.Estado;
 
-                model.ImpactoAmbiental = new ImpactoAmbientalModel();
-                model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
-                model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
-                //Suelo
-                model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
-                model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
-                model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
-                model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
-                model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
-                //Flora
-                model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
-                model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
-                model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
-                model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
-                //Fauna
-                model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
-                model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
-                model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
-                model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
-                //Agua
-                model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
-                model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
-                model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
-                model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
-                model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
-                model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
+                    model.ImpactoAmbiental = new ImpactoAmbientalModel();
+                    model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente = impacto.Id_Impacto_Ambiental_Incidente;
+                    model.ImpactoAmbiental.Id_Investigacion_Final = impacto.Id_Investigacion_Final;
+                    //Suelo
+                    model.ImpactoAmbiental.Id_Tipo_Suelo = impacto.Id_Tipo_Suelo;
+                    model.ImpactoAmbiental.Area_Suelo = impacto.Area_Suelo;
+                    model.ImpactoAmbiental.Id_Unidad_Area_Suelo = impacto.Id_Unidad_Area_Suelo;
+                    model.ImpactoAmbiental.Cantidad_Suelo = impacto.Cantidad_Suelo;
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo = impacto.Id_Unidad_Cantidad_Suelo;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo = impacto.Id_Lugar_Disposicion_Suelo;
+                    //Flora
+                    model.ImpactoAmbiental.Id_Especie_Flora = impacto.Id_Especie_Flora;
+                    model.ImpactoAmbiental.Unidad_Flora = impacto.Unidad_Flora;
+                    model.ImpactoAmbiental.Id_Unidad_Flora = impacto.Id_Unidad_Flora;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Flora = impacto.Cantidad_Residuo_Flora;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Flora = impacto.Id_Unidad_Residuo_Flora;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora = impacto.Id_Lugar_Disposicion_Flora;
+                    //Fauna
+                    model.ImpactoAmbiental.Id_Especie_Fauna = impacto.Id_Especie_Fauna;
+                    model.ImpactoAmbiental.Unidad_Fauna = impacto.Unidad_Fauna;
+                    model.ImpactoAmbiental.Id_Unidad_Fauna = impacto.Id_Unidad_Fauna;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Fauna = impacto.Cantidad_Residuo_Fauna;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna = impacto.Id_Unidad_Residuo_Fauna;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna = impacto.Id_Lugar_Disposicion_Fauna;
+                    //Agua
+                    model.ImpactoAmbiental.Id_Tipo_Agua = impacto.Id_Tipo_Agua;
+                    model.ImpactoAmbiental.Volumen_Agua = impacto.Volumen_Agua;
+                    model.ImpactoAmbiental.Id_Unidad_Agua = impacto.Id_Unidad_Agua;
+                    model.ImpactoAmbiental.Cantidad_Residuo_Agua = impacto.Cantidad_Residuo_Agua;
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Agua = impacto.Id_Unidad_Residuo_Agua;
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua = impacto.Id_Lugar_Disposicion_Agua;
 
-                model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
-                model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
-                model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
-                model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
-                model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
-                model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
-                model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
-                model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
-                model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
-                model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
-                model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
+                    model.ImpactoAmbiental.Restos_Arq = impacto.Restos_Arq;
+                    model.ImpactoAmbiental.Nombre_Resto_Arq = impacto.Nombre_Resto_Arq;
+                    model.ImpactoAmbiental.Cord_Este = impacto.Cord_Este;
+                    model.ImpactoAmbiental.Cord_Norte = impacto.Cord_Norte;
+                    model.ImpactoAmbiental.Danio_Salud = impacto.Danio_Salud;
+                    model.ImpactoAmbiental.Personas_Afectadas = impacto.Personas_Afectadas;
+                    model.ImpactoAmbiental.Cantidad_RS = impacto.Cantidad_RS;
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_RS = impacto.Id_Unidad_Cantidad_RS;
+                    model.ImpactoAmbiental.Volumen_Rs = impacto.Volumen_Rs;
+                    model.ImpactoAmbiental.Id_Unidad_Volumen_RS = impacto.Id_Unidad_Volumen_RS;
+                    model.ImpactoAmbiental.EO_RS = impacto.EO_RS;
 
-                return View(model);
+                    return View(model);
+                }
+                else
+                {
+                    return RedirectToAction("DetalleInvestigacion",new { IdInvestigacion = IdInvestigacion});
+                }
             }
         }
         public async Task<IActionResult> DetalleInvestigacion(string IdInvestigacion)
@@ -622,7 +629,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
-                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado);
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
                 var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
                 var model = new EditarInvestigacionModel();
@@ -713,6 +720,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> ListarInvolucrados(int IdInvestigacion)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
             var involucrados = await _getInvolucradosIncidente.Execute(IdInvestigacion);
             var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_involucrados = "";
@@ -737,7 +746,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_involucrados += "<td>" + fila.Empresa + "</td>";
                 else
                     filas_involucrados += "<td>_</td>";
-                if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                 {
                     filas_involucrados += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
                     filas_involucrados += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
@@ -794,6 +803,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> ListarProductoDerramado(int IdInvestigacion)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
             var productos = await _getProductosDerramados.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_productos = "";
@@ -808,7 +819,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 filas_productos += "<td>" + fila.Estado_Equipo_Responsable+"</td>";
                 filas_productos += "<td>" + fila.Cantidad_Recuperado + " " +fila.Unidad+ "</td>";
                 filas_productos += "<td>" + fila.Cantidad_No_Recuperado + " " +fila.Unidad+ "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                 {
                     filas_productos += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Editar</button></td>";
                     filas_productos += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Eliminar</button></td>";
@@ -872,6 +883,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> ListarCausas(int IdInvestigacion)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
             var causas = await _getCausasIncidenteInvestigacion.Execute(IdInvestigacion);
             var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_causas_inmediatas = "";
@@ -887,7 +900,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_inmediatas += "<td>_</td>";
-                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                     {
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -903,7 +916,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_basicas += "<td>_</td>";
-                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
+                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                     {
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -1031,11 +1044,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public async Task<IActionResult> ListarAcciones(int IdInvestigacion)
         {
             var rolUsuario = "";
-            if (HttpContext.Session.GetString("SessionUser") != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                rolUsuario = userInfo.Rol.ToString();
-            }
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            
+            rolUsuario = userInfo.Rol.ToString();
+            
 
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
@@ -1061,7 +1073,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_inmediatas += "<td>_</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
-                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) || rolUsuario.Equals(InspeccionRol.Admin.ToString()))
+                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(InspeccionRol.Admin.ToString()))
                     {
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -1087,7 +1099,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_correctivas += "<td>_</td>";
                     filas_acciones_correctivas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
-                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) || rolUsuario.Equals(RSRoles.Admin.ToString()))
+                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(RSRoles.Admin.ToString()))
                     {
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";

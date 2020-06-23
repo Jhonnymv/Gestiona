@@ -70,15 +70,15 @@ function Filtrar() {
     ActualizaCausaInmediataIncidente();
     ActualizaCausaBasicaIncidente();
     ActualizaImpactoSuelo();
-    //ActualizaImpactoFlora();
-    //ActualizaImpactoFauna();
-    //ActualizaImpactoAgua();
+    ActualizaImpactoFlora();
+    ActualizaImpactoFauna();
+    ActualizaImpactoAgua();
     ActualizaImpactoPersona();
 
     ActualizaResiduoSuelo();
-    ActualizaResiduoFlora();
-    ActualizaResiduoFauna();
-    ActualizaResiduoAgua();
+    //ActualizaResiduoFlora();
+    //ActualizaResiduoFauna();
+    //ActualizaResiduoAgua();
 }
 
 function ActualizarInvestigacionesFecha() {
