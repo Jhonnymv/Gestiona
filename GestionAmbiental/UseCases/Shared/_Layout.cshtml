@@ -73,7 +73,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" id="dropdown_rac" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Incidentes Ambientales</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown_rac">
-                                @if (ViewBag.Rol == "Inspector")
+                                @if (ViewBag.Rol == "Inspector"|| ViewBag.Rol == "AsesorSSO")
                                 {
                                     <a class="dropdown-item" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar </a>
                                     <a class="dropdown-item" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
