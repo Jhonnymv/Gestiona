@@ -1,0 +1,107 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna.Model.NombreComunModel
+@{
+    ViewData["Title"] = "DetalleNombreComun";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Información de Nombres Comunes de Fauna</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarNombreComun"  method="post" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" asp-for="IdNombreComun">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="IdTipoFauna"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="IdTipoFauna"></span>
+                    <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna" disabled>                        
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Foto"></label>
+                </div>
+                <div class="col-lg-8" id="image_preview">
+                    <img src="@Model.RutaFoto" style="width:100%;height:auto"/>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estado"></span>
+                    <select class="form-control" asp-for="Estado" disabled>
+                        <option value="">--SELECCIONE--</option>
+                        <option value="ACT">ACT</option>
+                        <option value="INA">INA</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            /*
+            var img = new Image();
+            var div = document.getElementById('image_preview');
+            img.onload = function () {
+                div.appendChild(img);
+            };
+            img.src = ''; 
+            */
+        });
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#Descripcion").prop('disabled', false);
+            $("#Estado").prop('disabled', false);
+        });
+
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#Descripcion").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
+        });
+    </script>
+}
+
+
+
+

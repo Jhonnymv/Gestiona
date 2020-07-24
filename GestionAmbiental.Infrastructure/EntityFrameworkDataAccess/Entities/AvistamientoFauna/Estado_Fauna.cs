@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna
+{
+    [Table("Tb_Estado_Fauna")]
+    public class Estado_Fauna
+    {
+        [Key]
+        public int Id_Estado_Fauna { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Descripcion { get; set; }
+        [Column(TypeName = "varchar(3)")]
+        public string Estado { get; set; }
+    }
+}

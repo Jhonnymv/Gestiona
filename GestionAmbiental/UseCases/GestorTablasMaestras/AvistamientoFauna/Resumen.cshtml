@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="listItems">
+            <li class="nav-item">
+                <a class="nav-link active" id="Tipo_Fauna">Tipo de Fauna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Nombre_Comun">Nombre Común de Fauna</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                <label>Buscar:</label>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro">
+            </div>
+            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                <button class="btn btn-primary" id="btn_enviar">Buscar</button>
+            </div>
+        </div>
+        <div class="row justify-content-start mt-2 mb-2">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+            </div>
+        </div>
+        <div class="row" id="tab_content">
+        </div>
+        <div class="row justify-content-center" id="paginado">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltrarTipoFauna(1);
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
+        });
+
+        $("#btn_enviar").on('click', function (e) {
+            if ($("#Tipo_Fauna").hasClass("active")) {
+                FiltrarTipoFauna(1);
+            }
+            if ($("#Nombre_Comun").hasClass("active")) {
+                FiltrarNombreComun(1);
+            }
+        });
+
+        $("#Tipo_Fauna").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
+            FiltrarTipoFauna(1);
+        });
+        $("#Nombre_Comun").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
+            FiltrarNombreComun(1);
+        });
+
+        function FiltrarTipoFauna(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarTipoFauna",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarNombreComun(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarNombreComun",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+    </script>
+}
+
