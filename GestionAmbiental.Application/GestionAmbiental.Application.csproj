@@ -12,4 +12,8 @@
     <ProjectReference Include="..\GestionAmbiental.Domain\GestionAmbiental.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\AvistamienoFauna\RegistrarAvistamientoFauna\" />
+  </ItemGroup>
+
 </Project>

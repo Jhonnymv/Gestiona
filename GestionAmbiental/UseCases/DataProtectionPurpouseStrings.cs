@@ -13,5 +13,6 @@ namespace GestionAmbiental.UseCases
         public readonly string IngresoResiduosPeligrosSIdRouteValue = "ManifiestosRSPeligrosos";
         public readonly string ReportePreliminarIdRouteValue = "ReportePreliminarIdRouteValue";
         public readonly string InvestigacionIdRouteValue = "InvestigacionIdRouteValue";
+        public readonly string AvistamientoFaunaIdRouteValue = "AvistamientoFaunaIdRouteValue";
     }
 }

@@ -793,7 +793,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "<td>" + fila.Email + "</td>";
                     filasTabla += "<td>" + fila.Rol + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
-                    filasTabla += "<td><a href=\"/GestorManifiestoRS/DetalleUsuario?IdUsuario=" + fila.IdUsuario + "\">Detalle</a></td>";
+                    filasTabla += "<td><a href=\"/GestorIncidentes/DetalleUsuario?IdUsuario=" + fila.IdUsuario + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
 

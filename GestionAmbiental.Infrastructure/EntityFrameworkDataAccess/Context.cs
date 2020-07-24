@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.Items;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.ReportePreliminar;
@@ -67,6 +68,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Involucrado_Incidente_Reporte> Involucrado_Incidente_Reporte { get; set; }
         public DbSet<Usuario_Notificar_Incidente> Usuario_Notificar_Incidente { get; set; }
 
+        public DbSet<Tipo_Fauna> Tipos_Fauna { get; set; }
+        public DbSet<Nombre_Comun_Fauna> Nombres_Comunes_Fauna { get; set; }
+        public DbSet<Tipo_Avistamiento> Tipos_Avistamiento { get; set; }
+        public DbSet<Estado_Fauna> Estados_Fauna { get; set; }
+        public DbSet<Area_Trabajo> Areas_Trabajo { get; set; }
+        public DbSet<Avistamiento_Fauna> Avistamientos_Fauna { get; set; }
+        public DbSet<Log_Avistamiento_Fauna> Logs_Avistamiento_Fauna { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -172,6 +180,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Involucrado_Incidente_Reporte");
             modelBuilder.Entity<Usuario_Notificar_Incidente>()
                 .ToTable("Tb_Usuarios_Notificar_Incidente");
+                       
+            modelBuilder.Entity<Tipo_Fauna>()
+                .ToTable("Tb_Tipo_Fauna");
+            modelBuilder.Entity<Nombre_Comun_Fauna>()
+                .ToTable("Tb_Nombre_Comun_Fauna");
+            modelBuilder.Entity<Tipo_Avistamiento>()
+                .ToTable("Tb_Tipo_Avistamiento");
+            modelBuilder.Entity<Estado_Fauna>()
+                .ToTable("Tb_Estado_Fauna");
+            modelBuilder.Entity<Area_Trabajo>()
+                .ToTable("Tb_Area_Trabajo");
+            modelBuilder.Entity<Avistamiento_Fauna>()
+                .ToTable("Tb_Avistamiento_Fauna");
+            modelBuilder.Entity<Log_Avistamiento_Fauna>()
+                .ToTable("Tb_Log_Avistamiento_Fauna");
         }
     }
 }

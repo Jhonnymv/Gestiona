@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorTablasMaestras;
+using GestionAmbiental.Domain.AvistamientoFauna.Items;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
@@ -1232,6 +1233,123 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Tipo_Factor = factor.Tipo_Factor;
             entity.Estado = factor.Estado;
             _context.Factor_Causa_Incidente.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        //Tb_Tipo_Fauna
+        public async Task<List<TipoFauna>> GetTiposFauna(string filtro)
+        {
+            var entities = await _context.Tipos_Fauna.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<TipoFauna>();
+            foreach (var item in entities)
+            {
+                output.Add(new TipoFauna { 
+                    IdTipoFauna = item.Id_Tipo_Fauna,
+                    Descripcion = item.Descripcion, 
+                    Estado = item.Estado 
+                });
+            }
+
+            return output;
+        }
+        public async Task<TipoFauna> GetTipoFauna(int id_tipo_fauna)
+        {
+            var entity = await _context.Tipos_Fauna.FirstOrDefaultAsync(x => x.Id_Tipo_Fauna.Equals(id_tipo_fauna));
+            var output = new TipoFauna
+            {
+                IdTipoFauna = entity.Id_Tipo_Fauna,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipoFauna(TipoFauna tipoFauna)
+        {
+            var entity = new Entities.AvistamientoFauna.Tipo_Fauna
+            {
+                Descripcion = tipoFauna.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipos_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Fauna ;
+        }
+        public async Task UpdateTipoFauna(TipoFauna tipoFauna)
+        {
+            var entity = await _context.Tipos_Fauna.FirstOrDefaultAsync(x => x.Id_Tipo_Fauna.Equals(tipoFauna.IdTipoFauna));
+            entity.Descripcion = tipoFauna.Descripcion;
+            entity.Estado = tipoFauna.Estado;
+            _context.Tipos_Fauna.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Nombre_Comun_Fauna
+        public async Task<List<NombreComunFauna>> GetNombreComun(string filtro)
+        {
+            var entities = await _context.Nombres_Comunes_Fauna.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+            var tiposFauna = await _context.Tipos_Fauna.ToListAsync();
+
+            var output = new List<NombreComunFauna>();
+            foreach (var item in entities)
+            {
+                var tipoFauna = tiposFauna.FirstOrDefault(x => x.Id_Tipo_Fauna.Equals(item.Id_Tipo_Fauna));
+                output.Add(new NombreComunFauna
+                {
+                    IdNombreComunFauna = item.Id_Nombre_Comun_Fauna,
+                    Descripcion = item.Descripcion,
+                    Foto = item.Foto,
+                    TipoFauna = new TipoFauna
+                    {
+                        IdTipoFauna = tipoFauna.Id_Tipo_Fauna,
+                        Descripcion = tipoFauna.Descripcion,
+                        Estado = tipoFauna.Estado
+                    },
+                    Estado = item.Estado
+                });
+            }
+
+            return output;
+        }
+        public async Task<NombreComunFauna> GetNombreComun(int id_nombre_comun)
+        {
+            var entity = await _context.Nombres_Comunes_Fauna.FirstOrDefaultAsync(x => x.Id_Nombre_Comun_Fauna.Equals(id_nombre_comun));
+            var tipoFauna = await _context.Tipos_Fauna.FirstOrDefaultAsync(x => x.Id_Tipo_Fauna.Equals(entity.Id_Tipo_Fauna));
+            var output = new NombreComunFauna
+            {
+                IdNombreComunFauna = entity.Id_Nombre_Comun_Fauna,
+                Descripcion = entity.Descripcion,
+                Foto = entity.Foto,
+                TipoFauna = new TipoFauna
+                {
+                    IdTipoFauna = tipoFauna.Id_Tipo_Fauna,
+                    Descripcion = tipoFauna.Descripcion,
+                    Estado = tipoFauna.Estado
+                },
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddNombreComun(NombreComunFauna nombreComun)
+        {
+            var entity = new Entities.AvistamientoFauna.Nombre_Comun_Fauna
+            {
+                Descripcion = nombreComun.Descripcion,
+                Foto = nombreComun.Foto,
+                Id_Tipo_Fauna = nombreComun.TipoFauna.IdTipoFauna,
+                Estado = "ACT"
+            };
+            _context.Nombres_Comunes_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Nombre_Comun_Fauna;
+        }
+        public async Task UpdateNombreComun(NombreComunFauna nombreComun)
+        {
+            var entity = await _context.Nombres_Comunes_Fauna.FirstOrDefaultAsync(x => x.Id_Nombre_Comun_Fauna.Equals(nombreComun.IdNombreComunFauna));
+            entity.Descripcion = nombreComun.Descripcion;
+            entity.Foto = nombreComun.Foto;
+            entity.Id_Tipo_Fauna = nombreComun.TipoFauna.IdTipoFauna;
+            entity.Estado = nombreComun.Estado;
+            _context.Nombres_Comunes_Fauna.Update(entity);
             await _context.SaveChangesAsync();
         }
     }

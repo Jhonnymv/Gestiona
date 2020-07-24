@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
+﻿using GestionAmbiental.Domain.AvistamientoFauna.Items;
+using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
 using System;
@@ -154,5 +155,17 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<Factor_Causa_Incidente> GetFactor_Causa_Incidente(int id_factor);
         Task<int> AddFactor_Causa_Incidente(Factor_Causa_Incidente factor);
         Task UpdateFactor_Causa_Incidente(Factor_Causa_Incidente factor);
+
+        //Tb_Tipo_Fauna
+        Task<List<TipoFauna>> GetTiposFauna(string filtro);
+        Task<TipoFauna> GetTipoFauna(int id_tipo_fauna);
+        Task<int> AddTipoFauna(TipoFauna tipoFauna);
+        Task UpdateTipoFauna(TipoFauna tipoFauna);
+
+        //Tb_Nombre_Comun_Fauna
+        Task<List<NombreComunFauna>> GetNombreComun(string filtro);
+        Task<NombreComunFauna> GetNombreComun(int id_nombre_comun);
+        Task<int> AddNombreComun(NombreComunFauna nombreComun);
+        Task UpdateNombreComun(NombreComunFauna nombreComun);
     }
 }

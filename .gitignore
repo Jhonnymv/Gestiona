@@ -339,3 +339,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+#uploaded files
+GestionAmbiental/wwwroot/img/uploads/AvistamientoFauna/

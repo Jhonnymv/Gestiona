@@ -42,7 +42,7 @@
                 <input type="text" class="form-control" id="filtro">
             </div>
             <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
-                <button class="btn btn-primary" id="btn_enviar">Enviar</button>
+                <button class="btn btn-primary" id="btn_enviar">Buscar</button>
             </div>
         </div>
         <div class="row justify-content-start mt-2 mb-2">
@@ -128,7 +128,7 @@
         $("#Usuarios").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarUsuario");
-            FiltrarUsuarios(1);
+            FiltrarUsuario(1);
         });
 
         function FiltarFactorCausa(pag) {
@@ -165,7 +165,7 @@
                 }
             });
         }
-        function FiltrarUsuarios(pag) {
+        function FiltrarUsuario(pag) {
             $.ajax({
                 type: "POST",
                 url: "/GestorIncidentes/FiltrarUsuario",
