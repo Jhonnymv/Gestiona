@@ -24,5 +24,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         public string Phone { get; set; }
 
         public string Mobile { get; set; }
+        public string Celular { get; set; }
+        public string Puesto { get; set; }
+        public string Jefe { get; set; }
+        public string Area { get; set; }
+        public string Empresa { get; set; }
+        public string DNI { get; set; }
+
     }
 }

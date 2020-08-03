@@ -20,21 +20,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Avi
         [Column(TypeName = "varchar(100)")]
         public string Ubicacion { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Nombre_Comun_Fauna { get; set; }
+        public int? Id_Nombre_Comun_Fauna { get; set; }
         [Column(TypeName = "int")]
         public int Cantidad { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Tipo_Avistamiento { get; set; }
+        public int? Id_Tipo_Avistamiento { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Estado_Fauna { get; set; }
+        public int? Id_Estado_Fauna { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Lugar_Referencia { get; set; }
         [Column(TypeName = "int")]
         public int Id_Usuario { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Empresa { get; set; }
+        public int? Id_Empresa { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Area_Trabajo { get; set; }
+        public int? Id_Area_Trabajo { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string N_Fotocheck { get; set; }
         [Column(TypeName = "varchar(250)")]
@@ -42,7 +42,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Avi
         [Column(TypeName = "text")]
         public string Evidencia_Accion { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Supervisor { get; set; }
+        public int? Id_Supervisor { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Estado { get; set; }
     }

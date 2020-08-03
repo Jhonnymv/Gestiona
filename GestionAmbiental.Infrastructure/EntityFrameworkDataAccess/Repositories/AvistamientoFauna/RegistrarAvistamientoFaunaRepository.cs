@@ -1,0 +1,41 @@
+﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.AvistamientoFauna
+{
+    public class RegistrarAvistamientoFaunaRepository : IRegistrarAvistamientoFaunaReadOnlyRepository
+    {
+        public Context _context;
+
+        public RegistrarAvistamientoFaunaRepository(Context context)
+        {
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+        }
+
+        public async Task<int> RegistrarAvistamientoFauna(Domain.AvistamientoFauna.AvistamientoFauna avistamiento)
+        {
+            var entity = new Entities.AvistamientoFauna.Avistamiento_Fauna();
+            entity.Codigo = avistamiento.Codigo;
+            entity.Fotos = avistamiento.Fotos;
+            entity.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento;
+            entity.Ubicacion = avistamiento.Ubicacion;
+            entity.Cantidad = avistamiento.Cantidad;
+            entity.Id_Nombre_Comun_Fauna = avistamiento.NombreComun?.IdNombreComunFauna;
+            entity.Id_Tipo_Avistamiento = avistamiento.TipoAvistamiento?.IdTipoAvistamiento;
+            entity.Id_Estado_Fauna = avistamiento.EstadoFauna?.IdEstadoFauna;
+            entity.Lugar_Referencia = avistamiento.Lugar_Referencia;
+            entity.Id_Usuario = avistamiento.Usuario.IdUsuario;
+            entity.Id_Empresa = avistamiento.Empresa?.IdEmpresa;
+            entity.Id_Area_Trabajo = avistamiento.AreaTrabajo?.IdAreaTrabajo;
+            entity.N_Fotocheck = avistamiento.NFotocheck;
+
+            _context.Avistamientos_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Avistamiento_Fauna;
+        }
+    }
+}

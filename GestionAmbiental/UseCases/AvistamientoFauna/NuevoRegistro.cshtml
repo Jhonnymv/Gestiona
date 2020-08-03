@@ -1,0 +1,261 @@
+﻿@model GestionAmbiental.UseCases.AvistamientoFauna.AvistamientoFaunaModel
+@{
+    ViewData["Title"] = "NuevoRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Nuevo Registro de Avistamiento de Fauna Silvestre</h2>
+    </div>
+</div>
+
+<div class="row mb-2">
+    <div class="container-fluid d-flex align-items-center flex-column bg-danger">
+        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">SI EL ESPÉCIMEN ESTÁ HERIDO LLAMAR A: </h1>
+        <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
+    </div>
+</div>
+<form class="form-group" id="form_nuevoRAC" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
+
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">Registro Fotográfico</h5>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12 text-center">
+            <span class="text-danger field-validation-error" data-valmsg-for="Fotos" data-valmsg-replace="true">
+                <span id="danger_fotos" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Fotos"><img src="~/img/icons/camara.png" /></label>
+            @*<label class="btn btn-primary" for="Foto">Seleccione</label>*@
+            <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpge,.png" onchange="preview_image(event)" multiple>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-lg-12 text-center">
+            <img id="previsualizacion" src="~/img/uploads/AvistamientoFauna/Arácnidos/Arañas_Arácnidos20200724185706.jpg" style="width:30rem;height:auto;max-width:100%" />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">Datos del Avistamiento</h5>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha_Avistamiento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
+            <input type="date" class="form-control" asp-for="Fecha_Avistamiento" readonly />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Hora_Avistamiento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
+            <input type="time" class="form-control" asp-for="Hora_Avistamiento" readonly />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Ubicacion"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Ubicacion"></span>
+            <input type="text" class="form-control" asp-for="Ubicacion" />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="IdNombreComun"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="IdNombreComun"></span>
+            <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun"></select>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
+            <div class="d-flex justify-content-center">
+                <button class="btn btn-link" onclick="VerImagen()">Ver Imagen de Referencia</button>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Cantidad"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Cantidad"></span>
+            <input type="number" class="form-control" asp-for="Cantidad" value="1"/>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="IdTipoAvistamiento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="IdTipoAvistamiento"></span>
+            <select asp-for="IdTipoAvistamiento" class="form-control" asp-items="ViewBag.TipoAvistamiento"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="IdEstadoFauna"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="IdEstadoFauna"></span>
+            <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Lugar_Referencia"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Lugar_Referencia"></span>
+            <input type="text" class="form-control" asp-for="Lugar_Referencia" />
+        </div>
+    </div>
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">Datos del Reportante</h5>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <label asp-for="IdEmpresa"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <span class="text-danger" asp-validation-for="IdEmpresa"></span>
+            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <label asp-for="Nombres_Apellidos"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.Usuario" readonly />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <label asp-for="IdAreaTrabajo"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
+            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <label asp-for="NFotocheck"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
+            <span class="text-danger" asp-validation-for="NFotocheck"></span>
+            <input type="text" class="form-control" asp-for="NFotocheck" />
+        </div>
+    </div>
+    <div class="row mb-2">
+        <a class="btn btn-secondary" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </div>
+</form>
+
+    <!-- Modal Imagen Referencia-->
+    <div class="modal fade" id="modal_imagen_referencia" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_imagen_referencia"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <div class="col-12">
+                            <img id="ImagenEspecie" style="width:100%;height:auto" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <label id="NombreEspecie" class="font-weight-bold" "></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @section Scripts{
+        <script type="text/javascript">
+            var ubicacion = $("#Ubicacion");
+
+            $(document).ready(function () {
+                CargarDatos();
+            });
+            function preview_image(event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var output = document.getElementById('previsualizacion');
+                    output.src = reader.result;
+                }
+                reader.readAsDataURL(event.target.files[0]);
+
+            }
+            function CargarDatos() {
+                var fechaActual = new Date();
+                $("#Fecha_Avistamiento").val(DarFormatoFecha(fechaActual));
+                $("#Hora_Avistamiento").val(DarFormatoHora(fechaActual));
+                $("#Ubicacion").val(ObtenerUbicacion());
+            }
+            function DarFormatoFecha(date) {
+                var d = new Date(date),
+                    month = '' + (d.getMonth() + 1),
+                    day = '' + d.getDate(),
+                    year = d.getFullYear();
+
+                if (month.length < 2)
+                    month = '0' + month;
+                if (day.length < 2)
+                    day = '0' + day;
+
+                return [year, month, day].join('-');
+            }
+            function DarFormatoHora(date) {
+                var d = new Date(date),
+                    hour = '' + (d.getHours() + 1),
+                    minute = '' + d.getMinutes()
+
+                if (hour.length < 2)
+                    hour = '0' + hour;
+                if (minute.length < 2)
+                    minute = '0' + minute;
+
+                return [hour, minute].join(':');
+            }
+            function ObtenerUbicacion() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+                } else {
+                    ubicacion.val("");
+                }
+            }
+            function MostrarUbicacion(position) {
+                ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
+            }
+            function VerImagen() {
+                var IdNombreComun = $("#IdNombreComun").val();
+                if (IdNombreComun != 0) {
+                    $("#modal_imagen_referencia").modal('show');
+                    $.ajax({
+                        type: 'GET',
+                        data: {
+                            'IdNombreComun': IdNombreComun
+                        },
+                        url: '/AvistamientoFauna/ObtenerImagenReferencia',
+                        success: function (response) {
+                            console.log(response.id);
+                            console.log(response.foto);
+                            $("#ImagenEspecie").attr("src", response.foto);
+                            $("#NombreEspecie").text(response.nombre);
+                        },
+                        error: function () {
+                            console.log("No se ha podido obtener la imagen");
+                        }
+                    });
+                }
+            }
+
+        </script>
+    }
+

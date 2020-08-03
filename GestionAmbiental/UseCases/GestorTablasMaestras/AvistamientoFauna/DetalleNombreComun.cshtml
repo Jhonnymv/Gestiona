@@ -11,7 +11,7 @@
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarNombreComun"  method="post" enctype="multipart/form-data" autocomplete="off">
+        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarNombreComun" method="post" enctype="multipart/form-data" autocomplete="off">
             <input type="hidden" asp-for="IdNombreComun">
             <div class="row mb-2">
                 <div class="col-lg-4">
@@ -28,16 +28,37 @@
                 </div>
                 <div class="col-lg-8">
                     <span class="text-danger" asp-validation-for="IdTipoFauna"></span>
-                    <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna" disabled>                        
+                    <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna" disabled>
                     </select>
                 </div>
             </div>
             <div class="row mb-2">
                 <div class="col-lg-4">
-                    <label asp-for="Foto"></label>
+                    <label asp-for="RutaFoto"></label>
                 </div>
                 <div class="col-lg-8" id="image_preview">
-                    <img src="@Model.RutaFoto" style="width:100%;height:auto"/>
+                    <input type="hidden" asp-for="RutaFoto" value="@Model.RutaFoto" />
+                    <img src="@Model.RutaFoto" style="width:100%;height:auto" />
+                </div>
+            </div>
+            <div id="seccion_foto" style="display:none;">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Foto"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <label class="btn btn-primary" for="Foto">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Foto" accept=".jpg,.jpge,.png" onchange="preview_image(event)">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <img id="output_image" style="width:100%;height:auto" />
+                    </div>
                 </div>
             </div>
             <div class="row mb-2">
@@ -66,16 +87,6 @@
 </div>
 @section scripts{
     <script>
-        $(document).ready(function () {
-            /*
-            var img = new Image();
-            var div = document.getElementById('image_preview');
-            img.onload = function () {
-                div.appendChild(img);
-            };
-            img.src = ''; 
-            */
-        });
         $("#btnEditar").on('click', function () {
             $("#bntsEditar").show();
             $("#bntsDetalle").hide();
@@ -85,6 +96,8 @@
             $("#btnGuardar").prop('disabled', false);
             //Habilitar inputs
             $("#Descripcion").prop('disabled', false);
+            $("#IdTipoFauna").prop('disabled', false);
+            $("#seccion_foto").css('display', 'block');
             $("#Estado").prop('disabled', false);
         });
 
@@ -97,8 +110,18 @@
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
             $("#Descripcion").prop('disabled', true);
+            $("#IdTipoFauna").prop('disabled', true);
+            $("#seccion_foto").css('display', 'none');
             $("#Estado").prop('disabled', true);
         });
+        function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('output_image');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
     </script>
 }
 

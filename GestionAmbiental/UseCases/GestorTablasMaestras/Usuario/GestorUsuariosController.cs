@@ -238,14 +238,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
 
                         var info_usuario = new ADUserModel();
                         info_usuario.UserName = GetValidProperty(deUser, "samaccountname");
+                        info_usuario.DisplayName = GetValidProperty(deUser, "displayname");
                         info_usuario.Email = GetValidProperty(deUser, "mail");
                         info_usuario.FirstName = GetValidProperty(deUser, "givenName");
                         info_usuario.LastName = GetValidProperty(deUser, "sn");
+                        info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
+                        info_usuario.Puesto = GetValidProperty(deUser, "title");
+                        info_usuario.Jefe = GetValidProperty(deUser, "manager");
+                        info_usuario.Area = GetValidProperty(deUser, "department");
+                        info_usuario.Empresa = GetValidProperty(deUser, "company");
+                        info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+
+                        /*
                         info_usuario.Company = GetValidProperty(deUser, "company");
                         info_usuario.Deparment = GetValidProperty(deUser, "department");
                         info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
                         info_usuario.Mobile = GetValidProperty(deUser, "mobile");
-                        info_usuario.DisplayName = GetValidProperty(deUser, "displayname");
+                        info_usuario.JobTitle = GetValidProperty(deUser, "title");*/
                         rst.Add(info_usuario);
 
                         deUser.Close();

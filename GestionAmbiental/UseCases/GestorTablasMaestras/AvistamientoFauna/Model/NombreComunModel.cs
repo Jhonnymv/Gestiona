@@ -17,11 +17,11 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna.Model
         [DisplayName("Tipo de Fauna:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public int IdTipoFauna { get; set; }
-        [DisplayName("Foto:")]
+        [DisplayName("Nueva Foto:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe cargar un archivo")]
         [DataType(DataType.Upload)]
         public IFormFile Foto { get; set; }
-        [DisplayName("Foto:")]
+        [DisplayName("Foto Actual:")]
         public string RutaFoto { get; set; }
         [DisplayName("Estado:")]
         public string Estado { get; set; }

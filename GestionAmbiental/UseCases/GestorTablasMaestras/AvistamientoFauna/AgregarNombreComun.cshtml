@@ -40,7 +40,13 @@
                         <span id="danger_evidencia" class=""></span>
                     </span>
                     <label class="btn btn-primary" for="Foto">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Foto" accept=".jpg,.jpge,.png">
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Foto" accept=".jpg,.jpge,.png" onchange="preview_image(event)">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-8">
+                    <img id="output_image" style="width:100%;height:auto"/>
                 </div>
             </div>
             <div class="row mt-2 justify-content-center" id="bntsDetalle">
@@ -50,4 +56,13 @@
         </form>
     </div>
 </div>
-
+<script type="text/javascript">
+    function preview_image(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output_image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

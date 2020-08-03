@@ -234,12 +234,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             {
                 foreach (var fila in data.NombresComunes)
                 {
-                    filasTabla += "<tr>";
-                    filasTabla += "<td>" + fila.Descripcion + "</td>";
-                    filasTabla += "<td>" + fila.TipoFauna + "</td>";
-                    filasTabla += "<td>" + fila.Foto + "</td>";
-                    filasTabla += "<td>" + fila.Estado + "</td>";
-                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleNombreComun?IdNombreComun=" + fila.IdNombreComunFauna + "\">Detalle</a></td>";
+                    filasTabla += "<tr style=\"vertical-align:middle;\">";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Descripcion + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.TipoFauna + "</td>";
+                    filasTabla += "<td style=\"width:150px;\"><img src=\""+Path.Combine(_hostingEnvironment.WebRootPath,fila.Foto)+"\" style =\"width:100%;height:auto\"/></td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Estado + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorAvistamientoFauna/DetalleNombreComun?IdNombreComun=" + fila.IdNombreComunFauna + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -318,9 +318,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+
                 if (ModelState.IsValid)
-                    //TODO: Cargar foto y guardar ruta
-                    await _editarNombreComun.Execute(model.IdNombreComun, model.Descripcion, model.IdTipoFauna,"", model.Estado);
+                    if (model.Foto != null && model.Foto.Length > 0)
+                    {
+                        var antiguaImagen = Path.Combine(_hostingEnvironment.WebRootPath, model.RutaFoto.Substring(1));
+                        if (System.IO.File.Exists(antiguaImagen))
+                        {
+                            System.IO.File.Delete(antiguaImagen);
+                        }
+                        var tipoFauna = await _getTipoFauna.Execute(model.IdTipoFauna);
+
+                        var extension = Path.GetExtension(model.Foto.FileName);
+
+                        var rutaNuevoArchivo = CargarImagen(model.Foto, model.Descripcion, tipoFauna.Descripcion, extension).Result;
+
+                        await _editarNombreComun.Execute(model.IdNombreComun, model.Descripcion, model.IdTipoFauna, rutaNuevoArchivo , model.Estado);
+                    }
                 return RedirectToAction("DetalleNombreComun", new { IdNombreComun = model.IdNombreComun });
             }
         }
