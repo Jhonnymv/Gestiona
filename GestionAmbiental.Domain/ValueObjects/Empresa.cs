@@ -8,7 +8,7 @@ namespace GestionAmbiental.Domain.ValueObjects
     {
         public int IdEmpresa { get; set; }
         public string RazonSocial { get; set; }
-
+        public string Estado { get; set; }
         public Empresa()
         {
         }

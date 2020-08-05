@@ -14,5 +14,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Empresa { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Razon_Social { get; set; }
+        [Column(TypeName = "varchar(3)")]
+        public string Estado { get; set; }
+
     }
 }

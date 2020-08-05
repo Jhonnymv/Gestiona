@@ -26,5 +26,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int? Id_Superior { get; set; }
         [Column(TypeName = "varchar(3)")]
         public string Estado { get; set; }
+        [Column(TypeName = "varchar(8)")]
+        public string DNI { get; set; }
+        [Column(TypeName = "varchar(11)")]
+        public string Celular { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Puesto { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Area_Trabajo { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Empresa { get; set; }
     }
 }

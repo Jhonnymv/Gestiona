@@ -14,7 +14,7 @@
     {
       "type": "GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Module",
       "properties": {
-        "ConnectionString": "Server=MSI;Database=GestionAmbiental;Trusted_Connection=True;MultipleActiveResultSets=True;"
+        "ConnectionString": "Server=MSI;Database=GestionAmbiental2;Trusted_Connection=True;MultipleActiveResultSets=True;"
       }
     }
   ]
