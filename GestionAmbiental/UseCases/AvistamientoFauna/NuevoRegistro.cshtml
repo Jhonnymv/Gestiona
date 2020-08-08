@@ -16,7 +16,7 @@
         <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
     </div>
 </div>
-<form class="form-group" id="form_nuevoRAC" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_nuevo_avistamiento" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
 
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
@@ -38,12 +38,15 @@
             <img id="previsualizacion" src="~/img/uploads/AvistamientoFauna/Arácnidos/Arañas_Arácnidos20200724185706.jpg" style="width:30rem;height:auto;max-width:100%" />
         </div>
     </div>
+    <div class="row mb-2 justify-content-center">
+        <button type="button" class="btn btn-primary" onclick="CargarFotos()">Guardar y cargar otra foto</button>
+    </div>
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
             <h5 style="color:white;margin:4px;">Datos del Avistamiento</h5>
         </div>
     </div>
-    <div class="row mb-2">
+    <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Fecha_Avistamiento"></label>
         </div>
@@ -58,8 +61,13 @@
             <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
             <input type="time" class="form-control" asp-for="Hora_Avistamiento" readonly />
         </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+        <div class="col-sm-10 col-md-2 col-lg-1 col-10 mb-2">
             <label asp-for="Ubicacion"></label>
+        </div>
+        <div class="col-sm-2 col-md-1 col-lg-1 col-2 mb-2">
+            <div class="d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png"/></button>
+            </div>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Ubicacion"></span>
@@ -74,7 +82,7 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
             <div class="d-flex justify-content-center">
-                <button class="btn btn-link" onclick="VerImagen()">Ver Imagen de Referencia</button>
+                <button type="button" class="btn btn-link" onclick="VerImagen()">Ver Imagen de Referencia</button>
             </div>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
@@ -82,7 +90,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" value="1"/>
+            <input type="number" class="form-control" asp-for="Cantidad" value="1" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdTipoAvistamiento"></label>
@@ -123,7 +131,8 @@
             <label asp-for="Nombres_Apellidos"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.Usuario" readonly />
+            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.UsuarioNombre" readonly />
+            <input type="hidden" asp-for="IdUsuario" value="@ViewBag.IdUsuario"/>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="IdAreaTrabajo"></label>
@@ -140,122 +149,173 @@
             <input type="text" class="form-control" asp-for="NFotocheck" />
         </div>
     </div>
-    <div class="row mb-2">
-        <a class="btn btn-secondary" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
         <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
 </form>
 
-    <!-- Modal Imagen Referencia-->
-    <div class="modal fade" id="modal_imagen_referencia" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_imagen_referencia"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <img id="ImagenEspecie" style="width:100%;height:auto" />
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 text-center">
-                            <label id="NombreEspecie" class="font-weight-bold" "></label>
-                        </div>
+<!-- Modal Imagen Referencia-->
+<div class="modal fade" id="modal_imagen_referencia" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_imagen_referencia"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-12">
+                        <img id="ImagenEspecie" style="width:100%;height:auto" />
                     </div>
                 </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <label id="NombreEspecie" class="font-weight-bold"></label>
+                    </div>
                 </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
+</div>
 
 
-    @section Scripts{
-        <script type="text/javascript">
-            var ubicacion = $("#Ubicacion");
+@section Scripts{
+    <script type="text/javascript">
+        var ubicacion = $("#Ubicacion");
+        $(document).ready(function () {
+            CargarDatos();
+        });
+        function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('previsualizacion');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+        function CargarDatos() {
+            var fechaActual = new Date();
+            $("#Fecha_Avistamiento").val(DarFormatoFecha(fechaActual));
+            $("#Hora_Avistamiento").val(DarFormatoHora(fechaActual));
+            ObtenerUbicacion();
+        }
+        function DarFormatoFecha(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
 
-            $(document).ready(function () {
-                CargarDatos();
-            });
-            function preview_image(event) {
-                var reader = new FileReader();
-                reader.onload = function () {
-                    var output = document.getElementById('previsualizacion');
-                    output.src = reader.result;
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+        function DarFormatoHora(date) {
+            var d = new Date(date),
+                hour = '' + (d.getHours() + 1),
+                minute = '' + d.getMinutes()
+
+            if (hour.length < 2)
+                hour = '0' + hour;
+            if (minute.length < 2)
+                minute = '0' + minute;
+
+            return [hour, minute].join(':');
+        }
+        function ObtenerUbicacion() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+            } else {
+                ubicacion.val("");
+            }
+        }
+        function MostrarUbicacion(position) {
+            ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
+        }
+        function VerImagen() {
+            var IdNombreComun = $("#IdNombreComun").val();
+            if (IdNombreComun != 0) {
+                $("#modal_imagen_referencia").modal('show');
+                $.ajax({
+                    type: 'GET',
+                    data: {
+                        'IdNombreComun': IdNombreComun
+                    },
+                    url: '/AvistamientoFauna/ObtenerImagenReferencia',
+                    success: function (response) {
+                        console.log(response.id);
+                        console.log(response.foto);
+                        $("#ImagenEspecie").attr("src", response.foto);
+                        $("#NombreEspecie").text(response.nombre);
+                    },
+                    error: function () {
+                        console.log("No se ha podido obtener la imagen");
+                    }
+                });
+            } else {
+                alert("Debe seleccionar un nombre común")
+            }
+        }
+
+        //Fotos
+        $("#Fotos").change(function () {
+            $("#danger_Fotos").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Fotos").data('max-size');
+            var archivos = $("#Fotos").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
                 }
-                reader.readAsDataURL(event.target.files[0]);
-
-            }
-            function CargarDatos() {
-                var fechaActual = new Date();
-                $("#Fecha_Avistamiento").val(DarFormatoFecha(fechaActual));
-                $("#Hora_Avistamiento").val(DarFormatoHora(fechaActual));
-                $("#Ubicacion").val(ObtenerUbicacion());
-            }
-            function DarFormatoFecha(date) {
-                var d = new Date(date),
-                    month = '' + (d.getMonth() + 1),
-                    day = '' + d.getDate(),
-                    year = d.getFullYear();
-
-                if (month.length < 2)
-                    month = '0' + month;
-                if (day.length < 2)
-                    day = '0' + day;
-
-                return [year, month, day].join('-');
-            }
-            function DarFormatoHora(date) {
-                var d = new Date(date),
-                    hour = '' + (d.getHours() + 1),
-                    minute = '' + d.getMinutes()
-
-                if (hour.length < 2)
-                    hour = '0' + hour;
-                if (minute.length < 2)
-                    minute = '0' + minute;
-
-                return [hour, minute].join(':');
-            }
-            function ObtenerUbicacion() {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
-                } else {
-                    ubicacion.val("");
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_Fotos").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
                 }
-            }
-            function MostrarUbicacion(position) {
-                ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
-            }
-            function VerImagen() {
-                var IdNombreComun = $("#IdNombreComun").val();
-                if (IdNombreComun != 0) {
-                    $("#modal_imagen_referencia").modal('show');
-                    $.ajax({
-                        type: 'GET',
-                        data: {
-                            'IdNombreComun': IdNombreComun
-                        },
-                        url: '/AvistamientoFauna/ObtenerImagenReferencia',
-                        success: function (response) {
-                            console.log(response.id);
-                            console.log(response.foto);
-                            $("#ImagenEspecie").attr("src", response.foto);
-                            $("#NombreEspecie").text(response.nombre);
-                        },
-                        error: function () {
-                            console.log("No se ha podido obtener la imagen");
-                        }
-                    });
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_Fotos").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
                 }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+
+        function CargarFotos() {
+            var archivos = $("#Fotos").get(0).files;
+
+            if (archivos.length > 0) {
+                $("#form_nuevo_avistamiento").submit();
+            } else {
+                alert("Debe cargar una fotografía");
             }
 
-        </script>
-    }
+        }
+    </script>
+}
 

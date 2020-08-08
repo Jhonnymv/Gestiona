@@ -12,7 +12,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
     {
         public int IdAvistamientoFauna { get; set; }
         public string IdEncriptado { get; set; }
-        public string[] FotosCargadas { get; set; }
+        public string FotosCargadas { get; set; }
         public List<IFormFile> Fotos { get; set; }
         [DisplayName("Fecha:")]
         public string Fecha_Avistamiento { get; set; }
@@ -37,9 +37,11 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         public int IdEmpresa { get; set; }
         [DisplayName("Nombres y Apellidos:")]
         public string Nombres_Apellidos { get; set; }
+        public int IdUsuario { get; set; }
         [DisplayName("Área de Trabajo:")]
         public int IdAreaTrabajo { get; set; }
         [DisplayName("N° Fotocheck:")]
         public string NFotocheck { get; set; }
+        public string Estado { get; set; }
     }
 }

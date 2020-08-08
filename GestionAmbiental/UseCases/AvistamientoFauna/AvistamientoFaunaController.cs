@@ -6,9 +6,14 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamientoFauna;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.EliminarAvistamientoFauna;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.EliminarFoto;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientoFauna;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientosFauna;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.Items;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.RegistrarAvistamientoFauna;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.ValidarPermisos;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
@@ -26,48 +31,76 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
     {
         private readonly IGetItems _getItems;
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
+        private readonly IGetAvistamientoFauna _getAvistamientoFauna;
 
         private readonly IGetUsuario _getUsuario;
         private readonly IRegistrarAvistamientoFauna _registrarAvistamientoFauna;
+        private readonly IEditarAvistamientoFauna _editarAvistamientoFauna;
+        private readonly IEliminarAvistamientoFauna _eliminarAvistamientoFauna;
+
+        private readonly IEliminarFoto _eliminarFoto;
+        private readonly IValidarPermisos _validarPermisos;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public AvistamientoFaunaController(
-            IGetItems getItems, 
+            IGetItems getItems,
             IGetAvistamientosFauna getAvistamientosFauna,
+            IGetAvistamientoFauna getAvistamientoFauna,
             IGetUsuario getUsuario,
             IGetInfo_SGA info_SGA,
             IRegistrarAvistamientoFauna registrarAvistamientoFauna,
+            IEliminarAvistamientoFauna eliminarAvistamientoFauna,
             IDataProtectionProvider dataProtectionProvider,
+            IEliminarFoto eliminarFoto,
+            IValidarPermisos validarPermisos,
+            IEditarAvistamientoFauna editarAvistamientoFauna,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getItems = getItems;
             _getAvistamientosFauna = getAvistamientosFauna;
+            _getAvistamientoFauna = getAvistamientoFauna;
             _getUsuario = getUsuario;
             _registrarAvistamientoFauna = registrarAvistamientoFauna;
+            _eliminarAvistamientoFauna = eliminarAvistamientoFauna;
+            _editarAvistamientoFauna = editarAvistamientoFauna;
+            _eliminarFoto = eliminarFoto;
+            _validarPermisos = validarPermisos;
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
         {
-            var items = await _getItems.Execute();
-            
-            var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
-            tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
-            estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            ViewBag.TipoFauna = tiposFauna;
-            ViewBag.EstadoFauna = estadosFauna;
+                var items = await _getItems.Execute();
 
-            return View();
+                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.TipoFauna = tiposFauna;
+                ViewBag.EstadoFauna = estadosFauna;
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina)
         {
-            var datosTabla = await _getAvistamientosFauna.Execute(fecha,tipo_fauna,estado_fauna,rpp,pagina);
+            var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, rpp, pagina);
 
             var filasTabla = "";
             var paginador = "";
@@ -76,25 +109,30 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             {
                 foreach (var fila in datosTabla.Avistamientos)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.Id_Investigacion_Final.ToString());
-                    
-                    filasTabla += "<tr>";
-                    if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()))
-                        filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
-                    else
-                        filasTabla += "<td></td>";
-
-                    var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
-                    filasTabla += "<td><a href=\"/AvistamientoFauna/EditarAvistamiento?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("dd/MM/yyyy") + "</td>";
-                    filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("HH:mm") + "</td>";
-                    filasTabla += "<td>" + fila.Ubicacion + "</td>";
-                    filasTabla += "<td>" + fila.Cantidad + "</td>";
-                    filasTabla += "<td>" + fila.TipoFauna + "</td>"; 
-                    filasTabla += "<td>" + fila.NombreComun + "</td>"; 
-                    filasTabla += "<td>" + fila.EstadoFauna + "</td>"; 
-                    filasTabla += "<td>" + fila.TipoAvistamiento + "</td>"; 
-                    filasTabla += "</tr>";
+                    if (!fila.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))
+                    {
+                        var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
+                        filasTabla += "<tr>";
+                        if (fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()))
+                        {
+                            filasTabla += "<td></td>";
+                            filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                        }
+                        else if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()))
+                        {
+                            filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
+                            filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                        }
+                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("dd/MM/yyyy") + "</td>";
+                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("HH:mm") + "</td>";
+                        filasTabla += "<td>" + fila.Ubicacion + "</td>";
+                        filasTabla += "<td>" + fila.Cantidad + "</td>";
+                        filasTabla += "<td>" + fila.TipoFauna + "</td>";
+                        filasTabla += "<td>" + fila.NombreComun + "</td>";
+                        filasTabla += "<td>" + fila.EstadoFauna + "</td>";
+                        filasTabla += "<td>" + fila.TipoAvistamiento + "</td>";
+                        filasTabla += "</tr>";
+                    }
                 }
 
                 paginador += "<ul class=\"pagination\">";
@@ -129,8 +167,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         }
         public async Task<IActionResult> CatalogoFauna()
         {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            return View();
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         [HttpGet]
         public async Task<IActionResult> CargarCatalogo()
@@ -157,9 +206,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 {
                     catalogo += "<div class=\"col-lg-3 col-md-4 col-6 mt-2\">";
                     catalogo += "<div class=\"card\" style=\"width:18rem;\">";
-                    catalogo += "<img src=\""+nombreComun.Foto+ "\" style=\"width:100%; height:18rem;\" class=\"card-img-top img-thumbnail\" alt=\"...\">";
+                    catalogo += "<img src=\"" + nombreComun.Foto + "\" style=\"width:100%; height:18rem;\" class=\"card-img-top img-thumbnail\" alt=\"" + nombreComun.Foto + "\">";
                     catalogo += "<div class=\"card-body\">";
-                    catalogo += "<p class=\"card-text text-center\">" + nombreComun.Descripcion+"</p>";
+                    catalogo += "<p class=\"card-text text-center\">" + nombreComun.Descripcion + "</p>";
                     catalogo += "</div>";
                     catalogo += "</div>";
                     catalogo += "</div>";
@@ -187,7 +236,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
 
-                ViewBag.Usuario = usuario.Nombres + " " + usuario.Apellidos;
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.UsuarioNombre = usuario.Nombres + " " + usuario.Apellidos;
+                ViewBag.IdUsuario = usuario.IdUsuario;
 
                 var items = await _getItems.Execute();
 
@@ -237,16 +289,17 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     var extension = Path.GetExtension(foto.FileName);
                     var max_file_size = 8388608;
 
-                    var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                    var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG" };
 
                     if (allowed_extensions.Contains(extension) && foto.Length < max_file_size)
                     {
                         var newfileName = CreateUniqueFileName(1) + extension;
                         filePath = await CargarImagen(foto, newfileName);
-                        fotos.Add(filePath);                   
+                        fotos.Add(filePath);
                     }
                 }
-                await _registrarAvistamientoFauna.Execute(fotos.ToArray(),
+
+                var IdAvistamiento = await _registrarAvistamientoFauna.Execute(fotos.ToArray(),
                     model.Fecha_Avistamiento,
                     model.Hora_Avistamiento,
                     model.Ubicacion,
@@ -255,12 +308,264 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdTipoAvistamiento,
                     model.IdEstadoFauna,
                     model.Lugar_Referencia,
-                    278,
+                    model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
                     model.NFotocheck);
+                return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
             }
             return RedirectToAction("NuevoRegistro");
+        }
+        public async Task<IActionResult> EditarRegistro(string IdAvistamiento)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var idAvistamiento = Int32.Parse(_protector.Unprotect(IdAvistamiento));
+                var avistamiento = await _getAvistamientoFauna.Execute(idAvistamiento);
+
+                var items = await _getItems.Execute();
+
+                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
+                tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
+                areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var nombresComunes = new List<SelectListItem>();
+                foreach (var grupo in items.TiposFauna)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Descripcion, Disabled = false };
+                    nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
+                }
+                nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.TipoFauna = tiposFauna;
+                ViewBag.EstadoFauna = estadosFauna;
+                ViewBag.NombreComun = nombresComunes;
+                ViewBag.TipoAvistamiento = tipoAvistamiento;
+                ViewBag.Empresa = empresas;
+                ViewBag.AreaTrabajo = areas;
+
+                var model = new AvistamientoFaunaModel();
+                model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
+                model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("yyyy-MM-dd");
+                model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
+                model.Ubicacion = avistamiento.Ubicacion;
+                model.Cantidad = avistamiento.Cantidad;
+                model.IdNombreComun = avistamiento.IdNombreComun;
+                model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
+                model.IdEstadoFauna = avistamiento.IdEstadoFauna;
+                model.Lugar_Referencia = avistamiento.Lugar_Referencia;
+                model.IdUsuario = avistamiento.IdUsuario;
+                model.Nombres_Apellidos = avistamiento.Usuario;
+                model.IdEmpresa = avistamiento.IdEmpresa;
+                model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
+                model.NFotocheck = avistamiento.NFotocheck;
+                model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
+                model.Estado = avistamiento.Estado;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarRegistro(AvistamientoFaunaModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var fotos = new List<string>();
+                if (model.FotosCargadas != null)
+                {
+                    var listaImagenes = new List<string>(model.FotosCargadas.Split(','));
+                    fotos.AddRange(listaImagenes);
+                    var vacios = new List<int>();
+                    foreach (var foto in fotos)
+                    {
+                        if (foto.Length == 0)
+                            vacios.Add(fotos.IndexOf(foto));
+                    }
+                    foreach(var vacio in vacios)
+                    {
+                        fotos.RemoveAt(vacio);
+                    }
+                }
+                if (model.Fotos != null)
+                    foreach (var foto in model.Fotos)
+                    {
+                        var filePath = "";
+
+                        var extension = Path.GetExtension(foto.FileName);
+                        var max_file_size = 8388608;
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG" };
+
+                        if (allowed_extensions.Contains(extension) && foto.Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(1) + extension;
+                            filePath = await CargarImagen(foto, newfileName);
+                            fotos.Add(filePath);
+                        }
+                    }
+                
+                await _editarAvistamientoFauna.Execute(model.IdAvistamientoFauna,
+                    fotos.ToArray(),
+                    model.Fecha_Avistamiento,
+                    model.Hora_Avistamiento,
+                    model.Ubicacion,
+                    model.Cantidad,
+                    model.IdNombreComun,
+                    model.IdTipoAvistamiento,
+                    model.IdEstadoFauna,
+                    model.Lugar_Referencia,
+                    model.IdUsuario,
+                    model.IdEmpresa,
+                    model.IdAreaTrabajo,
+                    model.NFotocheck);
+
+            }
+            var IdEncriptado = _protector.Protect(model.IdAvistamientoFauna.ToString());
+            return RedirectToAction("EditarRegistro", new { IdAvistamiento = IdEncriptado });
+        }
+        public async Task<IActionResult> DetalleRegistro(string IdAvistamiento)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var idAvistamiento = Int32.Parse(_protector.Unprotect(IdAvistamiento));
+                var avistamiento = await _getAvistamientoFauna.Execute(idAvistamiento);
+
+                var items = await _getItems.Execute();
+
+                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
+                tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
+                areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var nombresComunes = new List<SelectListItem>();
+                foreach (var grupo in items.TiposFauna)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Descripcion, Disabled = false };
+                    nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
+                }
+                nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.TipoFauna = tiposFauna;
+                ViewBag.EstadoFauna = estadosFauna;
+                ViewBag.NombreComun = nombresComunes;
+                ViewBag.TipoAvistamiento = tipoAvistamiento;
+                ViewBag.Empresa = empresas;
+                ViewBag.AreaTrabajo = areas;
+
+                var model = new AvistamientoFaunaModel();
+                model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
+                model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("dd/MM/yyyy");
+                model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
+                model.Ubicacion = avistamiento.Ubicacion;
+                model.Cantidad = avistamiento.Cantidad;
+                model.IdNombreComun = avistamiento.IdNombreComun;
+                model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
+                model.IdEstadoFauna = avistamiento.IdEstadoFauna;
+                model.Lugar_Referencia = avistamiento.Lugar_Referencia;
+                model.IdUsuario = avistamiento.IdUsuario;
+                model.Nombres_Apellidos = avistamiento.Usuario;
+                model.IdEmpresa = avistamiento.IdEmpresa;
+                model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
+                model.NFotocheck = avistamiento.NFotocheck;
+                model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
+                model.Estado = avistamiento.Estado;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
+        {
+            dynamic response;
+            if (HttpContext.Session.GetString("SessionUser") != null && imagenes != null)
+            {
+                var listaImagenes = new List<string>(imagenes.Split(','));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var imagesSrc = new List<ImagenCargada>();
+                for (int i = 0; i < listaImagenes.Count; i++)
+                {
+                    var encryptedFile = await DownloadFTPFileAsync(listaImagenes[i]);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado" + i.ToString() + Path.GetExtension(listaImagenes[i]);
+                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
+                    string imageBase64Data = Convert.ToBase64String(imageByteData);
+                    string imageDataURL = string.Format("data:image/png;base64,{0}", imageBase64Data);
+
+                    imagesSrc.Add(new ImagenCargada
+                    {
+                        Nombre = listaImagenes[i],
+                        Src = imageDataURL
+                    });
+                }
+
+                response = new
+                {
+                    imagenes = JsonConvert.SerializeObject(imagesSrc)
+                };
+            }
+            else
+            {
+                response = new
+                {
+                    imagenes = "[]"
+                };
+            }
+            return Ok(response);
         }
         public async Task<IActionResult> ObtenerImagenReferencia(int IdNombreComun)
         {
@@ -273,6 +578,63 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 Foto = nombreComun.Foto
             };
             return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarImagen(int IdAvistamiento, string imagen)
+        {
+            await DeleteFTPFileAsync(imagen);
+
+            await _eliminarFoto.Execute(IdAvistamiento, imagen);
+
+            return Ok();
+        }
+        [HttpGet]
+        public async Task<IActionResult> EliminarRegistro(int IdAvistamiento,string imagenes)
+        {
+
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var avistamiento = await _getAvistamientoFauna.Execute(IdAvistamiento);
+
+                if (await _validarPermisos.Editar(userInfo.NombreUsuario, avistamiento.IdUsuario))
+                {
+
+                    var fotos = new List<string>();
+                    if (imagenes != null)
+                    {
+                        var listaImagenes = new List<string>(imagenes.Split(','));
+                        fotos.AddRange(listaImagenes);
+                        var vacios = new List<int>();
+                        foreach (var foto in fotos)
+                        {
+                            if (foto.Length == 0)
+                                vacios.Add(fotos.IndexOf(foto));
+                        }
+                        foreach (var vacio in vacios)
+                        {
+                            fotos.RemoveAt(vacio);
+                        }
+                        foreach (var foto in fotos)
+                        {
+                            await EliminarImagen(IdAvistamiento, foto);
+                        }
+                    }
+                    await _eliminarAvistamientoFauna.Execute(IdAvistamiento);
+
+                    return RedirectToAction("Resumen");
+                }
+                else
+                {
+                    var IdEncriptado = _protector.Protect(IdAvistamiento.ToString());
+                    return RedirectToAction("EditarRegistro", new { IdAvistamiento = IdEncriptado });
+                }
+            }
         }
         private string CreateUniqueFileName(int nFile)
         {
@@ -325,18 +687,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     try
                     {
                         optimizer.LosslessCompress(stream);
-                    }catch(Exception e) { }
+                    }
+                    catch (Exception e) { }
                     stream.Flush();
-                                       
+
                     stream.Close();
                 }
-                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/"+newFileName;
+                var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/" + newFileName;
                 await EncryptFileAsync(fileName, encryptedArchiveFile);
 
                 return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
             }
             else
-                return "Error";         
+                return "Error";
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName)
         {
@@ -420,7 +783,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
-                    var decryptedFileName = "desencriptado.zip";
+                    var decryptedFileName = "desencriptado" + Path.GetExtension(fileName);
                     await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
                     /*read decrypted file*/
                     FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
@@ -526,7 +889,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             int data;
             while ((data = fsIn.ReadByte()) != -1)
                 cs.WriteByte((byte)data);
-            
+
             fsIn.Close();
             cs.Close();
             fsCrypt.Close();
@@ -564,6 +927,36 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             cs.Close();
             fsCrypt.Close();
 
+        }
+        private async Task DeleteFTPFileAsync(string filename)
+        {
+            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+
+                sftp.DeleteFile(filename);
+
+                sftp.Dispose();
+            }
+        }
+        private class ImagenCargada
+        {
+            public string Nombre { get; set; }
+            public string Src { get; set; }
         }
     }
 }

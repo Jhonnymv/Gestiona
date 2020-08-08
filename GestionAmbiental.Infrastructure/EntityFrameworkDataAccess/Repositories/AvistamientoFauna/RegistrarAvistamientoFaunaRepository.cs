@@ -1,6 +1,9 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
+using GestionAmbiental.Domain.Enum;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,11 +34,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Empresa = avistamiento.Empresa?.IdEmpresa;
             entity.Id_Area_Trabajo = avistamiento.AreaTrabajo?.IdAreaTrabajo;
             entity.N_Fotocheck = avistamiento.NFotocheck;
+            entity.Estado = avistamiento.Estado;
 
             _context.Avistamientos_Fauna.Add(entity);
             await _context.SaveChangesAsync();
 
             return entity.Id_Avistamiento_Fauna;
+        }
+        public async Task<string> GetUltimoCodigo()
+        {
+            var codigo = await _context.Avistamientos_Fauna.OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            return codigo;
         }
     }
 }

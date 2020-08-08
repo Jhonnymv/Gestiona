@@ -42,21 +42,36 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
             Fecha_Avistamiento = avistamiento.Fecha_Avistamiento;
             Ubicacion = avistamiento.Ubicacion;
             Cantidad = avistamiento.Cantidad;
-            IdNombreComun = avistamiento.NombreComun.IdNombreComunFauna;
-            NombreComun = avistamiento.NombreComun.Descripcion;
-            IdTipoFauna = avistamiento.NombreComun.TipoFauna.IdTipoFauna;
-            TipoFauna = avistamiento.NombreComun.TipoFauna.Descripcion;
-            IdTipoAvistamiento = avistamiento.TipoAvistamiento.IdTipoAvistamiento;
-            TipoAvistamiento = avistamiento.TipoAvistamiento.Descripcion;
-            IdEstadoFauna = avistamiento.EstadoFauna.IdEstadoFauna;
-            EstadoFauna = avistamiento.EstadoFauna.Descripcion;
+            if (avistamiento.NombreComun != null)
+            {
+                IdNombreComun = avistamiento.NombreComun.IdNombreComunFauna;
+                NombreComun = avistamiento.NombreComun.Descripcion;
+                IdTipoFauna = avistamiento.NombreComun.TipoFauna.IdTipoFauna;
+                TipoFauna = avistamiento.NombreComun.TipoFauna.Descripcion;
+            }
+            if (avistamiento.TipoAvistamiento != null)
+            {
+                IdTipoAvistamiento = avistamiento.TipoAvistamiento.IdTipoAvistamiento;
+                TipoAvistamiento = avistamiento.TipoAvistamiento.Descripcion;
+            }
+            if (avistamiento.EstadoFauna != null)
+            {
+                IdEstadoFauna = avistamiento.EstadoFauna.IdEstadoFauna;
+                EstadoFauna = avistamiento.EstadoFauna.Descripcion;
+            }
             Lugar_Referencia = avistamiento.Lugar_Referencia;
             IdUsuario = avistamiento.Usuario.IdUsuario;
             Usuario = avistamiento.Usuario.Nombres + avistamiento.Usuario.Apellidos;
-            IdEmpresa = avistamiento.Empresa.IdEmpresa;
-            Empresa = avistamiento.Empresa.RazonSocial;
-            IdAreaTrabajo = avistamiento.AreaTrabajo.IdAreaTrabajo;
-            AreaTrabajo = avistamiento.AreaTrabajo.Descripcion;
+            if (avistamiento.Empresa != null)
+            {
+                IdEmpresa = avistamiento.Empresa.IdEmpresa;
+                Empresa = avistamiento.Empresa.RazonSocial;
+            }
+            if (avistamiento.AreaTrabajo != null)
+            {
+                IdAreaTrabajo = avistamiento.AreaTrabajo.IdAreaTrabajo;
+                AreaTrabajo = avistamiento.AreaTrabajo.Descripcion;
+            }
             NFotocheck = avistamiento.NFotocheck;
             Descripcion_Accion = avistamiento.Descripcion_Accion;
             if (avistamiento.Supervisor != null)

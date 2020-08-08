@@ -6,7 +6,9 @@ namespace GestionAmbiental.Domain.Enum
 {
     public enum EstadosAvistamiento
     {
-        Registrado = 1,
-        Completado = 2
+        Pendiente = 1,
+        Registrado = 2,
+        Completado = 3,
+        Eliminado = 4
     }
 }
