@@ -392,45 +392,54 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         }
         public async Task<string> UploadFTPFileAsync(string path, string newFileName)
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return "NoAutorizado";
             else
-            {
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+            {*/
+            Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion;
 
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            var serverInfo = await _info_SGA.Execute(directorio);
+
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
                 {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
                 }
-                return newFileName;
             }
+
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+                using (FileStream fs = System.IO.File.OpenRead(path))
+                {
+                    sftp.UploadFile(fs, newFileName, true);
+                }
+                sftp.Dispose();
+            }
+            return newFileName;
+            //}
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
                 return "NoAutorizado";
+            }
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
@@ -466,11 +475,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);               
+                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
             }
         }
         public async Task<string> DownloadFTPFileAsync(string fileName)
-        {            
+        {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return "NoAutorizado";
@@ -478,8 +487,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
+                Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion;
+
+                var serverInfo = await _info_SGA.Execute(directorio);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
@@ -528,7 +538,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
                     sftp.Dispose();
                 }
-                                
+                //ftpStream.CopyTo(fileStream);
                 fileStream.Close();
 
                 return downloadedFilePath;

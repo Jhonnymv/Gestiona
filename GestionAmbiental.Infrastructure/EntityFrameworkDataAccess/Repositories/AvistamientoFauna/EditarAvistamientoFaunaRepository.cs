@@ -40,6 +40,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task CompletarAvistamiento(Domain.AvistamientoFauna.AvistamientoFauna avistamientoMA)
+        {
+            var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(avistamientoMA.IdAvistamientoFauna));
+            avistamiento.Id_Supervisor = avistamientoMA.Supervisor.IdUsuario;
+            avistamiento.Evidencia_Accion = avistamientoMA.Evidencia_Accion;
+            avistamiento.Descripcion_Accion = avistamientoMA.Descripcion_Accion;
+            avistamiento.Estado = avistamientoMA.Estado;
+
+            _context.Avistamientos_Fauna.Update(avistamiento);
+            await _context.SaveChangesAsync();
+        }
         public async Task EliminarFotoAvistamiento(int IdAvistamiento, string foto)
         {
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(IdAvistamiento));

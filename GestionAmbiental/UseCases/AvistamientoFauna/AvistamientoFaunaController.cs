@@ -112,16 +112,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     if (!fila.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))
                     {
                         var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
-                        filasTabla += "<tr>";
-                        if (fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()))
+                        filasTabla += "<tr>";                        
+                        if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString()))
+                        {
+                            if(fila.Fecha_Avistamiento > DateTime.Now.AddDays(-7))
+                                filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
+                            else
+                                filasTabla += "<td></td>";
+                            filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                        }
+                        else if(fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()))
                         {
                             filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                        }
-                        else if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()))
-                        {
-                            filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
-                            filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         }
                         filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("dd/MM/yyyy") + "</td>";
                         filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("HH:mm") + "</td>";
@@ -366,6 +369,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
+                model.IdEncriptado = IdAvistamiento;
                 model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("yyyy-MM-dd");
                 model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
                 model.Ubicacion = avistamiento.Ubicacion;
@@ -391,6 +395,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             if (ModelState.IsValid)
             {
                 var fotos = new List<string>();
+
                 if (model.FotosCargadas != null)
                 {
                     var listaImagenes = new List<string>(model.FotosCargadas.Split(','));
@@ -437,11 +442,15 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
-                    model.NFotocheck);
+                    model.NFotocheck,
+                    model.Opcion);
 
+                if (model.Opcion.Equals("GuardarEstado"))
+                    return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
+                else if (model.Opcion.Equals("Registrar"))
+                    return RedirectToAction("Resumen");
             }
-            var IdEncriptado = _protector.Protect(model.IdAvistamientoFauna.ToString());
-            return RedirectToAction("EditarRegistro", new { IdAvistamiento = IdEncriptado });
+            return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
         }
         public async Task<IActionResult> DetalleRegistro(string IdAvistamiento)
         {
@@ -508,6 +517,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
                 model.NFotocheck = avistamiento.NFotocheck;
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
+
+                model.Descripcion_Accion = avistamiento.Descripcion_Accion;
+                model.Evidencia_Cargada = avistamiento.Evidencia_Accion != null ? JsonConvert.SerializeObject(avistamiento.Evidencia_Accion) : null;
                 model.Estado = avistamiento.Estado;
 
                 return View(model);

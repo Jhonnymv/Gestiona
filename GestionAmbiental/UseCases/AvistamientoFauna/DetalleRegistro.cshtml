@@ -52,7 +52,7 @@
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
         <span class="text-danger" asp-validation-for="Ubicacion"></span>
-        <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" readonly/>
+        <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" readonly />
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
         <label asp-for="IdNombreComun"></label>
@@ -66,7 +66,7 @@
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
         <span class="text-danger" asp-validation-for="Cantidad"></span>
-        <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" readonly/>
+        <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" readonly />
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
         <label asp-for="IdTipoAvistamiento"></label>
@@ -87,7 +87,7 @@
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
         <span class="text-danger" asp-validation-for="Lugar_Referencia"></span>
-        <input type="text" class="form-control" asp-for="Lugar_Referencia" value="@Model.Lugar_Referencia" readonly/>
+        <input type="text" class="form-control" asp-for="Lugar_Referencia" value="@Model.Lugar_Referencia" readonly />
     </div>
 </div>
 <div class="row mb-2" style="background-color:#2e6793">
@@ -122,14 +122,38 @@
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
         <span class="text-danger" asp-validation-for="NFotocheck"></span>
-        <input type="text" class="form-control" asp-for="NFotocheck" value="@Model.NFotocheck" readonly/>
+        <input type="text" class="form-control" asp-for="NFotocheck" value="@Model.NFotocheck" readonly />
     </div>
 </div>
+@if (Model.Descripcion_Accion != null && Model.Evidencia_Cargada != null)
+{
+    <div class="row mb-2" style="background-color:#2e6793">
+        <div class="col-12" style="text-align:center">
+            <h5 style="color:white;margin:4px;">Acción Llevada a Cabo en Caso de Fauna Silvestre Herida o Muerta (Llenado por Medio Ambiente)</h5>
+        </div>
+    </div>
+
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
+            <label asp-for="Descripcion_Accion"></label>
+        </div>
+        <div class="col-sm-12 col-md-10 col-lg-10 mb-2">
+            <span class="text-danger" asp-validation-for="Descripcion_Accion"></span>
+            <textarea type="text" class="form-control" asp-for="Descripcion_Accion" rows="2" readonly></textarea>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
+            <label asp-for="Evidencia_Cargada"></label>
+        </div>
+        <input type="hidden" asp-for="Evidencia_Cargada" />
+        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista">
+        </div>
+    </div>
+}
 <div class="row mb-2 mr-2 d-flex justify-content-end">
     <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Volver</a>
 </div>
-@section Scripts{ 
-<script type="text/javascript">
+@section Scripts{
+    <script type="text/javascript">
     var estado;
         $(document).ready(function () {
             var imagenes = '@Model.FotosCargadas';
@@ -139,6 +163,7 @@
                 $("#FotosCargadas").val(imagenes_json);
                 visualizarImagenesCargadas();
             }
+            visualizarEvidencias();
         });
         function visualizarImagenesCargadas() {
             $.ajax({
@@ -165,5 +190,19 @@
                 }
             });
         }
-</script>
+        function visualizarEvidencias() {
+            var evidencias = '@Model.Evidencia_Cargada';
+            //evidencias
+            if (evidencias.length > 0) {
+                var evidencias_valores = JSON.parse(evidencias.replace(/&quot;/g, '"'));
+                console.log(evidencias_valores)
+                var html_evidencias = "";
+                for (var i = 0; i < evidencias_valores.length; i++)
+                    html_evidencias += "<p><a href=\"/AvistamientoFaunaMA/Download?fileName=" + evidencias_valores[i]+"\">Evidencia "+(i+1)+"</a></p>";
+
+                $("#Evidencias_Lista").html(html_evidencias);
+                $("#EvidenciaCargada").val(evidencias_valores);
+            }
+        }
+    </script>
 }

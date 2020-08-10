@@ -18,6 +18,8 @@
 </div>
 <form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
+    <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
+    <input type="hidden" asp-for="Opcion"/>
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
             <h5 style="color:white;margin:4px;">Registro Fotográfico</h5>
@@ -155,7 +157,8 @@
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
         <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button type="button" class="btn btn-primary" onclick="GuardarEstado()">Guardar Estado</button>
+        <button type="button" class="btn btn-primary" onclick="Registrar()">Registrar</button>
     </div>
 </form>
 
@@ -334,6 +337,7 @@
         });
         function CargarFotos() {
             var archivos = $("#Fotos").get(0).files;
+            $("#Opcion").val("GuardarEstado")
 
             if (archivos.length > 0) {
                 $("#form_nuevo_avistamiento").submit();
@@ -360,6 +364,37 @@
                     window.location.replace('@Url.Action("Resumen","AvistamientoFauna")');
                 }
             });
+        }
+        function GuardarEstado() {
+            $("#Opcion").val("GuardarEstado")
+            $("#form_nuevo_avistamiento").submit()
+        }
+        function Registrar() {
+            if (ValidarCampos()) {
+                $("#Opcion").val("Registrar")
+                $("#form_nuevo_avistamiento").submit()
+            } else {
+                alert.alert("Existen campos vacios")
+            }
+        }
+        function ValidarCampos() {
+            var resultado = true;
+            if ($("#Fecha_Avistamiento").val() == "") resultado = false;
+            if ($("#FotosCargadas").val() == "") resultado = false;
+            if ($("#Fotos").val() == "") resultado = false;
+            if ($("#Hora_Avistamiento").val() == "") resultado = false;
+            if ($("#Ubicacion").val() == "") resultado = false;
+            if ($("#Cantidad").val() == "") resultado = false;
+            if ($("#IdNombreComun").val() == "0") resultado = false;
+            if ($("#IdTipoFauna").val() == "0") resultado = false;
+            if ($("#IdTipoAvistamiento").val() == "0") resultado = false;
+            if ($("#IdEstadoFauna").val() == "0") resultado = false;
+            if ($("#Lugar_Referencia").val() == "") resultado = false;
+            if ($("#IdEmpresa").val() == "") resultado = false;
+            if ($("#Nombres_Apellidos").val() == "") resultado = false;
+            if ($("#IdAreaTrabajo").val() == "") resultado = false;
+            if ($("#NFotocheck").val() == "") resultado = false;
+            return resultado;
         }
     </script>
 }

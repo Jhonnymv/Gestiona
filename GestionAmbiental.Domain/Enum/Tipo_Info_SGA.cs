@@ -22,5 +22,7 @@ namespace GestionAmbiental.Domain.Enum
         FTPConnectionEvidenciaIncInvPosicion = 14,
         FTPConnectionEvidenciaIncInvPartes = 15,
         FTPConnectionEvidenciaIncInvAccion = 16,
+        FTPConnectionAvistamientoFauna = 1016,
+        FTPConnectionAvistamientoFaunaAccion = 1017
     }
 }

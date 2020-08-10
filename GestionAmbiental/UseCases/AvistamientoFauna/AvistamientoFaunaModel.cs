@@ -42,6 +42,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         public int IdAreaTrabajo { get; set; }
         [DisplayName("N° Fotocheck:")]
         public string NFotocheck { get; set; }
+        [DisplayName("Descripción de la acción:")]
+        public string Descripcion_Accion { get; set; }
+        [DisplayName("Evidencia:")]
+        public List<IFormFile> Evidencia_Accion { get; set; }
+        [DisplayName("Evidencia:")]
+        public string Evidencia_Cargada { get; set; }
         public string Estado { get; set; }
+        public string Opcion { get; set; }
     }
 }
