@@ -1352,5 +1352,140 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Nombres_Comunes_Fauna.Update(entity);
             await _context.SaveChangesAsync();
         }
+
+
+        //Tb_Tipo_Avistamiento
+        public async Task<List<TipoAvistamiento>> GetTipoAvistamiento(string filtro){
+            var entities = await _context.Tipos_Avistamiento.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<TipoAvistamiento>();
+            foreach (var item in entities)
+            {
+                output.Add(new TipoAvistamiento
+                {
+                    IdTipoAvistamiento = item.Id_Tipo_Avistamiento,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<TipoAvistamiento> GetTipoAvistamiento(int id_tipo_avistamiento)
+        {
+            var entity = await _context.Tipos_Avistamiento.FirstOrDefaultAsync(x => x.Id_Tipo_Avistamiento.Equals(id_tipo_avistamiento));
+            var output = new TipoAvistamiento
+            {
+                IdTipoAvistamiento = entity.Id_Tipo_Avistamiento,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipoAvistamiento(TipoAvistamiento TipoAvistamiento){
+            var entity = new Entities.AvistamientoFauna.Tipo_Avistamiento
+            {
+                Descripcion = TipoAvistamiento.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Tipos_Avistamiento.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Tipo_Avistamiento;
+        }
+        public async Task UpdateTipoAvistamiento(TipoAvistamiento TipoAvistamiento){
+            var entity = await _context.Tipos_Avistamiento.FirstOrDefaultAsync(x => x.Id_Tipo_Avistamiento.Equals(TipoAvistamiento.IdTipoAvistamiento));
+            entity.Descripcion = TipoAvistamiento.Descripcion;
+            entity.Estado = TipoAvistamiento.Estado;
+            _context.Tipos_Avistamiento.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Estado_Fauna
+        public async Task<List<EstadoFauna>> GetEstadoFauna(string filtro){
+            var entities = await _context.Estados_Fauna.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<EstadoFauna>();
+            foreach (var item in entities)
+            {
+                output.Add(new EstadoFauna
+                {
+                    IdEstadoFauna = item.Id_Estado_Fauna,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<EstadoFauna> GetEstadoFauna(int id_estado_fauna){
+            var entity = await _context.Estados_Fauna.FirstOrDefaultAsync(x => x.Id_Estado_Fauna.Equals(id_estado_fauna));
+            var output = new EstadoFauna
+            {
+                IdEstadoFauna = entity.Id_Estado_Fauna,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddEstadoFauna(EstadoFauna EstadoFauna){
+            var entity = new Entities.AvistamientoFauna.Estado_Fauna
+            {
+                Descripcion = EstadoFauna.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Estados_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Estado_Fauna;
+        }
+        public async Task UpdateEstadoFauna(EstadoFauna EstadoFauna){
+            var entity = await _context.Estados_Fauna.FirstOrDefaultAsync(x => x.Id_Estado_Fauna.Equals(EstadoFauna.IdEstadoFauna));
+            entity.Descripcion = EstadoFauna.Descripcion;
+            entity.Estado = EstadoFauna.Estado;
+            _context.Estados_Fauna.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Area_Trabajo
+        public async Task<List<AreaTrabajo>> GetAreaTrabajo(string filtro){
+            var entities = await _context.Areas_Trabajo.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<AreaTrabajo>();
+            foreach (var item in entities)
+            {
+                output.Add(new AreaTrabajo
+                {
+                    IdAreaTrabajo = item.Id_Area_Trabajo,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<AreaTrabajo> GetAreaTrabajo(int id_area_trabajo){
+            var entity = await _context.Areas_Trabajo.FirstOrDefaultAsync(x => x.Id_Area_Trabajo.Equals(id_area_trabajo));
+            var output = new AreaTrabajo
+            {
+                IdAreaTrabajo = entity.Id_Area_Trabajo,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddAreaTrabajo(AreaTrabajo AreaTrabajo)
+        {
+            var entity = new Entities.Area_Trabajo
+            {
+                Descripcion = AreaTrabajo.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Areas_Trabajo.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Area_Trabajo;
+        }
+        public async Task UpdateAreaTrabajo(AreaTrabajo AreaTrabajo){
+            var entity = await _context.Areas_Trabajo.FirstOrDefaultAsync(x => x.Id_Area_Trabajo.Equals(AreaTrabajo.IdAreaTrabajo));
+            entity.Descripcion = AreaTrabajo.Descripcion;
+            entity.Estado = AreaTrabajo.Estado;
+            _context.Areas_Trabajo.Update(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

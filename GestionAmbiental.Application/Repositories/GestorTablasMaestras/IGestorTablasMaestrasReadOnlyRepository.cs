@@ -167,5 +167,24 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<NombreComunFauna> GetNombreComun(int id_nombre_comun);
         Task<int> AddNombreComun(NombreComunFauna nombreComun);
         Task UpdateNombreComun(NombreComunFauna nombreComun);
+
+        //Tb_Tipo_Avistamiento
+        Task<List<TipoAvistamiento>> GetTipoAvistamiento(string filtro);
+        Task<TipoAvistamiento> GetTipoAvistamiento(int id_tipo_avistamiento);
+        Task<int> AddTipoAvistamiento(TipoAvistamiento TipoAvistamiento);
+        Task UpdateTipoAvistamiento(TipoAvistamiento TipoAvistamiento);
+        
+        //Tb_Estado_Fauna
+        Task<List<EstadoFauna>> GetEstadoFauna(string filtro);
+        Task<EstadoFauna> GetEstadoFauna(int id_estado_fauna);
+        Task<int> AddEstadoFauna(EstadoFauna EstadoFauna);
+        Task UpdateEstadoFauna(EstadoFauna EstadoFauna);
+        
+        //Tb_Area_Trabajo
+        Task<List<AreaTrabajo>> GetAreaTrabajo(string filtro);
+        Task<AreaTrabajo> GetAreaTrabajo(int id_area_trabajo);
+        Task<int> AddAreaTrabajo(AreaTrabajo AreaTrabajo);
+        Task UpdateAreaTrabajo(AreaTrabajo AreaTrabajo);
+
     }
 }

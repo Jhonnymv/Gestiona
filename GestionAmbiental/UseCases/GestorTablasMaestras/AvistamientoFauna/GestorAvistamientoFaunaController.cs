@@ -3,10 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.AgregarEstadoFauna;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.EditarEstadoFauna;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.GetEstadoFauna;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.GetEstadosFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.AgregarNombreComun;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.EditarNombreComun;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.GetNombreComun;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.GetNombresComunes;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoAvistamiento.AgregarTipoAvistamiento;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoAvistamiento.EditarTipoAvistamiento;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoAvistamiento.GetTipoAvistamiento;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoAvistamiento.GetTiposAvistamiento;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.AgregarTipoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.EditarTipoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.GetTipoFauna;
@@ -33,6 +41,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
         private readonly IGetTipoFauna _getTipoFauna;
         private readonly IGetTiposFauna _getTiposFauna;
 
+        private readonly IAgregarEstadoFauna _agregarEstadoFauna;
+        private readonly IEditarEstadoFauna _editarEstadoFauna;
+        private readonly IGetEstadoFauna _getEstadoFauna;
+        private readonly IGetEstadosFauna _getEstadosFauna;
+
+        private readonly IAgregarTipoAvistamiento _agregarTipoAvistamiento;
+        private readonly IEditarTipoAvistamiento _editarTipoAvistamiento;
+        private readonly IGetTipoAvistamiento _getTipoAvistamiento;
+        private readonly IGetTiposAvistamiento _getTiposAvistamiento;
 
         private readonly IHostingEnvironment _hostingEnvironment;
 
@@ -45,6 +62,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             IEditarTipoFauna editarTipoFauna,
             IGetTipoFauna getTipoFauna,
             IGetTiposFauna getTiposFauna,
+            IAgregarEstadoFauna agregarEstadoFauna,
+            IEditarEstadoFauna editarEstadoFauna,
+            IGetEstadoFauna getEstadoFauna,
+            IGetEstadosFauna getEstadosFauna,
+            IAgregarTipoAvistamiento agregarTipoAvistamiento,
+            IEditarTipoAvistamiento editarTipoAvistamiento,
+            IGetTipoAvistamiento getTipoAvistamiento,
+            IGetTiposAvistamiento getTiposAvistamiento,
             IHostingEnvironment hostingEnvironment)
         {
             _agregarNombreComun = agregarNombreComun;
@@ -55,6 +80,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             _editarTipoFauna = editarTipoFauna;
             _getTipoFauna = getTipoFauna;
             _getTiposFauna = getTiposFauna;
+            _agregarEstadoFauna = agregarEstadoFauna;
+            _editarEstadoFauna = editarEstadoFauna;
+            _getEstadoFauna = getEstadoFauna;
+            _getEstadosFauna = getEstadosFauna;
+            _agregarTipoAvistamiento = agregarTipoAvistamiento;
+            _editarTipoAvistamiento = editarTipoAvistamiento;
+            _getTipoAvistamiento = getTipoAvistamiento;
+            _getTiposAvistamiento = getTiposAvistamiento;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -74,6 +107,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return View();
             }
         }
+
         //Tipo Fauna
         [HttpPost]
         public async Task<IActionResult> FiltrarTipoFauna(string filtro, int pagina, int rpp)
@@ -389,6 +423,280 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                         }
                     }
                     return RedirectToAction("AgregarNombreComun");
+                }
+            }
+        }
+
+        //Estado Fauna
+        [HttpPost]
+        public async Task<IActionResult> FiltrarEstadoFauna(string filtro, int pagina, int rpp)
+        {
+            var data = await _getEstadosFauna.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Descripción</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.NEstadosFauna % rpp != 0 ? (data.NEstadosFauna / rpp) + 1 : data.NEstadosFauna / rpp;
+            if (data.NEstadosFauna > 0)
+            {
+                foreach (var fila in data.EstadosFauna)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Descripcion + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleEstadoFauna?IdEstadoFauna=" + fila.IdEstadoFauna + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleEstadoFauna(int IdEstadoFauna)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var data = await _getEstadoFauna.Execute(IdEstadoFauna);
+                var model = new EstadoFaunaModel();
+                model.IdEstadoFauna = data.IdEstadoFauna;
+                model.Descripcion = data.Descripcion;
+                model.Estado = data.Estado;
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarEstadoFauna(EstadoFaunaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarEstadoFauna.Execute(model.IdEstadoFauna, model.Descripcion, model.Estado);
+                return RedirectToAction("DetalleEstadoFauna", new { IdEstadoFauna = model.IdEstadoFauna });
+            }
+        }
+        public async Task<IActionResult> AgregarEstadoFauna()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarEstadoFauna(EstadoFaunaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return RedirectToAction("NoAutorizado", "Home");
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var idEstadoFauna = await _agregarEstadoFauna.Execute(model.Descripcion);
+                        return RedirectToAction("DetalleEstadoFauna", new { IdEstadoFauna = idEstadoFauna });
+                    }
+                    return RedirectToAction("AgregarEstadoFauna");
+                }
+            }
+        }
+
+        //Tipo Avistamiento
+        [HttpPost]
+        public async Task<IActionResult> FiltrarTipoAvistamiento(string filtro, int pagina, int rpp)
+        {
+            var data = await _getTiposAvistamiento.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Descripción</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.NTiposAvistamiento % rpp != 0 ? (data.NTiposAvistamiento / rpp) + 1 : data.NTiposAvistamiento / rpp;
+            if (data.NTiposAvistamiento > 0)
+            {
+                foreach (var fila in data.TiposAvistamiento)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Descripcion + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleTipoAvistamiento?IdTipoAvistamiento=" + fila.IdTipoAvistamiento + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleTipoAvistamiento(int IdTipoAvistamiento)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var data = await _getTipoAvistamiento.Execute(IdTipoAvistamiento);
+                var model = new TipoAvistamientoModel();
+                model.IdTipoAvistamiento = data.IdTipoAvistamiento;
+                model.Descripcion = data.Descripcion;
+                model.Estado = data.Estado;
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarTipoAvistamiento(TipoAvistamientoModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarTipoAvistamiento.Execute(model.IdTipoAvistamiento, model.Descripcion, model.Estado);
+                return RedirectToAction("DetalleTipoAvistamiento", new { IdTipoAvistamiento = model.IdTipoAvistamiento });
+            }
+        }
+        public async Task<IActionResult> AgregarTipoAvistamiento()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarTipoAvistamiento(TipoAvistamientoModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return RedirectToAction("NoAutorizado", "Home");
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var idTipoAvistamiento = await _agregarTipoAvistamiento.Execute(model.Descripcion);
+                        return RedirectToAction("DetalleTipoAvistamiento", new { IdTipoAvistamiento = idTipoAvistamiento });
+                    }
+                    return RedirectToAction("AgregarTipoAvistamiento");
                 }
             }
         }
