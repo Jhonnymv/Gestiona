@@ -19,14 +19,14 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamie
             _registrarAvistamientoFaunaReadOnlyRepository = registrarAvistamientoFaunaReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarAvistamientoFaunaReadOnlyRepository));
         }
 
-        public async Task Execute(int IdAvistamiento, string[] fotos, string fecha, string hora, string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, string lugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck, string opcion)
+        public async Task Execute(int IdAvistamiento, string[] fotos, string fecha, string hora, string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, int idLugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck, string opcion)
         {
             var nuevaFecha = DateTime.Parse(fecha + " " + hora);
             var input = new Domain.AvistamientoFauna.AvistamientoFauna();
 
             input.IdAvistamientoFauna = IdAvistamiento;
             input.Fotos = JsonConvert.SerializeObject(fotos);
-            input.Fecha_Avistamiento = nuevaFecha;
+            input.FechaAvistamiento = nuevaFecha;
             input.Ubicacion = ubicacion;
             input.Cantidad = cantidad;
 
@@ -55,15 +55,12 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamie
 
             if (idEstadoFauna != 0)
                 input.EstadoFauna = new Domain.AvistamientoFauna.Items.EstadoFauna { IdEstadoFauna = idEstadoFauna };
+            
+            if (idLugarReferencia != 0)
+                input.LugarReferencia = new Domain.AvistamientoFauna.Items.LugarReferencia { IdLugarReferencia = idLugarReferencia };
 
-            input.Lugar_Referencia = lugarReferencia;
             input.Usuario = new Domain.ValueObjects.Usuario { IdUsuario = idUsuario };
-            if (idEmpresa != 0)
-                input.Empresa = new Domain.ValueObjects.Empresa { IdEmpresa = idEmpresa };
-            if (idArea != 0)
-                input.AreaTrabajo = new Domain.ValueObjects.AreaTrabajo { IdAreaTrabajo = idArea };
-            input.NFotocheck = nFotocheck;
-
+            
             await _editarAvistamientoFaunaReadOnlyRepository.ActualizarAvistamiento(input);
 
         }

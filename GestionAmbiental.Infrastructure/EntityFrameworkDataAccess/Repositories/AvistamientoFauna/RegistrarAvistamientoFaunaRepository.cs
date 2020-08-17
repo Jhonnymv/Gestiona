@@ -23,17 +23,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = new Entities.AvistamientoFauna.Avistamiento_Fauna();
             entity.Codigo = avistamiento.Codigo;
             entity.Fotos = avistamiento.Fotos;
-            entity.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento;
+            entity.Fecha_Avistamiento = avistamiento.FechaAvistamiento;
             entity.Ubicacion = avistamiento.Ubicacion;
             entity.Cantidad = avistamiento.Cantidad;
             entity.Id_Nombre_Comun_Fauna = avistamiento.NombreComun?.IdNombreComunFauna;
             entity.Id_Tipo_Avistamiento = avistamiento.TipoAvistamiento?.IdTipoAvistamiento;
             entity.Id_Estado_Fauna = avistamiento.EstadoFauna?.IdEstadoFauna;
-            entity.Lugar_Referencia = avistamiento.Lugar_Referencia;
+            entity.Id_Lugar_Referencia = avistamiento.LugarReferencia?.IdLugarReferencia;
             entity.Id_Usuario = avistamiento.Usuario.IdUsuario;
-            entity.Id_Empresa = avistamiento.Empresa?.IdEmpresa;
-            entity.Id_Area_Trabajo = avistamiento.AreaTrabajo?.IdAreaTrabajo;
-            entity.N_Fotocheck = avistamiento.NFotocheck;
             entity.Estado = avistamiento.Estado;
 
             _context.Avistamientos_Fauna.Add(entity);
@@ -43,7 +40,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetUltimoCodigo()
         {
-            var codigo = await _context.Avistamientos_Fauna.OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            var codigo = await _context.Avistamientos_Fauna.Where(x=>!x.Codigo.Equals("TBD")).OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
             return codigo;
         }
     }

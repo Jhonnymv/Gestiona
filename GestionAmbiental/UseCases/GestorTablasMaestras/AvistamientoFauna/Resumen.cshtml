@@ -7,10 +7,16 @@
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="listItems">
             <li class="nav-item">
-                <a class="nav-link active" id="Tipo_Fauna">Tipo de Fauna</a>
+                <a class="nav-link active" id="Nombre_Comun">Nombre Común de Fauna</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="Nombre_Comun">Nombre Común de Fauna</a>
+                <a class="nav-link" id="Tipo_Fauna">Tipo de Fauna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Estado_Fauna">Estado de Fauna</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Tipo_Avistamiento">Tipo de Avistamiento</a>
             </li>
         </ul>
     </div>
@@ -40,8 +46,8 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            FiltrarTipoFauna(1);
-            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
+            FiltrarNombreComun(1);
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
         });
 
         $("#btn_enviar").on('click', function (e) {
@@ -52,7 +58,6 @@
                 FiltrarNombreComun(1);
             }
         });
-
         $("#Tipo_Fauna").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
@@ -62,6 +67,16 @@
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
             FiltrarNombreComun(1);
+        });
+        $("#Estado_Fauna").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarEstadoFauna");
+            FiltrarEstadoFauna(1);
+        });
+        $("#Tipo_Avistamiento").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoAvistamiento");
+            FiltrarTipoAvistamiento(1);
         });
 
         function FiltrarTipoFauna(pag) {
@@ -85,6 +100,40 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorAvistamientoFauna/FiltrarNombreComun",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarEstadoFauna(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarEstadoFauna",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarTipoAvistamiento(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarTipoAvistamiento",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

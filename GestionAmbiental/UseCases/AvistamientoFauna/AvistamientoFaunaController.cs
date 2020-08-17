@@ -115,7 +115,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                         filasTabla += "<tr>";                        
                         if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString()))
                         {
-                            if(fila.Fecha_Avistamiento > DateTime.Now.AddDays(-7))
+                            if(fila.FechaAvistamiento > DateTime.Now.AddDays(-7))
                                 filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                             else
                                 filasTabla += "<td></td>";
@@ -126,8 +126,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                             filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         }
-                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("dd/MM/yyyy") + "</td>";
-                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("HH:mm") + "</td>";
+                        filasTabla += "<td>" + fila.FechaAvistamiento.ToString("dd/MM/yyyy") + "</td>";
+                        filasTabla += "<td>" + fila.FechaAvistamiento.ToString("HH:mm") + "</td>";
                         filasTabla += "<td>" + fila.Ubicacion + "</td>";
                         filasTabla += "<td>" + fila.Cantidad + "</td>";
                         filasTabla += "<td>" + fila.TipoFauna + "</td>";
@@ -200,7 +200,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 catalogo += "<button class=\"btn btn-link collapsed text-dark font-weight-bold\" data-toggle=\"collapse\" data-target=\"#collapse" + tipoFauna.Descripcion + "\" aria-expanded=\"true\" aria-controls=\"collapse" + tipoFauna.Descripcion + "\">" + tipoFauna.Descripcion + "</button>";
                 catalogo += "</h5>";
                 catalogo += "</div>";
-                catalogo += "<div id=\"collapse" + tipoFauna.Descripcion + "\" class=\"collapse\" aria-labelledby=\"heading" + tipoFauna.Descripcion + "\" data-parent=\"#accordion\">";
+                catalogo += "<div id=\"collapse" + tipoFauna.Descripcion + "\" class=\"collapse show\" aria-labelledby=\"heading" + tipoFauna.Descripcion + "\" data-parent=\"#accordion\">";
                 catalogo += "<div class=\"card-body\">";
                 catalogo += "<div class=\"row text-center text-lg-left\">";
 
@@ -208,7 +208,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 foreach (var nombreComun in especiesPorTipo)
                 {
                     catalogo += "<div class=\"col-lg-3 col-md-4 col-6 mt-2\">";
-                    catalogo += "<div class=\"card\" style=\"width:18rem;\">";
+                    catalogo += "<div class=\"card\" style=\"width:100%;\">";
                     catalogo += "<img src=\"" + nombreComun.Foto + "\" style=\"width:100%; height:18rem;\" class=\"card-img-top img-thumbnail\" alt=\"" + nombreComun.Foto + "\">";
                     catalogo += "<div class=\"card-body\">";
                     catalogo += "<p class=\"card-text text-center\">" + nombreComun.Descripcion + "</p>";
@@ -310,12 +310,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdNombreComun,
                     model.IdTipoAvistamiento,
                     model.IdEstadoFauna,
-                    model.Lugar_Referencia,
+                    model.IdLugarReferencia,
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
-                    model.NFotocheck);
-                return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
+                    model.NFotocheck,
+                    model.Opcion);
+                if (model.Opcion.Equals("GuardarEstado"))
+                    return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
+                else if (model.Opcion.Equals("Registrar"))
+                return RedirectToAction("DetalleRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
             }
             return RedirectToAction("NuevoRegistro");
         }
@@ -370,19 +374,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
                 model.IdEncriptado = IdAvistamiento;
-                model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("yyyy-MM-dd");
-                model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
+                model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("yyyy-MM-dd");
+                model.Hora_Avistamiento = avistamiento.FechaAvistamiento.ToString("HH:mm");
                 model.Ubicacion = avistamiento.Ubicacion;
                 model.Cantidad = avistamiento.Cantidad;
                 model.IdNombreComun = avistamiento.IdNombreComun;
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
-                model.Lugar_Referencia = avistamiento.Lugar_Referencia;
+                model.IdLugarReferencia = avistamiento.IdLugarReferencia;
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
-                model.IdEmpresa = avistamiento.IdEmpresa;
-                model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
-                model.NFotocheck = avistamiento.NFotocheck;
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
                 model.Estado = avistamiento.Estado;
 
@@ -438,7 +439,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdNombreComun,
                     model.IdTipoAvistamiento,
                     model.IdEstadoFauna,
-                    model.Lugar_Referencia,
+                    model.IdLugarReferencia,
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
@@ -448,7 +449,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 if (model.Opcion.Equals("GuardarEstado"))
                     return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
                 else if (model.Opcion.Equals("Registrar"))
-                    return RedirectToAction("Resumen");
+                    return RedirectToAction("DetalleRegistro", new { IdAvistamiento = model.IdEncriptado });
             }
             return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
         }
@@ -503,23 +504,20 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
-                model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("dd/MM/yyyy");
-                model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
+                model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy");
+                model.Hora_Avistamiento = avistamiento.FechaAvistamiento.ToString("HH:mm");
                 model.Ubicacion = avistamiento.Ubicacion;
                 model.Cantidad = avistamiento.Cantidad;
                 model.IdNombreComun = avistamiento.IdNombreComun;
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
-                model.Lugar_Referencia = avistamiento.Lugar_Referencia;
+                model.IdLugarReferencia = avistamiento.IdLugarReferencia;
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
-                model.IdEmpresa = avistamiento.IdEmpresa;
-                model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
-                model.NFotocheck = avistamiento.NFotocheck;
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
 
-                model.Descripcion_Accion = avistamiento.Descripcion_Accion;
-                model.Evidencia_Cargada = avistamiento.Evidencia_Accion != null ? JsonConvert.SerializeObject(avistamiento.Evidencia_Accion) : null;
+                model.Descripcion_Accion = avistamiento.DescripcionAccion;
+                model.Evidencia_Cargada = avistamiento.EvidenciaAccion != null ? JsonConvert.SerializeObject(avistamiento.EvidenciaAccion) : null;
                 model.Estado = avistamiento.Estado;
 
                 return View(model);
@@ -578,16 +576,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 };
             }
             return Ok(response);
-        }
-        public async Task<IActionResult> ObtenerImagenReferencia(int IdNombreComun)
+        }        
+        public async Task<IActionResult> ObtenerImagenesReferencia()
         {
             var items = await _getItems.Execute();
-            var nombreComun = items.NombresComunes.FirstOrDefault(x => x.IdNombreComunFauna.Equals(IdNombreComun));
+            var nombresComunes = items.NombresComunes.ToList();
             dynamic response = new
             {
-                Id = nombreComun.IdNombreComunFauna,
-                Nombre = nombreComun.Descripcion,
-                Foto = nombreComun.Foto
+                Ids = nombresComunes.OrderBy(x=>x.IdNombreComunFauna).Select(x=>x.IdNombreComunFauna).ToArray(),
+                Nombres = nombresComunes.OrderBy(x => x.IdNombreComunFauna).Select(x => x.Descripcion).ToArray(),
+                Fotos = nombresComunes.OrderBy(x => x.IdNombreComunFauna).Select(x => x.Foto).ToArray()
             };
             return Ok(response);
         }

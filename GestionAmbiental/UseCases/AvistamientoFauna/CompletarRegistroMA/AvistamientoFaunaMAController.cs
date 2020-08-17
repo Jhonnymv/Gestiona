@@ -107,8 +107,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                             filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         }
-                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("dd/MM/yyyy") + "</td>";
-                        filasTabla += "<td>" + fila.Fecha_Avistamiento.ToString("HH:mm") + "</td>";
+                        filasTabla += "<td>" + fila.FechaAvistamiento.ToString("dd/MM/yyyy") + "</td>";
+                        filasTabla += "<td>" + fila.FechaAvistamiento.ToString("HH:mm") + "</td>";
                         filasTabla += "<td>" + fila.Ubicacion + "</td>";
                         filasTabla += "<td>" + fila.Cantidad + "</td>";
                         filasTabla += "<td>" + fila.TipoFauna + "</td>";
@@ -200,19 +200,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
-                model.Fecha_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("dd/MM/yyyy");
-                model.Hora_Avistamiento = avistamiento.Fecha_Avistamiento.ToString("HH:mm");
+                model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy");
+                model.Hora_Avistamiento = avistamiento.FechaAvistamiento.ToString("HH:mm");
                 model.Ubicacion = avistamiento.Ubicacion;
                 model.Cantidad = avistamiento.Cantidad;
                 model.IdNombreComun = avistamiento.IdNombreComun;
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
-                model.Lugar_Referencia = avistamiento.Lugar_Referencia;
+                model.IdLugarReferencia = avistamiento.IdLugarReferencia;
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
-                model.IdEmpresa = avistamiento.IdEmpresa;
-                model.IdAreaTrabajo = avistamiento.IdAreaTrabajo;
-                model.NFotocheck = avistamiento.NFotocheck;
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
                 model.Estado = avistamiento.Estado;
 

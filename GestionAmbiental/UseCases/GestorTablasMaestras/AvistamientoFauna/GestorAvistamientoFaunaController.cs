@@ -354,6 +354,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 if (ModelState.IsValid)
+                {
                     if (model.Foto != null && model.Foto.Length > 0)
                     {
                         var antiguaImagen = Path.Combine(_hostingEnvironment.WebRootPath, model.RutaFoto.Substring(1));
@@ -366,9 +367,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                         var extension = Path.GetExtension(model.Foto.FileName);
 
                         var rutaNuevoArchivo = CargarImagen(model.Foto, model.Descripcion, tipoFauna.Descripcion, extension).Result;
-
-                        await _editarNombreComun.Execute(model.IdNombreComun, model.Descripcion, model.IdTipoFauna, rutaNuevoArchivo , model.Estado);
+                        await _editarNombreComun.Execute(model.IdNombreComun, model.Descripcion, model.IdTipoFauna, rutaNuevoArchivo, model.Estado);
                     }
+                    else
+                    {
+                        await _editarNombreComun.Execute(model.IdNombreComun, model.Descripcion, model.IdTipoFauna, model.RutaFoto, model.Estado);
+                    }
+
+                }
                 return RedirectToAction("DetalleNombreComun", new { IdNombreComun = model.IdNombreComun });
             }
         }

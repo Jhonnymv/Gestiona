@@ -27,16 +27,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Avi
         public int? Id_Tipo_Avistamiento { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Estado_Fauna { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string Lugar_Referencia { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Lugar_Referencia { get; set; }
         [Column(TypeName = "int")]
         public int Id_Usuario { get; set; }
-        [Column(TypeName = "int")]
-        public int? Id_Empresa { get; set; }
-        [Column(TypeName = "int")]
-        public int? Id_Area_Trabajo { get; set; }
-        [Column(TypeName = "varchar(100)")]
-        public string N_Fotocheck { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Accion { get; set; }
         [Column(TypeName = "text")]

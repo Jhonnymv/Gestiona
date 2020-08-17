@@ -10,7 +10,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         public int IdAvistamientoFauna { get; set; }
         public string Codigo { get; set; }
         public string[] Fotos { get; set; }
-        public DateTime Fecha_Avistamiento { get; set; }
+        public DateTime FechaAvistamiento { get; set; }
         public string Ubicacion { get; set; }
         public int Cantidad { get; set; }
         public int IdNombreComun { get; set; }
@@ -21,16 +21,12 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         public string TipoFauna { get; set; }
         public int IdEstadoFauna { get; set; }
         public string EstadoFauna { get; set; }
-        public string Lugar_Referencia { get; set; }
+        public int IdLugarReferencia { get; set; }
+        public string LugarReferencia { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
-        public int IdEmpresa { get; set; }
-        public string Empresa { get; set; }
-        public int IdAreaTrabajo { get; set; }
-        public string AreaTrabajo { get; set; }
-        public string NFotocheck { get; set; }
-        public string Descripcion_Accion { get; set; }
-        public string[] Evidencia_Accion { get; set; }
+        public string DescripcionAccion { get; set; }
+        public string[] EvidenciaAccion { get; set; }
         public int IdSupervisor { get; set; }
         public string Supervisor { get; set; }
         public string Estado { get; set; }
@@ -39,7 +35,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         {
             IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
             Codigo = avistamiento.Codigo;
-            Fecha_Avistamiento = avistamiento.Fecha_Avistamiento;
+            FechaAvistamiento = avistamiento.FechaAvistamiento;
             Ubicacion = avistamiento.Ubicacion;
             Cantidad = avistamiento.Cantidad;
             if (avistamiento.NombreComun != null)
@@ -59,21 +55,14 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
                 IdEstadoFauna = avistamiento.EstadoFauna.IdEstadoFauna;
                 EstadoFauna = avistamiento.EstadoFauna.Descripcion;
             }
-            Lugar_Referencia = avistamiento.Lugar_Referencia;
+            if (avistamiento.LugarReferencia != null)
+            {
+                IdLugarReferencia = avistamiento.LugarReferencia.IdLugarReferencia;
+                LugarReferencia = avistamiento.LugarReferencia.Descripcion;
+            }
             IdUsuario = avistamiento.Usuario.IdUsuario;
-            Usuario = avistamiento.Usuario.Nombres + avistamiento.Usuario.Apellidos;
-            if (avistamiento.Empresa != null)
-            {
-                IdEmpresa = avistamiento.Empresa.IdEmpresa;
-                Empresa = avistamiento.Empresa.RazonSocial;
-            }
-            if (avistamiento.AreaTrabajo != null)
-            {
-                IdAreaTrabajo = avistamiento.AreaTrabajo.IdAreaTrabajo;
-                AreaTrabajo = avistamiento.AreaTrabajo.Descripcion;
-            }
-            NFotocheck = avistamiento.NFotocheck;
-            Descripcion_Accion = avistamiento.Descripcion_Accion;
+            Usuario = avistamiento.Usuario.Nombres + avistamiento.Usuario.Apellidos;            
+            DescripcionAccion = avistamiento.DescripcionAccion;
             if (avistamiento.Supervisor != null)
             {
                 IdSupervisor = avistamiento.Supervisor.IdUsuario;
@@ -96,9 +85,9 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
                 }
             }
             //Evidencia
-            if (avistamiento.Evidencia_Accion != null)
+            if (avistamiento.EvidenciaAccion != null)
             {
-                var evidencias = JArray.Parse(avistamiento.Evidencia_Accion);
+                var evidencias = JArray.Parse(avistamiento.EvidenciaAccion);
                 if (evidencias.Count > 0)
                 {
                     var listaEvidencias = new List<string>();
@@ -106,7 +95,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
                     {
                         listaEvidencias.Add((string)evidencia);
                     }
-                    Evidencia_Accion = listaEvidencias.ToArray();
+                    EvidenciaAccion = listaEvidencias.ToArray();
                 }
             }
         }

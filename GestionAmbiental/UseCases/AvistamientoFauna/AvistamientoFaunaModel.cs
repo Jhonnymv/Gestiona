@@ -32,7 +32,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         [DisplayName("Estado de Fauna:")]
         public int IdEstadoFauna { get; set; }
         [DisplayName("Lugar Referencial de Avistamiento:")]
-        public string Lugar_Referencia { get; set; }
+        public int IdLugarReferencia { get; set; }
         [DisplayName("Empresa:")]
         public int IdEmpresa { get; set; }
         [DisplayName("Nombres y Apellidos:")]

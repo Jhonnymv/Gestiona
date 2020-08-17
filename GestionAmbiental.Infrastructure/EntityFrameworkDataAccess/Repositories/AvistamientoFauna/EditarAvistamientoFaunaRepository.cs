@@ -23,17 +23,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(nuevoAvistamientoFauna.IdAvistamientoFauna));
             avistamiento.Codigo = nuevoAvistamientoFauna.Codigo;
             avistamiento.Fotos = nuevoAvistamientoFauna.Fotos;
-            avistamiento.Fecha_Avistamiento = nuevoAvistamientoFauna.Fecha_Avistamiento;
+            avistamiento.Fecha_Avistamiento = nuevoAvistamientoFauna.FechaAvistamiento;
             avistamiento.Ubicacion = nuevoAvistamientoFauna.Ubicacion;
             avistamiento.Cantidad = nuevoAvistamientoFauna.Cantidad;
             avistamiento.Id_Nombre_Comun_Fauna = nuevoAvistamientoFauna.NombreComun?.IdNombreComunFauna;
             avistamiento.Id_Tipo_Avistamiento = nuevoAvistamientoFauna.TipoAvistamiento?.IdTipoAvistamiento;
             avistamiento.Id_Estado_Fauna = nuevoAvistamientoFauna.EstadoFauna?.IdEstadoFauna;
-            avistamiento.Lugar_Referencia = nuevoAvistamientoFauna.Lugar_Referencia;
+            avistamiento.Id_Lugar_Referencia = nuevoAvistamientoFauna.LugarReferencia?.IdLugarReferencia;
             avistamiento.Id_Usuario = nuevoAvistamientoFauna.Usuario.IdUsuario;
-            avistamiento.Id_Empresa = nuevoAvistamientoFauna.Empresa?.IdEmpresa;
-            avistamiento.Id_Area_Trabajo = nuevoAvistamientoFauna.AreaTrabajo?.IdAreaTrabajo;
-            avistamiento.N_Fotocheck = nuevoAvistamientoFauna.NFotocheck;
             avistamiento.Estado = nuevoAvistamientoFauna.Estado;
 
             _context.Avistamientos_Fauna.Update(avistamiento);
@@ -44,8 +41,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(avistamientoMA.IdAvistamientoFauna));
             avistamiento.Id_Supervisor = avistamientoMA.Supervisor.IdUsuario;
-            avistamiento.Evidencia_Accion = avistamientoMA.Evidencia_Accion;
-            avistamiento.Descripcion_Accion = avistamientoMA.Descripcion_Accion;
+            avistamiento.Evidencia_Accion = avistamientoMA.EvidenciaAccion;
+            avistamiento.Descripcion_Accion = avistamientoMA.DescripcionAccion;
             avistamiento.Estado = avistamientoMA.Estado;
 
             _context.Avistamientos_Fauna.Update(avistamiento);

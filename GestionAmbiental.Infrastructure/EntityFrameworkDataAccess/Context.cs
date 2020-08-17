@@ -73,6 +73,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Tipo_Avistamiento> Tipos_Avistamiento { get; set; }
         public DbSet<Estado_Fauna> Estados_Fauna { get; set; }
         public DbSet<Area_Trabajo> Areas_Trabajo { get; set; }
+        public DbSet<Lugar_Referencia_AF> Lugares_Referencia_AF { get; set; }
+        public DbSet<Contacto_Emergencia_AF> Contactos_Emergencia_AF { get; set; }
         public DbSet<Avistamiento_Fauna> Avistamientos_Fauna { get; set; }
         public DbSet<Log_Avistamiento_Fauna> Logs_Avistamiento_Fauna { get; set; }
 
@@ -191,6 +193,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Estado_Fauna");
             modelBuilder.Entity<Area_Trabajo>()
                 .ToTable("Tb_Area_Trabajo");
+            modelBuilder.Entity<Lugar_Referencia_AF>()
+                .ToTable("Tb_Lugar_Referencia_AF");
+            modelBuilder.Entity<Contacto_Emergencia_AF>()
+                .ToTable("Tb_Contacto_Emergencia_AF");
             modelBuilder.Entity<Avistamiento_Fauna>()
                 .ToTable("Tb_Avistamiento_Fauna");
             modelBuilder.Entity<Log_Avistamiento_Fauna>()

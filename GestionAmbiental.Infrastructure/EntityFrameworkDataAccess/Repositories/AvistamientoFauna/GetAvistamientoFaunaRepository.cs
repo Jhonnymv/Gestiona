@@ -24,11 +24,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.IdAvistamientoFauna = avistamientoFauna.Id_Avistamiento_Fauna;
             output.Codigo = avistamientoFauna.Codigo;
             output.Fotos = avistamientoFauna.Fotos;
-            output.Fecha_Avistamiento = avistamientoFauna.Fecha_Avistamiento;
+            output.FechaAvistamiento = avistamientoFauna.Fecha_Avistamiento;
             output.Ubicacion = avistamientoFauna.Ubicacion;
             output.Cantidad = avistamientoFauna.Cantidad;
-            output.Lugar_Referencia = avistamientoFauna.Lugar_Referencia;
-            output.NFotocheck = avistamientoFauna.N_Fotocheck;
 
 
             if (avistamientoFauna.Id_Nombre_Comun_Fauna != null)
@@ -92,29 +90,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 output.EstadoFauna = estadoFaunaDomain;
             }
-
-            if (avistamientoFauna.Id_Empresa != null)
+            if (avistamientoFauna.Id_Lugar_Referencia != null)
             {
-                var empresa = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(avistamientoFauna.Id_Empresa));
-                var empresaDomain = new Domain.ValueObjects.Empresa
+                var lugarReferencia = await _context.Lugares_Referencia_AF.FirstOrDefaultAsync(x => x.Id_Lugar_Referencia_AF.Equals(avistamientoFauna.Id_Lugar_Referencia));
+                var lugarReferenciaDomain = new Domain.AvistamientoFauna.Items.LugarReferencia
                 {
-                    IdEmpresa = empresa.Id_Empresa,
-                    RazonSocial = empresa.Razon_Social
-                };
-                output.Empresa = empresaDomain;
-            }
-
-            if (avistamientoFauna.Id_Area_Trabajo != null)
-            {
-                var area = await _context.Areas_Trabajo.FirstOrDefaultAsync(x => x.Id_Area_Trabajo.Equals(avistamientoFauna.Id_Area_Trabajo));
-                var areaDomain = new Domain.ValueObjects.AreaTrabajo
-                {
-                    IdAreaTrabajo = area.Id_Area_Trabajo,
-                    Descripcion = area.Descripcion,
-                    Estado = area.Estado
+                    IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia_AF,
+                    Descripcion = lugarReferencia.Descripcion,
+                    Latitud = lugarReferencia.Latitud,
+                    Longitud = lugarReferencia.Longitud,
+                    Estado = lugarReferencia.Estado
                 };
 
-                output.AreaTrabajo = areaDomain;
+                output.LugarReferencia = lugarReferenciaDomain;
             }
             
             if (supervisor != null)
@@ -132,8 +120,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 };
                 output.Supervisor = supervisorDomain;
             }
-            output.Descripcion_Accion = avistamientoFauna.Descripcion_Accion;
-            output.Evidencia_Accion = avistamientoFauna.Evidencia_Accion;
+            output.DescripcionAccion = avistamientoFauna.Descripcion_Accion;
+            output.EvidenciaAccion = avistamientoFauna.Evidencia_Accion;
             output.Estado = avistamientoFauna.Estado;
 
             return output;
@@ -143,6 +131,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var tiposFauna = await _context.Tipos_Fauna.Where(x=>x.Id_Tipo_Fauna.Equals(tipo_fauna!=0?tipo_fauna:x.Id_Tipo_Fauna)).ToListAsync();
             var estadosFauna = await _context.Estados_Fauna.ToListAsync();
+            var lugaresReferencia = await _context.Lugares_Referencia_AF.ToListAsync();
             var nombresComunes = await _context.Nombres_Comunes_Fauna.Where(x => x.Id_Tipo_Fauna.Equals(tipo_fauna != 0 ? tipo_fauna : x.Id_Tipo_Fauna)).ToListAsync();
             var tiposAvistamiento = await _context.Tipos_Avistamiento.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -164,13 +153,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.IdAvistamientoFauna = item.Id_Avistamiento_Fauna;
                 outputItem.Codigo = item.Codigo;
                 outputItem.Fotos = item.Fotos;
-                outputItem.Fecha_Avistamiento = item.Fecha_Avistamiento;
+                outputItem.FechaAvistamiento = item.Fecha_Avistamiento;
                 outputItem.Ubicacion = item.Ubicacion;
                 outputItem.Cantidad = item.Cantidad;
-                outputItem.Lugar_Referencia = item.Lugar_Referencia;
-                outputItem.NFotocheck = item.N_Fotocheck;
-                outputItem.Descripcion_Accion = item.Descripcion_Accion;
-                outputItem.Evidencia_Accion = item.Evidencia_Accion;
+                outputItem.DescripcionAccion = item.Descripcion_Accion;
+                outputItem.EvidenciaAccion = item.Evidencia_Accion;
                 outputItem.Estado = item.Estado;
 
                 if (item.Id_Nombre_Comun_Fauna.HasValue)
@@ -219,30 +206,20 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                     outputItem.EstadoFauna = estadoFaunaDomain;
                 }
-
-                if (item.Id_Empresa.HasValue)
+                
+                if (item.Id_Lugar_Referencia.HasValue)
                 {
-                    var empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(item.Id_Empresa));
-                    var empresaDomain = new Domain.ValueObjects.Empresa
+                    var lugarReferencia = lugaresReferencia.FirstOrDefault(x => x.Id_Lugar_Referencia_AF.Equals(item.Id_Lugar_Referencia));
+                    var lugarReferenciaDomain = new Domain.AvistamientoFauna.Items.LugarReferencia
                     {
-                        IdEmpresa = empresa.Id_Empresa,
-                        RazonSocial = empresa.Razon_Social
+                        IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia_AF,
+                        Descripcion = lugarReferencia.Descripcion,
+                        Latitud = lugarReferencia.Latitud,
+                        Longitud = lugarReferencia.Longitud,
+                        Estado = lugarReferencia.Estado
                     };
 
-                    outputItem.Empresa = empresaDomain;
-                }
-
-                if (item.Id_Area_Trabajo.HasValue)
-                {
-                    var area = areas.FirstOrDefault(x => x.Id_Area_Trabajo.Equals(item.Id_Area_Trabajo));
-                    var areaDomain = new Domain.ValueObjects.AreaTrabajo
-                    {
-                        IdAreaTrabajo = area.Id_Area_Trabajo,
-                        Descripcion = area.Descripcion,
-                        Estado = area.Estado
-                    };
-
-                    outputItem.AreaTrabajo = areaDomain;
+                    outputItem.LugarReferencia = lugarReferenciaDomain;
                 }
 
                 var usuario = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Usuario));

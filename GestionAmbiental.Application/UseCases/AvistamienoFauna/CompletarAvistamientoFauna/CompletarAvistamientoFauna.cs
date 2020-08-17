@@ -28,8 +28,8 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.CompletarAvista
             var IdUsuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(UsuarioRed);
 
             input.IdAvistamientoFauna = IdAvistamiento;
-            input.Evidencia_Accion = JsonConvert.SerializeObject(Evidencias);
-            input.Descripcion_Accion = Descripcion;
+            input.EvidenciaAccion = JsonConvert.SerializeObject(Evidencias);
+            input.DescripcionAccion = Descripcion;
             input.Supervisor = new Domain.ValueObjects.Usuario { IdUsuario = IdUsuario };
             input.Estado = EstadosAvistamiento.Completado.ToString();
 

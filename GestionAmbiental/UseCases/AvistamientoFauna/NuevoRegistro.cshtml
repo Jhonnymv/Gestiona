@@ -12,12 +12,13 @@
 
 <div class="row mb-2">
     <div class="container-fluid d-flex align-items-center flex-column bg-danger">
-        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">SI EL ESPÉCIMEN ESTÁ HERIDO LLAMAR A: </h1>
+        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
         <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
     </div>
 </div>
 <form class="form-group" id="form_nuevo_avistamiento" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
 
+    <input type="hidden" asp-for="Opcion" />
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
             <h5 style="color:white;margin:4px;">Registro Fotográfico</h5>
@@ -35,11 +36,11 @@
     </div>
     <div class="row mb-2">
         <div class="col-lg-12 text-center">
-            <img id="previsualizacion" src="~/img/uploads/AvistamientoFauna/Arácnidos/Arañas_Arácnidos20200724185706.jpg" style="width:30rem;height:auto;max-width:100%" />
+            <img id="previsualizacion" style="width:30rem;height:auto;max-width:100%;display:none" />
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
-        <button type="button" class="btn btn-primary" onclick="CargarFotos()">Guardar y cargar otra foto</button>
+        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;"><img src="~/img/icons/guardar.png" /></button>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
@@ -66,7 +67,7 @@
         </div>
         <div class="col-sm-2 col-md-1 col-lg-1 col-2 mb-2">
             <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png"/></button>
+                <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
             </div>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
@@ -81,9 +82,7 @@
             <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun"></select>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-link" onclick="VerImagen()">Ver Imagen de Referencia</button>
-            </div>
+            <img id="img_referencia" style="width:30rem;height:auto;max-width:100%;display:none" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Cantidad"></label>
@@ -132,7 +131,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.UsuarioNombre" readonly />
-            <input type="hidden" asp-for="IdUsuario" value="@ViewBag.IdUsuario"/>
+            <input type="hidden" asp-for="IdUsuario" value="@ViewBag.IdUsuario" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="IdAreaTrabajo"></label>
@@ -151,7 +150,8 @@
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
-        <button type="submit" class="btn btn-primary">Registrar</button>
+        <button type="button" class="btn btn-primary" onclick="GuardarEstado()">Guardar Estado</button>
+        <button type="button" class="btn btn-primary" onclick="Registrar()">Registrar</button>
     </div>
 </form>
 
@@ -188,6 +188,7 @@
 @section Scripts{
     <script type="text/javascript">
         var ubicacion = $("#Ubicacion");
+        var imagenesReferencia = [];
         $(document).ready(function () {
             CargarDatos();
         });
@@ -197,13 +198,21 @@
                 var output = document.getElementById('previsualizacion');
                 output.src = reader.result;
             }
-            reader.readAsDataURL(event.target.files[0]);
+            try {
+                reader.readAsDataURL(event.target.files[0]);
+                $("#previsualizacion").show();
+                $("#botonCargarFoto").show();
+            } catch (error) {
+                $("#previsualizacion").hide();
+                $("#botonCargarFoto").hide();
+            }
         }
         function CargarDatos() {
             var fechaActual = new Date();
             $("#Fecha_Avistamiento").val(DarFormatoFecha(fechaActual));
             $("#Hora_Avistamiento").val(DarFormatoHora(fechaActual));
             ObtenerUbicacion();
+            ObtenerImagenesReferencia();
         }
         function DarFormatoFecha(date) {
             var d = new Date(date),
@@ -240,31 +249,34 @@
         function MostrarUbicacion(position) {
             ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
         }
-        function VerImagen() {
-            var IdNombreComun = $("#IdNombreComun").val();
-            if (IdNombreComun != 0) {
-                $("#modal_imagen_referencia").modal('show');
-                $.ajax({
-                    type: 'GET',
-                    data: {
-                        'IdNombreComun': IdNombreComun
-                    },
-                    url: '/AvistamientoFauna/ObtenerImagenReferencia',
-                    success: function (response) {
-                        console.log(response.id);
-                        console.log(response.foto);
-                        $("#ImagenEspecie").attr("src", response.foto);
-                        $("#NombreEspecie").text(response.nombre);
-                    },
-                    error: function () {
-                        console.log("No se ha podido obtener la imagen");
+        function ObtenerImagenesReferencia() {
+            $.ajax({
+                type: 'GET',
+                url: '/AvistamientoFauna/ObtenerImagenesReferencia',
+                success: function (response) {
+                    for (var i = 0; i < response.ids.length; i++) {
+                        var imagen = { id: response.ids[i], nombre: response.nombres[i], src: response.fotos[i] };
+                        imagenesReferencia.push(imagen);
                     }
-                });
-            } else {
-                alert("Debe seleccionar un nombre común")
-            }
+                },
+                error: function () {
+                    console.log("No se ha podido obtener las imagenes");
+                }
+            });
         }
-
+        $("#IdNombreComun").on('change', function () {
+            var nombreComun = $("#IdNombreComun").val();
+            if (nombreComun != 0) {
+                for (var i = 0; i < imagenesReferencia.length; i++) {
+                    if (imagenesReferencia[i].id == nombreComun) {
+                        $("#img_referencia").attr("src", imagenesReferencia[i].src);
+                        $("#img_referencia").show();
+                        return;
+                    }
+                }
+                $("#img_referencia").hide();
+            }
+        });
         //Fotos
         $("#Fotos").change(function () {
             $("#danger_Fotos").html("");
@@ -305,16 +317,47 @@
                 filesName.length > 0 ? $("#files_name").html(filesName) : null;
             }
         });
-
         function CargarFotos() {
             var archivos = $("#Fotos").get(0).files;
 
             if (archivos.length > 0) {
+                $("#Opcion").val("GuardarEstado")
                 $("#form_nuevo_avistamiento").submit();
             } else {
                 alert("Debe cargar una fotografía");
             }
 
+        }
+        function GuardarEstado() {
+            $("#Opcion").val("GuardarEstado")
+            $("#form_nuevo_avistamiento").submit()
+        }
+        function Registrar() {
+            if (ValidarCampos()) {
+                $("#Opcion").val("Registrar")
+                $("#form_nuevo_avistamiento").submit()
+            } else {
+                alert.alert("Existen campos vacios")
+            }
+        }
+        function ValidarCampos() {
+            var resultado = true;
+            if ($("#Fecha_Avistamiento").val() == "") resultado = false;
+            if ($("#FotosCargadas").val() == "") resultado = false;
+            if ($("#Fotos").val() == "") resultado = false;
+            if ($("#Hora_Avistamiento").val() == "") resultado = false;
+            if ($("#Ubicacion").val() == "") resultado = false;
+            if ($("#Cantidad").val() == "") resultado = false;
+            if ($("#IdNombreComun").val() == "0") resultado = false;
+            if ($("#IdTipoFauna").val() == "0") resultado = false;
+            if ($("#IdTipoAvistamiento").val() == "0") resultado = false;
+            if ($("#IdEstadoFauna").val() == "0") resultado = false;
+            if ($("#Lugar_Referencia").val() == "") resultado = false;
+            if ($("#IdEmpresa").val() == "") resultado = false;
+            if ($("#Nombres_Apellidos").val() == "") resultado = false;
+            if ($("#IdAreaTrabajo").val() == "") resultado = false;
+            if ($("#NFotocheck").val() == "") resultado = false;
+            return resultado;
         }
     </script>
 }

@@ -17,27 +17,26 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.RegistrarAvista
             _registrarAvistamientoFaunaReadOnlyRepository = registrarAvistamientoFaunaReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarAvistamientoFaunaReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string[] fotos, string fecha, string hora,string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, string lugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck)
+        public async Task<int> Execute(string[] fotos, string fecha, string hora,string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, int idLugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck, string opcion)
         {
             var nuevaFecha = DateTime.Parse(fecha+ " "+hora);
             var input = new Domain.AvistamientoFauna.AvistamientoFauna();
             input.Fotos = JsonConvert.SerializeObject(fotos);
-            input.Fecha_Avistamiento = nuevaFecha;
+            input.FechaAvistamiento = nuevaFecha;
             input.Ubicacion = ubicacion;
             input.Cantidad = cantidad;
 
             var ultimoCodigo = await _registrarAvistamientoFaunaReadOnlyRepository.GetUltimoCodigo();
-            if (ultimoCodigo != null && ultimoCodigo != "TBD" && (idNombreComun != 0 || idTipoAvistamiento != 0 || idEstadoFauna != 0))
+            if (opcion.Equals("Registrar"))
             {
-                input.Codigo = (Int32.Parse(ultimoCodigo) + 1).ToString();
                 input.Estado = EstadosAvistamiento.Registrado.ToString();
+
+                if (ultimoCodigo != null && ultimoCodigo != "TBD")
+                    input.Codigo = (Int32.Parse(ultimoCodigo) + 1).ToString();
+                else
+                    input.Codigo = "1";
             }
-            else if (idNombreComun != 0 || idTipoAvistamiento != 0 || idEstadoFauna != 0)
-            {
-                input.Codigo = "1";
-                input.Estado = EstadosAvistamiento.Registrado.ToString();
-            }
-            else if (idNombreComun == 0 || idTipoAvistamiento == 0 || idEstadoFauna == 0)
+            else if (opcion.Equals("GuardarEstado"))
             {
                 input.Codigo = "TBD";
                 input.Estado = EstadosAvistamiento.Pendiente.ToString();
@@ -52,13 +51,11 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.RegistrarAvista
             if (idEstadoFauna != 0)
                 input.EstadoFauna = new Domain.AvistamientoFauna.Items.EstadoFauna { IdEstadoFauna = idEstadoFauna };
                 
-            input.Lugar_Referencia = lugarReferencia;
+            if (idLugarReferencia != 0)
+                input.LugarReferencia = new Domain.AvistamientoFauna.Items.LugarReferencia { IdLugarReferencia = idLugarReferencia };
+                
             input.Usuario = new Domain.ValueObjects.Usuario { IdUsuario = idUsuario};
-            if (idEmpresa != 0)
-                input.Empresa = new Domain.ValueObjects.Empresa { IdEmpresa = idEmpresa };
-            if(idArea != 0)
-                input.AreaTrabajo = new Domain.ValueObjects.AreaTrabajo { IdAreaTrabajo = idArea};
-            input.NFotocheck = nFotocheck;
+            
             
             return await _registrarAvistamientoFaunaReadOnlyRepository.RegistrarAvistamientoFauna(input);
         }
