@@ -29,6 +29,8 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.Items
             output.Usuarios = await _getItemsAvistamientoFauna.GetUsuarios();
             output.Empresas = await _getItemsAvistamientoFauna.GetEmpresas();
             output.Supervisores = output.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorMAP)).ToList();
+            output.LugaresReferencia = await _getItemsAvistamientoFauna.GetLugaresReferencia();
+            output.ContactosEmergencia = await _getItemsAvistamientoFauna.GetContactosEmergencia();
 
             return output;
         }

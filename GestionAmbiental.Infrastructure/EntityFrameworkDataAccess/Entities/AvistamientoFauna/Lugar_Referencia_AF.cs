@@ -10,7 +10,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Avi
     public class Lugar_Referencia_AF
     {
         [Key]
-        public int Id_Lugar_Referencia_AF { get; set; }
+        public int Id_Lugar_Referencia { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Descripcion { get; set; }
         [Column(TypeName = "varchar(50)")]

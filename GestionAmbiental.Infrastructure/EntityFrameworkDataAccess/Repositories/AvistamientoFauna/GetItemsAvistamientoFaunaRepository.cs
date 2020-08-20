@@ -36,6 +36,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
+        public async Task<List<ContactoEmergencia>> GetContactosEmergencia()
+        {
+            var contactos = await _context.Contactos_Emergencia_AF.ToListAsync();
+            var output = new List<ContactoEmergencia>();
+            foreach (var item in contactos)
+            {
+                var outputItem = new ContactoEmergencia
+                {
+                    IdContactoEmergencia = item.Id_Contacto_Emergencia,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Telefono = item.Telefono,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
         public async Task<List<Empresa>> GetEmpresas()
         {
             var empresas = await _context.Empresas.ToListAsync();
@@ -62,6 +81,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdEstadoFauna = item.Id_Estado_Fauna,
                     Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<LugarReferencia>> GetLugaresReferencia()
+        {
+            var lugares = await _context.Lugares_Referencia_AF.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            var output = new List<LugarReferencia>();
+            foreach (var item in lugares)
+            {
+                var outputItem = new LugarReferencia
+                {
+                    IdLugarReferencia = item.Id_Lugar_Referencia,
+                    Descripcion = item.Descripcion,
+                    Latitud = item.Latitud,
+                    Longitud = item.Longitud,
                     Estado = item.Estado
                 };
                 output.Add(outputItem);

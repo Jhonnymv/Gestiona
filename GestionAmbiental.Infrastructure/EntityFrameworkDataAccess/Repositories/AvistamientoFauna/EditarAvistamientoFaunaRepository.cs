@@ -40,6 +40,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task CompletarAvistamiento(Domain.AvistamientoFauna.AvistamientoFauna avistamientoMA)
         {
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(avistamientoMA.IdAvistamientoFauna));
+            avistamiento.Fotos = avistamientoMA.Fotos;
+            avistamiento.Fecha_Avistamiento = avistamientoMA.FechaAvistamiento;
+            avistamiento.Ubicacion = avistamientoMA.Ubicacion;
+            avistamiento.Cantidad = avistamientoMA.Cantidad;
+            avistamiento.Id_Nombre_Comun_Fauna = avistamientoMA.NombreComun?.IdNombreComunFauna;
+            avistamiento.Id_Tipo_Avistamiento = avistamientoMA.TipoAvistamiento?.IdTipoAvistamiento;
+            avistamiento.Id_Estado_Fauna = avistamientoMA.EstadoFauna?.IdEstadoFauna;
+            avistamiento.Id_Lugar_Referencia = avistamientoMA.LugarReferencia?.IdLugarReferencia;
             avistamiento.Id_Supervisor = avistamientoMA.Supervisor.IdUsuario;
             avistamiento.Evidencia_Accion = avistamientoMA.EvidenciaAccion;
             avistamiento.Descripcion_Accion = avistamientoMA.DescripcionAccion;

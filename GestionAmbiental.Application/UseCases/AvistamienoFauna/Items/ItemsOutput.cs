@@ -16,5 +16,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.Items
         public List<Usuario> Usuarios { get; set; }
         public List<Empresa> Empresas { get; set; }
         public List<Usuario> Supervisores { get; set; }
+        public List<LugarReferencia> LugaresReferencia { get; set; }
+        public List<ContactoEmergencia> ContactosEmergencia { get; set; }
     }
 }

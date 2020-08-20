@@ -13,8 +13,8 @@
 
 <div class="row mb-2">
     <div class="container-fluid d-flex align-items-center flex-column bg-danger">
-        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">SI EL ESPÉCIMEN ESTÁ HERIDO LLAMAR A: </h1>
-        <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
+        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
+        <h2 id="telefonos" class="mb-5"></h2>
     </div>
 </div>
 
@@ -40,56 +40,56 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
-            <input type="text" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento" readonly />
+            <input type="text" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento"/>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Hora_Avistamiento"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
-            <input type="text" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento" readonly />
+            <input type="text" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento"/>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Ubicacion"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Ubicacion"></span>
-            <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" readonly />
+            <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion"/>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdNombreComun"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="IdNombreComun"></span>
-            <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun" value="@Model.IdNombreComun" disabled></select>
+            <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun" value="@Model.IdNombreComun"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Cantidad"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" readonly />
+            <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad"/>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdTipoAvistamiento"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="IdTipoAvistamiento"></span>
-            <select asp-for="IdTipoAvistamiento" class="form-control" asp-items="ViewBag.TipoAvistamiento" value="@Model.IdTipoAvistamiento" disabled></select>
+            <select asp-for="IdTipoAvistamiento" class="form-control" asp-items="ViewBag.TipoAvistamiento" value="@Model.IdTipoAvistamiento"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdEstadoFauna"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="IdEstadoFauna"></span>
-            <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna" disabled></select>
+            <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Lugar_Referencia"></label>
+            <label asp-for="IdLugarReferencia"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Lugar_Referencia"></span>
-            <input type="text" class="form-control" asp-for="Lugar_Referencia" value="@Model.Lugar_Referencia" readonly />
+            <span class="text-danger" asp-validation-for="IdLugarReferencia"></span>
+            <select asp-for="IdLugarReferencia" class="form-control" asp-items="ViewBag.LugarReferencia" value="@Model.IdLugarReferencia"></select>
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -103,13 +103,13 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdEmpresa"></span>
-            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa" disabled></select>
+            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="Nombres_Apellidos"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos" readonly />
+            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos"/>
             <input type="hidden" asp-for="IdUsuario" value="@Model.IdUsuario" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
@@ -117,14 +117,14 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
-            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo" disabled></select>
+            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="NFotocheck"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="NFotocheck"></span>
-            <input type="text" class="form-control" asp-for="NFotocheck" value="@Model.NFotocheck" readonly />
+            <input type="text" class="form-control" asp-for="NFotocheck" value="@Model.NFotocheck"/>
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -143,13 +143,16 @@
         <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
             <label asp-for="Evidencia_Accion"></label>
         </div>
-        <div class="col-sm-12 col-md-8 col-lg-8">
+        <div class="col-sm-12 col-md-2 col-lg-2">
             <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Accion" data-valmsg-replace="true">
                 <span id="danger_evidencia" class=""></span>
             </span>
             <label class="btn btn-primary" for="Evidencia_Accion">Adjuntar</label>
             @*<label class="btn btn-primary" for="Foto">Seleccione</label>*@
-            <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Accion" accept=".jpg,.jpge,.png" onchange="preview_image(event)" multiple>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Accion" accept=".jpg,.jpge,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8388608" multiple>
+        </div>
+        <div class="col-sm-12 col-md-8 col-lg-8">
+            <label id="nombre_archivo">0 Archivos</label>
         </div>
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
@@ -158,10 +161,16 @@
     </div>
 
 </form>
-        @section Scripts{
-            <script type="text/javascript">
+@section Scripts{
+    <script type="text/javascript">
     var estado;
         $(document).ready(function () {
+            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            var telefonos = "";
+            for (var i = 0; i < contactos.length; i++) {
+                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
+            }
+            $("#telefonos").html(telefonos)
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
             if (imagenes.length > 0) {
@@ -182,10 +191,15 @@
                     var fuentes = JSON.parse(response.imagenes);
                     var html_imagenes = "";
                     for (var i = 0; i < fuentes.length; i++) {
-                        html_imagenes += "<div class=\"col-lg-3 col-md-4 col-6 mt-2\" id=\""+fuentes[i].Nombre+"\">";
+                        html_imagenes += "<div class=\"col-lg-3 col-md-4 col-6 mt-2\" id=\"" + fuentes[i].Nombre + "\">";
+                        html_imagenes += "<div class=\"card\" style=\"width:100%;\">";
                         html_imagenes += "<img style=\"width:100%; height:auto;\" class=\"card-img-top img-thumbnail\" src=\"";
                         html_imagenes += fuentes[i].Src;
                         html_imagenes += "\">";
+                        html_imagenes += "<div class=\"card-body text-center\">";
+                        html_imagenes += "<button type=\"button\" class=\"btn btn-danger\" onclick=\"eliminarImagen(\'" + fuentes[i].Nombre + "\')\">Eliminar</button>";
+                        html_imagenes += "</div>";
+                        html_imagenes += "</div>";
                         html_imagenes += "</div>";
                     }
                     $("#imagenes_cargadas").html(html_imagenes);
@@ -195,5 +209,73 @@
                 }
             });
         }
-            </script>
+        function eliminarImagen(nombreArchivo) {
+            if (confirm("¿Está seguro de eliminar esta fotografía?"))
+                $.ajax({
+                    type: 'POST',
+                    url: '/AvistamientoFauna/EliminarImagen',
+                    data:
+                    {
+                        IdAvistamiento: $("#IdAvistamientoFauna").val(),
+                        imagen: nombreArchivo
+                    },
+                    success: function () {
+                        eliminarElemento(nombreArchivo);
+                        var fotos = $("#FotosCargadas").val();
+                        fotos = fotos.replace(nombreArchivo, "");
+                        fotos = fotos.replace(",,", ",");
+                        $("#FotosCargadas").val(fotos);
+                    },
+                    error: function () {
+                        console.log("No se ha podido obtener la información");
+                    }
+                });
         }
+        function eliminarElemento(elementId) {
+            var element = document.getElementById(elementId);
+            element.parentNode.removeChild(element);
+        }
+        $("#Evidencia_Accion").change(function () {
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Evidencia_Accion").data('max-size');
+            var archivos = $("#Evidencia_Accion").get(0).files;
+            var filesName = "";
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            $("#nombre_archivo").text(filesName);
+                            $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#nombre_archivo").html(filesName) : null;
+            } else
+                $("#nombre_archivo").html("0 Archivos")
+        });
+    </script>
+}

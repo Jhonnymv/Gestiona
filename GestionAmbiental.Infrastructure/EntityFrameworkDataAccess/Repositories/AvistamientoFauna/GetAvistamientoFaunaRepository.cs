@@ -92,10 +92,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             if (avistamientoFauna.Id_Lugar_Referencia != null)
             {
-                var lugarReferencia = await _context.Lugares_Referencia_AF.FirstOrDefaultAsync(x => x.Id_Lugar_Referencia_AF.Equals(avistamientoFauna.Id_Lugar_Referencia));
+                var lugarReferencia = await _context.Lugares_Referencia_AF.FirstOrDefaultAsync(x => x.Id_Lugar_Referencia.Equals(avistamientoFauna.Id_Lugar_Referencia));
                 var lugarReferenciaDomain = new Domain.AvistamientoFauna.Items.LugarReferencia
                 {
-                    IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia_AF,
+                    IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia,
                     Descripcion = lugarReferencia.Descripcion,
                     Latitud = lugarReferencia.Latitud,
                     Longitud = lugarReferencia.Longitud,
@@ -209,10 +209,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 
                 if (item.Id_Lugar_Referencia.HasValue)
                 {
-                    var lugarReferencia = lugaresReferencia.FirstOrDefault(x => x.Id_Lugar_Referencia_AF.Equals(item.Id_Lugar_Referencia));
+                    var lugarReferencia = lugaresReferencia.FirstOrDefault(x => x.Id_Lugar_Referencia.Equals(item.Id_Lugar_Referencia));
                     var lugarReferenciaDomain = new Domain.AvistamientoFauna.Items.LugarReferencia
                     {
-                        IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia_AF,
+                        IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia,
                         Descripcion = lugarReferencia.Descripcion,
                         Latitud = lugarReferencia.Latitud,
                         Longitud = lugarReferencia.Longitud,

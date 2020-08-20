@@ -13,7 +13,7 @@
 <div class="row mb-2">
     <div class="container-fluid d-flex align-items-center flex-column bg-danger">
         <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
-        <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
+        <h2 id="telefonos" class="mb-5"></h2>
     </div>
 </div>
 <form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -29,10 +29,10 @@
     <div class="row mb-2">
         <div class="col-12 text-center">
             <span class="text-danger field-validation-error" data-valmsg-for="Fotos" data-valmsg-replace="true">
-                <span id="danger_fotos" class=""></span>
+                <span id="alerta_fotos" class=""></span>
             </span>
             <label class="btn btn-primary" for="Fotos"><img src="~/img/icons/camara.png" /></label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpge,.png" onchange="preview_image(event)" multiple>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpge,.png" data-max-size="8388608" multiple>
         </div>
     </div>
     <div class="row mb-2">
@@ -109,11 +109,11 @@
             <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Lugar_Referencia"></label>
+            <label asp-for="IdLugarReferencia"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Lugar_Referencia"></span>
-            <input type="text" class="form-control" asp-for="Lugar_Referencia" value="@Model.Lugar_Referencia" />
+            <span class="text-danger" asp-validation-for="IdLugarReferencia"></span>
+            <select asp-for="IdLugarReferencia" class="form-control" asp-items="ViewBag.LugarReferencia" value="@Model.IdLugarReferencia"></select>
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -194,6 +194,12 @@
         var estado;
         var imagenesReferencia = [];
         $(document).ready(function () {
+            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            var telefonos = "";
+            for (var i = 0; i < contactos.length; i++) {
+                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
+            }
+            $("#telefonos").html(telefonos)
             ObtenerImagenesReferencia()
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
@@ -244,25 +250,26 @@
             });
         }
         function eliminarImagen(nombreArchivo) {
-            $.ajax({
-                type: 'POST',
-                url: '/AvistamientoFauna/EliminarImagen',
-                data:
-                {
-                    IdAvistamiento: $("#IdAvistamientoFauna").val(),
-                    imagen: nombreArchivo
-                },
-                success: function () {
+            if (confirm("¿Está seguro de eliminar esta fotografía?"))
+                $.ajax({
+                    type: 'POST',
+                    url: '/AvistamientoFauna/EliminarImagen',
+                    data:
+                    {
+                        IdAvistamiento: $("#IdAvistamientoFauna").val(),
+                        imagen: nombreArchivo
+                    },
+                    success: function () {
                     eliminarElemento(nombreArchivo);
                     var fotos = $("#FotosCargadas").val();
                     fotos = fotos.replace(nombreArchivo, "");
                     fotos = fotos.replace(",,", ",");
                     $("#FotosCargadas").val(fotos);
-                },
-                error: function () {
+                    },
+                    error: function () {
                     console.log("No se ha podido obtener la información");
-                }
-            });
+                    }
+                });
         }
         function preview_image(event) {
             var reader = new FileReader();
@@ -305,6 +312,49 @@
                     }
                 }
                 $("#img_referencia").hide();
+            }
+        }); 
+        $("#Fotos").change(function (event) {
+            $("#alerta_fotos").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Fotos").data('max-size');
+            var archivos = $("#Fotos").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#alerta_fotos").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    $("#previsualizacion").hide();
+                    $("#botonCargarFoto").hide();
+                    return;
+
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#alerta_fotos").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+                preview_image(event);
             }
         });
         function CargarFotos() {
@@ -360,10 +410,10 @@
             if ($("#IdTipoAvistamiento").val() == "0") resultado = false;
             if ($("#IdEstadoFauna").val() == "0") resultado = false;
             if ($("#Lugar_Referencia").val() == "") resultado = false;
-            if ($("#IdEmpresa").val() == "") resultado = false;
             if ($("#Nombres_Apellidos").val() == "") resultado = false;
+            /*if ($("#IdEmpresa").val() == "") resultado = false;
             if ($("#IdAreaTrabajo").val() == "") resultado = false;
-            if ($("#NFotocheck").val() == "") resultado = false;
+            if ($("#NFotocheck").val() == "") resultado = false;*/
             return resultado;
         }
     </script>

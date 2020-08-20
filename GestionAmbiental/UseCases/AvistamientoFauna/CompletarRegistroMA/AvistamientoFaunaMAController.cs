@@ -75,6 +75,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                 var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
+
+                ViewBag.Contactos = contactosEmergencia;
+
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
 
@@ -85,6 +89,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina)
         {
             var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, rpp, pagina);
+            //Solo los no vivos (IdEstadoFauna != 1)
+            datosTabla.Avistamientos = datosTabla.Avistamientos.Where(x => !x.IdEstadoFauna.Equals(1) && !(x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString())|| x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))).ToList();
 
             var filasTabla = "";
             var paginador = "";
@@ -169,13 +175,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                 var items = await _getItems.Execute();
 
                 var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
-                tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
-                estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
-                tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -183,20 +186,25 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+
                 var nombresComunes = new List<SelectListItem>();
                 foreach (var grupo in items.TiposFauna)
                 {
                     var nuevoGrupo = new SelectListGroup() { Name = grupo.Descripcion, Disabled = false };
                     nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
                 }
-                nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
+
+                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
                 ViewBag.NombreComun = nombresComunes;
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
+                ViewBag.LugarReferencia = lugares;
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
@@ -240,11 +248,45 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                         }
                     }                    
                 }
-                await _completarAvistamientoFauna.Execute(model.IdAvistamientoFauna, evidencias.ToArray(), model.Descripcion_Accion, userInfo.NombreUsuario);
+                var fotos = new List<string>();
+
+                if (model.FotosCargadas != null)
+                {
+                    var listaImagenes = new List<string>(model.FotosCargadas.Split(','));
+                    fotos.AddRange(listaImagenes);
+                    var vacios = new List<int>();
+                    foreach (var foto in fotos)
+                    {
+                        if (foto.Length == 0)
+                            vacios.Add(fotos.IndexOf(foto));
+                    }
+                    foreach (var vacio in vacios)
+                    {
+                        fotos.RemoveAt(vacio);
+                    }
+                }
+
+                await _completarAvistamientoFauna.Execute(model.IdAvistamientoFauna,
+                    fotos.ToArray(),
+                    model.Fecha_Avistamiento,
+                    model.Hora_Avistamiento,
+                    model.Ubicacion,
+                    model.Cantidad,
+                    model.IdNombreComun,
+                    model.IdTipoAvistamiento,
+                    model.IdEstadoFauna,
+                    model.IdLugarReferencia,
+                    model.IdUsuario,
+                    model.IdEmpresa,
+                    model.IdAreaTrabajo,
+                    model.NFotocheck,
+                    evidencias.ToArray(),
+                    model.Descripcion_Accion,
+                    userInfo.NombreUsuario);
             }
 
             var IdEncriptado = _protector.Protect(model.IdAvistamientoFauna.ToString());
-            return RedirectToAction("CompletarRegistro", new { IdAvistamiento = IdEncriptado });
+            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdEncriptado });
         }
         private string CreateUniqueFileName(int nFile)
         {

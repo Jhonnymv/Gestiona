@@ -91,6 +91,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x =>x.Telefono).ToArray());
+
+                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
 
@@ -181,6 +184,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var items = await _getItems.Execute();
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
+
+                ViewBag.Contactos = contactosEmergencia;
                 return View();
             }
         }
@@ -261,6 +268,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var nombresComunes = new List<SelectListItem>();
                 foreach (var grupo in items.TiposFauna)
                 {
@@ -268,13 +278,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
                 }
                 nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
 
+                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
                 ViewBag.NombreComun = nombresComunes;
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
+                ViewBag.LugarReferencia = lugares;
 
                 return View();
             }
@@ -285,19 +298,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             if (ModelState.IsValid)
             {
                 var fotos = new List<string>();
-                foreach (var foto in model.Fotos)
+                for (int i = 0; i < model.Fotos.Count; i++)
                 {
                     var filePath = "";
 
-                    var extension = Path.GetExtension(foto.FileName);
+                    var extension = Path.GetExtension(model.Fotos[i].FileName);
                     var max_file_size = 8388608;
 
                     var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG" };
 
-                    if (allowed_extensions.Contains(extension) && foto.Length < max_file_size)
+                    if (allowed_extensions.Contains(extension) && model.Fotos[i].Length < max_file_size)
                     {
-                        var newfileName = CreateUniqueFileName(1) + extension;
-                        filePath = await CargarImagen(foto, newfileName);
+                        var newfileName = CreateUniqueFileName(i+1) + extension;
+                        filePath = await CargarImagen(model.Fotos[i], newfileName);
                         fotos.Add(filePath);
                     }
                 }
@@ -356,6 +369,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var nombresComunes = new List<SelectListItem>();
                 foreach (var grupo in items.TiposFauna)
                 {
@@ -363,13 +379,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
                 }
                 nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
 
+                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
                 ViewBag.NombreComun = nombresComunes;
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
+                ViewBag.LugarReferencia = lugares;
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
@@ -413,19 +432,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     }
                 }
                 if (model.Fotos != null)
-                    foreach (var foto in model.Fotos)
+                    for (int i = 0; i < model.Fotos.Count; i++)
                     {
                         var filePath = "";
 
-                        var extension = Path.GetExtension(foto.FileName);
+                        var extension = Path.GetExtension(model.Fotos[i].FileName);
                         var max_file_size = 8388608;
 
                         var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG" };
 
-                        if (allowed_extensions.Contains(extension) && foto.Length < max_file_size)
+                        if (allowed_extensions.Contains(extension) && model.Fotos[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(1) + extension;
-                            filePath = await CargarImagen(foto, newfileName);
+                            var newfileName = CreateUniqueFileName(i+1) + extension;
+                            filePath = await CargarImagen(model.Fotos[i], newfileName);
                             fotos.Add(filePath);
                         }
                     }
@@ -487,6 +506,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var nombresComunes = new List<SelectListItem>();
                 foreach (var grupo in items.TiposFauna)
                 {
@@ -494,13 +516,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     nombresComunes.AddRange(items.NombresComunes.Where(y => y.TipoFauna.IdTipoFauna.Equals(grupo.IdTipoFauna)).OrderBy(x => x.Descripcion).Select(i => new SelectListItem() { Value = i.IdNombreComunFauna.ToString(), Text = i.Descripcion, Group = nuevoGrupo }).ToList());
                 }
                 nombresComunes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
 
+                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
                 ViewBag.NombreComun = nombresComunes;
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
+                ViewBag.LugarReferencia = lugares;
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
@@ -523,6 +548,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 return View(model);
             }
         }
+        
         [HttpPost]
         public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
         {
@@ -648,7 +674,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         }
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia_Avistamiento_Fauna_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+            var fileName = "Evidencia_Avistamiento_Fauna_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")+ "_" + nFile;
             return fileName;
         }
         private string GetContentType(string path)

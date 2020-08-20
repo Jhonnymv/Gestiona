@@ -61,7 +61,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
                 LugarReferencia = avistamiento.LugarReferencia.Descripcion;
             }
             IdUsuario = avistamiento.Usuario.IdUsuario;
-            Usuario = avistamiento.Usuario.Nombres + avistamiento.Usuario.Apellidos;            
+            Usuario = avistamiento.Usuario.Nombres + " " + avistamiento.Usuario.Apellidos;            
             DescripcionAccion = avistamiento.DescripcionAccion;
             if (avistamiento.Supervisor != null)
             {

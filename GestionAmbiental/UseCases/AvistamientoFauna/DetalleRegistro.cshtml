@@ -14,7 +14,7 @@
 <div class="row mb-2">
     <div class="container-fluid d-flex align-items-center flex-column bg-danger">
         <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
-        <h2 class="mb-5"><a class="text-white" href="tel:+51944617411">+51944617411</a></h2>
+        <h2 id="telefonos" class="mb-5"></h2>
     </div>
 </div>
 
@@ -83,11 +83,11 @@
         <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna" disabled></select>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-        <label asp-for="Lugar_Referencia"></label>
+        <label asp-for="IdLugarReferencia"></label>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-        <span class="text-danger" asp-validation-for="Lugar_Referencia"></span>
-        <input type="text" class="form-control" asp-for="Lugar_Referencia" value="@Model.Lugar_Referencia" readonly />
+        <span class="text-danger" asp-validation-for="IdLugarReferencia"></span>
+        <select asp-for="IdLugarReferencia" class="form-control" asp-items="ViewBag.LugarReferencia" value="@Model.IdLugarReferencia" disabled></select>
     </div>
 </div>
 <div class="row mb-2" style="background-color:#2e6793">
@@ -156,6 +156,12 @@
     <script type="text/javascript">
     var estado;
         $(document).ready(function () {
+            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            var telefonos = "";
+            for (var i = 0; i < contactos.length; i++) {
+                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
+            }
+            $("#telefonos").html(telefonos)
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
             if (imagenes.length > 0) {

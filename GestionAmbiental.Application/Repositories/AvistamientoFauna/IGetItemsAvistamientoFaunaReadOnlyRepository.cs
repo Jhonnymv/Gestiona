@@ -16,5 +16,7 @@ namespace GestionAmbiental.Application.Repositories.AvistamientoFauna
         Task<List<AreaTrabajo>> GetAreasTrabajo();
         Task<List<Empresa>> GetEmpresas();
         Task<List<Usuario>> GetUsuarios();
+        Task<List<LugarReferencia>> GetLugaresReferencia();
+        Task<List<ContactoEmergencia>> GetContactosEmergencia();
     }
 }
