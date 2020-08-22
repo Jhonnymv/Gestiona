@@ -332,7 +332,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 if (model.Opcion.Equals("GuardarEstado"))
                     return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
                 else if (model.Opcion.Equals("Registrar"))
-                return RedirectToAction("DetalleRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
+                    return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = IdAvistamiento });
+                
             }
             return RedirectToAction("NuevoRegistro");
         }
@@ -468,7 +469,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 if (model.Opcion.Equals("GuardarEstado"))
                     return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
                 else if (model.Opcion.Equals("Registrar"))
-                    return RedirectToAction("DetalleRegistro", new { IdAvistamiento = model.IdEncriptado });
+                    return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdEncriptado });
             }
             return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
         }
@@ -743,7 +744,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
@@ -838,7 +839,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
@@ -966,7 +967,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         }
         private async Task DeleteFTPFileAsync(string filename)
         {
-            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
             string host = "", port = "", user = "", pass = "", dir = "";
             foreach (var item in serverInfo.Info)
             {

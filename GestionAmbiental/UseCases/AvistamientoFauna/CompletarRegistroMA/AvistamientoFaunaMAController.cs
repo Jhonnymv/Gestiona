@@ -285,8 +285,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                     userInfo.NombreUsuario);
             }
 
-            var IdEncriptado = _protector.Protect(model.IdAvistamientoFauna.ToString());
-            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdEncriptado });
+            return RedirectToAction("NotificarAccionAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdAvistamientoFauna });
         }
         private string CreateUniqueFileName(int nFile)
         {

@@ -25,6 +25,9 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         public string LugarReferencia { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
+        public string Empresa { get; set; }
+        public string AreaTrabajo { get; set; }
+        public string Fotocheck { get; set; }
         public string DescripcionAccion { get; set; }
         public string[] EvidenciaAccion { get; set; }
         public int IdSupervisor { get; set; }
