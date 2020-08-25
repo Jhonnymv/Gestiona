@@ -17,12 +17,12 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Incidentes.
 
         public async Task<int> Execute(string descripcion)
         {
-            var item = new Domain.Incidentes.Items.Lugar_Disposicion
+            var item = new Domain.Incidentes.Items.Nivel_Incidente
             {
                 Descripcion = descripcion,
                 Estado = "ACT"
             };
-            return await _gestorTablasMaestrasReadOnlyRepository.AddLugar_Disposicion(item);
+            return await _gestorTablasMaestrasReadOnlyRepository.AddNivel_Incidente(item);
         }
     }
 }

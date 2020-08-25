@@ -26,6 +26,12 @@
                 <a class="nav-link" id="Producto">Productos Derramados</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" id="NivelIncidente">Niveles de Incidente</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="TipoIncidente">Tipos de Incidente</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="Unidades">Unidades Medida</a>
             </li>
             <li class="nav-item">
@@ -119,6 +125,16 @@
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarProductoIncidente");
             FiltrarProductoIncidente(1);
+        });
+        $("#NivelIncidente").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarNivelIncidente");
+            FiltrarNivelIncidente(1);
+        });
+        $("#TipoIncidente").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarTipoIncidente");
+            FiltrarTipoIncidente(1);
         });
         $("#Unidades").on('click', function (e) {
             $(this).tab('show');
@@ -220,6 +236,40 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorIncidentes/FiltrarTipoProducto",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarNivelIncidente(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarNivelIncidente",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarTipoIncidente(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorIncidentes/FiltrarTipoIncidente",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

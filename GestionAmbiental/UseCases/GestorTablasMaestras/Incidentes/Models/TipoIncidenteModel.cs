@@ -10,7 +10,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes.Models
 {
     public class TipoIncidenteModel
     {
-        public int? Id_Tipo_Incidente { get; set; }
+        public int Id_Tipo_Incidente { get; set; }
         [DisplayName("Descripción:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Descripcion { get; set; }
