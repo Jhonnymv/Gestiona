@@ -42,9 +42,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
         }
 
-        public async Task<IActionResult> NotificarNuevoAvistamiento(int IdAvistamiento)
+        public async Task<IActionResult> NotificarNuevoAvistamiento(string IdAvistamiento)
         {
-            var avistamiento = await _getAvistamientoFauna.Execute(IdAvistamiento);
+            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdAvistamiento));
+            var avistamiento = await _getAvistamientoFauna.Execute(IdDesencriptado);
 
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "AvistamientoFauna", "NuevoAvistamientoFauna.html");
 
@@ -64,9 +65,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                     case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-            var IdEncriptado = _protector.Protect(avistamiento.IdAvistamientoFauna.ToString());
             var msgBody = string.Format(templateReaded,
-                IdEncriptado,
+                IdAvistamiento,
                 avistamiento.Codigo,
                 avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
                 avistamiento.FechaAvistamiento.ToString("HH:mm"),
@@ -111,11 +111,12 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             mail.Dispose();
             msg.Dispose();
 
-            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdEncriptado });
+            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdAvistamiento });
         }
-        public async Task<IActionResult> NotificarAccionAvistamiento(int IdAvistamiento)
+        public async Task<IActionResult> NotificarAccionAvistamiento(string IdAvistamiento)
         {
-            var avistamiento = await _getAvistamientoFauna.Execute(IdAvistamiento);
+            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdAvistamiento));
+            var avistamiento = await _getAvistamientoFauna.Execute(IdDesencriptado);
 
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "AvistamientoFauna", "NuevaAccionAvistamientoFauna.html");
 
@@ -135,9 +136,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                     case "mailfrom": mailFrom = item.Value; break;
                 }
             }
-            var IdEncriptado = _protector.Protect(avistamiento.IdAvistamientoFauna.ToString());
             var msgBody = string.Format(templateReaded,
-                IdEncriptado,
+                IdAvistamiento,
                 avistamiento.Codigo,
                 avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
                 avistamiento.FechaAvistamiento.ToString("HH:mm"),
@@ -164,7 +164,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
 
             msg.To.Add(new MailAddress("kevinorh4@gmail.com"));
 
-            msg.Subject = "Nuevo Acción de Avistamiento de Fauna";
+            msg.Subject = "Nueva Acción de Avistamiento de Fauna";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
@@ -190,7 +190,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             mail.Dispose();
             msg.Dispose();
 
-            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdEncriptado });
+            return RedirectToAction("DetalleRegistro", "AvistamientoFauna", new { IdAvistamiento = IdAvistamiento });
         }
         private string GetContentType(string path)
         {

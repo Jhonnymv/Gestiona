@@ -62,8 +62,8 @@ $(document).ready(function () {
 });
 
 function Filtrar() {
-    ActualizarInvestigacionesFecha();
-    ActualizaNivelIncidente();
+    ActualizarAvistamientosFaunaFecha();
+    ActualizaNombreComun();
     ActualizaTipoIncidente();
     ActualizaGerenciaIncidente();
     ActualizarProductoInvestigacion();
@@ -81,7 +81,7 @@ function Filtrar() {
     //ActualizaResiduoAgua();
 }
 
-function ActualizarInvestigacionesFecha() {
+function ActualizarAvistamientosFaunaFecha() {
     tipo = $("#TipoIncidente").val();
     nivel = $("#NivelIncidente").val();
     gerencia = $("#Gerencia").val();
@@ -129,7 +129,7 @@ function ActualizarInvestigacionesFecha() {
                         data.push(data_inv_fechas[i].valor);
                     }
                     //Crear gráfica
-                    CrearGraficaInvestigacionesFecha(labels, data, Math.max(data) / 10);
+                    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
                 }
                 //ActualizarContadorOxFecha();
             }
@@ -139,7 +139,7 @@ function ActualizarInvestigacionesFecha() {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
 }
-function CrearGraficaInvestigacionesFecha(labels, data, stepSize) {
+function CrearGraficaAvistamientosFaunaFecha(labels, data, stepSize) {
     graph_inv_fechas = new Chart(
         document.getElementById("chart_inv_fechas"),
         {
@@ -489,7 +489,7 @@ function CrearGraficoTipoIncidente(labels, data) {
 }
 
 //Para gráfico Nivel Incidente
-function ActualizaNivelIncidente() {
+function ActualizaNombreComun() {
     $.ajax({
         type: "POST",
         url: "/ReportesIncidentesInvestigacion/GetNInvestigacionesNivelIncidente",
@@ -528,12 +528,12 @@ function ActualizaNivelIncidente() {
                     data.push(data_nivel_inc[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoNivelIncidente(labels, data);
+                CrearGraficoNombreComun(labels, data);
             }
         }
     });
 }
-function CrearGraficoNivelIncidente(labels, data) {
+function CrearGraficoNombreComun(labels, data) {
     graph_nivel_inc = new Chart(
         document.getElementById("chart_nivel_incidente"),
         {

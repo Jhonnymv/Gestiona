@@ -26,7 +26,7 @@ var data_rep_causa_incidente = [];
 var graph_rep_causa_incidente;
 
 $(document).ready(function () {
-    ActualizarInvestigacionesFecha();
+    ActualizarAvistamientosFaunaFecha();
     ActualizaImpactoAgua();
     ActualizarDatosGraficoNivelIncidente();
     ActualizarDatosGraficoGerenciaIncidente();
@@ -34,14 +34,14 @@ $(document).ready(function () {
 });
 
 function Filtrar() {
-    ActualizarInvestigacionesFecha();
+    ActualizarAvistamientosFaunaFecha();
     ActualizaImpactoAgua();
     ActualizarDatosGraficoNivelIncidente();
     ActualizarDatosGraficoGerenciaIncidente();
     ActualizarDatosGraficoCausaIncidente();
 }
 
-function ActualizarInvestigacionesFecha() {
+function ActualizarAvistamientosFaunaFecha() {
     tipo = $("#TipoIncidente").val();
     nivel = $("#NivelIncidente").val();
     gerencia = $("#Gerencia").val();
@@ -89,7 +89,7 @@ function ActualizarInvestigacionesFecha() {
                         data.push(data_inv_fechas[i].valor);
                     }
                     //Crear gráfica
-                    CrearGraficaInvestigacionesFecha(labels, data, Math.max(data) / 10);
+                    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
                 }
                 //ActualizarContadorOxFecha();
             }
@@ -99,7 +99,7 @@ function ActualizarInvestigacionesFecha() {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
 }
-function CrearGraficaInvestigacionesFecha(labels, data, stepSize) {
+function CrearGraficaAvistamientosFaunaFecha(labels, data, stepSize) {
     graph_inv_fechas = new Chart(
         document.getElementById("chart_rep_fechas"),
         {
@@ -272,12 +272,12 @@ function ActualizarDatosGraficoNivelIncidente() {
                     data.push(data_rep_nivel_incidente[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoNivelIncidente(labels, data);
+                CrearGraficoNombreComun(labels, data);
             }
         }
     });
 }
-function CrearGraficoNivelIncidente(labels, data) {
+function CrearGraficoNombreComun(labels, data) {
     graph_rep_nivel_incidente = new Chart(
         document.getElementById("chart_nivel_incidente"),
         {

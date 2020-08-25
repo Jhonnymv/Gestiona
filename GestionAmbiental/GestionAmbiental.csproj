@@ -45,6 +45,7 @@
     <Folder Include="UseCases\Notificaciones\Inspecciones\" />
     <Folder Include="UseCases\Notificaciones\RAC\" />
     <Folder Include="Views\GestorAvistamientoFauna\" />
+    <Folder Include="Views\ReportesAvistamientoFauna\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />

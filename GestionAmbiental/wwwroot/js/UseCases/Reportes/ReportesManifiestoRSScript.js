@@ -104,12 +104,12 @@ function ActualizarContadorxFecha() {
                     dataAnulado.push(data_cant_fechas_anulado[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaInvestigacionesFecha(labels, dataConforme, dataAnulado, Math.max(dataConforme) / 10);
+                CrearGraficaAvistamientosFaunaFecha(labels, dataConforme, dataAnulado, Math.max(dataConforme) / 10);
             }
         }
     });
 }
-function CrearGraficaInvestigacionesFecha(labels, dataConforme, dataAnulado, stepSize) {
+function CrearGraficaAvistamientosFaunaFecha(labels, dataConforme, dataAnulado, stepSize) {
     graph_cant_fechas = new Chart(
         document.getElementById("chart_man_fechas"),
         {

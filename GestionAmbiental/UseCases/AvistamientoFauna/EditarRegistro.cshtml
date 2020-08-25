@@ -159,8 +159,9 @@
     </div>
 </form>
 
-<!-- Modal Imagen Referencia-->
-<div class="modal fade" id="modal_imagen_referencia" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_imagen_referencia"
+
+<!-- Modal Ubicación-->
+<div class="modal fade" id="modal_ubicacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ubicacion"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -171,13 +172,18 @@
             </div>
             <div class="modal-body">
                 <div class="row mb-2">
-                    <div class="col-12">
-                        <img id="ImagenEspecie" style="width:100%;height:auto" />
+                    <div class="col-12 titulo-pagina">
+                        <h3>El permiso para obtener ubicación está bloqueado</h3>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-12 text-center">
-                        <label id="NombreEspecie" class="font-weight-bold"></label>
+                    <div class="col-12">
+                        <h4>Para habilitarlos siga los siguientes pasos:</h4>
+                        <br>
+                        <h5>1. Acceder a las opciones del navegador (<img src="~/img/icons/options.png" />)</h5>
+                        <h5>2. Ingresar a la "Configuración"</h5>
+                        <h5>3. Buscar e ingresar a "Ubicación"</h5>
+                        <h5>4. Buscar los sitios bloqueados y quitar a Gestiona</h5>
+                        <h5>5. Actualizar esta página</h5>
+                        <h5>6. Conceder los permisos de ubicación cuando se le solicite</h5>
                     </div>
                 </div>
             </div>
@@ -187,7 +193,23 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Guardando-->
+<div class="modal fade" id="Modal_Guardando" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>     Guardando Registro</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script type="text/javascript">
@@ -209,12 +231,38 @@
                 visualizarImagenesCargadas();
             }
         });
+        /*
         function ObtenerUbicacion() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(MostrarUbicacion);
             } else {
                 ubicacion.val("");
             }
+        }
+        */
+        function ObtenerUbicacion() {
+            navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+                if (result.state == 'granted') {
+                    ImprimirPermisos(result.state);
+                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+                } else if (result.state == 'prompt') {
+                    ImprimirPermisos(result.state);
+                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+                } else if (result.state == 'denied') {
+                    MostrarModalUbicacion()
+                    ImprimirPermisos(result.state);
+                }
+                result.onchange = function () {
+                    console.log("cambio")
+                    ImprimirPermisos(result.state);
+                }
+            });
+        }
+        function MostrarModalUbicacion() {
+            $("#modal_ubicacion").modal('show');
+        }
+        function ImprimirPermisos(state) {
+            console.log('Permission ' + state);
         }
         function MostrarUbicacion(position) {
             ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
@@ -313,7 +361,7 @@
                 }
                 $("#img_referencia").hide();
             }
-        }); 
+        });
         $("#Fotos").change(function (event) {
             $("#alerta_fotos").html("");
             //Validacion del tamaño del archivo
@@ -388,11 +436,13 @@
         }
         function GuardarEstado() {
             $("#Opcion").val("GuardarEstado")
+            $("#Modal_Guardando").modal('show')
             $("#form_nuevo_avistamiento").submit()
         }
         function Registrar() {
             if (ValidarCampos()) {
                 $("#Opcion").val("Registrar")
+                $("#Modal_Guardando").modal('show')
                 $("#form_nuevo_avistamiento").submit()
             } else {
                 alert("Existen campos vacios")
@@ -401,9 +451,9 @@
         function ValidarCampos() {
             var resultado = true;
             if ($("#Fecha_Avistamiento").val() == "") resultado = false;
-            if ($("#FotosCargadas").val() != "" && $("#Fotos").val() != "") resultado = false;
+            if ($("#FotosCargadas").val() == "" && $("#Fotos").val() == "") resultado = false;
             if ($("#Hora_Avistamiento").val() == "") resultado = false;
-            if ($("#Ubicacion").val() == "") resultado = false;
+            if ($("#Ubicacion").val() == "") { MostrarModalUbicacion(); resultado = false; }
             if ($("#Cantidad").val() == "") resultado = false;
             if ($("#IdNombreComun").val() == "0") resultado = false;
             if ($("#IdTipoFauna").val() == "0") resultado = false;

@@ -40,7 +40,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetUltimoCodigo()
         {
-            var codigo = await _context.Avistamientos_Fauna.Where(x=>!x.Codigo.Equals("TBD")).OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            var codigo = await _context.Avistamientos_Fauna.Where(x=>!x.Codigo.Equals("TBD")).OrderBy(x => Int32.Parse(x.Codigo)).Select(x => x.Codigo).LastOrDefaultAsync();
             return codigo;
         }
     }

@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamiento
                 fechaFiltro = Convert.ToDateTime(fecha);
             var data = await _getAvistamientoFaunaReadOnlyRepository.GetAvistamientosFauna(fechaFiltro,tipo_fauna,estado_fauna);
             var tbds = data.Where(x => x.Codigo.Equals("TBD")).OrderByDescending(x => x.FechaAvistamiento).ToList();
-            data = data.Where(x => !x.Codigo.Equals("TBD")).OrderBy(x => x.Codigo).ToList();
+            data = data.Where(x => !x.Codigo.Equals("TBD")).OrderByDescending(x => Int32.Parse(x.Codigo)).ToList();
             data.InsertRange(0,tbds);
             var output = new AvistamientosFaunaOutput();
             output.Avistamientos = new List<AvistamientoFaunaOutput>();
