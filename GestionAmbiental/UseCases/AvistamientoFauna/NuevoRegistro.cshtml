@@ -10,12 +10,6 @@
     </div>
 </div>
 
-<div class="row mb-2">
-    <div class="container-fluid d-flex align-items-center flex-column bg-danger">
-        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
-        <h2 id="telefonos" class="mb-5"></h2>
-    </div>
-</div>
 <form class="form-group" id="form_nuevo_avistamiento" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
 
     <input type="hidden" asp-for="Opcion" />
@@ -40,7 +34,7 @@
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
-        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;"><img src="~/img/icons/guardar.png" /></button>
+        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;"><img src="~/img/icons/mas.png" /></button>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
@@ -124,28 +118,28 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdEmpresa"></span>
-            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa"></select>
+            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="Nombres_Apellidos"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.UsuarioNombre" readonly />
-            <input type="hidden" asp-for="IdUsuario" value="@ViewBag.IdUsuario" />
+            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos" readonly />
+            <input type="hidden" asp-for="IdUsuario" value="@Model.IdUsuario" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="IdAreaTrabajo"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
-            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo"></select>
+            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <label asp-for="NFotocheck"></label>
+            <label asp-for="DNI"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <span class="text-danger" asp-validation-for="NFotocheck"></span>
-            <input type="text" class="form-control" asp-for="NFotocheck" />
+            <span class="text-danger" asp-validation-for="DNI"></span>
+            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI"/>
         </div>
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
@@ -211,12 +205,12 @@
         var ubicacion = $("#Ubicacion");
         var imagenesReferencia = [];
         $(document).ready(function () {
-            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
             var telefonos = "";
             for (var i = 0; i < contactos.length; i++) {
                 telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
             }
-            $("#telefonos").html(telefonos)
+            $("#telefonos").html(telefonos)*@
             CargarDatos();
         });
         function preview_image(event) {
@@ -276,7 +270,7 @@
         }
         */
         function MostrarUbicacion(position) {
-            ubicacion.val(position.coords.latitude + " " + position.coords.longitude);
+            ubicacion.val(position.coords.latitude + " ; " + position.coords.longitude);
         }
         function ObtenerImagenesReferencia() {
             $.ajax({

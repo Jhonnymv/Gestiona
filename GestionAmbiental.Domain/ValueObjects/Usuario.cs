@@ -14,6 +14,11 @@ namespace GestionAmbiental.Domain.ValueObjects
         public string Email { get; set; }
         public int? IdSuperior { get; set; }
         public string Estado { get; set; }
+        public string DNI { get; set; }
+        public string Celular { get; set; }
+        public string Puesto { get; set; }
+        public AreaTrabajo AreaTrabajo { get; set; }
+        public Empresa Empresa { get; set; }
 
         public Usuario(int id_Usuario, int id_Rol, string nombres, string apellidos, string email)
         {

@@ -25,9 +25,12 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         public string LugarReferencia { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
+        public string UsuarioEmail { get; set; }
+        public int? IdEmpresa { get; set; }
         public string Empresa { get; set; }
+        public int? IdAreaTrabajo { get; set; }
         public string AreaTrabajo { get; set; }
-        public string Fotocheck { get; set; }
+        public string DNI { get; set; }
         public string DescripcionAccion { get; set; }
         public string[] EvidenciaAccion { get; set; }
         public int IdSupervisor { get; set; }
@@ -64,7 +67,14 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
                 LugarReferencia = avistamiento.LugarReferencia.Descripcion;
             }
             IdUsuario = avistamiento.Usuario.IdUsuario;
-            Usuario = avistamiento.Usuario.Nombres + " " + avistamiento.Usuario.Apellidos;            
+            Usuario = avistamiento.Usuario.Nombres + " " + avistamiento.Usuario.Apellidos;
+            UsuarioEmail = avistamiento.Usuario.Email;
+            IdEmpresa = avistamiento.Usuario.Empresa?.IdEmpresa;
+            Empresa = avistamiento.Usuario.Empresa?.RazonSocial;
+            IdAreaTrabajo = avistamiento.Usuario.AreaTrabajo?.IdAreaTrabajo;
+            AreaTrabajo = avistamiento.Usuario.AreaTrabajo?.Descripcion;
+            DNI = avistamiento.Usuario.DNI;
+
             DescripcionAccion = avistamiento.DescripcionAccion;
             if (avistamiento.Supervisor != null)
             {

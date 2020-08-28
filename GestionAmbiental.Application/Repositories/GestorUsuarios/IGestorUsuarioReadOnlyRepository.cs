@@ -13,5 +13,10 @@ namespace GestionAmbiental.Application.Repositories.GestorUsuarios
         Task<Usuario> GetUsuario(string usuario_red);
         Task<int> GetIdUsuario(string usuario_red);
         Task ActualizarUsuarios(List<Usuario> usuarios);
+
+        Task<List<Empresa>> GetEmpresas();
+        Task<List<AreaTrabajo>> GetAreasTrabajo();
+        Task<int> AgregarEmpresa(Empresa empresa);
+        Task<int> AgregarAreaTrabajo(AreaTrabajo area);
     }
 }

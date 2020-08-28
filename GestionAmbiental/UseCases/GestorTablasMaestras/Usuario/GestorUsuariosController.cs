@@ -237,11 +237,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                             deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString());
 
                         var info_usuario = new ADUserModel();
-                        info_usuario.UserName = GetValidProperty(deUser, "samaccountname");
-                        info_usuario.DisplayName = GetValidProperty(deUser, "displayname");
+                        info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
                         info_usuario.Email = GetValidProperty(deUser, "mail");
-                        info_usuario.FirstName = GetValidProperty(deUser, "givenName");
-                        info_usuario.LastName = GetValidProperty(deUser, "sn");
+                        info_usuario.Nombres = GetValidProperty(deUser, "givenName");
+                        info_usuario.Apellidos = GetValidProperty(deUser, "sn");
                         info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
                         info_usuario.Puesto = GetValidProperty(deUser, "title");
                         info_usuario.Jefe = GetValidProperty(deUser, "manager");
@@ -261,7 +260,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                     }
                     deGroup.Close();
                     adSearchRoot.Close();
-                    rst = rst.OrderBy(x => x.UserName).ToList();
+                    rst = rst.OrderBy(x => x.UsuarioRed).ToList();
                 }
 
                 adSearcher.Dispose();

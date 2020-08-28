@@ -13,6 +13,11 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios
         public string Nombres { get; set; }
         public string Apellidos { get; set; }
         public string Email { get; set; }
+        public string DNI { get; set; }
+        public string Celular { get; set; }
+        public string Puesto { get; set; }
+        public int? Id_Area_Trabajo { get; set; }
+        public int? Id_Empresa { get; set; }
         public int? IdSuperior { get; set; }
         public string Estado { get; set; }
         
@@ -24,6 +29,11 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios
             Nombres = usuario.Nombres;
             Apellidos = usuario.Apellidos;
             Email = usuario.Email;
+            DNI = usuario.DNI;
+            Celular = usuario.Celular;
+            Puesto = usuario.Puesto;
+            Id_Area_Trabajo = usuario.AreaTrabajo?.IdAreaTrabajo;
+            Id_Empresa = usuario.Empresa?.IdEmpresa;
             IdSuperior = usuario.IdSuperior;
             Estado = usuario.Estado;
         }

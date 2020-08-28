@@ -44,21 +44,8 @@
 </form>
 
 <div class="row mb-2 justify-content-start d-flex align-items-center">
-    <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
         <a class="btn btn-danger float-left" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Registro</a>
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-9 mt-1">
-        <div class="card bg-danger text-white">
-            <div class="card-body">
-                <div class="d-flex justify-content-center align-items-center">
-                    <div class="mr-3">
-                        <div class="text-lg font-weight-bold text-white text-center">
-                            COMUNICATE CON MAP AL: <div id="telefonos"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 <div class="row mb-2 justify-content-center">
@@ -90,12 +77,12 @@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
             var telefonos = "";
             for (var i = 0; i < contactos.length; i++) {
                 telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
             }
-            $("#telefonos").html(telefonos)
+            $("#telefonos").html(telefonos)*@
             filtrar(1);
         });
         function filtrar(pag) {

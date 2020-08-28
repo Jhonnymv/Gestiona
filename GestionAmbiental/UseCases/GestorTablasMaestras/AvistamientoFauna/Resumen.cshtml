@@ -18,6 +18,12 @@
             <li class="nav-item">
                 <a class="nav-link" id="Tipo_Avistamiento">Tipo de Avistamiento</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Contacto_Emergencia">Contacto Emergencia</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -57,6 +63,18 @@
             if ($("#Nombre_Comun").hasClass("active")) {
                 FiltrarNombreComun(1);
             }
+            if ($("#Estado_Fauna").hasClass("active")) {
+                FiltrarEstadoFauna(1);
+            }
+            if ($("#Tipo_Avistamiento").hasClass("active")) {
+                FiltrarTipoAvistamiento(1);
+            }
+            if ($("#Contacto_Emergencia").hasClass("active")) {
+                FiltrarContactoEmergencia(1);
+            }
+            if ($("#Usuarios").hasClass("active")) {
+                FiltrarUsuario(1);
+            }
         });
         $("#Tipo_Fauna").on('click', function (e) {
             $(this).tab('show');
@@ -77,6 +95,16 @@
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoAvistamiento");
             FiltrarTipoAvistamiento(1);
+        });
+        $("#Contacto_Emergencia").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarContactoEmergencia");
+            FiltrarContactoEmergencia(1);
+        });
+        $("#Usuarios").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarUsuario");
+            FiltrarUsuario(1);
         });
 
         function FiltrarTipoFauna(pag) {
@@ -134,6 +162,40 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorAvistamientoFauna/FiltrarTipoAvistamiento",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarContactoEmergencia(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarContactoEmergencia",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarUsuario(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarUsuario",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

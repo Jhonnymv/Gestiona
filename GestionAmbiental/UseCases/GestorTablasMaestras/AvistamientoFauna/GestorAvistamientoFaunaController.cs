@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.ContactoEmergencia.AgregarContactoEmergencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.ContactoEmergencia.EditarContactoEmergencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.ContactoEmergencia.GetContactoEmergencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.ContactoEmergencia.GetContactosEmergencia;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.AgregarEstadoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.EditarEstadoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.GetEstadoFauna;
@@ -19,6 +23,11 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFau
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.EditarTipoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.GetTipoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.TipoFauna.GetTiposFauna;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Avistamiento_Fauna.AgregarUsuario;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Avistamiento_Fauna.DeleteUsuario;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Avistamiento_Fauna.EditarUsuario;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Avistamiento_Fauna.GetUsuario;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Avistamiento_Fauna.GetUsuarios;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna.Model;
 using Microsoft.AspNetCore.Hosting;
@@ -51,6 +60,18 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
         private readonly IGetTipoAvistamiento _getTipoAvistamiento;
         private readonly IGetTiposAvistamiento _getTiposAvistamiento;
 
+        private readonly IAgregarContactoEmergencia _agregarContactoEmergencia;
+        private readonly IEditarContactoEmergencia _editarContactoEmergencia;
+        private readonly IGetContactoEmergencia _getContactoEmergencia;
+        private readonly IGetContactosEmergencia _getContactosEmergencia;
+
+        private readonly IAgregarUsuario _agregarUsuario;
+        private readonly IDeleteUsuario _deleteUsuario;
+        private readonly IEditarUsuario _editarUsuario;
+        private readonly IGetUsuario _getUsuario;
+        private readonly IGetUsuarios _getUsuariosAF;
+        private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios _getUsuarios;
+
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public GestorAvistamientoFaunaController(
@@ -70,7 +91,17 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             IEditarTipoAvistamiento editarTipoAvistamiento,
             IGetTipoAvistamiento getTipoAvistamiento,
             IGetTiposAvistamiento getTiposAvistamiento,
-            IHostingEnvironment hostingEnvironment)
+            IAgregarContactoEmergencia agregarContactoEmergencia,
+            IEditarContactoEmergencia editarContactoEmergencia,
+            IGetContactoEmergencia getContactoEmergencia,
+            IGetContactosEmergencia getContactosEmergencia,
+            IAgregarUsuario agregarUsuario,
+            IDeleteUsuario deleteUsuario,
+            IEditarUsuario editarUsuario,
+            IGetUsuario getUsuario,
+            IGetUsuarios getUsuariosAF,
+            Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios getUsuarios,
+        IHostingEnvironment hostingEnvironment)
         {
             _agregarNombreComun = agregarNombreComun;
             _editarNombreComun = editarNombreComun;
@@ -88,6 +119,16 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             _editarTipoAvistamiento = editarTipoAvistamiento;
             _getTipoAvistamiento = getTipoAvistamiento;
             _getTiposAvistamiento = getTiposAvistamiento;
+            _agregarContactoEmergencia = agregarContactoEmergencia;
+            _editarContactoEmergencia = editarContactoEmergencia;
+            _getContactoEmergencia = getContactoEmergencia;
+            _getContactosEmergencia = getContactosEmergencia;
+            _agregarUsuario = agregarUsuario;
+            _deleteUsuario = deleteUsuario;
+            _editarUsuario = editarUsuario;
+            _getUsuario = getUsuario;
+            _getUsuariosAF = getUsuariosAF;
+            _getUsuarios = getUsuarios;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -707,6 +748,315 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             }
         }
 
+        //Contacto Emergencia
+        [HttpPost]
+        public async Task<IActionResult> FiltrarContactoEmergencia(string filtro, int pagina, int rpp)
+        {
+            var data = await _getContactosEmergencia.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Nombres</th>";
+            tabla += "<th>Apellidos</th>";
+            tabla += "<th>Teléfono</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.NContactos % rpp != 0 ? (data.NContactos / rpp) + 1 : data.NContactos / rpp;
+            if (data.NContactos > 0)
+            {
+                foreach (var fila in data.ContactosEmergencia)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Nombres + "</td>";
+                    filasTabla += "<td>" + fila.Apellidos + "</td>";
+                    filasTabla += "<td>" + fila.Telefono + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleContactoEmergencia?IdContactoEmergencia=" + fila.IdContactoEmergencia + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleContactoEmergencia(int IdContactoEmergencia)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var data = await _getContactoEmergencia.Execute(IdContactoEmergencia);
+                var model = new ContactoEmergenciaModel();
+                model.IdContactoEmergencia = data.IdContactoEmergencia;
+                model.Nombres = data.Nombres;
+                model.Apellidos = data.Apellidos;
+                model.Telefono = data.Telefono;
+                model.Estado = data.Estado;
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarContactoEmergencia(ContactoEmergenciaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarContactoEmergencia.Execute(model.IdContactoEmergencia, model.Nombres, model.Apellidos, model.Telefono, model.Estado);
+                return RedirectToAction("DetalleContactoEmergencia", new { IdContactoEmergencia = model.IdContactoEmergencia });
+            }
+        }
+        public async Task<IActionResult> AgregarContactoEmergencia()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarContactoEmergencia(ContactoEmergenciaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return RedirectToAction("NoAutorizado", "Home");
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var idContactoEmergencia = await _agregarContactoEmergencia.Execute(model.Nombres,model.Apellidos,model.Telefono);
+                        return RedirectToAction("DetalleContactoEmergencia", new { IdContactoEmergencia = idContactoEmergencia });
+                    }
+                    return RedirectToAction("AgregarContactoEmergencia");
+                }
+            }
+        }
+
+        //Usuarios a Notificar
+        public async Task<IActionResult> FiltrarUsuario(string filtro, int pagina, int rpp)
+        {
+            var data = await _getUsuariosAF.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Nombres</th>";
+            tabla += "<th>Apellidos</th>";
+            tabla += "<th>Usuario de Red</th>";
+            tabla += "<th>Email</th>";
+            tabla += "<th>Rol</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.nUsuarios % rpp != 0 ? (data.nUsuarios / rpp) + 1 : data.nUsuarios / rpp;
+            if (data.nUsuarios > 0)
+            {
+                foreach (var fila in data.Usuarios)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Nombres + "</td>";
+                    filasTabla += "<td>" + fila.Apellidos + "</td>";
+                    filasTabla += "<td>" + fila.UsuarioRed + "</td>";
+                    filasTabla += "<td>" + fila.Email + "</td>";
+                    filasTabla += "<td>" + fila.Rol + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleUsuario?IdUsuario=" + fila.IdUsuario + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleUsuario(int IdUsuario)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
+
+                var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
+                roles.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Roles = roles;
+
+                var Usuario = await _getUsuario.Execute(IdUsuario);
+                var model = new UsusarioNotificarModel();
+                model.Id_Usuario_Notificar = Usuario.IdUsuario;
+                model.Id_Rol = Usuario.IdRol;
+                model.Nombres = Usuario.Nombres;
+                model.Apellidos = Usuario.Apellidos;
+                model.usuario_red = Usuario.UsuarioRed;
+                model.Email = Usuario.Email;
+                model.Estado = Usuario.Estado;
+                return View(model);
+            }
+        }
+        public async Task<IActionResult> EditarUsuario(UsusarioNotificarModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                    await _editarUsuario.Execute(model.Id_Usuario_Notificar, model.Nombres, model.Apellidos, model.Id_Rol, model.Email, model.usuario_red, model.Estado);
+                return RedirectToAction("DetalleUsuario", new { IdUsuario = model.Id_Usuario_Notificar });
+            }
+        }
+        public async Task<IActionResult> AgregarUsuario()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var UsuariosAD = await _getUsuarios.Execute();
+
+                var usuarios = UsuariosAD.Usuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.ListUsuarios = usuarios;
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarUsuario(UsusarioNotificarModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var id = await _agregarUsuario.Execute(model.Id_Usuario_Notificar);
+                return RedirectToAction("DetalleUsuario", new { IdUsuario = id });
+            }
+            return RedirectToAction("AgregarUsuario");
+        }
+        public async Task<IActionResult> QuitarUsuario(int Id_Usuario)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                await _deleteUsuario.Execute(Id_Usuario);
+                return RedirectToAction("Resumen");
+            }
+        }
         public async Task<string> CargarImagen(IFormFile archivo, string nombreComun, string tipoFauna,string extension)
         {
             var nuevoNombre = CreateUniqueFileName(nombreComun,tipoFauna) + extension;

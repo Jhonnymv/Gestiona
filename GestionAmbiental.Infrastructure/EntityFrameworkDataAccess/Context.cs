@@ -77,6 +77,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Contacto_Emergencia_AF> Contactos_Emergencia_AF { get; set; }
         public DbSet<Avistamiento_Fauna> Avistamientos_Fauna { get; set; }
         public DbSet<Log_Avistamiento_Fauna> Logs_Avistamiento_Fauna { get; set; }
+        public DbSet<Usuario_Notificar_Avistamiento_Fauna> usuario_Notificar_Avistamiento_Fauna { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -201,6 +202,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Avistamiento_Fauna");
             modelBuilder.Entity<Log_Avistamiento_Fauna>()
                 .ToTable("Tb_Log_Avistamiento_Fauna");
+            modelBuilder.Entity<Usuario_Notificar_Avistamiento_Fauna>()
+                .ToTable("Tb_Usuarios_Notificar_Avistamiento_Fauna");
         }
     }
 }

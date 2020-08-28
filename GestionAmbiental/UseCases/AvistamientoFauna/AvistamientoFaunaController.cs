@@ -34,6 +34,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
 
         private readonly IGetUsuario _getUsuario;
+        private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario.IGetUsuario _getUsuarioId;
         private readonly IRegistrarAvistamientoFauna _registrarAvistamientoFauna;
         private readonly IEditarAvistamientoFauna _editarAvistamientoFauna;
         private readonly IEliminarAvistamientoFauna _eliminarAvistamientoFauna;
@@ -47,7 +48,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             IGetItems getItems,
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetAvistamientoFauna getAvistamientoFauna,
-            IGetUsuario getUsuario,
+            IGetUsuario getUsuario, 
+            Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario.IGetUsuario getUsuarioId,
             IGetInfo_SGA info_SGA,
             IRegistrarAvistamientoFauna registrarAvistamientoFauna,
             IEliminarAvistamientoFauna eliminarAvistamientoFauna,
@@ -61,6 +63,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             _getAvistamientosFauna = getAvistamientosFauna;
             _getAvistamientoFauna = getAvistamientoFauna;
             _getUsuario = getUsuario;
+            _getUsuarioId = getUsuarioId;
             _registrarAvistamientoFauna = registrarAvistamientoFauna;
             _eliminarAvistamientoFauna = eliminarAvistamientoFauna;
             _editarAvistamientoFauna = editarAvistamientoFauna;
@@ -91,9 +94,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x =>x.Telefono).ToArray());
-
-                ViewBag.Contactos = contactosEmergencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
 
@@ -207,7 +207,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 catalogo += "<button class=\"btn btn-link collapsed text-dark font-weight-bold\" data-toggle=\"collapse\" data-target=\"#collapse" + tipoFauna.Descripcion + "\" aria-expanded=\"true\" aria-controls=\"collapse" + tipoFauna.Descripcion + "\">" + tipoFauna.Descripcion + "</button>";
                 catalogo += "</h5>";
                 catalogo += "</div>";
-                catalogo += "<div id=\"collapse" + tipoFauna.Descripcion + "\" class=\"collapse show\" aria-labelledby=\"heading" + tipoFauna.Descripcion + "\" data-parent=\"#accordion\">";
+                catalogo += "<div id=\"collapse" + tipoFauna.Descripcion + "\" class=\"collapse\" aria-labelledby=\"heading" + tipoFauna.Descripcion + "\" data-parent=\"#accordion\">";
                 catalogo += "<div class=\"card-body\">";
                 catalogo += "<div class=\"row text-center text-lg-left\">";
 
@@ -243,13 +243,21 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                ViewBag.UsuarioNombre = usuario.Nombres + " " + usuario.Apellidos;
-                ViewBag.IdUsuario = usuario.IdUsuario;
+
+                var model = new AvistamientoFaunaModel();
+                var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
+                model.IdUsuario = usuario.IdUsuario;
+                model.Nombres_Apellidos = usuario.Nombres + " " + usuario.Apellidos;
+                if (usuario.Id_Empresa != null)
+                    model.IdEmpresa = usuario.Id_Empresa.Value;
+                if (usuario.Id_Area_Trabajo != null)
+                    model.IdAreaTrabajo = usuario.Id_Area_Trabajo.Value;
+                model.DNI = usuario.DNI;
+                model.IdUsuario = usuario.IdUsuario;
 
                 var items = await _getItems.Execute();
 
@@ -289,7 +297,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.AreaTrabajo = areas;
                 ViewBag.LugarReferencia = lugares;
 
-                return View();
+                return View(model);
             }
         }
         [HttpPost]
@@ -327,12 +335,12 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
-                    model.NFotocheck,
+                    model.DNI,
                     model.Opcion);
                 if (model.Opcion.Equals("GuardarEstado"))
                     return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
                 else if (model.Opcion.Equals("Registrar"))
-                    return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = IdAvistamiento });
+                    return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
                 
             }
             return RedirectToAction("NuevoRegistro");
@@ -391,6 +399,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.AreaTrabajo = areas;
                 ViewBag.LugarReferencia = lugares;
 
+                
+
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
                 model.IdEncriptado = IdAvistamiento;
@@ -402,8 +412,15 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
                 model.IdLugarReferencia = avistamiento.IdLugarReferencia;
+
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
+                if (avistamiento.IdEmpresa != null)
+                    model.IdEmpresa = avistamiento.IdEmpresa.Value;
+                if (avistamiento.IdAreaTrabajo != null)
+                    model.IdAreaTrabajo = avistamiento.IdAreaTrabajo.Value;
+                model.DNI = avistamiento.DNI;
+
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
                 model.Estado = avistamiento.Estado;
 
@@ -463,7 +480,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
-                    model.NFotocheck,
+                    model.DNI,
                     model.Opcion);
 
                 if (model.Opcion.Equals("GuardarEstado"))
@@ -482,7 +499,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -538,8 +554,15 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
                 model.IdLugarReferencia = avistamiento.IdLugarReferencia;
+                
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
+                if (avistamiento.IdEmpresa != null)
+                    model.IdEmpresa = avistamiento.IdEmpresa.Value;
+                if (avistamiento.IdAreaTrabajo != null)
+                    model.IdAreaTrabajo = avistamiento.IdAreaTrabajo.Value;
+                model.DNI = avistamiento.DNI;
+
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
 
                 model.Descripcion_Accion = avistamiento.DescripcionAccion;
@@ -548,8 +571,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 return View(model);
             }
-        }
-        
+        }        
         [HttpPost]
         public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
         {

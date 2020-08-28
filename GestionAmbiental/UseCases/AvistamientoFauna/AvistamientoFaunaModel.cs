@@ -40,8 +40,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         public int IdUsuario { get; set; }
         [DisplayName("Área de Trabajo:")]
         public int IdAreaTrabajo { get; set; }
-        [DisplayName("N° Fotocheck:")]
-        public string NFotocheck { get; set; }
+        [DisplayName("DNI:")]
+        public string DNI { get; set; }
         [DisplayName("Descripción de la acción:")]
         public string Descripcion_Accion { get; set; }
         [DisplayName("Evidencia:")]

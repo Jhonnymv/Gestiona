@@ -11,13 +11,6 @@
     </div>
 </div>
 
-<div class="row mb-2">
-    <div class="container-fluid d-flex align-items-center flex-column bg-danger">
-        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
-        <h2 id="telefonos" class="mb-5"></h2>
-    </div>
-</div>
-
 <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
 <div class="row mb-2" style="background-color:#2e6793">
     <div class="col-12" style="text-align:center">
@@ -118,11 +111,11 @@
         <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo" disabled></select>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-        <label asp-for="NFotocheck"></label>
+        <label asp-for="DNI"></label>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-        <span class="text-danger" asp-validation-for="NFotocheck"></span>
-        <input type="text" class="form-control" asp-for="NFotocheck" value="@Model.NFotocheck" readonly />
+        <span class="text-danger" asp-validation-for="DNI"></span>
+        <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI" readonly />
     </div>
 </div>
 @if (Model.Descripcion_Accion != null && Model.Evidencia_Cargada != null)
@@ -150,18 +143,19 @@
     </div>
 }
 <div class="row mb-2 mr-2 d-flex justify-content-end">
+    <a class="btn btn-danger mr-2" style="color:white" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamiento" asp-route-IdAvistamiento="@Model.IdAvistamientoFauna">Descargar Excel</a>
     <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Volver</a>
 </div>
 @section Scripts{
     <script type="text/javascript">
     var estado;
         $(document).ready(function () {
-            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
             var telefonos = "";
             for (var i = 0; i < contactos.length; i++) {
                 telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
             }
-            $("#telefonos").html(telefonos)
+            $("#telefonos").html(telefonos)*@
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
             if (imagenes.length > 0) {

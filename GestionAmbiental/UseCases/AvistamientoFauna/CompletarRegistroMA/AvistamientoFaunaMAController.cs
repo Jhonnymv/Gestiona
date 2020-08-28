@@ -216,8 +216,15 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
                 model.IdLugarReferencia = avistamiento.IdLugarReferencia;
+
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
+                if (avistamiento.IdEmpresa != null)
+                    model.IdEmpresa = avistamiento.IdEmpresa.Value;
+                if (avistamiento.IdAreaTrabajo != null)
+                    model.IdAreaTrabajo = avistamiento.IdAreaTrabajo.Value;
+                model.DNI = avistamiento.DNI;
+
                 model.FotosCargadas = avistamiento.Fotos != null ? JsonConvert.SerializeObject(avistamiento.Fotos) : null;
                 model.Estado = avistamiento.Estado;
 
@@ -279,13 +286,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                     model.IdUsuario,
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
-                    model.NFotocheck,
+                    model.DNI,
                     evidencias.ToArray(),
                     model.Descripcion_Accion,
                     userInfo.NombreUsuario);
             }
 
-            return RedirectToAction("NotificarAccionAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdAvistamientoFauna });
+            return RedirectToAction("NotificarAccionAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = _protector.Protect(model.IdAvistamientoFauna.ToString())});
         }
         private string CreateUniqueFileName(int nFile)
         {

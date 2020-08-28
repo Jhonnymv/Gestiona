@@ -1,0 +1,97 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna.Model.ContactoEmergenciaModel
+@{
+    ViewData["Title"] = "DetalleContactoEmergencia";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Información de Contacto de Emergencia</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarEstadoFauna">
+            <input type="hidden" asp-for="IdContactoEmergencia">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Nombres"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Nombres"></span>
+                    <input type="text" class="form-control" asp-for="Nombres" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Apellidos"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Apellidos"></span>
+                    <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Telefono"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Telefono"></span>
+                    <input type="text" class="form-control" asp-for="Telefono" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estado"></span>
+                    <select class="form-control" asp-for="Estado" disabled>
+                        <option value="">--SELECCIONE--</option>
+                        <option value="ACT">ACT</option>
+                        <option value="INA">INA</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#Nombres").prop('disabled', false);
+            $("#Apellidos").prop('disabled', false);
+            $("#Telefono").prop('disabled', false);
+            $("#Estado").prop('disabled', false);
+        });
+
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#Nombres").prop('disabled', true);
+            $("#Apellidos").prop('disabled', true);
+            $("#Telefono").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
+        });
+    </script>
+}

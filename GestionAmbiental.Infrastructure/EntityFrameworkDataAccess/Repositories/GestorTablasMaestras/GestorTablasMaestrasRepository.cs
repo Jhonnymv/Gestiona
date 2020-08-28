@@ -388,16 +388,37 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<Usuario> GetUsuario(int idUsuario)
         {
             var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(idUsuario));
-            var output = new Usuario
-            {
-               Nombres = usuario.Nombres,
-               Apellidos = usuario.Apellidos,
-               Email = usuario.Email,
-               IdRol = usuario.Id_Rol,
-               UsuarioRed = usuario.usuario_red,
-               IdSuperior = usuario.Id_Superior,
-               Estado = usuario.Estado
-            };
+
+            var areaTrabajo = await _context.Areas_Trabajo.FirstOrDefaultAsync(x => x.Id_Area_Trabajo.Equals(usuario.Id_Area_Trabajo));
+            var empresa = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(usuario.Id_Empresa));
+
+
+            var output = new Usuario();
+            output.Nombres = usuario.Nombres;
+            output.Apellidos = usuario.Apellidos;
+            output.Email = usuario.Email;
+            output.UsuarioRed = usuario.usuario_red;
+            output.IdUsuario = usuario.Id_Usuario;
+            if (areaTrabajo != null)
+                output.AreaTrabajo = new AreaTrabajo
+                {
+                    IdAreaTrabajo = areaTrabajo.Id_Area_Trabajo,
+                    Descripcion = areaTrabajo.Descripcion,
+                    Estado = areaTrabajo.Estado
+                };
+            if (empresa != null)
+                output.Empresa = new Empresa
+                {
+                    IdEmpresa = empresa.Id_Empresa,
+                    RazonSocial = empresa.Razon_Social,
+                    Estado = empresa.Estado
+                };
+            output.IdRol = usuario.Id_Rol;
+            output.IdSuperior = usuario.Id_Superior;
+            output.DNI = usuario.DNI;
+            output.Celular = usuario.Celular;
+            output.Puesto = usuario.Puesto;
+
             return output;
         }
                
@@ -1487,5 +1508,126 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Areas_Trabajo.Update(entity);
             await _context.SaveChangesAsync();
         }
+        
+        //Tb_Contacto_Emergencia_AF
+        public async Task<List<ContactoEmergencia>> GetContactoEmergencia(string filtro){
+            var entities = await _context.Contactos_Emergencia_AF.Where(x => x.Nombres.Contains(filtro == null ? x.Nombres : filtro)|| x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)).OrderBy(x => x.Nombres).ToListAsync();
+
+            var output = new List<ContactoEmergencia>();
+            foreach (var item in entities)
+            {
+                output.Add(new ContactoEmergencia
+                {
+                    IdContactoEmergencia = item.Id_Contacto_Emergencia,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Telefono = item.Telefono,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<ContactoEmergencia> GetContactoEmergencia(int id_contacto_emergencia)
+        {
+            var entity = await _context.Contactos_Emergencia_AF.FirstOrDefaultAsync(x => x.Id_Contacto_Emergencia.Equals(id_contacto_emergencia));
+            var output = new ContactoEmergencia
+            {
+
+                IdContactoEmergencia = entity.Id_Contacto_Emergencia,
+                Nombres = entity.Nombres,
+                Apellidos = entity.Apellidos,
+                Telefono = entity.Telefono,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddContactoEmergencia(ContactoEmergencia ContactoEmergencia)
+        {
+            var entity = new Entities.AvistamientoFauna.Contacto_Emergencia_AF
+            {
+                Nombres = ContactoEmergencia.Nombres,
+                Apellidos = ContactoEmergencia.Apellidos,
+                Telefono = ContactoEmergencia.Telefono,
+                Estado = "ACT"
+            };
+            _context.Contactos_Emergencia_AF.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Contacto_Emergencia;
+        }
+        public async Task UpdateContactoEmergencia(ContactoEmergencia ContactoEmergencia){
+            var entity = await _context.Contactos_Emergencia_AF.FirstOrDefaultAsync(x => x.Id_Contacto_Emergencia.Equals(ContactoEmergencia.IdContactoEmergencia));
+            entity.Nombres = ContactoEmergencia.Nombres;
+            entity.Apellidos = ContactoEmergencia.Apellidos;
+            entity.Telefono = ContactoEmergencia.Telefono;
+            entity.Estado = ContactoEmergencia.Estado;
+            _context.Contactos_Emergencia_AF.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        //Tb_Usuario_Notificar_Avistamiento
+        public async Task<List<Usuario_Notificar_Avistamiento_Fauna>> GetUsuario_Notificar_AF(string filtro)
+        {
+            var usuarios = await _context.usuario_Notificar_Avistamiento_Fauna.Where(x =>
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
+            ).OrderBy(x => x.Nombres)
+            .ToListAsync();
+
+            var output = new List<Usuario_Notificar_Avistamiento_Fauna>();
+            foreach (var item in usuarios)
+                output.Add(new Usuario_Notificar_Avistamiento_Fauna(item.Id_Usuarios_Notificar_Avistamiento_Fauna, item.Id_Rol, item.Nombres, item.Apellidos, item.usuario_red, item.Email, item.Estado));
+            return output;
+        }
+        public async Task<Usuario_Notificar_Avistamiento_Fauna> GetUsuario_Notificar_AF(int id_usuario_notificar)
+        {
+            var usuario = await _context.usuario_Notificar_Avistamiento_Fauna.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Avistamiento_Fauna.Equals(id_usuario_notificar));
+            var output = new Usuario_Notificar_Avistamiento_Fauna
+            {
+                Id_Usuario_Notificar_Avistamiento_Fauna = usuario.Id_Usuarios_Notificar_Avistamiento_Fauna,
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Id_Rol = usuario.Id_Rol,
+                Usuario_Red = usuario.usuario_red,
+                Estado = usuario.Estado
+            };
+            return output;
+        }
+        public async Task UpdateUsuario_Notificar_AF(Usuario_Notificar_Avistamiento_Fauna usuario_notifcar)
+        {
+            var usuarioEntity = await _context.usuario_Notificar_Avistamiento_Fauna.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Avistamiento_Fauna.Equals(usuario_notifcar.Id_Usuario_Notificar_Avistamiento_Fauna));
+            usuarioEntity.Nombres = usuario_notifcar.Nombres;
+            usuarioEntity.Apellidos = usuario_notifcar.Apellidos;
+            usuarioEntity.Email = usuario_notifcar.Email;
+            usuarioEntity.Id_Rol = usuario_notifcar.Id_Rol;
+            usuarioEntity.usuario_red = usuario_notifcar.Usuario_Red;
+            usuarioEntity.Estado = usuario_notifcar.Estado;
+
+            _context.usuario_Notificar_Avistamiento_Fauna.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task QuitarUsuario_Notificar_AF(int id_usuario_notificar)
+        {
+            var entity = await _context.usuario_Notificar_Avistamiento_Fauna.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Avistamiento_Fauna.Equals(id_usuario_notificar));
+            _context.usuario_Notificar_Avistamiento_Fauna.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<int> AddUsuario_Notificar_AF(int Id_Usuario_AD)
+        {
+            var temp_entity = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(Id_Usuario_AD));
+            var entity = new Entities.AvistamientoFauna.Usuario_Notificar_Avistamiento_Fauna
+            {
+                Nombres = temp_entity.Nombres,
+                Apellidos = temp_entity.Apellidos,
+                Email = temp_entity.Email,
+                Estado = "ACT",
+                Id_Rol = temp_entity.Id_Rol,
+                usuario_red = temp_entity.usuario_red
+            };
+            _context.usuario_Notificar_Avistamiento_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Usuarios_Notificar_Avistamiento_Fauna;
+        }
+
     }
 }

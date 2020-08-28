@@ -186,5 +186,17 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<int> AddAreaTrabajo(AreaTrabajo AreaTrabajo);
         Task UpdateAreaTrabajo(AreaTrabajo AreaTrabajo);
 
+        //Tb_Contacto_Emergencia_AF
+        Task<List<ContactoEmergencia>> GetContactoEmergencia(string filtro);
+        Task<ContactoEmergencia> GetContactoEmergencia(int id_contacto_emergencia);
+        Task<int> AddContactoEmergencia(ContactoEmergencia ContactoEmergencia);
+        Task UpdateContactoEmergencia(ContactoEmergencia ContactoEmergencia);
+
+        //Tb_Usuario_Notificar_Avistamiento_Fauna
+        Task<List<Usuario_Notificar_Avistamiento_Fauna>> GetUsuario_Notificar_AF(string filtro);
+        Task<Usuario_Notificar_Avistamiento_Fauna> GetUsuario_Notificar_AF(int id_usuario_notificar);
+        Task UpdateUsuario_Notificar_AF(Usuario_Notificar_Avistamiento_Fauna usuario_notifcar);
+        Task QuitarUsuario_Notificar_AF(int id_usuario_notificar);
+        Task<int> AddUsuario_Notificar_AF(int Id_Usuario_AD);
     }
 }

@@ -10,7 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientoFauna;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.Notificaciones.AvistamientoFauna.GetUsuariosNotificar;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -25,21 +27,27 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
     {
         private IHostingEnvironment _hostingEnvironment;
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
+        private readonly IGetUsuariosNotificar _getUsuariosNotificar;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
+        private readonly DescargarAvistamientoFaunaController _descargarAvistamientoFaunaController;
 
         public NotificacionesAvistamientoFaunaController(
            IHostingEnvironment hostingEnvironment,
            IGetAvistamientoFauna getAvistamientoFauna,
+           IGetUsuariosNotificar getUsuariosNotificar,
            IGetInfo_SGA getInfo_SGA,
            IDataProtectionProvider dataProtectionProvider,
-           DataProtectionPurpouseStrings dataProtectionPurpouseStrings
+           DataProtectionPurpouseStrings dataProtectionPurpouseStrings, 
+           DescargarAvistamientoFaunaController descargarAvistamientoFaunaController
            )
         {
             _hostingEnvironment = hostingEnvironment;
             _getAvistamientoFauna = getAvistamientoFauna;
+            _getUsuariosNotificar = getUsuariosNotificar;
             _info_SGA = getInfo_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
+            _descargarAvistamientoFaunaController = descargarAvistamientoFaunaController;
         }
 
         public async Task<IActionResult> NotificarNuevoAvistamiento(string IdAvistamiento)
@@ -79,19 +87,23 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 avistamiento.Empresa,
                 avistamiento.Usuario,
                 avistamiento.AreaTrabajo,
-                avistamiento.Fotocheck
+                avistamiento.DNI
                 );
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
 
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
 
-            msg.To.Add(new MailAddress("kevinorh4@gmail.com"));
-
+            var usuariosNotificar = await _getUsuariosNotificar.Execute();
+            foreach(var usuario in usuariosNotificar)
+            {
+                msg.To.Add(new MailAddress(usuario.Email));
+            }
+            
             msg.Subject = "Nuevo Avistamiento de Fauna";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
@@ -99,12 +111,9 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
 
-            for (int i = 0; i < avistamiento.Fotos.Length; i++)
-            {
-                var rutaArchivo = await Download(avistamiento.Fotos[i], i + 1,"Foto");
-                if (rutaArchivo != null)
-                    msg.Attachments.Add(new Attachment(rutaArchivo));
-            }
+            var archivoAvistamiento = await _descargarAvistamientoFaunaController.PrepararAvistamiento(avistamiento.IdAvistamientoFauna);
+            msg.Attachments.Add(new Attachment(archivoAvistamiento, "AvistamientoFauna-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
+
             await mail.SendMailAsync(msg);
 
             msg.Attachments.Dispose();
@@ -150,19 +159,19 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 avistamiento.Empresa,
                 avistamiento.Usuario,
                 avistamiento.AreaTrabajo,
-                avistamiento.Fotocheck,
+                avistamiento.DNI,
                 avistamiento.DescripcionAccion
                 );
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = true;
+            mail.EnableSsl = false;
 
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
 
-            msg.To.Add(new MailAddress("kevinorh4@gmail.com"));
+            msg.To.Add(new MailAddress(avistamiento.UsuarioEmail));
 
             msg.Subject = "Nueva Acción de Avistamiento de Fauna";
             msg.SubjectEncoding = Encoding.UTF8;
@@ -171,12 +180,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
 
-            for (int i = 0; i < avistamiento.Fotos.Length; i++)
-            {
-                var rutaArchivo = await Download(avistamiento.Fotos[i], i + 1,"Foto");
-                if (rutaArchivo != null)
-                    msg.Attachments.Add(new Attachment(rutaArchivo));
-            }
+            var archivoAvistamiento = await _descargarAvistamientoFaunaController.PrepararAvistamiento(avistamiento.IdAvistamientoFauna);
+            msg.Attachments.Add(new Attachment(archivoAvistamiento, "AvistamientoFauna-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
 
             for (int i = 0; i < avistamiento.EvidenciaAccion.Length; i++)
             {
