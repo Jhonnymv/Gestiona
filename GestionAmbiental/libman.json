@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "coreui",
+      "destination": "wwwroot/lib/coreui/"
+    },
+    {
+      "library": "pace-progress",
+      "destination": "wwwroot/lib/pace-progress/"
+    },
+    {
+      "library": "simple-line-icons",
+      "destination": "wwwroot/lib/simple-line-icons/"
+    },
+    {
+      "library": "font-awesome",
+      "destination": "wwwroot/lib/font-awesome/"
+    }
+    {
+      "library": "perfect-scrollbar",
+      "destination": "wwwroot/lib/perfect-scrollbar/"
+    }
+  ]
+}
