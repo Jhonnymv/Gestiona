@@ -41,6 +41,7 @@ namespace GestionAmbiental.Controllers
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
             }
+           
             return View();
         }
 

@@ -33,8 +33,8 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios
                 {
                     var jObject = usuario;
 
-                    var empresaUsuario = jObject.Value<string>("Empresa");
-                    var areaUsuario = jObject.Value<string>("Area");
+                    var empresaUsuario = jObject.Value<string>("Empresa").ToUpper();
+                    var areaUsuario = jObject.Value<string>("Area").ToUpper();
                     
 
                     var nuevoUsuario = new Usuario
@@ -48,7 +48,7 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios
                         Puesto = jObject.Value<string>("Puesto")
                     };
 
-                    if (empresaUsuario != null)
+                    if (empresaUsuario != null && empresaUsuario.Length>=3)
                     {
                         var empresa = listaEmpresas.FirstOrDefault(x => x.RazonSocial.Equals(empresaUsuario));
                         if (empresa!=null)
@@ -59,9 +59,10 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios
                                 RazonSocial = empresaUsuario
                             });
                             nuevoUsuario.Empresa = new Empresa { IdEmpresa = IdEmpresa };
+                            listaEmpresas = await _gestorUsuarioReadOnlyRepository.GetEmpresas();
                         }
                     }
-                    if (areaUsuario != null)
+                    if (areaUsuario != null && areaUsuario.Length>=3)
                     {
                         var area = listaAreas.FirstOrDefault(x => x.Descripcion.Equals(areaUsuario));
                         if (area != null)
@@ -73,6 +74,7 @@ namespace GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios
                                 Descripcion = areaUsuario
                             });
                             nuevoUsuario.AreaTrabajo = new AreaTrabajo { IdAreaTrabajo = IdArea };
+                            listaAreas = await _gestorUsuarioReadOnlyRepository.GetAreasTrabajo();
                         }
 
                     }

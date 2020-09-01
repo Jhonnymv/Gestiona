@@ -126,6 +126,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             lista_usuarios.RemoveAll(x => temp.Select(y => y.Id_Usuario).Contains(x.Id_Usuario));
             lista_usuarios.AddRange(temp);
             _context.Usuarios.UpdateRange(lista_usuarios);
+
             await _context.SaveChangesAsync();
         }
 
