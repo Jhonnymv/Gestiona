@@ -42,10 +42,10 @@ html {
   min-height: 100%;
 }
 
-body {
+/*body {*/
   /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
+  /*margin-bottom: 60px;
+}*/
 .footer {
   position: absolute;
   bottom: 0;
@@ -100,7 +100,10 @@ body {
     background-color: #2e6793;
     border-color: #2e6793;
 }
-
+.btn-secondary {
+    background-color: #555555;
+    border-color: #555555;
+}
 .btn-primary:hover {
     background-color: #627b8f;
     border-color: #627b8f;

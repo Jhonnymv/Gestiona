@@ -86,9 +86,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina)
         {
-            var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, rpp, pagina);
+            var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, lugar_referencia, rpp, pagina);
             //Solo los no vivos (IdEstadoFauna != 1)
             datosTabla.Avistamientos = datosTabla.Avistamientos.Where(x => !x.IdEstadoFauna.Equals(1) && !(x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString())|| x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))).ToList();
 

@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamiento
 {
     public interface IGetAvistamientosFauna
     {
-        Task<AvistamientosFaunaOutput> Execute(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina);
+        Task<AvistamientosFaunaOutput> Execute(string fecha, int tipo_fauna, int estado_fauna,int lugar_referencia, int rpp, int pagina);
     }
 }

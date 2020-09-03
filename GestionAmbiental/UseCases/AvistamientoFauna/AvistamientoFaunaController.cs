@@ -19,6 +19,7 @@ using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
 using ImageMagick;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -29,6 +30,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 {
     public class AvistamientoFaunaController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
+
         private readonly IGetItems _getItems;
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
@@ -45,6 +48,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public AvistamientoFaunaController(
+            IHostingEnvironment hostingEnvironment,
             IGetItems getItems,
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetAvistamientoFauna getAvistamientoFauna,
@@ -59,6 +63,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             IEditarAvistamientoFauna editarAvistamientoFauna,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _hostingEnvironment = hostingEnvironment;
             _getItems = getItems;
             _getAvistamientosFauna = getAvistamientosFauna;
             _getAvistamientoFauna = getAvistamientoFauna;
@@ -94,16 +99,26 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugaresReferencia = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                lugaresReferencia.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
+                
+                var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
+                mensajeContactos = mensajeContactos.Substring(10);
+
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
-
+                ViewBag.LugarReferencia = lugaresReferencia;
+                ViewBag.Mensaje = mensajeContactos;
+                ViewBag.Contactos = contactosEmergencia;
                 return View();
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina)
         {
-            var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, rpp, pagina);
+            var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, lugar_referencia, rpp, pagina);
 
             var filasTabla = "";
             var paginador = "";
@@ -118,7 +133,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                         filasTabla += "<tr>";                        
                         if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString()))
                         {
-                            if(fila.FechaAvistamiento > DateTime.Now.AddDays(-7))
+                            if(fila.FechaAvistamiento > DateTime.Now.AddDays(-1))
                                 filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                             else
                                 filasTabla += "<td></td>";
@@ -184,10 +199,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
-                var items = await _getItems.Execute();
-                var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
-
-                ViewBag.Contactos = contactosEmergencia;
                 return View();
             }
         }

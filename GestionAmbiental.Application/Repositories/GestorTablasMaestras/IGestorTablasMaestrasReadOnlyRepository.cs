@@ -198,5 +198,12 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task UpdateUsuario_Notificar_AF(Usuario_Notificar_Avistamiento_Fauna usuario_notifcar);
         Task QuitarUsuario_Notificar_AF(int id_usuario_notificar);
         Task<int> AddUsuario_Notificar_AF(int Id_Usuario_AD);
+
+
+        //Tb_Lugar_Referencia_Avistamiento
+        Task<List<LugarReferencia>> GetLugarReferencia(string filtro);
+        Task<LugarReferencia> GetLugarReferencia(int id_tipo_avistamiento);
+        Task<int> AddLugarReferencia(LugarReferencia LugarReferencia);
+        Task UpdateLugarReferencia(LugarReferencia LugarReferencia);
     }
 }

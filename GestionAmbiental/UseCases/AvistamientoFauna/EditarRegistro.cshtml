@@ -35,7 +35,7 @@
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
-        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;"><img src="~/img/icons/mas.png" /></button>
+        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;">Subir</button>
     </div>
     <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas">
     </div>
@@ -79,7 +79,7 @@
             <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun" value="@Model.IdNombreComun"></select>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
-            <img id="img_referencia" style="width:100%;height:18rem;max-width:100%;display:none" />
+            <img id="img_referencia" style="width:100%;height:15rem;max-width:100%;display:none" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Cantidad"></label>
@@ -121,7 +121,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdEmpresa"></span>
-            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa"></select>
+            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa" disabled></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="Nombres_Apellidos"></label>
@@ -135,14 +135,14 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
-            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo"></select>
+            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo" disabled></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <label asp-for="DNI"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="DNI"></span>
-            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI"/>
+            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI" readonly/>
         </div>
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
@@ -210,12 +210,6 @@
         var estado;
         var imagenesReferencia = [];
         $(document).ready(function () {
-            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
-            var telefonos = "";
-            for (var i = 0; i < contactos.length; i++) {
-                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
-            }
-            $("#telefonos").html(telefonos)*@
             ObtenerImagenesReferencia()
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
@@ -225,15 +219,6 @@
                 visualizarImagenesCargadas();
             }
         });
-        /*
-        function ObtenerUbicacion() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
-            } else {
-                ubicacion.val("");
-            }
-        }
-        */
         function ObtenerUbicacion() {
             navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
                 if (result.state == 'granted') {
@@ -259,7 +244,7 @@
             console.log('Permission ' + state);
         }
         function MostrarUbicacion(position) {
-            ubicacion.val(position.coords.latitude + " ; " + position.coords.longitude);
+            ubicacion.val(position.coords.latitude + " , " + position.coords.longitude);
         }
         function visualizarImagenesCargadas() {
             $.ajax({
@@ -429,9 +414,13 @@
             });
         }
         function GuardarEstado() {
-            $("#Opcion").val("GuardarEstado")
-            $("#Modal_Guardando").modal('show')
-            $("#form_nuevo_avistamiento").submit()
+            if ($("#FotosCargadas").val() != "" || $("#Fotos").val() != "") {
+                $("#Opcion").val("GuardarEstado")
+                $("#Modal_Guardando").modal('show')
+                $("#form_nuevo_avistamiento").submit()
+            } else {
+                alert("Debe cargar una fotografía");
+            }
         }
         function Registrar() {
             if (ValidarCampos()) {
@@ -453,11 +442,8 @@
             if ($("#IdTipoFauna").val() == "0") resultado = false;
             if ($("#IdTipoAvistamiento").val() == "0") resultado = false;
             if ($("#IdEstadoFauna").val() == "0") resultado = false;
-            if ($("#Lugar_Referencia").val() == "") resultado = false;
+            if ($("#IdLugarReferencia").val() == "0") resultado = false;
             if ($("#Nombres_Apellidos").val() == "") resultado = false;
-            /*if ($("#IdEmpresa").val() == "") resultado = false;
-            if ($("#IdAreaTrabajo").val() == "") resultado = false;
-            if ($("#NFotocheck").val() == "") resultado = false;*/
             return resultado;
         }
     </script>

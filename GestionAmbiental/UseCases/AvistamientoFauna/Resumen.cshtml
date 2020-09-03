@@ -32,8 +32,10 @@
             <select class="form-control" id="filtro_estado_fauna" asp-items="ViewBag.EstadoFauna"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <label>Lugar de Referencia:</label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+            <select class="form-control" id="filtro_lugar_referencia" asp-items="ViewBag.LugarReferencia"></select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -74,16 +76,41 @@
     <nav id="paginado" aria-label="pagination">
     </nav>
 </div>
+<div class="modal fade" id="modal_telefonos" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_telefonos"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body bg-red d-flex align-items-center" style="height:25rem;">
+                <div class="row">
+                    <div class="col-12 mb-2">
+                        <h2 class="text-white text-center" id="mensaje">Comunicate con MAP:</h2>
+                    </div>
+                    <div class="col-12">
+                        <h2 class="text-center mb-5" id="telefonos"></h2>
+                    </div>
+                </div>       
+            </div>            
+        </div>
+    </div>
+</div>
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {            
-            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
+            var mensaje = '@Html.Raw(ViewBag.Mensaje)';
+            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
             var telefonos = "";
             for (var i = 0; i < contactos.length; i++) {
                 telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
             }
-            $("#telefonos").html(telefonos)*@
+            $("#mensaje").html(mensaje);
+            $("#telefonos").html(telefonos);
             filtrar(1);
+            $("#modal_telefonos").modal('show');
         });
         function filtrar(pag) {
             $.ajax({
@@ -94,14 +121,14 @@
                     "rpp": 10,
                     "fecha": $("#filtro_fecha").val(),
                     "tipo_fauna": $("#filtro_tipo_fauna").val(),
-                    "estado_fauna": $("#filtro_estado_fauna").val()
+                    "estado_fauna": $("#filtro_estado_fauna").val(),
+                    "lugar_referencia": $("#filtro_lugar_referencia").val()
                 },
                 traditional: true,
                 success: (response) => {
                     $('#tabla_resumen tbody').empty()
                     $('#tabla_resumen tbody').html(response.data)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
                 }
             });
         }

@@ -1628,6 +1628,61 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return entity.Id_Usuarios_Notificar_Avistamiento_Fauna;
         }
+        //Tb_Lugar_Referencia_Fauna
+        public async Task<List<LugarReferencia>> GetLugarReferencia(string filtro)
+        {
+            var entities = await _context.Lugares_Referencia_AF.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<LugarReferencia>();
+            foreach (var item in entities)
+            {
+                output.Add(new LugarReferencia
+                {
+                    IdLugarReferencia = item.Id_Lugar_Referencia,
+                    Descripcion = item.Descripcion,
+                    Latitud = item.Latitud,
+                    Longitud = item.Longitud,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<LugarReferencia> GetLugarReferencia(int id_lugar_referencia)
+        {
+            var entity = await _context.Lugares_Referencia_AF.FirstOrDefaultAsync(x => x.Id_Lugar_Referencia.Equals(id_lugar_referencia));
+            var output = new LugarReferencia
+            {
+                IdLugarReferencia = entity.Id_Lugar_Referencia,
+                Descripcion = entity.Descripcion,
+                Latitud = entity.Latitud,
+                Longitud = entity.Longitud,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddLugarReferencia(LugarReferencia LugarReferencia)
+        {
+            var entity = new Entities.AvistamientoFauna.Lugar_Referencia_AF
+            {
+                Descripcion = LugarReferencia.Descripcion,
+                Latitud = LugarReferencia.Latitud,
+                Longitud = LugarReferencia.Longitud,
+                Estado = "ACT"
+            };
+            _context.Lugares_Referencia_AF.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Lugar_Referencia;
+        }
+        public async Task UpdateLugarReferencia(LugarReferencia LugarReferencia)
+        {
+            var entity = await _context.Lugares_Referencia_AF.FirstOrDefaultAsync(x => x.Id_Lugar_Referencia.Equals(LugarReferencia.IdLugarReferencia));
+            entity.Descripcion = LugarReferencia.Descripcion;
+            entity.Latitud = LugarReferencia.Latitud;
+            entity.Longitud = LugarReferencia.Longitud;
+            entity.Estado = LugarReferencia.Estado;
+            _context.Lugares_Referencia_AF.Update(entity);
+            await _context.SaveChangesAsync();
+        }
 
     }
 }

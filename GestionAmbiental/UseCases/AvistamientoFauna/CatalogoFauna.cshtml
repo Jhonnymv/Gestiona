@@ -8,15 +8,9 @@
         <h2>Registro de Avistamiento de Fauna Silvestre</h2>
     </div>
 </div>
-<div class="row mb-2">
-    <div class="container-fluid d-flex align-items-center flex-column bg-danger">
-        <h1 class="masthead-heading text-uppercase text-white text-center mt-5">COMUNICATE CON MAP AL: </h1>
-        <h2 id="telefonos" class="mb-5"></h2>
-    </div>
-</div>
 <div class="row mt-4 mb-4">
     <div class="col-12" align="center">
-        <a class="btn btn-primary" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna">Nuevo Registro</a>
+        <a class="btn btn-danger" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna">Nuevo Registro</a>
     </div>
 </div>
 <div class="row mb-2" style="background-color:#2e6793">
@@ -34,12 +28,6 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
-            var telefonos = "";
-            for (var i = 0; i < contactos.length; i++) {
-                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
-            }
-            $("#telefonos").html(telefonos)
             obtenerCatalogo();
         });
         function obtenerCatalogo() {

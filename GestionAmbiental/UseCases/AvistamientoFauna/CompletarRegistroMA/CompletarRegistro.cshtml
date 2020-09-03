@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<form class="form-group" id="form_nuevo_avistamiento" asp-action="CompletarRegistro" asp-controller="AvistamientoFaunaMA" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_completar_avistamiento" asp-action="CompletarRegistro" asp-controller="AvistamientoFaunaMA" method="post" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
 
     <div class="row mb-2" style="background-color:#2e6793">
@@ -33,21 +33,21 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
-            <input type="text" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento"/>
+            <input type="text" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Hora_Avistamiento"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
-            <input type="text" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento"/>
+            <input type="text" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Ubicacion"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Ubicacion"></span>
-            <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion"/>
+            <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdNombreComun"></label>
@@ -61,7 +61,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad"/>
+            <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdTipoAvistamiento"></label>
@@ -102,7 +102,7 @@
             <label asp-for="Nombres_Apellidos"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos"/>
+            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos" />
             <input type="hidden" asp-for="IdUsuario" value="@Model.IdUsuario" />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
@@ -117,7 +117,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
             <span class="text-danger" asp-validation-for="DNI"></span>
-            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI"/>
+            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI" />
         </div>
     </div>
     <div class="row mb-2" style="background-color:#2e6793">
@@ -150,20 +150,30 @@
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Volver</a>
-        <button type="submit" class="btn btn-primary">Guardar</button>
+        <button id="btn_guardar" type="button" class="btn btn-primary" onclick="Guardar()">Guardar</button>
     </div>
-
 </form>
+<!-- Modal Guardando-->
+<div class="modal fade" id="Modal_Guardando" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>     Guardando Registro</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
     var estado;
         $(document).ready(function () {
-            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
-            var telefonos = "";
-            for (var i = 0; i < contactos.length; i++) {
-                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
-            }
-            $("#telefonos").html(telefonos)*@
             var imagenes = '@Model.FotosCargadas';
             estado = '@Model.Estado'
             if (imagenes.length > 0) {
@@ -269,6 +279,16 @@
                 filesName.length > 0 ? $("#nombre_archivo").html(filesName) : null;
             } else
                 $("#nombre_archivo").html("0 Archivos")
+        });
+        $("#btn_guardar").on("click", function () {
+            if ($("#Evidencia_Accion").get(0).files.length > 0 &&
+                $("#Descripcion_Accion").val() != "")
+            {
+                $("#Modal_Guardando").modal('show');
+                $("#form_completar_avistamiento").submit();
+            } else {
+                alert("Debe cargar  la descripción y la evidencia de la acción");
+            }
         });
     </script>
 }

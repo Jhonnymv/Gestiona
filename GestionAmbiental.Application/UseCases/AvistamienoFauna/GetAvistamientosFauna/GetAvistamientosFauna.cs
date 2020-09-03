@@ -16,12 +16,12 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamiento
             _getAvistamientoFaunaReadOnlyRepository = getAvistamientoFaunaReadOnlyRepository ?? throw new ArgumentNullException(nameof(getAvistamientoFaunaReadOnlyRepository));
         }
 
-        public async Task<AvistamientosFaunaOutput> Execute(string fecha, int tipo_fauna, int estado_fauna, int rpp, int pagina)
+        public async Task<AvistamientosFaunaOutput> Execute(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina)
         {
             DateTime? fechaFiltro = null;
             if (fecha != null)
                 fechaFiltro = Convert.ToDateTime(fecha);
-            var data = await _getAvistamientoFaunaReadOnlyRepository.GetAvistamientosFauna(fechaFiltro,tipo_fauna,estado_fauna);
+            var data = await _getAvistamientoFaunaReadOnlyRepository.GetAvistamientosFauna(fechaFiltro,tipo_fauna,estado_fauna,lugar_referencia);
             var tbds = data.Where(x => x.Codigo.Equals("TBD")).OrderByDescending(x => x.FechaAvistamiento).ToList();
             data = data.Where(x => !x.Codigo.Equals("TBD")).OrderByDescending(x => Int32.Parse(x.Codigo)).ToList();
             data.InsertRange(0,tbds);

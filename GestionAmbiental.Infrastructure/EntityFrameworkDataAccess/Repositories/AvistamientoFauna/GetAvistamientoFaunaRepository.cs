@@ -138,7 +138,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<Domain.AvistamientoFauna.AvistamientoFauna>> GetAvistamientosFauna(DateTime? fecha, int tipo_fauna, int estado_fauna)
+        public async Task<List<Domain.AvistamientoFauna.AvistamientoFauna>> GetAvistamientosFauna(DateTime? fecha, int tipo_fauna, int estado_fauna, int lugar_referencia)
         {
             var tiposFauna = await _context.Tipos_Fauna.Where(x=>x.Id_Tipo_Fauna.Equals(tipo_fauna!=0?tipo_fauna:x.Id_Tipo_Fauna)).ToListAsync();
             var estadosFauna = await _context.Estados_Fauna.ToListAsync();
@@ -149,12 +149,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var areas = await _context.Areas_Trabajo.ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
 
-
             var avistamientos = await _context.Avistamientos_Fauna.ToListAsync();
             avistamientos = avistamientos.Where(x =>
             !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString())&&
             x.Fecha_Avistamiento.Date.Equals(fecha.HasValue?fecha.Value.Date:x.Fecha_Avistamiento.Date) &&
             nombresComunes.Select(y => y.Id_Nombre_Comun_Fauna).Contains(x.Id_Nombre_Comun_Fauna.Value) &&
+            x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
             x.Id_Estado_Fauna.Equals(estado_fauna!=0?estado_fauna:x.Id_Estado_Fauna))
                 .ToList();
 
