@@ -11649,7 +11649,7 @@ canvas {
   margin: 0;
   overflow-y: hidden;
   transition: max-height .3s ease-in-out;
-  background:#4a4a4a
+  background:#7d7d7d
 }
 
 .sidebar .nav-dropdown-items .nav-item {
@@ -11681,7 +11681,7 @@ canvas {
 
 .sidebar .nav-link.active {
   color: #fff;
-  background: #3a4248;
+  background: #616060;
 }
 
 .sidebar .nav-link.active .nav-icon {

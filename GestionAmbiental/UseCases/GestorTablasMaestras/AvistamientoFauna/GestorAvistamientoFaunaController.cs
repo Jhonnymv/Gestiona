@@ -11,6 +11,10 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFau
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.EditarEstadoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.GetEstadoFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.EstadoFauna.GetEstadosFauna;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.LugarReferencia.AgregarLugarReferencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.LugarReferencia.EditarLugarReferencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.LugarReferencia.GetLugaresReferencia;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.LugarReferencia.GetLugarReferencia;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.AgregarNombreComun;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.EditarNombreComun;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.AvistamientoFauna.NombreComun.GetNombreComun;
@@ -65,6 +69,11 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
         private readonly IGetContactoEmergencia _getContactoEmergencia;
         private readonly IGetContactosEmergencia _getContactosEmergencia;
 
+        private readonly IAgregarLugarReferencia _agregarLugarReferencia;
+        private readonly IEditarLugarReferencia _editarLugarReferencia;
+        private readonly IGetLugaresReferencia _getLugaresReferencia;
+        private readonly IGetLugarReferencia _getLugarReferencia;
+
         private readonly IAgregarUsuario _agregarUsuario;
         private readonly IDeleteUsuario _deleteUsuario;
         private readonly IEditarUsuario _editarUsuario;
@@ -95,6 +104,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             IEditarContactoEmergencia editarContactoEmergencia,
             IGetContactoEmergencia getContactoEmergencia,
             IGetContactosEmergencia getContactosEmergencia,
+            IAgregarLugarReferencia agregarLugarReferencia,
+            IEditarLugarReferencia editarLugarReferencia,
+            IGetLugaresReferencia getLugaresReferencia,
+            IGetLugarReferencia getLugarReferencia,
             IAgregarUsuario agregarUsuario,
             IDeleteUsuario deleteUsuario,
             IEditarUsuario editarUsuario,
@@ -123,6 +136,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             _editarContactoEmergencia = editarContactoEmergencia;
             _getContactoEmergencia = getContactoEmergencia;
             _getContactosEmergencia = getContactosEmergencia;
+            _agregarLugarReferencia = agregarLugarReferencia;
+            _editarLugarReferencia = editarLugarReferencia;
+            _getLugaresReferencia = getLugaresReferencia;
+            _getLugarReferencia = getLugarReferencia;
             _agregarUsuario = agregarUsuario;
             _deleteUsuario = deleteUsuario;
             _editarUsuario = editarUsuario;
@@ -887,6 +904,201 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                         return RedirectToAction("DetalleContactoEmergencia", new { IdContactoEmergencia = idContactoEmergencia });
                     }
                     return RedirectToAction("AgregarContactoEmergencia");
+                }
+            }
+        }
+        //Mensaje Contacto Emergencia
+        public async Task<IActionResult> DetalleMensajeContactoEmergencia()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
+                var mensaje = mensajeContactos.Substring(10);
+
+                var model = new MensajeEmergenciaModel();
+                model.Mensaje = mensaje;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarMensajeContactoEmergencia(MensajeEmergenciaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid) {
+                    try
+                    {
+                        var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
+                        var mensaje = mensajeContactos.Substring(10);
+                        mensajeContactos = mensajeContactos.Replace(mensaje, model.Mensaje);
+                        System.IO.File.WriteAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"), mensajeContactos);
+                    }
+                    catch (Exception e) { 
+                    }
+                }
+                return RedirectToAction("DetalleMensajeContactoEmergencia");
+            }
+        }
+
+
+        //Lugares Referencia
+        [HttpPost]
+        public async Task<IActionResult> FiltrarLugarReferencia(string filtro, int pagina, int rpp)
+        {
+            var data = await _getLugaresReferencia.Execute(filtro, pagina, rpp);
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Descripción</th>";
+            tabla += "<th>Latitud</th>";
+            tabla += "<th>Longitud</th>";
+            tabla += "<th>Estado</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = data.NLugares % rpp != 0 ? (data.NLugares / rpp) + 1 : data.NLugares / rpp;
+            if (data.NLugares > 0)
+            {
+                foreach (var fila in data.LugaresReferencias)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Descripcion + "</td>";
+                    filasTabla += "<td>" + fila.Latitud + "</td>";
+                    filasTabla += "<td>" + fila.Longitud + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleLugarReferencia?IdLugarReferencia=" + fila.IdLugarReferencia + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleLugarReferencia(int IdLugarReferencia)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var data = await _getLugarReferencia.Execute(IdLugarReferencia);
+                var model = new LugarReferenciaModel();
+                model.IdLugarReferencia = data.IdLugarReferencia;
+                model.Descripcion = data.Descripcion;
+                model.Latitud = data.Latitud;
+                model.Longitud = data.Longitud;
+                model.Estado = data.Estado;
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarLugarReferencia(LugarReferenciaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                if (ModelState.IsValid)
+                    await _editarLugarReferencia.Execute(model.IdLugarReferencia, model.Descripcion, model.Latitud, model.Longitud, model.Estado);
+                return RedirectToAction("DetalleLugarReferencia", new { IdLugarReferencia = model.IdLugarReferencia });
+            }
+        }
+        public async Task<IActionResult> AgregarLugarReferencia()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> AgregarLugarReferencia(LugarReferenciaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                return RedirectToAction("NoAutorizado", "Home");
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    return RedirectToAction("NoAutorizado", "Home");
+                else
+                {
+                    if (ModelState.IsValid)
+                    {
+                        var idLugarReferencia = await _agregarLugarReferencia.Execute(model.Descripcion, model.Latitud, model.Longitud);
+                        return RedirectToAction("DetalleLugarReferencia", new { IdLugarReferencia = idLugarReferencia });
+                    }
+                    return RedirectToAction("AgregarLugarReferencia");
                 }
             }
         }

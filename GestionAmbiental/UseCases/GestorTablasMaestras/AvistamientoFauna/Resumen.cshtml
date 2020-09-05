@@ -7,10 +7,10 @@
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="listItems">
             <li class="nav-item">
-                <a class="nav-link active" id="Nombre_Comun">Nombre Común de Fauna</a>
+                <a class="nav-link active" id="Nombre_Comun" href="#NombreComun">Nombre Común de Fauna</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="Tipo_Fauna">Tipo de Fauna</a>
+                <a class="nav-link" id="Tipo_Fauna" href="#TipoFauna">Tipo de Fauna</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="Estado_Fauna">Estado de Fauna</a>
@@ -20,6 +20,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="Contacto_Emergencia">Contacto Emergencia</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Lugar_Referencia">Lugares de Referencia</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
@@ -42,7 +45,11 @@
             <div class="col-6 col-sm-4 col-md-3 col-lg-2">
                 <a class="btn btn-danger" id="btn_agregar">Agregar</a>
             </div>
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2" id="opcion_editar_mensaje" style="display:none;">
+                <a class="btn btn-primary" id="btn_editar_mensaje" asp-controller="GestorAvistamientoFauna" asp-action="DetalleMensajeContactoEmergencia">Editar Mensaje</a>
+            </div>
         </div>
+
         <div class="row" id="tab_content">
         </div>
         <div class="row justify-content-center" id="paginado">
@@ -51,7 +58,7 @@
 </div>
 @section Scripts{
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function () {           
             FiltrarNombreComun(1);
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
         });
@@ -72,6 +79,9 @@
             if ($("#Contacto_Emergencia").hasClass("active")) {
                 FiltrarContactoEmergencia(1);
             }
+            if ($("#Lugar_Referencia").hasClass("active")) {
+                FiltrarLugarReferencia(1);
+            }
             if ($("#Usuarios").hasClass("active")) {
                 FiltrarUsuario(1);
             }
@@ -79,31 +89,43 @@
         $("#Tipo_Fauna").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
+            $("#opcion_editar_mensaje").hide();
             FiltrarTipoFauna(1);
         });
         $("#Nombre_Comun").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
+            $("#opcion_editar_mensaje").hide();
             FiltrarNombreComun(1);
         });
         $("#Estado_Fauna").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarEstadoFauna");
+            $("#opcion_editar_mensaje").hide();
             FiltrarEstadoFauna(1);
         });
         $("#Tipo_Avistamiento").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoAvistamiento");
+            $("#opcion_editar_mensaje").hide();
             FiltrarTipoAvistamiento(1);
         });
         $("#Contacto_Emergencia").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarContactoEmergencia");
+            $("#opcion_editar_mensaje").show();
             FiltrarContactoEmergencia(1);
+        });
+        $("#Lugar_Referencia").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarLugarReferencia");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarLugarReferencia(1);
         });
         $("#Usuarios").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarUsuario");
+            $("#opcion_editar_mensaje").hide();
             FiltrarUsuario(1);
         });
 
@@ -179,6 +201,23 @@
             $.ajax({
                 type: "POST",
                 url: "/GestorAvistamientoFauna/FiltrarContactoEmergencia",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarLugarReferencia(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarLugarReferencia",
                 data: {
                     "pagina": pag,
                     "rpp": 10,
