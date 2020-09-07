@@ -24,16 +24,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var output = new List<Dimension>();
 
-            var registros = await _context.Avistamientos_Fauna.Where(x =>
+            var reg = await _context.Avistamientos_Fauna.ToListAsync();
+
+            var registros = reg.Where(x =>
                 !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()) &&
-                !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
+                !x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) &&
                 x.Id_Nombre_Comun_Fauna.Equals(nombre_comun != 0 ? nombre_comun : x.Id_Nombre_Comun_Fauna) &&
                 x.Id_Tipo_Avistamiento.Equals(tipo_avistamiento != 0 ? tipo_avistamiento : x.Id_Tipo_Avistamiento) &&
                 x.Id_Estado_Fauna.Equals(estado_fauna != 0 ? estado_fauna : x.Id_Estado_Fauna) &&
                 x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
                 x.Fecha_Avistamiento >= FechaInicio &&
                 x.Fecha_Avistamiento <= FechaFin)
-                .ToListAsync();
+                .ToList();
 
             if (frecuencia.Equals("Diario"))
             {
@@ -219,16 +221,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var lista_estados_fauna = await _context.Estados_Fauna.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Avistamientos_Fauna.Where(x =>
+            var reg = await _context.Avistamientos_Fauna.ToListAsync();
+
+            var registros = reg.Where(x =>
                  !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()) &&
-                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
+                 !x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) &&
                  x.Id_Nombre_Comun_Fauna.Equals(nombre_comun != 0 ? nombre_comun : x.Id_Nombre_Comun_Fauna) &&
                  x.Id_Tipo_Avistamiento.Equals(tipo_avistamiento != 0 ? tipo_avistamiento : x.Id_Tipo_Avistamiento) &&
                  x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
                  x.Fecha_Avistamiento >= FechaInicio &&
                  x.Fecha_Avistamiento <= FechaFin)
                 .GroupBy(x =>x.Id_Estado_Fauna)
-                .ToListAsync();
+                .ToList();
             foreach (var item in registros)
             {
                 var estadoFauna = lista_estados_fauna.FirstOrDefault(x => x.Id_Estado_Fauna.Equals(item.Key));
@@ -242,16 +246,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var lista_nombres_comunes = await _context.Nombres_Comunes_Fauna.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Avistamientos_Fauna.Where(x =>
+            var reg = await _context.Avistamientos_Fauna.ToListAsync();
+
+            var registros = reg.Where(x =>
                  !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()) &&
-                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
+                 !x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) &&
                  x.Id_Tipo_Avistamiento.Equals(tipo_avistamiento != 0 ? tipo_avistamiento : x.Id_Tipo_Avistamiento) &&
                  x.Id_Estado_Fauna.Equals(estado_fauna != 0 ? estado_fauna : x.Id_Estado_Fauna) &&
                  x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
                  x.Fecha_Avistamiento >= FechaInicio &&
                  x.Fecha_Avistamiento <= FechaFin)
                 .GroupBy(x => x.Id_Nombre_Comun_Fauna)
-                .ToListAsync();
+                .ToList();
             foreach (var item in registros)
             {
                 var nombreComun = lista_nombres_comunes.FirstOrDefault(x => x.Id_Nombre_Comun_Fauna.Equals(item.Key));
@@ -265,16 +271,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var lista_tipos_avistamiento = await _context.Tipos_Avistamiento.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Avistamientos_Fauna.Where(x =>
+            var reg = await _context.Avistamientos_Fauna.ToListAsync();
+
+            var registros = reg.Where(x =>
                  !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()) &&
-                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
+                 !x.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) &&
                  x.Id_Nombre_Comun_Fauna.Equals(nombre_comun != 0 ? nombre_comun : x.Id_Nombre_Comun_Fauna) &&
                  x.Id_Estado_Fauna.Equals(estado_fauna != 0 ? estado_fauna : x.Id_Estado_Fauna) &&
                  x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
                  x.Fecha_Avistamiento >= FechaInicio &&
                  x.Fecha_Avistamiento <= FechaFin)
                 .GroupBy(x => x.Id_Tipo_Avistamiento)
-                .ToListAsync();
+                .ToList();
             foreach (var item in registros)
             {
                 var estadoFauna = lista_tipos_avistamiento.FirstOrDefault(x => x.Id_Tipo_Avistamiento.Equals(item.Key));

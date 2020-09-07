@@ -189,6 +189,14 @@ function CrearGraficoNombreComun(labels, data) {
                 }]
             },
             "options": {
+                "responsive": true,
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero": true
+                        }
+                    }]
+                },
                 "legend": {
                     "labels": {
                         fontColor: 'black'

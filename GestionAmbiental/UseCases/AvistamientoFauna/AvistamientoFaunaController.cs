@@ -212,13 +212,14 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             var catalogo = "";
             foreach (var tipoFauna in tiposFauna)
             {
+                var tfDescripcion = tipoFauna.Descripcion.Replace(" ", String.Empty);
                 catalogo += "<div class=\"card\">";
                 catalogo += "<div class=\"card-header\">";
                 catalogo += "<h5 class=\"mb-0 text-center\">";
-                catalogo += "<button class=\"btn btn-link collapsed text-dark font-weight-bold\" data-toggle=\"collapse\" data-target=\"#collapse" + tipoFauna.Descripcion + "\" aria-expanded=\"true\" aria-controls=\"collapse" + tipoFauna.Descripcion + "\">" + tipoFauna.Descripcion + "</button>";
+                catalogo += "<button class=\"btn btn-link collapsed text-dark font-weight-bold\" data-toggle=\"collapse\" data-target=\"#collapse" + tfDescripcion + "\" aria-expanded=\"true\" aria-controls=\"collapse" + tfDescripcion + "\">" + tipoFauna.Descripcion + "</button>";
                 catalogo += "</h5>";
                 catalogo += "</div>";
-                catalogo += "<div id=\"collapse" + tipoFauna.Descripcion + "\" class=\"collapse\" aria-labelledby=\"heading" + tipoFauna.Descripcion + "\" data-parent=\"#accordion\">";
+                catalogo += "<div id=\"collapse" + tfDescripcion + "\" class=\"collapse\" aria-labelledby=\"heading" + tfDescripcion + "\" data-parent=\"#accordion\">";
                 catalogo += "<div class=\"card-body\">";
                 catalogo += "<div class=\"row text-center text-lg-left\">";
 

@@ -30,13 +30,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var investigaciones = await _context.Investigacion_Final_Incidente.ToListAsync();
             var filtrado = investigaciones.Where(x =>
-            x.Fecha_Incidente.Value.Date.Equals(fecha.HasValue ? fecha.Value.Date : x.Fecha_Incidente.Value.Date) &&
             x.Id_Supervisor_MA.Equals(id_Asesor != 0 ? id_Asesor : x.Id_Supervisor_MA) &&
             x.Id_Gerencia_Responsable.Equals(id_Gerencia != 0 ? id_Gerencia : x.Id_Gerencia_Responsable))
                 .OrderByDescending(x=>x.Codigo)
                 .ToList();
 
-            if (investigaciones_titulares_minero.Count > 0 && id_Usuario != 0)
+            if (fecha.HasValue)
+                filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
+
+            //if (investigaciones_titulares_minero.Count > 0 && id_Usuario != 0)
                 filtrado = filtrado.Where(x => investigaciones_titulares_minero.Contains(x.Id_Investigacion_Final)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();

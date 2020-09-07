@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
+using GestionAmbiental.Application.UseCases.Reportes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,37 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamiento
 
             return output;
 
+        }
+
+        public async Task<AvistamientosFaunaOutput> Execute(int nombre_comun, int tipo_avistamiento, int estado_fauna, int lugar_referencia, string fechaInicio, string fechaFin)
+        {
+            //Dar formato a fechas
+            DateTime fInicio, fFinal;
+            if (fechaInicio != null)
+                fInicio = Convert.ToDateTime(fechaInicio);
+            else
+                fInicio = DateTime.MinValue;
+
+            if (fechaFin != null)
+                fFinal = Convert.ToDateTime(fechaFin + " 23:59:59");
+            else
+                fFinal = DateTime.MaxValue;
+
+            //Obtener valores
+            var data = await _getAvistamientoFaunaReadOnlyRepository.GetAvistamientosFauna(nombre_comun, tipo_avistamiento, estado_fauna, lugar_referencia, fInicio, fFinal);
+            //data = data.OrderBy(x => x.Index).ToList();
+
+            var output = new AvistamientosFaunaOutput();
+            output.Avistamientos = new List<AvistamientoFaunaOutput>();
+            output.NAvistamientos = data.Count;
+
+            foreach (var item in data)
+            {
+                var outputItem = new AvistamientoFaunaOutput(item);
+                output.Avistamientos.Add(outputItem);
+            }
+
+            return output;
         }
     }
 }

@@ -28,13 +28,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             x.Id_Usuario.Equals(id_Usuario != 0 ? id_Usuario : x.Id_Usuario)).Select(x=>x.Id_Reporte_Preliminar).ToListAsync();
 
             var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x=>x.Codigo).ToListAsync();
-            var reportesFiltro = reportes.Where(x =>
-            x.Fecha_Incidente.Equals(fecha.HasValue?fecha.Value:x.Fecha_Incidente) &&   
+            var reportesFiltro = reportes.Where(x =>  
             x.Id_Supervisor_MA.Equals(id_Asesor != 0?id_Asesor:x.Id_Supervisor_MA)&&
             x.Id_Gerencia_Responsable.Equals(id_Gerencia!=0?id_Gerencia:x.Id_Gerencia_Responsable))
                 .ToList();
+            if(fecha.HasValue)
+                reportesFiltro = reportesFiltro.Where(x =>x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
 
-            if (reportes_titulares_minero.Count > 0 && id_Usuario!=0)
+            //if (reportes_titulares_minero.Count > 0 && id_Usuario!=0)
                 reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
@@ -292,7 +294,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x => x.Codigo).ToListAsync();
 
             var reportesFiltro = reportes.Where(x =>
-            x.Fecha_Incidente.Equals(fecha.HasValue ? fecha.Value : x.Fecha_Incidente) &&
             x.Id_Supervisor_MA.Equals(id_Asesor != 0 ? id_Asesor : x.Id_Supervisor_MA) &&
             x.Id_Gerencia_Responsable.Equals(id_Gerencia != 0 ? id_Gerencia : x.Id_Gerencia_Responsable) &&
             (x.Estado.Equals(EstadosIncidentes.Registrado.ToString()) ||
@@ -300,8 +301,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
              x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) ))
                 .ToList();
 
-            if (reportes_titulares_minero.Count > 0 && id_Usuario != 0)
-                reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
+            if (fecha.HasValue)
+                reportesFiltro = reportesFiltro.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
+
+            //if (reportes_titulares_minero.Count > 0 && id_Usuario != 0)
+            reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
             var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();

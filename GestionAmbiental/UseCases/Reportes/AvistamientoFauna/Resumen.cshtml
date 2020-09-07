@@ -8,7 +8,7 @@
         <h2>Dashboard de Avistamiento de Fauna</h2>
     </div>
 </div>
-<form autocomplete="off">
+<form id="filtrosReporteAvistamiento" autocomplete="off" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamientosDashboard">
     <div class="container-fluid">
         <div class="row mb-2 justify-content-center">
             <div class="col-lg-10 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
@@ -55,7 +55,8 @@
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
-                    <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
+                    <button type="button" class="btn btn-primary mr-2" onclick="Filtrar()">Filtrar</button>
+                    <button id="descargar" type="button" class="btn btn-danger">Descargar Excel</button>
                 </div>
             </div>
         </div>
@@ -168,6 +169,16 @@
     <script type="text/javascript">
         $("#frecuencia").on("change", function () {
             ActualizarAvistamientosFaunaFecha();
+        });
+
+        $("#descargar").on('click', function () {
+            fechaInicio = $("#FInicio").val();
+            fechaFin = $("#FFin").val();
+            if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {                
+                $("#filtrosReporteAvistamiento").submit()
+            } else {
+                alert("La fecha de fin debe ser mayor a la fecha de inicio");
+            }
         });
     </script>
 

@@ -7,10 +7,12 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientoFauna;
+using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientosFauna;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Reportes.AvistamientoFauna;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,17 +28,20 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
     public class DescargarAvistamientoFaunaController : Controller
     {
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
+        private readonly IGetAvistamientosFauna _getAvistamientosFauna;
         private readonly IGetUsuario _getUsuario;
         private IHostingEnvironment _hostingEnvironment;
         private readonly IGetInfo_SGA _info_SGA;
 
         public DescargarAvistamientoFaunaController(
             IGetAvistamientoFauna getAvistamientoFauna,
+            IGetAvistamientosFauna getAvistamientosFauna,
             IGetUsuario getUsuario,
             IHostingEnvironment hostingEnvironment,
             IGetInfo_SGA info_SGA)
         {
             _getAvistamientoFauna = getAvistamientoFauna;
+            _getAvistamientosFauna = getAvistamientosFauna;
             _getUsuario = getUsuario;
             _hostingEnvironment = hostingEnvironment;
             _info_SGA = info_SGA;
@@ -187,6 +192,103 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
         {
             var archivoAvistamiento = await PrepararAvistamiento(IdAvistamiento);
             return File(archivoAvistamiento, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "AvistamientoFauna-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+        }
+        public async Task<IActionResult> DescargarAvistamientosDashboard(FiltroReporteAvistamientoFaunaModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var avistamientos = await _getAvistamientosFauna.Execute(model.NombreComun, model.TipoAvistamiento, model.EstadoFauna, model.LugarReferencia, model.FInicio, model.FFin);
+
+                string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "AvistamientoFauna");
+                string sFileName = @"Formato de Descarga de Datos.xlsx";
+                string sFilePath = Path.Combine(sWebRootFolder, sFileName);
+                FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
+
+                // Load the template into a NPOI workbook
+                XSSFWorkbook templateWorkbook = new XSSFWorkbook(fs);
+
+                // Load the sheet you are going to use as a template into NPOI
+                ISheet sheet = templateWorkbook.GetSheet("Hoja1");
+
+                //->Cell Style
+                XSSFCellStyle customCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                customCellStyle.WrapText = true;
+                customCellStyle.VerticalAlignment = VerticalAlignment.Center;
+                customCellStyle.BorderTop = BorderStyle.Thin;
+                customCellStyle.BorderBottom = BorderStyle.Thin;
+                customCellStyle.BorderLeft = BorderStyle.Thin;
+                customCellStyle.BorderRight = BorderStyle.Thin;
+                customCellStyle.Alignment = HorizontalAlignment.Center;
+
+                int fila = 1;
+
+                for (int i = 0; i < avistamientos.Avistamientos.Count; i++)
+                {
+                    IRow row = sheet.CreateRow(fila);
+
+                    row.CreateCell(0).SetCellValue(i+1);
+                    row.GetCell(0).CellStyle = customCellStyle;
+
+                    row.CreateCell(1).SetCellValue(avistamientos.Avistamientos[i].Codigo);
+                    row.GetCell(1).CellStyle = customCellStyle;
+
+                    row.CreateCell(2).SetCellValue(avistamientos.Avistamientos[i].FechaAvistamiento.ToString("dd/MM/yyyy"));
+                    row.GetCell(2).CellStyle = customCellStyle;
+
+                    row.CreateCell(3).SetCellValue(avistamientos.Avistamientos[i].FechaAvistamiento.ToString("HH:mm"));
+                    row.GetCell(3).CellStyle = customCellStyle;
+
+                    row.CreateCell(4).SetCellValue(avistamientos.Avistamientos[i].TipoFauna);
+                    row.GetCell(4).CellStyle = customCellStyle;
+
+                    row.CreateCell(5).SetCellValue(avistamientos.Avistamientos[i].NombreComun);
+                    row.GetCell(5).CellStyle = customCellStyle;
+
+                    row.CreateCell(6).SetCellValue(avistamientos.Avistamientos[i].Cantidad);
+                    row.GetCell(6).CellStyle = customCellStyle;
+
+                    row.CreateCell(7).SetCellValue(avistamientos.Avistamientos[i].TipoAvistamiento);
+                    row.GetCell(7).CellStyle = customCellStyle;
+
+                    row.CreateCell(8).SetCellValue(avistamientos.Avistamientos[i].EstadoFauna);
+                    row.GetCell(8).CellStyle = customCellStyle;
+
+                    row.CreateCell(9).SetCellValue(avistamientos.Avistamientos[i].LugarReferencia);
+                    row.GetCell(9).CellStyle = customCellStyle;
+
+                    if (avistamientos.Avistamientos[i].Ubicacion != null || avistamientos.Avistamientos[i].Ubicacion != "")
+                    {
+                        row.CreateCell(10).SetCellValue(avistamientos.Avistamientos[i].Ubicacion.Split(" , ")[0]);
+                        row.GetCell(10).CellStyle = customCellStyle;
+
+                        row.CreateCell(11).SetCellValue(avistamientos.Avistamientos[i].Ubicacion.Split(" , ")[1]);
+                        row.GetCell(11).CellStyle = customCellStyle;
+
+                        row.CreateCell(12).SetCellValue("Ver en Google Maps");
+                        XSSFHyperlink UrlLink = new XSSFHyperlink(HyperlinkType.Url)
+                        {
+                            Address = "https://www.google.com/maps/place/" + avistamientos.Avistamientos[i].Ubicacion.Replace(" ", @"%20")
+                        };
+                        row.GetCell(12).Hyperlink = (UrlLink);
+                        row.GetCell(12).CellStyle = customCellStyle;
+                    }
+
+                    fila++;
+                }
+                // Force formulas to update with new data we added
+                sheet.ForceFormulaRecalculation = true;
+                // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
+                MemoryStream ms = new MemoryStream();
+                templateWorkbook.Write(ms);
+
+                // Send the memory stream to the browser
+                ms.Position = 0;
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteAvistamientos-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+            }
         }
         private double GetRowHeight(int image_width, int image_height, double cellWidth)
         {
