@@ -1,8 +1,9 @@
 ﻿@model GestionAmbiental.UseCases.Reportes.AvistamientoFauna.FiltroReporteAvistamientoFaunaModel
-@{ 
-    ViewData["Title"] = "Resumen";
+@{
+    ViewData["Title"] = "Dashboard Avistamiento Fauna";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Dashboard de Avistamiento de Fauna</h2>
@@ -56,63 +57,136 @@
                 </div>
                 <div class="row mb-2 justify-content-center">
                     <button type="button" class="btn btn-primary mr-2" onclick="Filtrar()">Filtrar</button>
-                    <button id="descargar" type="button" class="btn btn-danger">Descargar Excel</button>
+                    <button id="descargar" type="button" class="btn btn-danger mr-2">Descargar Excel</button>
+                    <button id="descargarPDF" type="button" class="btn btn-danger" onclick="printDiv('pdfprintarea')">Imprimir Dashboard</button>
                 </div>
             </div>
         </div>
     </div>
 </form>
+
 <!--Cantidad de Avistamientos por fecha-->
-<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-8">
-                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Avistamientos Registrados </h6>
-                    </div>
-                    <div class="col-2">
-                        <select id="frecuencia" class="form-control">
-                            <option value="Diario" selected>Diario</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensual">Mensual</option>s
-                        </select>
+<div id="pdfContainer">
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_avistamientos_fechas" name="check_avistamientos_fechas" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Avistamientos Registrados </h6>
+                        </div>
+                        <div class="col-2">
+                            <select id="frecuencia" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>s
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class="">
+                <div class="card-body">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class="">
+                                </div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class="">
+                                </div>
                             </div>
                         </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class="">
+                        <canvas id="chart_avistamientos_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--NRegistros Nombres Comunes-->
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_avistamientos_nombre_comun" name="check_avistamientos_nombre_comun" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Nombre Común</h6>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_avistamientos_nombre_comun" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
                             </div>
                         </div>
                     </div>
-                    <canvas id="chart_avistamientos_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<!--NRegistros Nombres Comunes-->
-<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Nombre Común</h6>
+    <!--NRegistros Estado Fauna-->
+    <div class="row mb-2">
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_avistamientos_estado_fauna" name="check_avistamientos_estado_fauna" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Estado de Fauna</h6>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_avistamientos_estado_fauna" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_avistamientos_nombre_comun" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+        </div>
+
+    <!--NRegistros Tipo Avistamiento-->
+        <div class="col-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_avistamientos_tipo_avistamiento" name="check_avistamientos_tipo_avistamiento" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Tipo de Fauna</h6>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_avistamientos_tipo_avistamiento" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -120,20 +194,64 @@
         </div>
     </div>
 </div>
-
-<!--NRegistros Estado Fauna-->
-<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Estado de Fauna</h6>
+<!--Area de impresion-->
+<div id="pdfprintarea" style="display:none;">
+    <div class="row mb-2" id="div_avistamientos_fechas">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Avistamientos Registrados</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                             <img style="width:100%;height:auto" id="img_avistamientos_fechas"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_avistamientos_estado_fauna" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+        </div>
+    </div>
+    <div class="row mb-2" id="div_avistamientos_nombre_comun">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Nombre Común</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                             <img style="width:100%;height:auto" id="img_avistamientos_nombre_comun"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-6" id="div_avistamientos_estado_fauna">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Estado de Fauna</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                             <img style="width:100%;height:auto" id="img_avistamientos_estado_fauna"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6" id="div_avistamientos_tipo_avistamiento">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Tipo de Fauna</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                             <img style="width:100%;height:auto" id="img_avistamientos_tipo_avistamiento"/>
                         </div>
                     </div>
                 </div>
@@ -141,45 +259,70 @@
         </div>
     </div>
 </div>
-
-<!--NRegistros Estado Fauna-->
-<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Avistamientos por Tipo de Fauna</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_avistamientos_tipo_avistamiento" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-@section Scripts{
-
+@section Scripts{    
     <script src="~/js/UseCases/Reportes/ReporteAvistamientoFaunaScript.js" type="text/javascript"></script>
     <script type="text/javascript">
         $("#frecuencia").on("change", function () {
             ActualizarAvistamientosFaunaFecha();
         });
-
         $("#descargar").on('click', function () {
             fechaInicio = $("#FInicio").val();
             fechaFin = $("#FFin").val();
-            if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {                
+            if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
                 $("#filtrosReporteAvistamiento").submit()
             } else {
                 alert("La fecha de fin debe ser mayor a la fecha de inicio");
             }
         });
+        function preparePrintArea() {
+            $("#pdfprintarea").show();
+
+            var canvas_avistamientos_fechas = document.getElementById("chart_avistamientos_fechas");
+            var canvas_avistamientos_nombre_comun = document.getElementById("chart_avistamientos_nombre_comun");
+            var canvas_avistamientos_estado_fauna = document.getElementById("chart_avistamientos_estado_fauna");
+            var canvas_avistamientos_tipo_avistamiento = document.getElementById("chart_avistamientos_tipo_avistamiento");
+
+            var img_avistamientos_fechas = canvas_avistamientos_fechas.toDataURL("image/png");
+            var img_avistamientos_nombre_comun = canvas_avistamientos_nombre_comun.toDataURL("image/png");
+            var img_avistamientos_estado_fauna = canvas_avistamientos_estado_fauna.toDataURL("image/png");
+            var img_avistamientos_tipo_avistamiento = canvas_avistamientos_tipo_avistamiento.toDataURL("image/png");
+
+
+            document.getElementById('img_avistamientos_fechas').setAttribute('src', img_avistamientos_fechas);
+            document.getElementById('img_avistamientos_nombre_comun').setAttribute('src', img_avistamientos_nombre_comun);
+            document.getElementById('img_avistamientos_estado_fauna').setAttribute('src', img_avistamientos_estado_fauna);
+            document.getElementById('img_avistamientos_tipo_avistamiento').setAttribute('src', img_avistamientos_tipo_avistamiento);
+
+            if (!$("#check_avistamientos_fechas").prop('checked'))
+                $("#div_avistamientos_fechas").hide();
+            if (!$("#check_avistamientos_nombre_comun").prop('checked'))
+                $("#div_avistamientos_nombre_comun").hide();
+            if (!$("#check_avistamientos_estado_fauna").prop('checked'))
+                $("#div_avistamientos_estado_fauna").hide();
+            if (!$("#check_avistamientos_tipo_avistamiento").prop('checked'))
+                $("#div_avistamientos_tipo_avistamiento").hide();
+        }
+        function printDiv(divName) {            
+            preparePrintArea();
+            setTimeout(function () {
+                var printContents = document.getElementById(divName).innerHTML;
+                var originalContents = document.body.innerHTML;
+
+                document.body.innerHTML = printContents;
+
+                window.print();
+
+                document.body.innerHTML = originalContents;
+
+                $("#pdfprintarea").hide();
+
+                CargarDataAGraficoAvistamientosFaunaFecha();
+                CargarDataAGraficoNombreComun();
+                CargarDataAGraficoEstadoFauna();
+                CargarDataAGraficoTipoAvsitamiento();
+            }, 2500);            
+        }
+        
     </script>
 
 }

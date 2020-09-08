@@ -72,14 +72,7 @@ function ActualizarAvistamientosFaunaFecha() {
                     //Actualizar contador
                     data_avist_fechas = response.registros;
 
-                    var labels = [];
-                    var data = [];
-                    for (var i = 0; i < data_avist_fechas.length; i++) {
-                        labels.push(data_avist_fechas[i].nombre);
-                        data.push(data_avist_fechas[i].valor);
-                    }
-                    //Crear gráfica
-                    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
+                    CargarDataAGraficoAvistamientosFaunaFecha();
                 }
             }
         });
@@ -87,6 +80,16 @@ function ActualizarAvistamientosFaunaFecha() {
     } else {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
+}
+function CargarDataAGraficoAvistamientosFaunaFecha() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_avist_fechas.length; i++) {
+        labels.push(data_avist_fechas[i].nombre);
+        data.push(data_avist_fechas[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
 }
 function CrearGraficaAvistamientosFaunaFecha(labels, data, stepSize) {
     graph_avist_fechas = new Chart(
@@ -162,17 +165,20 @@ function ActualizaNombreComun() {
                 //Actualizar contador
                 data_nombre_comun = response.registros;
 
-                var labels = [];
-                var data = [];
-                for (var i = 0; i < data_nombre_comun.length; i++) {
-                    labels.push(data_nombre_comun[i].nombre);
-                    data.push(data_nombre_comun[i].valor);
-                }
-                //Crear gráfica
-                CrearGraficoNombreComun(labels, data);
+                CargarDataAGraficoNombreComun();
             }
         }
     });
+}
+function CargarDataAGraficoNombreComun() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_nombre_comun.length; i++) {
+        labels.push(data_nombre_comun[i].nombre);
+        data.push(data_nombre_comun[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficoNombreComun(labels, data);
 }
 function CrearGraficoNombreComun(labels, data) {
     graph_nombre_comun = new Chart(
@@ -246,17 +252,20 @@ function ActualizaEstadoFauna() {
                 //Actualizar contador
                 data_estado_fauna = response.registros;
 
-                var labels = [];
-                var data = [];
-                for (var i = 0; i < data_estado_fauna.length; i++) {
-                    labels.push(data_estado_fauna[i].nombre);
-                    data.push(data_estado_fauna[i].valor);
-                }
-                //Crear gráfica
-                CrearGraficoEstadoFauna(labels, data);
+                CargarDataAGraficoEstadoFauna()
             }
         }
     });
+}
+function CargarDataAGraficoEstadoFauna() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_estado_fauna.length; i++) {
+        labels.push(data_estado_fauna[i].nombre);
+        data.push(data_estado_fauna[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficoEstadoFauna(labels, data);
 }
 function CrearGraficoEstadoFauna(labels, data) {
     graph_estado_fauna = new Chart(
@@ -328,17 +337,20 @@ function ActualizaTipoAvistamiento() {
                 //Actualizar contador
                 data_tipo_avistamiento = response.registros;
 
-                var labels = [];
-                var data = [];
-                for (var i = 0; i < data_tipo_avistamiento.length; i++) {
-                    labels.push(data_tipo_avistamiento[i].nombre);
-                    data.push(data_tipo_avistamiento[i].valor);
-                }
-                //Crear gráfica
-                CrearGraficoTipoAvsitamiento(labels, data);
+                CargarDataAGraficoTipoAvsitamiento();
             }
         }
     });
+}
+function CargarDataAGraficoTipoAvsitamiento() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_tipo_avistamiento.length; i++) {
+        labels.push(data_tipo_avistamiento[i].nombre);
+        data.push(data_tipo_avistamiento[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficoTipoAvsitamiento(labels, data);
 }
 function CrearGraficoTipoAvsitamiento(labels, data) {
     //Colores Aleatorios
