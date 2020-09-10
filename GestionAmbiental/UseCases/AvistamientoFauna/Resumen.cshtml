@@ -122,7 +122,8 @@
                     "fecha": $("#filtro_fecha").val(),
                     "tipo_fauna": $("#filtro_tipo_fauna").val(),
                     "estado_fauna": $("#filtro_estado_fauna").val(),
-                    "lugar_referencia": $("#filtro_lugar_referencia").val()
+                    "lugar_referencia": $("#filtro_lugar_referencia").val(),
+                    "usuario_red": '@ViewBag.Usuario'
                 },
                 traditional: true,
                 success: (response) => {

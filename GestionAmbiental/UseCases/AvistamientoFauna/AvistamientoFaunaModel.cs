@@ -12,6 +12,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
     {
         public int IdAvistamientoFauna { get; set; }
         public string IdEncriptado { get; set; }
+        public string Codigo { get; set; }
         public string FotosCargadas { get; set; }
         public List<IFormFile> Fotos { get; set; }
         [DisplayName("Fecha:")]

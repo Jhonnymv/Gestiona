@@ -13,6 +13,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         [DisplayName("Razón Social:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string RazonSocial { get; set; }
+        [DisplayName("Estado:")]
+        public string Estado { get; set; }
 
     }
 }

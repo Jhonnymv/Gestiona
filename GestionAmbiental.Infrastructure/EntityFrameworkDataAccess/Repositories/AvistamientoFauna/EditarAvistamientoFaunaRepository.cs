@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -18,7 +19,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task ActualizarAvistamiento(Domain.AvistamientoFauna.AvistamientoFauna nuevoAvistamientoFauna)
+        public async Task ActualizarAvistamiento(int idUsuario, Domain.AvistamientoFauna.AvistamientoFauna nuevoAvistamientoFauna)
         {
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(nuevoAvistamientoFauna.IdAvistamientoFauna));
             avistamiento.Codigo = nuevoAvistamientoFauna.Codigo;
@@ -34,6 +35,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             avistamiento.Estado = nuevoAvistamientoFauna.Estado;
 
             _context.Avistamientos_Fauna.Update(avistamiento);
+            
+            var log = new Log_Avistamiento_Fauna();
+            var bkp = JsonConvert.SerializeObject(avistamiento);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Avistamiento_Fauna = avistamiento.Id_Avistamiento_Fauna;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.UPDATE.ToString();
+
+            _context.Logs_Avistamiento_Fauna.Add(log);
             await _context.SaveChangesAsync();
         }
 
@@ -54,6 +65,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             avistamiento.Estado = avistamientoMA.Estado;
 
             _context.Avistamientos_Fauna.Update(avistamiento);
+
+            var log = new Log_Avistamiento_Fauna();
+            var bkp = JsonConvert.SerializeObject(avistamiento);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Avistamiento_Fauna = avistamiento.Id_Avistamiento_Fauna;
+            log.Id_Usuario = avistamiento.Id_Supervisor.Value;
+            log.Tipo = TipoAccion.UPDATE.ToString();
+
+            _context.Logs_Avistamiento_Fauna.Add(log);
             await _context.SaveChangesAsync();
         }
         public async Task EliminarFotoAvistamiento(int IdAvistamiento, string foto)
@@ -64,16 +85,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             avistamiento.Fotos = JsonConvert.SerializeObject(values);
 
             _context.Avistamientos_Fauna.Update(avistamiento);
+
             await _context.SaveChangesAsync();
         }
-        public async Task EliminarAvistamiento(int IdAvistamiento)
+        public async Task EliminarAvistamiento(int idUsuario, int IdAvistamiento)
         {
             var avistamiento = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(IdAvistamiento));
+            avistamiento.Codigo = "TBD";
             avistamiento.Fotos = "[]";
             avistamiento.Estado = EstadosAvistamiento.Eliminado.ToString();
 
-
             _context.Avistamientos_Fauna.Update(avistamiento);
+
+            var log = new Log_Avistamiento_Fauna();
+            var bkp = JsonConvert.SerializeObject(avistamiento);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Avistamiento_Fauna = avistamiento.Id_Avistamiento_Fauna;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.DELETE.ToString();
+
+            _context.Logs_Avistamiento_Fauna.Add(log);
             await _context.SaveChangesAsync();
 
         }

@@ -39,7 +39,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
                 x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
 
-            //if (investigaciones_titulares_minero.Count > 0 && id_Usuario != 0)
+            if (investigaciones_titulares_minero.Count > 0 && id_Usuario != 0)
                 filtrado = filtrado.Where(x => investigaciones_titulares_minero.Contains(x.Id_Investigacion_Final)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();

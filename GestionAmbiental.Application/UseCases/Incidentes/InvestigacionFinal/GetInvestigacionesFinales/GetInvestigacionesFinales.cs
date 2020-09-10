@@ -22,7 +22,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
 
         public async Task<InvestigacionesFinalesOutput> Execute(string fecha, int id_Usuario, int id_Gerencia, int id_Asesor, int pagina, int rpp,string usuarioRed)
         {
-
             DateTime? fechaFiltro = null;
             if (fecha != null)
                 fechaFiltro = Convert.ToDateTime(fecha);

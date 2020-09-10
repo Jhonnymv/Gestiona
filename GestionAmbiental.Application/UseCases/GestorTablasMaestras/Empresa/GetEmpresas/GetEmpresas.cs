@@ -26,6 +26,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Empresa.Get
                 var temp = new EmpresaOutput();
                 temp.IdEmpresa = item.IdEmpresa;
                 temp.RazonSocial = item.RazonSocial;
+                temp.Estado = item.Estado;
                 empresasOutputs.Add(temp);
             }
             var output = new EmpresasOutput

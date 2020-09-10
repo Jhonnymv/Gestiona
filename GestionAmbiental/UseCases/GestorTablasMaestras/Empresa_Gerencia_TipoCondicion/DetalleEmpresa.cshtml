@@ -22,6 +22,19 @@
                     <input type="text" class="form-control" asp-for="RazonSocial" disabled>
                 </div>
             </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estado"></span>
+                    <select class="form-control" asp-for="Estado" disabled>
+                        <option value="">--SELECCIONE--</option>
+                        <option value="ACT">ACT</option>
+                        <option value="INA">INA</option>
+                    </select>
+                </div>
+            </div>
             <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
                 <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
                 <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
@@ -44,6 +57,7 @@
             $("#btnGuardar").prop('disabled', false);
             //Habilitar inputs
             $("#RazonSocial").prop('disabled', false);
+            $("#Estado").prop('disabled', false);
         });
 
         $("#btnCancelar").on('click', function () {
@@ -55,6 +69,7 @@
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
             $("#RazonSocial").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
         });
     </script>
 }

@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EliminarAvistam
 {
     public interface IEliminarAvistamientoFauna
     {
-        Task Execute(int IdAvistamiento);
+        Task Execute(string usuarioRed, int IdAvistamiento);
     }
 }

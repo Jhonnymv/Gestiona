@@ -354,11 +354,11 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             }
             //5. validar extension y cargar en una celda
             var extension = Path.GetExtension(filePath);
-            if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
+            if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge")|| extension.Equals(".jpeg") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE")|| extension.Equals(".JPEG"))
             {
                 byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                 PictureType pType;
-                if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
+                if (extension.Equals(".jpg") || extension.Equals(".jpge") ||extension.Equals(".jpeg") || extension.Equals(".JPG") || extension.Equals(".JPGE")|| extension.Equals(".JPEG"))
                     pType = PictureType.JPEG;
                 else
                 {

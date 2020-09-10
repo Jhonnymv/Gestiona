@@ -96,6 +96,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
 
                             filasTabla += "<tr>";
                             filasTabla += "<td>" + empresa.RazonSocial + "</td>";
+                            filasTabla += "<td>" + empresa.Estado + "</td>";
                             filasTabla += "<td><a href=\"/GestorEGTC/DetalleEmpresa?IdEmpresa=" + empresa.IdEmpresa + "\">Detalle</a></td>";
                             filasTabla += "</tr>";
                         }
@@ -148,6 +149,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     var model = new EmpresaModel();
                     model.IdEmpresa = data.IdEmpresa;
                     model.RazonSocial = data.RazonSocial;
+                    model.Estado = data.Estado;
                     return View(model);
                 }
             }
@@ -166,7 +168,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                 {
                     if (ModelState.IsValid)
                     {
-                        await _editarEmpresa.Execute(model.IdEmpresa, model.RazonSocial);
+                        await _editarEmpresa.Execute(model.IdEmpresa, model.RazonSocial,model.Estado);
                     }
                     return RedirectToAction("DetalleEmpresa", new { IdEmpresa = model.IdEmpresa });
                 }

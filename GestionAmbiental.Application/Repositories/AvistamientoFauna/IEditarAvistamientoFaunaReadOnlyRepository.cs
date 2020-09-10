@@ -8,8 +8,8 @@ namespace GestionAmbiental.Application.Repositories.AvistamientoFauna
     public interface IEditarAvistamientoFaunaReadOnlyRepository
     {
         Task EliminarFotoAvistamiento(int IdAvistamiento, string foto);
-        Task ActualizarAvistamiento(Domain.AvistamientoFauna.AvistamientoFauna nuevoAvistamientoFauna);
+        Task ActualizarAvistamiento(int idUsuario, Domain.AvistamientoFauna.AvistamientoFauna nuevoAvistamientoFauna);
         Task CompletarAvistamiento(Domain.AvistamientoFauna.AvistamientoFauna avistamientoMA);
-        Task EliminarAvistamiento(int IdAvistamiento);
+        Task EliminarAvistamiento(int idUsuario, int IdAvistamiento);
     }
 }

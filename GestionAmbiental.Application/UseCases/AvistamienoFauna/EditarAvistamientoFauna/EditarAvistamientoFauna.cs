@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
+using GestionAmbiental.Application.Repositories.GestorUsuarios;
 using GestionAmbiental.Domain.Enum;
 using Newtonsoft.Json;
 using System;
@@ -12,14 +13,16 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamie
     {
         private readonly IEditarAvistamientoFaunaReadOnlyRepository _editarAvistamientoFaunaReadOnlyRepository;
         private readonly IRegistrarAvistamientoFaunaReadOnlyRepository _registrarAvistamientoFaunaReadOnlyRepository;
+        private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
-        public EditarAvistamientoFauna(IEditarAvistamientoFaunaReadOnlyRepository editarAvistamientoFaunaReadOnlyRepository,IRegistrarAvistamientoFaunaReadOnlyRepository registrarAvistamientoFaunaReadOnlyRepository)
+        public EditarAvistamientoFauna(IEditarAvistamientoFaunaReadOnlyRepository editarAvistamientoFaunaReadOnlyRepository, IRegistrarAvistamientoFaunaReadOnlyRepository registrarAvistamientoFaunaReadOnlyRepository, IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _editarAvistamientoFaunaReadOnlyRepository = editarAvistamientoFaunaReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarAvistamientoFaunaReadOnlyRepository));
             _registrarAvistamientoFaunaReadOnlyRepository = registrarAvistamientoFaunaReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarAvistamientoFaunaReadOnlyRepository));
+            _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorUsuarioReadOnlyRepository));
         }
 
-        public async Task Execute(int IdAvistamiento, string[] fotos, string fecha, string hora, string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, int idLugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck, string opcion)
+        public async Task Execute(string usuarioRed, int IdAvistamiento,string codigo, string[] fotos, string fecha, string hora, string ubicacion, int cantidad, int idNombreComun, int idTipoAvistamiento, int idEstadoFauna, int idLugarReferencia, int idUsuario, int idEmpresa, int idArea, string nFotocheck, string opcion,string estado)
         {
             var nuevaFecha = DateTime.Parse(fecha + " " + hora);
             var input = new Domain.AvistamientoFauna.AvistamientoFauna();
@@ -46,6 +49,11 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamie
                 input.Codigo = "TBD";
                 input.Estado = EstadosAvistamiento.Pendiente.ToString();
             }
+            else if (opcion.Equals("EditarAdmin"))
+            {
+                input.Codigo = codigo;
+                input.Estado = estado;
+            }
 
             if (idNombreComun != 0)
                 input.NombreComun = new Domain.AvistamientoFauna.Items.NombreComunFauna { IdNombreComunFauna = idNombreComun };
@@ -60,8 +68,10 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.EditarAvistamie
                 input.LugarReferencia = new Domain.AvistamientoFauna.Items.LugarReferencia { IdLugarReferencia = idLugarReferencia };
 
             input.Usuario = new Domain.ValueObjects.Usuario { IdUsuario = idUsuario };
+
+            var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuarioRed);
             
-            await _editarAvistamientoFaunaReadOnlyRepository.ActualizarAvistamiento(input);
+            await _editarAvistamientoFaunaReadOnlyRepository.ActualizarAvistamiento(Id_Usuario,input);
 
         }
     }

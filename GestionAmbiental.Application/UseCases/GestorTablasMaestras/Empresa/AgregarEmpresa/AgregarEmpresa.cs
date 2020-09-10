@@ -19,7 +19,8 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Empresa.Agr
         {
             var empresa = new Domain.ValueObjects.Empresa
             {
-                RazonSocial = razonSocial
+                RazonSocial = razonSocial,
+                Estado = "ACT"
             };
             return await _gestorTablasMaestrasReadOnlyRepository.AddEmpresa(empresa);
         }

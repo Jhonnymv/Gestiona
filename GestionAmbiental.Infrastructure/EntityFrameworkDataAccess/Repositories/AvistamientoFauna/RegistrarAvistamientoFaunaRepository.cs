@@ -1,6 +1,8 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +20,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<int> RegistrarAvistamientoFauna(Domain.AvistamientoFauna.AvistamientoFauna avistamiento)
+        public async Task<int> RegistrarAvistamientoFauna(int idUsuario, Domain.AvistamientoFauna.AvistamientoFauna avistamiento)
         {
             var entity = new Entities.AvistamientoFauna.Avistamiento_Fauna();
             entity.Codigo = avistamiento.Codigo;
@@ -34,6 +36,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Estado = avistamiento.Estado;
 
             _context.Avistamientos_Fauna.Add(entity);
+            await _context.SaveChangesAsync();
+
+            var log = new Log_Avistamiento_Fauna();
+            var bkp = JsonConvert.SerializeObject(entity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Avistamiento_Fauna = entity.Id_Avistamiento_Fauna;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.CREATE.ToString();
+
+            _context.Logs_Avistamiento_Fauna.Add(log);
             await _context.SaveChangesAsync();
 
             return entity.Id_Avistamiento_Fauna;

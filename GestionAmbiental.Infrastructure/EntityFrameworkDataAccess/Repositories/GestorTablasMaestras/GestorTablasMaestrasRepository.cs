@@ -51,7 +51,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var empresaEntity = new Entities.Empresa
             {
-                Razon_Social = empresa.RazonSocial
+                Razon_Social = empresa.RazonSocial,
+                Estado = empresa.Estado
             };
             _context.Empresas.Add(empresaEntity);
             await _context.SaveChangesAsync();
@@ -231,7 +232,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new Empresa
             {
                 IdEmpresa = empresa.Id_Empresa,
-                RazonSocial = empresa.Razon_Social
+                RazonSocial = empresa.Razon_Social,
+                Estado = empresa.Estado
             };
             return output;            
         }
@@ -242,7 +244,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             
             var output = new List<Empresa>();
             foreach (var item in empresas)
-                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
+                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social,item.Estado));
             return output;
         }
 
@@ -521,6 +523,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var empresaEntity = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(empresa.IdEmpresa));
             empresaEntity.Razon_Social = empresa.RazonSocial;
+            empresaEntity.Estado = empresa.Estado;
             _context.Empresas.Update(empresaEntity);
             await _context.SaveChangesAsync();
         }

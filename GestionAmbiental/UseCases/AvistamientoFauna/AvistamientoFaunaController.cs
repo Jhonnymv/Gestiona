@@ -116,9 +116,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina,string usuario_red)
         {
             var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, lugar_referencia, rpp, pagina);
+            var usuario = await _getUsuario.Execute(usuario_red);
 
             var filasTabla = "";
             var paginador = "";
@@ -131,7 +132,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     {
                         var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
                         filasTabla += "<tr>";                        
-                        if (fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString()))
+                        if ((fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString())) && !usuario.IdRol.Equals((int)InspeccionRol.Admin))
                         {
                             if(fila.FechaAvistamiento > DateTime.Now.AddDays(-1))
                                 filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
@@ -139,7 +140,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                                 filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         }
-                        else if(fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()))
+                        else if(fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
                         {
                             filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -173,7 +174,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
                     paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
-
             }
             else
             {
@@ -317,6 +317,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var fotos = new List<string>();
                 for (int i = 0; i < model.Fotos.Count; i++)
                 {
@@ -335,7 +337,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     }
                 }
 
-                var IdAvistamiento = await _registrarAvistamientoFauna.Execute(fotos.ToArray(),
+                var IdAvistamiento = await _registrarAvistamientoFauna.Execute(userInfo.NombreUsuario,fotos.ToArray(),
                     model.Fecha_Avistamiento,
                     model.Hora_Avistamiento,
                     model.Ubicacion,
@@ -409,12 +411,11 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
-                ViewBag.LugarReferencia = lugares;
-
-                
+                ViewBag.LugarReferencia = lugares;                              
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
+                model.Codigo = avistamiento.Codigo;
                 model.IdEncriptado = IdAvistamiento;
                 model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("yyyy-MM-dd");
                 model.Hora_Avistamiento = avistamiento.FechaAvistamiento.ToString("HH:mm");
@@ -444,6 +445,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (ModelState.IsValid)
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var fotos = new List<string>();
 
                 if (model.FotosCargadas != null)
@@ -479,7 +482,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                         }
                     }
                 
-                await _editarAvistamientoFauna.Execute(model.IdAvistamientoFauna,
+                await _editarAvistamientoFauna.Execute(userInfo.NombreUsuario,
+                    model.IdAvistamientoFauna,
+                    model.Codigo,
                     fotos.ToArray(),
                     model.Fecha_Avistamiento,
                     model.Hora_Avistamiento,
@@ -493,9 +498,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.IdEmpresa,
                     model.IdAreaTrabajo,
                     model.DNI,
-                    model.Opcion);
+                    model.Opcion,
+                    model.Estado);
 
-                if (model.Opcion.Equals("GuardarEstado"))
+                if (model.Opcion.Equals("GuardarEstado")|| model.Opcion.Equals("EditarAdmin"))
                     return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
                 else if (model.Opcion.Equals("Registrar"))
                     return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdEncriptado });
@@ -672,8 +678,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var avistamiento = await _getAvistamientoFauna.Execute(IdAvistamiento);
-
-                if (await _validarPermisos.Editar(userInfo.NombreUsuario, avistamiento.IdUsuario))
+                var xd = await _validarPermisos.Editar(userInfo.NombreUsuario, avistamiento.IdUsuario);
+                if (await _validarPermisos.Editar(userInfo.NombreUsuario, avistamiento.IdUsuario) || userInfo.Rol.Equals(InspeccionRol.Admin))
                 {
 
                     var fotos = new List<string>();
@@ -696,7 +702,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                             await EliminarImagen(IdAvistamiento, foto);
                         }
                     }
-                    await _eliminarAvistamientoFauna.Execute(IdAvistamiento);
+                    await _eliminarAvistamientoFauna.Execute(userInfo.NombreUsuario, IdAvistamiento);
 
                     return RedirectToAction("Resumen");
                 }

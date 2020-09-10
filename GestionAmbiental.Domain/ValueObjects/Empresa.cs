@@ -18,5 +18,11 @@ namespace GestionAmbiental.Domain.ValueObjects
             IdEmpresa = id_Empresa_Contratista;
             RazonSocial = razon_Social;
         }
+        public Empresa(int id_Empresa_Contratista, string razon_Social,string estado)
+        {
+            IdEmpresa = id_Empresa_Contratista;
+            RazonSocial = razon_Social;
+            Estado = estado;
+        }
     }
 }

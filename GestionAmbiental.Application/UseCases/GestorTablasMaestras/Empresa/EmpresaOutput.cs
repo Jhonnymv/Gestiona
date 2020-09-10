@@ -8,6 +8,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Empresa
     {
         public int IdEmpresa { get; set; }
         public string RazonSocial { get; set; }
+        public string Estado { get; set; }
 
         public EmpresaOutput()
         {
@@ -16,6 +17,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Empresa
         {
             IdEmpresa = empresa.IdEmpresa;
             RazonSocial = empresa.RazonSocial;
+            Estado = empresa.Estado;
         }
     }
 }

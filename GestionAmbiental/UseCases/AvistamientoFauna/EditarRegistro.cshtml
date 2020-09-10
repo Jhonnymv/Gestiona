@@ -13,6 +13,8 @@
 <form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
     <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
+    <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
+    <input type="hidden" asp-for="Estado" value="@Model.Estado" />
     <input type="hidden" asp-for="Opcion" />
     <div class="row mb-2" style="background-color:#2e6793">
         <div class="col-12" style="text-align:center">
@@ -147,9 +149,17 @@
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
-        <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
-        <button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>
-        <button type="button" class="btn btn-primary" onclick="Registrar()">Registrar</button>
+        @if (ViewBag.Rol == "Admin")
+        {
+            <button type="button" class="btn btn-primary mr-2" onclick="EditarAdmin()">Guardar</button>
+            <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
+            <button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>
+            <button type="button" class="btn btn-primary" onclick="Registrar()">Registrar</button>
+        }
     </div>
 </form>
 
@@ -416,6 +426,15 @@
         function GuardarEstado() {
             if ($("#FotosCargadas").val() != "" || $("#Fotos").val() != "") {
                 $("#Opcion").val("GuardarEstado")
+                $("#Modal_Guardando").modal('show')
+                $("#form_nuevo_avistamiento").submit()
+            } else {
+                alert("Debe cargar una fotografía");
+            }
+        }
+        function EditarAdmin() {
+            if ($("#FotosCargadas").val() != "" || $("#Fotos").val() != "") {
+                $("#Opcion").val("EditarAdmin")
                 $("#Modal_Guardando").modal('show')
                 $("#form_nuevo_avistamiento").submit()
             } else {

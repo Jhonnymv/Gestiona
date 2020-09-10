@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Empresa.Edi
 {
     public interface IEditarEmpresa
     {
-        Task Execute(int idEmpresa, string razonSocial);
+        Task Execute(int idEmpresa, string razonSocial,string estado);
     }
 }
