@@ -1,11 +1,15 @@
 ﻿<div class="sidebar">
     <nav class="sidebar-nav">
         <ul class="nav">
-            @if (ViewBag.Rol == null){
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Iniciar Sesión</a></li> 
-                }
-            else {
-                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector"){
+            @if (ViewBag.Rol == null)
+            {
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Iniciar Sesión</a></li>
+
+            }
+            else
+            {
+                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
+                {
                     <!--Inspecciones-->
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
@@ -18,14 +22,15 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="InspeccionesImplementacion" asp-action="Resumen">Obs. Pendientes de Implementación</a>
                             </li>
-                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP"){
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
-                             </li>
-                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes Estadísticos</a>
-                             </li>
-                             }
+                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">Obs. Pendientes de Verificación</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesInspecciones" asp-action="Resumen">Reportes Estadísticos</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!--Reporte de Acto y Condición Subestándar-->
@@ -40,37 +45,39 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="ImplementacionRAC" asp-action="Resumen">Pendientes de Implementación</a>
                             </li>
-                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP"){
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="VerificacionRAC" asp-action="Resumen">Pendientes de Verificación</a>
-                             </li>
-                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportesRAC" asp-action="Resumen">Reportes Estadísticos</a>
-                             </li>
-                             }
+                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="VerificacionRAC" asp-action="Resumen">Pendientes de Verificación</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesRAC" asp-action="Resumen">Reportes Estadísticos</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!--Residuos Sólidos-->
-                    @if (ViewBag.Rol == "AsesorMAP"){
-                    <li class="nav-item nav-dropdown">
-                        <a class="nav-link nav-dropdown-toggle" href="#">
-                            <i class="nav-icon"><img src="~/img/icons/residue.png"/></i> Residuos Sólidos
-                        </a>
-                        <ul class="nav-dropdown-items">
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (ViewBag.Rol == "AsesorMAP")
+                    {
+                        <li class="nav-item nav-dropdown">
+                            <a class="nav-link nav-dropdown-toggle" href="#">
+                                <i class="nav-icon"><img src="~/img/icons/residue.png" /></i> Residuos Sólidos
+                            </a>
+                            <ul class="nav-dropdown-items">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="IngresoSalidaRS" asp-action="Resumen">Ingreso y Salida de Residuos Sólidos</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesIngresoSalida" asp-action="Resumen">Reportes Estadísticos Ingreso y Salida</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CompletarManifiesto" asp-action="Resumen">Control de Manifiestos de Residuos Sólidos MA</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesManifiestoRS" asp-action="Resumen">Reportes Estadísticos de Manifiestos</a>
+                                </li>
+                            </ul>
+                        </li>
                     }
                     <!--Incidentes Ambientales-->
                     <li class="nav-item nav-dropdown">
@@ -78,33 +85,34 @@
                             <i class="nav-icon"><img src="~/img/icons/alert-red.png" /></i> Incidentes Ambientales
                         </a>
                         <ul class="nav-dropdown-items">
-                            
+
                             @if (ViewBag.Rol == "Inspector" || ViewBag.Rol == "AsesorSSO")
                             {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
+                                </li>
                             }
-                            @if (ViewBag.Rol == "AsesorMAP"){
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar MA</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="ReportesIncidentesReportePreliminar" asp-action="Resumen">Reportes Estadísticos (Reporte Preliminar)</a>
-                             </li>
-                             <li class="nav-item">
-                                 <a class="nav-link" asp-controller="ReportesIncidentesInvestigacion" asp-action="Resumen">Reportes Estadísticos (Informe Investigación Final)</a>
-                             </li>
-                             }
+                            @if (ViewBag.Rol == "AsesorMAP")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportePreliminar" asp-action="Resumen">Reporte Preliminar</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar MA</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesIncidentesReportePreliminar" asp-action="Resumen">Reportes Estadísticos (Reporte Preliminar)</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesIncidentesInvestigacion" asp-action="Resumen">Reportes Estadísticos (Informe Investigación Final)</a>
+                                </li>
+                            }
                         </ul>
                     </li>
                     <!--Avistamiento Fauna-->
@@ -120,84 +128,99 @@
                             {
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="AvistamientoFaunaMA" asp-action="Resumen">Avistamiento de Fauna MA</a>
-                                </li>                                
+                                </li>
+
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="ReportesAvistamientoFauna" asp-action="Resumen">Reportes Estadísticos</a>
                                 </li>
                             }
                         </ul>
                     </li>
-                    
-                 }
+                    @if (ViewBag.Rol == "AsesorMAP")
+                    {
+                        <!--Consumo de Agua-->
+                        <li class="nav-item nav-dropdown">
+                            <a class="nav-link nav-dropdown-toggle" href="#">
+                                <i class="nav-icon"><img src="~/img/icons/pajaro.png" /></i> Consumo de Agua
+                            </a>
+                            <ul class="nav-dropdown-items">
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ConsumoAguaMar" asp-action="Resumen">Agua de Mar</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                    }
+                }
                 @if (ViewBag.Rol == "Admin")
-                { 
-                     <li class="nav-item">
+                {
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="Inspecciones" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/inspection.png" /></i> Inspecciones
                         </a>
-                     </li>
-                     <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="RegistroRAC" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/alert.png" /></i> RAC
                         </a>
-                     </li>
-                     <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="IngresoSalidaRS" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/ingreso-salida.png" /></i> Ingreso y Salida de Residuos Sólidos
                         </a>
-                     </li>
-                     <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="ManifiestoRS" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/manifiesto.png" /></i> Control de Manifiestos de Residuos Sólidos
                         </a>
-                     </li>
-                     <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/alert-red.png" /></i> Informe Investigación Final Incidentes
                         </a>
-                     </li>
-                     <li class="nav-item">
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" asp-controller="AvistamientoFauna" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/pajaro.png" /></i> Avistamiento de Fauna
                         </a>
-                     </li>
-                      <li class="nav-item nav-dropdown">
-                          <a class="nav-link nav-dropdown-toggle" href="#">
-                              <i class="nav-icon"><img src="~/img/icons/ajustes.png" /></i> Gestor Tablas Maestras
-                          </a>
-                          <ul class="nav-dropdown-items">
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
+                    </li>
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon"><img src="~/img/icons/ajustes.png" /></i> Gestor Tablas Maestras
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorUsuarios" asp-action="Usuarios">Usuarios</a>
 
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Acto/Condición</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">Ingreso/Salida Residuos Sólidos</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorManifiestoRS" asp-action="Resumen">Manifiesto Residuos Sólidos</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorIncidentes" asp-action="Resumen">Incidentes Ambientales</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorIncidentes" asp-action="ResumenImpacto">Componentes Ambientales</a>
-                              </li>
-                              <li class="nav-item">
-                                  <a class="nav-link" asp-controller="GestorAvistamientoFauna" asp-action="Resumen">Avistamiento de Fauna</a>
-                              </li>
-                          </ul>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorEGTC" asp-action="EGTCs">Empresas, Gerencias y Tipos de Acto/Condición</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">Información del Sistema</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">Ingreso/Salida Residuos Sólidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorManifiestoRS" asp-action="Resumen">Manifiesto Residuos Sólidos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorIncidentes" asp-action="Resumen">Incidentes Ambientales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorIncidentes" asp-action="ResumenImpacto">Componentes Ambientales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorAvistamientoFauna" asp-action="Resumen">Avistamiento de Fauna</a>
+                            </li>
+                        </ul>
                     </li>
                 }
                 @if (ViewBag.Rol == "Contratista")
-                { 
+                {
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
-                            <i class="nav-icon"><img src="~/img/icons/ingreso-salida.png"/></i> Ingreso y Salida de Residuos Sólidos
+                            <i class="nav-icon"><img src="~/img/icons/ingreso-salida.png" /></i> Ingreso y Salida de Residuos Sólidos
                         </a>
                         <ul class="nav-dropdown-items">
                             <li class="nav-item">
@@ -222,8 +245,9 @@
                         </ul>
                     </li>
                 }
-                <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="SignOut"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Cerrar Sesión</a></li>}
-            
+                <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="SignOut"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Cerrar Sesión</a></li>
+}
+
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>
