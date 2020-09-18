@@ -174,7 +174,7 @@
                 @if (Model.Estado == EstadosRAC.Registrado.ToString()  || Model.Estado == EstadosRAC.Ampliado.ToString()|| Model.Estado == EstadosRAC.Rechazado.ToString())
                 {
                     <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Cierre" data-valmsg-replace="true">
-                        <span id="danger_evidencia" class=""></span>
+                        <span id="danger_evidencia" class="text-danger"></span>
                     </span>
                     if (ViewBag.Permiso)
                     {
@@ -194,6 +194,7 @@
             <div class="col-sm-12 col-md-12 col-lg-4">
                 @if ((Model.Estado == EstadosRAC.Registrado.ToString() || Model.Estado == EstadosRAC.Ampliado.ToString() || Model.Estado == EstadosRAC.Rechazado.ToString()) && ViewBag.Permiso)
                 {
+                    <span id="danger_comentario" class="text-danger" asp-validation-for="Comentario_Cierre"></span>
                     <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250"></textarea>
                 }
                 else
@@ -282,14 +283,15 @@
         });
 
         function guardar() {
-
-            if ($("#Evidencia_Cierre").get(0).files.length === 0) {
-                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
-                return false;
+            if ($("#Evidencia_Cierre").get(0).files.length != 0 && $("#Comentario_Cierre").val() != "") {
+                $("#Modal_Enviando_Correo").modal('show')
+                $("#form_implementarRAC").submit();
+            } else {
+                if ($("#Evidencia_Cierre").get(0).files.length === 0)
+                    $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
+                if ($("#Comentario_Cierre").val() == "")
+                    $("#danger_comentario").html("Debe ingresar un comentario<br/>");
             }
-            $("#Modal_Enviando_Correo").modal('show')
-            $("#form_implementarRAC").submit();
-            return true;
         }
     </script>
 }

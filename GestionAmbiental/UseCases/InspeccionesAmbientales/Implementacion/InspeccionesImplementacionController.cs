@@ -396,7 +396,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 return "NoAutorizado";
             else
             {*/
-            Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion;
+            Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaI;
 
             var serverInfo = await _info_SGA.Execute(directorio);
 
@@ -487,7 +487,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion;
+                Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaI;
 
                 var serverInfo = await _info_SGA.Execute(directorio);
                 string host = "", port = "", user = "", pass = "", dir = "";

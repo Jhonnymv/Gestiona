@@ -108,7 +108,6 @@
                         </ul>
                     </li>
                     <!--Avistamiento Fauna-->
-                    @if (ViewBag.Rol == "AsesorMAP"){
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
                             <i class="nav-icon"><img src="~/img/icons/pajaro.png" /></i> Avistamiento de Fauna
@@ -117,15 +116,18 @@
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="AvistamientoFauna" asp-action="Resumen">Avistamiento de Fauna</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="AvistamientoFaunaMA" asp-action="Resumen">Avistamiento de Fauna MA</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="ReportesAvistamientoFauna" asp-action="Resumen">Reportes Estadísticos</a>
-                            </li>
+                            @if (ViewBag.Rol == "AsesorMAP")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="AvistamientoFaunaMA" asp-action="Resumen">Avistamiento de Fauna MA</a>
+                                </li>                                
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ReportesAvistamientoFauna" asp-action="Resumen">Reportes Estadísticos</a>
+                                </li>
+                            }
                         </ul>
                     </li>
-                    }
+                    
                  }
                 @if (ViewBag.Rol == "Admin")
                 { 

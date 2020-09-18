@@ -232,7 +232,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                 }
             }
             //var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
-            return RedirectToAction("ImplementarRAC", new { IdRAC = model.Id_RAC });
+            return RedirectToAction("ImplementarRAC", new { IdRAC = _protector.Protect(model.Id_RAC.ToString()) });
         }
 
         private string CreateUniqueFileName(int nFile)

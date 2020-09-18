@@ -75,8 +75,13 @@
             <span class="text-danger" asp-validation-for="IdNombreComun"></span>
             <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun"></select>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
-            <img id="img_referencia" style="width:100%;height:15rem;max-width:100%;display:none" />
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-2 d-flex justify-content-start">
+            <div id="card_img_referencia" class="card" style="width:auto;display: none;">
+                <img id="img_referencia" style="width:auto;height:10rem;max-width:100%" alt="imagen referencia" />
+                <div class="card-body">
+                    <p class="card-text text-center">Imagen de Referencia</p>
+                </div>
+            </div>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Cantidad"></label>
@@ -293,11 +298,14 @@
                 for (var i = 0; i < imagenesReferencia.length; i++) {
                     if (imagenesReferencia[i].id == nombreComun) {
                         $("#img_referencia").attr("src", imagenesReferencia[i].src);
-                        $("#img_referencia").show();
+                        $("#card_img_referencia").show();
                         return;
                     }
                 }
-                $("#img_referencia").hide();
+                $("#card_img_referencia").show();
+            }
+            else {
+                $("#card_img_referencia").hide();
             }
         });
         //Fotos
