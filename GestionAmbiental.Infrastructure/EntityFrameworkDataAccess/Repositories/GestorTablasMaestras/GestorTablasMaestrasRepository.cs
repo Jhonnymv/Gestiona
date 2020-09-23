@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.GestorTablasMaestras;
 using GestionAmbiental.Domain.AvistamientoFauna.Items;
+using GestionAmbiental.Domain.ConsumoAgua;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
@@ -1687,5 +1688,211 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
+        //Tb_Origen_Agua
+        public async Task<List<OrigenAgua>> GetOrigenAgua(string filtro){
+            var entities = await _context.Origenes_Agua.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+
+            var output = new List<OrigenAgua>();
+            foreach (var item in entities)
+            {
+                output.Add(new OrigenAgua
+                {
+                    IdOrigenAgua = item.Id_Origen_Agua,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<OrigenAgua> GetOrigenAgua(int id_origen_agua){
+            var entity = await _context.Origenes_Agua.FirstOrDefaultAsync(x => x.Id_Origen_Agua.Equals(id_origen_agua));
+            var output = new OrigenAgua
+            {
+                IdOrigenAgua = entity.Id_Origen_Agua,
+                Descripcion = entity.Descripcion,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddOrigenAgua(OrigenAgua OrigenAgua){
+            var entity = new Entities.ConsumoAgua.OrigenAgua
+            {
+                Descripcion = OrigenAgua.Descripcion,
+                Estado = "ACT"
+            };
+            _context.Origenes_Agua.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Origen_Agua;
+        }
+        public async Task UpdateOrigenAgua(OrigenAgua OrigenAgua){
+            var entity = await _context.Origenes_Agua.FirstOrDefaultAsync(x => x.Id_Origen_Agua.Equals(OrigenAgua.IdOrigenAgua));
+            entity.Descripcion = OrigenAgua.Descripcion;
+            entity.Estado = OrigenAgua.Estado;
+            _context.Origenes_Agua.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        //Tb_Fuente_Agua
+        public async Task<List<FuenteAgua>> GetFuenteAgua(string filtro){
+            var entities = await _context.Fuentes_Agua.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+            var origenes = await _context.Origenes_Agua.ToListAsync();
+            var output = new List<FuenteAgua>();
+            foreach (var item in entities)
+            {
+                var origen = origenes.FirstOrDefault(x => x.Id_Origen_Agua.Equals(item.Id_Origen_Agua));
+                output.Add(new FuenteAgua
+                {
+                    IdFuenteAgua = item.Id_Fuente_Agua,
+                    OrigenAgua = new OrigenAgua
+                    {
+                        IdOrigenAgua = origen.Id_Origen_Agua,
+                        Descripcion = origen.Descripcion,
+                        Estado = origen.Estado
+                    },
+                    Descripcion = item.Descripcion,
+                    Coordenadas_UTM = item.Coordenadas_UTM,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<FuenteAgua> GetFuenteAgua(int id_fuente_agua){
+            var entity = await _context.Fuentes_Agua.FirstOrDefaultAsync(x => x.Id_Fuente_Agua.Equals(id_fuente_agua));
+            var origen = await _context.Origenes_Agua.FindAsync(entity.Id_Origen_Agua);
+            var output = new FuenteAgua
+            {
+                IdFuenteAgua = entity.Id_Fuente_Agua,
+                OrigenAgua = new OrigenAgua
+                {
+                    IdOrigenAgua = origen.Id_Origen_Agua,
+                    Descripcion = origen.Descripcion,
+                    Estado = origen.Estado
+                },
+                Descripcion = entity.Descripcion,
+                Coordenadas_UTM = entity.Coordenadas_UTM,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddFuenteAgua(FuenteAgua FuenteAgua){
+            var entity = new Entities.ConsumoAgua.FuenteAgua
+            {
+                Descripcion = FuenteAgua.Descripcion,
+                Coordenadas_UTM = FuenteAgua.Coordenadas_UTM,
+                Id_Origen_Agua = FuenteAgua.OrigenAgua.IdOrigenAgua,
+                Estado = "ACT"
+            };
+            _context.Fuentes_Agua.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Fuente_Agua;
+        }
+        public async Task UpdateFuenteAgua(FuenteAgua FuenteAgua)
+        {
+            var entity = await _context.Fuentes_Agua.FirstOrDefaultAsync(x => x.Id_Fuente_Agua.Equals(FuenteAgua.IdFuenteAgua));
+            entity.Descripcion = FuenteAgua.Descripcion;
+            entity.Coordenadas_UTM = FuenteAgua.Coordenadas_UTM;
+            entity.Id_Origen_Agua = FuenteAgua.OrigenAgua.IdOrigenAgua;
+            entity.Estado = FuenteAgua.Estado;
+            _context.Fuentes_Agua.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        //Tb_Resolucion_Consumo_Agua
+        public async Task<List<ResolucionConsumoAgua>> GetResolucionConsumoAgua(string filtro){
+            var entities = await _context.Resoluciones_Consumo_Agua.Where(x => x.Resolucion.Contains(filtro == null ? x.Resolucion : filtro)).OrderBy(x =>Int32.Parse(x.Anio)).ToListAsync();
+            var fuentes = await _context.Fuentes_Agua.ToListAsync();
+            var origenes = await _context.Origenes_Agua.ToListAsync();
+
+            var output = new List<ResolucionConsumoAgua>();
+            foreach (var item in entities)
+            {
+                var fuente = fuentes.FirstOrDefault(x => x.Id_Fuente_Agua.Equals(item.Id_Fuente_Agua));
+                var origen = origenes.FirstOrDefault(x => x.Id_Origen_Agua.Equals(fuente.Id_Origen_Agua));
+                output.Add(new ResolucionConsumoAgua
+                {
+                    IdResolucionConsumoAgua = item.Id_Resolucion_Consumo_Agua,
+                    FuenteAgua = new FuenteAgua
+                    {
+                        IdFuenteAgua = fuente.Id_Fuente_Agua,
+                        Descripcion = fuente.Descripcion,
+                        Coordenadas_UTM =fuente.Coordenadas_UTM,
+                        OrigenAgua = new OrigenAgua
+                        {
+                            IdOrigenAgua = origen.Id_Origen_Agua,
+                            Descripcion = origen.Descripcion,
+                            Estado = origen.Estado
+                        },
+                        Estado = fuente.Estado
+                    },
+                    Anio = item.Anio,
+                    Actividad = item.Actividad,
+                    ClaseDerecho = item.Clase_Derecho,
+                    Resolucion= item.Resolucion,
+                    TipoUso = item.Tipo_Uso,
+                    VolumenOtorgado = item.Volumen_Otorgado,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<ResolucionConsumoAgua> GetResolucionConsumoAgua(int id_resolucion)
+        {
+            var entity = await _context.Resoluciones_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Resolucion_Consumo_Agua.Equals(id_resolucion));
+            var fuente = await _context.Fuentes_Agua.FindAsync(entity.Id_Fuente_Agua);
+            var origen = await _context.Origenes_Agua.FindAsync(fuente.Id_Origen_Agua);
+
+            var output = new ResolucionConsumoAgua
+            {
+                IdResolucionConsumoAgua = entity.Id_Resolucion_Consumo_Agua,
+                FuenteAgua = new FuenteAgua
+                {
+                    IdFuenteAgua = fuente.Id_Fuente_Agua,
+                    Descripcion = fuente.Descripcion,
+                    Coordenadas_UTM = fuente.Coordenadas_UTM,
+                    OrigenAgua = new OrigenAgua
+                    {
+                        IdOrigenAgua = origen.Id_Origen_Agua,
+                        Descripcion = origen.Descripcion,
+                        Estado = origen.Estado
+                    },
+                    Estado = fuente.Estado
+                },
+                Anio = entity.Anio,
+                Actividad = entity.Actividad,
+                ClaseDerecho = entity.Clase_Derecho,
+                Resolucion = entity.Resolucion,
+                TipoUso = entity.Tipo_Uso,
+                VolumenOtorgado = entity.Volumen_Otorgado,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua){
+            var entity = new Entities.ConsumoAgua.ResolucionConsumoAgua
+            {
+                Resolucion = ResolucionConsumoAgua.Resolucion,
+                Actividad = ResolucionConsumoAgua.Actividad,
+                Anio = ResolucionConsumoAgua.Anio,
+                Id_Fuente_Agua = ResolucionConsumoAgua.FuenteAgua.IdFuenteAgua,
+                Clase_Derecho = ResolucionConsumoAgua.ClaseDerecho,
+                Tipo_Uso = ResolucionConsumoAgua.TipoUso,
+                Volumen_Otorgado = ResolucionConsumoAgua.VolumenOtorgado,
+                Estado = "ACT"
+            };
+            _context.Resoluciones_Consumo_Agua.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Resolucion_Consumo_Agua;
+        }
+        public async Task UpdateResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua)
+        {
+            var entity = await _context.Resoluciones_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Resolucion_Consumo_Agua.Equals(ResolucionConsumoAgua.IdResolucionConsumoAgua));
+            entity.Resolucion = ResolucionConsumoAgua.Resolucion;
+                entity.Actividad = ResolucionConsumoAgua.Actividad;
+                entity.Anio = ResolucionConsumoAgua.Anio;
+                entity.Id_Fuente_Agua = ResolucionConsumoAgua.FuenteAgua.IdFuenteAgua;
+                entity.Clase_Derecho = ResolucionConsumoAgua.ClaseDerecho;
+                entity.Tipo_Uso = ResolucionConsumoAgua.TipoUso;
+                entity.Volumen_Otorgado = ResolucionConsumoAgua.VolumenOtorgado;
+            _context.Resoluciones_Consumo_Agua.Update(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

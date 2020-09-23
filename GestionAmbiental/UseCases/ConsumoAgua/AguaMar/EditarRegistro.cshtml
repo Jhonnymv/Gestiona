@@ -1,0 +1,135 @@
+﻿@model GestionAmbiental.UseCases.ConsumoAgua.AguaMar.ConsumoAguaMarModel
+@{
+    ViewData["Title"] = "EditarRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Editar Consumo de Agua</h2>
+    </div>
+</div>
+
+<form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="ConsumoAguaMar" method="post" enctype="multipart/form-data" autocomplete="off">
+    <div class="row mb-2 align-items-center">
+        <input type="hidden" class="form-control" asp-for="Id" value="@Model.Id" />
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="IdResolucion"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="IdResolucion"></span>
+            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Resoluciones" value="@Model.IdResolucion"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="FuenteAgua"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="FuenteAgua"></span>
+            <input type="text" class="form-control" asp-for="FuenteAgua" readonly />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha"></span>
+            <input type="date" class="form-control" asp-for="Fecha" />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="TiempoBombeo"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
+            <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="LecturaInicial"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="LecturaInicial"></span>
+            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="LecturaFinal"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="LecturaFinal"></span>
+            <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="VolumenAguaBombeado"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
+            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" readonly />
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="CaudalPromedio"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
+            <input type="number" class="form-control" asp-for="CaudalPromedio" readonly />
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaMar" asp-action="Resumen">Cancelar</a>
+        @*<button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>*@
+        <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
+</form>
+@section Scripts{
+    <script type="text/javascript">
+        var horas = 0;
+        var lecturaInicial = 0;
+        var lecturaFinal = 0;
+
+        $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
+            horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : "";
+            lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : "";
+            lecturaFinal = $("#LecturaFinal").val() != "" ? parseFloat($("#LecturaFinal").val()) : "";
+            //horas entre 0 y 24
+            if (horas != "" && (horas < 0 || horas > 24)) {
+                horas = 0;
+                $("#TiempoBombeo").val(0)
+                alert("El tiempo de bombeo no debe ser entre 0 y 24 horas");
+            }
+
+            if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
+                if (lecturaFinal >= lecturaInicial) {
+                    CalcularVolumenAguaBombeado();
+                    CalcularCaudalPromedio();
+                } else {
+                    alert("La lectura final debe ser mayor o igual a la inicial");
+                }
+            } else {
+                alert("Los valores deben se positivos");
+                if (horas < 0) {
+                    $("#TiempoBombeo").val(0);
+                    horas = 0;
+                }
+                if (lecturaInicial < 0) {
+                    $("#LecturaInicial").val(0);
+                    lecturaInicial = 0;
+                }
+                if (lecturaFinal < 0) {
+                    $("#LecturaFinal").val(0);
+                    lecturaFinal = 0;
+                }
+                CalcularVolumenAguaBombeado();
+                CalcularCaudalPromedio();
+            }
+        });
+        function CalcularVolumenAguaBombeado() {
+            var volumen = lecturaFinal - lecturaInicial;
+            $("#VolumenAguaBombeado").val(volumen);
+        }
+        function CalcularCaudalPromedio() {
+            var volumen = lecturaFinal - lecturaInicial;
+            var segundos = horas * 3600;
+            if (segundos > 0)
+                $("#CaudalPromedio").val((volumen / segundos).toFixed(2));
+            else
+                $("#CaudalPromedio").val(0);
+        }
+
+    </script>
+}

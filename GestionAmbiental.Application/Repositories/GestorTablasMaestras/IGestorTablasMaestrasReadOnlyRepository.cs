@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Domain.AvistamientoFauna.Items;
+using GestionAmbiental.Domain.ConsumoAgua;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
 using GestionAmbiental.Domain.ValueObjects;
@@ -199,11 +200,27 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task QuitarUsuario_Notificar_AF(int id_usuario_notificar);
         Task<int> AddUsuario_Notificar_AF(int Id_Usuario_AD);
 
-
         //Tb_Lugar_Referencia_Avistamiento
         Task<List<LugarReferencia>> GetLugarReferencia(string filtro);
-        Task<LugarReferencia> GetLugarReferencia(int id_tipo_avistamiento);
+        Task<LugarReferencia> GetLugarReferencia(int id_lugar_referencia);
         Task<int> AddLugarReferencia(LugarReferencia LugarReferencia);
         Task UpdateLugarReferencia(LugarReferencia LugarReferencia);
+        
+        //Tb_Origen_Agua
+        Task<List<OrigenAgua>> GetOrigenAgua(string filtro);
+        Task<OrigenAgua> GetOrigenAgua(int id_origen_agua);
+        Task<int> AddOrigenAgua(OrigenAgua OrigenAgua);
+        Task UpdateOrigenAgua(OrigenAgua OrigenAgua);
+        //Tb_Fuente_Agua
+        Task<List<FuenteAgua>> GetFuenteAgua(string filtro);
+        Task<FuenteAgua> GetFuenteAgua(int id_fuente_agua);
+        Task<int> AddFuenteAgua(FuenteAgua FuenteAgua);
+        Task UpdateFuenteAgua(FuenteAgua FuenteAgua);
+        //Tb_Resolucion_Consumo_Agua
+        Task<List<ResolucionConsumoAgua>> GetResolucionConsumoAgua(string filtro);
+        Task<ResolucionConsumoAgua> GetResolucionConsumoAgua(int id_resolucion);
+        Task<int> AddResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua);
+        Task UpdateResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua);
+
     }
 }

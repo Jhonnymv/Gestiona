@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="listItems">
+            <li class="nav-item">
+                <a class="nav-link active" id="Resoluciones" href="#Resoluciones">Resoluciones</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Fuentes_Agua" href="#Fuentes_Agua">Fuentes de Agua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Origenes_Agua" href="#Origenes_Agua">Origenes de Agua</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                <label>Buscar:</label>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro">
+            </div>
+            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                <button class="btn btn-primary" id="btn_enviar">Buscar</button>
+            </div>
+        </div>
+        <div class="row justify-content-start mt-2 mb-2">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+            </div>
+        </div>
+        <div class="row" id="tab_content">
+        </div>
+        <div class="row justify-content-center" id="paginado">
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltrarResolucionConsumoAgua(1);
+            $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarResolucionConsumoAgua");
+        });
+
+        $("#btn_enviar").on('click', function (e) {
+            if ($("#Resoluciones").hasClass("active")) {
+                FiltrarResolucionConsumoAgua(1);
+            }
+            if ($("#Fuentes_Agua").hasClass("active")) {
+                FiltrarFuenteAgua(1);
+            }
+            if ($("#Origenes_Agua").hasClass("active")) {
+                FiltrarOrigenAgua(1);
+            }/*
+            if ($("#Usuarios").hasClass("active")) {
+                FiltrarUsuario(1);
+            }*/
+        });
+        $("#Resoluciones").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarResolucionConsumoAgua");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarResolucionConsumoAgua(1);
+        });
+        $("#Fuentes_Agua").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarFuenteAgua");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarFuenteAgua(1);
+        });
+        $("#Origenes_Agua").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarOrigenAgua");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarOrigenAgua(1);
+        });
+        /*
+        $("#Usuarios").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarUsuario");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarUsuario(1);
+        });
+        */
+        function FiltrarResolucionConsumoAgua(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorConsumoAgua/FiltrarResolucionConsumoAgua",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarFuenteAgua(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorConsumoAgua/FiltrarFuenteAgua",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarOrigenAgua(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorConsumoAgua/FiltrarOrigenAgua",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        /*
+        function FiltrarUsuario(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorConsumoAgua/FiltrarUsuario",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        */
+    </script>
+}
+
+
+

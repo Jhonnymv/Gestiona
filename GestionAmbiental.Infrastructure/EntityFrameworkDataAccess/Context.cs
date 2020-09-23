@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ConsumoAgua;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.Items;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.ReportePreliminar;
@@ -78,6 +79,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Avistamiento_Fauna> Avistamientos_Fauna { get; set; }
         public DbSet<Log_Avistamiento_Fauna> Logs_Avistamiento_Fauna { get; set; }
         public DbSet<Usuario_Notificar_Avistamiento_Fauna> usuario_Notificar_Avistamiento_Fauna { get; set; }
+
+
+        public DbSet<ConsumoAgua> Consumos_Agua { get; set; }
+        public DbSet<LogConsumoAgua> Logs_Consumo_Agua { get; set; }
+        public DbSet<ResolucionConsumoAgua> Resoluciones_Consumo_Agua { get; set; }
+        public DbSet<OrigenAgua> Origenes_Agua { get; set; }
+        public DbSet<FuenteAgua> Fuentes_Agua { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -204,6 +212,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Log_Avistamiento_Fauna");
             modelBuilder.Entity<Usuario_Notificar_Avistamiento_Fauna>()
                 .ToTable("Tb_Usuarios_Notificar_Avistamiento_Fauna");
+
+            modelBuilder.Entity<OrigenAgua>()
+               .ToTable("Tb_Origen_Agua");
+            modelBuilder.Entity<FuenteAgua>()
+               .ToTable("Tb_Fuente_Agua");
+            modelBuilder.Entity<ConsumoAgua>()
+               .ToTable("Tb_Consumo_Agua");
+            modelBuilder.Entity<LogConsumoAgua>()
+               .ToTable("Tb_Log_Consumo_Agua");
+            modelBuilder.Entity<ResolucionConsumoAgua>()
+               .ToTable("Tb_Resolucion_Consumo_Agua");
         }
     }
 }

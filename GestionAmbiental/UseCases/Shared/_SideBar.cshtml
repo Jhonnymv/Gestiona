@@ -141,13 +141,15 @@
                         <!--Consumo de Agua-->
                         <li class="nav-item nav-dropdown">
                             <a class="nav-link nav-dropdown-toggle" href="#">
-                                <i class="nav-icon"><img src="~/img/icons/pajaro.png" /></i> Consumo de Agua
+                                <i class="nav-icon"><img src="~/img/icons/gotas.png" /></i> Consumo de Agua
                             </a>
                             <ul class="nav-dropdown-items">
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="ConsumoAguaMar" asp-action="Resumen">Agua de Mar</a>
                                 </li>
-
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">Agua Subterranea</a>
+                                </li>
                             </ul>
                         </li>
                     }
@@ -212,6 +214,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" asp-controller="GestorAvistamientoFauna" asp-action="Resumen">Avistamiento de Fauna</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorConsumoAgua" asp-action="Resumen">Consumo de Agua</a>
                             </li>
                         </ul>
                     </li>

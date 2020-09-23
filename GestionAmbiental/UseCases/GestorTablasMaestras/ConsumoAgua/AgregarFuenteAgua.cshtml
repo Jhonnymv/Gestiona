@@ -1,0 +1,53 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model.FuenteAguaModel
+@{
+    ViewData["Title"] = "AgregarFuenteAgua";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar Fuente de Agua</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="AgregarFuenteAgua">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <input type="text" class="form-control" asp-for="Descripcion">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Coordenadas_UTM"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Coordenadas_UTM"></span>
+                    <input type="text" class="form-control" asp-for="Coordenadas_UTM">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="IdOrigenAgua"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="IdOrigenAgua"></span>
+                    <select class="form-control" asp-for="IdOrigenAgua" asp-items="ViewBag.OrigenesAgua">
+                    </select>
+                </div>
+                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
