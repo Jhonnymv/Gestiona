@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAguaMasivo;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua.FuenteAgua.AgregarFuenteAgua;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua.FuenteAgua.EditarFuenteAgua;
@@ -43,6 +44,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 
         private readonly IRegistrarConsumoAguaMasivo _registrarConsumoAguaMasivo;
         private ExcelLecturaEscritura _excelLecturaEscritura;
+        private readonly ISelectItems _selectItems;
+
         public GestorConsumoAguaController(
             IAgregarFuenteAgua agregarFuenteAgua, 
             IEditarFuenteAgua editarFuenteAgua,
@@ -57,7 +60,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             IGetResolucion getResolucion, 
             IGetResoluciones getResoluciones,
             IRegistrarConsumoAguaMasivo registrarConsumoAguaMasivo,
-            ExcelLecturaEscritura excelLecturaEscritura)
+            ISelectItems selectItems)
         {
             _agregarFuenteAgua = agregarFuenteAgua;
             _editarFuenteAgua = editarFuenteAgua;
@@ -72,7 +75,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             _getResolucion = getResolucion;
             _getResoluciones = getResoluciones;
             _registrarConsumoAguaMasivo = registrarConsumoAguaMasivo;
-            _excelLecturaEscritura = excelLecturaEscritura;
+            _selectItems = selectItems;
         }
 
         public async Task<IActionResult> Resumen()
@@ -91,7 +94,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             }
         }
         //Cargar datos de Excel
-        public async Task<IActionResult> CargaDataExcel()
+        public async Task<IActionResult> CargaDataExcel(string message, string result)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -99,12 +102,30 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             }
             else
             {
-                var resoluciones = await _getResoluciones.Execute();
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var resolucionesVB = resoluciones.Resoluciones.Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
-                resolucionesVB.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-                ViewBag.Resoluciones = resolucionesVB;
+                var items = await _selectItems.GetSelectItems();
+
+                var resoluciones = new List<SelectListItem>();
+                foreach (var grupo in items.ItemsOrigenes)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Descripcion, Disabled = false };
+                    resoluciones.AddRange(items.ItemsResoluciones.Where(y => y.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(grupo.IdOrigenAgua)).OrderBy(x => x.Resolucion).Select(i => new SelectListItem() { Value = i.IdResolucionConsumoAgua.ToString(), Text = i.Resolucion, Group = nuevoGrupo }).ToList());
+                }
+
+                 items.ItemsResoluciones.Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var fuentesAgua = items.ItemsResoluciones.Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+
+                ViewBag.Resoluciones = resoluciones;
+                ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.Result = result;
+                ViewBag.Message = message;
+
                 return View();
             }
         }
@@ -113,48 +134,44 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (ModelState.IsValid)
             {
-                var stream = model.Excel.OpenReadStream();
-                _excelLecturaEscritura = new ExcelLecturaEscritura(stream,model.Pagina,model.FilaInicio,model.ColumnaInicio);
-                var data = _excelLecturaEscritura.ObtenerDatos();
-                                
-                var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
-
-                foreach (var consumo in data)
+                try
                 {
-                    if(consumo.TiempoBombeo!=0 && consumo.LecturaInicial != 0 && consumo.LecturaFinal != 0)
-                    {
-                        input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
-                        {
-                            IdResolucionConsumoAgua = model.Resolucion,
-                            Fecha = consumo.Fecha,
-                            TiempoBombeo = consumo.TiempoBombeo,
-                            LecturaInicial = consumo.LecturaInicial,
-                            LecturaFinal = consumo.LecturaFinal,
-                            VolumenBombeado = consumo.LecturaFinal -consumo.LecturaInicial,
-                            CaudalPromedio = (consumo.LecturaFinal - consumo.LecturaInicial)/(consumo.TiempoBombeo*3600)
-                        });
-                    }
-                }
+                    var stream = model.Excel.OpenReadStream();
+                    _excelLecturaEscritura = new ExcelLecturaEscritura(stream, model.Pagina, model.FilaInicio, model.ColumnaInicio);
 
-                var agregados = await _registrarConsumoAguaMasivo.Execute(input, "kevin");
-                
+                    if (!_excelLecturaEscritura.ValidarExistenciaPagina())
+                        return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: No se encontró la hoja en el archivo Excel", result = "Error" });
+
+                    var data = _excelLecturaEscritura.ObtenerDatos();
+
+                    var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
+
+                    foreach (var consumo in data)
+                    {
+                        if (consumo.TiempoBombeo != 0 && consumo.LecturaInicial != 0 && consumo.LecturaFinal != 0)
+                        {
+                            input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
+                            {
+                                IdResolucionConsumoAgua = model.Resolucion,
+                                Fecha = consumo.Fecha,
+                                TiempoBombeo = consumo.TiempoBombeo,
+                                LecturaInicial = consumo.LecturaInicial,
+                                LecturaFinal = consumo.LecturaFinal,
+                                VolumenBombeado = consumo.LecturaFinal - consumo.LecturaInicial,
+                                CaudalPromedio = (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600)
+                            });
+                        }
+                    }
+                    var agregados = await _registrarConsumoAguaMasivo.Execute(input, "kevin");
+                    return RedirectToAction("CargaDataExcel", new { message = "Se agregaron " + agregados + " registros", result = "Success" });
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: " + e.Message, result = "Error" });
+                }
             }
-            /*
-             function CalcularVolumenAguaBombeado() {
-            var volumen = lecturaFinal - lecturaInicial;
-            $("#VolumenAguaBombeado").val(volumen);
-        }
-        function CalcularCaudalPromedio() {
-            var volumen = lecturaFinal - lecturaInicial;
-            var segundos = horas * 3600;
-            if (segundos > 0)
-                $("#CaudalPromedio").val((volumen / segundos).toFixed(2));
-            else
-                $("#CaudalPromedio").val(0);
-        }
-             */
-            return RedirectToAction("CargaDataExcel");
-        }
+            return RedirectToAction("CargaDataExcel", new { message = "" });
+        }   
 
         //Origen Agua
         [HttpPost]

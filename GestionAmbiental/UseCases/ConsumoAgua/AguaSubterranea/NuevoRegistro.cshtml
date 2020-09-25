@@ -69,6 +69,14 @@
             <input type="number" class="form-control" asp-for="CaudalPromedio" step="0.01" readonly />
         </div>
     </div>
+    @if (ViewBag.Message != null)
+    {
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert" style="text-align:center;">@ViewBag.Message</div>
+            </div>
+        </div>
+    }
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">Cancelar</a>
         @*<button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>*@
@@ -96,36 +104,37 @@
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : "";
             lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : "";
             lecturaFinal = $("#LecturaFinal").val() != "" ? parseFloat($("#LecturaFinal").val()) : "";
-            //horas entre 0 y 24
-            if (horas!="" && (horas < 0 || horas > 24)) {
-                horas = 0;
-                $("#TiempoBombeo").val(0)
-                alert("El tiempo de bombeo no debe ser entre 0 y 24 horas");
-            }
-
-            if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
-                if (lecturaFinal >= lecturaInicial) {
+            if (horas != "" && lecturaInicial != "" && lecturaFinal != "") {
+                //horas entre 0 y 24
+                if (horas != "" && (horas < 0 || horas > 24)) {
+                    horas = 0;
+                    $("#TiempoBombeo").val(0)
+                    alert("El tiempo de bombeo no debe ser entre 0 y 24 horas");
+                }
+                if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
+                    if (lecturaFinal >= lecturaInicial) {
+                        CalcularVolumenAguaBombeado();
+                        CalcularCaudalPromedio();
+                    } else {
+                        alert("La lectura final debe ser mayor o igual a la inicial");
+                    }
+                } else {
+                    alert("Los valores deben se positivos");
+                    if (horas < 0) {
+                        $("#TiempoBombeo").val(0);
+                        horas = 0;
+                    }
+                    if (lecturaInicial < 0) {
+                        $("#LecturaInicial").val(0);
+                        lecturaInicial = 0;
+                    }
+                    if (lecturaFinal < 0) {
+                        $("#LecturaFinal").val(0);
+                        lecturaFinal = 0;
+                    }
                     CalcularVolumenAguaBombeado();
                     CalcularCaudalPromedio();
-                } else {
-                    alert("La lectura final debe ser mayor o igual a la inicial");
                 }
-            } else {
-                alert("Los valores deben se positivos");
-                if (horas < 0) {
-                    $("#TiempoBombeo").val(0);
-                    horas = 0;
-                }
-                if (lecturaInicial < 0) {
-                    $("#LecturaInicial").val(0);
-                    lecturaInicial = 0;
-                }
-                if (lecturaFinal < 0) {
-                    $("#LecturaFinal").val(0);
-                    lecturaFinal = 0;
-                }
-                CalcularVolumenAguaBombeado();
-                CalcularCaudalPromedio();
             }
         });
         function CalcularVolumenAguaBombeado() {

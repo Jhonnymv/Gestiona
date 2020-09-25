@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\**" />
+    <Content Remove="Views\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
@@ -44,8 +51,6 @@
     <Folder Include="logs\" />
     <Folder Include="UseCases\Notificaciones\Inspecciones\" />
     <Folder Include="UseCases\Notificaciones\RAC\" />
-    <Folder Include="Views\ConsumoAguaSubterranea\" />
-    <Folder Include="Views\GestorConsumoAgua\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />

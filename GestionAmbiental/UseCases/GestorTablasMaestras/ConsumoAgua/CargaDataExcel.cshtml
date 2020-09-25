@@ -15,7 +15,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="ColumnaInicio"></span>
-            <input type="number" class="form-control" asp-for="ColumnaInicio" value="2"/>
+            <input type="number" class="form-control" asp-for="ColumnaInicio" value="2" />
         </div>
     </div>
     <div class="row justify-content-center">
@@ -24,7 +24,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="FilaInicio"></span>
-            <input type="number" class="form-control" asp-for="FilaInicio" value="8"/>
+            <input type="number" class="form-control" asp-for="FilaInicio" value="8" />
         </div>
     </div>
     <div class="row justify-content-center">
@@ -47,6 +47,15 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="FuenteAgua"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="FuenteAgua"></span>
+            <input type="text" class="form-control" asp-for="FuenteAgua" readonly/>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Excel"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
@@ -57,8 +66,69 @@
             <input type="file" style="visibility:hidden; display:none" asp-for="Excel" accept=".xls, .xlsx">
         </div>
     </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label id="files_name">No se ha seleccionado ningun archivo</label>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12">
+            @if (ViewBag.Result != null)
+            {
+                @if (ViewBag.Result == "Success")
+                {
+                    <div class="alert alert-success" role="alert" style="text-align:center;">@ViewBag.Message</div>
+                }
+                else
+                {
+                    <div class="alert alert-danger" role="alert" style="text-align:center;">@ViewBag.Message</div>
+                }
+            }
+        </div>
+    </div>
+    <div class="row justify-content-center">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="GestorConsumoAgua" asp-action="Resumen">Cancelar</a>
         <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
 </form>
+
+@section Scripts{
+    <script type="text/javascript">
+        var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
+        $("#Excel").change(function () {
+            $("#danger_excel").html("");
+            //Validacion del tamaño del archivo
+            var archivos = $("#Excel").get(0).files;
+
+            if (archivos.length > 0) {
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'xls':
+                        case 'xlsx':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_excel").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        $("#Resolucion").on('change', function () {
+            var resol = $("#Resolucion").val();
+            for (var i = 0; i < fuentesAgua.length; i++) {
+                if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
+                    $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+                    return;
+                }
+            }
+        });
+    </script>
+}

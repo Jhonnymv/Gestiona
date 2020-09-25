@@ -24,5 +24,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model
         [DisplayName("Resolución a la cual pertenecen los datos:")]
         [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public int Resolucion { get; set; }
+        public string FuenteAgua { get; set; }
     }
 }

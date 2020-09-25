@@ -12,6 +12,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
     public class ExcelLecturaEscritura
     {
         protected IWorkbook Workbook;
+        protected ISheet sheet;
         protected string Pagina;
         protected int Fila;
         protected int Columna;
@@ -30,31 +31,40 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             Fila = fila-1;
             Columna = columna-1;
         }
-       public List<ConsumoAguaModel> ObtenerDatos()
+        public bool ValidarExistenciaPagina()
+        {
+            var result = true;
+            sheet = Workbook.GetSheet(Pagina);
+            if (sheet == null)
+                result = false;
+
+            return result;
+        }
+        public List<ConsumoAguaModel> ObtenerDatos()
         {
             var output = new List<ConsumoAguaModel>();
-            ISheet sheet = Workbook.GetSheet(Pagina);
 
-            for (int row = Fila; row <= sheet.LastRowNum; row++)
-            {
-                var sheetRow = sheet.GetRow(row);
-                if (sheetRow != null) //null is when the row only contains empty cells 
+            if (sheet != null)
+                for (int row = Fila; row <= sheet.LastRowNum; row++)
                 {
-                    var outputItem = new ConsumoAguaModel();
-                    for (int column = Columna; column < Columna+4; column++)
+                    var sheetRow = sheet.GetRow(row);
+                    if (sheetRow != null) //null is when the row only contains empty cells 
                     {
-                        if (column == Columna)
-                            outputItem.Fecha = sheetRow.GetCell(column).DateCellValue;
-                        else if (column == Columna+1)
-                            outputItem.TiempoBombeo = sheetRow.GetCell(column).NumericCellValue;
-                        else if(column == Columna+2)
-                            outputItem.LecturaInicial = sheetRow.GetCell(column).NumericCellValue;
-                        else if(column == Columna+3)
-                            outputItem.LecturaFinal = sheetRow.GetCell(column).NumericCellValue;
+                        var outputItem = new ConsumoAguaModel();
+                        for (int column = Columna; column < Columna + 4; column++)
+                        {
+                            if (column == Columna)
+                                outputItem.Fecha = sheetRow.GetCell(column).DateCellValue;
+                            else if (column == Columna + 1)
+                                outputItem.TiempoBombeo = sheetRow.GetCell(column).NumericCellValue;
+                            else if (column == Columna + 2)
+                                outputItem.LecturaInicial = sheetRow.GetCell(column).NumericCellValue;
+                            else if (column == Columna + 3)
+                                outputItem.LecturaFinal = sheetRow.GetCell(column).NumericCellValue;
+                        }
+                        output.Add(outputItem);
                     }
-                    output.Add(outputItem);
-                }                    
-            }
+                }
             return output;
         }
     }

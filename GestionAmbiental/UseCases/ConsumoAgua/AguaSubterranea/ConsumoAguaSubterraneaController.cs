@@ -73,7 +73,6 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                     var IdEncriptado = _protector.Protect(fila.IdConsumoAgua.ToString());
                     filasTabla += "<tr>";
 
-                    filasTabla += "<td><a href=\"/ConsumoAguaMar/EditarRegistro?IdConsumo=" + IdEncriptado + "\">" + fila.IdConsumoAgua + "</a></td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy") + "</td>";
                     filasTabla += "<td>" + fila.TiempoBombeo + "</td>";
@@ -81,6 +80,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                     filasTabla += "<td>" + String.Format("{0:0.00}", fila.LecturaFinal) + "</td>";
                     filasTabla += "<td>" + String.Format("{0:0.00}", fila.VolumenBombeado) + "</td>";
                     filasTabla += "<td>" + String.Format("{0:0.00}", fila.CaudalPromedio) + "</td>";
+                    filasTabla += "<td><a href=\"/ConsumoAguaSubterranea/EditarRegistro?IdConsumo=" + IdEncriptado + "\">Ver Detalles</a></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -114,7 +114,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             return Ok(response);
         }
 
-        public async Task<IActionResult> NuevoRegistro()
+        public async Task<IActionResult> NuevoRegistro(string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -137,6 +137,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.Message = message;
 
                 return View();
             }
@@ -147,18 +148,27 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var volumenAguaBombeado = CalcularVolumenAguaBombeado(model.LecturaInicial, model.LecturaFinal);
+                var caudalPromedio = CalcularCaudalPromedio(model.LecturaInicial, model.LecturaFinal, model.TiempoBombeo);
+                if (volumenAguaBombeado != -1 && caudalPromedio != -1)
+                {
 
-                var id = await _registrarConsumoAgua.Execute(
-                    model.IdResolucion,
-                    model.Fecha,
-                    model.TiempoBombeo,
-                    model.LecturaInicial,
-                    model.LecturaFinal,
-                    model.VolumenAguaBombeado,
-                    model.CaudalPromedio,
-                    userInfo.NombreUsuario);
+                    var id = await _registrarConsumoAgua.Execute(
+                        model.IdResolucion,
+                        model.Fecha,
+                        model.TiempoBombeo,
+                        model.LecturaInicial,
+                        model.LecturaFinal,
+                        volumenAguaBombeado,
+                        caudalPromedio,
+                        userInfo.NombreUsuario);
 
-                return RedirectToAction("Resumen");
+                    return RedirectToAction("Resumen");
+                }
+                else
+                {
+                    return RedirectToAction("NuevoRegistro",new { message = "Los valores ingresados son incorrectos"});
+                }
             }
             return RedirectToAction("Resumen");
         }
@@ -211,19 +221,37 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                await _editarConsumoAgua.Execute(
-                    model.Id,
-                    model.IdResolucion,
-                    model.Fecha,
-                    model.TiempoBombeo,
-                    model.LecturaInicial,
-                    model.LecturaFinal,
-                    model.VolumenAguaBombeado,
-                    model.CaudalPromedio);
+                var volumenAguaBombeado = CalcularVolumenAguaBombeado(model.LecturaInicial, model.LecturaFinal);
+                var caudalPromedio = CalcularCaudalPromedio(model.LecturaInicial, model.LecturaFinal, model.TiempoBombeo);
+                if (volumenAguaBombeado != -1 && caudalPromedio != -1)
+                {
+                    await _editarConsumoAgua.Execute(
+                        model.Id,
+                        model.IdResolucion,
+                        model.Fecha,
+                        model.TiempoBombeo,
+                        model.LecturaInicial,
+                        model.LecturaFinal,
+                        model.VolumenAguaBombeado,
+                        model.CaudalPromedio);
+                }
             }
             var encriptado = _protector.Protect(model.Id.ToString());
             return RedirectToAction("EditarRegistro", new { IdConsumo = encriptado });
+        }
+        private double CalcularVolumenAguaBombeado(double lecturaInicial,double lecturaFinal)
+        {
+            if (lecturaFinal - lecturaInicial >= 0)
+                return lecturaFinal - lecturaInicial;
+            else
+                return -1;
+        }
+        private double CalcularCaudalPromedio(double lecturaInicial,double lecturaFinal,double horas)
+        {
+            if (((lecturaFinal - lecturaInicial) / (horas * 3600)) >= 0)
+                return (lecturaFinal - lecturaInicial) / (horas * 3600);
+            else
+                return -1;
         }
     }
 }
