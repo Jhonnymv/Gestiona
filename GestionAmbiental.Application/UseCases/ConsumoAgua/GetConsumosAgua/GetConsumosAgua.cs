@@ -16,13 +16,15 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua
             _getConsumoAguaReadOnlyRepository = getConsumoAguaReadOnlyRepository ?? throw new ArgumentNullException(nameof(getConsumoAguaReadOnlyRepository));
         }
 
-        public async Task<ConsumosAguaOutput> Execute(string fecha, int pagina, int rpp)
+        public async Task<ConsumosAguaOutput> Execute(string fecha, int pagina, int rpp,int origen_agua)
         {
             DateTime? fechaFiltro = null;
             if (fecha != null)
                 fechaFiltro = Convert.ToDateTime(fecha);
 
             var data = await _getConsumoAguaReadOnlyRepository.GetConsumosAgua(fechaFiltro);
+            data = data.Where(x=>x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.Fecha).ToList();
+
             var output = new ConsumosAguaOutput();
             output.Consumos = new List<ConsumoAguaOutput>();
             output.NConsumo = data.Count;

@@ -34,5 +34,23 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
 
             return output;
         }
+        public async Task<ResolucionesConsumoAguaOutput> Execute()
+        {
+            var input = await _gestorTablasMaestrasReadOnlyRepository.GetResolucionConsumoAgua(null);
+
+            var outputs = new List<ResolucionConsumoAguaOutput>();
+            foreach (var item in input)
+            {
+                var temp = new ResolucionConsumoAguaOutput(item);
+                outputs.Add(temp);
+            }
+            var output = new ResolucionesConsumoAguaOutput
+            {
+                NResoluciones = input.Count,
+                Resoluciones = outputs
+            };
+
+            return output;
+        }
     }
 }

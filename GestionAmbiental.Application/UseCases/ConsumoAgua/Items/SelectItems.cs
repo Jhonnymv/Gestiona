@@ -18,8 +18,10 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.Items
         public async Task<SelectItemsOutput> GetSelectItems()
         {
             var resoluciones = await _getItemsReadOnlyRepository.GetReslucionesConsumoAgua();
+            var origenes = await _getItemsReadOnlyRepository.GetOrigenesAgua();
             var output = new SelectItemsOutput();
             output.ItemsResoluciones = resoluciones;
+            output.ItemsOrigenes = origenes;
             return output;
         }
     }

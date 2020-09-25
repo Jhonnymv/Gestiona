@@ -7,6 +7,7 @@ using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAgua;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,19 +22,23 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
         private readonly IEditarConsumoAgua _editarConsumoAgua;
         private readonly ISelectItems _selectItems;
+        private readonly IDataProtector _protector;
 
         public ConsumoAguaMarController(
             IGetConsumosAgua getConsumosAgua, 
             IGetConsumoAgua getConsumoAgua, 
             IRegistrarConsumoAgua registrarConsumoAgua,
             IEditarConsumoAgua editarConsumoAgua,
-            ISelectItems selectItems)
+            ISelectItems selectItems,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getConsumosAgua = getConsumosAgua;
             _getConsumoAgua = getConsumoAgua;
             _registrarConsumoAgua = registrarConsumoAgua;
             _editarConsumoAgua = editarConsumoAgua;
             _selectItems = selectItems;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ConsumoAguaMarIdRouteValue);
         }
 
         public IActionResult Resumen()
@@ -49,34 +54,15 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
-                //var items = await _getItems.Execute();
-
-                //var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
-                //tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                //var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
-                //estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                //var lugaresReferencia = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
-                //lugaresReferencia.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                //var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
-
-                //var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
-                //mensajeContactos = mensajeContactos.Substring(10);
-
-                //ViewBag.TipoFauna = tiposFauna;
-                //ViewBag.EstadoFauna = estadosFauna;
-                //ViewBag.LugarReferencia = lugaresReferencia;
-                //ViewBag.Mensaje = mensajeContactos;
-                //ViewBag.Contactos = contactosEmergencia;
                 return View();
             }
         }
         [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int rpp, int pagina)
         {
-            var datosTabla = await _getConsumosAgua.Execute(fecha, pagina, rpp );
+            var items = await _selectItems.GetSelectItems();
+
+            var datosTabla = await _getConsumosAgua.Execute(fecha, pagina, rpp,items.ItemsOrigenes.FirstOrDefault(x=>x.Descripcion.Equals("Agua de Mar")).IdOrigenAgua);
 
             var filasTabla = "";
             var paginador = "";
@@ -85,22 +71,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             {
                 foreach (var fila in datosTabla.Consumos)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
+                    var IdEncriptado = _protector.Protect(fila.IdConsumoAgua.ToString());
                     filasTabla += "<tr>";
-                    //if ((fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString())) && !usuario.IdRol.Equals((int)InspeccionRol.Admin))
-                    //{
-                    //    if (fila.FechaAvistamiento > DateTime.Now.AddDays(-1))
-                    //        filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
-                    //    else
-                    //        filasTabla += "<td></td>";
-                    //    filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    //}
-                    //else if (fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
-                    //{
-                    //    filasTabla += "<td></td>";
-                    //    filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    //}
-                    filasTabla += "<td><a href=\"/ConsumoAguaMar/EditarRegistro?IdConsumo=" + fila.IdConsumoAgua + "\">" + fila.IdConsumoAgua + "</a></td>";
+                   
+                    filasTabla += "<td><a href=\"/ConsumoAguaMar/EditarRegistro?IdConsumo=" + IdEncriptado + "\">" + fila.IdConsumoAgua + "</a></td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy") + "</td>";
                     filasTabla += "<td>" + fila.TiempoBombeo + "</td>";
@@ -143,14 +117,30 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 
         public async Task<IActionResult> NuevoRegistro()
         {
-            var items = await _selectItems.GetSelectItems();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            var resoluciones = items.ItemsResoluciones.Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
-            resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
 
-            ViewBag.Resoluciones = resoluciones;
 
-            return View();
+                var items = await _selectItems.GetSelectItems();
+
+                var resoluciones = items.ItemsResoluciones.Where(x=>x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+
+                ViewBag.Resoluciones = resoluciones;
+                ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+
+                return View();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> NuevoRegistro(ConsumoAguaMarModel model)
@@ -173,32 +163,47 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             }
             return RedirectToAction("Resumen");
         }
-        public async Task<IActionResult> EditarRegistro(int IdConsumo)
+        public async Task<IActionResult> EditarRegistro(string IdConsumo)
         {
-
-            var items = await _selectItems.GetSelectItems();
-
-            var resoluciones = items.ItemsResoluciones.Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
-            resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-            ViewBag.Resoluciones = resoluciones;
-
-            var consumo = await _getConsumoAgua.Execute(IdConsumo);
-            var model = new ConsumoAguaMarModel
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                Id = consumo.IdConsumoAgua,
-                IdResolucion = consumo.IdResolucionConsumoAgua,
-                Resolucion = consumo.ResolucionConsumoAgua,
-                FuenteAgua = consumo.FuenteAgua,
-                Fecha = consumo.Fecha.ToString("yyyy-MM-dd"),
-                TiempoBombeo = consumo.TiempoBombeo,
-                LecturaInicial = consumo.LecturaInicial,
-                LecturaFinal = consumo.LecturaFinal,
-                VolumenAguaBombeado = consumo.VolumenBombeado,
-                CaudalPromedio = consumo.CaudalPromedio
-            };
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            return View(model);
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var desencriptado = Int32.Parse(_protector.Unprotect(IdConsumo));
+
+                var items = await _selectItems.GetSelectItems();
+
+                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+
+                ViewBag.Resoluciones = resoluciones;
+                ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+
+                var consumo = await _getConsumoAgua.Execute(desencriptado);
+                var model = new ConsumoAguaMarModel
+                {
+                    Id = consumo.IdConsumoAgua,
+                    IdResolucion = consumo.IdResolucionConsumoAgua,
+                    Resolucion = consumo.ResolucionConsumoAgua,
+                    FuenteAgua = consumo.FuenteAgua,
+                    Fecha = consumo.Fecha.ToString("yyyy-MM-dd"),
+                    TiempoBombeo = consumo.TiempoBombeo,
+                    LecturaInicial = consumo.LecturaInicial,
+                    LecturaFinal = consumo.LecturaFinal,
+                    VolumenAguaBombeado = consumo.VolumenBombeado,
+                    CaudalPromedio = consumo.CaudalPromedio
+                };
+
+                return View(model);
+            }
         }
 
         [HttpPost]
@@ -218,7 +223,8 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                     model.VolumenAguaBombeado,
                     model.CaudalPromedio);
             }
-            return RedirectToAction("EditarRegistro", new { IdConsumo = model.Id });
+            var encriptado = _protector.Protect(model.Id.ToString());
+            return RedirectToAction("EditarRegistro", new { IdConsumo = encriptado });
         }
     }
 }

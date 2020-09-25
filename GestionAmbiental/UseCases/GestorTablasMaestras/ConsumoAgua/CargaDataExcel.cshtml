@@ -1,0 +1,64 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model.CargaExcelModel
+@{
+    ViewData["Title"] = "CargaDataExcel";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Cargar Datos de Excel</h2>
+    </div>
+</div>
+<form class="form-group" id="form_nuevo_avistamiento" asp-action="CargaDataExcel" asp-controller="GestorConsumoAgua" method="post" enctype="multipart/form-data" autocomplete="off">
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="ColumnaInicio"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="ColumnaInicio"></span>
+            <input type="number" class="form-control" asp-for="ColumnaInicio" value="2"/>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="FilaInicio"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="FilaInicio"></span>
+            <input type="number" class="form-control" asp-for="FilaInicio" value="8"/>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Pagina"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Pagina"></span>
+            <input type="text" class="form-control" asp-for="Pagina" />
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Resolucion"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger" asp-validation-for="Resolucion"></span>
+            <select asp-for="Resolucion" class="form-control" asp-items="ViewBag.Resoluciones"></select>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Excel"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Excel" data-valmsg-replace="true">
+                <span id="danger_excel" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Excel">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Excel" accept=".xls, .xlsx">
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="GestorConsumoAgua" asp-action="Resumen">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+    </div>
+</form>

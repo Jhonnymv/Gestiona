@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
     public interface IGetResoluciones
     {
         Task<ResolucionesConsumoAguaOutput> Execute(string filtro, int pagina, int rpp);
+        Task<ResolucionesConsumoAguaOutput> Execute();
     }
 }

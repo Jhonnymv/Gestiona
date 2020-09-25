@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua
 {
     public interface IGetConsumosAgua
     {
-        Task<ConsumosAguaOutput> Execute(string fecha, int pagina, int rpp);
+        Task<ConsumosAguaOutput> Execute(string fecha, int pagina, int rpp, int origen_agua);
     }
 }

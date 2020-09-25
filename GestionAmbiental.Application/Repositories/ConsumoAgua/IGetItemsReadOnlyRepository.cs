@@ -9,5 +9,6 @@ namespace GestionAmbiental.Application.Repositories.ConsumoAgua
     public interface IGetItemsReadOnlyRepository
     {
         Task<List<ResolucionConsumoAgua>> GetReslucionesConsumoAgua();
+        Task<List<OrigenAgua>> GetOrigenesAgua();
     }
 }

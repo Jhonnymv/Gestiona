@@ -80,8 +80,19 @@
         var horas = 0;
         var lecturaInicial = 0;
         var lecturaFinal = 0;
+        var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
 
-        $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {            
+        $("#IdResolucion").on('change', function () {
+            var resol = $("#IdResolucion").val();
+            for (var i = 0; i < fuentesAgua.length; i++) {
+                if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
+                    $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+                    return;
+                }
+            }
+        });
+
+        $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : "";
             lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : "";
             lecturaFinal = $("#LecturaFinal").val() != "" ? parseFloat($("#LecturaFinal").val()) : "";
@@ -92,7 +103,7 @@
                 alert("El tiempo de bombeo no debe ser entre 0 y 24 horas");
             }
 
-            if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {                   
+            if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
                 if (lecturaFinal >= lecturaInicial) {
                     CalcularVolumenAguaBombeado();
                     CalcularCaudalPromedio();
@@ -129,6 +140,7 @@
             else
                 $("#CaudalPromedio").val(0);
         }
+
 
     </script>
 }

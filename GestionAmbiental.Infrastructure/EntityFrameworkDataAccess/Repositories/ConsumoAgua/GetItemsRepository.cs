@@ -18,6 +18,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+        public async Task<List<OrigenAgua>> GetOrigenesAgua()
+        {
+            var data = await _context.Origenes_Agua.ToListAsync();
+            var output = new List<OrigenAgua>();
+            foreach(var item in data)
+            {
+                output.Add(new OrigenAgua
+                {
+                    IdOrigenAgua = item.Id_Origen_Agua,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+
         public async Task<List<ResolucionConsumoAgua>> GetReslucionesConsumoAgua()
         {
             var data = await _context.Resoluciones_Consumo_Agua.ToListAsync();

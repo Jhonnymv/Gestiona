@@ -81,6 +81,17 @@
         var horas = 0;
         var lecturaInicial = 0;
         var lecturaFinal = 0;
+        var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
+
+        $("#IdResolucion").on('change', function () {
+            var resol = $("#IdResolucion").val();
+            for (var i = 0; i < fuentesAgua.length; i++) {
+                if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
+                    $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+                    return;
+                }
+            }
+        });
 
         $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : "";
