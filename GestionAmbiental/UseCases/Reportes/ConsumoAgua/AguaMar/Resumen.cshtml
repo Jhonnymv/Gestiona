@@ -1,0 +1,188 @@
+﻿@model GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar.FiltroReportesConsumoAguaMarModel
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Dashboard de Consumo de Agua de Mar</h2>
+    </div>
+</div>
+<form id="filtrosReporteConsumoAguaMar" autocomplete="off" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamientosDashboard">
+    <div class="container-fluid">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-10 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="Resolucion"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FInicio"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FFin"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-primary mr-2" onclick="Filtrar()">Filtrar</button>
+                    <button id="descargar" type="button" class="btn btn-danger mr-2">Descargar Excel</button>
+                    <button id="descargarPDF" type="button" class="btn btn-danger" onclick="printDiv('pdfprintarea')">Imprimir Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<!--Cantidad consumida por fecha-->
+<div id="pdfContainer">
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_volumen_fechas" name="check_volumen_fechas" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Consumo de Agua</h6>
+                        </div>
+                        <div class="col-2">
+                            <select id="frecuencia" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>s
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class="">
+                                </div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class="">
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="chart_volumen_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Volumen restante-->
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_volumen_restante" name="check_volumen_restante" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Restante por Resolución</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_volumen_restante" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/UseCases/Reportes/ReporteConsumoAguaMarScript.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $("#frecuencia").on("change", function () {
+            ActualizarVolumenFecha();
+        });
+        $("#descargar").on('click', function () {
+            fechaInicio = $("#FInicio").val();
+            fechaFin = $("#FFin").val();
+            if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
+                $("#filtrosReporteConsumoAguaMar").submit()
+            } else {
+                alert("La fecha de fin debe ser mayor a la fecha de inicio");
+            }
+        });
+        /*
+        function preparePrintArea() {
+            $("#pdfprintarea").show();
+
+            var canvas_avistamientos_fechas = document.getElementById("chart_avistamientos_fechas");
+            var canvas_avistamientos_nombre_comun = document.getElementById("chart_avistamientos_nombre_comun");
+            var canvas_avistamientos_estado_fauna = document.getElementById("chart_avistamientos_estado_fauna");
+            var canvas_avistamientos_tipo_avistamiento = document.getElementById("chart_avistamientos_tipo_avistamiento");
+
+            var img_avistamientos_fechas = canvas_avistamientos_fechas.toDataURL("image/png");
+            var img_avistamientos_nombre_comun = canvas_avistamientos_nombre_comun.toDataURL("image/png");
+            var img_avistamientos_estado_fauna = canvas_avistamientos_estado_fauna.toDataURL("image/png");
+            var img_avistamientos_tipo_avistamiento = canvas_avistamientos_tipo_avistamiento.toDataURL("image/png");
+
+
+            document.getElementById('img_avistamientos_fechas').setAttribute('src', img_avistamientos_fechas);
+            document.getElementById('img_avistamientos_nombre_comun').setAttribute('src', img_avistamientos_nombre_comun);
+            document.getElementById('img_avistamientos_estado_fauna').setAttribute('src', img_avistamientos_estado_fauna);
+            document.getElementById('img_avistamientos_tipo_avistamiento').setAttribute('src', img_avistamientos_tipo_avistamiento);
+
+            if (!$("#check_avistamientos_fechas").prop('checked'))
+                $("#div_avistamientos_fechas").hide();
+            if (!$("#check_avistamientos_nombre_comun").prop('checked'))
+                $("#div_avistamientos_nombre_comun").hide();
+            if (!$("#check_avistamientos_estado_fauna").prop('checked'))
+                $("#div_avistamientos_estado_fauna").hide();
+            if (!$("#check_avistamientos_tipo_avistamiento").prop('checked'))
+                $("#div_avistamientos_tipo_avistamiento").hide();
+        }
+        function printDiv(divName) {
+            preparePrintArea();
+            setTimeout(function () {
+                var printContents = document.getElementById(divName).innerHTML;
+                var originalContents = document.body.innerHTML;
+
+                document.body.innerHTML = printContents;
+
+                window.print();
+
+                document.body.innerHTML = originalContents;
+
+                $("#pdfprintarea").hide();
+
+                CargarDataAGraficoAvistamientosFaunaFecha();
+                CargarDataAGraficoNombreComun();
+                CargarDataAGraficoEstadoFauna();
+                CargarDataAGraficoTipoAvsitamiento();
+            }, 2500);
+        }
+        */
+    </script>
+
+}

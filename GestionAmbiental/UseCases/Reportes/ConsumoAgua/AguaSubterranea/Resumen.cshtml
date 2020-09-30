@@ -1,0 +1,50 @@
+﻿@model GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea.FiltroReportesConsumoAguaSubterraneaModel
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Dashboard de Agua Subterranea</h2>
+    </div>
+</div>
+<form id="filtrosReporteConsumoAguaSubterranea" autocomplete="off" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamientosDashboard">
+    <div class="container-fluid">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-10 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="Resolucion"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FInicio"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                    </div>
+                    <div class="col-lg-2 mt-1">
+                        <label asp-for="FFin"></label>
+                    </div>
+                    <div class="col-lg-4 mt-1">
+                        <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <button type="button" class="btn btn-primary mr-2" onclick="Filtrar()">Filtrar</button>
+                    <button id="descargar" type="button" class="btn btn-danger mr-2">Descargar Excel</button>
+                    <button id="descargarPDF" type="button" class="btn btn-danger" onclick="printDiv('pdfprintarea')">Imprimir Dashboard</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
