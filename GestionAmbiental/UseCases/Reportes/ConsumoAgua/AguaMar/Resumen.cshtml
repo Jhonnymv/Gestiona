@@ -89,6 +89,39 @@
             </div>
         </div>
     </div>
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_caudal_fechas" name="check_caudal_fechas" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Caudal Promedio Diario</h6>
+                        </div>
+                        <div class="col-2">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor">
+                            <div class="chartjs-size-monitor-expand">
+                                <div class="">
+                                </div>
+                            </div>
+                            <div class="chartjs-size-monitor-shrink">
+                                <div class="">
+                                </div>
+                            </div>
+                        </div>
+                        <canvas id="chart_caudal_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <!--Volumen restante-->
     <div class="row mb-2">
         <div class="col-xl-12 col-lg-12">

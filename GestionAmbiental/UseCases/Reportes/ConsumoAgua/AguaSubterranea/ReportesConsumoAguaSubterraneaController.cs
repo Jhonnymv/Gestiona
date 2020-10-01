@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
+using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetCaudalPromedioFecha;
+using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetVolumenFecha;
+using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetVolumenRestante;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,13 +16,23 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
     public class ReportesConsumoAguaSubterraneaController : Controller
     {
         private readonly ISelectItems _selectItems;
+        private readonly IGetVolumenFecha _getVolumenFecha;
+        private readonly IGetVolumenRestante _getVolumenRestante;
+        private readonly IGetCaudalPromedioFecha _getCaudalPromedioFecha;
 
-        public ReportesConsumoAguaSubterraneaController(ISelectItems selectItems)
+        public ReportesConsumoAguaSubterraneaController(
+            ISelectItems selectItems, 
+            IGetVolumenFecha getVolumenFecha,
+            IGetVolumenRestante getVolumenRestante,
+            IGetCaudalPromedioFecha getCaudalPromedioFecha)
         {
             _selectItems = selectItems;
+            _getVolumenFecha = getVolumenFecha;
+            _getVolumenRestante = getVolumenRestante;
+            _getCaudalPromedioFecha = getCaudalPromedioFecha;
         }
 
-        public async Task <IActionResult> Resumen()
+        public async Task<IActionResult> Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -42,6 +55,40 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
 
                 return View();
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GetVolumenFecha(int resolucion, string fechaInicio, string fechaFin, string frecuencia)
+        {
+            var registros = await _getVolumenFecha.Execute(resolucion, fechaInicio, fechaFin, frecuencia);
+
+            dynamic response = new
+            {
+                registros = registros
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetVolumenRestante(int resolucion)
+        {
+            var registros = await _getVolumenRestante.Execute(resolucion);
+
+            dynamic response = new
+            {
+                registros = registros
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin)
+        {
+            var registros = await _getCaudalPromedioFecha.Execute(resolucion, fechaInicio, fechaFin);
+
+            dynamic response = new
+            {
+                registros = registros
+            };
+            return Ok(response);
         }
     }
 }

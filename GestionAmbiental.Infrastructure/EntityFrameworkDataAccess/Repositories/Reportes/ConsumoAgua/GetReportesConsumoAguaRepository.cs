@@ -28,13 +28,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var fuentes = await _context.Fuentes_Agua.Where(x => x.Id_Origen_Agua.Equals(origen)).Select(x => x.Id_Fuente_Agua).ToListAsync();
             var resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => fuentes.Contains(x.Id_Fuente_Agua)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
 
-            if (resolucion != 0) {
+            if (resolucion != 0)
+            {
                 resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => x.Id_Resolucion_Consumo_Agua.Equals(resolucion)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
             }
 
             var registros = reg.Where(x =>
                 !x.Estado.Equals(EstadosConsumo.Eliminado.ToString()) &&
-                resoluciones.Contains(x.Id_Resolucion_Consumo_Agua)&&
+                resoluciones.Contains(x.Id_Resolucion_Consumo_Agua) &&
                 //x.Id_Resolucion_Consumo_Agua.Equals(resolucion != 0 ? resolucion : x.Id_Resolucion_Consumo_Agua) &&          
                 x.Fecha >= FechaInicio &&
                 x.Fecha <= FechaFin)
@@ -60,7 +61,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 foreach (var item in frec)
                 {
                     var diaAnio = item.Key.DayOfYear;
-                    lstDiasConValor.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Sum(x=>x.Volumen_Bombeado), (item.Key.Year * 1000) + item.Key.DayOfYear));
+                    lstDiasConValor.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), item.Sum(x => x.Volumen_Bombeado), (item.Key.Year * 1000) + item.Key.DayOfYear));
                 }
                 var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                 output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
@@ -68,7 +69,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else if (frecuencia.Equals("Semanal"))
             {
                 CultureInfo cul = CultureInfo.CurrentCulture;
-                var data = registros.Select(x => new { woy = cul.Calendar.GetWeekOfYear(x.Fecha, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha.ToString("yyyy"),volumen = x.Volumen_Bombeado }).ToList();
+                var data = registros.Select(x => new { woy = cul.Calendar.GetWeekOfYear(x.Fecha, CalendarWeekRule.FirstDay, DayOfWeek.Monday).ToString().PadLeft(2, '0') + " " + x.Fecha.ToString("yyyy"), volumen = x.Volumen_Bombeado }).ToList();
                 var frec = data.GroupBy(x => x.woy).ToList();
 
                 int nSemInicial = cul.Calendar.GetWeekOfYear(FechaInicio, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
@@ -91,7 +92,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         var week = Convert.ToInt32(item.Key.Substring(0, 2));
                         var year = Convert.ToInt32(item.Key.Substring(3, 4));
 
-                        lstSemConValor.Add(new Dimension("Sem " + week + " - " + year, item.Sum(x=>x.volumen), year * 100 + week));
+                        lstSemConValor.Add(new Dimension("Sem " + week + " - " + year, item.Sum(x => x.volumen), year * 100 + week));
                     }
                     var distinctIngreso = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                     output = distinctIngreso.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
@@ -138,7 +139,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         if (semAnt > semAct)
                             nAnio++;
 
-                        lstSemConValor.Add(new Dimension(nombre, item.Sum(x=>x.volumen), (anioAct * 100) + semAct));
+                        lstSemConValor.Add(new Dimension(nombre, item.Sum(x => x.volumen), (anioAct * 100) + semAct));
 
                         semAnt = semAct;
                     }
@@ -210,7 +211,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var fecha = new DateTime(anio, mes, 1);
                     var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
 
-                    lstMesConValor.Add(new Dimension(nombre, item.Sum(x=>x.volumen), anio * 100 + mes));
+                    lstMesConValor.Add(new Dimension(nombre, item.Sum(x => x.volumen), anio * 100 + mes));
 
                 }
                 var distinctIngreso = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
@@ -237,13 +238,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var registros = reg.Where(x =>
                 !x.Estado.Equals(EstadosConsumo.Eliminado.ToString()) &&
                 resoluciones.Select(y => y.Id_Resolucion_Consumo_Agua).Contains(x.Id_Resolucion_Consumo_Agua))
-                .GroupBy(x =>x.Id_Resolucion_Consumo_Agua)
+                .GroupBy(x => x.Id_Resolucion_Consumo_Agua)
                 .ToList();
 
             foreach (var item in registros)
             {
-                var resolucionConsumo = resoluciones.FirstOrDefault(x =>x.Id_Resolucion_Consumo_Agua.Equals(item.Key));
-                outputUsado.Add(new Dimension(resolucionConsumo.Resolucion, item.Sum(x =>x.Volumen_Bombeado), resolucionConsumo.Id_Resolucion_Consumo_Agua));
+                var resolucionConsumo = resoluciones.FirstOrDefault(x => x.Id_Resolucion_Consumo_Agua.Equals(item.Key));
+                outputUsado.Add(new Dimension(resolucionConsumo.Resolucion, item.Sum(x => x.Volumen_Bombeado), resolucionConsumo.Id_Resolucion_Consumo_Agua));
                 outputPorUsar.Add(new Dimension(resolucionConsumo.Resolucion, (resolucionConsumo.Volumen_Otorgado - item.Sum(x => x.Volumen_Bombeado)), resolucionConsumo.Id_Resolucion_Consumo_Agua));
             }
             output.Add(outputUsado);
@@ -251,5 +252,55 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
+        public async Task<List<Dimension>> GetCaudalPromedioFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin)
+        {
+            var output = new List<Dimension>();
+
+            var reg = await _context.Consumos_Agua.ToListAsync();
+            var fuentes = await _context.Fuentes_Agua.Where(x => x.Id_Origen_Agua.Equals(origen)).Select(x => x.Id_Fuente_Agua).ToListAsync();
+            var resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => fuentes.Contains(x.Id_Fuente_Agua)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
+
+            if (resolucion != 0)
+            {
+                resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => x.Id_Resolucion_Consumo_Agua.Equals(resolucion)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
+            }
+
+            var registros = reg.Where(x =>
+                !x.Estado.Equals(EstadosConsumo.Eliminado.ToString()) &&
+                resoluciones.Contains(x.Id_Resolucion_Consumo_Agua) &&
+                //x.Id_Resolucion_Consumo_Agua.Equals(resolucion != 0 ? resolucion : x.Id_Resolucion_Consumo_Agua) &&          
+                x.Fecha >= FechaInicio &&
+                x.Fecha <= FechaFin)
+                .ToList();
+
+
+            var frec = registros.GroupBy(x => x.Fecha.Date).ToList();
+            int nDias = 0;
+
+            if (FechaFin.Year > FechaInicio.Year)
+                nDias = FechaFin.DayOfYear + (FechaInicio.Year % 4 == 0 ? 366 : 365) - FechaInicio.DayOfYear;
+            else
+                nDias = FechaFin.DayOfYear - FechaInicio.DayOfYear;
+
+            var lstDiasSinValor = new List<Dimension>();
+            var lstDiasConValor = new List<Dimension>();
+            for (int i = nDias; i >= 0; i--)
+            {
+                var diaAnio = FechaFin.AddDays(-i).DayOfYear;
+                lstDiasSinValor.Add(new Dimension(FechaFin.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0, (FechaFin.AddDays(-i).Year * 1000) + diaAnio));
+            }
+            foreach (var item in frec)
+            {
+                var diaAnio = item.Key.DayOfYear;
+                var caudal = item.Sum(x => x.Caudal_Promedio);
+                var nRegistros = item.Count();
+                lstDiasConValor.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), Math.Round(caudal /nRegistros, 2), (item.Key.Year * 1000) + item.Key.DayOfYear));
+            }
+            var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+            output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
+
+            return output;
+        }
+
     }
 }

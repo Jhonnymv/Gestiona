@@ -11,6 +11,10 @@ var data_vol_utilizado = [];
 var data_vol_restante = [];
 var graph_vol_restante;
 
+//Variables gráfico Caudal X Fecha
+var data_caudal_fechas = [];
+var graph_caudal_fechas;
+
 $(document).ready(function () {
     Filtrar();
 });
@@ -18,8 +22,9 @@ $(document).ready(function () {
 function Filtrar() {
     ActualizarVolumenFecha();
     ActualizarVolumenRestante();
+    ActualizarCaudalFecha();
 }
-
+//Para gráfico Volumen X Fecha
 function ActualizarVolumenFecha() {
     resolucion = $("#Resolucion").val();
     fechaInicio = $("#FInicio").val();
@@ -116,7 +121,7 @@ function CrearGraficaVolumenFecha(labels, data, stepSize) {
         });
 }
 
-//Para gráfico Contador x Fecha
+//Para gráfico Volumen Restante
 function ActualizarVolumenRestante() {
     $.ajax({
         type: "POST",
@@ -157,7 +162,6 @@ function ActualizarVolumenRestante() {
         }
     });
 }
-
 function CargarDataGraficorVolumenRestante() {
     var labels = [];
     var dataUtilizado = [];
@@ -210,6 +214,102 @@ function CrearGraficaVolumenRestante(labels, dataUtilizado, dataRestante, stepSi
                     }],
                     'xAxes': [{
                         'stacked': true,
+                        'ticks': {
+                            'stepSize': stepSize,
+                            'beginAtZero': true
+                        }
+                    }]
+                },
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        });
+}
+
+//Para gráfico Caudal X Fecha
+function ActualizarCaudalFecha() {
+    resolucion = $("#Resolucion").val();
+    fechaInicio = $("#FInicio").val();
+    fechaFin = $("#FFin").val();
+
+    if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
+        $.ajax({
+            type: "POST",
+            url: "/ReportesConsumoAguaMar/GetCaudalPromedioFecha",
+            data: {
+                "Resolucion": $("#Resolucion").val(),
+                "FechaInicio": $("#FInicio").val(),
+                "FechaFin": $("#FFin").val(),
+            },
+            success: (response) => {
+                if (data_caudal_fechas.length > 0) {
+                    //Actualizar contador
+                    data_caudal_fechas = response.registros;
+
+                    var labels = [];
+                    var data = [];
+                    for (var i = 0; i < data_caudal_fechas.length; i++) {
+                        labels.push(data_caudal_fechas[i].nombre);
+                        data.push(data_caudal_fechas[i].valor);
+                    }
+                    //Actualizar gráfica
+                    graph_caudal_fechas.data.labels = labels;
+                    graph_caudal_fechas.data.datasets[0].data = data;
+                    graph_caudal_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                    graph_caudal_fechas.update();
+                } else {
+                    //Actualizar contador
+                    data_caudal_fechas = response.registros;
+
+                    CargarDataGraficorCaudalFecha();
+                }
+            }
+        });
+
+    } else {
+        alert("La fecha de fin debe ser mayor a la fecha de inicio");
+    }
+}
+function CargarDataGraficorCaudalFecha() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_caudal_fechas.length; i++) {
+        labels.push(data_caudal_fechas[i].nombre);
+        data.push(data_caudal_fechas[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficaCaudalFecha(labels, data, Math.max(data) / 10);
+}
+function CrearGraficaCaudalFecha(labels, data, stepSize) {
+    graph_caudal_fechas = new Chart(
+        document.getElementById("chart_caudal_fechas"),
+        {
+            "type": "bar",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": "m3/s",
+                    "data": data,
+                    "fill": false,
+                    "backgroundColor": "rgb(46, 103, 147)",
+                    "borderColor": "rgb(46, 103, 147)",
+                    "lineTension": 0.1
+                }]
+            },
+            "options": {
+                "responsive": true,
+                "scales": {
+                    'yAxes': [{
                         'ticks': {
                             'stepSize': stepSize,
                             'beginAtZero': true
