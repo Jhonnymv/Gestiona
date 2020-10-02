@@ -123,5 +123,123 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+
+        public async Task<List<Domain.ConsumoAgua.ConsumoAgua>> GetConsumosAguaDescarga(DateTime fechaInicio, DateTime fechaFina, int idResolucion)
+        {
+            var data = await _context.Consumos_Agua.ToListAsync();
+            
+            data = data.Where(x => 
+            x.Id_Resolucion_Consumo_Agua.Equals(idResolucion) && 
+            x.Fecha.Date>= fechaInicio.Date &&
+            x.Fecha.Date <= fechaFina.Date)
+                .ToList();
+
+            var output = new List<Domain.ConsumoAgua.ConsumoAgua>();
+
+            var resolucion = await _context.Resoluciones_Consumo_Agua.FindAsync(idResolucion);
+            var fuente = await _context.Fuentes_Agua.FirstOrDefaultAsync(x => x.Id_Fuente_Agua.Equals(resolucion.Id_Fuente_Agua));
+            var origen = await _context.Origenes_Agua.FirstOrDefaultAsync(x => x.Id_Origen_Agua.Equals(fuente.Id_Origen_Agua));
+
+            foreach (var item in data)
+            {
+                var outputItem = new Domain.ConsumoAgua.ConsumoAgua
+                {
+                    IdConsumoAgua = item.Id_Consumo_Agua,
+                    ResolucionConsumoAgua = new Domain.ConsumoAgua.ResolucionConsumoAgua
+                    {
+                        IdResolucionConsumoAgua = resolucion.Id_Resolucion_Consumo_Agua,
+                        Anio = resolucion.Anio,
+                        TipoUso = resolucion.Tipo_Uso,
+                        ClaseDerecho = resolucion.Clase_Derecho,
+                        Resolucion = resolucion.Resolucion,
+                        FuenteAgua = new Domain.ConsumoAgua.FuenteAgua
+                        {
+                            IdFuenteAgua = fuente.Id_Fuente_Agua,
+                            Descripcion = fuente.Descripcion,
+                            Coordenadas_UTM = fuente.Coordenadas_UTM,
+                            OrigenAgua = new Domain.ConsumoAgua.OrigenAgua
+                            {
+                                IdOrigenAgua = origen.Id_Origen_Agua,
+                                Descripcion = origen.Descripcion,
+                                Estado = origen.Estado
+                            },
+                            Estado = fuente.Estado
+                        },
+                        VolumenOtorgado = resolucion.Volumen_Otorgado,
+                        Actividad = resolucion.Actividad,
+                        Estado = resolucion.Estado
+                    },
+                    Fecha = item.Fecha,
+                    TiempoBombeo = item.Tiempo_Bombeo,
+                    LecturaInicial = item.Lectura_Inicial,
+                    LecturaFinal = item.Lectura_Final,
+                    VolumenBombeado = item.Volumen_Bombeado,
+                    CaudalPromedio = item.Caudal_Promedio,
+                    IdUsuario = item.Id_Usuario,
+                    FechaRegistro = item.Fecha_Registro,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<Domain.ConsumoAgua.ConsumoAgua>> GetConsumosAguaDescarga(int idResolucion)
+        {
+            var data = await _context.Consumos_Agua.ToListAsync();
+
+            data = data.Where(x =>
+            x.Id_Resolucion_Consumo_Agua.Equals(idResolucion))
+                .ToList();
+
+            var output = new List<Domain.ConsumoAgua.ConsumoAgua>();
+
+            var resolucion = await _context.Resoluciones_Consumo_Agua.FindAsync(idResolucion);
+            var fuente = await _context.Fuentes_Agua.FirstOrDefaultAsync(x => x.Id_Fuente_Agua.Equals(resolucion.Id_Fuente_Agua));
+            var origen = await _context.Origenes_Agua.FirstOrDefaultAsync(x => x.Id_Origen_Agua.Equals(fuente.Id_Origen_Agua));
+
+            foreach (var item in data)
+            {
+                var outputItem = new Domain.ConsumoAgua.ConsumoAgua
+                {
+                    IdConsumoAgua = item.Id_Consumo_Agua,
+                    ResolucionConsumoAgua = new Domain.ConsumoAgua.ResolucionConsumoAgua
+                    {
+                        IdResolucionConsumoAgua = resolucion.Id_Resolucion_Consumo_Agua,
+                        Anio = resolucion.Anio,
+                        TipoUso = resolucion.Tipo_Uso,
+                        ClaseDerecho = resolucion.Clase_Derecho,
+                        Resolucion = resolucion.Resolucion,
+                        FuenteAgua = new Domain.ConsumoAgua.FuenteAgua
+                        {
+                            IdFuenteAgua = fuente.Id_Fuente_Agua,
+                            Descripcion = fuente.Descripcion,
+                            Coordenadas_UTM = fuente.Coordenadas_UTM,
+                            OrigenAgua = new Domain.ConsumoAgua.OrigenAgua
+                            {
+                                IdOrigenAgua = origen.Id_Origen_Agua,
+                                Descripcion = origen.Descripcion,
+                                Estado = origen.Estado
+                            },
+                            Estado = fuente.Estado
+                        },
+                        VolumenOtorgado = resolucion.Volumen_Otorgado,
+                        Actividad = resolucion.Actividad,
+                        Estado = resolucion.Estado
+                    },
+                    Fecha = item.Fecha,
+                    TiempoBombeo = item.Tiempo_Bombeo,
+                    LecturaInicial = item.Lectura_Inicial,
+                    LecturaFinal = item.Lectura_Final,
+                    VolumenBombeado = item.Volumen_Bombeado,
+                    CaudalPromedio = item.Caudal_Promedio,
+                    IdUsuario = item.Id_Usuario,
+                    FechaRegistro = item.Fecha_Registro,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
     }
 }

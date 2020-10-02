@@ -9,7 +9,7 @@
         <h2>Dashboard de Consumo de Agua de Mar</h2>
     </div>
 </div>
-<form id="filtrosReporteConsumoAguaMar" autocomplete="off" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamientosDashboard">
+<form id="filtrosReporteConsumoAguaMar" autocomplete="off" asp-controller="DescargarConsumoAgua" asp-action="DescargarReporteConsumo">
     <div class="container-fluid">
         <div class="row mb-2 justify-content-center">
             <div class="col-lg-10 col-md-10 col-sm-12 border rounded" style="border-color:#2e6793 !important">
@@ -20,7 +20,7 @@
                     <div class="col-lg-4 mt-1">
                         <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
                     </div>
-                    <div class="col-lg-2 mt-1">
+                    <div class="col-lg-2 mt-1">                        
                     </div>
                     <div class="col-lg-4 mt-1">
                     </div>
@@ -160,10 +160,11 @@
         $("#descargar").on('click', function () {
             fechaInicio = $("#FInicio").val();
             fechaFin = $("#FFin").val();
-            if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
+            resolucion = $("#Resolucion").val();
+            if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" && resolucion!=0) {
                 $("#filtrosReporteConsumoAguaMar").submit()
             } else {
-                alert("La fecha de fin debe ser mayor a la fecha de inicio");
+                alert("La fecha de fin debe ser mayor a la fecha de inicio y debe seleccionar la resolución");
             }
         });
         /*

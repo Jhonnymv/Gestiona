@@ -46,6 +46,7 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
 
                 var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+               
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
