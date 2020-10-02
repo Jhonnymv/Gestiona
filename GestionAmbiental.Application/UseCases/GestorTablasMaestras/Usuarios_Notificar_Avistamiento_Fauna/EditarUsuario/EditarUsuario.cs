@@ -17,15 +17,15 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_No
 
         public async Task Execute(int idUsuario, string nombres, string apellidos, int idRol, string email, string usuarioRed, string estado)
         {
-            var usuario = new Domain.Incidentes.Items.Usuario_Notificar_Incidente();
-            usuario.Id_Usuario_Notificar_Incidente = idUsuario;
+            var usuario = new Domain.AvistamientoFauna.Items.Usuario_Notificar_Avistamiento_Fauna();
+            usuario.Id_Usuario_Notificar_Avistamiento_Fauna = idUsuario;
             usuario.Nombres = nombres;
             usuario.Apellidos = apellidos;
             usuario.Id_Rol = idRol;
             usuario.Email = email;
             usuario.Usuario_Red = usuarioRed;
             usuario.Estado = estado;
-            await _gestorTablasMaestrasReadOnlyRepository.UpdateUsuario_Notificar_Incidente(usuario);
+            await _gestorTablasMaestrasReadOnlyRepository.UpdateUsuario_Notificar_AF(usuario);
         }
     }
 }

@@ -86,6 +86,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<ResolucionConsumoAgua> Resoluciones_Consumo_Agua { get; set; }
         public DbSet<OrigenAgua> Origenes_Agua { get; set; }
         public DbSet<FuenteAgua> Fuentes_Agua { get; set; }
+        public DbSet<Usuarios_Notificar_Consumo_Agua> Usuarios_Notificar_Consumo_Agua { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -223,6 +224,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                .ToTable("Tb_Log_Consumo_Agua");
             modelBuilder.Entity<ResolucionConsumoAgua>()
                .ToTable("Tb_Resolucion_Consumo_Agua");
+            modelBuilder.Entity<Usuarios_Notificar_Consumo_Agua>()
+               .ToTable("Tb_Usuarios_Notificar_Consumo_Agua");
         }
     }
 }

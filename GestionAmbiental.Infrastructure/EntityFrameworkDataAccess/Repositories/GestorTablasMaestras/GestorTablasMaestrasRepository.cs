@@ -1894,5 +1894,70 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Resoluciones_Consumo_Agua.Update(entity);
             await _context.SaveChangesAsync();
         }
+
+        //Tb_Usuario_Notificar_Avistamiento
+        public async Task<List<UsuarioNotificarConsumoAgua>> GetUsuario_Notificar_Consumo_Agua(string filtro)
+        {
+            var usuarios = await _context.Usuarios_Notificar_Consumo_Agua.Where(x =>
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
+            ).OrderBy(x => x.Nombres)
+            .ToListAsync();
+
+            var output = new List<UsuarioNotificarConsumoAgua>();
+            foreach (var item in usuarios)
+                output.Add(new UsuarioNotificarConsumoAgua(item.Id_Usuarios_Notificar_Consumo_Agua, item.Id_Rol, item.Nombres, item.Apellidos, item.usuario_red, item.Email, item.Estado));
+            return output;
+        }
+        public async Task<UsuarioNotificarConsumoAgua> GetUsuario_Notificar_Consumo_Agua(int id_usuario_notificar)
+        {
+            var usuario = await _context.Usuarios_Notificar_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Consumo_Agua.Equals(id_usuario_notificar));
+            var output = new UsuarioNotificarConsumoAgua
+            {
+                Id_Usuario_Notificar_Consumo_Agua = usuario.Id_Usuarios_Notificar_Consumo_Agua,
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Id_Rol = usuario.Id_Rol,
+                Usuario_Red = usuario.usuario_red,
+                Estado = usuario.Estado
+            };
+            return output;
+        }
+        public async Task UpdateUsuario_Notificar_Consumo_Agua(UsuarioNotificarConsumoAgua usuario_notifcar)
+        {
+            var usuarioEntity = await _context.Usuarios_Notificar_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Consumo_Agua.Equals(usuario_notifcar.Id_Usuario_Notificar_Consumo_Agua));
+            usuarioEntity.Nombres = usuario_notifcar.Nombres;
+            usuarioEntity.Apellidos = usuario_notifcar.Apellidos;
+            usuarioEntity.Email = usuario_notifcar.Email;
+            usuarioEntity.Id_Rol = usuario_notifcar.Id_Rol;
+            usuarioEntity.usuario_red = usuario_notifcar.Usuario_Red;
+            usuarioEntity.Estado = usuario_notifcar.Estado;
+
+            _context.Usuarios_Notificar_Consumo_Agua.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task QuitarUsuario_Notificar_Consumo_Agua(int id_usuario_notificar)
+        {
+            var entity = await _context.Usuarios_Notificar_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_Consumo_Agua.Equals(id_usuario_notificar));
+            _context.Usuarios_Notificar_Consumo_Agua.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<int> AddUsuario_Notificar_Consumo_Agua(int Id_Usuario_AD)
+        {
+            var temp_entity = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(Id_Usuario_AD));
+            var entity = new Entities.ConsumoAgua.Usuarios_Notificar_Consumo_Agua
+            {
+                Nombres = temp_entity.Nombres,
+                Apellidos = temp_entity.Apellidos,
+                Email = temp_entity.Email,
+                Estado = "ACT",
+                Id_Rol = temp_entity.Id_Rol,
+                usuario_red = temp_entity.usuario_red
+            };
+            _context.Usuarios_Notificar_Consumo_Agua.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Usuarios_Notificar_Consumo_Agua;
+        }
     }
 }

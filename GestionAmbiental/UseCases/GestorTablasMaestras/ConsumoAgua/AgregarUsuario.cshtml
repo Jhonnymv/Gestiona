@@ -1,0 +1,31 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model.UsusarioNotificarModel
+@{
+    ViewData["Title"] = "AgregarUsuario";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Agregar Usuario</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="AgregarUsuario">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label>Usuario a Agregar:</label>
+                </div>
+                <div class="col-lg-8">
+                    <select class="form-control" asp-for="Id_Usuario_Notificar" asp-items="ViewBag.ListUsuarios">
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center">
+                <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>

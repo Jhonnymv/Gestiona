@@ -222,5 +222,12 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<int> AddResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua);
         Task UpdateResolucionConsumoAgua(ResolucionConsumoAgua ResolucionConsumoAgua);
 
+        //Tb_Usuario_Notificar_Consumo_Agua
+        Task<List<UsuarioNotificarConsumoAgua>> GetUsuario_Notificar_Consumo_Agua(string filtro);
+        Task<UsuarioNotificarConsumoAgua> GetUsuario_Notificar_Consumo_Agua(int id_usuario_notificar);
+        Task UpdateUsuario_Notificar_Consumo_Agua(UsuarioNotificarConsumoAgua usuario_notifcar);
+        Task QuitarUsuario_Notificar_Consumo_Agua(int id_usuario_notificar);
+        Task<int> AddUsuario_Notificar_Consumo_Agua(int Id_Usuario_AD);
+
     }
 }

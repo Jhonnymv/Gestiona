@@ -20,7 +20,7 @@
                     <div class="col-lg-4 mt-1">
                         <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
                     </div>
-                    <div class="col-lg-2 mt-1">                        
+                    <div class="col-lg-2 mt-1">
                     </div>
                     <div class="col-lg-4 mt-1">
                     </div>
@@ -132,7 +132,7 @@
                             <input type="checkbox" id="check_volumen_restante" name="check_volumen_restante" class="form-check" checked="checked" style="margin: initial;">
                         </div>
                         <div class="col-8" style="align-self: center;">
-                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Restante por Resolución</h6>
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Autorizado por Resolución</h6>
                         </div>
                     </div>
                 </div>
@@ -151,6 +151,57 @@
     </div>
 </div>
 
+<!--Area de impresion-->
+<div id="pdfprintarea" style="display:none;">
+    <div class="row mb-2" id="div_volumen_fechas">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Consumo de Agua</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <img style="width:100%;height:auto" id="img_volumen_fechas" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2" id="div_caudal_fechas">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Caudal Promedio Diario</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <img style="width:100%;height:auto" id="img_caudal_fechas" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-2" id="div_volumen_restante">
+        <div class="col-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Autorizado por Resolución</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <img style="width:100%;height:auto" id="img_volumen_restante" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="~/js/UseCases/Reportes/ReporteConsumoAguaMarScript.js" type="text/javascript"></script>
     <script type="text/javascript">
@@ -161,40 +212,35 @@
             fechaInicio = $("#FInicio").val();
             fechaFin = $("#FFin").val();
             resolucion = $("#Resolucion").val();
-            if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" && resolucion!=0) {
+            if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" && resolucion != 0) {
                 $("#filtrosReporteConsumoAguaMar").submit()
             } else {
                 alert("La fecha de fin debe ser mayor a la fecha de inicio y debe seleccionar la resolución");
             }
         });
-        /*
+
         function preparePrintArea() {
             $("#pdfprintarea").show();
 
-            var canvas_avistamientos_fechas = document.getElementById("chart_avistamientos_fechas");
-            var canvas_avistamientos_nombre_comun = document.getElementById("chart_avistamientos_nombre_comun");
-            var canvas_avistamientos_estado_fauna = document.getElementById("chart_avistamientos_estado_fauna");
-            var canvas_avistamientos_tipo_avistamiento = document.getElementById("chart_avistamientos_tipo_avistamiento");
+            var canvas_volumen_fechas = document.getElementById("chart_volumen_fechas");
+            var canvas_caudal_fechas = document.getElementById("chart_caudal_fechas");
+            var canvas_volumen_restante = document.getElementById("chart_volumen_restante");
 
-            var img_avistamientos_fechas = canvas_avistamientos_fechas.toDataURL("image/png");
-            var img_avistamientos_nombre_comun = canvas_avistamientos_nombre_comun.toDataURL("image/png");
-            var img_avistamientos_estado_fauna = canvas_avistamientos_estado_fauna.toDataURL("image/png");
-            var img_avistamientos_tipo_avistamiento = canvas_avistamientos_tipo_avistamiento.toDataURL("image/png");
+            var img_volumen_fechas = canvas_volumen_fechas.toDataURL("image/png");
+            var img_caudal_fechas = canvas_caudal_fechas.toDataURL("image/png");
+            var img_volumen_restante = canvas_volumen_restante.toDataURL("image/png");
 
 
-            document.getElementById('img_avistamientos_fechas').setAttribute('src', img_avistamientos_fechas);
-            document.getElementById('img_avistamientos_nombre_comun').setAttribute('src', img_avistamientos_nombre_comun);
-            document.getElementById('img_avistamientos_estado_fauna').setAttribute('src', img_avistamientos_estado_fauna);
-            document.getElementById('img_avistamientos_tipo_avistamiento').setAttribute('src', img_avistamientos_tipo_avistamiento);
+            document.getElementById('img_volumen_fechas').setAttribute('src', img_volumen_fechas);
+            document.getElementById('img_caudal_fechas').setAttribute('src', img_caudal_fechas);
+            document.getElementById('img_volumen_restante').setAttribute('src', img_volumen_restante);
 
-            if (!$("#check_avistamientos_fechas").prop('checked'))
-                $("#div_avistamientos_fechas").hide();
-            if (!$("#check_avistamientos_nombre_comun").prop('checked'))
-                $("#div_avistamientos_nombre_comun").hide();
-            if (!$("#check_avistamientos_estado_fauna").prop('checked'))
-                $("#div_avistamientos_estado_fauna").hide();
-            if (!$("#check_avistamientos_tipo_avistamiento").prop('checked'))
-                $("#div_avistamientos_tipo_avistamiento").hide();
+            if (!$("#check_volumen_fechas").prop('checked'))
+                $("#div_volumen_fechas").hide();
+            if (!$("#check_caudal_fechas").prop('checked'))
+                $("#div_caudal_fechas").hide();
+            if (!$("#check_volumen_restante").prop('checked'))
+                $("#div_volumen_restante").hide();
         }
         function printDiv(divName) {
             preparePrintArea();
@@ -210,13 +256,16 @@
 
                 $("#pdfprintarea").hide();
 
-                CargarDataAGraficoAvistamientosFaunaFecha();
-                CargarDataAGraficoNombreComun();
-                CargarDataAGraficoEstadoFauna();
-                CargarDataAGraficoTipoAvsitamiento();
+                $("#div_volumen_fechas").show();
+                $("#div_caudal_fechas").show();
+                $("#div_volumen_restante").show();
+
+                CargarDataGraficorVolumenFecha();
+                CargarDataGraficorVolumenRestante();
+                CargarDataGraficorCaudalFecha();
             }, 2500);
         }
-        */
+
     </script>
 
 }

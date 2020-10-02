@@ -63,10 +63,10 @@
             }
             if ($("#Origenes_Agua").hasClass("active")) {
                 FiltrarOrigenAgua(1);
-            }/*
+            }
             if ($("#Usuarios").hasClass("active")) {
                 FiltrarUsuario(1);
-            }*/
+            }
         });
         $("#Resoluciones").on('click', function (e) {
             $(this).tab('show');
@@ -86,14 +86,14 @@
             $("#opcion_editar_mensaje").hide();
             FiltrarOrigenAgua(1);
         });
-        /*
+        
         $("#Usuarios").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarUsuario");
             $("#opcion_editar_mensaje").hide();
             FiltrarUsuario(1);
         });
-        */
+        
         function FiltrarResolucionConsumoAgua(pag) {
             $.ajax({
                 type: "POST",
@@ -145,7 +145,7 @@
                 }
             });
         }
-        /*
+        
         function FiltrarUsuario(pag) {
             $.ajax({
                 type: "POST",
@@ -163,7 +163,7 @@
                 }
             });
         }
-        */
+        
     </script>
 }
 
