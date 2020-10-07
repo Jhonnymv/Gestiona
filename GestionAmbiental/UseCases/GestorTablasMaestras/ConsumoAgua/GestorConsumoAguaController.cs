@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
+using GestionAmbiental.Application.UseCases.ConsumoAgua.GetRegistroRecienteConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAguaMasivo;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua.FuenteAgua.AgregarFuenteAgua;
@@ -53,9 +55,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         private readonly IGetUsuario _getUsuario;
         private readonly IGetUsuarios _getUsuariosCA;
 
+
+        private readonly IGetConsumosAgua _getConsumosAgua;
+
         private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios _getUsuarios;
 
         private readonly IRegistrarConsumoAguaMasivo _registrarConsumoAguaMasivo;
+        private readonly IGetRegistrosRecientesConsumoAgua _getRegistrosRecientesConsumoAgua;
+
         private ExcelLecturaEscritura _excelLecturaEscritura;
         private readonly ISelectItems _selectItems;
 
@@ -73,6 +80,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             IGetResolucion getResolucion, 
             IGetResoluciones getResoluciones,
             IRegistrarConsumoAguaMasivo registrarConsumoAguaMasivo,
+            IGetRegistrosRecientesConsumoAgua getRegistrosRecientesConsumoAgua,
             IAgregarUsuario agregarUsuario,
             IDeleteUsuario deleteUsuario,
             IEditarUsuario editarUsuario,
@@ -93,6 +101,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             _editarResolucion = editarResolucion;
             _getResolucion = getResolucion;
             _getResoluciones = getResoluciones;
+            _getRegistrosRecientesConsumoAgua = getRegistrosRecientesConsumoAgua;
             _registrarConsumoAguaMasivo = registrarConsumoAguaMasivo;
             _selectItems = selectItems;
 
@@ -170,34 +179,71 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 
                     var data = _excelLecturaEscritura.ObtenerDatos();
 
-                    var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
+                    var validacion = await ValidarDatosExcel(data, model.Resolucion, model.FilaInicio);
 
-                    foreach (var consumo in data)
+                    if (validacion.Length == 0)
                     {
-                        if (consumo.TiempoBombeo != 0 && consumo.LecturaInicial != 0 && consumo.LecturaFinal != 0)
+                        var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
+
+                        foreach (var consumo in data)
                         {
-                            input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
+                            if (consumo.TiempoBombeo != 0 && consumo.LecturaInicial != 0 && consumo.LecturaFinal != 0)
                             {
-                                IdResolucionConsumoAgua = model.Resolucion,
-                                Fecha = consumo.Fecha,
-                                TiempoBombeo = consumo.TiempoBombeo,
-                                LecturaInicial = consumo.LecturaInicial,
-                                LecturaFinal = consumo.LecturaFinal,
-                                VolumenBombeado = consumo.LecturaFinal - consumo.LecturaInicial,
-                                CaudalPromedio = (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600)
-                            });
+                                input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
+                                {
+                                    IdResolucionConsumoAgua = model.Resolucion,
+                                    Fecha = consumo.Fecha,
+                                    TiempoBombeo = consumo.TiempoBombeo,
+                                    LecturaInicial = consumo.LecturaInicial,
+                                    LecturaFinal = consumo.LecturaFinal,
+                                    VolumenBombeado = consumo.LecturaFinal - consumo.LecturaInicial,
+                                    CaudalPromedio = (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600)
+                                });
+                            }
                         }
+                        var agregados = await _registrarConsumoAguaMasivo.Execute(input, "kevin");
+                        return RedirectToAction("CargaDataExcel", new { message = "Se agregaron " + agregados + " registros", result = "Success" });
                     }
-                    var agregados = await _registrarConsumoAguaMasivo.Execute(input, "kevin");
-                    return RedirectToAction("CargaDataExcel", new { message = "Se agregaron " + agregados + " registros", result = "Success" });
+                    else
+                    {
+                        return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: \n" + validacion, result = "Error" });
+                    }
                 }
                 catch (Exception e)
                 {
-                    return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: " + e.Message, result = "Error" });
                 }
             }
             return RedirectToAction("CargaDataExcel", new { message = "" });
         }   
+
+        private async Task<string> ValidarDatosExcel(List<CargaExcel.ConsumoAguaModel> consumos,int resolucion, int fila)
+        {
+            var result = "";
+            //Ordenar por fechas
+            //consumos = consumos.OrderByDescending(x => x.Fecha).ToList();
+
+            //Obtener ultimo registro de la resolucion
+            var resoluciones = new List<int>();
+            resoluciones.Add(resolucion);
+            var ultimoRegistro = await _getRegistrosRecientesConsumoAgua.Execute(resoluciones.ToArray());
+            
+            //Validar fechas mayores a la última registrada
+            if (ultimoRegistro.Count > 0 && consumos[0].Fecha <= ultimoRegistro.First().Fecha)
+                result += "La fecha de la fila " + fila + " no es mayor o igual a la fecha del último registro correspondiente a esta resolución (" + ultimoRegistro.First().Fecha.ToString("dd/MM/yyyy") + ")\n";
+
+            //Validar lectura inicial del primer registro del excel es igual al final del ultimo registro si existe
+            if (ultimoRegistro.Count > 0 && consumos[0].LecturaInicial != ultimoRegistro.First().LecturaFinal)
+                result += "La lectura inicial de la fila " + fila + " no es igual a la lectura final del último registro correspondiente a esta resolución (" + ultimoRegistro.First().LecturaFinal + "m3)\n";
+            
+            for (int i = 0; i < consumos.Count; i++)
+            {
+                //Validar lectura inicial igual al final anterior
+                if (i != 0 && consumos[i].LecturaInicial != consumos[i - 1].LecturaFinal)
+                    result += "La lectura inicial de la fila " + (fila + i) + " no es igual a la lectura final anterior\n";
+
+            }
+            return result;
+        }
 
         //Origen Agua
         [HttpPost]

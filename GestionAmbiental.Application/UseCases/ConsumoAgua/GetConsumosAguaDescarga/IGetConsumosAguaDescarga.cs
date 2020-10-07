@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAguaDesca
     public interface IGetConsumosAguaDescarga
     {
         Task<List<ConsumoAguaOutput>> ExecuteFechas(string fechaInicio, string fechaFin, int resolucion);
-        Task<List<ConsumoMensualOutput>> ExecuteMensual(int resolucion);
+        Task<List<ConsumoMensualOutput>> ExecuteMensual(int resolucion,int anio);
     }
 }

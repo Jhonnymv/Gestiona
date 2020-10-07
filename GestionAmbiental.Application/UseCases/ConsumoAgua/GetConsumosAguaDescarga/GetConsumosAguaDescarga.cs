@@ -31,9 +31,9 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAguaDesca
             return output;
         }
 
-        public async Task<List<ConsumoMensualOutput>> ExecuteMensual(int resolucion)
+        public async Task<List<ConsumoMensualOutput>> ExecuteMensual(int resolucion,int anio)
         {
-            var consumos = await _getConsumoAguaReadOnlyRepository.GetConsumosAguaDescarga(resolucion);
+            var consumos = await _getConsumoAguaReadOnlyRepository.GetConsumosAguaDescarga(resolucion, anio);
             
             var mensual= consumos.GroupBy(x =>x.Fecha.Month).OrderBy(x => x.Key).ToList();
 

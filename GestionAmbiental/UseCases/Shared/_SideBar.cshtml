@@ -156,6 +156,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="ReportesConsumoAguaSubterranea" asp-action="Resumen">Reportes Estadísticos Agua Subterranea</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="GestorConsumoAgua" asp-action="CargaDataExcel">Cargar datos desde Excel</a>
+                                </li>
                             </ul>
                         </li>
                     }
@@ -191,6 +194,23 @@
                         <a class="nav-link" asp-controller="AvistamientoFauna" asp-action="Resumen">
                             <i class="nav-icon"><img src="~/img/icons/pajaro.png" /></i> Avistamiento de Fauna
                         </a>
+                    </li>
+                    <!--Consumo de Agua-->
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon"><img src="~/img/icons/gotas.png" /></i> Consumo de Agua
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ConsumoAguaMar" asp-action="Resumen">Agua de Mar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">Agua Subterranea</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="GestorConsumoAgua" asp-action="CargaDataExcel">Cargar datos desde Excel</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
@@ -257,7 +277,7 @@
                     </li>
                 }
                 <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="SignOut"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Cerrar Sesión</a></li>
-}
+            }
 
         </ul>
     </nav>

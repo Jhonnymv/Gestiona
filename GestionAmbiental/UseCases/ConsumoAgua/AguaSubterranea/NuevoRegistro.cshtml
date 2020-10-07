@@ -40,6 +40,9 @@
             <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
             <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" />
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 mb-2 text-center">
+            <button type="button" class="btn btn-link" onclick="AbrirCalculadora()">Calcular Tiempo de Bombeo</button>
+        </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="LecturaInicial"></label>
         </div>
@@ -83,33 +86,85 @@
         <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
 </form>
+<!-- Modal Calcular Tiempo Bombeo-->
+<div class="modal fade" id="modal_calculadora" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_calculadora"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_calculadora">
+                    Calcular Tiempo de Bombeo
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label>Tiempo en Minutos:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label>Tiempo en Horas:</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" style="color:white" onclick="UtilizarTiempo()">Utilizar Tiempo</a>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script type="text/javascript">
-        var horas = 0;
+         var horas = 0;
         var lecturaInicial = 0;
         var lecturaFinal = 0;
         var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
+        var ultimosRegistros = JSON.parse('@Html.Raw(ViewBag.RegistrosResolucion)');
+        var tiempoAnterior = 0;
 
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
             for (var i = 0; i < fuentesAgua.length; i++) {
                 if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
                     $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+                    break;
+                }
+            }
+            for (var i = 0; i < ultimosRegistros.length; i++) {
+                if (ultimosRegistros[i].IdResolucion == resol) {
+                    $("#Fecha").val(ultimosRegistros[i].Fecha);
+                    $("#LecturaInicial").val(ultimosRegistros[i].LecturaInicial);
+                    tiempoAnterior = ultimosRegistros[i].TiempoBombeo
                     return;
                 }
             }
         });
 
         $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
-            horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : "";
-            lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : "";
-            lecturaFinal = $("#LecturaFinal").val() != "" ? parseFloat($("#LecturaFinal").val()) : "";
-            if (horas != "" && lecturaInicial != "" && lecturaFinal != "") {
+            horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
+            lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : null;
+            lecturaFinal = $("#LecturaFinal").val() != "" ? parseFloat($("#LecturaFinal").val()) : null;
+            if (horas != null && lecturaInicial != null && lecturaFinal != null) {
                 //horas entre 0 y 24
-                if (horas != "" && (horas < 0 || horas > 24)) {
+                if (horas != "" && (horas < 0 || horas > 24 - tiempoAnterior)) {
                     horas = 0;
                     $("#TiempoBombeo").val(0)
-                    alert("El tiempo de bombeo no debe ser entre 0 y 24 horas");
+                    $("#LecturaFinal").val(lecturaInicial);
+                    if (tiempoAnterior == 24)
+                        alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
+                    else
+                        alert("El tiempo de bombeo no debe ser entre 0 y " + (24 - tiempoAnterior) + " horas");
                 }
                 if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
                     if (lecturaFinal >= lecturaInicial) {
@@ -137,6 +192,7 @@
                 }
             }
         });
+
         function CalcularVolumenAguaBombeado() {
             var volumen = lecturaFinal - lecturaInicial;
             $("#VolumenAguaBombeado").val(volumen);
@@ -149,7 +205,19 @@
             else
                 $("#CaudalPromedio").val(0);
         }
-
+        function AbrirCalculadora() {
+            $("#modal_calculadora").modal('show');
+        }
+        function UtilizarTiempo() {
+            var tiempo = $("#cal_tiempo_horas").val();
+            $("#TiempoBombeo").val(tiempo);
+            $("#modal_calculadora").modal('toggle');
+        }
+        $("#cal_tiempo_minutos").on('change', function () {
+            var min = $("#cal_tiempo_minutos").val();
+            console.log(min)
+            $("#cal_tiempo_horas").val(Math.round((min / 60) * 100) / 100);
+        });
 
     </script>
 }

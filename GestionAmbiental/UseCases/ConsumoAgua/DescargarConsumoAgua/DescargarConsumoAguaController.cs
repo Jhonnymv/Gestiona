@@ -17,6 +17,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
     public class DescargarConsumoAguaController : Controller
     {
         private readonly IGetConsumosAgua _getConsumosAgua;
+
         private readonly IGetConsumosAguaDescarga _getConsumosAguaDescarga;
         private readonly ISelectItems _selectItems;
         private IHostingEnvironment _hostingEnvironment;
@@ -33,7 +34,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> DescargarReporteConsumo(string FInicio, string FFin, int resolucion)
+        public async Task<IActionResult> DescargarReporteConsumo(string FInicio, string FFin, int resolucion,int anio)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -45,7 +46,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 var resolucionData = items.ItemsResoluciones.FirstOrDefault(x => x.IdResolucionConsumoAgua.Equals(resolucion));
 
                 var consumosDiario = await _getConsumosAguaDescarga.ExecuteFechas(FInicio, FFin, resolucion);
-                var consumosMensual = await _getConsumosAguaDescarga.ExecuteMensual(resolucion);
+                var consumosMensual = await _getConsumosAguaDescarga.ExecuteMensual(resolucion,anio);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "ConsumoAgua");
                 string sFileName = @"FORMATO REPORTE DE CONSUMO DE AGUA.xlsx";
@@ -71,7 +72,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
             //Reporte Consumo Mensual
 
                 //Año
-                sheetMensual.GetRow(7).GetCell(2).SetCellValue(resolucionData.Anio);
+                sheetMensual.GetRow(7).GetCell(2).SetCellValue(anio);
                 //Clase Derecho
                 sheetMensual.GetRow(9).GetCell(2).SetCellValue(resolucionData.ClaseDerecho);
                 //Resolucion
@@ -86,46 +87,48 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 sheetMensual.GetRow(14).GetCell(2).SetCellValue(resolucionData.VolumenOtorgado.ToString() + " (m3/año)");
                 //Fecha Reporte
                 sheetMensual.GetRow(15).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
-
+                                
                 int filaMensual = 18;
-                for (int i = 0; i < consumosMensual[0].Mes-1; i++)
+                if (consumosMensual.Count > 0)
                 {
-                    IRow row = sheetMensual.GetRow(filaMensual);
+                    for (int i = 0; i < consumosMensual[0].Mes - 1; i++)
+                    {
+                        IRow row = sheetMensual.GetRow(filaMensual);
 
-                    row.GetCell(2).SetCellValue(0);
-                    row.GetCell(2).CellStyle = customCellStyle;
+                        row.GetCell(2).SetCellValue(0);
+                        row.GetCell(2).CellStyle = customCellStyle;
 
-                    row.GetCell(3).SetCellValue(0);
-                    row.GetCell(3).CellStyle = customCellStyle;
+                        row.GetCell(3).SetCellValue(0);
+                        row.GetCell(3).CellStyle = customCellStyle;
 
-                    row.GetCell(4).SetCellValue(0);
-                    row.GetCell(4).CellStyle = customCellStyle;
+                        row.GetCell(4).SetCellValue(0);
+                        row.GetCell(4).CellStyle = customCellStyle;
 
-                    row.GetCell(5).SetCellValue(0);
-                    row.GetCell(5).CellStyle = customCellStyle;
+                        row.GetCell(5).SetCellValue(0);
+                        row.GetCell(5).CellStyle = customCellStyle;
 
-                    filaMensual++;
+                        filaMensual++;
+                    }
+
+                    for (int i = 0; i < consumosMensual.Count; i++)
+                    {
+                        IRow row = sheetMensual.GetRow(filaMensual);
+
+                        row.GetCell(2).SetCellValue(consumosMensual[i].TiempoOperacion);
+                        row.GetCell(2).CellStyle = customCellStyle;
+
+                        row.GetCell(3).SetCellValue(consumosMensual[i].Caudal);
+                        row.GetCell(3).CellStyle = customCellStyle;
+
+                        row.GetCell(4).SetCellValue(consumosMensual[i].VolumenMensual);
+                        row.GetCell(4).CellStyle = customCellStyle;
+
+                        row.GetCell(5).SetCellValue(consumosMensual[i].VolumenAcumulado);
+                        row.GetCell(5).CellStyle = customCellStyle;
+
+                        filaMensual++;
+                    }
                 }
-
-                for (int i = 0; i < consumosMensual.Count; i++)
-                {
-                    IRow row = sheetMensual.GetRow(filaMensual);
-                    
-                    row.GetCell(2).SetCellValue(consumosMensual[i].TiempoOperacion);
-                    row.GetCell(2).CellStyle = customCellStyle;
-
-                    row.GetCell(3).SetCellValue(consumosMensual[i].Caudal);
-                    row.GetCell(3).CellStyle = customCellStyle;
-
-                    row.GetCell(4).SetCellValue(consumosMensual[i].VolumenMensual);
-                    row.GetCell(4).CellStyle = customCellStyle;
-
-                    row.GetCell(5).SetCellValue(consumosMensual[i].VolumenAcumulado);
-                    row.GetCell(5).CellStyle = customCellStyle;
-
-                    filaMensual++;
-                }
-
 
             //Reporte Consumo Diario
 

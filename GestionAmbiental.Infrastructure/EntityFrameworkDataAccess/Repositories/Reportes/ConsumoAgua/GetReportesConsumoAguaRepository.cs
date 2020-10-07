@@ -302,5 +302,54 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
+        public async Task<List<Dimension>> GetTiempoBombeoFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin)
+        {
+            var output = new List<Dimension>();
+
+            var reg = await _context.Consumos_Agua.ToListAsync();
+            var fuentes = await _context.Fuentes_Agua.Where(x => x.Id_Origen_Agua.Equals(origen)).Select(x => x.Id_Fuente_Agua).ToListAsync();
+            var resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => fuentes.Contains(x.Id_Fuente_Agua)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
+
+            if (resolucion != 0)
+            {
+                resoluciones = await _context.Resoluciones_Consumo_Agua.Where(x => x.Id_Resolucion_Consumo_Agua.Equals(resolucion)).Select(x => x.Id_Resolucion_Consumo_Agua).ToListAsync();
+            }
+
+            var registros = reg.Where(x =>
+                !x.Estado.Equals(EstadosConsumo.Eliminado.ToString()) &&
+                resoluciones.Contains(x.Id_Resolucion_Consumo_Agua) &&
+                //x.Id_Resolucion_Consumo_Agua.Equals(resolucion != 0 ? resolucion : x.Id_Resolucion_Consumo_Agua) &&          
+                x.Fecha >= FechaInicio &&
+                x.Fecha <= FechaFin)
+                .ToList();
+
+
+            var frec = registros.GroupBy(x => x.Fecha.Date).ToList();
+            int nDias = 0;
+
+            if (FechaFin.Year > FechaInicio.Year)
+                nDias = FechaFin.DayOfYear + (FechaInicio.Year % 4 == 0 ? 366 : 365) - FechaInicio.DayOfYear;
+            else
+                nDias = FechaFin.DayOfYear - FechaInicio.DayOfYear;
+
+            var lstDiasSinValor = new List<Dimension>();
+            var lstDiasConValor = new List<Dimension>();
+            for (int i = nDias; i >= 0; i--)
+            {
+                var diaAnio = FechaFin.AddDays(-i).DayOfYear;
+                lstDiasSinValor.Add(new Dimension(FechaFin.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0, (FechaFin.AddDays(-i).Year * 1000) + diaAnio));
+            }
+            foreach (var item in frec)
+            {
+                var diaAnio = item.Key.DayOfYear;
+                var tiempoBombeo = item.Sum(x => x.Tiempo_Bombeo);
+                var nRegistros = item.Count();
+                lstDiasConValor.Add(new Dimension(item.Key.ToString("dd MMMM").Substring(0, 6), tiempoBombeo, (item.Key.Year * 1000) + item.Key.DayOfYear));
+            }
+            var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+            output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
+
+            return output;
+        }
     }
 }

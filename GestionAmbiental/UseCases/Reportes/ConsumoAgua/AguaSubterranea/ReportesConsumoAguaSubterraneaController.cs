@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetCaudalPromedioFecha;
+using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetTiempoBombeo;
 using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetVolumenFecha;
 using GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAguaSubterranea.GetVolumenRestante;
 using Microsoft.AspNetCore.Http;
@@ -18,18 +19,21 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
         private readonly ISelectItems _selectItems;
         private readonly IGetVolumenFecha _getVolumenFecha;
         private readonly IGetVolumenRestante _getVolumenRestante;
+        private readonly IGetTiempoBombeo _getTiempoBombeo;
         private readonly IGetCaudalPromedioFecha _getCaudalPromedioFecha;
 
         public ReportesConsumoAguaSubterraneaController(
             ISelectItems selectItems, 
             IGetVolumenFecha getVolumenFecha,
             IGetVolumenRestante getVolumenRestante,
+            IGetTiempoBombeo getTiempoBombeo,
             IGetCaudalPromedioFecha getCaudalPromedioFecha)
         {
             _selectItems = selectItems;
             _getVolumenFecha = getVolumenFecha;
             _getVolumenRestante = getVolumenRestante;
             _getCaudalPromedioFecha = getCaudalPromedioFecha;
+            _getTiempoBombeo = getTiempoBombeo;
         }
 
         public async Task<IActionResult> Resumen()
@@ -83,6 +87,17 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
         public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin)
         {
             var registros = await _getCaudalPromedioFecha.Execute(resolucion, fechaInicio, fechaFin);
+
+            dynamic response = new
+            {
+                registros = registros
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetTiempoBombeoFecha(int resolucion, string fechaInicio, string fechaFin)
+        {
+            var registros = await _getTiempoBombeo.Execute(resolucion, fechaInicio, fechaFin);
 
             dynamic response = new
             {

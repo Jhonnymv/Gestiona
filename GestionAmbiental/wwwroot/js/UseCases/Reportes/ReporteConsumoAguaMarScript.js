@@ -15,6 +15,10 @@ var graph_vol_restante;
 var data_caudal_fechas = [];
 var graph_caudal_fechas;
 
+//Variables gráfico tiempo X Fecha
+var data_tiempo_bombeo_fechas = [];
+var graph_tiempo_bombeo_fechas;
+
 $(document).ready(function () {
     Filtrar();
 });
@@ -23,6 +27,7 @@ function Filtrar() {
     ActualizarVolumenFecha();
     ActualizarVolumenRestante();
     ActualizarCaudalFecha();
+    ActualizarTiempoBombeoFecha();
 }
 //Para gráfico Volumen X Fecha
 function ActualizarVolumenFecha() {
@@ -299,6 +304,102 @@ function CrearGraficaCaudalFecha(labels, data, stepSize) {
                 "labels": labels,
                 "datasets": [{
                     "label": "m3/s",
+                    "data": data,
+                    "fill": false,
+                    "backgroundColor": "rgb(46, 103, 147)",
+                    "borderColor": "rgb(46, 103, 147)",
+                    "lineTension": 0.1
+                }]
+            },
+            "options": {
+                "responsive": true,
+                "scales": {
+                    'yAxes': [{
+                        'ticks': {
+                            'stepSize': stepSize,
+                            'beginAtZero': true
+                        }
+                    }]
+                },
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        });
+}
+
+//Para gráfico Tiempo Bombeo X Fecha
+function ActualizarTiempoBombeoFecha() {
+    resolucion = $("#Resolucion").val();
+    fechaInicio = $("#FInicio").val();
+    fechaFin = $("#FFin").val();
+
+    if (fechaInicio <= fechaFin || (fechaInicio == "" && fechaFin == "")) {
+        $.ajax({
+            type: "POST",
+            url: "/ReportesConsumoAguaMar/GetTiempoBombeoFecha",
+            data: {
+                "Resolucion": $("#Resolucion").val(),
+                "FechaInicio": $("#FInicio").val(),
+                "FechaFin": $("#FFin").val(),
+            },
+            success: (response) => {
+                if (data_tiempo_bombeo_fechas.length > 0) {
+                    //Actualizar contador
+                    data_tiempo_bombeo_fechas = response.registros;
+
+                    var labels = [];
+                    var data = [];
+                    for (var i = 0; i < data_tiempo_bombeo_fechas.length; i++) {
+                        labels.push(data_tiempo_bombeo_fechas[i].nombre);
+                        data.push(data_tiempo_bombeo_fechas[i].valor);
+                    }
+                    //Actualizar gráfica
+                    graph_tiempo_bombeo_fechas.data.labels = labels;
+                    graph_tiempo_bombeo_fechas.data.datasets[0].data = data;
+                    graph_tiempo_bombeo_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                    graph_tiempo_bombeo_fechas.update();
+                } else {
+                    //Actualizar contador
+                    data_tiempo_bombeo_fechas = response.registros;
+
+                    CargarDataGraficorTiempoBombeoFecha();
+                }
+            }
+        });
+
+    } else {
+        alert("La fecha de fin debe ser mayor a la fecha de inicio");
+    }
+}
+function CargarDataGraficorTiempoBombeoFecha() {
+    var labels = [];
+    var data = [];
+    for (var i = 0; i < data_tiempo_bombeo_fechas.length; i++) {
+        labels.push(data_tiempo_bombeo_fechas[i].nombre);
+        data.push(data_tiempo_bombeo_fechas[i].valor);
+    }
+    //Crear gráfica
+    CrearGraficaTiempoBombeoFecha(labels, data, Math.max(data) / 10);
+}
+function CrearGraficaTiempoBombeoFecha(labels, data, stepSize) {
+    graph_tiempo_bombeo_fechas = new Chart(
+        document.getElementById("chart_tiempo_bombeo"),
+        {
+            "type": "bar",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": "horas",
                     "data": data,
                     "fill": false,
                     "backgroundColor": "rgb(46, 103, 147)",

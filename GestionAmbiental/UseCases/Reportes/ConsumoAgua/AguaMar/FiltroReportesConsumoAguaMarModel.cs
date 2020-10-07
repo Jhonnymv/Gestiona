@@ -11,6 +11,8 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
     {
         [DisplayName("Resolución:")]
         public int Resolucion { get; set; }
+        [DisplayName("Año (Descarga Excel):")]
+        public int Anio { get; set; }
         [DisplayName("Desde:")]
         public string FInicio { get; set; }
         [DisplayName("Hasta:")]

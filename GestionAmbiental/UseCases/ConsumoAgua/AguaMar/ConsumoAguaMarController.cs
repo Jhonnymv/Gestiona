@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.EditarConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
+using GestionAmbiental.Application.UseCases.ConsumoAgua.GetRegistroRecienteConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAgua;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
@@ -22,6 +23,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         private readonly IGetConsumoAgua _getConsumoAgua;
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
         private readonly IEditarConsumoAgua _editarConsumoAgua;
+        private readonly IGetRegistrosRecientesConsumoAgua _getRegistrosRecientesConsumoAgua;
         private readonly ISelectItems _selectItems;
         private readonly IDataProtector _protector;
 
@@ -30,6 +32,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             IGetConsumoAgua getConsumoAgua, 
             IRegistrarConsumoAgua registrarConsumoAgua,
             IEditarConsumoAgua editarConsumoAgua,
+            IGetRegistrosRecientesConsumoAgua getRegistrosRecientesConsumoAgua,
             ISelectItems selectItems,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
@@ -39,6 +42,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             _getConsumoAgua = getConsumoAgua;
             _registrarConsumoAgua = registrarConsumoAgua;
             _editarConsumoAgua = editarConsumoAgua;
+            _getRegistrosRecientesConsumoAgua = getRegistrosRecientesConsumoAgua;
             _selectItems = selectItems;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ConsumoAguaMarIdRouteValue);
         }
@@ -130,8 +134,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
-
                 var items = await _selectItems.GetSelectItems();
+
+                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x=>x.IdResolucionConsumoAgua).ToArray();
+                var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
 
                 var resoluciones = items.ItemsResoluciones.Where(x=>x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -140,6 +146,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
                 ViewBag.Message = message;
                 return View();
             }
@@ -195,8 +202,12 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
 
+                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => x.IdResolucionConsumoAgua).ToArray();
+                var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
+
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
 
                 var consumo = await _getConsumoAgua.Execute(desencriptado);
                 var model = new ConsumoAguaMarModel

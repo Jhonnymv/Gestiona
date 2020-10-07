@@ -21,8 +21,10 @@
                         <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
                     </div>
                     <div class="col-lg-2 mt-1">
+                        <label asp-for="Anio"></label>
                     </div>
                     <div class="col-lg-4 mt-1">
+                        <input type="number" class="form-control" asp-for="Anio" value="@DateTime.Now.Year" />
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
@@ -142,6 +144,33 @@
                             <div class="chart-area">
                                 <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
                                 <canvas id="chart_volumen_restante" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Tiempo de Bombeo-->
+    <div class="row mb-2">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <div class="row">
+                        <div class="col-2">
+                            <input type="checkbox" id="check_tiempo_bombeo" name="check_tiempo_bombeo" class="form-check" checked="checked" style="margin: initial;">
+                        </div>
+                        <div class="col-8" style="align-self: center;">
+                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Tiempo de Bombeo</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                                <canvas id="chart_tiempo_bombeo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                             </div>
                         </div>
                     </div>
