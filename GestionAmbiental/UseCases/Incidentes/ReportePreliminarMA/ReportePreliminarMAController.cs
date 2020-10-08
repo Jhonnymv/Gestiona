@@ -400,6 +400,18 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             return RedirectToAction("DifundirNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = IdDesencriptado });
         }
         [HttpPost]
+        public async Task<IActionResult> IniciarInvestigacionSinNotificar(int IdReporte)
+        {
+            try
+            {
+                var id_investigacion_final = await _registrarInvestigacionFinal.Execute(IdReporte);
+                return Ok("Investigación Generada");
+            }catch(Exception e)
+            {
+                return Ok(e.Message);
+            }
+        }
+        [HttpPost]
         public async Task<IActionResult> ListarInvolucrados(int IdReporte)
         {
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
