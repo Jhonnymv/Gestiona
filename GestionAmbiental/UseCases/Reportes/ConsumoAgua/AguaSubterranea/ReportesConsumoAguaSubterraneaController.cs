@@ -50,7 +50,7 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
 
                 var itemsFiltro = await _selectItems.GetSelectItems();
 
-                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.Resoluciones = resoluciones;

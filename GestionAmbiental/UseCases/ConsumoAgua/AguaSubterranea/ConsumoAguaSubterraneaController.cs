@@ -65,7 +65,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
         {
             var items = await _selectItems.GetSelectItems();
 
-            var datosTabla = await _getConsumosAgua.Execute(fecha, pagina, rpp, items.ItemsOrigenes.FirstOrDefault(x => x.Descripcion.Equals("Agua de Pozo")).IdOrigenAgua);
+            var datosTabla = await _getConsumosAgua.Execute(fecha, pagina, rpp, items.ItemsOrigenes.FirstOrDefault(x => x.Descripcion.Equals("Agua Subterranea")).IdOrigenAgua);
 
             var filasTabla = "";
             var paginador = "";
@@ -133,13 +133,13 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 
                 var items = await _selectItems.GetSelectItems();
 
-                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(x => x.IdResolucionConsumoAgua).ToArray();
+                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => x.IdResolucionConsumoAgua).ToArray();
                 var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
 
-                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
@@ -196,12 +196,12 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 
                 var items = await _selectItems.GetSelectItems();
 
-                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(x => x.IdResolucionConsumoAgua).ToArray();
+                var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => x.IdResolucionConsumoAgua).ToArray();
                 var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
 
-                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Pozo")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
