@@ -4,7 +4,6 @@
             @if (ViewBag.Rol == null)
             {
                 <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="Signin"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Iniciar Sesión</a></li>
-
             }
             else
             {
@@ -185,10 +184,19 @@
                             <i class="nav-icon"><img src="~/img/icons/manifiesto.png" /></i> Control de Manifiestos de Residuos Sólidos
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">
-                            <i class="nav-icon"><img src="~/img/icons/alert-red.png" /></i> Informe Investigación Final Incidentes
+                    <!--Incidentes Ambientales-->
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon"><img src="~/img/icons/alert-red.png" /></i> Incidentes Ambientales
                         </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ReportePreliminarMA" asp-action="Resumen">Reporte Preliminar MA</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="InvestigacionFinal" asp-action="Resumen">Informe Investigación Final</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="AvistamientoFauna" asp-action="Resumen">
@@ -277,8 +285,7 @@
                     </li>
                 }
                 <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="SignOut"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Cerrar Sesión</a></li>
-            }
-
+            }           
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

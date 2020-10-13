@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Notificaciones.Incidentes.GetUsuariosNotificar;
@@ -141,21 +142,40 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
             mail.EnableSsl = false;
-
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
-            foreach (var item in usuarios)
-                msg.To.Add(new MailAddress(item.Email));
+
             msg.Subject = "Nuevo Reporte Preliminar de Incidente";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-            
+
             var archivoReporte = await _reportePreliminarController.PrepararReportePreliminar(IdReporte, userInfo.NombreUsuario);
             msg.Attachments.Add(new Attachment(archivoReporte, "ReportePreliminarIncidente-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
+            
+            var correosUsuarios = new List<MailAddress>();
+            for (int i = 0; i < usuarios.Count; i++)
+            {
+                msg.To.Add(new MailAddress(usuarios[i].Email));
+                correosUsuarios.Add(new MailAddress(usuarios[i].Email));
+                if (i > 0 && i % 20 == 0)
+                {
+                    await mail.SendMailAsync(msg);
+
+                    foreach (var item in correosUsuarios)
+                        msg.To.Remove(item);
+
+                    correosUsuarios = new List<MailAddress>();
+
+                    Thread.Sleep(60000);
+                }
+            }
+            if (correosUsuarios.Count > 0)
+                await mail.SendMailAsync(msg);
+
 
             await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();

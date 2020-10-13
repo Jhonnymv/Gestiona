@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Accion.GetAcciones;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
@@ -158,9 +159,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
 
-            foreach (var item in usuarios)
-                msg.To.Add(new MailAddress(item.Email));
-
             msg.Subject = "Nueva Investigación de Incidente";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
@@ -171,7 +169,26 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             var archivoInvestigacion = await _descargarInvestigacionFinalController.PrepararInvestigacion(IdInvestigacion);
             msg.Attachments.Add(new Attachment(archivoInvestigacion, "InvestigacionIncidente-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
 
-            await mail.SendMailAsync(msg);
+            var correosUsuarios = new List<MailAddress>();
+            for (int i = 0; i < usuarios.Count; i++)
+            {
+                msg.To.Add(new MailAddress(usuarios[i].Email));
+                correosUsuarios.Add(new MailAddress(usuarios[i].Email));
+                if (i > 0 && i % 20 == 0)
+                {
+                    await mail.SendMailAsync(msg);
+
+                    foreach (var item in correosUsuarios)
+                        msg.To.Remove(item);
+
+                    correosUsuarios = new List<MailAddress>();
+
+                    Thread.Sleep(60000);
+                }
+            }
+            if (correosUsuarios.Count > 0)
+                await mail.SendMailAsync(msg);
+
             msg.Attachments.Dispose();
             mail.Dispose();
             msg.Dispose();

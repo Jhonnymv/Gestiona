@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamientoFauna;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
@@ -99,22 +100,36 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
             mail.Credentials = credential;
 
             var usuariosNotificar = await _getUsuariosNotificar.Execute();
-            foreach(var usuario in usuariosNotificar)
-            {
-                msg.To.Add(new MailAddress(usuario.Email));
-            }
-            
+
+            var archivoAvistamiento = await _descargarAvistamientoFaunaController.PrepararAvistamiento(avistamiento.IdAvistamientoFauna);
+
             msg.Subject = "Nuevo Avistamiento de Fauna";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
             msg.BodyEncoding = Encoding.UTF8;
             msg.Body = msgBody;
-
-            var archivoAvistamiento = await _descargarAvistamientoFaunaController.PrepararAvistamiento(avistamiento.IdAvistamientoFauna);
             msg.Attachments.Add(new Attachment(archivoAvistamiento, "AvistamientoFauna-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx"));
 
-            await mail.SendMailAsync(msg);
+            var correosUsuarios = new List<MailAddress>();
+            for (int i = 0; i < usuariosNotificar.Count; i++)
+            {
+                msg.To.Add(new MailAddress(usuariosNotificar[i].Email));
+                correosUsuarios.Add(new MailAddress(usuariosNotificar[i].Email));
+                if (i >0 && i % 20 == 0)
+                {
+                    await mail.SendMailAsync(msg);
+
+                    foreach (var item in correosUsuarios)
+                        msg.To.Remove(item);
+                    
+                    correosUsuarios = new List<MailAddress>();
+
+                    Thread.Sleep(60000);
+                }
+            }
+            if(correosUsuarios.Count >0)
+                await mail.SendMailAsync(msg);
 
             msg.Attachments.Dispose();
             mail.Dispose();
