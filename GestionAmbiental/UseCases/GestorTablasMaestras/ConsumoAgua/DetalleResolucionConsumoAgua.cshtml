@@ -66,7 +66,7 @@
                 </div>
                 <div class="col-lg-8">
                     <span class="text-danger" asp-validation-for="VolumenOtorgado"></span>
-                    <input type="number" class="form-control" asp-for="VolumenOtorgado"  step="0.01" disabled>
+                    <input type="number" class="form-control" asp-for="VolumenOtorgado" step="0.01" disabled>
                 </div>
             </div>
             <div class="row mb-2">
@@ -76,6 +76,33 @@
                 <div class="col-lg-8">
                     <span class="text-danger" asp-validation-for="Actividad"></span>
                     <input type="text" class="form-control" asp-for="Actividad" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="LimiteDiario"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="LimiteDiario"></span>
+                    <input type="number" class="form-control" asp-for="LimiteDiario" step="0.01" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="LimiteSemanal"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="LimiteSemanal"></span>
+                    <input type="number" class="form-control" asp-for="LimiteSemanal" step="0.01" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="LimiteMensual"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="LimiteMensual"></span>
+                    <input type="number" class="form-control" asp-for="LimiteMensual" step="0.01" disabled>
                 </div>
             </div>
             <div class="row mb-2">
@@ -118,6 +145,9 @@
             $("#TipoUso").prop('disabled', false);
             $("#ClaseDerecho").prop('disabled', false);
             $("#VolumenOtorgado").prop('disabled', false);
+            $("#LimiteDiario").prop('disabled', false);
+            $("#LimiteSemanal").prop('disabled', false);
+            $("#LimiteMensual").prop('disabled', false);
             $("#Actividad").prop('disabled', false);
             $("#Estado").prop('disabled', false);
         });
@@ -130,14 +160,17 @@
             $("#btnCancelar").prop('disabled', true);
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
-            $("#Resolucion").prop('disabled', ture);
-            $("#IdFuenteAgua").prop('disabled', ture);
-            $("#Anio").prop('disabled', ture);
-            $("#TipoUso").prop('disabled', ture);
-            $("#ClaseDerecho").prop('disabled', ture);
-            $("#VolumenOtorgado").prop('disabled', ture);
-            $("#Actividad").prop('disabled', ture);
-            $("#Estado").prop('disabled', ture);
+            $("#Resolucion").prop('disabled', true);
+            $("#IdFuenteAgua").prop('disabled', true);
+            $("#Anio").prop('disabled', true);
+            $("#TipoUso").prop('disabled', true);
+            $("#ClaseDerecho").prop('disabled', true);
+            $("#VolumenOtorgado").prop('disabled', true);
+            $("#LimiteDiario").prop('disabled', true);
+            $("#LimiteSemanal").prop('disabled', true);
+            $("#LimiteMensual").prop('disabled', true);
+            $("#Actividad").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
         });
     </script>
 }

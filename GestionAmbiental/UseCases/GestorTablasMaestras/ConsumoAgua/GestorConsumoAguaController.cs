@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
+using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAguaDescarga;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetRegistroRecienteConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAguaMasivo;
@@ -57,6 +58,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 
 
         private readonly IGetConsumosAgua _getConsumosAgua;
+        private readonly IGetConsumosAguaDescarga _getConsumosAguaFechas;
 
         private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios _getUsuarios;
 
@@ -81,6 +83,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             IGetResoluciones getResoluciones,
             IRegistrarConsumoAguaMasivo registrarConsumoAguaMasivo,
             IGetRegistrosRecientesConsumoAgua getRegistrosRecientesConsumoAgua,
+            IGetConsumosAguaDescarga getConsumosAguaFechas,
             IAgregarUsuario agregarUsuario,
             IDeleteUsuario deleteUsuario,
             IEditarUsuario editarUsuario,
@@ -102,6 +105,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             _getResolucion = getResolucion;
             _getResoluciones = getResoluciones;
             _getRegistrosRecientesConsumoAgua = getRegistrosRecientesConsumoAgua;
+            _getConsumosAguaFechas = getConsumosAguaFechas;
             _registrarConsumoAguaMasivo = registrarConsumoAguaMasivo;
             _selectItems = selectItems;
 
@@ -179,7 +183,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 
                     var data = _excelLecturaEscritura.ObtenerDatos();
 
-                    var validacion = await ValidarDatosExcel(data, model.Resolucion, model.FilaInicio);
+                    var dataFechas = await _getConsumosAguaFechas.ExecuteFechas(data.First().Fecha.ToString(), data.Last().Fecha.ToString(), model.Resolucion);
+
+                    var validacion = await ValidarDatosExcel(data, dataFechas, model.Resolucion, model.FilaInicio);
 
                     if (validacion.Length == 0)
                     {
@@ -214,9 +220,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 }
             }
             return RedirectToAction("CargaDataExcel", new { message = "" });
-        }   
+        }
 
-        private async Task<string> ValidarDatosExcel(List<CargaExcel.ConsumoAguaModel> consumos,int resolucion, int fila)
+        private async Task<string> ValidarDatosExcel(List<CargaExcel.ConsumoAguaModel> consumos, List<Application.UseCases.ConsumoAgua.ConsumoAguaOutput> consumosFecha, int resolucion, int fila)
         {
             var result = "";
             //Ordenar por fechas
@@ -226,7 +232,39 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             var resoluciones = new List<int>();
             resoluciones.Add(resolucion);
             var ultimoRegistro = await _getRegistrosRecientesConsumoAgua.Execute(resoluciones.ToArray());
-            
+
+            //Si no hay fechas registradas en el periodo de tiempo
+            if (consumosFecha.Count == 0)
+            {
+                //Validar que la suma de horas de fechas repetidas no sean mayores a 24
+                var consumosFechas = consumos.GroupBy(x => x.Fecha).ToList();
+                foreach (var item in consumosFechas)
+                {
+                    var sumaTiempos = item.Sum(x => x.TiempoBombeo);
+                    if (sumaTiempos > 24 || sumaTiempos < 0)
+                        result += "La suma de horas de la fecha " + item.Key.ToString("dd/MM/yyyy") + " supera las 24 horas o es negativo\n";
+                }
+            }
+            //Hay fechas registradas en el periodo de tiempo
+            else
+            {
+                //Validar que la suma de horas de fechas repetidas (Excel y registradas) no sean mayores a 24
+                var consumosFechas = consumos.GroupBy(x => x.Fecha).ToList();
+                var consumosFechasReg = consumosFecha.GroupBy(x => x.Fecha).ToList();
+                foreach (var item in consumosFechas)
+                {
+                    //Buscar si existe fechas registradas iguales a las del Excel
+                    var registradoFecha = consumosFechasReg.FirstOrDefault(x => x.Key.Equals(item.Key));
+                    //Sumar lo tiempos del Excel   
+                    var sumaTiempos = item.Sum(x => x.TiempoBombeo);
+                    //Si existe fechas registradas iguales a las del Excel, sumar a los tiempos del Excel
+                    if (registradoFecha != null)
+                        sumaTiempos += registradoFecha.Sum(x => x.TiempoBombeo);
+                    if (sumaTiempos > 24 || sumaTiempos < 0)
+                        result += "La suma de horas de la fecha " + item.Key.ToString("dd/MM/yyyy") + " del Excel ("+ item.Sum(x => x.TiempoBombeo) + "h) y los registros (" + registradoFecha.Sum(x => x.TiempoBombeo) + "h) supera las 24 horas o es negativo\n";
+                }
+            }
+
             //Validar fechas mayores a la última registrada
             if (ultimoRegistro.Count > 0 && consumos[0].Fecha <= ultimoRegistro.First().Fecha)
                 result += "La fecha de la fila " + fila + " no es mayor o igual a la fecha del último registro correspondiente a esta resolución (" + ultimoRegistro.First().Fecha.ToString("dd/MM/yyyy") + ")\n";
@@ -639,6 +677,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 model.IdFuenteAgua = data.IdFuenteAgua;
                 model.TipoUso = data.TipoUso;
                 model.VolumenOtorgado = data.VolumenOtorgado;
+                model.LimiteDiario = data.LimiteDiario;
+                model.LimiteSemanal = data.LimiteSemanal;
+                model.LimiteMensual = data.LimiteMensual;
                 model.Estado = data.Estado;
                 return View(model);
             }
@@ -657,7 +698,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 if (ModelState.IsValid)
-                    await _editarResolucion.Execute(model.IdResolucionConsumoAgua,model.Resolucion,model.Anio,model.TipoUso,model.ClaseDerecho,model.IdFuenteAgua,model.VolumenOtorgado,model.Actividad, model.Estado);
+                    await _editarResolucion.Execute(model.IdResolucionConsumoAgua, model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.Actividad, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual, model.Estado);
                 return RedirectToAction("DetalleResolucionConsumoAgua", new { IdResolucionConsumoAgua = model.IdResolucionConsumoAgua });
             }
         }
@@ -696,7 +737,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 {
                     if (ModelState.IsValid)
                     {
-                        var idResolucionConsumoAgua = await _agregarResolucion.Execute(model.Resolucion,model.Anio,model.TipoUso,model.ClaseDerecho,model.IdFuenteAgua,model.VolumenOtorgado,model.Actividad);
+                        var idResolucionConsumoAgua = await _agregarResolucion.Execute(model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual, model.Actividad);
                         return RedirectToAction("DetalleResolucionConsumoAgua", new { IdResolucionConsumoAgua = idResolucionConsumoAgua });
                     }
                     return RedirectToAction("AgregarResolucionConsumoAgua");

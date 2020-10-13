@@ -53,6 +53,7 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
                
 
                 ViewBag.Resoluciones = resoluciones;
+                ViewBag.Limites = JsonConvert.SerializeObject(itemsFiltro.ItemsResoluciones.Select(x =>new { IdResolucion = x.IdResolucionConsumoAgua, LimiteDiario = x.LimiteDiario, LimiteSemanal = x.LimiteSemanal, LimiteMensual = x.LimiteMensual}));
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 

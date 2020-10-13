@@ -66,6 +66,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         Estado = fuente.Estado
                     },
                     VolumenOtorgado = item.Volumen_Otorgado,
+                    LimiteDiario = item.Limite_Diario,
+                    LimiteSemanal = item.Limite_Semanal,
+                    LimiteMensual = item.Limite_Mensual,
                     Actividad = item.Actividad
                 });
             }

@@ -1828,6 +1828,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Resolucion= item.Resolucion,
                     TipoUso = item.Tipo_Uso,
                     VolumenOtorgado = item.Volumen_Otorgado,
+                    LimiteDiario = item.Limite_Diario,
+                    LimiteSemanal = item.Limite_Semanal,
+                    LimiteMensual = item.Limite_Mensual,
                     Estado = item.Estado
                 });
             }
@@ -1861,6 +1864,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Resolucion = entity.Resolucion,
                 TipoUso = entity.Tipo_Uso,
                 VolumenOtorgado = entity.Volumen_Otorgado,
+                LimiteDiario = entity.Limite_Diario,
+                LimiteSemanal = entity.Limite_Semanal,
+                LimiteMensual = entity.Limite_Mensual,
                 Estado = entity.Estado
             };
             return output;
@@ -1875,6 +1881,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Clase_Derecho = ResolucionConsumoAgua.ClaseDerecho,
                 Tipo_Uso = ResolucionConsumoAgua.TipoUso,
                 Volumen_Otorgado = ResolucionConsumoAgua.VolumenOtorgado,
+                Limite_Diario = ResolucionConsumoAgua.LimiteDiario,
+                Limite_Semanal = ResolucionConsumoAgua.LimiteSemanal,
+                Limite_Mensual = ResolucionConsumoAgua.LimiteMensual,
                 Estado = "ACT"
             };
             _context.Resoluciones_Consumo_Agua.Add(entity);
@@ -1885,12 +1894,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = await _context.Resoluciones_Consumo_Agua.FirstOrDefaultAsync(x => x.Id_Resolucion_Consumo_Agua.Equals(ResolucionConsumoAgua.IdResolucionConsumoAgua));
             entity.Resolucion = ResolucionConsumoAgua.Resolucion;
-                entity.Actividad = ResolucionConsumoAgua.Actividad;
-                entity.Anio = ResolucionConsumoAgua.Anio;
-                entity.Id_Fuente_Agua = ResolucionConsumoAgua.FuenteAgua.IdFuenteAgua;
-                entity.Clase_Derecho = ResolucionConsumoAgua.ClaseDerecho;
-                entity.Tipo_Uso = ResolucionConsumoAgua.TipoUso;
-                entity.Volumen_Otorgado = ResolucionConsumoAgua.VolumenOtorgado;
+            entity.Actividad = ResolucionConsumoAgua.Actividad;
+            entity.Anio = ResolucionConsumoAgua.Anio;
+            entity.Id_Fuente_Agua = ResolucionConsumoAgua.FuenteAgua.IdFuenteAgua;
+            entity.Clase_Derecho = ResolucionConsumoAgua.ClaseDerecho;
+            entity.Tipo_Uso = ResolucionConsumoAgua.TipoUso;
+            entity.Volumen_Otorgado = ResolucionConsumoAgua.VolumenOtorgado;
+            entity.Limite_Diario = ResolucionConsumoAgua.LimiteDiario;
+            entity.Limite_Semanal = ResolucionConsumoAgua.LimiteSemanal;
+            entity.Limite_Mensual = ResolucionConsumoAgua.LimiteMensual;
             _context.Resoluciones_Consumo_Agua.Update(entity);
             await _context.SaveChangesAsync();
         }

@@ -66,32 +66,34 @@
     </div>
 
     @*Iconos diseñados por <a href="https://www.flaticon.es/autores/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.es/" title="Flaticon"> www.flaticon.es</a>*@
-    <environment include="Production">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-        <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-        <script src="~/lib/charts/Chart.bundle.js"></script>
-        <script src="~/lib/charts/Chart.bundle.min.js"></script>
-        <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
-    </environment>
-    <environment exclude="Production">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
-        </script>
-        <script src="~/lib/charts/Chart.bundle.js"></script>
-        <script src="~/lib/charts/Chart.bundle.min.js"></script>
-        <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
-    </environment>
+<environment include="Production">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/charts/Chart.bundle.js"></script>
+    <script src="~/lib/charts/Chart.bundle.min.js"></script>
+    <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
+    <script src="~/lib/charts/chartjs-plugin-annotation.min.js"></script>
+</environment>
+<environment exclude="Production">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery"
+            crossorigin="anonymous"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            crossorigin="anonymous"
+            integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
+    </script>
+    <script src="~/lib/charts/Chart.bundle.js"></script>
+    <script src="~/lib/charts/Chart.bundle.min.js"></script>
+    <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
+    <script src="~/lib/charts/chartjs-plugin-annotation.min.js"></script>
+</environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @*Prueba COREUI*@

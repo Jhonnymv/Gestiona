@@ -234,6 +234,7 @@
 @section Scripts{
     <script src="~/js/UseCases/Reportes/ReporteConsumoAguaSubterraneaScript.js" type="text/javascript"></script>
     <script type="text/javascript">
+        var limites = @Html.Raw(ViewBag.Limites);
         $("#frecuencia").on("change", function () {
             ActualizarVolumenFecha();
         });

@@ -77,6 +77,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                     var IdEncriptado = _protector.Protect(fila.IdConsumoAgua.ToString());
                     filasTabla += "<tr>";
 
+                    filasTabla += "<td>" + fila.ResolucionConsumoAgua + "</td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy") + "</td>";
                     filasTabla += "<td>" + fila.TiempoBombeo + "</td>";
@@ -143,7 +144,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
                 ViewBag.Message = message;
 
                 return View();
@@ -205,8 +206,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
-
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
 
                 var consumo = await _getConsumoAgua.Execute(desencriptado);
                 var model = new ConsumoAguaSubterraneaModel

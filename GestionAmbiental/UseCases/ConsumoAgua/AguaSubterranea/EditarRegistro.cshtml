@@ -153,7 +153,7 @@
             }
             for (var i = 0; i < ultimosRegistros.length; i++) {
                 if (ultimosRegistros[i].IdResolucion == resol) {
-                    $("#Fecha").val(ultimosRegistros[i].Fecha);
+                    $("#Fecha").val(ultimosRegistros[i].FechaNueva);
                     $("#LecturaInicial").val(ultimosRegistros[i].LecturaInicial);
                     tiempoAnterior = ultimosRegistros[i].TiempoBombeo
                     return;
@@ -161,6 +161,27 @@
             }
         });
 
+        $("#Fecha").on('change', function () {
+            var resol = $("#IdResolucion").val();
+            var fecha = $("#Fecha").val();
+            for (var i = 0; i < ultimosRegistros.length; i++) {
+                if (ultimosRegistros[i].IdResolucion == resol) {
+                    if (ultimosRegistros[i].Fecha == fecha)
+                        tiempoAnterior = ultimosRegistros[i].TiempoBombeo
+                    break;
+                }
+            }
+            horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
+            if (horas != null && horas != "" && (horas < 0 || horas > 24 - tiempoAnterior)) {
+                horas = 0;
+                $("#TiempoBombeo").val(0)
+                $("#LecturaFinal").val(lecturaInicial);
+                if (tiempoAnterior == 24)
+                    alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
+                else
+                    alert("El tiempo de bombeo no debe ser entre 0 y " + (24 - tiempoAnterior) + " horas");
+            }
+        });
         $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
             lecturaInicial = $("#LecturaInicial").val() != "" ? parseFloat($("#LecturaInicial").val()) : null;

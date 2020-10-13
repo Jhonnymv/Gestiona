@@ -11,5 +11,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.CargaExcel
         public double TiempoBombeo { get; set; }
         public double LecturaInicial { get; set; }
         public double LecturaFinal { get; set; }
+        public int Fila { get; set; }
     }
 }

@@ -13,6 +13,9 @@ namespace GestionAmbiental.Domain.ConsumoAgua
         public string ClaseDerecho { get; set; }
         public FuenteAgua FuenteAgua { get; set; }
         public double VolumenOtorgado { get; set; }
+        public double? LimiteDiario { get; set; }
+        public double? LimiteSemanal { get; set; }
+        public double? LimiteMensual { get; set; }
         public string Actividad { get; set; }
         public string Estado { get; set; }
     }

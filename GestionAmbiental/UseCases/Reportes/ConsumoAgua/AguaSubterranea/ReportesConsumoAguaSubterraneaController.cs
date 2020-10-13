@@ -53,7 +53,8 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
                 var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                ViewBag.Resoluciones = resoluciones;
+                ViewBag.Resoluciones = resoluciones; 
+                ViewBag.Limites = JsonConvert.SerializeObject(itemsFiltro.ItemsResoluciones.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, LimiteDiario = x.LimiteDiario, LimiteSemanal = x.LimiteSemanal, LimiteMensual = x.LimiteMensual }));
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 

@@ -26,7 +26,6 @@ namespace GestionAmbiental.Controllers
 
         public async Task<IActionResult> Index()
         {
-            /*
             var rol = await _getRolUsuario.Execute("kevin");
 
             var userInfo = new UserInfo { NombreUsuario = "kevin", Rol = rol.Value };
@@ -34,15 +33,14 @@ namespace GestionAmbiental.Controllers
 
             ViewBag.Rol = userInfo.Rol.ToString();
             ViewBag.Usuario = userInfo.NombreUsuario;
-            */
-            
+            /*
             if (HttpContext.Session.GetString("SessionUser")!= null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
             }
-            
+            */
             return View();
         }
 

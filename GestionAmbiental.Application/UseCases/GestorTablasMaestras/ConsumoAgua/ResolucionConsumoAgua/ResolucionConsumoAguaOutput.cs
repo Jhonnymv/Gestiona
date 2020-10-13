@@ -14,6 +14,9 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
         public int IdFuenteAgua { get; set; }
         public string FuenteAgua { get; set; }
         public double VolumenOtorgado { get; set; }
+        public double? LimiteDiario { get; set; }
+        public double? LimiteSemanal { get; set; }
+        public double? LimiteMensual { get; set; }
         public string Actividad { get; set; }
         public string Estado { get; set; }
         public ResolucionConsumoAguaOutput() { }
@@ -26,6 +29,9 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
             IdFuenteAgua = resolucion.FuenteAgua.IdFuenteAgua;
             FuenteAgua = resolucion.FuenteAgua.Descripcion;
             VolumenOtorgado = resolucion.VolumenOtorgado;
+            LimiteDiario = resolucion.LimiteDiario;
+            LimiteSemanal = resolucion.LimiteSemanal;
+            LimiteMensual = resolucion.LimiteMensual;
             Actividad = resolucion.Actividad;
             Estado = resolucion.Estado;
         }

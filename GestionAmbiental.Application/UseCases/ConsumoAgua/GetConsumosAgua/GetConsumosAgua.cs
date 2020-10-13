@@ -23,12 +23,30 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua
                 fechaFiltro = Convert.ToDateTime(fecha);
 
             var data = await _getConsumoAguaReadOnlyRepository.GetConsumosAgua(fechaFiltro);
-            data = data.Where(x=>x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.Fecha).ToList();
+            data = data.Where(x=>x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.LecturaFinal).ToList();
 
             var output = new ConsumosAguaOutput();
             output.Consumos = new List<ConsumoAguaOutput>();
             output.NConsumo = data.Count;
             data = data.Skip((pagina - 1) * rpp).Take(rpp).ToList();
+
+            foreach (var item in data)
+            {
+                output.Consumos.Add(new ConsumoAguaOutput(item));
+            }
+            return output;
+        }
+
+        public async Task<ConsumosAguaOutput> Execute(string fecha, int origen_agua)
+        {
+            DateTime fechaFiltro = Convert.ToDateTime(fecha);
+
+            var data = await _getConsumoAguaReadOnlyRepository.GetConsumosAguaMensual(fechaFiltro);
+            data = data.Where(x => x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.LecturaFinal).ToList();
+
+            var output = new ConsumosAguaOutput();
+            output.Consumos = new List<ConsumoAguaOutput>();
+            output.NConsumo = data.Count;
 
             foreach (var item in data)
             {

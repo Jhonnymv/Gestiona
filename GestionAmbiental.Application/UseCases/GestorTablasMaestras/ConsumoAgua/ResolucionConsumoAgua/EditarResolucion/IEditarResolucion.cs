@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
 {
     public interface IEditarResolucion
     {
-        Task Execute(int id, string descripcion, string anio, string tipoUso, string claseDerecho, int idFuente, double volumenOtorgado, string actividad, string estado);
+        Task Execute(int id, string descripcion, string anio, string tipoUso, string claseDerecho, int idFuente, double volumenOtorgado, string actividad, double? limiteDiario, double? limiteSemanal, double? limiteMensual, string estado);
     }
 }

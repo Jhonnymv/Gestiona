@@ -60,7 +60,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                             else if (column == Columna + 2)
                                 outputItem.LecturaInicial = sheetRow.GetCell(column).NumericCellValue;
                             else if (column == Columna + 3)
-                                outputItem.LecturaFinal = sheetRow.GetCell(column).NumericCellValue;
+                                outputItem.LecturaFinal = sheetRow.GetCell(column).NumericCellValue;                            
                         }
                         output.Add(outputItem);
                     }

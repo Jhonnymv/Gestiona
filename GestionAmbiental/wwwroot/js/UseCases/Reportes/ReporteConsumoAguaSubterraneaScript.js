@@ -1,6 +1,10 @@
 ﻿var resolucion = $("#Resolucion").val();
 var fechaInicio = "";
 var fechaFin = "";
+//Limites
+var limiteDiario = null;
+var limiteSemanal = null;
+var limiteMensual = null;
 
 //Variables gráfico Volumen X Fecha
 var data_vol_fechas = [];
@@ -52,19 +56,44 @@ function ActualizarVolumenFecha() {
 
                     var labels = [];
                     var data = [];
+                    var valMax = 0;
                     for (var i = 0; i < data_vol_fechas.length; i++) {
+                        if (valMax < data_vol_fechas[i].valor)
+                            valMax = data_vol_fechas[i].valor;
                         labels.push(data_vol_fechas[i].nombre);
                         data.push(data_vol_fechas[i].valor);
                     }
+                    //Actualizar limite
+                    var limite = null;
+                    var frecuencia = $("#frecuencia").val();
+
+                    if (resolucion != "0")
+                        for (var i = 0; i < limites.length; i++)
+                            if (resolucion == limites[i].IdResolucion) {
+                                limiteDiario = limites[i].LimiteDiario;
+                                limiteSemanal = limites[i].LimiteSemanal;
+                                limiteMensual = limites[i].LimiteMensual;
+                            }
+
+                    switch (frecuencia) {
+                        case 'Diario': limite = limiteDiario;
+                            if (limite > valMax)
+                                valMax = limite + 100; break;
+                        case 'Semanal': limite = limiteSemanal;
+                            if (limite > valMax)
+                                valMax = limite + 500; break;
+                        case 'Mensual': limite = limiteMensual;
+                            if (limite > valMax)
+                                valMax = limite + 1000; break;
+                    }
                     //Actualizar gráfica
-                    graph_vol_fechas.data.labels = labels;
-                    graph_vol_fechas.data.datasets[0].data = data;
-                    graph_vol_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
-                    graph_vol_fechas.update();
+                    graph_vol_fechas.destroy();
+                    CrearGraficaVolumenFecha(labels, data, limite, valMax, Math.max(data) / 10);
+
                 } else {
                     //Actualizar contador
                     data_vol_fechas = response.registros;
-
+                    //graph_vol_fechas.clear();
                     CargarDataGraficorVolumenFecha();
                 }
             }
@@ -77,28 +106,53 @@ function ActualizarVolumenFecha() {
 function CargarDataGraficorVolumenFecha() {
     var labels = [];
     var data = [];
+    var frecuencia = $("#frecuencia").val();
+
+    var limite = null
+    var valMax = 0;
+
+    if (resolucion != "0")
+        for (var i = 0; i < limites.length; i++)
+            if (resolucion == limites[i].IdResolucion) {
+                limiteDiario = limites[i].LimiteDiario;
+                limiteSemanal = limites[i].LimiteSemanal;
+                limiteMensual = limites[i].LimiteMensual;
+            }
+
+    switch (frecuencia) {
+        case 'Diario': limite = limiteDiario; break;
+        case 'Semanal': limite = limiteSemanal; break;
+        case 'Mensual': limite = limiteMensual; break;
+    }
+
     for (var i = 0; i < data_vol_fechas.length; i++) {
+        if (valMax < data_vol_fechas[i].valor)
+            valMax = data_vol_fechas[i].valor;
+
         labels.push(data_vol_fechas[i].nombre);
         data.push(data_vol_fechas[i].valor);
     }
+    if (limite > valMax)
+        valMax = limite + 100;
     //Crear gráfica
-    CrearGraficaVolumenFecha(labels, data, Math.max(data) / 10);
+    CrearGraficaVolumenFecha(labels, data, limite, valMax, Math.max(data) / 10);
 }
-function CrearGraficaVolumenFecha(labels, data, stepSize) {
+function CrearGraficaVolumenFecha(labels, data, limite, maximo, stepSize) {
     graph_vol_fechas = new Chart(
         document.getElementById("chart_volumen_fechas"),
         {
             "type": "bar",
             "data": {
                 "labels": labels,
-                "datasets": [{
-                    "label": "m3",
-                    "data": data,
-                    "fill": false,
-                    "backgroundColor": "rgb(46, 103, 147)",
-                    "borderColor": "rgb(46, 103, 147)",
-                    "lineTension": 0.1
-                }]
+                "datasets": [
+                    {
+                        "label": "m3",
+                        "data": data,
+                        "fill": false,
+                        "backgroundColor": "rgb(46, 103, 147)",
+                        "borderColor": "rgb(46, 103, 147)",
+                        "lineTension": 0.1
+                    }]
             },
             "options": {
                 "responsive": true,
@@ -106,7 +160,23 @@ function CrearGraficaVolumenFecha(labels, data, stepSize) {
                     'yAxes': [{
                         'ticks': {
                             'stepSize': stepSize,
-                            'beginAtZero': true
+                            'beginAtZero': true,
+                            'max': maximo
+                        }
+                    }]
+                },
+                "annotation": {
+                    "annotations": [{
+                        "type": 'line',
+                        "mode": 'horizontal',
+                        "scaleID": 'y-axis-0',
+                        "value": limite,
+                        "borderColor": 'rgb(255, 0, 0)',
+                        "borderWidth": 2,
+                        "label": {
+                            "enabled": true,
+                            "position": "center",
+                            "content": limite
                         }
                     }]
                 },

@@ -8,6 +8,7 @@ using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetRegistroRecienteConsumoAgua;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAgua;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua.ResolucionConsumoAgua.GetResolucion;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -24,6 +25,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
         private readonly IEditarConsumoAgua _editarConsumoAgua;
         private readonly IGetRegistrosRecientesConsumoAgua _getRegistrosRecientesConsumoAgua;
+        private readonly IGetResolucion _getResolucion;
         private readonly ISelectItems _selectItems;
         private readonly IDataProtector _protector;
 
@@ -34,6 +36,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             IEditarConsumoAgua editarConsumoAgua,
             IGetRegistrosRecientesConsumoAgua getRegistrosRecientesConsumoAgua,
             ISelectItems selectItems,
+            IGetResolucion getResolucion,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetUsuario getUsuario)
@@ -44,6 +47,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             _editarConsumoAgua = editarConsumoAgua;
             _getRegistrosRecientesConsumoAgua = getRegistrosRecientesConsumoAgua;
             _selectItems = selectItems;
+            _getResolucion = getResolucion;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ConsumoAguaMarIdRouteValue);
         }
 
@@ -80,6 +84,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                     var IdEncriptado = _protector.Protect(fila.IdConsumoAgua.ToString());
                     filasTabla += "<tr>";
                    
+                    filasTabla += "<td>" + fila.ResolucionConsumoAgua + "</td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy") + "</td>";
                     filasTabla += "<td>" + fila.TiempoBombeo + "</td>";
@@ -146,7 +151,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
                 ViewBag.Message = message;
                 return View();
             }
@@ -159,9 +164,11 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var volumenAguaBombeado = CalcularVolumenAguaBombeado(model.LecturaInicial, model.LecturaFinal);
                 var caudalPromedio = CalcularCaudalPromedio(model.LecturaInicial, model.LecturaFinal, model.TiempoBombeo);
+                var resolucion = await _getResolucion.Execute(model.IdResolucion);
+                var items = await _selectItems.GetSelectItems();
+
                 if (volumenAguaBombeado != -1 && caudalPromedio != -1)
                 {
-
                     var id = await _registrarConsumoAgua.Execute(
                         model.IdResolucion,
                         model.Fecha,
@@ -172,7 +179,14 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                         caudalPromedio,
                         userInfo.NombreUsuario);
 
-                    return RedirectToAction("Resumen");
+                    var registradosMensual = await _getConsumosAgua.Execute(model.Fecha, items.ItemsOrigenes.FirstOrDefault(x => x.Descripcion.Equals("Agua de Mar")).IdOrigenAgua);
+                    var consumoActual = registradosMensual.Consumos.Sum(x => x.VolumenBombeado);
+                    if (consumoActual > (resolucion.LimiteMensual*0.9))
+                    {                        
+                        return RedirectToAction("NotificarLimiteConsumoAguaMarMensual", "NotificacionesConsumoAgua", new { IdConsumo = id, limiteMensual = resolucion.LimiteMensual, volumenActual = consumoActual });                        
+                    }
+                    else
+                        return RedirectToAction("Resumen");
                 }
                 else
                 {
@@ -207,7 +221,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
 
                 var consumo = await _getConsumoAgua.Execute(desencriptado);
                 var model = new ConsumoAguaMarModel
