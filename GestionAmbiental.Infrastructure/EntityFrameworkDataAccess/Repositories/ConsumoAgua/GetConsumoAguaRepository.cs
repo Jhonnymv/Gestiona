@@ -65,12 +65,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<Domain.ConsumoAgua.ConsumoAgua>> GetConsumosAgua(DateTime? fecha)
+        public async Task<List<Domain.ConsumoAgua.ConsumoAgua>> GetConsumosAgua(DateTime? fecha, int idResolucion)
         {
             var data = await _context.Consumos_Agua.ToListAsync();
 
             if (fecha.HasValue)
                 data = data.Where(x => x.Fecha.Date.Equals(fecha.Value.Date)).ToList();
+            if (idResolucion != 0)
+                data = data.Where(x => x.Id_Resolucion_Consumo_Agua.Equals(idResolucion)).ToList();
 
             var output = new List<Domain.ConsumoAgua.ConsumoAgua>();
 

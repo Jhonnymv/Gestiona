@@ -51,7 +51,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ConsumoAguaMarIdRouteValue);
         }
 
-        public IActionResult Resumen()
+        public async Task<IActionResult> Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -60,7 +60,12 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var items = await _selectItems.GetSelectItems();
 
+                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Resoluciones = resoluciones;
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
@@ -68,11 +73,11 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int rpp, int pagina)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int resolucion, int rpp, int pagina)
         {
             var items = await _selectItems.GetSelectItems();
 
-            var datosTabla = await _getConsumosAgua.Execute(fecha, pagina, rpp,items.ItemsOrigenes.FirstOrDefault(x=>x.Descripcion.Equals("Agua de Mar")).IdOrigenAgua);
+            var datosTabla = await _getConsumosAgua.Execute(fecha,resolucion, pagina, rpp,items.ItemsOrigenes.FirstOrDefault(x=>x.Descripcion.Equals("Agua de Mar")).IdOrigenAgua);
 
             var filasTabla = "";
             var paginador = "";
@@ -144,13 +149,13 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x=>x.IdResolucionConsumoAgua).ToArray();
                 var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
 
-                var resoluciones = items.ItemsResoluciones.Where(x=>x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
-                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var actividades = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Actividad }).ToList();
+                actividades.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+                var resolucionesAct = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.Resolucion }).ToArray();
 
-                ViewBag.Resoluciones = resoluciones;
-                ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.Actividades = actividades;
+                ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
                 ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
                 ViewBag.Message = message;
                 return View();
@@ -212,15 +217,16 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 
                 var items = await _selectItems.GetSelectItems();
 
-                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
-                resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var fuentesAgua = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.FuenteAgua.Descripcion }).ToArray();
+                var actividades = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Actividad }).ToList();
+                actividades.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var resolucionesAct = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => new { x.IdResolucionConsumoAgua, x.Resolucion }).ToArray();
 
                 var idsResoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(x => x.IdResolucionConsumoAgua).ToArray();
                 var ultimosRegistros = await _getRegistrosRecientesConsumoAgua.Execute(idsResoluciones);
 
-                ViewBag.Resoluciones = resoluciones;
-                ViewBag.FuentesAgua = JsonConvert.SerializeObject(fuentesAgua);
+                ViewBag.Actividades = actividades;
+                ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
                 ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
 
                 var consumo = await _getConsumoAgua.Execute(desencriptado);
@@ -241,7 +247,6 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 return View(model);
             }
         }
-
         [HttpPost]
         public async Task<IActionResult> EditarRegistro(ConsumoAguaMarModel model)
         {

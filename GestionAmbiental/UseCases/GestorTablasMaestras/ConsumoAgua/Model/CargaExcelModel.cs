@@ -21,9 +21,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model
         [DisplayName("Número de la columna de fechas:")]
         [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public int ColumnaInicio { get; set; }
-        [DisplayName("Resolución a la cual pertenecen los datos:")]
+        [DisplayName("Actividad a la cual pertenecen los datos:")]
         [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
-        public int Resolucion { get; set; }
-        public string FuenteAgua { get; set; }
+        public int IdResolucion { get; set; }
+        [DisplayName("Resolución a la cual pertenecen los datos:")]
+        public string Resolucion { get; set; }
     }
 }

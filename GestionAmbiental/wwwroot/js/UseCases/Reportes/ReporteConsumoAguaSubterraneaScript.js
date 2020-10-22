@@ -47,7 +47,7 @@ function ActualizarVolumenFecha() {
                 "Resolucion": $("#Resolucion").val(),
                 "FechaInicio": $("#FInicio").val(),
                 "FechaFin": $("#FFin").val(),
-                "frecuencia": $("#frecuencia").val()
+                "frecuencia": $("#frecuencia_consumo").val()
             },
             success: (response) => {
                 if (data_vol_fechas.length > 0) {
@@ -65,7 +65,7 @@ function ActualizarVolumenFecha() {
                     }
                     //Actualizar limite
                     var limite = null;
-                    var frecuencia = $("#frecuencia").val();
+                    var frecuencia = $("#frecuencia_consumo").val();
 
                     if (resolucion != "0")
                         for (var i = 0; i < limites.length; i++)
@@ -106,7 +106,7 @@ function ActualizarVolumenFecha() {
 function CargarDataGraficorVolumenFecha() {
     var labels = [];
     var data = [];
-    var frecuencia = $("#frecuencia").val();
+    var frecuencia = $("#frecuencia_consumo").val();
 
     var limite = null
     var valMax = 0;
@@ -325,6 +325,7 @@ function ActualizarCaudalFecha() {
                 "Resolucion": $("#Resolucion").val(),
                 "FechaInicio": $("#FInicio").val(),
                 "FechaFin": $("#FFin").val(),
+                "frecuencia": $("#frecuencia_consumo").val()    
             },
             success: (response) => {
                 if (data_caudal_fechas.length > 0) {

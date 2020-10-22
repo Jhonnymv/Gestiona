@@ -1,6 +1,6 @@
 ﻿@model GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea.FiltroReportesConsumoAguaSubterraneaModel
 @{
-    ViewData["Title"] = "Resumen";
+    ViewData["Title"] = "PLATAFORMA GESTIONA - MARCOBRE";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
@@ -65,7 +65,7 @@
                             <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Consumo de Agua</h6>
                         </div>
                         <div class="col-2">
-                            <select id="frecuencia" class="form-control">
+                            <select id="frecuencia_consumo" class="form-control">
                                 <option value="Diario" selected>Diario</option>
                                 <option value="Semanal">Semanal</option>
                                 <option value="Mensual">Mensual</option>s
@@ -103,6 +103,11 @@
                             <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Caudal Promedio Diario</h6>
                         </div>
                         <div class="col-2">
+                            <select id="frecuencia_caudal" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>s
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -218,7 +223,7 @@
         <div class="col-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Autorizado por Resolución</h6>
+                    <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Restante</h6>
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -235,8 +240,11 @@
     <script src="~/js/UseCases/Reportes/ReporteConsumoAguaSubterraneaScript.js" type="text/javascript"></script>
     <script type="text/javascript">
         var limites = @Html.Raw(ViewBag.Limites);
-        $("#frecuencia").on("change", function () {
+        $("#frecuencia_consumo").on("change", function () {
             ActualizarVolumenFecha();
+        });
+        $("#frecuencia_caudal").on("change", function () {
+            ActualizarCaudalFecha();
         });
         $("#descargar").on('click', function () {
             fechaInicio = $("#FInicio").val();

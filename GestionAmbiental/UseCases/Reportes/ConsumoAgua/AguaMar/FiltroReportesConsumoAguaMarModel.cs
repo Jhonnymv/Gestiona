@@ -9,7 +9,7 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
 {
     public class FiltroReportesConsumoAguaMarModel
     {
-        [DisplayName("Resolución:")]
+        [DisplayName("Actividad:")]
         public int Resolucion { get; set; }
         [DisplayName("Año (Descarga Excel):")]
         public int Anio { get; set; }

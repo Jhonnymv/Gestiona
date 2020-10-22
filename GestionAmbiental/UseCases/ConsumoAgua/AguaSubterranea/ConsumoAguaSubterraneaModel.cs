@@ -10,9 +10,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
     public class ConsumoAguaSubterraneaModel
     {
         public int Id { get; set; }
-        [DisplayName("Resolución:")]
+        [DisplayName("Actividad:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int IdResolucion { get; set; }
+        [DisplayName("Resolución:")]
         public string Resolucion { get; set; }
         [DisplayName("Fuente de Agua:")]
         public string FuenteAgua { get; set; }
@@ -34,3 +35,4 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
         public double CaudalPromedio { get; set; }
     }
 }
+

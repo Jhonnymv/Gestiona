@@ -38,20 +38,20 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-5 col-lg-4 mb-2">
-            <label asp-for="Resolucion"></label>
+            <label asp-for="IdResolucion"></label>
         </div>
         <div class="col-sm-12 col-md-5 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Resolucion"></span>
-            <select asp-for="Resolucion" class="form-control" asp-items="ViewBag.Resoluciones"></select>
+            <span class="text-danger" asp-validation-for="IdResolucion"></span>
+            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades"></select>
         </div>
     </div>
     <div class="row justify-content-center">
         <div class="col-sm-12 col-md-5 col-lg-4 mb-2">
-            <label asp-for="FuenteAgua"></label>
+            <label asp-for="Resolucion"></label>
         </div>
         <div class="col-sm-12 col-md-5 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="FuenteAgua"></span>
-            <input type="text" class="form-control" asp-for="FuenteAgua" readonly/>
+            <span class="text-danger" asp-validation-for="Resolucion"></span>
+            <input type="text" class="form-control" asp-for="Resolucion" readonly/>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -95,7 +95,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
+        var resolucionesAct = JSON.parse('@Html.Raw(ViewBag.ResolucionesAct)');
         $("#Excel").change(function () {
             $("#danger_excel").html("");
             //Validacion del tamaño del archivo
@@ -120,11 +120,11 @@
                 filesName.length > 0 ? $("#files_name").html(filesName) : null;
             }
         });
-        $("#Resolucion").on('change', function () {
-            var resol = $("#Resolucion").val();
-            for (var i = 0; i < fuentesAgua.length; i++) {
-                if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
-                    $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+        $("#IdResolucion").on('change', function () {
+            var resol = $("#IdResolucion").val();
+            for (var i = 0; i < resolucionesAct.length; i++) {
+                if (resolucionesAct[i].IdResolucionConsumoAgua == resol) {
+                    $("#Resolucion").val(resolucionesAct[i].Resolucion);
                     return;
                 }
             }

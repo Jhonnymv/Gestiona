@@ -1903,6 +1903,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Limite_Diario = ResolucionConsumoAgua.LimiteDiario;
             entity.Limite_Semanal = ResolucionConsumoAgua.LimiteSemanal;
             entity.Limite_Mensual = ResolucionConsumoAgua.LimiteMensual;
+            entity.Estado = ResolucionConsumoAgua.Estado;
             _context.Resoluciones_Consumo_Agua.Update(entity);
             await _context.SaveChangesAsync();
         }

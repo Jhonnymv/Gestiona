@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAgua
             _getReportesConsumoAguaReadOnlyRepository = getReportesConsumoAguaReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesConsumoAguaReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int resolucion, string FechaInicio, string FechaFin)
+        public async Task<List<DimensionOutput>> Execute(int resolucion, string FechaInicio, string FechaFin,string frecuencia)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -30,7 +30,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAgua
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            var data = await _getReportesConsumoAguaReadOnlyRepository.GetCaudalPromedioFecha(resolucion, 2, fInicio, fFinal);
+            var data = await _getReportesConsumoAguaReadOnlyRepository.GetCaudalPromedioFecha(resolucion, 2, fInicio, fFinal,frecuencia);
             data = data.OrderBy(x => x.Index).ToList();
 
             var output = new List<DimensionOutput>();

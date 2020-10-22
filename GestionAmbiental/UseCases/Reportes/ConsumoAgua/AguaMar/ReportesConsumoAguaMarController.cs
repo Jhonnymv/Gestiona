@@ -48,10 +48,9 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
 
                 var itemsFiltro = await _selectItems.GetSelectItems();
 
-                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua de Mar")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Actividad +" ("+ g.Resolucion+")" }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                
-
                 ViewBag.Resoluciones = resoluciones;
                 ViewBag.Limites = JsonConvert.SerializeObject(itemsFiltro.ItemsResoluciones.Select(x =>new { IdResolucion = x.IdResolucionConsumoAgua, LimiteDiario = x.LimiteDiario, LimiteSemanal = x.LimiteSemanal, LimiteMensual = x.LimiteMensual}));
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
@@ -84,9 +83,9 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin)
+        public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin, string frecuencia)
         {
-            var registros = await _getCaudalPromedioFecha.Execute(resolucion,fechaInicio,fechaFin);
+            var registros = await _getCaudalPromedioFecha.Execute(resolucion,fechaInicio,fechaFin,frecuencia);
 
             dynamic response = new
             {

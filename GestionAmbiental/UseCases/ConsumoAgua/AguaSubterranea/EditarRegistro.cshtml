@@ -1,12 +1,12 @@
 ﻿@model GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea.ConsumoAguaSubterraneaModel
 @{
-    ViewData["Title"] = "EditarRegistro";
+    ViewData["Title"] = "Editar Registro";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Editar Consumo de Agua</h2>
+        <h2>Editar Consumo de Agua Subterranea</h2>
     </div>
 </div>
 
@@ -18,14 +18,14 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="IdResolucion"></span>
-            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Resoluciones" value="@Model.IdResolucion" disabled></select>
+            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades" value="@Model.IdResolucion" disabled></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="FuenteAgua"></label>
+            <label asp-for="Resolucion"></label>
         </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="FuenteAgua"></span>
-            <input type="text" class="form-control" asp-for="FuenteAgua" readonly />
+        <div class="col-sm-12 col-md-3 col-lg-6 mb-2">
+            <span class="text-danger" asp-validation-for="Resolucion"></span>
+            <input type="text" class="form-control" asp-for="Resolucion" readonly />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Fecha"></label>
@@ -127,8 +127,8 @@
         var horas = 0;
         var lecturaInicial = 0;
         var lecturaFinal = 0;
-        var fuentesAgua = JSON.parse('@Html.Raw(ViewBag.FuentesAgua)');
         var rolUsuario = '@Html.Raw(ViewBag.Rol)';
+        var resolucionesAct = JSON.parse('@Html.Raw(ViewBag.ResolucionesAct)');
         var ultimosRegistros = JSON.parse('@Html.Raw(ViewBag.RegistrosResolucion)');
         var tiempoAnterior = 0;
 
@@ -138,16 +138,16 @@
                 $("#FuenteAgua").prop('readonly', false);
                 $("#Fecha").prop('readonly', false);
                 $("#TiempoBombeo").prop('readonly', false);
-                $("#LecturaInicial").prop('readonly', false);
+                //$("#LecturaInicial").prop('readonly', false);
                 $("#LecturaFinal").prop('readonly', false);
             }
         });
 
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
-            for (var i = 0; i < fuentesAgua.length; i++) {
-                if (fuentesAgua[i].IdResolucionConsumoAgua == resol) {
-                    $("#FuenteAgua").val(fuentesAgua[i].Descripcion);
+            for (var i = 0; i < resolucionesAct.length; i++) {
+                if (resolucionesAct[i].IdResolucionConsumoAgua == resol) {
+                    $("#Resolucion").val(resolucionesAct[i].Resolucion);
                     break;
                 }
             }
@@ -155,7 +155,7 @@
                 if (ultimosRegistros[i].IdResolucion == resol) {
                     $("#Fecha").val(ultimosRegistros[i].FechaNueva);
                     $("#LecturaInicial").val(ultimosRegistros[i].LecturaInicial);
-                    tiempoAnterior = ultimosRegistros[i].TiempoBombeo
+                    tiempoAnterior = 0;
                     return;
                 }
             }
@@ -203,6 +203,7 @@
                         CalcularCaudalPromedio();
                     } else {
                         alert("La lectura final debe ser mayor o igual a la inicial");
+                        $("#LecturaFinal").val(lecturaInicial);
                     }
                 } else {
                     alert("Los valores deben se positivos");

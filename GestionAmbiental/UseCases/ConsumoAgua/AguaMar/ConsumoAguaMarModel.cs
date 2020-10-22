@@ -10,9 +10,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
     public class ConsumoAguaMarModel
     {
         public int Id { get; set; }
-        [DisplayName("Resolución:")]
+        [DisplayName("Actividad:")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int IdResolucion { get; set; }
+        [DisplayName("Resolución:")]
         public string Resolucion { get; set; }
         [DisplayName("Fuente de Agua:")]
         public string FuenteAgua { get; set; }

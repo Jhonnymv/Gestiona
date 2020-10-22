@@ -50,7 +50,7 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
 
                 var itemsFiltro = await _selectItems.GetSelectItems();
 
-                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = itemsFiltro.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Actividad + " (" + g.Resolucion + ")" }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.Resoluciones = resoluciones; 
@@ -85,9 +85,9 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaSubterranea
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin)
+        public async Task<IActionResult> GetCaudalPromedioFecha(int resolucion, string fechaInicio, string fechaFin, string frecuencia)
         {
-            var registros = await _getCaudalPromedioFecha.Execute(resolucion, fechaInicio, fechaFin);
+            var registros = await _getCaudalPromedioFecha.Execute(resolucion, fechaInicio, fechaFin,frecuencia);
 
             dynamic response = new
             {
