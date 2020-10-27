@@ -945,15 +945,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 if (ModelState.IsValid) {
-                    try
-                    {
-                        var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
-                        var mensaje = mensajeContactos.Substring(10);
-                        mensajeContactos = mensajeContactos.Replace(mensaje, model.Mensaje);
-                        System.IO.File.WriteAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"), mensajeContactos);
-                    }
-                    catch (Exception e) { 
-                    }
+                    var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
+                    var mensaje = mensajeContactos.Substring(10);
+                    mensajeContactos = mensajeContactos.Replace(mensaje, model.Mensaje);
+                    System.IO.File.WriteAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"), mensajeContactos);
                 }
                 return RedirectToAction("DetalleMensajeContactoEmergencia");
             }

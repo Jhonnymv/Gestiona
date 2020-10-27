@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua;
@@ -26,6 +27,7 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notifi
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuarios_Notificar_Consumo_Agua.GetUsuarios;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -35,6 +37,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 {
     public class GestorConsumoAguaController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IAgregarFuenteAgua _agregarFuenteAgua;
         private readonly IEditarFuenteAgua _editarFuenteAgua;
         private readonly IGetFuenteAgua _getFuenteAgua;
@@ -69,6 +72,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         private readonly ISelectItems _selectItems;
 
         public GestorConsumoAguaController(
+            IHostingEnvironment hostingEnvironment,
             IAgregarFuenteAgua agregarFuenteAgua, 
             IEditarFuenteAgua editarFuenteAgua,
             IGetFuenteAgua getFuenteAgua,
@@ -92,6 +96,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios getUsuarios,
             ISelectItems selectItems)
         {
+            _hostingEnvironment = hostingEnvironment;
             _agregarFuenteAgua = agregarFuenteAgua;
             _editarFuenteAgua = editarFuenteAgua;
             _getFuenteAgua = getFuenteAgua;
@@ -903,6 +908,119 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 await _deleteUsuario.Execute(Id_Usuario);
                 return RedirectToAction("Resumen");
             }
+        }
+
+        //Mensajes Error
+        [HttpPost]
+        public async Task<IActionResult> FiltrarMensajeError(string filtro)
+        {
+            var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var mensajes = JsonConvert.DeserializeObject<Mensajes>(textoMensajes);
+
+            var data = mensajes.MensajesError;
+
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Tipo</th>";
+            tabla += "<th>Mensaje</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            if (data.Count > 0)
+            {
+                foreach (var fila in data)
+                {
+
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.Tipo + "</td>";
+                    filasTabla += "<td>" + fila.Mensaje + "</td>";
+                    filasTabla += "<td><a href=\"/GestorConsumoAgua/DetalleMensajeError?Tipo=" + fila.Tipo + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+                paginador += "<ul class=\"pagination\">";
+                paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarMensajeError(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                paginador += "</ul>";
+
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+
+        }
+        public async Task<IActionResult> DetalleMensajeError(string Tipo)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _getFuentesAgua.Execute();
+                var fuentes = items.Fuentes.Select(g => new SelectListItem() { Value = g.IdFuenteAgua.ToString(), Text = g.Descripcion, Disabled = g.Estado.Equals("INA") }).ToList();
+                fuentes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                ViewBag.FuentesAgua = fuentes;
+
+                var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var mensajes = JsonConvert.DeserializeObject<Mensajes>(textoMensajes);
+                var model = new MensajeErrorModel();
+                model.Tipo = mensajes.MensajesError.First(x => x.Tipo.Equals(Tipo)).Tipo;
+                model.Mensaje = mensajes.MensajesError.First(x => x.Tipo.Equals(Tipo)).Mensaje;
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarMensajeError(MensajeErrorModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                {
+                    var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    var mensajes = JsonConvert.DeserializeObject<Mensajes>(textoMensajes);
+
+                    mensajes.MensajesError.First(x => x.Tipo.Equals(model.Tipo)).Mensaje = model.Mensaje;                  
+
+                    System.IO.File.WriteAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), JsonConvert.SerializeObject(mensajes), System.Text.Encoding.GetEncoding("iso-8859-1"));                    
+                }
+
+                return RedirectToAction("DetalleMensajeError", new { Tipo = model.Tipo });
+            }
+        }
+
+        private class Mensajes
+        {
+            public List<MensajeError> MensajesError { get; set; }
+        }
+        private class MensajeError
+        {
+            public string Tipo { get; set; }
+            public string Mensaje { get; set; }
         }
     }
 }

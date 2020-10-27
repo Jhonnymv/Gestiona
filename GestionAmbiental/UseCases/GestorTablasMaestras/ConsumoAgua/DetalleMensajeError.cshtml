@@ -1,0 +1,73 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model.MensajeErrorModel
+@{
+    ViewData["Title"] = "DetalleMensajeError";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Mensaje de Error</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="EditarMensajeError">
+            <div class="row mb-2">
+                <div class="col-lg-12 text-center">
+                    <label>El mensaje debe mantener las palabras ARG1, ARG2 o ARG3, si las tiene, que serán remplazadas por valores</label>
+                </div>
+            </div><div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Tipo"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Tipo"></span>
+                    <input type="text" class="form-control" asp-for="Tipo" readonly>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Mensaje"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Mensaje"></span>
+                    <input type="text" class="form-control" asp-for="Mensaje" readonly>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#Mensaje").prop('readonly', false);
+        });
+
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#Mensaje").prop('readonly', true);
+        });
+    </script>
+}
+

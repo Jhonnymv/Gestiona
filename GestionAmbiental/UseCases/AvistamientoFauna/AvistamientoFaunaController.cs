@@ -104,7 +104,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
                 
-                var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"));
+                var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"), System.Text.Encoding.GetEncoding("iso-8859-1"));
                 mensajeContactos = mensajeContactos.Substring(10);
 
                 ViewBag.TipoFauna = tiposFauna;

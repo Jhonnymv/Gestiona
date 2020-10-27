@@ -19,6 +19,9 @@
             <li class="nav-item">
                 <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="Mensajes">Mensajes de Error</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -64,31 +67,44 @@
             if ($("#Usuarios").hasClass("active")) {
                 FiltrarUsuario(1);
             }
+            if ($("#Mensajes").hasClass("active")) {
+                FiltrarMensajeError(1);
+            }
         });
         $("#Resoluciones").on('click', function (e) {
             $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").show();
             $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarResolucionConsumoAgua");
-            $("#opcion_editar_mensaje").hide();
             FiltrarResolucionConsumoAgua(1);
         });
         $("#Fuentes_Agua").on('click', function (e) {
             $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").show();
             $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarFuenteAgua");
-            $("#opcion_editar_mensaje").hide();
             FiltrarFuenteAgua(1);
         });
         $("#Origenes_Agua").on('click', function (e) {
             $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").show();
             $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarOrigenAgua");
-            $("#opcion_editar_mensaje").hide();
             FiltrarOrigenAgua(1);
         });
         
         $("#Usuarios").on('click', function (e) {
             $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").show();
             $("#btn_agregar").prop("href", "/GestorConsumoAgua/AgregarUsuario");
-            $("#opcion_editar_mensaje").hide();
             FiltrarUsuario(1);
+        });
+        $("#Mensajes").on('click', function (e) {
+            $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").hide();
+            FiltrarMensajeError();
         });
         
         function FiltrarResolucionConsumoAgua(pag) {
@@ -141,8 +157,22 @@
                     $('#paginado').html(response.paginador)
                 }
             });
+        }        
+        function FiltrarMensajeError() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorConsumoAgua/FiltrarMensajeError",
+                data: {
+                    "filtro": $('#filtro').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
         }
-        
         function FiltrarUsuario(pag) {
             $.ajax({
                 type: "POST",

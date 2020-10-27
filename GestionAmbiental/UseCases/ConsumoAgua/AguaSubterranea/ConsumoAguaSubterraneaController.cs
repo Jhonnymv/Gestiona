@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.EditarConsumoAgua;
@@ -9,6 +10,7 @@ using GestionAmbiental.Application.UseCases.ConsumoAgua.GetRegistroRecienteConsu
 using GestionAmbiental.Application.UseCases.ConsumoAgua.Items;
 using GestionAmbiental.Application.UseCases.ConsumoAgua.RegistrarConsumoAgua;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -18,6 +20,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 {
     public class ConsumoAguaSubterraneaController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IGetConsumosAgua _getConsumosAgua;
         private readonly IGetConsumoAgua _getConsumoAgua;
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
@@ -27,6 +30,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
         private readonly IDataProtector _protector;
 
         public ConsumoAguaSubterraneaController(
+            IHostingEnvironment hostingEnvironment,
             IGetConsumosAgua getConsumosAgua,
             IGetConsumoAgua getConsumoAgua,
             IRegistrarConsumoAgua registrarConsumoAgua,
@@ -36,6 +40,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _hostingEnvironment = hostingEnvironment;
             _getConsumosAgua = getConsumosAgua;
             _getConsumoAgua = getConsumoAgua;
             _registrarConsumoAgua = registrarConsumoAgua;
@@ -55,7 +60,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 var items = await _selectItems.GetSelectItems();
 
-                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = g.Resolucion }).ToList();
+                var resoluciones = items.ItemsResoluciones.Where(x => x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(g => new SelectListItem() { Value = g.IdResolucionConsumoAgua.ToString(), Text = "(" + g.Actividad + ") " + g.Resolucion }).ToList();
                 resoluciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.Resoluciones = resoluciones;
@@ -81,7 +86,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                 {
                     var IdEncriptado = _protector.Protect(fila.IdConsumoAgua.ToString());
                     filasTabla += "<tr>";
-
+                    filasTabla += "<td>" + fila.Actividad + "</td>";
                     filasTabla += "<td>" + fila.ResolucionConsumoAgua + "</td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy") + "</td>";
@@ -146,7 +151,9 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                 actividades.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var resolucionesAct = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => new { x.IdResolucionConsumoAgua, x.Resolucion }).ToArray();
+                var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
 
+                ViewBag.MensajesError = textoMensajes;
                 ViewBag.Actividades = actividades;
                 ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
                 ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
@@ -209,7 +216,9 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
                 actividades.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var resolucionesAct = items.ItemsResoluciones.Where(x => x.Estado.Equals("ACT") && x.FuenteAgua.OrigenAgua.Descripcion.Equals("Agua Subterranea")).Select(x => new { x.IdResolucionConsumoAgua, x.Resolucion }).ToArray();
+                var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
 
+                ViewBag.MensajesError = textoMensajes;
                 ViewBag.Actividades = actividades;
                 ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
                 ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));

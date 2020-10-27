@@ -10,6 +10,7 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua
         public int IdConsumoAgua { get; set; }
         public int IdResolucionConsumoAgua { get; set; }
         public string ResolucionConsumoAgua { get; set; }
+        public string Actividad { get; set; }
         public string FuenteAgua { get; set; }
         public DateTime Fecha { get; set; }
         public double TiempoBombeo { get; set; }
@@ -28,6 +29,7 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua
         {
             IdConsumoAgua = consumoAgua.IdConsumoAgua;
             IdResolucionConsumoAgua = consumoAgua.ResolucionConsumoAgua.IdResolucionConsumoAgua;
+            Actividad = consumoAgua.ResolucionConsumoAgua.Actividad;
             ResolucionConsumoAgua = consumoAgua.ResolucionConsumoAgua.Resolucion;
             FuenteAgua = consumoAgua.ResolucionConsumoAgua.FuenteAgua.Descripcion;
             Fecha = consumoAgua.Fecha;
