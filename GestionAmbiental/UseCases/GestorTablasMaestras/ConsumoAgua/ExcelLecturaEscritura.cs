@@ -48,7 +48,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 for (int row = Fila; row <= sheet.LastRowNum; row++)
                 {
                     var sheetRow = sheet.GetRow(row);
-                    if (sheetRow != null) //null is when the row only contains empty cells 
+                    if (sheetRow != null && sheetRow.Cells.Count==7) //null is when the row only contains empty cells 
                     {
                         var outputItem = new ConsumoAguaModel();
                         for (int column = Columna; column < Columna + 4; column++)

@@ -10,7 +10,7 @@
     </div>
 </div>
 
-<form class="form-group" id="form_nuevo_avistamiento" asp-action="NuevoRegistro" asp-controller="ConsumoAguaMar" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_nuevo_consumo" asp-action="NuevoRegistro" asp-controller="ConsumoAguaMar" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="IdResolucion"></label>
@@ -48,7 +48,7 @@
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <span class="text-danger" asp-validation-for="LecturaInicial"></span>
-            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly/>
+            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="LecturaFinal"></label>
@@ -83,7 +83,7 @@
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaMar" asp-action="Resumen">Cancelar</a>
         @*<button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>*@
-        <button type="submit" class="btn btn-primary">Registrar</button>
+        <button id="btn_enviar" type="button" class="btn btn-primary">Registrar</button>
     </div>
 </form>
 <!-- Modal Calcular Tiempo Bombeo-->
@@ -105,7 +105,7 @@
                         <label>Tiempo en Minutos:</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" class="form-control" id="cal_tiempo_minutos" min="0"/>
+                        <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
                     </div>
                 </div>
                 <div class="row mb-2">
@@ -113,7 +113,7 @@
                         <label>Tiempo en Horas:</label>
                     </div>
                     <div class="col-8">
-                        <input type="number" class="form-control" id="cal_tiempo_horas" readonly/>
+                        <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
                     </div>
                 </div>
             </div>
@@ -133,7 +133,11 @@
         var mensajesError = @Html.Raw(ViewBag.MensajesError);
         var resolucionesAct = JSON.parse('@Html.Raw(ViewBag.ResolucionesAct)');
         var ultimosRegistros = JSON.parse('@Html.Raw(ViewBag.RegistrosResolucion)');
+        var caudalPromedio = -1;
         var tiempoAnterior = 0;
+        $(document).ready(function () {
+            $("#LecturaInicial").val(0);
+        });
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
             for (var i = 0; i < resolucionesAct.length; i++) {
@@ -147,7 +151,8 @@
                     $("#Fecha").prop("min", ultimosRegistros[i].Fecha);
                     $("#Fecha").val(ultimosRegistros[i].FechaNueva);
                     $("#LecturaInicial").val(ultimosRegistros[i].LecturaInicial);
-                    tiempoAnterior = 0;
+                    tiempoAnterior = 0;                    
+                    caudalPromedio = ultimosRegistros[i].CaudalPromedio;
                     return;
                 }
             }
@@ -171,7 +176,7 @@
                 $("#LecturaFinal").val(lecturaInicial);
                 lecturaFinal = lecturaInicial;
                 if (tiempoAnterior == 24)
-                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))                
+                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))
                     //alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
                 else
                     alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1",  (24 - tiempoAnterior)))
@@ -196,48 +201,66 @@
                 }
             }
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
-            if (horas != null && lecturaInicial != null && lecturaFinal != null) {
+            if (horas != null) {
                 //horas entre 0 y 24
                 if (horas != "" && (horas < 0 || horas > 24 - tiempoAnterior)) {
                     horas = 0;
                     $("#TiempoBombeo").val(0)
                     $("#LecturaFinal").val(lecturaInicial);
                     lecturaFinal = lecturaInicial;
-                    if (tiempoAnterior == 24)
-                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1",$("#Fecha").val()))
+                    if (tiempoAnterior == 24) {
+                        alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))
                         //alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
-                    else
-                    alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1",  (24 - tiempoAnterior)))
-                    //alert("El tiempo de bombeo debe estar entre 0 y " + (24 - tiempoAnterior) + " horas");    
-                    CalcularVolumenAguaBombeado();
-                    CalcularCaudalPromedio();
-                }
-                if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
-                    if (lecturaFinal >= lecturaInicial) {
                         CalcularVolumenAguaBombeado();
                         CalcularCaudalPromedio();
+                        return;
+                    }
+                    else {
+                        alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1", (24 - tiempoAnterior)))
+                        //alert("El tiempo de bombeo debe estar entre 0 y " + (24 - tiempoAnterior) + " horas");
+                        CalcularVolumenAguaBombeado();
+                        CalcularCaudalPromedio();
+                        return;
+                    }
+                }
+                if (lecturaInicial != null && lecturaFinal != null) {
+                    if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
+                        if (lecturaFinal > lecturaInicial) {
+                            CalcularVolumenAguaBombeado();
+                            CalcularCaudalPromedio();
+                        }
+                        else if (lecturaFinal == lecturaInicial || horas == 0) {
+                            horas = 0;
+                            $("#TiempoBombeo").val(0)
+                            $("#LecturaFinal").val(lecturaInicial)
+                            alert(mensajesError.MensajesError[4].Mensaje)
+                            //alert("Si la lectura inicial y final son iguales, el tiempo de bombeo debe igual a cero");   
+                            CalcularVolumenAguaBombeado();
+                            CalcularCaudalPromedio();
+                        }
+                        else {
+                            alert(mensajesError.MensajesError[2].Mensaje)
+                            //alert("La lectura final debe ser mayor o igual a la inicial");
+                            $("#LecturaFinal").val(lecturaInicial);
+                        }
                     } else {
-                        alert(mensajesError.MensajesError[2].Mensaje)
-                        //alert("La lectura final debe ser mayor o igual a la inicial");
-                        $("#LecturaFinal").val(lecturaInicial);
+                        alert(mensajesError.MensajesError[3].Mensaje)
+                        //alert("Los valores deben se positivos");
+                        if (horas < 0) {
+                            $("#TiempoBombeo").val(0);
+                            horas = 0;
+                        }
+                        if (lecturaInicial < 0) {
+                            $("#LecturaInicial").val(0);
+                            lecturaInicial = 0;
+                        }
+                        if (lecturaFinal < 0) {
+                            $("#LecturaFinal").val(0);
+                            lecturaFinal = 0;
+                        }
+                        CalcularVolumenAguaBombeado();
+                        CalcularCaudalPromedio();
                     }
-                } else {
-                    alert(mensajesError.MensajesError[3].Mensaje)
-                    //alert("Los valores deben se positivos");
-                    if (horas < 0) {
-                        $("#TiempoBombeo").val(0);
-                        horas = 0;
-                    }
-                    if (lecturaInicial < 0) {
-                        $("#LecturaInicial").val(0);
-                        lecturaInicial = 0;
-                    }
-                    if (lecturaFinal < 0) {
-                        $("#LecturaFinal").val(0);
-                        lecturaFinal = 0;
-                    }
-                    CalcularVolumenAguaBombeado();
-                    CalcularCaudalPromedio();
                 }
             }
         });
@@ -267,6 +290,15 @@
             var min = $("#cal_tiempo_minutos").val();
             console.log(min)
             $("#cal_tiempo_horas").val(Math.round((min/60) * 100) / 100);
+        });
+
+        $("#btn_enviar").click(function (e) {
+            if ($("#CaudalPromedio").val() != caudalPromedio) {
+                if (confirm("¡Alerta! Datos fuera del rango ¿Desea continuar?"))
+                    $("#form_nuevo_consumo").submit();
+            }
+            else
+                $("#form_nuevo_consumo").submit();
         });
     </script>
 }

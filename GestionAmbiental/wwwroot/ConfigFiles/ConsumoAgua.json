@@ -1,1 +1,24 @@
-{"MensajesError":[{"Tipo":"MsgErrorTiempoMax","Mensaje":"La suma del tiempo de bombeo de la fecha ARG1 alcanzó las 24 horas"},{"Tipo":"MsgErrorTiempoEntre","Mensaje":"El tiempo de bombeo debe estar entre 0 y ARG1 horas"},{"Tipo":"MsgErrorFinalMayor","Mensaje":"La lectura final debe ser mayor o igual a la inicial"},{"Tipo":"MsgErrorPositivo","Mensaje":"Los valores deben ser positivos"}]}
+{
+  "MensajesError": [
+    {
+      "Tipo": "MsgErrorTiempoMax",
+      "Mensaje": "La suma del tiempo de bombeo de la fecha ARG1 alcanzó las 24 horas"
+    },
+    {
+      "Tipo": "MsgErrorTiempoEntre",
+      "Mensaje": "El tiempo de bombeo debe estar entre 0 y ARG1 horas"
+    },
+    {
+      "Tipo": "MsgErrorFinalMayor",
+      "Mensaje": "La lectura final debe ser mayor a la inicial"
+    },
+    {
+      "Tipo": "MsgErrorPositivo",
+      "Mensaje": "Los valores deben ser positivos"
+    },
+    {
+      "Tipo": "MsgErrorFinalIgualInicial",
+      "Mensaje": "Si la lectura inicial y final son iguales, el tiempo de bombeo debe igual a cero"
+    }
+  ]
+}

@@ -313,6 +313,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .OrderByDescending(x => x.Fecha_Registro)
                 .ToListAsync();
 
+            var caudalPromedio = Math.Round(data.Sum(x => x.Caudal_Promedio)/data.Count,2);
+
             var ultimoRegistro = data
                 .GroupBy(x => x.Fecha)
                 .OrderByDescending(x => x.Key)
@@ -354,7 +356,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.LecturaInicial = ultimoRegistro.Last().Lectura_Inicial;
                 output.LecturaFinal = ultimoRegistro.First().Lectura_Final;
                 output.VolumenBombeado = ultimoRegistro.Sum(x => x.Volumen_Bombeado);
-                output.CaudalPromedio = Math.Round(ultimoRegistro.Sum(x => x.Caudal_Promedio) / ultimoRegistro.Count(), 2);
+                //output.CaudalPromedio = Math.Round(ultimoRegistro.Sum(x => x.Caudal_Promedio) / ultimoRegistro.Count(), 2);
+                output.CaudalPromedio = caudalPromedio;
                 output.IdUsuario = ultimoRegistro.First().Id_Usuario;
                 output.FechaRegistro = ultimoRegistro.First().Fecha_Registro;
                 output.Estado = ultimoRegistro.First().Estado;

@@ -11,6 +11,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model
     public class CargaExcelModel
     {
         [DisplayName("Archivo Excel:")]
+        [Required(ErrorMessage = "Debe cargar un archivo Excel")]
         public IFormFile Excel { get; set; }
         [DisplayName("Nombre de la página en la que se encuentran los datos Excel:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]

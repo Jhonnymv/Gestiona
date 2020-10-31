@@ -141,7 +141,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var conductores = items.ItemsConductor.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
                 vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -150,7 +150,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 var compVehiculos = items.ItemsVehiculo.Select(x => new { Id_Vehiculo_RS = x.Id_Vehiculo_RS, Capacidad = x.Capacidad }).ToList();
                 ViewBag.ComVehiculos = JsonConvert.SerializeObject(compVehiculos);
                 //Complementos de conductor (Para completar automáticamente los demás campos)
-                var compConductores = items.ItemsConductor.Select(x => new { Id_Conductor_RS = x.Id_Conductor_RS, NLicencia = x.NLicencia }).ToList();
+                var compConductores = items.ItemsConductor.Where(x => x.Estado.Equals("ACT")).Select(x => new { Id_Conductor_RS = x.Id_Conductor_RS, NLicencia = x.NLicencia }).ToList();
                 ViewBag.CompConductores = JsonConvert.SerializeObject(compConductores);
                 //Complementos de EO-RS (Para completar automáticamente los demás campos)
                 var compEO_RS = items.ItemsEO_RS.Select(x => new { Id_EO_RS = x.Id_EO_RS, Registro = x.Registro, Fecha_Vencimiento_Registro = x.Fecha_Vencimiento_Registro.ToString("yyyy-MM-dd") }).ToList();
@@ -248,7 +248,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 residuos_solidos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var eo_rs = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eo_rs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var conductores = items.ItemsConductor.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var conductores = items.ItemsConductor.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Conductor_RS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 conductores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var vehiculos = items.ItemsVehiculo.OrderBy(x => x.Placa).Select(g => new SelectListItem() { Value = g.Id_Vehiculo_RS.ToString(), Text = g.Placa }).ToList();
                 vehiculos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));

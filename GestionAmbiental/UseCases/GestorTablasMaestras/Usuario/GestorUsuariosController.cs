@@ -133,7 +133,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                     var usuario = await _getUsuario.Execute(IdUsuario);
                     var usuarios = await _getUsuarios.Execute();
 
-                    var enumList = Enum.GetValues(typeof(RSRoles)).OfType<RSRoles>().ToList();
+                    var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
 
                     var roles = enumList.Select(g => new SelectListItem() { Value = ((int)g).ToString(), Text = g.ToString() }).ToList();
                     

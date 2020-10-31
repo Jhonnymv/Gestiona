@@ -164,7 +164,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 ViewBag.MensajesError = textoMensajes;
                 ViewBag.Actividades = actividades;
                 ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo, CaudalPromedio = x.CaudalPromedio }));
                 ViewBag.Message = message;
                 return View();
             }
@@ -238,7 +238,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
                 ViewBag.MensajesError = textoMensajes;
                 ViewBag.Actividades = actividades;
                 ViewBag.ResolucionesAct = JsonConvert.SerializeObject(resolucionesAct);
-                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo }));
+                ViewBag.RegistrosResolucion = JsonConvert.SerializeObject(ultimosRegistros.Select(x => new { IdResolucion = x.IdResolucionConsumoAgua, Fecha = x.Fecha.ToString("yyyy-MM-dd"), FechaNueva = x.Fecha.AddDays(1).ToString("yyyy-MM-dd"), LecturaInicial = x.LecturaFinal, TiempoBombeo = x.TiempoBombeo, CaudalPromedio = x.CaudalPromedio }));
 
                 var consumo = await _getConsumoAgua.Execute(desencriptado);
                 var model = new ConsumoAguaMarModel
@@ -286,17 +286,16 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         private double CalcularVolumenAguaBombeado(double lecturaInicial, double lecturaFinal)
         {
             if (lecturaFinal - lecturaInicial >= 0)
-                return lecturaFinal - lecturaInicial;
+                return Math.Round(lecturaFinal - lecturaInicial,2);
             else
                 return -1;
         }
         private double CalcularCaudalPromedio(double lecturaInicial, double lecturaFinal, double horas)
         {
             if (((lecturaFinal - lecturaInicial) / (horas * 3600)) >= 0)
-                return (lecturaFinal - lecturaInicial) / (horas * 3600);
+                return Math.Round((lecturaFinal - lecturaInicial) / (horas * 3600),2);
             else
                 return -1;
-        }
-        
+        }        
     }
 }

@@ -266,17 +266,17 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             var encriptado = _protector.Protect(model.Id.ToString());
             return RedirectToAction("EditarRegistro", new { IdConsumo = encriptado });
         }
-        private double CalcularVolumenAguaBombeado(double lecturaInicial,double lecturaFinal)
+        private double CalcularVolumenAguaBombeado(double lecturaInicial, double lecturaFinal)
         {
             if (lecturaFinal - lecturaInicial >= 0)
-                return lecturaFinal - lecturaInicial;
+                return Math.Round(lecturaFinal - lecturaInicial, 2);
             else
                 return -1;
         }
-        private double CalcularCaudalPromedio(double lecturaInicial,double lecturaFinal,double horas)
+        private double CalcularCaudalPromedio(double lecturaInicial, double lecturaFinal, double horas)
         {
             if (((lecturaFinal - lecturaInicial) / (horas * 3600)) >= 0)
-                return (lecturaFinal - lecturaInicial) / (horas * 3600);
+                return Math.Round((lecturaFinal - lecturaInicial) / (horas * 3600), 2);
             else
                 return -1;
         }

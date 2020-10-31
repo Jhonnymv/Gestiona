@@ -7,7 +7,7 @@
             }
             else
             {
-                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector")
+                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector"|| ViewBag.Rol == "OperadorAgua")
                 {
                     <!--Inspecciones-->
                     <li class="nav-item nav-dropdown">
@@ -135,7 +135,7 @@
                             }
                         </ul>
                     </li>
-                    @if (ViewBag.Rol == "AsesorMAP")
+                    @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua")
                     {
                         <!--Consumo de Agua-->
                         <li class="nav-item nav-dropdown">

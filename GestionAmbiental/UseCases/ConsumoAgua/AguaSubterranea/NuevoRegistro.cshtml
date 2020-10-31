@@ -133,6 +133,9 @@
         var resolucionesAct = JSON.parse('@Html.Raw(ViewBag.ResolucionesAct)');
         var ultimosRegistros = JSON.parse('@Html.Raw(ViewBag.RegistrosResolucion)');
         var tiempoAnterior = 0;
+        $(document).ready(function () {
+            $("#LecturaInicial").val(0);
+        });
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
             for (var i = 0; i < resolucionesAct.length; i++) {
@@ -179,6 +182,7 @@
                 CalcularCaudalPromedio();
             }
         });
+        
         $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
             tiempoAnterior = 0;
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
@@ -195,48 +199,66 @@
                 }
             }
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
-            if (horas != null && lecturaInicial != null && lecturaFinal != null) {
+            if (horas != null) {
                 //horas entre 0 y 24
                 if (horas != "" && (horas < 0 || horas > 24 - tiempoAnterior)) {
                     horas = 0;
                     $("#TiempoBombeo").val(0)
                     $("#LecturaFinal").val(lecturaInicial);
                     lecturaFinal = lecturaInicial;
-                    if (tiempoAnterior == 24)
-                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1",$("#Fecha").val()))
+                    if (tiempoAnterior == 24) {
+                        alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))
                         //alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
-                    else
-                    alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1",  (24 - tiempoAnterior)))
-                    //alert("El tiempo de bombeo debe estar entre 0 y " + (24 - tiempoAnterior) + " horas");    
-                    CalcularVolumenAguaBombeado();
-                    CalcularCaudalPromedio();
-                }
-                if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
-                    if (lecturaFinal >= lecturaInicial) {
                         CalcularVolumenAguaBombeado();
                         CalcularCaudalPromedio();
+                        return;
+                    }
+                    else {
+                        alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1", (24 - tiempoAnterior)))
+                        //alert("El tiempo de bombeo debe estar entre 0 y " + (24 - tiempoAnterior) + " horas");
+                        CalcularVolumenAguaBombeado();
+                        CalcularCaudalPromedio();
+                        return;
+                    }
+                }
+                if (lecturaInicial != null && lecturaFinal != null) {
+                    if (horas >= 0 && lecturaInicial >= 0 && lecturaFinal >= 0) {
+                        if (lecturaFinal > lecturaInicial) {
+                            CalcularVolumenAguaBombeado();
+                            CalcularCaudalPromedio();
+                        }
+                        else if (lecturaFinal == lecturaInicial || horas == 0) {
+                            horas = 0;
+                            $("#TiempoBombeo").val(0)
+                            $("#LecturaFinal").val(lecturaInicial)
+                            alert(mensajesError.MensajesError[4].Mensaje)
+                            //alert("Si la lectura inicial y final son iguales, el tiempo de bombeo debe igual a cero");   
+                            CalcularVolumenAguaBombeado();
+                            CalcularCaudalPromedio();
+                        }
+                        else {
+                            alert(mensajesError.MensajesError[2].Mensaje)
+                            //alert("La lectura final debe ser mayor o igual a la inicial");
+                            $("#LecturaFinal").val(lecturaInicial);
+                        }
                     } else {
-                        alert(mensajesError.MensajesError[2].Mensaje)
-                        //alert("La lectura final debe ser mayor o igual a la inicial");
-                        $("#LecturaFinal").val(lecturaInicial);
+                        alert(mensajesError.MensajesError[3].Mensaje)
+                        //alert("Los valores deben se positivos");
+                        if (horas < 0) {
+                            $("#TiempoBombeo").val(0);
+                            horas = 0;
+                        }
+                        if (lecturaInicial < 0) {
+                            $("#LecturaInicial").val(0);
+                            lecturaInicial = 0;
+                        }
+                        if (lecturaFinal < 0) {
+                            $("#LecturaFinal").val(0);
+                            lecturaFinal = 0;
+                        }
+                        CalcularVolumenAguaBombeado();
+                        CalcularCaudalPromedio();
                     }
-                } else {
-                    alert(mensajesError.MensajesError[3].Mensaje)
-                    //alert("Los valores deben se positivos");
-                    if (horas < 0) {
-                        $("#TiempoBombeo").val(0);
-                        horas = 0;
-                    }
-                    if (lecturaInicial < 0) {
-                        $("#LecturaInicial").val(0);
-                        lecturaInicial = 0;
-                    }
-                    if (lecturaFinal < 0) {
-                        $("#LecturaFinal").val(0);
-                        lecturaFinal = 0;
-                    }
-                    CalcularVolumenAguaBombeado();
-                    CalcularCaudalPromedio();
                 }
             }
         });

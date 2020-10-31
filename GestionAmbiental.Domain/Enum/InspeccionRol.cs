@@ -9,6 +9,7 @@ namespace GestionAmbiental.Domain.Enum
         AsesorMAP = 2,
         AsesorSSO = 3,
         Admin = 4,
-        Contratista = 5
+        Contratista = 5,
+        OperadorAgua = 6
     }
 }
