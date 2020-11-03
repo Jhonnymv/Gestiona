@@ -176,8 +176,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             if (correosUsuarios.Count > 0)
                 await mail.SendMailAsync(msg);
 
-
-            await mail.SendMailAsync(msg);
             msg.Attachments.Dispose();
             mail.Dispose();
             msg.Dispose();
