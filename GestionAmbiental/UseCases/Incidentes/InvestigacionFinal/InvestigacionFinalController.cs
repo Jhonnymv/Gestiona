@@ -1193,7 +1193,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     {
                         var extension = Path.GetExtension(model.Evidencias_Papel[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Papel[i].Length < max_file_size)
                         {
@@ -1215,7 +1215,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     {
                         var extension = Path.GetExtension(model.Evidencias_Persona[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Persona[i].Length < max_file_size)
                         {
@@ -1237,7 +1237,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     {
                         var extension = Path.GetExtension(model.Evidencias_Posicion[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Posicion[i].Length < max_file_size)
                         {
@@ -1259,7 +1259,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     {
                         var extension = Path.GetExtension(model.Evidencias_Partes[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Partes[i].Length < max_file_size)
                         {

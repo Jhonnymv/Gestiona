@@ -138,12 +138,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                 row.Height = rowHeight;
                 //rezise images
 
-                if ((imageProperties.extension == ".jpg" ||
-                    imageProperties.extension == ".png" ||
-                    imageProperties.extension == ".jpge" ||
-                    imageProperties.extension == ".JPG" ||
-                    imageProperties.extension == ".PNG" ||
-                    imageProperties.extension == ".JPGE" &&
+                if ((imageProperties.extension.ToLower() == ".jpg" ||
+                    imageProperties.extension.ToLower() == ".png" ||
+                    imageProperties.extension.ToLower() == ".jpeg" &&
                     imageProperties.extension != null) &&
                     imageProperties.rowHeight != 0 &&
                     imageProperties.rowHeight < row.Height)
@@ -262,10 +259,11 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
 
                     if (avistamientos.Avistamientos[i].Ubicacion != null || avistamientos.Avistamientos[i].Ubicacion != "")
                     {
-                        row.CreateCell(10).SetCellValue(avistamientos.Avistamientos[i].Ubicacion.Split(" , ")[0]);
+                        var ubicacion = avistamientos.Avistamientos[i].Ubicacion.Replace(" ", "");
+                        row.CreateCell(10).SetCellValue(ubicacion.Split(",")[0]);
                         row.GetCell(10).CellStyle = customCellStyle;
 
-                        row.CreateCell(11).SetCellValue(avistamientos.Avistamientos[i].Ubicacion.Split(" , ")[1]);
+                        row.CreateCell(11).SetCellValue(ubicacion.Split(",")[1]);
                         row.GetCell(11).CellStyle = customCellStyle;
 
                         row.CreateCell(12).SetCellValue("Ver en Google Maps");
@@ -276,6 +274,20 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                         row.GetCell(12).Hyperlink = (UrlLink);
                         row.GetCell(12).CellStyle = customCellStyle;
                     }
+
+                    row.CreateCell(13).SetCellValue(avistamientos.Avistamientos[i].LatLugarReferencia);
+                    row.GetCell(13).CellStyle = customCellStyle;
+
+                    row.CreateCell(14).SetCellValue(avistamientos.Avistamientos[i].LongLugarReferencia);
+                    row.GetCell(14).CellStyle = customCellStyle;
+
+                    row.CreateCell(15).SetCellValue("Ver en Google Maps");
+                    XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
+                    {
+                        Address = "https://www.google.com/maps/place/" + avistamientos.Avistamientos[i].LatLugarReferencia + "," + avistamientos.Avistamientos[i].LongLugarReferencia
+                    };
+                    row.GetCell(15).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(15).CellStyle = customCellStyle;
 
                     fila++;
                 }
@@ -397,11 +409,11 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                 filePath = pathDesencriptado;
             //5. validar extension y cargar en una celda
             var extension = Path.GetExtension(filePath);
-            if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
+            if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpeg") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPEG"))
             {
                 byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                 PictureType pType;
-                if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
+                if (extension.Equals(".jpg") || extension.Equals(".jpeg") || extension.Equals(".JPG") || extension.Equals(".JPEG"))
                     pType = PictureType.JPEG;
                 else
                 {

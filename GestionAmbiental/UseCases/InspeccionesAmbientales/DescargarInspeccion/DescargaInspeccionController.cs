@@ -161,10 +161,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if ((evidencia_condicion.extension == ".jpg" ||
                         evidencia_condicion.extension == ".png" ||
-                        evidencia_condicion.extension == ".jpge" ||
+                        evidencia_condicion.extension == ".jpeg" ||
                         evidencia_condicion.extension == ".JPG" ||
                         evidencia_condicion.extension == ".PNG" ||
-                        evidencia_condicion.extension == ".JPGE" &&
+                        evidencia_condicion.extension == ".JPEG" &&
                         evidencia_condicion.extension != null) &&
                         evidencia_condicion.rowHeight != 0 &&
                         evidencia_condicion.rowHeight < row.Height)
@@ -174,10 +174,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if ((evidencia_inspeccion.extension == ".jpg" ||
                         evidencia_inspeccion.extension == ".png" ||
-                        evidencia_inspeccion.extension == ".jpge" || 
+                        evidencia_inspeccion.extension == ".jpeg" || 
                         evidencia_inspeccion.extension == ".JPG" ||
                         evidencia_inspeccion.extension == ".PNG" ||
-                        evidencia_inspeccion.extension == ".JPGE") &&
+                        evidencia_inspeccion.extension == ".JPEG") &&
                         evidencia_inspeccion.extension != null &&
                         evidencia_inspeccion.rowHeight != 0 &&
                         evidencia_inspeccion.rowHeight < row.Height)
@@ -324,11 +324,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 //5. validar extension y cargar en una celda
                 var extension = Path.GetExtension(filePath);
-                if (extension.Equals(".jpg") || extension.Equals(".png") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".PNG") || extension.Equals(".JPGE"))
+                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg") )
                 {                
                     byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     PictureType pType;
-                    if (extension.Equals(".jpg") || extension.Equals(".jpge") || extension.Equals(".JPG") || extension.Equals(".JPGE"))
+                    if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg"))
                         pType = PictureType.JPEG;
                     else
                     {

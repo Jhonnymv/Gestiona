@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Application.Repositories.AvistamientoFauna;
 using GestionAmbiental.Application.UseCases.Reportes;
+using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,6 +58,7 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna.GetAvistamiento
 
             //Obtener valores
             var data = await _getAvistamientoFaunaReadOnlyRepository.GetAvistamientosFauna(nombre_comun, tipo_avistamiento, estado_fauna, lugar_referencia, fInicio, fFinal);
+            data = data.Where(x => !x.Codigo.Equals("TBD")).ToList();
             //data = data.OrderBy(x => x.Index).ToList();
 
             var output = new AvistamientosFaunaOutput();

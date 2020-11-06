@@ -23,6 +23,8 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
         public string EstadoFauna { get; set; }
         public int IdLugarReferencia { get; set; }
         public string LugarReferencia { get; set; }
+        public string LatLugarReferencia { get; set; }
+        public string LongLugarReferencia { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
         public string UsuarioEmail { get; set; }
@@ -65,6 +67,8 @@ namespace GestionAmbiental.Application.UseCases.AvistamienoFauna
             {
                 IdLugarReferencia = avistamiento.LugarReferencia.IdLugarReferencia;
                 LugarReferencia = avistamiento.LugarReferencia.Descripcion;
+                LatLugarReferencia = avistamiento.LugarReferencia.Latitud;
+                LongLugarReferencia = avistamiento.LugarReferencia.Longitud;
             }
             IdUsuario = avistamiento.Usuario.IdUsuario;
             Usuario = avistamiento.Usuario.Nombres + " " + avistamiento.Usuario.Apellidos;

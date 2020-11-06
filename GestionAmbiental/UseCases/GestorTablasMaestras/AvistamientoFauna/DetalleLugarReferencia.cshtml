@@ -22,6 +22,11 @@
                     <input type="text" class="form-control" asp-for="Descripcion" disabled>
                 </div>
             </div>
+            <div id="bntCalcular" class="row mb-2" hidden>
+                <div class="col-lg-12 text-center">
+                    <button id="convertir" type="button" class="btn btn-link">Convertir UTM a Latitud y Longitud</button>
+                </div>
+            </div>
             <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Latitud"></label>
@@ -64,6 +69,88 @@
         </form>
     </div>
 </div>
+<!-- Modal Convertir Ubicación-->
+<div class="modal fade" id="modal_ubicacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ubicacion"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+                    <div class="col-12 titulo-pagina">
+                        <h3>Convertir UTM a Latitud y Longitud</h3>
+                    </div>
+                    <div class="col-12">
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Hemisferio</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <select class="form-control" id="hemisferio">
+                                    <option value="S" selected>Sur</option>
+                                    <option value="N">Norte</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Zona</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input id="zona" type="number" class="form-control" value="18">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Este</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input id="este" type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Norte</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input id="norte" type="number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-12 titulo-pagina">
+                                <h3>Resultado</h3>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Latitud</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input id="lat" type="number" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-lg-4">
+                                <label>Longitud</label>
+                            </div>
+                            <div class="col-lg-8">
+                                <input id="long" type="number" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button id="bntUtilizarVal" type="button" class="btn btn-primary">Utilizar Valores</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script>
         $("#btnEditar").on('click', function () {
@@ -73,6 +160,7 @@
             $("#btnEditar").prop('disabled', true);
             $("#btnCancelar").prop('disabled', false);
             $("#btnGuardar").prop('disabled', false);
+            $("#bntCalcular").prop('hidden', false);
             //Habilitar inputs
             $("#Descripcion").prop('disabled', false);
             $("#Latitud").prop('disabled', false);
@@ -87,11 +175,61 @@
             $("#btnEditar").prop('disabled', false);
             $("#btnCancelar").prop('disabled', true);
             $("#btnGuardar").prop('disabled', true);
+            $("#bntCalcular").prop('hidden', true);
             //Deshabilitar inputs
             $("#Descripcion").prop('disabled', true);
             $("#Latitud").prop('disabled', true);
             $("#Longitud").prop('disabled', true);
             $("#Estado").prop('disabled', true);
+        });
+        $("#convertir").on("click", function () {
+            $("#modal_ubicacion").modal("show");
+        });
+        $("#zona,#este,#norte,#hemisferio").on("change", function () {
+            var zona = $("#zona").val();
+            var este = $("#este").val();
+            var norte = $("#norte").val();
+            var hemisferio = $("#hemisferio").val();
+
+            console.log("zona", zona);
+            console.log("este", este);
+            console.log("norte", norte);
+            console.log("hemisferio", hemisferio);
+
+            if (zona != "" && este != "" && norte != "" && hemisferio != "") {
+                $.ajax({
+                    type: 'POST',
+                    url: '/GestorAvistamientoFauna/UTMToLatLon',
+                    data:
+                    {
+                        Easting: $("#este").val(),
+                        Northing: $("#norte").val(),
+                        Zone: $("#zona").val(),
+                        Hemi: $("#hemisferio").val()
+                    },
+                    success: function (response) {
+                        $("#lat").val(response.latitude);
+                        $("#long").val(response.longitude);
+                    },
+                    error: function () {
+                        console.log("No se ha podido convertir las coordenadas");
+                    }
+                });
+            }
+        });
+        $("#bntUtilizarVal").on("click", function () {
+            var lat = $("#lat").val();
+            var long = $("#long").val();
+
+            $("#Latitud").val(lat);
+            $("#Longitud").val(long);
+
+            $("#este").val("");
+            $("#norte").val("");
+            $("#lat").val("");
+            $("#long").val("");
+
+            $("#modal_ubicacion").modal("toggle");
         });
     </script>
 }
