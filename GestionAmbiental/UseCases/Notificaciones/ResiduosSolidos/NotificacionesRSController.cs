@@ -119,7 +119,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             if (correosUsuarios.Count > 0)
                 await mail.SendMailAsync(msg);
 
-
             msg.Attachments.Dispose();
             mail.Dispose();
             msg.Dispose();

@@ -303,7 +303,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     {
                         var extension = Path.GetExtension(model.Certificado[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Certificado[i].Length < max_file_size)
                         {
@@ -323,7 +323,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     {
                         var extension = Path.GetExtension(model.Informe_Transporte[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Informe_Transporte[i].Length < max_file_size)
                         {
@@ -343,7 +343,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     {
                         var extension = Path.GetExtension(model.Manifiesto_Doc[i].FileName);
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Manifiesto_Doc[i].Length < max_file_size)
                         {

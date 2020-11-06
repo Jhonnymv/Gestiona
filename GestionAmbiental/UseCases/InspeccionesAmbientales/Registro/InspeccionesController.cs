@@ -331,7 +331,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
                         var max_file_size = 8388608;
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
@@ -596,7 +596,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         var extension = Path.GetExtension(model.Nueva_Evidencia[i].FileName);
                         var max_file_size = 8388608;
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPGE", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
 
                         if (allowed_extensions.Contains(extension) && model.Nueva_Evidencia[i].Length < max_file_size)
                         {
