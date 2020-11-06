@@ -12,7 +12,7 @@
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
         <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarNombreComun" method="post" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" asp-for="IdNombreComun">
+            <input type="hidden" asp-for="IdNombreComun" value="@Model.IdNombreComun">
             <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Descripcion"></label>

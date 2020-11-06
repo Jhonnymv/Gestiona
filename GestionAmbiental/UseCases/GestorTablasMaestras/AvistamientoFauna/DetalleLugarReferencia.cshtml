@@ -12,7 +12,7 @@
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
         <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarLugarReferencia">
-            <input type="hidden" asp-for="IdLugarReferencia">
+            <input type="hidden" asp-for="IdLugarReferencia" value="@Model.IdLugarReferencia">
             <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Descripcion"></label>

@@ -11,8 +11,8 @@
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarEstadoFauna">
-            <input type="hidden" asp-for="IdContactoEmergencia">
+        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarContactoEmergencia">
+            <input type="hidden" asp-for="IdContactoEmergencia" value="@Model.IdContactoEmergencia">
             <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Nombres"></label>
