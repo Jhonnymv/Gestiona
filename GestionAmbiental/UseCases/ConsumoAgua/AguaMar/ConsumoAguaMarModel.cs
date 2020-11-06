@@ -23,10 +23,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         [DisplayName("Tiempo de Bombeo (Horas):")]
         [Range(0, 999.99, ErrorMessage = "Debe completar este campo")]
         public double TiempoBombeo { get; set; }
-        [DisplayName("Lectura Inicial Flujometro en el día (m3):")]
+        [DisplayName("Lectura Inicial Flujómetro en el día (m3):")]
         [Range(0, 99999999.99, ErrorMessage = "Debe completar este campo")]
         public double LecturaInicial { get; set; }
-        [DisplayName("Lectura Final Flujometro en el día (m3):")]
+        [DisplayName("Lectura Final Flujómetro en el día (m3):")]
         [Range(0, 99999999.99, ErrorMessage = "Debe completar este campo")]
         public double LecturaFinal { get; set; }
         [DisplayName("Volumen de Agua Bombeado (consumo) m3:")]

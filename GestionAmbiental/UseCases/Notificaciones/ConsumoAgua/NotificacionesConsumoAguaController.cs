@@ -42,10 +42,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
         }
         public async Task<IActionResult> NotificarLimiteConsumoAguaMarMensual(int IdConsumo, double? limiteMensual, double volumenActual)
         {
-            /*
-            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdAvistamiento));
-            var avistamiento = await _getAvistamientoFauna.Execute(IdDesencriptado);
-            */
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "ConsumoAgua", "ConsumoAguaMarMensualExedido.html");
             
             StreamReader SourceReader = System.IO.File.OpenText(template);
