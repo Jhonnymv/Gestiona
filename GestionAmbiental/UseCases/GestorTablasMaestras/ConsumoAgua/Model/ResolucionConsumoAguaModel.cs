@@ -27,6 +27,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua.Model
         public double? LimiteSemanal { get; set; }
         [DisplayName("Limite Mensual (m3):")]
         public double? LimiteMensual { get; set; }
+        [DisplayName("Fecha de Vencimiento:")]
+        public string FechaVencimiento { get; set; }
+        [DisplayName("Caudal (L/s):")]
+        public double? Caudal { get; set; }
         [DisplayName("Actividad:")]
         public string Actividad { get; set; }
         [DisplayName("Estado:")]

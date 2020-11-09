@@ -17,6 +17,8 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
         public double? LimiteDiario { get; set; }
         public double? LimiteSemanal { get; set; }
         public double? LimiteMensual { get; set; }
+        public DateTime? FechaVencimiento { get; set; }
+        public double? Caudal { get; set; }
         public string Actividad { get; set; }
         public string Estado { get; set; }
         public ResolucionConsumoAguaOutput() { }
@@ -32,6 +34,8 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
             LimiteDiario = resolucion.LimiteDiario;
             LimiteSemanal = resolucion.LimiteSemanal;
             LimiteMensual = resolucion.LimiteMensual;
+            FechaVencimiento = resolucion.FechaVencimiento;
+            Caudal = resolucion.Caudal;
             Actividad = resolucion.Actividad;
             Estado = resolucion.Estado;
         }

@@ -1831,6 +1831,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     LimiteDiario = item.Limite_Diario,
                     LimiteSemanal = item.Limite_Semanal,
                     LimiteMensual = item.Limite_Mensual,
+                    FechaVencimiento = item.Fecha_Vencimiento,
+                    Caudal = item.Caudal,
                     Estado = item.Estado
                 });
             }
@@ -1867,6 +1869,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 LimiteDiario = entity.Limite_Diario,
                 LimiteSemanal = entity.Limite_Semanal,
                 LimiteMensual = entity.Limite_Mensual,
+                FechaVencimiento = entity.Fecha_Vencimiento,
+                Caudal = entity.Caudal,
                 Estado = entity.Estado
             };
             return output;
@@ -1884,6 +1888,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Limite_Diario = ResolucionConsumoAgua.LimiteDiario,
                 Limite_Semanal = ResolucionConsumoAgua.LimiteSemanal,
                 Limite_Mensual = ResolucionConsumoAgua.LimiteMensual,
+                Fecha_Vencimiento = ResolucionConsumoAgua.FechaVencimiento,
+                Caudal = ResolucionConsumoAgua.Caudal,
                 Estado = "ACT"
             };
             _context.Resoluciones_Consumo_Agua.Add(entity);
@@ -1903,6 +1909,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Limite_Diario = ResolucionConsumoAgua.LimiteDiario;
             entity.Limite_Semanal = ResolucionConsumoAgua.LimiteSemanal;
             entity.Limite_Mensual = ResolucionConsumoAgua.LimiteMensual;
+            entity.Fecha_Vencimiento = ResolucionConsumoAgua.FechaVencimiento;
+            entity.Caudal = ResolucionConsumoAgua.Caudal;
             _context.Resoluciones_Consumo_Agua.Update(entity);
             await _context.SaveChangesAsync();
         }

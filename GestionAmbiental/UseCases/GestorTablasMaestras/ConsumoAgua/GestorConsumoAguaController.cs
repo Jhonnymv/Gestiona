@@ -585,12 +585,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Resolución</th>";
+            tabla += "<th>Fecha de Vencimiento</th>";
             tabla += "<th>Año</th>";
             tabla += "<th>Tipo de Uso</th>";
             tabla += "<th>Clase de Derecho</th>";
             tabla += "<th>Fuente de Agua</th>";
             tabla += "<th>Volumen Otorgado</th>";
             tabla += "<th>Actividad</th>";
+            tabla += "<th>Caudal</th>";
             tabla += "<th>Estado</th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -607,12 +609,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td>" + fila.Resolucion + "</td>";
+                    filasTabla += "<td>" + fila.FechaVencimiento + "</td>";
                     filasTabla += "<td>" + fila.Anio + "</td>";
                     filasTabla += "<td>" + fila.TipoUso + "</td>";
                     filasTabla += "<td>" + fila.ClaseDerecho + "</td>";
                     filasTabla += "<td>" + fila.FuenteAgua + "</td>";
                     filasTabla += "<td>" + fila.VolumenOtorgado + "</td>";
                     filasTabla += "<td>" + fila.Actividad + "</td>";
+                    filasTabla += "<td>" + fila.Caudal + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
                     filasTabla += "<td><a href=\"/GestorConsumoAgua/DetalleResolucionConsumoAgua?IdResolucionConsumoAgua=" + fila.IdResolucionConsumoAgua + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
@@ -680,6 +684,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 model.LimiteDiario = data.LimiteDiario;
                 model.LimiteSemanal = data.LimiteSemanal;
                 model.LimiteMensual = data.LimiteMensual;
+                model.FechaVencimiento = data.FechaVencimiento?.ToString("yyyy-MM-dd");
+                model.Caudal = data.Caudal;
                 model.Estado = data.Estado;
                 return View(model);
             }
@@ -698,7 +704,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 if (ModelState.IsValid)
-                    await _editarResolucion.Execute(model.IdResolucionConsumoAgua, model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.Actividad, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual, model.Estado);
+                    await _editarResolucion.Execute(model.IdResolucionConsumoAgua, model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.Actividad, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual,model.FechaVencimiento,model.Caudal, model.Estado);
                 return RedirectToAction("DetalleResolucionConsumoAgua", new { IdResolucionConsumoAgua = model.IdResolucionConsumoAgua });
             }
         }
@@ -737,7 +743,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 {
                     if (ModelState.IsValid)
                     {
-                        var idResolucionConsumoAgua = await _agregarResolucion.Execute(model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual, model.Actividad);
+                        var idResolucionConsumoAgua = await _agregarResolucion.Execute(model.Resolucion, model.Anio, model.TipoUso, model.ClaseDerecho, model.IdFuenteAgua, model.VolumenOtorgado, model.LimiteDiario, model.LimiteSemanal, model.LimiteMensual,model.FechaVencimiento,model.Caudal, model.Actividad);
                         return RedirectToAction("DetalleResolucionConsumoAgua", new { IdResolucionConsumoAgua = idResolucionConsumoAgua });
                     }
                     return RedirectToAction("AgregarResolucionConsumoAgua");
