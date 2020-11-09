@@ -93,13 +93,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var items = await _getItems.Execute();
 
-                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var tiposFauna = items.TiposFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
                 tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var lugaresReferencia = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                var lugaresReferencia = items.LugaresReferencia.OrderBy(x =>x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
                 lugaresReferencia.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
@@ -273,13 +273,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var items = await _getItems.Execute();
 
-                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var tiposFauna = items.TiposFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
                 tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
+                var tipoAvistamiento = items.TiposAvistamiento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
                 tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
@@ -288,7 +288,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                var lugares = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
                 lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var nombresComunes = new List<SelectListItem>();
@@ -377,13 +377,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var items = await _getItems.Execute();
 
-                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var tiposFauna = items.TiposFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
                 tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
+                var tipoAvistamiento = items.TiposAvistamiento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
                 tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
@@ -392,7 +392,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                var lugares = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
                 lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var nombresComunes = new List<SelectListItem>();
@@ -526,13 +526,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 var items = await _getItems.Execute();
 
-                var tiposFauna = items.TiposFauna.Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var tiposFauna = items.TiposFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoFauna.ToString(), Text = g.Descripcion }).ToList();
                 tiposFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var estadosFauna = items.EstadosFauna.Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
+                var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var tipoAvistamiento = items.TiposAvistamiento.Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
+                var tipoAvistamiento = items.TiposAvistamiento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
                 tipoAvistamiento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
@@ -541,7 +541,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var lugares = items.LugaresReferencia.Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                var lugares = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
                 lugares.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var nombresComunes = new List<SelectListItem>();
