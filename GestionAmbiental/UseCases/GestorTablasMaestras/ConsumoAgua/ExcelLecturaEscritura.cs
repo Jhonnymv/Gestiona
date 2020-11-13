@@ -50,6 +50,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                     var sheetRow = sheet.GetRow(row);
                     if (sheetRow != null && sheetRow.Cells.Count==7) //null is when the row only contains empty cells 
                     {
+                        if (sheetRow.GetCell(Columna).DateCellValue == DateTime.MinValue)
+                            break;
                         var outputItem = new ConsumoAguaModel();
                         for (int column = Columna; column < Columna + 4; column++)
                         {

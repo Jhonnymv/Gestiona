@@ -78,13 +78,13 @@ function ActualizarVolumenFecha() {
                     switch (frecuencia) {
                         case 'Diario': limite = limiteDiario;
                             if (limite > valMax)
-                                valMax = limite + 100; break;
+                                valMax = limite + Math.round(limite/2); break;
                         case 'Semanal': limite = limiteSemanal;
                             if (limite > valMax)
-                                valMax = limite + 500; break;
+                                valMax = limite + Math.round(limite/4); break;
                         case 'Mensual': limite = limiteMensual;
                             if (limite > valMax)
-                                valMax = limite + 1000; break;
+                                valMax = limite + Math.round(limite/10); break;
                     }
                     //Actualizar gráfica
                     graph_vol_fechas.destroy();
@@ -132,8 +132,18 @@ function CargarDataGraficorVolumenFecha() {
         labels.push(data_vol_fechas[i].nombre);
         data.push(data_vol_fechas[i].valor);
     }
-    if (limite > valMax)
-        valMax = limite + 100;
+
+    switch (frecuencia) {
+        case 'Diario': limite = limiteDiario;
+            if (limite > valMax)
+                valMax = limite + Math.round(limite / 2); break;
+        case 'Semanal': limite = limiteSemanal;
+            if (limite > valMax)
+                valMax = limite + Math.round(limite / 4); break;
+        case 'Mensual': limite = limiteMensual;
+            if (limite > valMax)
+                valMax = limite + Math.round(limite / 10); break;
+    }
     //Crear gráfica
     CrearGraficaVolumenFecha(labels, data, limite, valMax, Math.max(data) / 10);
 }

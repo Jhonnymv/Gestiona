@@ -44,6 +44,24 @@
             </div>
             <div class="row mb-2">
                 <div class="col-lg-4">
+                    <label asp-for="FechaVencimiento"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="FechaVencimiento"></span>
+                    <input type="date" class="form-control" asp-for="FechaVencimiento" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Caudal"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Caudal"></span>
+                    <input type="number" class="form-control" asp-for="Caudal" step="0.01" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
                     <label asp-for="TipoUso"></label>
                 </div>
                 <div class="col-lg-8">
@@ -142,6 +160,8 @@
             $("#Resolucion").prop('disabled', false);
             $("#IdFuenteAgua").prop('disabled', false);
             $("#Anio").prop('disabled', false);
+            $("#FechaVencimiento").prop('disabled', false);
+            $("#Caudal").prop('disabled', false);
             $("#TipoUso").prop('disabled', false);
             $("#ClaseDerecho").prop('disabled', false);
             $("#VolumenOtorgado").prop('disabled', false);
@@ -163,6 +183,8 @@
             $("#Resolucion").prop('disabled', true);
             $("#IdFuenteAgua").prop('disabled', true);
             $("#Anio").prop('disabled', true);
+            $("#FechaVencimiento").prop('disabled', true);
+            $("#Caudal").prop('disabled', true);
             $("#TipoUso").prop('disabled', true);
             $("#ClaseDerecho").prop('disabled', true);
             $("#VolumenOtorgado").prop('disabled', true);

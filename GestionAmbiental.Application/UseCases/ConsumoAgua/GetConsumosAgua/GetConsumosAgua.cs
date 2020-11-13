@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua
                 fechaFiltro = Convert.ToDateTime(fecha);
 
             var data = await _getConsumoAguaReadOnlyRepository.GetConsumosAgua(fechaFiltro,resolucion);
-            data = data.Where(x=>x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.LecturaFinal).ToList();
+            data = data.Where(x=>x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.Fecha).ToList();
 
             var output = new ConsumosAguaOutput();
             output.Consumos = new List<ConsumoAguaOutput>();
@@ -42,7 +42,7 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAgua
             DateTime fechaFiltro = Convert.ToDateTime(fecha);
 
             var data = await _getConsumoAguaReadOnlyRepository.GetConsumosAguaMensual(fechaFiltro);
-            data = data.Where(x => x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.LecturaFinal).ToList();
+            data = data.Where(x => x.ResolucionConsumoAgua.FuenteAgua.OrigenAgua.IdOrigenAgua.Equals(origen_agua)).OrderByDescending(x => x.Fecha).ToList();
 
             var output = new ConsumosAguaOutput();
             output.Consumos = new List<ConsumoAguaOutput>();

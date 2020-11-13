@@ -89,8 +89,10 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 sheetMensual.GetRow(15).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
                                 
                 int filaMensual = 18;
+                int mes = filaMensual - 17;
                 if (consumosMensual.Count > 0)
                 {
+                    //LLenar con 0 si los datos no empuezan en Enero
                     for (int i = 0; i < consumosMensual[0].Mes - 1; i++)
                     {
                         IRow row = sheetMensual.GetRow(filaMensual);
@@ -107,26 +109,27 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                         row.GetCell(5).SetCellValue(0);
                         row.GetCell(5).CellStyle = customCellStyle;
 
-                        filaMensual++;
+                        filaMensual++; 
+                        mes = filaMensual - 17;
                     }
-
+                    
                     for (int i = 0; i < consumosMensual.Count; i++)
                     {
                         IRow row = sheetMensual.GetRow(filaMensual);
-
+                        
                         row.GetCell(2).SetCellValue(consumosMensual[i].TiempoOperacion);
                         row.GetCell(2).CellStyle = customCellStyle;
-
+                        
                         row.GetCell(3).SetCellValue(consumosMensual[i].Caudal);
                         row.GetCell(3).CellStyle = customCellStyle;
-
+                        
                         row.GetCell(4).SetCellValue(consumosMensual[i].VolumenMensual);
                         row.GetCell(4).CellStyle = customCellStyle;
-
+                        
                         row.GetCell(5).SetCellValue(consumosMensual[i].VolumenAcumulado);
                         row.GetCell(5).CellStyle = customCellStyle;
-
-                        filaMensual++;
+                        
+                        filaMensual++;                        
                     }
                 }
 

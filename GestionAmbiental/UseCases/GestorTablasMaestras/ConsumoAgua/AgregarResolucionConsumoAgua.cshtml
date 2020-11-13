@@ -32,6 +32,24 @@
             </div>
             <div class="row mb-2">
                 <div class="col-lg-4">
+                    <label asp-for="FechaVencimiento"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="FechaVencimiento"></span>
+                    <input type="date" class="form-control" asp-for="FechaVencimiento">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Caudal"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Caudal"></span>
+                    <input type="number" class="form-control" asp-for="Caudal" step="0.01">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
                     <label asp-for="TipoUso"></label>
                 </div>
                 <div class="col-lg-8">

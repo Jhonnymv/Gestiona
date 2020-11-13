@@ -15,8 +15,12 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string descripcion, string anio, string tipoUso, string claseDerecho, int idFuente, double volumenOtorgado, double? limiteDiario, double? limiteSemanal, double? limiteMensual, string actividad)
+        public async Task<int> Execute(string descripcion, string anio, string tipoUso, string claseDerecho, int idFuente, double volumenOtorgado, double? limiteDiario, double? limiteSemanal, double? limiteMensual,string fechaVencimiento, double? caudal,  string actividad)
         {
+            DateTime? fechaVencimientoDT = null;
+            if (fechaVencimiento!=null)
+                fechaVencimientoDT = Convert.ToDateTime(fechaVencimiento);
+
             var input = new Domain.ConsumoAgua.ResolucionConsumoAgua()
             {
                 Resolucion = descripcion,
@@ -31,6 +35,8 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.ConsumoAgua
                 LimiteDiario = limiteDiario,
                 LimiteSemanal = limiteSemanal,
                 LimiteMensual = limiteMensual,
+                FechaVencimiento = fechaVencimientoDT,
+                Caudal = caudal,
                 Actividad = actividad
             };
             return await _gestorTablasMaestrasReadOnlyRepository.AddResolucionConsumoAgua(input);

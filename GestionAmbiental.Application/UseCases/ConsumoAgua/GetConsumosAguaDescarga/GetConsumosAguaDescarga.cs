@@ -38,27 +38,43 @@ namespace GestionAmbiental.Application.UseCases.ConsumoAgua.GetConsumosAguaDesca
             var mensual= consumos.GroupBy(x =>x.Fecha.Month).OrderBy(x => x.Key).ToList();
 
             var output = new List<ConsumoMensualOutput>();
+            //Validador de meses son consecutivos
+            var mesConsecutivo = mensual[0].Key;
             //Calcular TiempoOperacion, VolumenMensual y Caudal
-            for (int i = 0;i<mensual.Count;i++)
+            for (int i = 0;i<mensual.Count; i++)
             {
-                var TiempoOperacion = Math.Round(mensual[i].Sum(x => x.TiempoBombeo), 2);
-                var VolumenMensual = Math.Round(mensual[i].Sum(x => x.VolumenBombeado), 2);
-                var Caudal = Math.Round(VolumenMensual/(TiempoOperacion*3600), 2);
-
-                //var VolumenAcumulado = Math.Round(i > 0 ? VolumenMensual : VolumenMensual + mensual[i - 1].Sum(x => x.VolumenBombeado), 2);
-
-
-                var outputItem = new ConsumoMensualOutput
+                if (mesConsecutivo == mensual[i].Key)
                 {
-                    Mes = mensual[i].Key,
-                    TiempoOperacion = TiempoOperacion,
-                    VolumenMensual = VolumenMensual,
-                    Caudal = Caudal
-                };
-                output.Add(outputItem);
+                    var TiempoOperacion = Math.Round(mensual[i].Sum(x => x.TiempoBombeo), 2);
+                    var VolumenMensual = Math.Round(mensual[i].Sum(x => x.VolumenBombeado), 2);
+                    var Caudal = Math.Round(VolumenMensual / (TiempoOperacion * 3600), 2);
+
+                    //var VolumenAcumulado = Math.Round(i > 0 ? VolumenMensual : VolumenMensual + mensual[i - 1].Sum(x => x.VolumenBombeado), 2);
+                    var outputItem = new ConsumoMensualOutput
+                    {
+                        Mes = mensual[i].Key,
+                        TiempoOperacion = TiempoOperacion,
+                        VolumenMensual = VolumenMensual,
+                        Caudal = Caudal
+                    };
+                    output.Add(outputItem);
+                }
+                else
+                {
+                    var outputItem = new ConsumoMensualOutput
+                    {
+                        Mes = mesConsecutivo,
+                        TiempoOperacion = 0,
+                        VolumenMensual = 0,
+                        Caudal = 0
+                    };
+                    i--;
+                    output.Add(outputItem);
+                }
+                mesConsecutivo++;
             }
 
-            //Calcular VolumenAcumulado
+            //Calcular Volumen Acumulado
             for (int i = 0; i < output.Count; i++)
             {
                 var VolumenAcumulado = Math.Round(i > 0 ? output[i].VolumenMensual + output[i - 1].VolumenAcumulado : output[i].VolumenMensual, 2);

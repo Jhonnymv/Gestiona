@@ -31,6 +31,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Con
         public double? Limite_Semanal { get; set; }
         [Column(TypeName = "decimal(10,2)")]
         public double? Limite_Mensual { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime? Fecha_Vencimiento { get; set; }
+        [Column(TypeName = "decimal(6,2)")]
+        public double? Caudal { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Estado { get; set; }
     }
