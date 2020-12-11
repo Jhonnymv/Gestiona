@@ -7,6 +7,7 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inciden
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecciones;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA_Documentos;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
@@ -80,13 +81,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Log_Avistamiento_Fauna> Logs_Avistamiento_Fauna { get; set; }
         public DbSet<Usuario_Notificar_Avistamiento_Fauna> usuario_Notificar_Avistamiento_Fauna { get; set; }
 
-
         public DbSet<ConsumoAgua> Consumos_Agua { get; set; }
         public DbSet<LogConsumoAgua> Logs_Consumo_Agua { get; set; }
         public DbSet<ResolucionConsumoAgua> Resoluciones_Consumo_Agua { get; set; }
         public DbSet<OrigenAgua> Origenes_Agua { get; set; }
         public DbSet<FuenteAgua> Fuentes_Agua { get; set; }
         public DbSet<Usuarios_Notificar_Consumo_Agua> Usuarios_Notificar_Consumo_Agua { get; set; }
+        
+        public DbSet<Tipo_Documento> SGA_Tipos_Documento { get; set; }
+        public DbSet<Condicion> SGA_Condiciones { get; set; }
+        public DbSet<Aprobacion_Documento> SGA_Aprobaciones_Documento { get; set; }
+        public DbSet<Revision_Documento> SGA_Revisiones_Documento { get; set; }
+        public DbSet<Documento> SGA_Documentos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -226,6 +232,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                .ToTable("Tb_Resolucion_Consumo_Agua");
             modelBuilder.Entity<Usuarios_Notificar_Consumo_Agua>()
                .ToTable("Tb_Usuarios_Notificar_Consumo_Agua");
+
+
+            modelBuilder.Entity<Condicion>()
+               .ToTable("Tb_SGA_Condicion");
+            modelBuilder.Entity<Tipo_Documento>()
+               .ToTable("Tb_SGA_Tipo_Documento");
+            modelBuilder.Entity<Aprobacion_Documento>()
+               .ToTable("Tb_SGA_Aprobacion_Documento");
+            modelBuilder.Entity<Revision_Documento>()
+               .ToTable("Tb_SGA_Revision_Documento");
+            modelBuilder.Entity<Documento>()
+               .ToTable("Tb_SGA_Documento");
         }
     }
 }

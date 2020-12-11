@@ -20,4 +20,8 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EntityFrameworkDataAccess\Repositories\SGA_Documentos\" />
+  </ItemGroup>
+
 </Project>
