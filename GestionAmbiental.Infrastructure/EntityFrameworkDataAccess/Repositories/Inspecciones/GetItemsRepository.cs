@@ -35,7 +35,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var empresasContratistaDomain = new List<Domain.ValueObjects.Empresa>();
             foreach (var empresa in empresas)
             {
-                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa(empresa.Id_Empresa, empresa.Razon_Social));
+                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa(empresa.Id_Empresa, empresa.Razon_Social,empresa.Estado));
             }
             var tiposCondicionDomain = new List<Domain.ValueObjects.TipoCondicion>();
             foreach (var tipo in tiposCondicion)
@@ -53,7 +53,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Empresa>();
             foreach(var item in empresas)
             {
-                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social));
+                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social, item.Estado));
             }
             return output;
         }

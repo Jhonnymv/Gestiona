@@ -190,15 +190,13 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 var dataFechas = await _getConsumosAguaFechas.ExecuteFechas(data.First().Fecha.ToString(), data.Last().Fecha.ToString(), model.IdResolucion);
 
                 var validacion = await ValidarDatosExcel(data, dataFechas, model.IdResolucion, model.FilaInicio);
-                
                 if (validacion.Length == 0)
                 {
                     var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
 
                     foreach (var consumo in data)
                     {
-                        if (consumo.TiempoBombeo != 0 && consumo.LecturaInicial != 0 && consumo.LecturaFinal != 0)
-                        {
+                        if((consumo.TiempoBombeo!=0) || (consumo.TiempoBombeo == 0 && consumo.LecturaInicial == consumo.LecturaFinal))
                             input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
                             {
                                 IdResolucionConsumoAgua = model.IdResolucion,
@@ -207,9 +205,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                                 LecturaInicial = consumo.LecturaInicial,
                                 LecturaFinal = consumo.LecturaFinal,
                                 VolumenBombeado = consumo.LecturaFinal - consumo.LecturaInicial,
-                                CaudalPromedio = (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600)
+                                CaudalPromedio = consumo.TiempoBombeo != 0 ? (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600) : 0
                             });
-                        }
                     }
                     var agregados = await _registrarConsumoAguaMasivo.Execute(input, userInfo.NombreUsuario);
                     return RedirectToAction("CargaDataExcel", new { message = "Se agregaron " + agregados + " registros", result = "Success" });

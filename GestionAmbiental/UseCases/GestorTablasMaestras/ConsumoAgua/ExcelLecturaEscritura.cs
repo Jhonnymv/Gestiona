@@ -48,16 +48,24 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 for (int row = Fila; row <= sheet.LastRowNum; row++)
                 {
                     var sheetRow = sheet.GetRow(row);
-                    if (sheetRow != null && sheetRow.Cells.Count==7) //null is when the row only contains empty cells 
+                    if (sheetRow != null && sheetRow.Cells.Count >= 6) //null is when the row only contains empty cells 
                     {
-                        if (sheetRow.GetCell(Columna).DateCellValue == DateTime.MinValue)
+                        if (sheetRow.GetCell(Columna).CellType != CellType.String && sheetRow.GetCell(Columna).DateCellValue == DateTime.MinValue)
                             break;
+                        else if (sheetRow.GetCell(Columna).CellType == CellType.String && DateTime.Parse(sheetRow.GetCell(Columna).StringCellValue) == DateTime.MinValue)
+                            break;
+
                         var outputItem = new ConsumoAguaModel();
                         for (int column = Columna; column < Columna + 4; column++)
                         {
                             if (column == Columna)
-                                outputItem.Fecha = sheetRow.GetCell(column).DateCellValue;
-                            else if (column == Columna + 1)
+                            {
+                                if (sheetRow.GetCell(Columna).CellType != CellType.String)
+                                    outputItem.Fecha = sheetRow.GetCell(column).DateCellValue;
+                                else
+                                    outputItem.Fecha = DateTime.Parse(sheetRow.GetCell(Columna).StringCellValue);
+                            }
+                            if (column == Columna + 1)
                                 outputItem.TiempoBombeo = sheetRow.GetCell(column).NumericCellValue;
                             else if (column == Columna + 2)
                                 outputItem.LecturaInicial = sheetRow.GetCell(column).NumericCellValue;

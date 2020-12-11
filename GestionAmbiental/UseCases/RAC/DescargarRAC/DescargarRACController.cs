@@ -138,20 +138,20 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 row.Height = rowHeight;
                 //rezise images
 
-                if ((Evidencia_Obs.extension.ToLower() == ".jpg" ||
+                if (Evidencia_Obs.extension != null &&
+                    (Evidencia_Obs.extension.ToLower() == ".jpg" ||
                     Evidencia_Obs.extension.ToLower() == ".png" ||
-                    Evidencia_Obs.extension.ToLower() == ".jpeg" &&
-                    Evidencia_Obs.extension != null) &&
+                    Evidencia_Obs.extension.ToLower() == ".jpeg") &&
                     Evidencia_Obs.rowHeight != 0 &&
                     Evidencia_Obs.rowHeight < row.Height)
                 {
                     Evidencia_Obs.image.Resize(1.0, (double)Evidencia_Obs.rowHeight / row.Height);
                 }
 
-                if ((Evidencia_Cierre.extension.ToLower() == ".jpg" ||
+                if (Evidencia_Cierre.extension != null && 
+                    (Evidencia_Cierre.extension.ToLower() == ".jpg" ||
                     Evidencia_Cierre.extension.ToLower() == ".png" ||
                     Evidencia_Cierre.extension.ToLower() == ".jpeg") &&
-                    Evidencia_Cierre.extension != null &&
                     Evidencia_Cierre.rowHeight != 0 &&
                     Evidencia_Cierre.rowHeight < row.Height)
                 {
