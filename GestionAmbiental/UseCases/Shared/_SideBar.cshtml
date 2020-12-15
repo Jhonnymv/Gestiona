@@ -7,8 +7,31 @@
             }
             else
             {
-                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector"|| ViewBag.Rol == "OperadorAgua")
+                @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Inspector" || ViewBag.Rol == "OperadorAgua")
                 {
+                    <!--SGA Documentos-->
+                    <li class="nav-item nav-dropdown">
+                        <a class="nav-link nav-dropdown-toggle" href="#">
+                            <i class="nav-icon"><img src="~/img/icons/inspection.png" /></i> SGA
+                        </a>
+                        <ul class="nav-dropdown-items">
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Documentación</a>
+                            </li>
+                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Administración</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Indicadores</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Auditoria</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
                     <!--Inspecciones-->
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
@@ -285,7 +308,7 @@
                     </li>
                 }
                 <li class="nav-item"><a class="nav-link text-white" asp-controller="Autenticacion" asp-action="SignOut"><i class="nav-icon"><img src="~/img/icons/user.png" /></i>Cerrar Sesión</a></li>
-            }           
+            }
         </ul>
     </nav>
     <button class="sidebar-minimizer brand-minimizer" type="button"></button>

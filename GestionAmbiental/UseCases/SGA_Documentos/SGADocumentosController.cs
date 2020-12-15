@@ -1,0 +1,397 @@
+﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
+using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Renci.SshNet;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.UseCases.SGA_Documentos
+{
+    public class SGADocumentosController : Controller
+    {
+        private readonly ISelectItems _selectItems;
+        private readonly IConsultarDocumentos _consultarDocumentos;
+        private readonly IRegistrarDocumento _registrarDocumento;
+        private readonly IGetInfo_SGA _info_SGA;
+
+        public SGADocumentosController(ISelectItems selectItems, IConsultarDocumentos consultarDocumentos, IRegistrarDocumento registrarDocumento, IGetInfo_SGA info_SGA)
+        {
+            _selectItems = selectItems;
+            _consultarDocumentos = consultarDocumentos;
+            _registrarDocumento = registrarDocumento;
+            _info_SGA = info_SGA;
+        }
+
+        public async Task<IActionResult> Resumen()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x=>x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x=>x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+
+                return View();
+            }
+        }
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
+        {
+            var datosTabla = await _consultarDocumentos.Execute(nombre,tipo,codigo,condicion,pagina,rpp);
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
+            if (datosTabla.NRegistros > 0)
+            {
+                foreach (var fila in datosTabla.Documentos)
+                {
+                    //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td><a href=\"/SGADocumentos/EditarDocumento?IdDocumento=" + fila.IdSGADocumento + "\">" + fila.IdSGADocumento + "</a></td>";
+                    filasTabla += "<td>" + fila.DocNombre + "</td>";
+                    filasTabla += "<td>" + fila.DocVersion + "</td>";
+                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>" + fila.Condicion + "</td>";
+                    filasTabla += "<td>" + fila.Comentario + "</td>";
+                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+            else
+            {
+                filasTabla = "Sin datos";
+            }
+            dynamic response = new
+            {
+                Data = filasTabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> RegistrarDocumento()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var items = await _selectItems.Execute();
+                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento)); 
+                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") +"_"+ model.Doc_Nombre +"_v."+ String.Format("{0:0.0}",model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                if (!cargaDocumento.Equals("Error"))
+                {
+                    await _registrarDocumento.Execute(
+                        model.Id_SGA_Tipo_Documento,
+                        model.Doc_Nombre,
+                        model.Doc_Version,
+                        model.Doc_Predecesor,
+                        model.Comentario,
+                        cargaDocumento,
+                        userInfo.NombreUsuario);
+                }
+                else
+                {
+                    return View();
+                }
+
+            }
+            return View();
+        }
+
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
+            };
+        }
+        private async Task<string> CargarDocumento(IFormFile file, string newFileName,string tipo)
+        {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                var fileName = filePath + newFileName;
+                if (file.Length > 0)
+                {
+                    var stream = new FileStream(fileName, FileMode.Create);
+                    file.CopyTo(stream);
+
+                    stream.Flush();
+
+                    stream.Close();
+                }
+                var newFilePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/" + newFileName;
+                //await EncryptFileAsync(fileName, encryptedArchiveFile);
+
+                return await UploadFTPFileAsync(newFilePath, newFileName, tipo);
+            }
+            else
+                return "Error";
+        }
+        public async Task<string> UploadFTPFileAsync(string path, string newFileName,string tipo)
+        {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
+                }
+
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    if(!sftp.Exists(Path.Combine(dir,tipo)))
+                        sftp.CreateDirectory(Path.Combine(dir, tipo));
+
+                    sftp.ChangeDirectory(Path.Combine(dir, tipo));
+                    using (FileStream fs = System.IO.File.OpenRead(path))
+                    {
+                        sftp.UploadFile(fs, newFileName, true);
+                    }
+                    sftp.Dispose();
+                }
+                return Path.Combine(tipo,newFileName);
+            }
+            else
+                return "Error";
+        }
+        public async Task<IActionResult> Download(string fileName)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                try
+                {
+                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                    /*decrypt file*/
+                    var decryptedFileName = "desencriptado" + Path.GetExtension(fileName);
+                    //await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    /*read decrypted file*/
+                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                    return File(stream, GetContentType(decryptedFileName), fileName);
+                }
+                catch (Exception e)
+                {
+                    return Content("No se encontró el archivo: " + e.Message);
+                }
+            }
+        }
+        public async Task<string> DownloadFTPFileAsync(string fileName)
+        {
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
+                }
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(fileName, fileStream);
+
+                    sftp.Dispose();
+                }
+                fileStream.Close();
+
+                return downloadedFilePath;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
+        private async Task DeleteFTPFileAsync(string filename)
+        {
+            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+
+                sftp.DeleteFile(filename);
+
+                sftp.Dispose();
+            }
+        }
+    }
+}
