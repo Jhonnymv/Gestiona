@@ -27,13 +27,15 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             if (idPredecesor.HasValue)
                 predecesor.IdSGADocumento = idPredecesor.Value;
 
+            var ultimoCodigo = await _registrarDocumentosReadOnlyRepository.GetUltimoCodigo();
+           
             var model = new Documento
             {
                 SGATipoDocumento = new TipoDocumento
                 {
                     IdSGATipoDocumento = IdTipoDoc
                 },
-                DocCodigo = "",
+                DocCodigo = ultimoCodigo!=null? "D-"+(Int32.Parse(ultimoCodigo) + 1).ToString().PadLeft(7,'0'): "D-0000001",
                 DocNombre = nombreDoc,
                 DocVersion = versionDoc,
                 DocPredecesor = predecesor,

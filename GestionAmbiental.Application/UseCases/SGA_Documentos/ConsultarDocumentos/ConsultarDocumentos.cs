@@ -19,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         public async Task<DocumentosOutput> Execute(string nombre, int tipo, string codigo, int condicion,int pagina, int rpp)
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, tipo, codigo, condicion);
+            data = data.OrderByDescending(x => Int32.Parse(x.DocCodigo.Remove(0, 2))).ToList();
 
             var output = new DocumentosOutput
             {
@@ -30,6 +31,20 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             foreach (var item in data)
             {
                 output.Documentos.Add(new DocumentoOutput(item));
+            }
+            return output;
+        }
+
+        public async Task<List<DocumentoOutput>> Execute()
+        {
+            var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(null, 0, null, 0);
+
+            var output = new List<DocumentoOutput>();
+
+            //data = data.Where(x => x.Estado.Equals("Aprobado")).ToList();
+            foreach (var item in data)
+            {
+                output.Add(new DocumentoOutput(item));
             }
             return output;
         }

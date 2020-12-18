@@ -94,9 +94,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var data = await _context.SGA_Documentos.ToListAsync();
             data = data.Where(x =>
-            x.Doc_Nombre.Contains(nombre !=null ? nombre : x.Doc_Nombre) ||
-            x.Id_SGA_Tipo_Documento.Equals(tipo != 0 ? tipo : x.Id_SGA_Tipo_Documento) ||
-            x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo) ||
+            x.Doc_Nombre.Contains(nombre !=null ? nombre : x.Doc_Nombre) &&
+            x.Id_SGA_Tipo_Documento.Equals(tipo != 0 ? tipo : x.Id_SGA_Tipo_Documento) &&
+            x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo) &&
             x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)).ToList();
 
             var tiposDoc = await _context.SGA_Tipos_Documento
@@ -153,6 +153,93 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 };
 
                 output.Add(outputItem);                    
+            }
+            return output;
+        }
+
+        public async Task<List<Documento>> GetPredecesores(int Id)
+        {
+            var output = new List<Documento>();
+
+            var data = await _context.SGA_Documentos.ToListAsync();
+            //Nueva lista con Ids y Ids de Predecesores
+            var dataIdPred = data.Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
+            //Definir el documento de Origen
+            var origen = data.First(x => x.Id_SGA_Documento.Equals(Id));
+            
+            //Si el origen tiene predecesor iniciar busqueda
+            if (origen.Doc_Predecesor.HasValue)
+            {
+                //Variable temporal que almacena el Id del predecesor
+                int? Idtemp = origen.Doc_Predecesor;
+                //Lista de Ids de documentos predecesores
+                var idsDocsPredecesores = new List<int>();
+                //Buscar hasta que no haya predecesores
+                while (Idtemp != null)
+                {
+                    //Buscar el documento con Id igual al predecesor de documento actual
+                    var nuevoPred = dataIdPred.Find(x => x.Id.Equals(Idtemp.Value));
+                    //Agregar el Id del documento predecesor a la lista
+                    idsDocsPredecesores.Add(nuevoPred.Id);
+                    //Cambiar el valor de la variable temporal al Id del predecesor del documento encontrado
+                    Idtemp = nuevoPred.IdPred;
+                }
+                
+                var predecesores = new List<Entities.SGA_Documentos.Documento>();
+                //Agregar los documentos a la lista de predecesores en funcion a la lista de Ids de predecesores
+                predecesores.AddRange(data.Where(x => idsDocsPredecesores.Contains(x.Id_SGA_Documento)));
+
+                var tiposDoc = await _context.SGA_Tipos_Documento.ToListAsync();
+
+                var condiciones = await _context.SGA_Condiciones.ToListAsync();
+
+                var usuarios = await _context.Usuarios.Where(x => data.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
+
+                foreach (var item in predecesores)
+                {
+                    var tipoDocModel = tiposDoc.First(x => x.Id_SGA_Tipo_Documento.Equals(item.Id_SGA_Tipo_Documento));
+                    var condicionModel = condiciones.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
+                    var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+
+                    var outputItem = new Documento
+                    {
+                        IdSGADocumento = item.Id_SGA_Documento,
+                        SGATipoDocumento = new TipoDocumento
+                        {
+                            IdSGATipoDocumento = tipoDocModel.Id_SGA_Tipo_Documento,
+                            Descripcion = tipoDocModel.Descripcion,
+                            Estado = tipoDocModel.Estado
+                        },
+                        DocCodigo = item.Doc_Codigo,
+                        DocNombre = item.Doc_Nombre,
+                        DocVersion = item.Doc_Version,
+                        //DocPredecesor
+                        FechaAprobacion = item.Fecha_Aprobacion,
+                        Condicion = new Condicion
+                        {
+                            IdSGACondicion = condicionModel.Id_SGA_Condicion,
+                            Descripcion = condicionModel.Descripcion,
+                            Estado = condicionModel.Estado
+                        },
+                        Comentario = item.Comentario,
+                        FechaTentativa = item.Fecha_Tentativa,
+                        DocRuta = item.Doc_Ruta,
+                        Usuario = new Domain.ValueObjects.Usuario
+                        {
+                            IdUsuario = usuario.Id_Usuario,
+                            Nombres = usuario.Nombres,
+                            Apellidos = usuario.Apellidos,
+                            IdRol = usuario.Id_Rol,
+                            Email = usuario.Email,
+                            Estado = usuario.Estado
+                        },
+                        FechaCreacion = item.Fecha_Creacion,
+                        FechaActualizacion = item.Fecha_Actualizacion,
+                        Estado = item.Estado
+                    };
+
+                    output.Add(outputItem);
+                }
             }
             return output;
         }

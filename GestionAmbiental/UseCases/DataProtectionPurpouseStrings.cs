@@ -16,5 +16,6 @@ namespace GestionAmbiental.UseCases
         public readonly string AvistamientoFaunaIdRouteValue = "AvistamientoFaunaIdRouteValue";
         public readonly string ConsumoAguaMarIdRouteValue = "ConsumoAguaMarIdRouteValue";
         public readonly string ConsumoAguaSbuterraneaIdRouteValue = "ConsumoAguaSbuterraneaIdRouteValue";
+        public readonly string DocumentosSGAIdRouteValue = "DocumentosSGAIdRouteValue";
     }
 }

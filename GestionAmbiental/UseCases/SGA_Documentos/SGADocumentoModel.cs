@@ -10,10 +10,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
     public class SGADocumentoModel
     {
         public int Id_SGA_Documento { get; set; }
+        public string Id_Encriptado { get; set; }
         [DisplayName("Tipo de Documento:")]
-        public int Id_SGA_Tipo_Documento { get; set; }
-        [DisplayName("Código:")]
-        public string Doc_Codigo { get; set; }        
+        public int Id_SGA_Tipo_Documento { get; set; }    
         [DisplayName("Nombre:")]
         public string Doc_Nombre { get; set; }
         [DisplayName("Versión:")]

@@ -1,7 +1,9 @@
 ﻿using GestionAmbiental.Application.Repositories.SGA_Documentos;
 using GestionAmbiental.Domain.SGA_Documentos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -40,6 +42,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entidad.Id_SGA_Documento;
+        }
+
+        public async Task<string> GetUltimoCodigo()
+        {
+
+            var codigo = await _context.SGA_Documentos.ToListAsync();
+            if (codigo.Count > 0)
+                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Remove(0,2))).Select(x => x.Doc_Codigo.Remove(0, 2)).LastOrDefault();
+            else
+                return null;
         }
     }
 }

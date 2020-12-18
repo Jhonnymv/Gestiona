@@ -1,8 +1,11 @@
 ﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredecesores;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
 using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,15 +23,30 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
     {
         private readonly ISelectItems _selectItems;
         private readonly IConsultarDocumentos _consultarDocumentos;
+        private readonly IConsultarDocumento _consultarDocumento;
         private readonly IRegistrarDocumento _registrarDocumento;
+        private readonly IConsultarPredecesores _consultarPredecesores;
         private readonly IGetInfo_SGA _info_SGA;
 
-        public SGADocumentosController(ISelectItems selectItems, IConsultarDocumentos consultarDocumentos, IRegistrarDocumento registrarDocumento, IGetInfo_SGA info_SGA)
+        private readonly IDataProtector _protector;
+
+        public SGADocumentosController(
+            ISelectItems selectItems, 
+            IConsultarDocumentos consultarDocumentos,
+            IConsultarDocumento consultarDocumento,
+            IRegistrarDocumento registrarDocumento,
+            IConsultarPredecesores consultarPredecesores,
+            IGetInfo_SGA info_SGA,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _selectItems = selectItems;
             _consultarDocumentos = consultarDocumentos;
+            _consultarDocumento = consultarDocumento;
+            _consultarPredecesores = consultarPredecesores;
             _registrarDocumento = registrarDocumento;
             _info_SGA = info_SGA;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
 
         public async Task<IActionResult> Resumen()
@@ -57,6 +75,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 return View();
             }
         }
+        [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
         {
             var datosTabla = await _consultarDocumentos.Execute(nombre,tipo,codigo,condicion,pagina,rpp);
@@ -67,9 +86,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             {
                 foreach (var fila in datosTabla.Documentos)
                 {
-                    //var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
+                    var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/SGADocumentos/EditarDocumento?IdDocumento=" + fila.IdSGADocumento + "\">" + fila.IdSGADocumento + "</a></td>";
+                    filasTabla += "<td><a href=\"/SGADocumentos/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
                     filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
@@ -131,8 +150,96 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
+
+                var documentos = await _consultarDocumentos.Execute();
+                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+
+                var predecesoresTipo = new List<SelectListItem>();
+                foreach (var grupo in documentosAgrupados)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    foreach (var docPredecesor in grupo)
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre, Group = nuevoGrupo });
+                }
+                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
+
+                ViewBag.Predecesores = predecesoresTipo;
+
                 return View();
             }
+        }
+        
+        public async Task<IActionResult> VerDocumento(string IdDocumento)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+
+                var documento = await _consultarDocumento.Execute(IdDesencriptado);
+
+                var model = new SGADocumentoModel {
+                    Id_Encriptado = IdDocumento,
+                    Id_SGA_Documento = documento.IdSGADocumento,
+                    Id_SGA_Tipo_Documento = documento.IdSGATipoDocumento,
+                    Doc_Nombre = documento.DocNombre,
+                    Doc_Predecesor = documento.IdDocPredecesor,
+                    Doc_Version = documento.DocVersion,
+                    Comentario = documento.Comentario,
+                    Condicion = documento.IdCondicion
+                };
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ConsultarPredecesores(string IdDocumento)
+        {
+            var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
+            var datosTabla = await _consultarPredecesores.Execute(IdDesencriptado);
+            var filasTabla = "";
+            if (datosTabla.Count > 0)
+            {
+                foreach (var fila in datosTabla)
+                {
+                    var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td><a href=\"/SGADocumentos/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
+                    filasTabla += "<td>" + fila.DocNombre + "</td>";
+                    filasTabla += "<td>" + fila.DocVersion + "</td>";
+                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>" + fila.Condicion + "</td>";
+                    filasTabla += "<td>" + fila.Comentario + "</td>";
+                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
+                    filasTabla += "</tr>";
+                }
+            }
+            else
+            {
+                filasTabla = "Sin datos";
+            }
+            dynamic response = new
+            {
+                Data = filasTabla
+            };
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
@@ -164,7 +271,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             }
             return View();
         }
-
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();

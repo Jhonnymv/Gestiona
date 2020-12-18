@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
     public interface IRegistrarDocumentosReadOnlyRepository
     {
         Task<int> RegistrarDocumento(Domain.SGA_Documentos.Documento documento);
+        Task<string> GetUltimoCodigo();
     }
 }
