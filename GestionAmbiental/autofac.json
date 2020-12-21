@@ -14,7 +14,7 @@
     {
       "type": "GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Module",
       "properties": {
-        "ConnectionString": "Server=MAMADISIMO;Database=GestionAmbiental2;Trusted_Connection=True;MultipleActiveResultSets=True;"
+        "ConnectionString": "Server=MAMADISIMO;Database=GestionAmbiental;Trusted_Connection=True;MultipleActiveResultSets=True;"
       }
     }
   ]

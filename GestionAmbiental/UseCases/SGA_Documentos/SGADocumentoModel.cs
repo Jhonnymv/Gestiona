@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GestionAmbiental.Application.UseCases.SGA_Documentos;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,5 +26,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string Comentario { get; set; }
         [DisplayName("Documento:")]
         public IFormFile Documento { get; set; }
+
+        public string Revisiones { get; set; }
+        public string Aprobaciones { get; set; }
     }
 }

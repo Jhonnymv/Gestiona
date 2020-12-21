@@ -63,8 +63,79 @@
             <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
         </div>
     </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Revisores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <table class="table" id="tabla_revisores">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="width: 20%"><input class="form-control" type="number" id="ordenRevisor" value="1"/></td>
+                        <td style="width: 50%"><select class="form-control" id="usuarioRevisor"></select></td>
+                        <td style="width: 20%"><input class="form-control" type="date" id="fechaRevisor" /></td>
+                        <td style="width: 10%"><button type="button" id="btnRevisor" class="btn btn-primary"><img src="~/img/icons/guardar.png" /></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Aprobadores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <table class="table" id="tabla_aprobadores">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="width: 20%"><input class="form-control" type="number" id="ordenAprobador" value="1"/></td>
+                        <td style="width: 50%"><select class="form-control" id="usuarioAprobador"></select></td>
+                        <td style="width: 30%"><input class="form-control" type="date" id="fechaAprobador" /></td>
+                        <td style="width: 10%"><button type="button" id="btnAprobador" class="btn btn-primary"><img src="~/img/icons/guardar.png" /></button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGADocumentos" asp-action="Resumen">Cancelar</a>
         <button type="submit" class="btn btn-primary mr-2">Registrar</button>
     </div>
 </form>
+
+@section Scripts{ 
+    <script type="text/javascript">
+        //Validar que el orden no se repita
+        //Validar como minimo 1 revisor y aprobador
+
+        var usuarios = JSON.parse('@Html.Raw(ViewBag.Usuarios)')
+        var optionsUsuario = usuarios.map(function (val, ind) {
+            return $("<option></option>").val(val.Value).html(val.Text);
+        });
+        $(document).ready(function () {
+            $('#usuarioAprobador,#usuarioRevisor').append(optionsUsuario);
+            $("#fechaAprobador,#fechaRevisor").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+        });
+    </script>
+
+}

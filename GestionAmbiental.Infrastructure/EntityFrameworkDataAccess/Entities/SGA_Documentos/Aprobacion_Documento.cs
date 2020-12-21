@@ -18,7 +18,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         [Column(TypeName = "int")]
         public int Orden { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Limite { get; set; }
+        public DateTime? Fecha_Limite { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Aprobacion { get; set; }
         [Column(TypeName = "varchar(30)")]

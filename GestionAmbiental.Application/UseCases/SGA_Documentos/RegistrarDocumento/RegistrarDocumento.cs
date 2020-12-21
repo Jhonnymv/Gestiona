@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _registrarDocumentosReadOnlyRepository = registrarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarDocumentosReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed)
+        public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, List<RevisionAprobacionInput> revisiones, List<RevisionAprobacionInput> aprobaciones)
         {
             /*
             DateTime? fechaTentativaDT = null;
@@ -50,8 +50,45 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 },
                 Estado = "Registrado"
             };
+            
+            var IdDoc =  await _registrarDocumentosReadOnlyRepository.RegistrarDocumento(model);
 
-            return await _registrarDocumentosReadOnlyRepository.RegistrarDocumento(model);
+            var revisionesDoc = new List<RevisionDocumento>();
+            foreach(var item in revisiones)
+            {
+
+                DateTime? fechaDT = null;
+                if(item.FechaLimite!=null)
+                    fechaDT= Convert.ToDateTime(item.FechaLimite);
+                revisionesDoc.Add(new RevisionDocumento {
+                    IdSGADocumento = IdDoc,
+                    IdUsuario = item.IdUsuario,
+                    FechaLimite = fechaDT,
+                    Orden = item.Orden,
+                    Estado = "Registrado"
+                });
+            }
+            var aprobacionesDoc = new List<AprobacionDocumento>();
+            foreach (var item in revisiones)
+            {
+
+                DateTime? fechaDT = null;
+                if (item.FechaLimite != null)
+                    fechaDT = Convert.ToDateTime(item.FechaLimite);
+                aprobacionesDoc.Add(new AprobacionDocumento
+                {
+                    IdSGADocumento = IdDoc,
+                    IdUsuario = item.IdUsuario,
+                    FechaLimite = fechaDT,
+                    Orden = item.Orden,
+                    Estado = "Registrado"
+                });
+            }
+
+            await _registrarDocumentosReadOnlyRepository.RegistrarRevisiones(revisionesDoc);
+            await _registrarDocumentosReadOnlyRepository.RegistrarAprobaciones(aprobacionesDoc);
+
+            return IdDoc;
         }
     }
 }

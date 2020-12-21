@@ -6,12 +6,12 @@ namespace GestionAmbiental.Domain.SGA_Documentos
 {
     public class AprobacionDocumento
     {
-        public int Id_SGA_Revision_Documento { get; set; }
-        public int Id_SGA_Documento { get; set; }
-        public int Id_Usuario { get; set; }
+        public int IdSGARevisionDocumento { get; set; }
+        public int IdSGADocumento { get; set; }
+        public int IdUsuario { get; set; }
         public int Orden { get; set; }
-        public DateTime Fecha_Limite { get; set; }
-        public DateTime? Fecha_Aprobacion { get; set; }
+        public DateTime? FechaLimite { get; set; }
+        public DateTime? FechaAprobacion { get; set; }
         public string Estado { get; set; }
     }
 }

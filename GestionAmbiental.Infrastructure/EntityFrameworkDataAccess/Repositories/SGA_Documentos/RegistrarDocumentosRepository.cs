@@ -53,5 +53,45 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else
                 return null;
         }
+
+        public async Task<int> RegistrarRevisiones(List<RevisionDocumento> revisiones)
+        {
+            var data = new List<Entities.SGA_Documentos.Revision_Documento>();
+            foreach(var item in revisiones)
+            {
+                data.Add(new Entities.SGA_Documentos.Revision_Documento
+                {
+                    Id_Usuario = item.IdUsuario,
+                    Id_SGA_Documento = item.IdSGADocumento,
+                    Fecha_Limite = item.FechaLimite,
+                    Orden = item.Orden,
+                    Estado = item.Estado
+                });
+            }
+            _context.SGA_Revisiones_Documento.AddRange(data);
+            await _context.SaveChangesAsync();
+
+            return data.Count;
+        }
+
+        public async Task<int> RegistrarAprobaciones(List<AprobacionDocumento> aprobaciones)
+        {
+            var data = new List<Entities.SGA_Documentos.Aprobacion_Documento>();
+            foreach (var item in aprobaciones)
+            {
+                data.Add(new Entities.SGA_Documentos.Aprobacion_Documento
+                {
+                    Id_Usuario = item.IdUsuario,
+                    Id_SGA_Documento = item.IdSGADocumento,
+                    Fecha_Limite = item.FechaLimite,
+                    Orden = item.Orden,
+                    Estado = item.Estado
+                });
+            }
+            _context.SGA_Aprobaciones_Documento.AddRange(data);
+            await _context.SaveChangesAsync();
+
+            return data.Count;
+        }
     }
 }

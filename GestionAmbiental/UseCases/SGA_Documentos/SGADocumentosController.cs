@@ -128,47 +128,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             };
             return Ok(response);
         }
-        public async Task<IActionResult> RegistrarDocumento()
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-            {
-                return RedirectToAction("NoAutorizado", "Home");
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
-
-                var items = await _selectItems.Execute();
-                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
-                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
-                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                ViewBag.Condiciones = condiciones;
-                ViewBag.TiposDoc = tipos;
-
-                var documentos = await _consultarDocumentos.Execute();
-                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
-
-                var predecesoresTipo = new List<SelectListItem>();
-                foreach (var grupo in documentosAgrupados)
-                {
-                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
-                    foreach (var docPredecesor in grupo)
-                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre, Group = nuevoGrupo });
-                }
-                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
-
-                ViewBag.Predecesores = predecesoresTipo;
-
-                return View();
-            }
-        }
-        
         public async Task<IActionResult> VerDocumento(string IdDocumento)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -195,7 +155,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
-                var model = new SGADocumentoModel {
+                var model = new SGADocumentoModel
+                {
                     Id_Encriptado = IdDocumento,
                     Id_SGA_Documento = documento.IdSGADocumento,
                     Id_SGA_Tipo_Documento = documento.IdSGATipoDocumento,
@@ -241,6 +202,58 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             };
             return Ok(response);
         }
+        public async Task<IActionResult> RegistrarDocumento()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                
+                var usuarios = JsonConvert.SerializeObject(items.ItemsUsuarios.Select(x=>new { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToArray());
+                //reemplazar comillas simples con espacio
+                usuarios = usuarios.Replace('\'', ' ');
+                
+                /*
+                var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos}).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                */
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+                ViewBag.Usuarios = usuarios;
+                ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
+
+                var documentos = await _consultarDocumentos.Execute();
+                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+
+                var predecesoresTipo = new List<SelectListItem>();
+                foreach (var grupo in documentosAgrupados)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    foreach (var docPredecesor in grupo)
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre, Group = nuevoGrupo });
+                }
+                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
+
+                ViewBag.Predecesores = predecesoresTipo;
+
+                return View();
+            }
+        }
+        
         [HttpPost]
         public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
         {
@@ -254,14 +267,20 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
                 if (!cargaDocumento.Equals("Error"))
                 {
-                    await _registrarDocumento.Execute(
+                    var revisiones = JsonConvert.SerializeObject(model.Revisiones);
+                    var aprobaciones = JsonConvert.SerializeObject(model.Aprobaciones);
+
+
+                    /*await _registrarDocumento.Execute(
                         model.Id_SGA_Tipo_Documento,
                         model.Doc_Nombre,
                         model.Doc_Version,
                         model.Doc_Predecesor,
                         model.Comentario,
                         cargaDocumento,
-                        userInfo.NombreUsuario);
+                        userInfo.NombreUsuario,
+                        model.Revisiones,
+                        model.Aprobaciones);*/
                 }
                 else
                 {
