@@ -65,6 +65,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
 
                 if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
                     outputItem.PermisosAdmin = true;
+                else if (item.Asesor.IdUsuario.Equals(usuario.IdUsuario))
+                    outputItem.Permisos = true;
                 else
                     outputItem.PermisosAdmin = false;
 
