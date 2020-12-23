@@ -3,11 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
-<<<<<<< HEAD
     <UserSecretsId>f17d01e0-5e90-4d1b-9134-5ab5a3719a63</UserSecretsId>
-=======
-    <UserSecretsId>3ac4f7b6-1c6b-4eab-8c0b-60aa67b2780f</UserSecretsId>
->>>>>>> ConsumoAgua
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

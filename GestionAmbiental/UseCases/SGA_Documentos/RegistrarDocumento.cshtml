@@ -80,11 +80,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td style="width: 20%"><input class="form-control" type="number" id="ordenRevisor" value="1"/></td>
-                        <td style="width: 50%"><select class="form-control" id="usuarioRevisor"></select></td>
-                        <td style="width: 20%"><input class="form-control" type="date" id="fechaRevisor" /></td>
-                        <td style="width: 10%"><button type="button" id="btnRevisor" class="btn btn-primary"><img src="~/img/icons/guardar.png" /></button></td>
+                    <tr id="Revisor1">
+                        <td style="width: 20%"><input class="form-control" type="number" id="ordenRevisor1" value="1" /></td>
+                        <td style="width: 50%"><select class="form-control" id="usuarioRevisor1"></select></td>
+                        <td style="width: 20%"><input class="form-control" type="date" id="fechaRevisor1" /></td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr id="NuevaFilaRevisor">
+                        <td style="width: 100%" colspan="4"><button type="button" id="btnAgregarAprobador" class="btn btn-outline-primary" style="width: 100%" onclick="AgregarFilaRevisor(2)">Nueva Fila</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -106,12 +109,15 @@
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td style="width: 20%"><input class="form-control" type="number" id="ordenAprobador" value="1"/></td>
-                        <td style="width: 50%"><select class="form-control" id="usuarioAprobador"></select></td>
-                        <td style="width: 30%"><input class="form-control" type="date" id="fechaAprobador" /></td>
-                        <td style="width: 10%"><button type="button" id="btnAprobador" class="btn btn-primary"><img src="~/img/icons/guardar.png" /></button></td>
+                <tbody>                   
+                    <tr id="Aprobador1">
+                        <td style="width: 20%"><input class="form-control" type="number" id="ordenAprobador1" value="1" /></td>
+                        <td style="width: 50%"><select class="form-control" id="usuarioAprobador1"></select></td>
+                        <td style="width: 30%"><input class="form-control" type="date" id="fechaAprobador1" /></td>
+                        <td style="width: 10%"></td>
+                    </tr>
+                    <tr id="NuevaFilaAprobador">
+                        <td style="width: 100%" colspan="4"><button type="button" id="btnAgregarAprobador" class="btn btn-outline-primary" style="width: 100%" onclick="AgregarFilaAprobador(2)">Nueva Fila</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -132,10 +138,137 @@
         var optionsUsuario = usuarios.map(function (val, ind) {
             return $("<option></option>").val(val.Value).html(val.Text);
         });
+        var filasAprobador = 1;
+        var idsfilasAprobador = 1;
+        var filasRevisor = 1;
+        var idsfilasRevisor = 1;
+
+
         $(document).ready(function () {
-            $('#usuarioAprobador,#usuarioRevisor').append(optionsUsuario);
-            $("#fechaAprobador,#fechaRevisor").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            $('#usuarioAprobador1,#usuarioRevisor1').append(optionsUsuario);
+            $("#fechaAprobador1,#fechaRevisor1").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
+
+        function filaValida(fila) {
+            var orden = fila.find("#orden").val();
+            var idUsuario = fila.find("#usuarioAprobador,#usuarioRevisor").val();
+            var fecha = fila.find("#fecha").val();
+
+            if (orden != "" && idUsuario != '0' && fecha != "")
+                return true;
+            return false;
+        }
+
+        function AgregarFilaRevisor(fila) {
+            //Copiar el boton agregar
+            var nuevaFila = "<tr id=\"NuevaFilaRevisor\">" +
+                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarRevisor\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaRevisor(" + (fila + 1)+")\">Nueva Fila</button></td>"+
+                            "</tr>";
+            //Eliminar boton
+            $('#tabla_revisores tr:last').remove();
+
+            var data = "<tr id=\"Revisor" + fila + "\">" +
+                "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" id=\"ordenRevisor"+fila+"\" value=\"" + fila + "\"/></td>" +
+                "<td style=\"width: 50%\"><select class=\"form-control\" id=\"usuarioRevisor" + fila +"\"></select></td>" +
+                "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" id=\"fechaRevisor" + fila +"\"/></td>" +
+                "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor("+fila+")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                "</tr>";
+
+            //crear nueva lista de usuarios
+            var opciones =  usuarios.map(function (val, ind) {
+                return $("<option></option>").val(val.Value).html(val.Text);
+            });
+
+            var usuarioRevisor = "#usuarioRevisor" + fila;
+            var fechaRevisor = "#fechaRevisor" + fila;
+
+            $("#tabla_revisores tbody").append(data + nuevaFila);
+
+            $(usuarioRevisor).append(opciones);
+
+            $(fechaRevisor).prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+
+            filasRevisor += 1;
+            idsfilasRevisor += 1;
+        }
+        function AgregarFilaAprobador(fila) {
+            //Copiar el boton agregar
+            var nuevaFila = "<tr id=\"NuevaFilaAprobador\">" +
+                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarAprobador\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaAprobador(" + (fila + 1)+")\">Nueva Fila</button></td>"+
+                            "</tr>";
+            //Eliminar boton
+            $('#tabla_aprobadores tr:last').remove();
+
+            var data = "<tr id=\"Aprobador" + fila + "\">" +
+                "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" id=\"ordenAprobador" + fila + "\" value=\"" + (filasAprobador+1) + "\"/></td>" +
+                "<td style=\"width: 50%\"><select class=\"form-control\" id=\"usuarioAprobador" + fila +"\"></select></td>" +
+                "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" id=\"fechaAprobador" + fila +"\"/></td>" +
+                "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarAprobador("+fila+")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                "</tr>";
+
+            //crear nueva lista de usuarios
+            var opciones =  usuarios.map(function (val, ind) {
+                return $("<option></option>").val(val.Value).html(val.Text);
+            });
+
+            var usuarioAprobador = "#usuarioAprobador" + fila;
+            var fechaAprobador = "#fechaAprobador" + fila;
+
+            $("#tabla_aprobadores tbody").append(data + nuevaFila);
+
+            $(usuarioAprobador).append(opciones);
+            $(fechaAprobador).prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+
+            filasAprobador += 1;
+            idsfilasAprobador += 1;
+        }
+
+        function EliminarRevisor(fila) {
+            var fila = "#Revisor" + fila;
+            $(fila).remove();
+            filasRevisor -= 1;
+        }
+        function EliminarAprobador(fila) {
+
+            console.log("-------------ELIMINAR NUEVA FILA"+fila+ "------")
+            //Copiar el boton agregar
+            var nuevaFila = "<tr id=\"NuevaFilaAprobador\">" +
+                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarAprobador\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaAprobador(" + (idsfilasAprobador+1) + ")\">Nueva Fila</button></td>" +
+                "</tr>";
+            //Eliminar boton
+            $('#tabla_aprobadores tr:last').remove();
+            $("#tabla_aprobadores tbody").append(nuevaFila);
+
+            var filaNombre = "#Aprobador" + fila;
+            console.log("filaNombre", filaNombre)
+            
+            //todos los N Orden mayores a la fila debe restar 1
+            //1. Identificar cada fila y su orden
+            //2. Identificar la fila q sera eliminada
+            //3. Restar 1 a los ordenes superiores al de la fila eliminada
+
+
+            console.log("fila < filasAprobador", fila < filasAprobador)
+            if (fila < filasAprobador) {
+                for (var i = fila+1; i <= idsfilasAprobador; i++) {
+                    console.log("i", i)
+
+                    var orden = "#ordenAprobador" + i;
+                    console.log("orden", orden)
+                    if ($(orden)[0] != null) {
+                        console.log("EXISTE")
+                        var valorOrden = $(orden).val();
+                        console.log("orden anterior", valorOrden)
+                        $(orden).val(valorOrden - 1);
+
+                        console.log("orden nuevo", $(orden).val())
+                    }
+                }
+            }
+
+            $(filaNombre).remove();
+            filasAprobador -= 1;
+        }
     </script>
 
 }
