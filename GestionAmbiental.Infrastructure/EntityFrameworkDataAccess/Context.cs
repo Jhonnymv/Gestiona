@@ -90,7 +90,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         
         public DbSet<Tipo_Documento> SGA_Tipos_Documento { get; set; }
         public DbSet<Condicion> SGA_Condiciones { get; set; }
-        public DbSet<Aprobacion_Documento> SGA_Aprobaciones_Documento { get; set; }
+        public DbSet<Tipo_Revision> SGA_Tipos_Revision { get; set; }
         public DbSet<Revision_Documento> SGA_Revisiones_Documento { get; set; }
         public DbSet<Documento> SGA_Documentos { get; set; }
 
@@ -238,8 +238,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                .ToTable("Tb_SGA_Condicion");
             modelBuilder.Entity<Tipo_Documento>()
                .ToTable("Tb_SGA_Tipo_Documento");
-            modelBuilder.Entity<Aprobacion_Documento>()
-               .ToTable("Tb_SGA_Aprobacion_Documento");
+            modelBuilder.Entity<Tipo_Revision>()
+               .ToTable("Tb_SGA_Tipo_Revision");
             modelBuilder.Entity<Revision_Documento>()
                .ToTable("Tb_SGA_Revision_Documento");
             modelBuilder.Entity<Documento>()

@@ -62,6 +62,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 data.Add(new Entities.SGA_Documentos.Revision_Documento
                 {
                     Id_Usuario = item.IdUsuario,
+                    Id_SGA_Tipo_Revision = item.SGATipoRevision.IdTipoRevision,
                     Id_SGA_Documento = item.IdSGADocumento,
                     Fecha_Limite = item.FechaLimite,
                     Orden = item.Orden,
@@ -73,25 +74,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return data.Count;
         }
-
-        public async Task<int> RegistrarAprobaciones(List<AprobacionDocumento> aprobaciones)
+        public async Task<int> RegistrarRevision(RevisionDocumento revision)
         {
-            var data = new List<Entities.SGA_Documentos.Aprobacion_Documento>();
-            foreach (var item in aprobaciones)
+            var entity = new Entities.SGA_Documentos.Revision_Documento
             {
-                data.Add(new Entities.SGA_Documentos.Aprobacion_Documento
-                {
-                    Id_Usuario = item.IdUsuario,
-                    Id_SGA_Documento = item.IdSGADocumento,
-                    Fecha_Limite = item.FechaLimite,
-                    Orden = item.Orden,
-                    Estado = item.Estado
-                });
-            }
-            _context.SGA_Aprobaciones_Documento.AddRange(data);
+                Id_Usuario = revision.IdUsuario,
+                Id_SGA_Tipo_Revision = revision.SGATipoRevision.IdTipoRevision,
+                Id_SGA_Documento = revision.IdSGADocumento,
+                Fecha_Limite = revision.FechaLimite,
+                Orden = revision.Orden,
+                Estado = revision.Estado
+            };
+            _context.SGA_Revisiones_Documento.Add(entity);
+                
             await _context.SaveChangesAsync();
 
-            return data.Count;
+            return entity.Id_SGA_Revision_Documento;
         }
     }
 }

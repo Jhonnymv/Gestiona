@@ -12,5 +12,6 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
         Task<List<TipoDocumento>> GetTiposDocumento();
         Task<List<Condicion>> GetCondiciones();
         Task<List<Usuario>> GetListUsuarios();
+        Task<List<TipoRevision>> GetTiposRevision();
     }
 }

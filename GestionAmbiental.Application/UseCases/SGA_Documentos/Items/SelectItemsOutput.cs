@@ -11,5 +11,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.Items
         public List<TipoDocumento> ItemsTipoDocumento { get; set; }
         public List<Condicion> ItemsCondicion { get; set; }
         public List<Usuario> ItemsUsuarios { get; set; }
+        public List<TipoRevision> ItemsTipoRevision { get; set; }
     }
 }

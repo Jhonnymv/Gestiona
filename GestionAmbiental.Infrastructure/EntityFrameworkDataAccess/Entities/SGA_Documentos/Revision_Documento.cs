@@ -12,6 +12,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         [Key]
         public int Id_SGA_Revision_Documento { get; set; }
         [Column(TypeName = "int")]
+        public int Id_SGA_Tipo_Revision { get; set; }
+        [Column(TypeName = "int")]
         public int Id_SGA_Documento { get; set; }
         [Column(TypeName = "int")]
         public int Id_Usuario { get; set; }

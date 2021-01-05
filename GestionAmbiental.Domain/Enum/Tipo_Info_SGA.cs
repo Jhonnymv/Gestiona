@@ -24,6 +24,6 @@ namespace GestionAmbiental.Domain.Enum
         FTPConnectionEvidenciaIncInvAccion = 16,
         FTPConnectionAvistamientoFauna = 17,
         FTPConnectionAvistamientoFaunaAccion = 18,
-        FTPConnectionSGADocumentos = 1018
+        FTPConnectionSGADocumentos = 2013
     }
 }

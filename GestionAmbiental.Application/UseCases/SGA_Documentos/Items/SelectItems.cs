@@ -20,10 +20,12 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.Items
             var condiciones = await _getItemsReadOnlyRepository.GetCondiciones();
             var tipos = await _getItemsReadOnlyRepository.GetTiposDocumento();
             var usuarios = await _getItemsReadOnlyRepository.GetListUsuarios();
+            var tiposRevision = await _getItemsReadOnlyRepository.GetTiposRevision();
             var output = new SelectItemsOutput();
             output.ItemsCondicion = condiciones;
             output.ItemsTipoDocumento = tipos;
             output.ItemsUsuarios = usuarios;
+            output.ItemsTipoRevision = tiposRevision;
             return output;
         }
     }

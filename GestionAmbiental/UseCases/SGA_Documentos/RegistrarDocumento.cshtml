@@ -62,6 +62,18 @@
             <label class="btn btn-primary" for="Documento">Seleccione</label>
             <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
         </div>
+        <input type="hidden" asp-for="Opcion" />
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+            </div>
+        </div>
+    }
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
     </div>
     <div class="row mb-2 mr-2">
         <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
@@ -70,6 +82,7 @@
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-center">
         <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Revisores" />
             <table class="table" id="tabla_revisores">
                 <thead class="thead-mcolor">
                     <tr>
@@ -77,18 +90,10 @@
                         <th>Usuario</th>
                         <th>Fecha Limite</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="Revisor1">
-                        <td style="width: 20%"><input class="form-control" type="number" id="ordenRevisor1" value="1" /></td>
-                        <td style="width: 50%"><select class="form-control" id="usuarioRevisor1"></select></td>
-                        <td style="width: 20%"><input class="form-control" type="date" id="fechaRevisor1" /></td>
-                        <td style="width: 10%"></td>
-                    </tr>
-                    <tr id="NuevaFilaRevisor">
-                        <td style="width: 100%" colspan="4"><button type="button" id="btnAgregarAprobador" class="btn btn-outline-primary" style="width: 100%" onclick="AgregarFilaRevisor(2)">Nueva Fila</button></td>
-                    </tr>
                 </tbody>
             </table>
         </div>
@@ -100,6 +105,7 @@
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-center">
         <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Aprobadores" />
             <table class="table" id="tabla_aprobadores">
                 <thead class="thead-mcolor">
                     <tr>
@@ -107,168 +113,276 @@
                         <th>Usuario</th>
                         <th>Fecha Limite</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </thead>
-                <tbody>                   
-                    <tr id="Aprobador1">
-                        <td style="width: 20%"><input class="form-control" type="number" id="ordenAprobador1" value="1" /></td>
-                        <td style="width: 50%"><select class="form-control" id="usuarioAprobador1"></select></td>
-                        <td style="width: 30%"><input class="form-control" type="date" id="fechaAprobador1" /></td>
-                        <td style="width: 10%"></td>
-                    </tr>
-                    <tr id="NuevaFilaAprobador">
-                        <td style="width: 100%" colspan="4"><button type="button" id="btnAgregarAprobador" class="btn btn-outline-primary" style="width: 100%" onclick="AgregarFilaAprobador(2)">Nueva Fila</button></td>
-                    </tr>
+                <tbody>
                 </tbody>
             </table>
         </div>
     </div>
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGADocumentos" asp-action="Resumen">Cancelar</a>
-        <button type="submit" class="btn btn-primary mr-2">Registrar</button>
+        <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
 </form>
+<!--Modal Revisión-->
+<div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_revision">
+                    Agregar Revisor/Aprobador
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
 
-@section Scripts{ 
+                    <div class="row mb-2">
+                        <input type="hidden" id="Id_Revision" />
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <span class="text-danger" id="danger_revision"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Tipo de Revisión:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <select class="form-control" id="select_tipo_revision" asp-items="@ViewBag.TiposRevision">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Orden de Revisión:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <input type="number" class="form-control" id="input_orden_revision" value="1" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Responsable:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <select class="form-control" id="select_usuario" asp-items="@ViewBag.Usuarios">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Fecha Límite:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <input type="date" class="form-control" id="input_fecha_limite" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn_editar_revisor">Editar</button>
+                    <button type="button" class="btn btn-primary" id="btn_confirmar_revisor">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
     <script type="text/javascript">
-        //Validar que el orden no se repita
-        //Validar como minimo 1 revisor y aprobador
 
-        var usuarios = JSON.parse('@Html.Raw(ViewBag.Usuarios)')
-        var optionsUsuario = usuarios.map(function (val, ind) {
-            return $("<option></option>").val(val.Value).html(val.Text);
-        });
-        var filasAprobador = 1;
-        var idsfilasAprobador = 1;
-        var filasRevisor = 1;
-        var idsfilasRevisor = 1;
+        var listAprobadores = [];
+        var listRevisores = [];
+        var IdPrimerUsuario;
 
 
         $(document).ready(function () {
-            $('#usuarioAprobador1,#usuarioRevisor1').append(optionsUsuario);
-            $("#fechaAprobador1,#fechaRevisor1").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            IdPrimerUsuario = $("#select_usuario").val();
         });
 
-        function filaValida(fila) {
-            var orden = fila.find("#orden").val();
-            var idUsuario = fila.find("#usuarioAprobador,#usuarioRevisor").val();
-            var fecha = fila.find("#fecha").val();
+        function ValidarDatosModal() {
+            var tipo = $("#select_tipo_revision").val();
+            var orden = $("#input_orden_revision").val();
+            var idUsuario = $("#select_usuario").val();
+            var fecha = $("#input_fecha_limite").val();
 
-            if (orden != "" && idUsuario != '0' && fecha != "")
+            if (tipo!='0' && orden != "" && idUsuario != '0' && fecha != "")
                 return true;
             return false;
         }
 
-        function AgregarFilaRevisor(fila) {
-            //Copiar el boton agregar
-            var nuevaFila = "<tr id=\"NuevaFilaRevisor\">" +
-                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarRevisor\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaRevisor(" + (fila + 1)+")\">Nueva Fila</button></td>"+
-                            "</tr>";
-            //Eliminar boton
-            $('#tabla_revisores tr:last').remove();
+        $("#btn_guardar_estado").on("click", function () {
+            $("#opcion").val("GuardarEstado");
+            $("#form_registrar_documento").submit();
+        });
+        $("#btn_registrar").on("click", function () {
+            $("#opcion").val("Registrar");
+            $("#form_registrar_documento").submit()
+        });
 
-            var data = "<tr id=\"Revisor" + fila + "\">" +
-                "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" id=\"ordenRevisor"+fila+"\" value=\"" + fila + "\"/></td>" +
-                "<td style=\"width: 50%\"><select class=\"form-control\" id=\"usuarioRevisor" + fila +"\"></select></td>" +
-                "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" id=\"fechaRevisor" + fila +"\"/></td>" +
-                "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor("+fila+")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
-                "</tr>";
+        $("#btn_agregar_revision").on("click", function () {
+            $("#btn_editar_revisor").hide();
+            $("#btn_confirmar_revisor").show();
+            $("#modal_revision").modal('show');            
+        });
+        $("#select_tipo_revision").on("change", function () {
+            if ($(this).val() == 1) {
+                $("#input_orden_revision").val(listRevisores.length + 1);
+                if (listRevisores.length > 0)
+                    $("#input_fecha_limite").prop("min", listRevisores[listRevisores.length - 1].Fecha);
+                else
+                    $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            }
+            else if ($(this).val() == 2) {
+                $("#input_orden_revision").val(listAprobadores.length + 1);
+                if (listAprobadores.length > 0)
+                    $("#input_fecha_limite").prop("min", listRevisores[listRevisores.length - 1].Fecha);
+                else
+                    $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            }
+        });
 
-            //crear nueva lista de usuarios
-            var opciones =  usuarios.map(function (val, ind) {
-                return $("<option></option>").val(val.Value).html(val.Text);
-            });
+        $("#btn_confirmar_revisor").on("click", function () {
+            //Guardar Datos y redireccionar a Editar
+            if (ValidarDatosModal()) {
+                var tipo = $("#select_tipo_revision").val();
 
-            var usuarioRevisor = "#usuarioRevisor" + fila;
-            var fechaRevisor = "#fechaRevisor" + fila;
+                var revisor = {
+                    Orden:  parseInt($("#input_orden_revision").val()),
+                    Usuario: parseInt($("#select_usuario").val()),
+                    UsuarioNombre: $("#select_usuario").find("option:selected").text(),
+                    Fecha: $("#input_fecha_limite").val()
+                };
 
-            $("#tabla_revisores tbody").append(data + nuevaFila);
+                tipo == '1' ? listRevisores.push(revisor) : listAprobadores.push(revisor);
 
-            $(usuarioRevisor).append(opciones);
+                $("#select_tipo_revision").val(0);
+                $("#select_usuario").val(IdPrimerUsuario);
+                $("#input_fecha_limite").val("");
+                $("#modal_revision").modal('toggle');
 
-            $(fechaRevisor).prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                if (tipo == '1') {
+                    $("#tabla_revisores tbody").empty();
+                    var html = LlenarTabla(tipo, listRevisores);
+                    $("#tabla_revisores tbody").html(html);
+                    $("#Revisores").val(JSON.stringify(listRevisores));
 
-            filasRevisor += 1;
-            idsfilasRevisor += 1;
-        }
-        function AgregarFilaAprobador(fila) {
-            //Copiar el boton agregar
-            var nuevaFila = "<tr id=\"NuevaFilaAprobador\">" +
-                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarAprobador\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaAprobador(" + (fila + 1)+")\">Nueva Fila</button></td>"+
-                            "</tr>";
-            //Eliminar boton
-            $('#tabla_aprobadores tr:last').remove();
-
-            var data = "<tr id=\"Aprobador" + fila + "\">" +
-                "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" id=\"ordenAprobador" + fila + "\" value=\"" + (filasAprobador+1) + "\"/></td>" +
-                "<td style=\"width: 50%\"><select class=\"form-control\" id=\"usuarioAprobador" + fila +"\"></select></td>" +
-                "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" id=\"fechaAprobador" + fila +"\"/></td>" +
-                "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarAprobador("+fila+")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
-                "</tr>";
-
-            //crear nueva lista de usuarios
-            var opciones =  usuarios.map(function (val, ind) {
-                return $("<option></option>").val(val.Value).html(val.Text);
-            });
-
-            var usuarioAprobador = "#usuarioAprobador" + fila;
-            var fechaAprobador = "#fechaAprobador" + fila;
-
-            $("#tabla_aprobadores tbody").append(data + nuevaFila);
-
-            $(usuarioAprobador).append(opciones);
-            $(fechaAprobador).prop("min", '@Html.Raw(ViewBag.FechaHoy)');
-
-            filasAprobador += 1;
-            idsfilasAprobador += 1;
-        }
-
-        function EliminarRevisor(fila) {
-            var fila = "#Revisor" + fila;
-            $(fila).remove();
-            filasRevisor -= 1;
-        }
-        function EliminarAprobador(fila) {
-
-            console.log("-------------ELIMINAR NUEVA FILA"+fila+ "------")
-            //Copiar el boton agregar
-            var nuevaFila = "<tr id=\"NuevaFilaAprobador\">" +
-                "<td style=\"width: 100%\" colspan=\"4\"><button type=\"button\" id=\"btnAgregarAprobador\" class=\"btn btn-outline-primary\" style=\"width: 100%\" onclick=\"AgregarFilaAprobador(" + (idsfilasAprobador+1) + ")\">Nueva Fila</button></td>" +
-                "</tr>";
-            //Eliminar boton
-            $('#tabla_aprobadores tr:last').remove();
-            $("#tabla_aprobadores tbody").append(nuevaFila);
-
-            var filaNombre = "#Aprobador" + fila;
-            console.log("filaNombre", filaNombre)
-            
-            //todos los N Orden mayores a la fila debe restar 1
-            //1. Identificar cada fila y su orden
-            //2. Identificar la fila q sera eliminada
-            //3. Restar 1 a los ordenes superiores al de la fila eliminada
-
-
-            console.log("fila < filasAprobador", fila < filasAprobador)
-            if (fila < filasAprobador) {
-                for (var i = fila+1; i <= idsfilasAprobador; i++) {
-                    console.log("i", i)
-
-                    var orden = "#ordenAprobador" + i;
-                    console.log("orden", orden)
-                    if ($(orden)[0] != null) {
-                        console.log("EXISTE")
-                        var valorOrden = $(orden).val();
-                        console.log("orden anterior", valorOrden)
-                        $(orden).val(valorOrden - 1);
-
-                        console.log("orden nuevo", $(orden).val())
-                    }
+                } else if (tipo == '2') {
+                    $("#tabla_aprobadores tbody").empty();
+                    var html = LlenarTabla(tipo, listAprobadores);
+                    $("#tabla_aprobadores tbody").html(html);
+                    $("#Aprobadores").val(JSON.stringify(listAprobadores));
                 }
             }
+        });
+        $("#btn_editar_revisor").on("click", function () {
+            //Guardar Datos y redireccionar a Editar
+            if (ValidarDatosModal()) {
+                var tipo = $("#select_tipo_revision").val();
+                var orden = parseInt($("#input_orden_revision").val())
+                var revisor = {
+                    Orden:  orden,
+                    Usuario: parseInt($("#select_usuario").val()),
+                    UsuarioNombre: $("#select_usuario").find("option:selected").text(),
+                    Fecha: $("#input_fecha_limite").val()
+                };
+                if (tipo == '1') {
+                    listRevisores[orden - 1] = revisor;
+                }
+                else if (tipo == '2') {
+                    listAprobadores[orden - 1] = revisor;
+                }
 
-            $(filaNombre).remove();
-            filasAprobador -= 1;
+                $("#select_tipo_revision").val(0);
+                $("#select_usuario").val(IdPrimerUsuario);
+                $("#input_fecha_limite").val("");
+                $("#modal_revision").modal('toggle');
+                $("#btn_editar_revisor").hide();
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                if (tipo == '1') {
+                    $("#tabla_revisores tbody").empty();
+                    var html = LlenarTabla(tipo, listRevisores);
+                    $("#tabla_revisores tbody").html(html);
+                    $("#Revisores").val(JSON.stringify(listRevisores));
+
+                } else if (tipo == '2') {
+                    $("#tabla_aprobadores tbody").empty();
+                    var html = LlenarTabla(tipo, listAprobadores);
+                    $("#tabla_aprobadores tbody").html(html);
+                    $("#Aprobadores").val(JSON.stringify(listAprobadores));
+                }
+            }
+        });
+
+        function EliminarRevisor(tipo, orden) {
+            if (tipo == 1) {
+                for (var i = 0; i < listRevisores.length; i++) {
+                    if (listRevisores[i].Orden > orden)
+                        listRevisores[i].Orden -= 1;
+                }
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                listRevisores.splice(orden - 1, 1);
+                $("#tabla_revisores tbody").empty();
+                var html = LlenarTabla(tipo, listRevisores);
+                $("#tabla_revisores tbody").html(html);
+                $("#Revisores").val(JSON.stringify(listRevisores));
+
+            }
+            else if (tipo == 2) {
+                for (var i = 0; i < listAprobadores.length; i++) {
+                    if (listAprobadores[i].Orden > orden)
+                        listAprobadores[i].Orden -= 1;
+                }
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                listAprobadores.splice(orden - 1, 1);
+                $("#tabla_aprobadores tbody").empty();
+                var html = LlenarTabla(tipo, listAprobadores);
+                $("#tabla_aprobadores tbody").html(html);
+                $("#Aprobadores").val(JSON.stringify(listAprobadores));
+            }
         }
+        function EditarRevisor(tipo, orden) {
+            $("#btn_editar_revisor").show();
+            $("#btn_confirmar_revisor").hide();
+            $("#modal_revision").modal('show');
+            
+            $("#select_tipo_revision").val(tipo);
+            if (tipo == 1) {
+                $("#input_orden_revision").val(listRevisores[orden - 1].Orden)
+                $("#select_usuario").val(listRevisores[orden - 1].Usuario);
+                $("#input_fecha_limite").val(listRevisores[orden - 1].Fecha);
+            }
+            else if (tipo == 2) {
+                $("#input_orden_revision").val(listAprobadores[orden - 1].Orden)
+                $("#select_usuario").val(listAprobadores[orden - 1].Usuario);
+                $("#input_fecha_limite").val(listAprobadores[orden - 1].Fecha);
+            }
+        }
+        function LlenarTabla(tipo, lista) {
+            var html = "";
+            for (var i = 0; i < lista.length; i++) {
+                html += "<tr>" +
+                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
+                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
+                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >"+
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                    "</tr>";
+            }
+            return html;
+        }
+
     </script>
 
 }

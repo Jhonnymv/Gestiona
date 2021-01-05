@@ -4,6 +4,7 @@ using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredecesores;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarRevisorAprobador;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         private readonly IConsultarDocumento _consultarDocumento;
         private readonly IRegistrarDocumento _registrarDocumento;
         private readonly IConsultarPredecesores _consultarPredecesores;
+        private readonly IRegistrarRevisorAprovador _registrarRevisorAprovador;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
@@ -36,6 +38,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             IConsultarDocumento consultarDocumento,
             IRegistrarDocumento registrarDocumento,
             IConsultarPredecesores consultarPredecesores,
+            IRegistrarRevisorAprovador registrarRevisorAprovador,
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
@@ -44,6 +47,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             _consultarDocumentos = consultarDocumentos;
             _consultarDocumento = consultarDocumento;
             _consultarPredecesores = consultarPredecesores;
+            _registrarRevisorAprovador = registrarRevisorAprovador;
             _registrarDocumento = registrarDocumento;
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
@@ -202,7 +206,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             };
             return Ok(response);
         }
-        public async Task<IActionResult> RegistrarDocumento()
+        public async Task<IActionResult> RegistrarDocumento(string Error)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -221,11 +225,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
                 tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
                 
-                var usuarios = JsonConvert.SerializeObject(items.ItemsUsuarios.Select(x=>new { Value = x.IdUsuario.ToString(), Text = x.Nombres + " " + x.Apellidos }).ToArray());
+                var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
+                tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                
                 //reemplazar comillas simples con espacio
-                usuarios = usuarios.Replace('\'', ' ');
+                //usuarios = usuarios.Replace('\'', ' ');
                 
                 /*
                 var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos}).ToList();
@@ -234,6 +241,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.Usuarios = usuarios;
+                ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
                 var documentos = await _consultarDocumentos.Execute();
@@ -249,11 +257,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
 
                 ViewBag.Predecesores = predecesoresTipo;
+                ViewBag.Error = Error;
+
 
                 return View();
             }
         }
-        
         [HttpPost]
         public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
         {
@@ -262,16 +271,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento)); 
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") +"_"+ model.Doc_Nombre +"_v."+ String.Format("{0:0.0}",model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.0}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
                 var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
                 if (!cargaDocumento.Equals("Error"))
                 {
-                    var revisiones = JsonConvert.SerializeObject(model.Revisiones);
-                    var aprobaciones = JsonConvert.SerializeObject(model.Aprobaciones);
-
-
-                    /*await _registrarDocumento.Execute(
+                    var idDocumento = await _registrarDocumento.Execute(
                         model.Id_SGA_Tipo_Documento,
                         model.Doc_Nombre,
                         model.Doc_Version,
@@ -279,16 +284,24 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                         model.Comentario,
                         cargaDocumento,
                         userInfo.NombreUsuario,
-                        model.Revisiones,
-                        model.Aprobaciones);*/
+                        model.Opcion);
                 }
                 else
                 {
-                    return View();
+                    return RedirectToAction("RegistrarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
                 }
 
             }
+            return View(model);
+        }
+        public async Task<IActionResult> EditarDocumento(SGADocumentoModel model)
+        {
             return View();
+        }
+        public async Task<IActionResult> AgregarRevisorAprobador(int orden, int idUsuario, string fecha)
+        {
+
+            return Ok();
         }
         private string GetContentType(string path)
         {
@@ -358,34 +371,41 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
+                try
                 {
-                    switch (item.Key)
+                    var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
+                    string host = "", port = "", user = "", pass = "", dir = "";
+                    foreach (var item in serverInfo.Info)
                     {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
+                        switch (item.Key)
+                        {
+                            case "host": host = item.Value; break;
+                            case "port": port = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                            case "directory": dir = item.Value; break;
+                        }
                     }
-                }
 
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                    using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                    {
+                        sftp.Connect();
+                        if (!sftp.Exists(Path.Combine(dir, tipo)))
+                            sftp.CreateDirectory(Path.Combine(dir, tipo));
+
+                        sftp.ChangeDirectory(Path.Combine(dir, tipo));
+                        using (FileStream fs = System.IO.File.OpenRead(path))
+                        {
+                            sftp.UploadFile(fs, newFileName, true);
+                        }
+                        sftp.Dispose();
+                    }
+                    return Path.Combine(tipo, newFileName);
+                }
+                catch(Exception e)
                 {
-                    sftp.Connect();
-                    if(!sftp.Exists(Path.Combine(dir,tipo)))
-                        sftp.CreateDirectory(Path.Combine(dir, tipo));
-
-                    sftp.ChangeDirectory(Path.Combine(dir, tipo));
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();
+                    return "Error";
                 }
-                return Path.Combine(tipo,newFileName);
             }
             else
                 return "Error";

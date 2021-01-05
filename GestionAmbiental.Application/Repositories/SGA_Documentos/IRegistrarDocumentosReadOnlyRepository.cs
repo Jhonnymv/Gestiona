@@ -10,7 +10,7 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
     {
         Task<int> RegistrarDocumento(Documento documento);
         Task<string> GetUltimoCodigo();
+        Task<int> RegistrarRevision(RevisionDocumento revision);
         Task<int> RegistrarRevisiones(List<RevisionDocumento> revisiones);
-        Task<int> RegistrarAprobaciones(List<AprobacionDocumento> aprobaciones);
     }
 }

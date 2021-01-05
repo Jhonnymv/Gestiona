@@ -65,6 +65,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Email = item.Email;
                 outputItem.IdRol = item.Id_Rol;
                 outputItem.UsuarioRed = item.usuario_red;
+                outputItem.Estado = item.Estado;
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<TipoRevision>> GetTiposRevision()
+        {
+            var data = await _context.SGA_Tipos_Revision.ToListAsync();
+            var output = new List<TipoRevision>();
+            foreach (var item in data)
+            {
+                var outputItem = new TipoRevision
+                {
+                    IdTipoRevision = item.Id_SGA_Tipo_Revision,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;

@@ -13,21 +13,21 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public int Id_SGA_Documento { get; set; }
         public string Id_Encriptado { get; set; }
         [DisplayName("Tipo de Documento:")]
-        public int Id_SGA_Tipo_Documento { get; set; }    
+        public int Id_SGA_Tipo_Documento { get; set; }
         [DisplayName("Nombre:")]
         public string Doc_Nombre { get; set; }
         [DisplayName("Versión:")]
         public double Doc_Version { get; set; }
         [DisplayName("Predecesor:")]
-        public int? Doc_Predecesor { get; set; }       
+        public int? Doc_Predecesor { get; set; }
         [DisplayName("Condición:")]
         public int Condicion { get; set; }
         [DisplayName("Comentario:")]
         public string Comentario { get; set; }
         [DisplayName("Documento:")]
         public IFormFile Documento { get; set; }
-
-        public string Revisiones { get; set; }
-        public string Aprobaciones { get; set; }
+        public string Opcion { get; set; }
+        public string Revisores {get;set;}
+        public string Aprobadores {get;set;}
     }
 }

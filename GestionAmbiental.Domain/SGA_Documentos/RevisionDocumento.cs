@@ -7,6 +7,7 @@ namespace GestionAmbiental.Domain.SGA_Documentos
     public class RevisionDocumento
     {
         public int IdSGARevisionDocumento { get; set; }
+        public TipoRevision SGATipoRevision { get; set; }
         public int IdSGADocumento { get; set; }
         public int IdUsuario { get; set; }
         public int Orden { get; set; }
