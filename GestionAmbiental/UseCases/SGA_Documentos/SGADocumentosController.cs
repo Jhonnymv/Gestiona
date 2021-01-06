@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.SGA_Documentos;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredecesores;
@@ -159,6 +160,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
+                var revisores = documento.Revisores.Select(x => new { Id = x.IdSGARevisionDocumento, Orden = x.Orden, Usuario = x.Usuario.IdUsuario, UsuarioNombre = x.Usuario.Nombres +" "+x.Usuario.Apellidos, Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")}).ToList();
+                var aprobadores = documento.Aprobadores.Select(x => new { Id = x.IdSGARevisionDocumento, Orden = x.Orden, Usuario = x.Usuario.IdUsuario, UsuarioNombre = x.Usuario.Nombres +" "+x.Usuario.Apellidos, Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")}).ToList();
+
                 var model = new SGADocumentoModel
                 {
                     Id_Encriptado = IdDocumento,
@@ -168,7 +172,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     Doc_Predecesor = documento.IdDocPredecesor,
                     Doc_Version = documento.DocVersion,
                     Comentario = documento.Comentario,
-                    Condicion = documento.IdCondicion
+                    Condicion = documento.IdCondicion,
+                    Revisores = JsonConvert.SerializeObject(revisores),
+                    Aprobadores = JsonConvert.SerializeObject(aprobadores)
                 };
 
                 return View(model);
@@ -244,6 +250,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
+                //Obtener ultimas versiones de documentos publicados
                 var documentos = await _consultarDocumentos.Execute();
                 var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
 
@@ -252,7 +259,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 {
                     var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
                     foreach (var docPredecesor in grupo)
-                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre, Group = nuevoGrupo });
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre+" v."+docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
                 }
                 predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
 
@@ -276,6 +283,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
                 if (!cargaDocumento.Equals("Error"))
                 {
+                    var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInput>>(model.Revisores); 
+                    var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInput>>(model.Aprobadores); 
+
                     var idDocumento = await _registrarDocumento.Execute(
                         model.Id_SGA_Tipo_Documento,
                         model.Doc_Nombre,
@@ -284,7 +294,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                         model.Comentario,
                         cargaDocumento,
                         userInfo.NombreUsuario,
-                        model.Opcion);
+                        model.Opcion,
+                        revisores,
+                        aprobadores);
+                    return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
                 }
                 else
                 {

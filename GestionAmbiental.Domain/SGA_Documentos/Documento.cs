@@ -24,6 +24,6 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public string Estado { get; set; }
 
         public List<RevisionDocumento> Revisiones { get; set; }
-        public List<TipoRevision> Aprobaciones { get; set; }
+        public List<RevisionDocumento> Aprobaciones { get; set; }
     }
 }

@@ -9,7 +9,7 @@
     </div>
 </div>
 <form class="form-group" id="form_registrar_documento" method="post" enctype="multipart/form-data" autocomplete="off">
-    <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado"/>
+    <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
@@ -59,6 +59,56 @@
         <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
         </div>
     </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Revisores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Revisores" />
+            <table class="table" id="tabla_revisores">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        @*if(permiso)
+                        <th></th>
+                        <th></th>
+                            *@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Aprobadores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Aprobadores" />
+            <table class="table" id="tabla_aprobadores">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        @*if(permiso)
+        <th></th>
+        <th></th>
+                        *@
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <div class="row mb-2">
         <div class="col-12 titulo-pagina">
             <h2>Versiones Anteriores</h2>
@@ -89,10 +139,12 @@
 </form>
 @section Scripts{
     <script type="text/javascript">
-    $(document).ready(function () {
-        ObtenerPredecesores();
-    });
-    function ObtenerPredecesores() {
+        $(document).ready(function () {
+            ObtenerPredecesores();
+            CargarRevisores();
+            CargarAprobadores();
+        });
+        function ObtenerPredecesores() {
             $.ajax({
                 type: "POST",
                 url: "/SGADocumentos/ConsultarPredecesores",
@@ -106,5 +158,36 @@
                 }
             });
         }
+        function CargarRevisores() {
+            var revisores = JSON.parse('@Html.Raw(Model.Revisores)');
+            console.log(revisores);
+            $("#tabla_revisores tbody").empty();
+            var html = LlenarTabla(1, revisores);
+            $("#tabla_revisores tbody").html(html);
+        }
+        function CargarAprobadores() {
+            var aprobadores = JSON.parse('@Html.Raw(Model.Aprobadores)');
+            console.log(aprobadores);
+            $("#tabla_aprobadores tbody").empty();
+            var html = LlenarTabla(1, aprobadores);
+            $("#tabla_aprobadores tbody").html(html);
+        }
+         function LlenarTabla(tipo, lista) {
+            var html = "";
+            for (var i = 0; i < lista.length; i++) {
+                html += "<tr>" +
+                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
+                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
+                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
+                
+                /*if(permiso)
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >"+
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                */
+                    "</tr>";
+            }
+            return html;
+        }
+
     </script>
  }

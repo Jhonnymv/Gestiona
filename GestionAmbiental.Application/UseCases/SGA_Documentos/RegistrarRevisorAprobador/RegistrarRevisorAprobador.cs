@@ -22,7 +22,10 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarRevisorA
             {
                 IdSGADocumento = idDocumento,
                 SGATipoRevision = new TipoRevision { IdTipoRevision = tipo },
-                IdUsuario = idUsuario,
+                Usuario = new Domain.ValueObjects.Usuario
+                {
+                    IdUsuario = idUsuario
+                },
                 Orden = orden,
                 FechaLimite = Convert.ToDateTime(fechaLimite)
             };

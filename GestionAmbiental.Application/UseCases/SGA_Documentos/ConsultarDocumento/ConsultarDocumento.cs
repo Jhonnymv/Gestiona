@@ -19,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         {
             var documento = await _getSGADocumentosReadOnlyRepository.GetDocumento(IdDocumento);
             var output = new DocumentoOutput(documento);
+            
             return output;
         }
     }

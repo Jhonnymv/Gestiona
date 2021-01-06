@@ -26,6 +26,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public string Usuario { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
+        public List<RevisionDocumento> Revisores { get; set; } 
+        public List<RevisionDocumento> Aprobadores { get; set; } 
         public string Estado { get; set; }
 
         public DocumentoOutput(Documento documento)
@@ -49,6 +51,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
             FechaTentativa = documento.FechaTentativa;
             FechaActualizacion = documento.FechaActualizacion;
             Estado = documento.Estado;
+            Revisores = documento.Revisiones;
+            Aprobadores = documento.Aprobaciones;
         }
     }
 }

@@ -20,34 +20,38 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<int> RegistrarDocumento(Documento documento)
         {
+            
             var entidad = new Entities.SGA_Documentos.Documento();
-            entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
-            entidad.Doc_Codigo = documento.DocCodigo;
-            entidad.Doc_Nombre = documento.DocNombre;
-            entidad.Doc_Version = documento.DocVersion;
-            if(documento.DocPredecesor.IdSGADocumento != 0)
-                entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
+            try
+            {
+                entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
+                entidad.Doc_Codigo = documento.DocCodigo;
+                entidad.Doc_Nombre = documento.DocNombre;
+                entidad.Doc_Version = documento.DocVersion;
+                if (documento.DocPredecesor.IdSGADocumento != 0)
+                    entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
 
-            entidad.Fecha_Aprobacion = documento.FechaAprobacion;
-            entidad.Condicion = documento.Condicion.IdSGACondicion;
-            entidad.Comentario = documento.Comentario;
-            entidad.Fecha_Tentativa = documento.FechaTentativa;
-            entidad.Doc_Ruta = documento.DocRuta;
-            entidad.Id_Usuario = documento.Usuario.IdUsuario;
-            entidad.Fecha_Creacion = DateTime.Today;
-            entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
-            entidad.Estado = documento.Estado;
+                entidad.Fecha_Aprobacion = documento.FechaAprobacion;
+                entidad.Condicion = documento.Condicion.IdSGACondicion;
+                entidad.Comentario = documento.Comentario;
+                entidad.Fecha_Tentativa = documento.FechaTentativa;
+                entidad.Doc_Ruta = documento.DocRuta;
+                entidad.Id_Usuario = documento.Usuario.IdUsuario;
+                entidad.Fecha_Creacion = DateTime.Today;
+                entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
+                entidad.Estado = documento.Estado;
 
-            _context.SGA_Documentos.Add(entidad);
-            await _context.SaveChangesAsync();
-
+                _context.SGA_Documentos.Add(entidad);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e) { }
             return entidad.Id_SGA_Documento;
         }
 
         public async Task<string> GetUltimoCodigo()
         {
 
-            var codigo = await _context.SGA_Documentos.ToListAsync();
+            var codigo = await _context.SGA_Documentos.Where(x=>!x.Doc_Codigo.Equals("TBD")).ToListAsync();
             if (codigo.Count > 0)
                 return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Remove(0,2))).Select(x => x.Doc_Codigo.Remove(0, 2)).LastOrDefault();
             else
@@ -61,7 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 data.Add(new Entities.SGA_Documentos.Revision_Documento
                 {
-                    Id_Usuario = item.IdUsuario,
+                    Id_Usuario = item.Usuario.IdUsuario,
                     Id_SGA_Tipo_Revision = item.SGATipoRevision.IdTipoRevision,
                     Id_SGA_Documento = item.IdSGADocumento,
                     Fecha_Limite = item.FechaLimite,
@@ -78,7 +82,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = new Entities.SGA_Documentos.Revision_Documento
             {
-                Id_Usuario = revision.IdUsuario,
+                Id_Usuario = revision.Usuario.IdUsuario,
                 Id_SGA_Tipo_Revision = revision.SGATipoRevision.IdTipoRevision,
                 Id_SGA_Documento = revision.IdSGADocumento,
                 Fecha_Limite = revision.FechaLimite,
