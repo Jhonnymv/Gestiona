@@ -53,6 +53,9 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
             Estado = documento.Estado;
             Revisores = documento.Revisiones;
             Aprobadores = documento.Aprobaciones;
+            DocRuta = documento.DocRuta;
+            IdUsuario = documento.Usuario.IdUsuario;
+            Usuario = documento.Usuario.Nombres + " " + documento.Usuario.Apellidos;
         }
     }
 }

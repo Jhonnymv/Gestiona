@@ -6,6 +6,7 @@ using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredecesores
 using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarRevisorAprobador;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -26,6 +27,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         private readonly ISelectItems _selectItems;
         private readonly IConsultarDocumentos _consultarDocumentos;
         private readonly IConsultarDocumento _consultarDocumento;
+        private readonly IGetUsuario _getUsuario;
         private readonly IRegistrarDocumento _registrarDocumento;
         private readonly IConsultarPredecesores _consultarPredecesores;
         private readonly IRegistrarRevisorAprovador _registrarRevisorAprovador;
@@ -37,6 +39,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             ISelectItems selectItems, 
             IConsultarDocumentos consultarDocumentos,
             IConsultarDocumento consultarDocumento,
+            IGetUsuario getUsuario,
             IRegistrarDocumento registrarDocumento,
             IConsultarPredecesores consultarPredecesores,
             IRegistrarRevisorAprovador registrarRevisorAprovador,
@@ -47,6 +50,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             _selectItems = selectItems;
             _consultarDocumentos = consultarDocumentos;
             _consultarDocumento = consultarDocumento;
+            _getUsuario = getUsuario;
             _consultarPredecesores = consultarPredecesores;
             _registrarRevisorAprovador = registrarRevisorAprovador;
             _registrarDocumento = registrarDocumento;
@@ -148,6 +152,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
+
                 var items = await _selectItems.Execute();
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -158,10 +164,40 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
 
+                //Obtener ultimas versiones de documentos publicados
+                var documentos = await _consultarDocumentos.Execute(IdDesencriptado);
+                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+
+                var predecesoresTipo = new List<SelectListItem>();
+                foreach (var grupo in documentosAgrupados)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    foreach (var docPredecesor in grupo)
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
+                }
+                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
+
+                ViewBag.Predecesores = predecesoresTipo;
+
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
-                var revisores = documento.Revisores.Select(x => new { Id = x.IdSGARevisionDocumento, Orden = x.Orden, Usuario = x.Usuario.IdUsuario, UsuarioNombre = x.Usuario.Nombres +" "+x.Usuario.Apellidos, Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")}).ToList();
-                var aprobadores = documento.Aprobadores.Select(x => new { Id = x.IdSGARevisionDocumento, Orden = x.Orden, Usuario = x.Usuario.IdUsuario, UsuarioNombre = x.Usuario.Nombres +" "+x.Usuario.Apellidos, Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")}).ToList();
+                var revisores = documento.Revisores.Select(x => new { 
+                    Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()), 
+                    Orden = x.Orden, Usuario = x.Usuario.IdUsuario, 
+                    UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos, 
+                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"), 
+                    Estado = x.Estado,
+                    Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false })
+                    .ToList();
+
+                var aprobadores = documento.Aprobadores.Select(x => new { 
+                    Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()), 
+                    Orden = x.Orden, Usuario = x.Usuario.IdUsuario, 
+                    UsuarioNombre = x.Usuario.Nombres +" "+x.Usuario.Apellidos,
+                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"), 
+                    Estado = x.Estado, 
+                    Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false })
+                    .ToList();
 
                 var model = new SGADocumentoModel
                 {
@@ -173,6 +209,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     Doc_Version = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
+                    DocumentoRuta = documento.DocRuta,
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores)
                 };
@@ -311,6 +348,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         {
             return View();
         }
+        [HttpPost]
+        public async Task<IActionResult> RevisarDocumento(string IdDocumentoRevision, string Comentario, string IdDocumento, string Opcion)
+        {
+            var IdDocumentoRevisionInt = Int32.Parse(_protector.Unprotect(IdDocumentoRevision));
+            var IdDocumentoInt = Int32.Parse(_protector.Unprotect(IdDocumento));
+            return Ok();
+        }
+
         public async Task<IActionResult> AgregarRevisorAprobador(int orden, int idUsuario, string fecha)
         {
 
@@ -436,7 +481,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+                    var tipoDoc = fileName.Split('/', 2)[0];
+                    var nombreDoc = fileName.Split('/', 2)[1];
+                    var encryptedFile = await DownloadFTPFileAsync(fileName,tipoDoc,nombreDoc);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -446,16 +493,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     {
                         Directory.CreateDirectory(SGATempPath);
                     }
-                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\"+tipoDoc+"\\";
 
-                    /*decrypt file*/
-                    var decryptedFileName = "desencriptado" + Path.GetExtension(fileName);
-                    //await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
                     /*read decrypted file*/
-                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+                    FileStream stream = new FileStream(archivePath + nombreDoc, FileMode.Open);
 
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    return File(stream, GetContentType(nombreDoc), fileName);
                 }
                 catch (Exception e)
                 {
@@ -463,13 +506,13 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 }
             }
         }
-        public async Task<string> DownloadFTPFileAsync(string fileName)
+        public async Task<string> DownloadFTPFileAsync(string fileName,string tipoDoc, string nombreDoc)
         {
             try
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
@@ -503,6 +546,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 Directory.CreateDirectory(filePath);
                 Directory.CreateDirectory(archivePath);
+                Directory.CreateDirectory(archivePath + tipoDoc);
+
                 /*New file downloaded name*/
                 var downloadedFilePath = archivePath + fileName;
                 /*Copy data to new temp file*/
@@ -510,10 +555,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
                 {
                     sftp.Connect();
-                    sftp.ChangeDirectory(dir);
+                    sftp.ChangeDirectory(dir+tipoDoc);
 
                     //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
+                    sftp.DownloadFile(nombreDoc, fileStream);
 
                     sftp.Dispose();
                 }

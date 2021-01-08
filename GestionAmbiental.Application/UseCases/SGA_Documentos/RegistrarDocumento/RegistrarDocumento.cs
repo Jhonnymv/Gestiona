@@ -5,16 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 
 namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento
 {
     public class RegistrarDocumento : IRegistrarDocumento
     {
         private readonly IRegistrarDocumentosReadOnlyRepository _registrarDocumentosReadOnlyRepository;
+        private readonly IGetUsuario _getUsuario;
 
-        public RegistrarDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository)
+        public RegistrarDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository, IGetUsuario getUsuario)
         {
             _registrarDocumentosReadOnlyRepository = registrarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarDocumentosReadOnlyRepository));
+            _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
         public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInput> revisores, List<RevisionAprobacionInput> aprobadores)
@@ -27,7 +30,9 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value!=0)
                 predecesor.IdSGADocumento = idPredecesor.Value;
-                       
+
+            var usuario = await _getUsuario.Execute(usuarioRed);
+
             var model = new Documento
             {
                 SGATipoDocumento = new TipoDocumento
@@ -41,7 +46,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 DocRuta = rutaDoc,
                 Usuario = new Domain.ValueObjects.Usuario
                 {
-                    IdUsuario = 1
+                    IdUsuario = usuario.IdUsuario
                 }
             };
             if (opcion.Equals("GuardarEstado"))
@@ -81,7 +86,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                     Orden = item.Orden,
                     FechaLimite = Convert.ToDateTime(item.Fecha),
                     SGATipoRevision = new TipoRevision { IdTipoRevision = 1},
-                    Estado = "ACT"
+                    Estado = item.Orden==1? EstadosRevisionDocSGA.Activo.ToString(): EstadosRevisionDocSGA.Inactivo.ToString()
                 });
             }
             await _registrarDocumentosReadOnlyRepository.RegistrarRevisiones(listRevisiones);
@@ -99,7 +104,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                     Orden = item.Orden,
                     FechaLimite = Convert.ToDateTime(item.Fecha),
                     SGATipoRevision = new TipoRevision { IdTipoRevision = 2 },
-                    Estado = "ACT"
+                    Estado = EstadosRevisionDocSGA.Inactivo.ToString()
                 });
             }
             await _registrarDocumentosReadOnlyRepository.RegistrarRevisiones(listAprobaciones);

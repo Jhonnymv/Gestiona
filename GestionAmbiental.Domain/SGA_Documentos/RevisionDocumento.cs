@@ -14,6 +14,7 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public int Orden { get; set; }
         public DateTime? FechaLimite { get; set; }
         public DateTime? FechaRevision { get; set; }
+        public string Comentario { get; set; }
         public string Estado { get; set; }
     }
 }

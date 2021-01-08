@@ -34,33 +34,29 @@
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Doc_Predecesor"></label>
         </div>
-        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Doc_Predecesor"></span>
             <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Condicion"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Condicion"></span>
-            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones"></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Comentario"></span>
             <textarea asp-for="Comentario" class="form-control"></textarea>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Documento"></label>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
+        <div class="col-sm-12 col-md-2 col-lg-1 mb-2">
             <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
                 <span id="danger_documento" class=""></span>
             </span>
             <label class="btn btn-primary" for="Documento">Seleccione</label>
             <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-3">
+            <label id="files_name">0 Archivos</label>
         </div>
     </div>
     @if (ViewBag.Error != null)
@@ -207,7 +203,50 @@
             IdPrimerUsuario = $("#select_usuario").val();
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
+        $("#Documento").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento").data('max-size');
+            var archivos = $("#Documento").get(0).files;
 
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
         function ValidarDatosModal() {
             var tipo = $("#select_tipo_revision").val();
             var orden = $("#input_orden_revision").val();

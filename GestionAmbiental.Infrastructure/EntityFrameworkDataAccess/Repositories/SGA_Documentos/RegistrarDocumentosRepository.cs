@@ -22,29 +22,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             
             var entidad = new Entities.SGA_Documentos.Documento();
-            try
-            {
-                entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
-                entidad.Doc_Codigo = documento.DocCodigo;
-                entidad.Doc_Nombre = documento.DocNombre;
-                entidad.Doc_Version = documento.DocVersion;
-                if (documento.DocPredecesor.IdSGADocumento != 0)
-                    entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
+            entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
+            entidad.Doc_Codigo = documento.DocCodigo;
+            entidad.Doc_Nombre = documento.DocNombre;
+            entidad.Doc_Version = documento.DocVersion;
+            if (documento.DocPredecesor.IdSGADocumento != 0)
+                entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
 
-                entidad.Fecha_Aprobacion = documento.FechaAprobacion;
-                entidad.Condicion = documento.Condicion.IdSGACondicion;
-                entidad.Comentario = documento.Comentario;
-                entidad.Fecha_Tentativa = documento.FechaTentativa;
-                entidad.Doc_Ruta = documento.DocRuta;
-                entidad.Id_Usuario = documento.Usuario.IdUsuario;
-                entidad.Fecha_Creacion = DateTime.Today;
-                entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
-                entidad.Estado = documento.Estado;
+            entidad.Fecha_Aprobacion = documento.FechaAprobacion;
+            entidad.Condicion = documento.Condicion.IdSGACondicion;
+            entidad.Comentario = documento.Comentario;
+            entidad.Fecha_Tentativa = documento.FechaTentativa;
+            entidad.Doc_Ruta = documento.DocRuta;
+            entidad.Id_Usuario = documento.Usuario.IdUsuario;
+            entidad.Fecha_Creacion = DateTime.Today;
+            entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
+            entidad.Estado = documento.Estado;
 
-                _context.SGA_Documentos.Add(entidad);
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception e) { }
+            _context.SGA_Documentos.Add(entidad);
+            await _context.SaveChangesAsync();
             return entidad.Id_SGA_Documento;
         }
 
@@ -70,6 +66,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Id_SGA_Documento = item.IdSGADocumento,
                     Fecha_Limite = item.FechaLimite,
                     Orden = item.Orden,
+                    Comentario = item.Comentario,
                     Estado = item.Estado
                 });
             }

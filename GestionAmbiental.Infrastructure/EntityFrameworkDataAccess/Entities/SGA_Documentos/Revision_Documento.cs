@@ -23,6 +23,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public DateTime? Fecha_Limite { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Revision { get; set; }
+        [Column(TypeName = "text")]
+        public string Comentario { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Estado { get; set; }
     }

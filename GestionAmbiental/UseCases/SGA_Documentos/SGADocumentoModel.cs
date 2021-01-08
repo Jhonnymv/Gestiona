@@ -26,6 +26,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string Comentario { get; set; }
         [DisplayName("Documento:")]
         public IFormFile Documento { get; set; }
+        public string DocumentoRuta { get; set; }
         public string Opcion { get; set; }
         public string Revisores {get;set;}
         public string Aprobadores {get;set;}

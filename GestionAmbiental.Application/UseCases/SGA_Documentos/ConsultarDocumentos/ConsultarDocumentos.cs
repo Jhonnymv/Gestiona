@@ -61,5 +61,27 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             }
             return output;
         }
+        public async Task<List<DocumentoOutput>> Execute(int Id)
+        {
+            var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(null, 0, null, 0);
+            var actual = data.First(x => x.IdSGADocumento.Equals(Id));
+
+            var output = new List<DocumentoOutput>();
+
+            //Buscar los Ids de documentos predecesores
+            var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
+            //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
+            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).ToList();
+            if (actual.DocPredecesor != null)
+            {
+                var predecesor = data.First(x => x.IdSGADocumento.Equals(actual.DocPredecesor.IdSGADocumento));
+                ultimasVersiones.Add(predecesor);
+            }
+            foreach (var item in ultimasVersiones)
+            {
+                output.Add(new DocumentoOutput(item));
+            }
+            return output;
+        }
     }
 }
