@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevisionDocumento;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos
 {
@@ -27,6 +28,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         private readonly ISelectItems _selectItems;
         private readonly IConsultarDocumentos _consultarDocumentos;
         private readonly IConsultarDocumento _consultarDocumento;
+        private readonly IConsultarRevisionDocumento _consultarRevisionDocumento;
         private readonly IGetUsuario _getUsuario;
         private readonly IRegistrarDocumento _registrarDocumento;
         private readonly IConsultarPredecesores _consultarPredecesores;
@@ -39,6 +41,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             ISelectItems selectItems, 
             IConsultarDocumentos consultarDocumentos,
             IConsultarDocumento consultarDocumento,
+            IConsultarRevisionDocumento consultarRevisionDocumento,
             IGetUsuario getUsuario,
             IRegistrarDocumento registrarDocumento,
             IConsultarPredecesores consultarPredecesores,
@@ -50,6 +53,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             _selectItems = selectItems;
             _consultarDocumentos = consultarDocumentos;
             _consultarDocumento = consultarDocumento;
+            _consultarRevisionDocumento = consultarRevisionDocumento;
             _getUsuario = getUsuario;
             _consultarPredecesores = consultarPredecesores;
             _registrarRevisorAprovador = registrarRevisorAprovador;
@@ -273,14 +277,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                
-                //reemplazar comillas simples con espacio
-                //usuarios = usuarios.Replace('\'', ' ');
-                
-                /*
-                var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+" "+g.Apellidos}).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                */
+               
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.Usuarios = usuarios;
@@ -317,12 +314,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var items = await _selectItems.Execute();
                 var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
                 var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.0}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
+                var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
                 var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
-                if (!cargaDocumento.Equals("Error"))
-                {
-                    var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInput>>(model.Revisores); 
-                    var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInput>>(model.Aprobadores); 
 
+                if (!cargaDocumento.Equals("Error"))
+                {                  
                     var idDocumento = await _registrarDocumento.Execute(
                         model.Id_SGA_Tipo_Documento,
                         model.Doc_Nombre,
@@ -344,23 +341,60 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             }
             return View(model);
         }
-        public async Task<IActionResult> EditarDocumento(SGADocumentoModel model)
-        {
-            return View();
-        }
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> RevisarDocumento(string IdDocumentoRevision, string Comentario, string IdDocumento, string Opcion)
         {
-            var IdDocumentoRevisionInt = Int32.Parse(_protector.Unprotect(IdDocumentoRevision));
-            var IdDocumentoInt = Int32.Parse(_protector.Unprotect(IdDocumento));
-            return Ok();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var IdDocumentoRevisionInt = Int32.Parse(_protector.Unprotect(IdDocumentoRevision));
+                var IdDocumentoInt = Int32.Parse(_protector.Unprotect(IdDocumento));
+                //Validar que el usuario revisor del IdDocumentoRevisionInt es el usuario conectado
+                var documentoRevision = await _consultarRevisionDocumento.Execute(IdDocumentoRevisionInt);
+                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
+                dynamic response;
+                if (!documentoRevision.Usuario.Equals(usuarioActual.IdUsuario))
+                {
+                    response = new
+                    {
+                        Result = "Error",
+                        Message = "El usuario actualmente conectado no es el mismo al usuario asignado a esta revisión"
+                    };
+                    return Ok(response);
+                }
+                else
+                {
+                    //Validar si se puede enviar la variable "documentoRevision" a la notificacion, incluir comentario
+                    if (Opcion.Equals("Rechazado"))
+                    {
+                        //Notificar
+                        //Editar
+                    }
+                    else
+                    {
+                        //Editar
+                        //Notificar
+                    }
+
+
+                    response = new
+                    {
+                        Result = "Ok",
+                        
+                    };
+                    return Ok(response);
+                }
+            }
         }
 
-        public async Task<IActionResult> AgregarRevisorAprobador(int orden, int idUsuario, string fecha)
-        {
-
-            return Ok();
-        }
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();

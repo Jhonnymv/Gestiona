@@ -10,6 +10,7 @@ namespace GestionAmbiental.Domain.Enum
         Registrado = 2,
         EnRevision = 3,
         EnAprobacion = 4,
-        Publicado = 5
+        Firmas = 5,
+        Publicado = 7
     }
 }

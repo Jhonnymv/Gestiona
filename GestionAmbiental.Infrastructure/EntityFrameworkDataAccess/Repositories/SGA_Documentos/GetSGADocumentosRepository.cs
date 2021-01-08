@@ -59,7 +59,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdSGADocumento = item.Id_SGA_Documento,
                     SGATipoRevision = new TipoRevision { IdTipoRevision = item.Id_SGA_Tipo_Revision},
-                    IdSGARevisionDocumento = item.Id_SGA_Tipo_Revision,
+                    IdSGARevisionDocumento = item.Id_SGA_Revision_Documento,
                     Usuario = new Domain.ValueObjects.Usuario { 
                         IdUsuario = usuarioItem.Id_Usuario,
                         Nombres = usuarioItem.Nombres.Replace('\'', ' '),
@@ -81,7 +81,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdSGADocumento = item.Id_SGA_Documento,
                     SGATipoRevision = new TipoRevision { IdTipoRevision = item.Id_SGA_Tipo_Revision },
-                    IdSGARevisionDocumento = item.Id_SGA_Tipo_Revision,
+                    IdSGARevisionDocumento = item.Id_SGA_Revision_Documento,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuarioItem.Id_Usuario,
@@ -298,6 +298,46 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     output.Add(outputItem);
                 }
             }
+            return output;
+        }
+        public async Task<RevisionDocumento> GetRevisionDocumento(int Id)
+        {            
+            var data = await _context.SGA_Revisiones_Documento.FirstAsync(x=>x.Id_SGA_Revision_Documento.Equals(Id));
+            var output = new RevisionDocumento { 
+                IdSGARevisionDocumento = data.Id_SGA_Revision_Documento,
+                IdSGADocumento = data.Id_SGA_Documento,
+                Orden = data.Orden,
+                FechaLimite = data.Fecha_Limite,
+                Comentario = data.Comentario,
+                Estado = data.Estado,
+                FechaRevision = data.Fecha_Revision,
+                SGATipoRevision = new TipoRevision { IdTipoRevision = data.Id_SGA_Tipo_Revision},
+                Usuario = new Domain.ValueObjects.Usuario { IdUsuario = data.Id_Usuario}
+            };
+            return output;
+        }
+
+        public async Task<List<RevisionDocumento>> GetRevisionesDocumento(int IdDocumento)
+        {
+            var data = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento)).ToListAsync();
+            var output = new List<RevisionDocumento>();
+            foreach(var item in data)
+            {
+                var outputItem = new RevisionDocumento
+                {
+                    IdSGARevisionDocumento = item.Id_SGA_Revision_Documento,
+                    IdSGADocumento = item.Id_SGA_Documento,
+                    Orden = item.Orden,
+                    FechaLimite = item.Fecha_Limite,
+                    Comentario = item.Comentario,
+                    Estado = item.Estado,
+                    FechaRevision = item.Fecha_Revision,
+                    SGATipoRevision = new TipoRevision { IdTipoRevision = item.Id_SGA_Tipo_Revision },
+                    Usuario = new Domain.ValueObjects.Usuario { IdUsuario = item.Id_Usuario }
+                };
+                output.Add(outputItem);
+            }
+            
             return output;
         }
     }

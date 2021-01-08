@@ -233,7 +233,9 @@
                     html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'"+lista[i].Id+"\')\">Revisar</button></td>";
                     //html += "<td style=\"width: 10%\"><button class=\"btn btn-primary\" onclick=\"\">Revisar</button></td>";
                 } else {
-                    html += "<td></td>";
+                    //html += "<td></td>";
+                    html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'" + lista[i].Id + "\')\">Revisar</button></td>";
+
                 }
                 html +=   "</tr>";
             }
@@ -252,7 +254,7 @@
         });
         function EnviarRevision(Opcion) {
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "/SGADocumentos/RevisarDocumento",
                 data: {
                     "IdDocumentoRevision": $("#IdSGADocRevision").val(),

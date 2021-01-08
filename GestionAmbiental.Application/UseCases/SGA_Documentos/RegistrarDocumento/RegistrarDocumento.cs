@@ -20,7 +20,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInput> revisores, List<RevisionAprobacionInput> aprobadores)
+        public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
         {
             /*
             DateTime? fechaTentativaDT = null;
