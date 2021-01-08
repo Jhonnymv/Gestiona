@@ -14,9 +14,10 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
         private readonly IEditarDocumentosReadOnlyRepository _editarDocumentosReadOnlyRepository;
         private readonly IGetSGADocumentosReadOnlyRepository _getSGADocumentosReadOnlyRepository;
 
-        public EditarRevisionDocumento(IEditarDocumentosReadOnlyRepository editarDocumentosReadOnlyRepository)
+        public EditarRevisionDocumento(IEditarDocumentosReadOnlyRepository editarDocumentosReadOnlyRepository, IGetSGADocumentosReadOnlyRepository getSGADocumentosReadOnlyRepository)
         {
             _editarDocumentosReadOnlyRepository = editarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarDocumentosReadOnlyRepository));
+            _getSGADocumentosReadOnlyRepository = getSGADocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(getSGADocumentosReadOnlyRepository));
         }
 
         public async Task Execute(int IdDocumento, int IdRevisionDocumento, string Comentario, string Opcion)
@@ -25,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
             {
                 IdSGARevisionDocumento = IdRevisionDocumento,
                 Comentario = Comentario,
-                Estado = Opcion.Equals("Aceptado")? EstadosRevisionDocSGA.Aprobado.ToString(): EstadosRevisionDocSGA.Rechazado.ToString()
+                Estado = Opcion.Equals("Aceptar")? EstadosRevisionDocSGA.Aprobado.ToString(): EstadosRevisionDocSGA.Rechazado.ToString()
             };
             await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(input);
             //Buscar documento siguiente
@@ -33,7 +34,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
            
             var revisionActual = revisionesDocumento.First(x => x.IdSGARevisionDocumento.Equals(IdRevisionDocumento));
             
-            if (Opcion.Equals("Aceptado"))
+            if (Opcion.Equals("Aceptar"))
             { 
                 //Si se acepto el doc, cambiar estado a Activo la siguiente revision
                 if (revisionActual.SGATipoRevision.IdTipoRevision.Equals(1))
@@ -49,9 +50,14 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
                             IdSGARevisionDocumento = siguienteRevision.IdSGARevisionDocumento,
                             Estado = EstadosRevisionDocSGA.Activo.ToString()
                         };
-                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(input);
+                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(inputSiguiente);
                         //cambiar estado del doc a En Revision
-
+                        await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(
+                            new Documento { 
+                                IdSGADocumento = IdDocumento,
+                                Condicion = new Condicion { IdSGACondicion = (int)EstadosDocumentosSGA.EnRevision },
+                                Estado = EstadosDocumentosSGA.EnRevision.ToString() 
+                            });
                     }
                     else
                     {
@@ -61,8 +67,15 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
                             IdSGARevisionDocumento = primeraAprobacion.IdSGARevisionDocumento,
                             Estado = EstadosRevisionDocSGA.Activo.ToString()
                         };
-                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(input);
+                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(inputSiguiente);
                         //cambiar estado del doc a En Aprobacion
+                        await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(
+                            new Documento
+                            {
+                                IdSGADocumento = IdDocumento,
+                                Condicion = new Condicion { IdSGACondicion = (int)EstadosDocumentosSGA.EnAprobacion },
+                                Estado = EstadosDocumentosSGA.EnAprobacion.ToString()
+                            });
                     }
                 }
                 else if(revisionActual.SGATipoRevision.IdTipoRevision.Equals(2))
@@ -77,20 +90,33 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDoc
                             IdSGARevisionDocumento = siguienteAprobacion.IdSGARevisionDocumento,
                             Estado = EstadosRevisionDocSGA.Activo.ToString()
                         };
-                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(input);
+                        await _editarDocumentosReadOnlyRepository.EditarRevisionDocumento(inputSiguiente);
                         //cambiar estado del doc a En Revision
-
+                        await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(
+                           new Documento
+                           {
+                               IdSGADocumento = IdDocumento,
+                               Condicion = new Condicion { IdSGACondicion = (int)EstadosDocumentosSGA.EnRevision },
+                               Estado = EstadosDocumentosSGA.EnRevision.ToString()
+                           });
                     }
                     else
                     {
                         //Si no hay un siguiente del tipo Aprobacion, cambiar a estado del Doc a Firmas
-
+                        await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(
+                           new Documento
+                           {
+                               IdSGADocumento = IdDocumento,
+                               Condicion = new Condicion { IdSGACondicion = (int)EstadosDocumentosSGA.Firmas },
+                               Estado = EstadosDocumentosSGA.Firmas.ToString()
+                           });
                     }
                 }
             }
             else
             {
                 //Si se rechazo, cambiar todo a Inactivo (el primero a Activo), eliminar todos los comentario
+                await _editarDocumentosReadOnlyRepository.RechazarDocumento(IdDocumento);
             }
            
         }

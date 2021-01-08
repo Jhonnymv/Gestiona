@@ -229,12 +229,11 @@
                     "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
                     "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                     "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
-                if (lista[i].Permiso) {
+                if (lista[i].Permiso && lista[i].Estado == "Activo") {
                     html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'"+lista[i].Id+"\')\">Revisar</button></td>";
                     //html += "<td style=\"width: 10%\"><button class=\"btn btn-primary\" onclick=\"\">Revisar</button></td>";
                 } else {
-                    //html += "<td></td>";
-                    html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'" + lista[i].Id + "\')\">Revisar</button></td>";
+                    html += "<td></td>";
 
                 }
                 html +=   "</tr>";

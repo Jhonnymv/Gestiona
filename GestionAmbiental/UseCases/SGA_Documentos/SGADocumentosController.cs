@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevisionDocumento;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDocumento;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos
 {
@@ -32,6 +33,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         private readonly IGetUsuario _getUsuario;
         private readonly IRegistrarDocumento _registrarDocumento;
         private readonly IConsultarPredecesores _consultarPredecesores;
+        private readonly IEditarRevisionDocumento _editarRevisionDocumento;
         private readonly IRegistrarRevisorAprovador _registrarRevisorAprovador;
         private readonly IGetInfo_SGA _info_SGA;
 
@@ -45,6 +47,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             IGetUsuario getUsuario,
             IRegistrarDocumento registrarDocumento,
             IConsultarPredecesores consultarPredecesores,
+            IEditarRevisionDocumento editarRevisionDocumento,
             IRegistrarRevisorAprovador registrarRevisorAprovador,
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,
@@ -56,6 +59,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             _consultarRevisionDocumento = consultarRevisionDocumento;
             _getUsuario = getUsuario;
             _consultarPredecesores = consultarPredecesores;
+            _editarRevisionDocumento = editarRevisionDocumento;
             _registrarRevisorAprovador = registrarRevisorAprovador;
             _registrarDocumento = registrarDocumento;
             _info_SGA = info_SGA;
@@ -373,6 +377,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 else
                 {
                     //Validar si se puede enviar la variable "documentoRevision" a la notificacion, incluir comentario
+                    /*
                     if (Opcion.Equals("Rechazado"))
                     {
                         //Notificar
@@ -383,7 +388,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                         //Editar
                         //Notificar
                     }
-
+                    */
+                    await _editarRevisionDocumento.Execute(IdDocumentoInt, IdDocumentoRevisionInt, Comentario, Opcion);
 
                     response = new
                     {

@@ -12,11 +12,13 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
     public class RegistrarDocumento : IRegistrarDocumento
     {
         private readonly IRegistrarDocumentosReadOnlyRepository _registrarDocumentosReadOnlyRepository;
+        private readonly IEditarDocumentosReadOnlyRepository _editarDocumentosReadOnlyRepository;
         private readonly IGetUsuario _getUsuario;
 
-        public RegistrarDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository, IGetUsuario getUsuario)
+        public RegistrarDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository, IEditarDocumentosReadOnlyRepository editarDocumentosReadOnlyRepository, IGetUsuario getUsuario)
         {
             _registrarDocumentosReadOnlyRepository = registrarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarDocumentosReadOnlyRepository));
+            _editarDocumentosReadOnlyRepository = editarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarDocumentosReadOnlyRepository));
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
@@ -47,11 +49,11 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 Usuario = new Domain.ValueObjects.Usuario
                 {
                     IdUsuario = usuario.IdUsuario
-                }
+                },
+                DocCodigo = "TBD"
             };
             if (opcion.Equals("GuardarEstado"))
-            {
-                model.DocCodigo = "TBD";                
+            {        
                 //Pendiente
                 model.Condicion = new Condicion
                 {
@@ -61,8 +63,10 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             }
             else if (opcion.Equals("Registrar"))
             {
+                /*
                 var ultimoCodigo = await _registrarDocumentosReadOnlyRepository.GetUltimoCodigo();
                 model.DocCodigo = ultimoCodigo != null ? "D-" + (Int32.Parse(ultimoCodigo) + 1).ToString().PadLeft(7, '0') : "D-0000001";
+                */
                 //Pendiente
                 model.Condicion = new Condicion
                 {
