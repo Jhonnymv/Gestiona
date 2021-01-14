@@ -20,7 +20,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public double Doc_Version { get; set; }
         [DisplayName("Predecesor:")]
         public int? Doc_Predecesor { get; set; }
-        [DisplayName("Condición:")]
+        [DisplayName("Estado:")]
         public int Condicion { get; set; }
         [DisplayName("Comentario:")]
         public string Comentario { get; set; }

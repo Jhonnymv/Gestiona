@@ -125,12 +125,13 @@ td {
 .table{
     border: 1px solid #2e6793;
 }
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 930px) {
     table {
         display: block;
         overflow-x: auto;
     }
-}/*
+}
+/*
 @media screen and (max-width: 740px) {
     table {
         display: block;
@@ -138,6 +139,7 @@ td {
     }
 }*/
 .table-modal {
+    border: 1px solid #2e6793;
     display: block;
     overflow-x: auto;
 }
@@ -276,6 +278,85 @@ input[type=checkbox] {
     padding: 10px;
     margin-left: auto;
 }
+.tipoDoc:hover {
+    opacity:0.5;
+}
+.tipoDoc {
+    background: var(--my-color-var);
+    display: inline-block;
+    height: 100px;
+    top:-32px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 0px;
+    position: relative;
+    width: 150px;
+    border-radius: 5px;
+}
+.tipoDoc:before {
+    content: "";
+    position: absolute;
+    left: 150px;
+    top: 0px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid var(--my-color-var);
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-radius: 5px;
+}
+.tipoDoc:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 15px solid white;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-radius: 5px;
+}
+.tipoDocUnion {
+    background: var(--my-color-var);
+    display: inline-block;
+    height: 100px;
+    position: relative;
+    width: 20px;
+    border-radius: 5px;
+}
+.tipoDocUnion:before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 0px;
+    width: 0;
+    height: 0;
+    border-left: 15px solid var(--my-color-var);
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-radius: 5px;
+}
+.tipoDocUnion:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-left: 15px solid white;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+    border-radius: 50px;
+}
+
+.texto-tipoDoc {
+    margin-top: 10px;
+    margin-left: 25px;
+    font-size: 50px;
+    color: white
+}
+
 
 @import "../lib/bootstrap/dist/css/bootstrap.min.css";
 .pagination{

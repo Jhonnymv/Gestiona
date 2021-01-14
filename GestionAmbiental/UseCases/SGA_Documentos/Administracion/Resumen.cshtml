@@ -1,0 +1,207 @@
+﻿@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Administracion de Documentos</h2>
+    </div>
+</div>
+<div class="row mb-2">
+    <div class="col-12 text-center">
+        <div class="card-deck text-center justify-content-center" id="opcionesTipoDoc">
+
+        </div>
+    </div>
+</div>
+<form autocomplete="off">
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-2 mt-1">
+            <label>Nombre de Documento:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
+            <input type="text" class="form-control" id="filtro_nombre">
+        </div>
+        <div class="col-lg-2 mt-1">
+            <label>Código:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
+            <input type="text" class="form-control" id="filtro_codigo">
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-2 mt-1">
+            <label>Tipo de Documento:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
+            <select class="form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc"></select>
+        </div>
+        <div class="col-lg-2 mt-1">
+            <label>Estado:</label>
+        </div>
+        <div class="col-lg-3 mt-1">
+            <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones"></select>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-1 mt-1">
+            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+        </div>
+    </div>
+</form>
+<div class="row mb-2 justify-content-start">
+    <div class="col-md mt-1">
+        <a class="btn btn-danger float-left" asp-action="RegistrarDocumento" asp-controller="SGADocumentos"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Documento</a>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-12">
+        <table class="table" id="tabla_documentos">
+            <thead class="thead-mcolor">
+                <tr>
+                    <th>Código</th>
+                    <th>Documento</th>
+                    <th>Versión / Revisión</th>
+                    <th>Fecha de Aprobación</th>
+                    <th>Estado</th>
+                    <th>Comentarios</th>
+                    <th>Fecha Tentativa de la Nueva Versión</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <nav id="paginado" aria-label="pagination">
+    </nav>
+</div>
+
+<!--Modal Docs Tipo-->
+<div class="modal fade" id="modal_docs_tipo" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_tipo"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_docs_tipo">
+                    TITULO
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-12">
+                            <input type="hidden" id="tipoDocModal" />
+                            <table class="table table-modal" id="tabla_documentos_tipo">
+                                <thead class="thead-mcolor">
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Documento</th>
+                                        <th>Versión / Revisión</th>
+                                        <th>Fecha de Aprobación</th>
+                                        <th>Condición</th>
+                                        <th>Comentarios</th>
+                                        <th>Fecha Tentativa de la Nueva Versión</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <div class="row mb-2 justify-content-center">
+                        <nav id="paginado_documentos_tipo" aria-label="pagination">
+                        </nav>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            filtrar(1);
+            cargarOpciones();
+        });
+        function filtrar(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/SGAAdministracion/GetTablaResumenFiltrada",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "nombre": $('#filtro_nombre').val(),
+                    "tipo": $('#filtro_tipoDoc').val(),
+                    "condicion": $('#filtro_condicion').val(),
+                    "codigo": $("#filtro_codigo").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_documentos tbody').empty()
+                    $('#tabla_documentos tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function filtrarModal(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/SGAAdministracion/GetTablaModalResumenFiltrada",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "nombre": $('#filtro_nombre').val(),
+                    "tipo": $("#tipoDocModal").val(),
+                    "condicion": $('#filtro_condicion').val(),
+                    "codigo": $("#filtro_codigo").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_documentos_tipo tbody').empty()
+                    $('#tabla_documentos_tipo tbody').html(response.data)
+                    $('#paginado_documentos_tipo').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function cargarOpciones() {
+            var azul = 255;
+            var verde = 0;
+            var variacion = 50;
+
+           tipos = JSON.parse('@Html.Raw(ViewBag.TiposDocJson)');
+            var html = "";
+            for (var i = 0; i < tipos.length; i++) {
+                var palabras = tipos[i].Descripcion.split(' ');
+                var iniciales = "";
+                for (var j = 0; j < palabras.length; j++) {
+                    if (palabras[j].charAt(0) != 'y') {
+                        iniciales += palabras[j].charAt(0);
+                    }
+                }
+                html += "<div><p>" + tipos[i].Descripcion+"</p><div class=\"tipoDoc\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\" onclick=\"FiltrarTipo(" + tipos[i].IdSGATipoDocumento + ")\"><p class=\"texto-tipoDoc\">" + iniciales + "</p></div><div class=\"tipoDocUnion\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\"></div></div>";
+                if (verde + variacion <= 255 && azul - variacion > 0) {
+                    verde += variacion;
+                    azul -= variacion;
+                }
+            }
+            $("#opcionesTipoDoc").html(html)
+        }
+        function FiltrarTipo(idTipo) {
+            $('#filtro_tipoDoc').val(idTipo);
+            $('#modal_docs_tipo').modal('show');
+            $("#tipoDocModal").val(idTipo)
+            filtrarModal(1);
+        }
+    </script>
+}

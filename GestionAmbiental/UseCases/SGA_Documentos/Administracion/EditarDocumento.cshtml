@@ -1,0 +1,488 @@
+﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
+@{
+    ViewData["Title"] = "Registrar Documento";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Detalles del Documento</h2>
+    </div>
+</div>
+<form class="form-group" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="EditarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+    <input type="hidden" asp-for="Id_SGA_Documento" value="@Model.Id_SGA_Documento" />
+    <div class="row mb-2 align-items-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Id_SGA_Tipo_Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Id_SGA_Tipo_Documento"></span>
+            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Version"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Version"></span>
+            <input type="number" asp-for="Doc_Version" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Nombre"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
+            <input type="text" asp-for="Doc_Nombre" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Predecesor"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Predecesor"></span>
+            <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Condicion"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Condicion"></span>
+            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Comentario"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Comentario"></span>
+            <textarea asp-for="Comentario" class="form-control"></textarea>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
+                <span id="danger_documento" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Documento">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-2">
+            <label id="files_name">0 Archivos</label>
+        </div>
+        <input type="hidden" asp-for="DocumentoRuta" value="@Model.DocumentoRuta" />
+        <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
+        </div>
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+            </div>
+        </div>
+    }
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
+    </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Revisores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+            <input type="hidden" asp-for="Revisores" />
+            <table class="table table-modal" id="tabla_revisores" style="display: inline-table">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        <th></th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Aprobadores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+            <input type="hidden" asp-for="Aprobadores" />
+            <table class="table table-modal" id="tabla_aprobadores" style="display: inline-table">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Orden</th>
+                        <th>Usuario</th>
+                        <th>Fecha Limite</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Versiones Anteriores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <table class="table" id="tabla_documentos">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Documento</th>
+                        <th>Versión / Revisión</th>
+                        <th>Fecha de Aprobación</th>
+                        <th>Condición</th>
+                        <th>Comentarios</th>
+                        <th>Fecha Tentativa de la Nueva Versión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input type="hidden" asp-for="Opcion" />
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
+        <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
+    </div>
+</form>
+<!--Modal Revisión-->
+<div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_revision">
+                    Agregar Revisor/Aprobador
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <input type="hidden" id="Id_Revision" />
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <span class="text-danger" id="danger_revision"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Tipo de Revisión:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <select class="form-control" id="select_tipo_revision" asp-items="@ViewBag.TiposRevision">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Orden de Revisión:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <input type="number" class="form-control" id="input_orden_revision" value="1" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Responsable:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <select class="form-control" id="select_usuario" asp-items="@ViewBag.Usuarios">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-6 col-md-4 col-lg-3">
+                            <label>Fecha Límite:</label>
+                        </div>
+                        <div class="col-sm-6 col-md-8 col-lg-9">
+                            <input type="date" class="form-control" id="input_fecha_limite" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn_editar_revisor">Editar</button>
+                    <button type="button" class="btn btn-primary" id="btn_confirmar_revisor">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var listAprobadores = [];
+        var listRevisores = [];
+        var IdPrimerUsuario;
+
+        $(document).ready(function () {
+            ObtenerPredecesores();
+            CargarRevisores();
+            CargarAprobadores();
+
+            IdPrimerUsuario = $("#select_usuario").val();
+            $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+
+            var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+            //Reemplazar parentesis "(" por guión
+            ruta = ruta.replace('-','/')
+
+            var descargar = "<p><a href=\"/SGADocumentos/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
+            $("#Descargar_Documento").html(descargar);
+        });
+
+        $("#Documento").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento").data('max-size');
+            var archivos = $("#Documento").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        function ObtenerPredecesores() {
+            $.ajax({
+                type: "POST",
+                url: "/SGADocumentacion/ConsultarPredecesores",
+                data: {
+                    "IdDocumento": $("#Id_Encriptado").val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_documentos tbody').empty()
+                    $('#tabla_documentos tbody').html(response.data)
+                }
+            });
+        }
+        $("#btn_guardar_estado").on("click", function () {
+            $("#Opcion").val("GuardarEstado");
+            $("#form_editar_documento").submit();
+        });
+        $("#btn_registrar").on("click", function () {
+            $("#Opcion").val("Registrar");
+            $("#form_editar_documento").submit()
+        });
+        $("#btn_agregar_revision").on("click", function () {
+            $("#btn_editar_revisor").hide();
+            $("#btn_confirmar_revisor").show();
+            $("#modal_revision").modal('show');
+        });
+        $("#select_tipo_revision").on("change", function () {
+            if ($(this).val() == 1) {
+                $("#input_orden_revision").val(listRevisores.length + 1);
+            }
+            else if ($(this).val() == 2) {
+                $("#input_orden_revision").val(listAprobadores.length + 1);
+            }
+        });
+
+        $("#btn_confirmar_revisor").on("click", function () {
+            //Guardar Datos y redireccionar a Editar
+            if (ValidarDatosModal()) {
+                var tipo = $("#select_tipo_revision").val();
+
+                var revisor = {
+                    Orden: parseInt($("#input_orden_revision").val()),
+                    Usuario: parseInt($("#select_usuario").val()),
+                    UsuarioNombre: $("#select_usuario").find("option:selected").text(),
+                    Fecha: $("#input_fecha_limite").val()
+                };
+
+                tipo == '1' ? listRevisores.push(revisor) : listAprobadores.push(revisor);
+
+                $("#select_tipo_revision").val(0);
+                $("#select_usuario").val(IdPrimerUsuario);
+                $("#input_fecha_limite").val("");
+                $("#modal_revision").modal('toggle');
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                if (tipo == '1') {
+                    $("#tabla_revisores tbody").empty();
+                    var html = LlenarTabla(tipo, listRevisores);
+                    $("#tabla_revisores tbody").html(html);
+                    $("#Revisores").val(JSON.stringify(listRevisores));
+
+                } else if (tipo == '2') {
+                    $("#tabla_aprobadores tbody").empty();
+                    var html = LlenarTabla(tipo, listAprobadores);
+                    $("#tabla_aprobadores tbody").html(html);
+                    $("#Aprobadores").val(JSON.stringify(listAprobadores));
+                }
+            }
+        });
+        $("#btn_editar_revisor").on("click", function () {
+            //Guardar Datos y redireccionar a Editar
+            if (ValidarDatosModal()) {
+                var tipo = $("#select_tipo_revision").val();
+                var orden = parseInt($("#input_orden_revision").val())
+                var revisor = {
+                    Orden: orden,
+                    Usuario: parseInt($("#select_usuario").val()),
+                    UsuarioNombre: $("#select_usuario").find("option:selected").text(),
+                    Fecha: $("#input_fecha_limite").val()
+                };
+                if (tipo == '1') {
+                    listRevisores[orden - 1] = revisor;
+                }
+                else if (tipo == '2') {
+                    listAprobadores[orden - 1] = revisor;
+                }
+
+                $("#select_tipo_revision").val(0);
+                $("#select_usuario").val(IdPrimerUsuario);
+                $("#input_fecha_limite").val("");
+                $("#modal_revision").modal('toggle');
+                $("#btn_editar_revisor").hide();
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                if (tipo == '1') {
+                    $("#tabla_revisores tbody").empty();
+                    var html = LlenarTabla(tipo, listRevisores);
+                    $("#tabla_revisores tbody").html(html);
+                    $("#Revisores").val(JSON.stringify(listRevisores));
+
+                } else if (tipo == '2') {
+                    $("#tabla_aprobadores tbody").empty();
+                    var html = LlenarTabla(tipo, listAprobadores);
+                    $("#tabla_aprobadores tbody").html(html);
+                    $("#Aprobadores").val(JSON.stringify(listAprobadores));
+                }
+            }
+        });
+        function ValidarDatosModal() {
+            var tipo = $("#select_tipo_revision").val();
+            var orden = $("#input_orden_revision").val();
+            var idUsuario = $("#select_usuario").val();
+            var fecha = $("#input_fecha_limite").val();
+
+            if (tipo != '0' && orden != "" && idUsuario != '0' && fecha != "")
+                return true;
+            return false;
+        }
+        function CargarRevisores() {
+            listRevisores = JSON.parse('@Html.Raw(Model.Revisores)');
+            $("#tabla_revisores tbody").empty();
+            var html = LlenarTabla(1, listRevisores);
+            $("#tabla_revisores tbody").html(html);
+        }
+        function CargarAprobadores() {
+            listAprobadores = JSON.parse('@Html.Raw(Model.Aprobadores)');
+            $("#tabla_aprobadores tbody").empty();
+            var html = LlenarTabla(2, listAprobadores);
+            $("#tabla_aprobadores tbody").html(html);
+        }
+        function EditarRevisor(tipo, orden) {
+            $("#btn_editar_revisor").show();
+            $("#btn_confirmar_revisor").hide();
+            $("#modal_revision").modal('show');
+
+            $("#select_tipo_revision").val(tipo);
+            if (tipo == 1) {
+                $("#input_orden_revision").val(listRevisores[orden - 1].Orden)
+                $("#select_usuario").val(listRevisores[orden - 1].Usuario);
+                $("#input_fecha_limite").val(listRevisores[orden - 1].Fecha);
+            }
+            else if (tipo == 2) {
+                $("#input_orden_revision").val(listAprobadores[orden - 1].Orden)
+                $("#select_usuario").val(listAprobadores[orden - 1].Usuario);
+                $("#input_fecha_limite").val(listAprobadores[orden - 1].Fecha);
+            }
+        }
+        function EliminarRevisor(tipo, orden) {
+            if (tipo == 1) {
+                for (var i = 0; i < listRevisores.length; i++) {
+                    if (listRevisores[i].Orden > orden)
+                        listRevisores[i].Orden -= 1;
+                }
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                listRevisores.splice(orden - 1, 1);
+                $("#tabla_revisores tbody").empty();
+                var html = LlenarTabla(tipo, listRevisores);
+                $("#tabla_revisores tbody").html(html);
+                $("#Revisores").val(JSON.stringify(listRevisores));
+
+            }
+            else if (tipo == 2) {
+                for (var i = 0; i < listAprobadores.length; i++) {
+                    if (listAprobadores[i].Orden > orden)
+                        listAprobadores[i].Orden -= 1;
+                }
+
+                //Cargar datos a tablas y reemplazar valor del modelo (Revisores o Aprobadores en JSON)
+                listAprobadores.splice(orden - 1, 1);
+                $("#tabla_aprobadores tbody").empty();
+                var html = LlenarTabla(tipo, listAprobadores);
+                $("#tabla_aprobadores tbody").html(html);
+                $("#Aprobadores").val(JSON.stringify(listAprobadores));
+            }
+        }
+        function LlenarTabla(tipo, lista) {
+            var html = "";
+            for (var i = 0; i < lista.length; i++) {
+                html += "<tr>" +
+                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
+                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
+                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                    "</tr>";
+            }
+            return html;
+        }
+
+    </script>
+}

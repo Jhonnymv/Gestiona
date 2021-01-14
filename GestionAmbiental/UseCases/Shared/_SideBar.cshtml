@@ -12,22 +12,22 @@
                     <!--SGA Documentos-->
                     <li class="nav-item nav-dropdown">
                         <a class="nav-link nav-dropdown-toggle" href="#">
-                            <i class="nav-icon"><img src="~/img/icons/inspection.png" /></i> SGA
+                            <i class="nav-icon"><img src="~/img/icons/leaf.png" /></i> SGA
                         </a>
                         <ul class="nav-dropdown-items">
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Documentación</a>
+                                <a class="nav-link" asp-controller="SGADocumentacion" asp-action="Resumen"><i class="nav-icon"><img src="~/img/icons/documentacion-24px.png" /></i>Documentación</a>
                             </li>
                             @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Administración</a>
+                                    <a class="nav-link" asp-controller="SGAAdministracion" asp-action="Resumen"><i class="nav-icon"><img src="~/img/icons/administracion-24px.png" /></i>Administración</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Indicadores</a>
+                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen"><i class="nav-icon"><img src="~/img/icons/indicadores-24px.png" /></i>Indicadores</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen">Auditoria</a>
+                                    <a class="nav-link" asp-controller="SGADocumentos" asp-action="Resumen"><i class="nav-icon"><img src="~/img/icons/auditoria-24px.png" /></i>Auditoria</a>
                                 </li>
                             }
                         </ul>

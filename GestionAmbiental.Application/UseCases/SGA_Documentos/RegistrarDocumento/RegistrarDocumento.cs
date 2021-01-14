@@ -12,13 +12,11 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
     public class RegistrarDocumento : IRegistrarDocumento
     {
         private readonly IRegistrarDocumentosReadOnlyRepository _registrarDocumentosReadOnlyRepository;
-        private readonly IEditarDocumentosReadOnlyRepository _editarDocumentosReadOnlyRepository;
         private readonly IGetUsuario _getUsuario;
 
         public RegistrarDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository, IEditarDocumentosReadOnlyRepository editarDocumentosReadOnlyRepository, IGetUsuario getUsuario)
         {
             _registrarDocumentosReadOnlyRepository = registrarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarDocumentosReadOnlyRepository));
-            _editarDocumentosReadOnlyRepository = editarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarDocumentosReadOnlyRepository));
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 

@@ -9,7 +9,10 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
     public interface IEditarDocumentosReadOnlyRepository
     {
         Task EditarRevisionDocumento(RevisionDocumento revision);
+        Task EditarRevisionesDocumento(List<RevisionDocumento> revision, int IdTipo, int IdDocumento);
         Task EditarEstadoDocumento(Documento documento);
+        Task ActivarPrimeraRevision(int IdDocumento);
         Task RechazarDocumento(int IdDocumento);
+        Task EditarDocumento(Documento documento);
     }
 }

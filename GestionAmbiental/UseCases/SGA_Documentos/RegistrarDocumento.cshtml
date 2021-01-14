@@ -53,7 +53,7 @@
                 <span id="danger_documento" class=""></span>
             </span>
             <label class="btn btn-primary" for="Documento">Seleccione</label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
+            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
         </div>
         <div class="col-sm-12 col-md-7 col-lg-3">
             <label id="files_name">0 Archivos</label>
@@ -321,7 +321,7 @@
                 var tipo = $("#select_tipo_revision").val();
                 var orden = parseInt($("#input_orden_revision").val())
                 var revisor = {
-                    Orden:  orden,
+                    Orden: orden,
                     Usuario: parseInt($("#select_usuario").val()),
                     UsuarioNombre: $("#select_usuario").find("option:selected").text(),
                     Fecha: $("#input_fecha_limite").val()
