@@ -1,6 +1,6 @@
 ﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
 @{
-    ViewData["Title"] = "Registrar Documento";
+    ViewData["Title"] = "Ver Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 <div class="row mb-2">
@@ -56,7 +56,8 @@
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Documento"></label>
         </div>
-        <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
+        <div class="col-sm-12 col-md-4 col-lg-4">
+            <button class="btn btn-primary" type="button" id="preview">Visualizar</button>
         </div>
     </div>
     <div class="row mb-2 mr-2">
@@ -179,22 +180,97 @@
         </div>
     </div>
 </div>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                   <div id="viewPDF">
+                       
+                   </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
-        var xd = [];
+        var rutaArchivo = "";
         $(document).ready(function () {
+
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
 
-            var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+            @*var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
             //Reemplazar parentesis "(" por guión
-            ruta = ruta.replace('-','/')
+            ruta = ruta.replace('-', '/');
 
-            var descargar = "<p><a href=\"/SGADocumentos/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
-            $("#Descargar_Documento").html(descargar);
+            var descargar = "<p><a href=\"/SGADocumentacion/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
+            $("#Descargar_Documento").html(descargar);*@
         });
+        $("#preview").on('click', function () {
+            if (PDFObject.supportsPDFs) {
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+                //Reemplazar parentesis "(" por guión
+                ruta = ruta.replace('-', '/')
 
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo");
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        });
+        $("#btn_descargar").on('click', function () {
+            if (rutaArchivo == "") {
+                //href to 
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+                //Reemplazar parentesis "(" por guión
+                ruta = ruta.replace('-', '/');
+                window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+            } else {
+                //descargar del ROOT
+
+                window.location.replace("/SGADocumentacion/DownloadPreviewFile?path=" + rutaArchivo);
+            }
+        });
         function ObtenerPredecesores() {
             $.ajax({
                 type: "POST",
@@ -231,7 +307,7 @@
                      */
                     "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +
                     "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
-                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";                
+                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
                 if (lista[i].Permiso && lista[i].Estado == "Activo") {
                     html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'" + lista[i].Id + "\')\">Revisar</button></td>";
                     //html += "<td style=\"width: 10%\"><button class=\"btn btn-primary\" onclick=\"\">Revisar</button></td>";

@@ -55,6 +55,7 @@
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
     <Folder Include="wwwroot\img\uploads\AvistamientoFauna\" />
     <Folder Include="wwwroot\img\uploads\AvistamientoFauna\Arácnidos\" />
+    <Folder Include="wwwroot\Temp\DownloadedDocs\" />
   </ItemGroup>
 
   <ItemGroup>

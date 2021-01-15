@@ -1,22 +1,25 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.SGA_Documentos;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
-using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
-using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevisionDocumento;
-using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
-using Microsoft.AspNetCore.DataProtection;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredecesores;
-using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevisionDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDocumento;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
+using GestionAmbiental.Domain.Enum;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
+using Renci.SshNet;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
 {
@@ -29,6 +32,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
         private readonly IConsultarRevisionDocumento _consultarRevisionDocumento;
         private readonly IEditarRevisionDocumento _editarRevisionDocumento;
         private readonly IGetUsuario _getUsuario;
+        private readonly IGetInfo_SGA _info_SGA;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly IDataProtector _protector;
 
@@ -41,6 +46,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
             IEditarRevisionDocumento editarRevisionDocumento,
             IGetUsuario getUsuario,
             IDataProtectionProvider dataProtectionProvider,
+            IHostingEnvironment hostingEnvironment,
+            IGetInfo_SGA info_SGA,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _selectItems = selectItems;
@@ -50,6 +57,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
             _consultarRevisionDocumento = consultarRevisionDocumento;
             _editarRevisionDocumento = editarRevisionDocumento;
             _getUsuario = getUsuario;
+            _info_SGA = info_SGA;
+
+            _hostingEnvironment = hostingEnvironment;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
         public async Task<IActionResult> Resumen()
@@ -357,6 +367,183 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
                 }
             }
         }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
+            };
+        }
+        public async Task<IActionResult> Download(string fileName)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                try
+                {
+                    var tipoDoc = fileName.Split('/', 2)[0];
+                    var nombreDoc = fileName.Split('/', 2)[1];
+                    var encryptedFile = await DownloadFTPFileAsync(fileName, tipoDoc, nombreDoc);
 
+                    /* Save encrypted file in temp path*/
+                    var tempPath = Path.GetTempPath();
+
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    if (!Directory.Exists(SGATempPath))
+                    {
+                        Directory.CreateDirectory(SGATempPath);
+                    }
+                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\" + tipoDoc + "\\";
+
+                    /*read decrypted file*/
+                    FileStream stream = new FileStream(archivePath + nombreDoc, FileMode.Open);
+
+                    return File(stream, GetContentType(nombreDoc), fileName);
+                }
+                catch (Exception e)
+                {
+                    return Content("No se encontró el archivo: " + e.Message);
+                }
+            }
+        }
+        public async Task<IActionResult> PreviewFile(string fileName)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                dynamic response;
+                try
+                {
+                    var tipoDoc = fileName.Split('/', 2)[0];
+                    var nombreDoc = fileName.Split('/', 2)[1];
+                    var downloadedFile = await DownloadFTPFileAsync(fileName, tipoDoc, nombreDoc);
+
+                    var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);
+                    var docsDownloadedPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Temp\DownloadedDocs");
+                    if (Directory.Exists(docsDownloadedPath))
+                    {
+                        Directory.Delete(docsDownloadedPath, true); 
+                        Directory.CreateDirectory(Path.Combine(docsDownloadedPath,userInfo.NombreUsuario));
+                    }
+                    var docPath = Path.Combine(docsDownloadedPath, userInfo.NombreUsuario, nombreDoc);
+                    
+                    using (var fileStream = new FileStream(docPath, FileMode.Create))
+                    {
+                        await fileStreamDownloaded.CopyToAsync(fileStream);
+                        fileStream.Close();
+                    }
+                    fileStreamDownloaded.Close();
+                    response = new
+                    {
+                        result = "Ok",
+                        path = "/Temp/DownloadedDocs/" + userInfo.NombreUsuario + "/" + nombreDoc,
+                        extension = Path.GetExtension(nombreDoc)
+                    };
+                    return Ok(response);
+                }
+                catch (Exception e)
+                {
+                    response = new
+                    {
+                        result = "Error",
+                        message = "No se encontró el archivo: " + e.Message
+                    };
+                    return Ok(response);
+                }
+            }
+        }
+        public async Task<IActionResult> DownloadPreviewFile(string path)
+        {
+            var completePath = _hostingEnvironment.WebRootPath+"/"+ path;
+            FileStream stream = new FileStream(completePath, FileMode.Open);
+            return File(stream, GetContentType(path), Path.GetFileName(path));
+        }
+        public async Task<string> DownloadFTPFileAsync(string fileName, string tipoDoc, string nombreDoc)
+        {
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
+                }
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+                Directory.CreateDirectory(archivePath + tipoDoc);
+
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir + tipoDoc);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(nombreDoc, fileStream);
+
+                    sftp.Dispose();
+                }
+                fileStream.Close();
+
+                return downloadedFilePath;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+        }
     }
 }
