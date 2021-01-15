@@ -20,6 +20,7 @@ using GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento;
 using System.IO;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using Renci.SshNet;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 {
@@ -32,6 +33,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         private readonly IConsultarRevisionDocumento _consultarRevisionDocumento;
         private readonly IGetUsuario _getUsuario;
         private readonly IEditarDocumento _editarDocumento;
+        private readonly IRegistrarDocumento _registrarDocumento;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
@@ -44,6 +46,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     IGetUsuario getUsuario,
                     IEditarDocumento editarDocumento,
                     IGetInfo_SGA info_SGA,
+                    IRegistrarDocumento registrarDocumento,
                     IDataProtectionProvider dataProtectionProvider,
                     DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -54,6 +57,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             _consultarRevisionDocumento = consultarRevisionDocumento;
             _getUsuario = getUsuario;
             _info_SGA = info_SGA;
+            _registrarDocumento = registrarDocumento;
             _editarDocumento = editarDocumento;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
@@ -84,6 +88,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 return View();
             }
         }
+
         [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
         {
@@ -462,7 +467,94 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             };
             return Ok(response);
         }
+        public async Task<IActionResult> RegistrarDocumento(string Error)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
+                tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+                ViewBag.Usuarios = usuarios;
+                ViewBag.TiposRevision = tiposRevision;
+                ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
+
+                //Obtener ultimas versiones de documentos publicados
+                var documentos = await _consultarDocumentos.Execute();
+                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+
+                var predecesoresTipo = new List<SelectListItem>();
+                foreach (var grupo in documentosAgrupados)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    foreach (var docPredecesor in grupo)
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
+                }
+                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
+
+                ViewBag.Predecesores = predecesoresTipo;
+                ViewBag.Error = Error;
+
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var items = await _selectItems.Execute();
+                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.0}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
+                var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
+                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+
+                if (!cargaDocumento.Equals("Error"))
+                {
+                    var idDocumento = await _registrarDocumento.Execute(
+                        model.Id_SGA_Tipo_Documento,
+                        model.Doc_Nombre,
+                        model.Doc_Version,
+                        model.Doc_Predecesor,
+                        model.Comentario,
+                        cargaDocumento,
+                        userInfo.NombreUsuario,
+                        model.Opcion,
+                        revisores,
+                        aprobadores);
+                    return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                }
+                else
+                {
+                    return RedirectToAction("RegistrarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
+                }
+
+            }
+            return View(model);
+        }
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();
