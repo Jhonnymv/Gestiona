@@ -10,6 +10,8 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
     public interface IGetItemsReadOnlyRepository
     {
         Task<List<TipoDocumento>> GetTiposDocumento();
+        Task<List<CategoriaDocumento>> GetCategoriasDocumento();
+        Task<List<CategoriaTipo>> GetCategoriasTipo();
         Task<List<Condicion>> GetCondiciones();
         Task<List<Usuario>> GetListUsuarios();
         Task<List<TipoRevision>> GetTiposRevision();

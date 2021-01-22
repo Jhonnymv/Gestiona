@@ -59,84 +59,90 @@
         <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
         </div>
     </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Revisores</h2>
+    @if (Model.Revisores.Length > 2)
+    {
+        <div class="row mb-2 mr-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Revisores</h2>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
-            <input type="hidden" asp-for="Revisores" />
-            <table class="table" id="tabla_revisores">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        @*if(permiso)
-                            <th></th>
-                            <th></th>
-                        *@
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+                <input type="hidden" asp-for="Revisores" />
+                <table class="table" id="tabla_revisores">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Orden</th>
+                            <th>Usuario</th>
+                            <th>Fecha Limite</th>
+                            @*if(permiso)
+                                <th></th>
+                                <th></th>
+                            *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Aprobadores</h2>
+    }
+    @if (Model.Aprobadores.Length > 2)
+    {
+        <div class="row mb-2 mr-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Aprobadores</h2>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
-            <input type="hidden" asp-for="Aprobadores" />
-            <table class="table" id="tabla_aprobadores">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        @*if(permiso)
-                            <th></th>
-                            <th></th>
-                        *@
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+                <input type="hidden" asp-for="Aprobadores" />
+                <table class="table" id="tabla_aprobadores">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Orden</th>
+                            <th>Usuario</th>
+                            <th>Fecha Limite</th>
+                            @*if(permiso)
+                                <th></th>
+                                <th></th>
+                            *@
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Versiones Anteriores</h2>
+        }
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Versiones Anteriores</h2>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 align-items-center">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <table class="table" id="tabla_documentos">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Código</th>
-                        <th>Documento</th>
-                        <th>Versión / Revisión</th>
-                        <th>Fecha de Aprobación</th>
-                        <th>Condición</th>
-                        <th>Comentarios</th>
-                        <th>Fecha Tentativa de la Nueva Versión</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <table class="table" id="tabla_documentos">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código</th>
+                            <th>Documento</th>
+                            <th>Versión / Revisión</th>
+                            <th>Fecha de Aprobación</th>
+                            <th>Condición</th>
+                            <th>Comentarios</th>
+                            <th>Fecha Tentativa de la Nueva Versión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
-    </div>
-</form>
+        <div class="row mb-2 mr-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
+        </div>
+    </form>
 <!--Modal Revisión-->
 <div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
      aria-hidden="true" style="display: none;">

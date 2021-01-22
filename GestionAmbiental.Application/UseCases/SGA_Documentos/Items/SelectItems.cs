@@ -21,11 +21,15 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.Items
             var tipos = await _getItemsReadOnlyRepository.GetTiposDocumento();
             var usuarios = await _getItemsReadOnlyRepository.GetListUsuarios();
             var tiposRevision = await _getItemsReadOnlyRepository.GetTiposRevision();
+            var categoriaDocumento = await _getItemsReadOnlyRepository.GetCategoriasDocumento();
+            var categoriaTipo = await _getItemsReadOnlyRepository.GetCategoriasTipo();
             var output = new SelectItemsOutput();
             output.ItemsCondicion = condiciones;
             output.ItemsTipoDocumento = tipos;
             output.ItemsUsuarios = usuarios;
             output.ItemsTipoRevision = tiposRevision;
+            output.ItemsCategoriaDocumento = categoriaDocumento;
+            output.ItemsCategoriaTipo = categoriaTipo;
             return output;
         }
     }

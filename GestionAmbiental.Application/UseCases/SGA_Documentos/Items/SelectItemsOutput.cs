@@ -9,6 +9,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.Items
     public class SelectItemsOutput
     {
         public List<TipoDocumento> ItemsTipoDocumento { get; set; }
+        public List<CategoriaTipo> ItemsCategoriaTipo { get; set; }
+        public List<CategoriaDocumento> ItemsCategoriaDocumento { get; set; }
         public List<Condicion> ItemsCondicion { get; set; }
         public List<Usuario> ItemsUsuarios { get; set; }
         public List<TipoRevision> ItemsTipoRevision { get; set; }

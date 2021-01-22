@@ -5,13 +5,23 @@
 
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Administracion de Documentos</h2>
+        <h2 id="titulo_pagina">Administracion de Documentos SGA</h2>
     </div>
 </div>
 <div class="row mb-2">
-    <div class="col-12 text-center">
-        <div class="card-deck text-center justify-content-center" id="opcionesTipoDoc">
-
+    <div class="col-sm-12 col-md-3 col-lg-2 text-center">
+        <div class="d-flex flex-column" style="width:100%;">
+            <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
+            <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
+            <div class="p-2" id="btn_normativo"><button class="btn btn-warning" style="width:100%;">Documentos Normativos</button></div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_condicion">
+        <div class="card-deck text-center justify-content-center">
+            <div><p>Elaboración</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,240);" onclick="FiltrarCondicion([1,2])"><p class="texto-tipoDoc">E</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,240);"></div></div>
+            <div><p>Revisión</p><div class="tipoDoc" style="--my-color-var: rgb(0,80,160);" onclick="FiltrarCondicion([3])"><p class="texto-tipoDoc">R</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,80,160);"></div></div>
+            <div><p>Aprobación</p><div class="tipoDoc" style="--my-color-var: rgb(0,160,80);" onclick="FiltrarCondicion([4,5,6])"><p class="texto-tipoDoc">A</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,160,80);"></div></div>
+            <div><p>Obsoleto</p><div class="tipoDoc" style="--my-color-var: rgb(0,240,0);" onclick="FiltrarCondicion([7])"><p class="texto-tipoDoc">O</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,240,0);"></div></div>
         </div>
     </div>
 </div>
@@ -35,13 +45,13 @@
             <label>Tipo de Documento:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc"></select>
+            <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple></select>
         </div>
         <div class="col-lg-2 mt-1">
             <label>Estado:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones"></select>
+            <select class="selectpicker form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones" multiple></select>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
@@ -52,7 +62,8 @@
 </form>
 <div class="row mb-2 justify-content-start">
     <div class="col-md mt-1">
-        <a class="btn btn-danger float-left" asp-action="RegistrarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Documento</a>
+        <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
+        <a class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
     </div>
 </div>
 <div class="row mb-2 justify-content-center">
@@ -79,13 +90,13 @@
     </nav>
 </div>
 
-<!--Modal Docs Tipo-->
-<div class="modal fade" id="modal_docs_tipo" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_tipo"
+<!--Modal Docs Condicion-->
+<div class="modal fade" id="modal_docs_condicion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_condicion"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_docs_tipo">
+                <h5 class="modal-title" id="titulo_modal_docs_condicion">
                     TITULO
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -96,7 +107,7 @@
                 <div class="modal-body">
                     <div class="row mb-2 justify-content-center">
                         <div class="col-12">
-                            <input type="hidden" id="tipoDocModal" />
+                            <input type="hidden" id="condicionDocModal" />
                             <table class="table table-modal" id="tabla_documentos_tipo">
                                 <thead class="thead-mcolor">
                                     <tr>
@@ -127,10 +138,30 @@
 </div>
 
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script type="text/javascript">
+        var categoria = 1;
+        $("#btn_sga").on('click', function () {
+            $("#titulo_pagina").text("Administracion de Documentos SGA");
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion")')
+            categoria = 1;
+            filtrar(1);
+        });
+        $("#btn_sgi").on('click', function () {
+            $("#titulo_pagina").text("Administracion de Documentos SGI");
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion")')
+            categoria = 2;
+            filtrar(1);
+        });
+        $("#btn_normativo").on('click', function () {
+            $("#titulo_pagina").text("Administracion de Documentos Normativos");
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion")')
+            categoria = 3;
+            filtrar(1);
+        });
         $(document).ready(function () {
             filtrar(1);
-            cargarOpciones();
+            //cargarOpciones();
         });
         function filtrar(pag) {
             $.ajax({
@@ -140,8 +171,9 @@
                     "pagina": pag,
                     "rpp": 10,
                     "nombre": $('#filtro_nombre').val(),
-                    "tipo": $('#filtro_tipoDoc').val(),
-                    "condicion": $('#filtro_condicion').val(),
+                    "categoria": categoria,
+                    "tipos": $('#filtro_tipoDoc').val(),
+                    "condiciones": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
                 traditional: true,
@@ -161,8 +193,9 @@
                     "pagina": pag,
                     "rpp": 10,
                     "nombre": $('#filtro_nombre').val(),
-                    "tipo": $("#tipoDocModal").val(),
-                    "condicion": $('#filtro_condicion').val(),
+                    "categoria": categoria,
+                    "tipos": $("#tipoDocModal").val(),
+                    "condiciones": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
                 traditional: true,
@@ -170,7 +203,6 @@
                     $('#tabla_documentos_tipo tbody').empty()
                     $('#tabla_documentos_tipo tbody').html(response.data)
                     $('#paginado_documentos_tipo').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
                 }
             });
         }
@@ -197,10 +229,10 @@
             }
             $("#opcionesTipoDoc").html(html)
         }
-        function FiltrarTipo(idTipo) {
-            $('#filtro_tipoDoc').val(idTipo);
-            $('#modal_docs_tipo').modal('show');
-            $("#tipoDocModal").val(idTipo)
+        function FiltrarCondicion(condiciones) {
+            $('#filtro_condicion').val(condiciones);
+            $('#modal_docs_condicion').modal('show');
+            $("#condicionDocModal").val(condiciones)
             filtrarModal(1);
         }
     </script>

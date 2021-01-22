@@ -80,7 +80,11 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
-                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                //tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var categorias = items.ItemsCategoriaDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.Id_SGA_Categoria_Documento.ToString(), Text = g.Descripcion }).ToList();
+
+                var categoriasTipo = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT")).ToList();
 
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
@@ -90,9 +94,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre,int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute(nombre, tipo, codigo, condicion, pagina, rpp);
+            var datosTabla = await _consultarDocumentos.Execute(nombre,categoria, tipos, codigo, condicion, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -145,9 +149,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
             };
             return Ok(response);
         }
-        public async Task<IActionResult> GetTablaModalResumenFiltrada(int tipo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute("", tipo, "", 0, pagina, rpp);
+            var datosTabla = await _consultarDocumentos.Execute("",categoria, tipos, "", 0, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -433,11 +437,11 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                dynamic response;
+                dynamic response; 
+                var tipoDoc = fileName.Split('/', 2)[0];
+                var nombreDoc = fileName.Split('/', 2)[1];
                 try
-                {
-                    var tipoDoc = fileName.Split('/', 2)[0];
-                    var nombreDoc = fileName.Split('/', 2)[1];
+                {                    
                     var downloadedFile = await DownloadFTPFileAsync(fileName, tipoDoc, nombreDoc);
 
                     var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);

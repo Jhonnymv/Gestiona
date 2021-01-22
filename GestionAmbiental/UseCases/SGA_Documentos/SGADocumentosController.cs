@@ -93,9 +93,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre,int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute(nombre,tipo,codigo,condicion,pagina,rpp);
+            var datosTabla = await _consultarDocumentos.Execute(nombre,categoria, tipos,codigo,condicion,pagina,rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;

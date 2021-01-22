@@ -13,12 +13,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
     public class GetItemsRepository : IGetItemsReadOnlyRepository
     {
         private readonly Context _context;
-
         public GetItemsRepository(Context context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-
         public async Task<List<Condicion>> GetCondiciones()
         {
             var data = await _context.SGA_Condiciones.ToListAsync();
@@ -35,7 +33,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
         public async Task<List<TipoDocumento>> GetTiposDocumento()
         {
             var data = await _context.SGA_Tipos_Documento.ToListAsync();
@@ -70,7 +67,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-
         public async Task<List<TipoRevision>> GetTiposRevision()
         {
             var data = await _context.SGA_Tipos_Revision.ToListAsync();
@@ -81,6 +77,42 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdTipoRevision = item.Id_SGA_Tipo_Revision,
                     Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<CategoriaDocumento>> GetCategoriasDocumento()
+        {
+            var data = await _context.SGA_Categoria_Documento.ToListAsync();
+            var output = new List<CategoriaDocumento>();
+            foreach (var item in data)
+            {
+                var outputItem = new CategoriaDocumento
+                {
+                    Id_SGA_Categoria_Documento = item.Id_SGA_Categoria_Documento,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
+                output.Add(outputItem);
+            }
+            return output;
+        }
+
+        public async Task<List<CategoriaTipo>> GetCategoriasTipo()
+        {
+            var data = await _context.SGA_Categoria_Tipo.ToListAsync();
+            var output = new List<CategoriaTipo>();
+            foreach (var item in data)
+            {
+                var outputItem = new CategoriaTipo
+                {
+                    IdSGACategoriaTipo = item.Id_SGA_Categoria_Tipo,
+                    IdSGACategoriaDocumento = item.Id_SGA_Categoria_Documento,
+                    IdSGATipoDocumento = item.Id_SGA_Tipo_Documento,
+                    Visible = item.Visible,
                     Estado = item.Estado
                 };
                 output.Add(outputItem);

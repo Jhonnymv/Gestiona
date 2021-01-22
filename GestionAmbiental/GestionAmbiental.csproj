@@ -11,6 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\**" />
+    <Content Remove="Views\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
@@ -66,6 +73,7 @@
     <None Include="UseCases\Reportes\ResiduosSolidos\ControlIngresoSalida\Resumen.cshtml" />
     <None Include="UseCases\Reportes\ConsumoAgua\AguaMar\Resumen.cshtml" />
     <None Include="UseCases\Reportes\ConsumoAgua\AguaSubterranea\Resumen.cshtml" />
+    <None Include="UseCases\SGA_Documentos\Administracion\CargarDocumentoSRevision.cshtml" />
   </ItemGroup>
   
 </Project>

@@ -8,7 +8,9 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
 {
     public interface IGetSGADocumentosReadOnlyRepository
     {
-        Task<List<Documento>> GetDocumentos(string nombre, int tipo, string codigo, int condicion );
+        Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int condicion);
+        Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int[] condicion);
+        Task<List<Documento>> GetDocumentos();
         Task<Documento> GetDocumento(int Id);
         Task<List<Documento>> GetPredecesores(int Id);
         Task<RevisionDocumento> GetRevisionDocumento(int Id);

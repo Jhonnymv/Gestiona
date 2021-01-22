@@ -5,13 +5,40 @@
 
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Documentos SGA</h2>
+        <h2 id="titulo_pagina">Documentos SGA</h2>
     </div>
 </div>
 <div class="row mb-2">
-    <div class="col-12 text-center">    
-        <div class="card-deck text-center justify-content-center" id="opcionesTipoDoc">
-
+    <div class="col-sm-12 col-md-3 col-lg-2 text-center">
+        <div class="d-flex flex-column" style="width:100%;">
+            <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
+            <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
+            <div class="p-2" id="btn_normativo"><button class="btn btn-warning" style="width:100%;">Documentos Normativos</button></div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sga">
+        <div class="card-deck text-center justify-content-center">
+            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+            <div><p>Matrices Base</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+            <div><p>Manuales, Planes y Programas</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
+            <div><p>Instructivos y Protocolos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
+            <div><p>Formatos</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sgi" style="display:none">
+        <div class="card-deck text-center justify-content-center">
+            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+            <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+            <div><p>Reglamentos y Estándar de Gestión</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
+            <div><p>Programas e Instructivos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
+            <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_normativo" style="display:none">
+        <div class="card-deck text-center justify-content-center">
+            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
         </div>
     </div>
 </div>
@@ -35,7 +62,7 @@
             <label>Tipo de Documento:</label>
         </div>
         <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc"></select>
+            <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple></select>
         </div>
         <div class="col-lg-2 mt-1">
             <label>Estado:</label>
@@ -90,7 +117,7 @@
                 <div class="modal-body">
                     <div class="row mb-2 justify-content-center">
                         <div class="col-md">
-                             <input type="hidden" id="tipoDocModal"/>
+                            <input type="hidden" id="tipoDocModal" />
                             <table class="table table-modal" id="tabla_documentos_tipo">
                                 <thead class="thead-mcolor">
                                     <tr>
@@ -121,11 +148,13 @@
 </div>
 
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
     <script type="text/javascript">
+        var categoria = 1;
         var tipos = [];
+        var tiposFiltro = [];
         $(document).ready(function () {
             filtrar(1);
-            cargarOpciones();
         });
         function filtrar(pag) {
             $.ajax({
@@ -135,7 +164,8 @@
                     "pagina": pag,
                     "rpp": 10,
                     "nombre": $('#filtro_nombre').val(),
-                    "tipo": $('#filtro_tipoDoc').val(),
+                    "categoria": categoria,
+                    "tipos": $('#filtro_tipoDoc').val(),
                     "condicion": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
@@ -156,7 +186,8 @@
                     "pagina": pag,
                     "rpp": 10,
                     "nombre": $('#filtro_nombre').val(),
-                    "tipo": $("#tipoDocModal").val(),
+                    "categoria": categoria,
+                    "tipos": $("#filtro_tipoDoc").val(),
                     "condicion": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
@@ -169,33 +200,31 @@
                 }
             });
         }
-        function cargarOpciones() {
-            var azul = 255;
-            var verde = 0;
-            var variacion = 50;
-
-           tipos = JSON.parse('@Html.Raw(ViewBag.TiposDocJson)');
-            var html = "";
-            for (var i = 0; i < tipos.length; i++) {
-                var palabras = tipos[i].Descripcion.split(' ');
-                var iniciales = "";
-                for (var j = 0; j < palabras.length; j++) {
-                    if (palabras[j].charAt(0) != 'y') {
-                        iniciales += palabras[j].charAt(0);
-                    }
-                }
-                html += "<div><p>" + tipos[i].Descripcion+"</p><div class=\"tipoDoc\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\" onclick=\"FiltrarTipo(" + tipos[i].IdSGATipoDocumento + ")\"><p class=\"texto-tipoDoc\">" + iniciales + "</p></div><div class=\"tipoDocUnion\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\"></div></div>";
-                if (verde + variacion <= 255 && azul - variacion > 0) {
-                    verde += variacion;
-                    azul -= variacion;
-                }
-            }
-            $("#opcionesTipoDoc").html(html)
-        }
-        function FiltrarTipo(idTipo) {
-            $('#filtro_tipoDoc').val(idTipo);
+        $("#btn_sga").on('click', function () {
+            $("#opciones_sga").show();
+            $("#opciones_sgi").hide();
+            $("#opciones_normativo").hide();
+            $("#titulo_pagina").text("Documentos SGA");
+            categoria = 1;
+        });
+        $("#btn_sgi").on('click', function () {
+            $("#opciones_sgi").show();
+            $("#opciones_sga").hide();
+            $("#opciones_normativo").hide();
+            $("#titulo_pagina").text("Documentos SGI");
+            categoria = 2;
+        });
+        $("#btn_normativo").on('click', function () {
+            $("#opciones_normativo").show();
+            $("#opciones_sga").hide();
+            $("#opciones_sgi").hide();
+            $("#titulo_pagina").text("Documentos Normativos");
+            categoria = 3;
+        });
+        function FiltrarTipo(tipos) {
+            $('#filtro_tipoDoc').val(tipos);
             $('#modal_docs_tipo').modal('show');
-            $("#tipoDocModal").val(idTipo)
+            $("#tipoDocModal").val(tipos)
             filtrarModal(1);
         }
     </script>

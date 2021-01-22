@@ -1,14 +1,14 @@
 ﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
 @{
-    ViewData["Title"] = "Registrar Documento";
+    ViewData["Title"] = "Cargar Documento Sin Revisión";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Nuevo Documento</h2>
+        <h2>Cargar Documento</h2>
     </div>
 </div>
-<form class="form-group" id="form_registrar_documento" asp-action="RegistrarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
@@ -30,13 +30,6 @@
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
             <input type="text" asp-for="Doc_Nombre" class="form-control">
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Predecesor"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Predecesor"></span>
-            <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
@@ -67,133 +60,17 @@
             </div>
         </div>
     }
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
-    </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Revisores</h2>
-        </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
-            <input type="hidden" asp-for="Revisores" />
-            <table class="table" id="tabla_revisores">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Aprobadores</h2>
-        </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
-            <input type="hidden" asp-for="Aprobadores" />
-            <table class="table" id="tabla_aprobadores">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
     <input type="hidden" asp-for="Opcion" />
+    <input type="hidden" asp-for="Revisores" />
+    <input type="hidden" asp-for="Aprobadores" />
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
         <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
 </form>
-<!--Modal Revisión-->
-<div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_revision">
-                    Agregar Revisor/Aprobador
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form>
-                <div class="modal-body">
-
-                    <div class="row mb-2">
-                        <input type="hidden" id="Id_Revision" />
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <span class="text-danger" id="danger_revision"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Tipo de Revisión:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_tipo_revision" asp-items="@ViewBag.TiposRevision">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Orden de Revisión:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="number" class="form-control" id="input_orden_revision" value="1" readonly />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Responsable:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_usuario" asp-items="@ViewBag.Usuarios">
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Fecha Límite:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="date" class="form-control" id="input_fecha_limite" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn_editar_revisor">Editar</button>
-                    <button type="button" class="btn btn-primary" id="btn_confirmar_revisor">Agregar</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-
 @section Scripts{
     <script type="text/javascript">
-
         var listAprobadores = [];
         var listRevisores = [];
         var IdPrimerUsuario;
@@ -201,6 +78,8 @@
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
+            $("#Revisores").val(JSON.stringify(listRevisores));
+            $("#Aprobadores").val(JSON.stringify(listAprobadores));
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
         $("#Documento").change(function () {

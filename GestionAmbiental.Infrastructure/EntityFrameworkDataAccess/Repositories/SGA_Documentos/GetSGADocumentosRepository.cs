@@ -139,21 +139,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             return output;
         }
-
-        public async Task<List<Documento>> GetDocumentos(string nombre, int tipo, string codigo, int condicion)
+        public async Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int condicion)
         {
             var output = new List<Documento>();
 
             var data = await _context.SGA_Documentos.ToListAsync();
             data = data.Where(x =>
             x.Doc_Nombre.Contains(nombre !=null ? nombre : x.Doc_Nombre) &&
-            x.Id_SGA_Tipo_Documento.Equals(tipo != 0 ? tipo : x.Id_SGA_Tipo_Documento) &&
             x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo) &&
             x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)).ToList();
 
-            var tiposDoc = await _context.SGA_Tipos_Documento
-                .Where(x =>x.Id_SGA_Tipo_Documento.Equals(tipo!=0?tipo:x.Id_SGA_Tipo_Documento))
-                .ToListAsync();
+            var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
+            var tiposIdDoc = tiposCategoria.Select(x => x.Id_SGA_Tipo_Documento).ToList();
+            var tiposDoc = await _context.SGA_Tipos_Documento.Where(x=>tiposIdDoc.Contains(x.Id_SGA_Tipo_Documento)).ToListAsync();
+
+            if (tipos.Length > 0)
+            {
+                tiposDoc = tiposDoc.Where(x => tipos.Contains(x.Id_SGA_Tipo_Documento)).ToList();
+            }
+            data = data.Where(x => tiposDoc.Select(y => y.Id_SGA_Tipo_Documento).Contains(x.Id_SGA_Tipo_Documento)).ToList();
 
             var condiciones = await _context.SGA_Condiciones
                 .Where(x => x.Id_SGA_Condicion.Equals(condicion != 0 ? condicion : x.Id_SGA_Condicion))
@@ -213,7 +217,151 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int[] condiciones)
+        {
 
+            var output = new List<Documento>();
+
+            var data = await _context.SGA_Documentos.ToListAsync();
+            data = data.Where(x =>
+            x.Doc_Nombre.Contains(nombre != null ? nombre : x.Doc_Nombre) &&
+            x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo)).ToList();
+
+            var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
+            var tiposIdDoc = tiposCategoria.Select(x => x.Id_SGA_Tipo_Documento).ToList();
+            var tiposDoc = await _context.SGA_Tipos_Documento.Where(x => tiposIdDoc.Contains(x.Id_SGA_Tipo_Documento)).ToListAsync();
+
+            if (tipos.Length > 0)
+            {
+                tiposDoc = tiposDoc.Where(x => tipos.Contains(x.Id_SGA_Tipo_Documento)).ToList();
+            }
+            data = data.Where(x => tiposDoc.Select(y => y.Id_SGA_Tipo_Documento).Contains(x.Id_SGA_Tipo_Documento)).ToList();
+
+            var condicionesEntities = await _context.SGA_Condiciones.ToListAsync();
+            if(condiciones.Length > 0)
+            {
+                condicionesEntities = condicionesEntities.Where(x => condiciones.Contains(x.Id_SGA_Condicion)).ToList();
+            }
+            data = data.Where(x => condicionesEntities.Select(y => y.Id_SGA_Condicion).Contains(x.Condicion)).ToList();
+
+            var usuarios = await _context.Usuarios.Where(x => data.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
+
+            foreach (var item in data)
+            {
+                var tipoDocModel = tiposDoc.First(x => x.Id_SGA_Tipo_Documento.Equals(item.Id_SGA_Tipo_Documento));
+                var condicionModel = condicionesEntities.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
+                var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+
+                var outputItem = new Documento
+                {
+                    IdSGADocumento = item.Id_SGA_Documento,
+                    SGATipoDocumento = new TipoDocumento
+                    {
+                        IdSGATipoDocumento = tipoDocModel.Id_SGA_Tipo_Documento,
+                        Descripcion = tipoDocModel.Descripcion,
+                        Estado = tipoDocModel.Estado
+                    },
+                    DocCodigo = item.Doc_Codigo,
+                    DocNombre = item.Doc_Nombre,
+                    DocVersion = item.Doc_Version,
+                    FechaAprobacion = item.Fecha_Aprobacion,
+                    Condicion = new Condicion
+                    {
+                        IdSGACondicion = condicionModel.Id_SGA_Condicion,
+                        Descripcion = condicionModel.Descripcion,
+                        Estado = condicionModel.Estado
+                    },
+                    Comentario = item.Comentario,
+                    FechaTentativa = item.Fecha_Tentativa,
+                    DocRuta = item.Doc_Ruta,
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = usuario.Id_Usuario,
+                        Nombres = usuario.Nombres,
+                        Apellidos = usuario.Apellidos,
+                        IdRol = usuario.Id_Rol,
+                        Email = usuario.Email,
+                        Estado = usuario.Estado
+                    },
+                    FechaCreacion = item.Fecha_Creacion,
+                    FechaActualizacion = item.Fecha_Actualizacion,
+                    Estado = item.Estado
+                };
+                if (item.Doc_Predecesor.HasValue)
+                {
+                    outputItem.DocPredecesor = new Documento
+                    {
+                        IdSGADocumento = item.Doc_Predecesor.Value
+                    };
+                }
+                output.Add(outputItem);
+            }
+            return output;
+        }
+        public async Task<List<Documento>> GetDocumentos()
+        {
+            var output = new List<Documento>();
+
+            var data = await _context.SGA_Documentos.ToListAsync();
+
+            var tiposDoc = await _context.SGA_Tipos_Documento.ToListAsync();
+
+            var condiciones = await _context.SGA_Condiciones.ToListAsync();
+
+            var usuarios = await _context.Usuarios.Where(x => data.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
+
+            foreach (var item in data)
+            {
+                var tipoDocModel = tiposDoc.First(x => x.Id_SGA_Tipo_Documento.Equals(item.Id_SGA_Tipo_Documento));
+                var condicionModel = condiciones.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
+                var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+
+                var outputItem = new Documento
+                {
+                    IdSGADocumento = item.Id_SGA_Documento,
+                    SGATipoDocumento = new TipoDocumento
+                    {
+                        IdSGATipoDocumento = tipoDocModel.Id_SGA_Tipo_Documento,
+                        Descripcion = tipoDocModel.Descripcion,
+                        Estado = tipoDocModel.Estado
+                    },
+                    DocCodigo = item.Doc_Codigo,
+                    DocNombre = item.Doc_Nombre,
+                    DocVersion = item.Doc_Version,
+                    FechaAprobacion = item.Fecha_Aprobacion,
+                    Condicion = new Condicion
+                    {
+                        IdSGACondicion = condicionModel.Id_SGA_Condicion,
+                        Descripcion = condicionModel.Descripcion,
+                        Estado = condicionModel.Estado
+                    },
+                    Comentario = item.Comentario,
+                    FechaTentativa = item.Fecha_Tentativa,
+                    DocRuta = item.Doc_Ruta,
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = usuario.Id_Usuario,
+                        Nombres = usuario.Nombres,
+                        Apellidos = usuario.Apellidos,
+                        IdRol = usuario.Id_Rol,
+                        Email = usuario.Email,
+                        Estado = usuario.Estado
+                    },
+                    FechaCreacion = item.Fecha_Creacion,
+                    FechaActualizacion = item.Fecha_Actualizacion,
+                    Estado = item.Estado
+                };
+                if (item.Doc_Predecesor.HasValue)
+                {
+                    outputItem.DocPredecesor = new Documento
+                    {
+                        IdSGADocumento = item.Doc_Predecesor.Value
+                    };
+                }
+                output.Add(outputItem);
+            }
+            return output;
+        }
         public async Task<List<Documento>> GetPredecesores(int Id)
         {
             var output = new List<Documento>();
@@ -316,7 +464,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             return output;
         }
-
         public async Task<List<RevisionDocumento>> GetRevisionesDocumento(int IdDocumento)
         {
             var data = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento)).ToListAsync();

@@ -89,6 +89,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Usuarios_Notificar_Consumo_Agua> Usuarios_Notificar_Consumo_Agua { get; set; }
         
         public DbSet<Tipo_Documento> SGA_Tipos_Documento { get; set; }
+        public DbSet<Categoria_Documento> SGA_Categoria_Documento { get; set; }
+        public DbSet<Categoria_Tipo> SGA_Categoria_Tipo { get; set; }
         public DbSet<Condicion> SGA_Condiciones { get; set; }
         public DbSet<Tipo_Revision> SGA_Tipos_Revision { get; set; }
         public DbSet<Revision_Documento> SGA_Revisiones_Documento { get; set; }
@@ -238,6 +240,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                .ToTable("Tb_SGA_Condicion");
             modelBuilder.Entity<Tipo_Documento>()
                .ToTable("Tb_SGA_Tipo_Documento");
+            modelBuilder.Entity<Categoria_Tipo>()
+               .ToTable("Tb_SGA_Categoria_Tipo");
+            modelBuilder.Entity<Categoria_Documento>()
+               .ToTable("Tb_SGA_Categoria_Documento");
             modelBuilder.Entity<Tipo_Revision>()
                .ToTable("Tb_SGA_Tipo_Revision");
             modelBuilder.Entity<Revision_Documento>()

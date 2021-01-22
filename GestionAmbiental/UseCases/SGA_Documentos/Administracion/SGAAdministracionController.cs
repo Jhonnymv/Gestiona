@@ -76,11 +76,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var items = await _selectItems.Execute();
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
-                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
-                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
+              
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento);
@@ -90,9 +89,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         }
 
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int tipo, string codigo, int condicion, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int categoria, int[] tipos, string codigo, int[] condiciones, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute(nombre, tipo, codigo, condicion, pagina, rpp);
+            var datosTabla = await _consultarDocumentos.Execute(nombre, categoria, tipos, codigo, condiciones, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -147,9 +146,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             return Ok(response);
         }
 
-        public async Task<IActionResult> GetTablaModalResumenFiltrada(int tipo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] condiciones, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute("", tipo, "", 0, pagina, rpp);
+            var datosTabla = await _consultarDocumentos.Execute("",categoria, new int[0], "", condiciones, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -204,7 +203,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             };
             return Ok(response);
         }
-
         public async Task<IActionResult> VerDocumento(string IdDocumento)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -467,7 +465,58 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             };
             return Ok(response);
         }
-        public async Task<IActionResult> RegistrarDocumento(string Error)
+        public async Task<IActionResult> CargarDocumento(string Error)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
+                tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+                ViewBag.Usuarios = usuarios;
+                ViewBag.TiposRevision = tiposRevision;
+                ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
+
+                //Obtener ultimas versiones de documentos publicados
+                var documentos = await _consultarDocumentos.Execute();
+                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+
+                var predecesoresTipo = new List<SelectListItem>();
+                foreach (var grupo in documentosAgrupados)
+                {
+                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    foreach (var docPredecesor in grupo)
+                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
+                }
+                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
+
+                ViewBag.Predecesores = predecesoresTipo;
+                ViewBag.Error = Error;
+
+
+                return View();
+            }
+        }
+        public async Task<IActionResult> CargarDocumentoSRevision(string Error)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -519,7 +568,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
         }
         [HttpPost]
-        public async Task<IActionResult> RegistrarDocumento(SGADocumentoModel model)
+        public async Task<IActionResult> CargarDocumento(SGADocumentoModel model)
         {
             if (ModelState.IsValid)
             {
@@ -662,7 +711,5 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             else
                 return "Error";
         }
-
-        
     }
 }
