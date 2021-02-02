@@ -63,7 +63,7 @@
 <div class="row mb-2 justify-content-start">
     <div class="col-md mt-1">
         <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
-        <a class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
+        <a id="btn_actualizar_documento" class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
     </div>
 </div>
 <div class="row mb-2 justify-content-center">
@@ -144,18 +144,21 @@
         $("#btn_sga").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGA");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })')
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumento", "SGAAdministracion", new { IdCategoria = 1 })')
             categoria = 1;
             filtrar(1);
         });
         $("#btn_sgi").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGI");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })')
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })')
             categoria = 2;
             filtrar(1);
         });
         $("#btn_externos").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos Externos");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })')
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })')
             categoria = 3;
             filtrar(1);
         });

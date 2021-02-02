@@ -19,7 +19,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarPredeces
         public async Task<List<DocumentoOutput>> Execute(int Id)
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetPredecesores(Id);
-            data = data.OrderByDescending(x => Int32.Parse(x.DocCodigo.Remove(0, 2))).ToList();
+            data = data.OrderByDescending(x => x.DocVersion).ToList();
 
             var output = new List<DocumentoOutput>();
 

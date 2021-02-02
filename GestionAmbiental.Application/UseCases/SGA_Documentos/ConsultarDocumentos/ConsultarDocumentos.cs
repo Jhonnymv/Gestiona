@@ -45,7 +45,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             return output;
         }
 
-        public async Task<List<DocumentoOutput>> Execute()
+        public async Task<List<DocumentoOutput>> ExecutePublicados()
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos();
 
@@ -54,7 +54,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             //Buscar los Ids de documentos predecesores
             var predecesores = data.Where(x=>x.DocPredecesor != null).Select(x=>x.DocPredecesor.IdSGADocumento).ToList();
             //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
-            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).ToList();
+            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && (x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())|| x.Estado.Equals(EstadosDocumentosSGA.Obsoleto.ToString()))).ToList();
 
             foreach (var item in ultimasVersiones)
             {

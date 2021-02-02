@@ -458,7 +458,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var data = await _context.SGA_Documentos.ToListAsync();
             //Nueva lista con Ids y Ids de Predecesores
-            var dataIdPred = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
+            var dataIdPred = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString()) || x.Estado.Equals(EstadosDocumentosSGA.Obsoleto.ToString())).Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
             //Definir el documento de Origen
             var origen = data.First(x => x.Id_SGA_Documento.Equals(Id));
             

@@ -1,0 +1,175 @@
+﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
+@{
+    ViewData["Title"] = "Actualizar Documento";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Cargar Documento @ViewBag.CategoriaDoc</h2>
+    </div>
+</div>
+<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumentoSRevision" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
+    <div class="row mb-2 align-items-center">
+        <input asp-for="Doc_Principal" type="hidden" value="@ViewBag.DocPrincipal" />
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Id_SGA_Tipo_Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Id_SGA_Tipo_Documento"></span>
+            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Version"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Version"></span>
+            <input type="number" asp-for="Doc_Version" class="form-control" step=".01">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Nombre"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
+            <input type="hidden" asp-for="Doc_Nombre" class="form-control">
+            <select asp-for="Doc_Predecesor" class="form-control"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Codigo"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Comentario"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Comentario"></span>
+            <textarea asp-for="Comentario" class="form-control"></textarea>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-1 mb-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
+                <span id="danger_documento" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Documento">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-3">
+            <label id="files_name">0 Archivos</label>
+        </div>
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+            </div>
+        </div>
+    }
+    <input type="hidden" asp-for="Opcion" />
+    <input type="hidden" asp-for="Revisores" />
+    <input type="hidden" asp-for="Aprobadores" />
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
+        @if (ViewBag.DocPrincipal == null)
+        {
+            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        }
+        <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
+    </div>
+</form>
+@section Scripts{
+    <script type="text/javascript">
+        var listDocumentosP = [];
+        $(document).ready(function () {
+            listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
+        });
+        $("#Id_SGA_Tipo_Documento").change(function () {
+            //Limpiar opciones de predecesores (nombre)
+            $('#Doc_Predecesor').empty();
+            //Contador para que se asigne el nombre, codigo y version una sola vez (la primera opcion agregada)
+            var count = 0;
+            var categoriaTipo = $("#Id_SGA_Tipo_Documento").val();
+            for (var i = 0; i < listDocumentosP.length; i++) {
+                if (categoriaTipo == listDocumentosP[i].IdSGACategoriaTipo) {
+                    //Actualizar a las opciones de predecesores (nombre)
+                    $('#Doc_Predecesor').append(new Option(listDocumentosP[i].DocNombre, listDocumentosP[i].IdSGADocumento));
+                    //Si es la primera opcion agregada actualiza nombre, codigo y version
+                    if (count == 0) {
+                        $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
+                        $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
+                        $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                        count++;
+                    }
+                }
+            }
+        });
+        $("#Doc_Predecesor").change(function () {
+            var IdDoc = $("#Doc_Predecesor").val();
+            for (var i = 0; i < listDocumentosP.length; i++) {
+                if (IdDoc == listDocumentosP[i].IdSGADocumento) {
+                    $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
+                    $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
+                    $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                    return;
+                }
+            }
+        });
+        $("#Documento").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento").data('max-size');
+            var archivos = $("#Documento").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        $("#btn_guardar_estado").on("click", function () {
+            $("#Opcion").val("GuardarEstado");
+            $("#form_registrar_documento").submit();
+        });
+        $("#btn_registrar").on("click", function () {
+            $("#Opcion").val("Registrar");
+            $("#form_registrar_documento").submit()
+        });
+    </script>
+
+}

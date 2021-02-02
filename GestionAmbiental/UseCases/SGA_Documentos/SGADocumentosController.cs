@@ -289,7 +289,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
                 //Obtener ultimas versiones de documentos publicados
-                var documentos = await _consultarDocumentos.Execute();
+                var documentos = await _consultarDocumentos.ExecutePublicados();
                 var documentosAgrupados = documentos.GroupBy(x => x.IdSGACategoriaTipo).ToList();
 
                 var predecesoresTipo = new List<SelectListItem>();
