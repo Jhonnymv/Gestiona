@@ -7,8 +7,8 @@ namespace GestionAmbiental.Domain.SGA_Documentos
     public class CategoriaTipo
     {
         public int IdSGACategoriaTipo { get; set; }
-        public int IdSGACategoriaDocumento { get; set; }
-        public int IdSGATipoDocumento { get; set; }
+        public CategoriaDocumento CategoriaDocumento { get; set; }
+        public TipoDocumento TipoDocumento { get; set; }
         public bool Visible { get; set; }
         public string Estado { get; set; }
     }

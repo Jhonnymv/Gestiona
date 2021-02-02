@@ -104,14 +104,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<CategoriaTipo>> GetCategoriasTipo()
         {
             var data = await _context.SGA_Categoria_Tipo.ToListAsync();
+            var categorias = await _context.SGA_Categoria_Documento.ToListAsync();
+            var tipos = await _context.SGA_Tipos_Documento.ToListAsync();
             var output = new List<CategoriaTipo>();
             foreach (var item in data)
             {
+                var categoria = categorias.Find(x => x.Id_SGA_Categoria_Documento.Equals(item.Id_SGA_Categoria_Documento));
+                var tipo = tipos.Find(x => x.Id_SGA_Tipo_Documento.Equals(item.Id_SGA_Tipo_Documento));
                 var outputItem = new CategoriaTipo
                 {
                     IdSGACategoriaTipo = item.Id_SGA_Categoria_Tipo,
-                    IdSGACategoriaDocumento = item.Id_SGA_Categoria_Documento,
-                    IdSGATipoDocumento = item.Id_SGA_Tipo_Documento,
+                    CategoriaDocumento = new CategoriaDocumento
+                    {
+                        Id_SGA_Categoria_Documento = categoria.Id_SGA_Categoria_Documento,
+                        Descripcion = categoria.Descripcion,
+                        Estado = categoria.Estado
+                    },
+                    TipoDocumento = new TipoDocumento
+                    {
+                        IdSGATipoDocumento  = tipo.Id_SGA_Tipo_Documento,
+                        Descripcion = tipo.Descripcion,
+                        Estado = tipo.Estado
+                    },
                     Visible = item.Visible,
                     Estado = item.Estado
                 };

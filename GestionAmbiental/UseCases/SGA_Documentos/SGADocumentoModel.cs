@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,10 +13,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
     {
         public int Id_SGA_Documento { get; set; }
         public string Id_Encriptado { get; set; }
+        public int Doc_Principal { get; set; }
         [DisplayName("Tipo de Documento:")]
         public int Id_SGA_Tipo_Documento { get; set; }
+        public int Id_Categoria { get; set; }
         [DisplayName("Nombre:")]
         public string Doc_Nombre { get; set; }
+        [DisplayName("Código:")]
+        public string Doc_Codigo { get; set; }
         [DisplayName("Versión:")]
         public double Doc_Version { get; set; }
         [DisplayName("Predecesor:")]
@@ -30,5 +35,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string Opcion { get; set; }
         public string Revisores {get;set;}
         public string Aprobadores {get;set;}
+        public string Secundarios {get;set;}
     }
 }

@@ -20,13 +20,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
+        public async Task<int> Execute(int IdCategoriaTipo,string codigo, int IdDocPrincipal, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
         {
-            /*
-            DateTime? fechaTentativaDT = null;
-            if (fechaTentativa!=null)
-                fechaTentativaDT = Convert.ToDateTime(fechaTentativa);
-            */
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value!=0)
                 predecesor.IdSGADocumento = idPredecesor.Value;
@@ -35,10 +30,10 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
 
             var model = new Documento
             {
-                SGATipoDocumento = new TipoDocumento
+                SGACategoriaTipo = new CategoriaTipo
                 {
-                    IdSGATipoDocumento = IdTipoDoc
-                },
+                    IdSGACategoriaTipo = IdCategoriaTipo
+                },               
                 DocNombre = nombreDoc,
                 DocVersion = versionDoc,
                 DocPredecesor = predecesor,
@@ -50,7 +45,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 },
                 DocCodigo = "TBD"
             };
-            if (opcion.Equals("GuardarEstado"))
+            if (opcion.Equals("GuardarEstado") || opcion.Equals("AgregarFormato"))
             {        
                 //Pendiente
                 model.Condicion = new Condicion
@@ -59,20 +54,31 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 };
                 model.Estado = EstadosDocumentosSGA.Pendiente.ToString();
             }
-            else if (opcion.Equals("Registrar"))
+            else if (opcion.Equals("Registrar") && IdDocPrincipal == 0)
             {
-                /*
-                var ultimoCodigo = await _registrarDocumentosReadOnlyRepository.GetUltimoCodigo();
-                model.DocCodigo = ultimoCodigo != null ? "D-" + (Int32.Parse(ultimoCodigo) + 1).ToString().PadLeft(7, '0') : "D-0000001";
-                */
-                //Pendiente
+                //Registrado
                 model.Condicion = new Condicion
                 {
                     IdSGACondicion = 2
                 };
                 model.Estado = EstadosDocumentosSGA.Registrado.ToString();
             }
-            
+
+            if(codigo!= null && codigo.Length > 0)
+                model.DocCodigo = codigo;
+
+            if (IdDocPrincipal != 0)
+            {
+                model.Condicion = new Condicion
+                {
+                    IdSGACondicion = 1
+                };
+                model.DocPrincipal = new Documento
+                {
+                    IdSGADocumento = IdDocPrincipal
+                };
+                model.Estado = EstadosDocumentosSGA.Pendiente.ToString();
+            }
             var IdDoc =  await _registrarDocumentosReadOnlyRepository.RegistrarDocumento(model);
             //Cargar revisiones
             var listRevisiones = new List<RevisionDocumento>();

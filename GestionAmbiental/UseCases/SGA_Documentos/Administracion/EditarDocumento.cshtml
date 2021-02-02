@@ -1,16 +1,17 @@
 ﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
 @{
-    ViewData["Title"] = "Registrar Documento";
+    ViewData["Title"] = "Editar Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Detalles del Documento</h2>
+        <h2>Editar Documento</h2>
     </div>
 </div>
 <form class="form-group" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="EditarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
     <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
     <input type="hidden" asp-for="Id_SGA_Documento" value="@Model.Id_SGA_Documento" />
+    <input type="hidden" asp-for="Id_Categoria" value="@Model.Id_Categoria" />
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
@@ -57,6 +58,12 @@
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Documento"></label>
         </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <button class="btn btn-primary" type="button" onclick="PreviewPDF('@Model.DocumentoRuta.Replace("\\","\\\\")')">Visualizar</button>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label>Reemplazar Documento:</label>
+        </div>
         <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
             <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
                 <span id="danger_documento" class=""></span>
@@ -68,8 +75,6 @@
             <label id="files_name">0 Archivos</label>
         </div>
         <input type="hidden" asp-for="DocumentoRuta" value="@Model.DocumentoRuta" />
-        <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
-        </div>
     </div>
     @if (ViewBag.Error != null)
     {
@@ -79,58 +84,101 @@
             </div>
         </div>
     }
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
     </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Revisores</h2>
+    @if (Model.Secundarios.Length > 2)
+    {
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Documentos Relacionados</h2>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
-            <input type="hidden" asp-for="Revisores" />
-            <table class="table table-modal" id="tabla_revisores" style="display: inline-table">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        <th></th>
-                        <th></th>
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <table class="table" id="tabla_secundarios">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código</th>
+                            <th>Tipo de Documento</th>
+                            <th>Nombre</th>
+                            <th>Versión / Revisión</th>
+                            <th>Condición</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    @if (Model.Revisores.Length > 2 || Model.Aprobadores.Length > 2)
+    {
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
+        </div>
+        <div class="row mb-2 mr-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Revisores</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <span class="text-danger" id="danger_revisores"></span>
+            </div>
+        </div>
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+                <input type="hidden" asp-for="Revisores" />
+                <table class="table" id="tabla_revisores" style="display: inline-table">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Orden</th>
+                            <th>Usuario</th>
+                            <th>Fecha Limite</th>
+                            <th></th>
+                            <th></th>
 
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Aprobadores</h2>
+
+        <div class="row mb-2 mr-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Aprobadores</h2>
+            </div>
         </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-center">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
-            <input type="hidden" asp-for="Aprobadores" />
-            <table class="table table-modal" id="tabla_aprobadores" style="display: inline-table">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Orden</th>
-                        <th>Usuario</th>
-                        <th>Fecha Limite</th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <span class="text-danger" id="danger_aprobadores"></span>
+            </div>
         </div>
-    </div>
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2">
+                <input type="hidden" asp-for="Aprobadores" />
+                <table class="table" id="tabla_aprobadores">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Orden</th>
+                            <th>Usuario</th>
+                            <th>Fecha Limite</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
     <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
             <h2>Versiones Anteriores</h2>
         </div>
     </div>
@@ -177,15 +225,13 @@
                 <div class="modal-body">
                     <div class="row mb-2">
                         <input type="hidden" id="Id_Revision" />
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <span class="text-danger" id="danger_revision"></span>
-                        </div>
                     </div>
                     <div class="row mb-2">
                         <div class="col-sm-6 col-md-4 col-lg-3">
                             <label>Tipo de Revisión:</label>
                         </div>
                         <div class="col-sm-6 col-md-8 col-lg-9">
+                            <span class="text-danger" id="danger_modal_tipo"></span>
                             <select class="form-control" id="select_tipo_revision" asp-items="@ViewBag.TiposRevision">
                             </select>
                         </div>
@@ -203,6 +249,7 @@
                             <label>Responsable:</label>
                         </div>
                         <div class="col-sm-6 col-md-8 col-lg-9">
+                            <span class="text-danger" id="danger_modal_responsable"></span>
                             <select class="form-control" id="select_usuario" asp-items="@ViewBag.Usuarios">
                             </select>
                         </div>
@@ -212,6 +259,7 @@
                             <label>Fecha Límite:</label>
                         </div>
                         <div class="col-sm-6 col-md-8 col-lg-9">
+                            <span class="text-danger" id="danger_modal_fecha"></span>
                             <input type="date" class="form-control" id="input_fecha_limite" />
                         </div>
                     </div>
@@ -225,8 +273,36 @@
         </div>
     </div>
 </div>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div id="viewPDF">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
 
         var listAprobadores = [];
@@ -234,21 +310,48 @@
         var IdPrimerUsuario;
 
         $(document).ready(function () {
+            CargarSecundarios();
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
 
             IdPrimerUsuario = $("#select_usuario").val();
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
-
-            var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
-            //Reemplazar parentesis "(" por guión
-            ruta = ruta.replace('-','/')
-
-            var descargar = "<p><a href=\"/SGADocumentos/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
-            $("#Descargar_Documento").html(descargar);
         });
 
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                console.log(ruta)       
+                //ruta = ruta.replace('\\', '\\\\');
+                
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo");
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
         $("#Documento").change(function () {
             $("#danger_documento").html("");
             //Validacion del tamaño del archivo
@@ -293,6 +396,26 @@
                 filesName.length > 0 ? $("#files_name").html(filesName) : null;
             }
         });
+        function CargarSecundarios() {
+            var listSecundarios = @Html.Raw(Model.Secundarios);
+            var html = "";
+            for(var i = 0; i < listSecundarios.length; i++) {
+                html += "<tr>";
+                if (listSecundarios[i].Condicion == "Pendiente") {
+                    html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                } else {
+                    html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                }
+                html +="<td>" + listSecundarios[i].TipoDocumento +"</td>" +
+                    "<td>" + listSecundarios[i].Nombre +"</td>" +
+                    "<td>" + listSecundarios[i].Version +"</td >" +
+                    "<td>" + listSecundarios[i].Condicion +"</td >" +
+                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + listSecundarios[i].Ruta.replace('\\', '\\\\')+"\')\">Visualizar</button></td >" +
+                    "</tr>";
+            }
+            console.log(html)
+            $("#tabla_secundarios tbody").html(html);
+        }
         function ObtenerPredecesores() {
             $.ajax({
                 type: "POST",
@@ -308,12 +431,22 @@
             });
         }
         $("#btn_guardar_estado").on("click", function () {
-            $("#Opcion").val("GuardarEstado");
-            $("#form_editar_documento").submit();
+            if (ValidarDatos()) {
+                $("#Opcion").val("GuardarEstado");
+                $("#form_editar_documento").submit();
+            }
         });
         $("#btn_registrar").on("click", function () {
-            $("#Opcion").val("Registrar");
-            $("#form_editar_documento").submit()
+            if (ValidarDatos() && ValidarDatosRevisores()) {
+                $("#Opcion").val("Registrar");
+                $("#form_editar_documento").submit();
+            }
+        });
+        $("#btn_agregar_formato").on("click", function () {
+            if (ValidarDatos()) {
+                $("#Opcion").val("AgregarFormato");
+                $("#form_editar_documento").submit();
+            }
         });
         $("#btn_agregar_revision").on("click", function () {
             $("#btn_editar_revisor").hide();
@@ -328,7 +461,6 @@
                 $("#input_orden_revision").val(listAprobadores.length + 1);
             }
         });
-
         $("#btn_confirmar_revisor").on("click", function () {
             //Guardar Datos y redireccionar a Editar
             if (ValidarDatosModal()) {
@@ -402,14 +534,74 @@
                 }
             }
         });
+
+        //Validacion para guardar estado, registrar o agregar formato
+        function ValidarDatos() {
+            var tipo = $("#Id_SGA_Tipo_Documento").val();
+            var version = $("#Doc_Version").val();
+            var nombre = $("#Doc_Nombre").val();
+            var documento = $("#Documento").val();
+            var documentoRuta = $("#DocumentoRuta").val();
+
+            $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("");
+            $('span[data-valmsg-for="Doc_Version"]').text("");
+            $('span[data-valmsg-for="Doc_Nombre"]').text("");
+            $('span[data-valmsg-for="Documento"]').text("");
+
+            if (tipo != '0' && version != "" && nombre != "" && ( documento != "" || documentoRuta != ""))
+                return true;
+            else {
+                if (tipo == '0')
+                    $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("Este campo es requerido");
+                if (version == "")
+                    $('span[data-valmsg-for="Doc_Version"]').text("Este campo es requerido");
+                if (nombre == "")
+                    $('span[data-valmsg-for="Doc_Nombre"]').text("Este campo es requerido");
+                if (documento == "" &&  documentoRuta == "")
+                    $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
+
+                return false;
+            }
+        }
+        //Validacion adicional para registrar
+        function ValidarDatosRevisores() {
+            $('#danger_revisores').text("");
+            $('#danger_aprobadores').text("");
+
+            if (listAprobadores.length != 0 && listRevisores.length != 0)
+                return true;
+            else {
+                if (listAprobadores.length == 0)
+                    $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
+                if (listRevisores.length == 0)
+                    $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
+                return false;
+            }
+        }
+        //Validacion para el modal de revisores
         function ValidarDatosModal() {
             var tipo = $("#select_tipo_revision").val();
             var orden = $("#input_orden_revision").val();
             var idUsuario = $("#select_usuario").val();
             var fecha = $("#input_fecha_limite").val();
 
+            $("#danger_modal_tipo").text("");
+            $("#danger_modal_responsable").text("");
+            $("#danger_modal_fecha").text("");
+
             if (tipo != '0' && orden != "" && idUsuario != '0' && fecha != "")
                 return true;
+            else {
+                if (tipo == '0') {
+                    $("#danger_modal_tipo").text("Debe seleccionar un tipo de revisión");
+                }
+                if (idUsuario == '0') {
+                    $("#danger_modal_responsable").text("Debe seleccionar a un responsable");
+                }
+                if (fecha == "") {
+                    $("#danger_modal_fecha").text("Debe seleccionar una fecha");
+                }
+            }
             return false;
         }
         function CargarRevisores() {

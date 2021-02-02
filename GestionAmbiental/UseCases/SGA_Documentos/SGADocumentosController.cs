@@ -173,13 +173,13 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.TiposDoc = tipos;
 
                 //Obtener ultimas versiones de documentos publicados
-                var documentos = await _consultarDocumentos.Execute(IdDesencriptado);
-                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+                var documentos = await _consultarDocumentos.ExecutePredecesores(IdDesencriptado);
+                var documentosAgrupados = documentos.GroupBy(x => x.IdSGACategoriaTipo).ToList();
 
                 var predecesoresTipo = new List<SelectListItem>();
                 foreach (var grupo in documentosAgrupados)
                 {
-                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    var nuevoGrupo = new SelectListGroup() { Name = "(" + grupo.First().SGACategoriaDocumento + ")" + grupo.First().SGATipoDocumento, Disabled = false };
                     foreach (var docPredecesor in grupo)
                         predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
                 }
@@ -211,7 +211,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 {
                     Id_Encriptado = IdDocumento,
                     Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_SGA_Tipo_Documento = documento.IdSGATipoDocumento,
+                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
                     Doc_Nombre = documento.DocNombre,
                     Doc_Predecesor = documento.IdDocPredecesor,
                     Doc_Version = documento.DocVersion,
@@ -290,12 +290,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 //Obtener ultimas versiones de documentos publicados
                 var documentos = await _consultarDocumentos.Execute();
-                var documentosAgrupados = documentos.GroupBy(x => x.SGATipoDocumento).ToList();
+                var documentosAgrupados = documentos.GroupBy(x => x.IdSGACategoriaTipo).ToList();
 
                 var predecesoresTipo = new List<SelectListItem>();
                 foreach (var grupo in documentosAgrupados)
                 {
-                    var nuevoGrupo = new SelectListGroup() { Name = grupo.Key, Disabled = false };
+                    var nuevoGrupo = new SelectListGroup() { Name = "(" + grupo.First().SGACategoriaDocumento + ")" + grupo.First().SGATipoDocumento, Disabled = false };
                     foreach (var docPredecesor in grupo)
                         predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre+" v."+docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
                 }
@@ -326,6 +326,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 {                  
                     var idDocumento = await _registrarDocumento.Execute(
                         model.Id_SGA_Tipo_Documento,
+                        model.Doc_Codigo,
+                        model.Doc_Principal,
                         model.Doc_Nombre,
                         model.Doc_Version,
                         model.Doc_Predecesor,
@@ -521,8 +523,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 try
                 {
-                    var tipoDoc = fileName.Split('/', 2)[0];
-                    var nombreDoc = fileName.Split('/', 2)[1];
+                    var tipoDoc = fileName.Split('\\', 2)[0];
+                    var nombreDoc = fileName.Split('\\', 2)[1];
                     var encryptedFile = await DownloadFTPFileAsync(fileName,tipoDoc,nombreDoc);
 
                     /* Save encrypted file in temp path*/

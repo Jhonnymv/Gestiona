@@ -111,7 +111,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task EditarDocumento(Documento documento)
         {
             var entidad = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
-            entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
+
+            var secundarios = await _context.SGA_Documentos.Where(x => x.Doc_Principal.Equals(documento.IdSGADocumento)).ToListAsync();
+
+            entidad.Id_SGA_Categoria_Tipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
             entidad.Doc_Codigo = documento.DocCodigo;
             entidad.Doc_Nombre = documento.DocNombre;
             entidad.Doc_Version = documento.DocVersion;
@@ -124,8 +127,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Fecha_Tentativa = documento.FechaTentativa;
             entidad.Doc_Ruta = documento.DocRuta;
             entidad.Id_Usuario = documento.Usuario.IdUsuario;
-            entidad.Fecha_Creacion = DateTime.Today;
-            entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
+            entidad.Fecha_Actualizacion = DateTime.Today;
             entidad.Estado = documento.Estado;
 
             _context.SGA_Documentos.Update(entidad);

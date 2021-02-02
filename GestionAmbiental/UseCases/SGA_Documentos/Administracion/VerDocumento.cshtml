@@ -56,7 +56,8 @@
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Documento"></label>
         </div>
-        <div class="col-sm-12 col-md-4 col-lg-4" id="Descargar_Documento">
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <button class="btn btn-primary" type="button" onclick="PreviewPDF('@Model.DocumentoRuta.Replace("\\","\\\\")')">Visualizar</button>
         </div>
     </div>
     @if (Model.Revisores.Length > 2)
@@ -114,35 +115,35 @@
                 </table>
             </div>
         </div>
-        }
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Versiones Anteriores</h2>
-            </div>
+    }
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Versiones Anteriores</h2>
         </div>
-        <div class="row mb-2 align-items-center">
-            <div class="col-sm-12 col-md-12 col-lg-12">
-                <table class="table" id="tabla_documentos">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Código</th>
-                            <th>Documento</th>
-                            <th>Versión / Revisión</th>
-                            <th>Fecha de Aprobación</th>
-                            <th>Condición</th>
-                            <th>Comentarios</th>
-                            <th>Fecha Tentativa de la Nueva Versión</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
+    </div>
+    <div class="row mb-2 align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <table class="table" id="tabla_documentos">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Documento</th>
+                        <th>Versión / Revisión</th>
+                        <th>Fecha de Aprobación</th>
+                        <th>Condición</th>
+                        <th>Comentarios</th>
+                        <th>Fecha Tentativa de la Nueva Versión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-        <div class="row mb-2 mr-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
-        </div>
-    </form>
+    </div>
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
+    </div>
+</form>
 <!--Modal Revisión-->
 <div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
      aria-hidden="true" style="display: none;">
@@ -183,22 +184,76 @@
         </div>
     </div>
 </div>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div id="viewPDF">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var xd = [];
         $(document).ready(function () {
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
-
-            var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
-            //Reemplazar parentesis "(" por guión
-            ruta = ruta.replace('-','/')
-
-            var descargar = "<p><a href=\"/SGADocumentos/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
-            $("#Descargar_Documento").html(descargar);
         });
 
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                console.log(ruta)
+                //ruta = ruta.replace('\\', '\\\\');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo");
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
         function ObtenerPredecesores() {
             $.ajax({
                 type: "POST",

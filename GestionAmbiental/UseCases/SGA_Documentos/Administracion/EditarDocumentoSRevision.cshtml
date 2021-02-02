@@ -1,0 +1,304 @@
+﻿@model GestionAmbiental.UseCases.SGA_Documentos.SGADocumentoModel
+@{
+    ViewData["Title"] = "Editar Documento";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Editar Documento</h2>
+    </div>
+</div>
+<form class="form-group" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="EditarDocumentoSRevision" method="post" enctype="multipart/form-data" autocomplete="off">
+    <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+    <input type="hidden" asp-for="Id_SGA_Documento" value="@Model.Id_SGA_Documento" />
+    <input type="hidden" asp-for="Id_Categoria" value="@Model.Id_Categoria" />
+    <div class="row mb-2 align-items-center">
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Id_SGA_Tipo_Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Id_SGA_Tipo_Documento"></span>
+            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Version"></label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Version"></span>
+            <input type="number" asp-for="Doc_Version" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Nombre"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
+            <input type="text" asp-for="Doc_Nombre" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Codigo"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Condicion"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Condicion"></span>
+            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Comentario"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Comentario"></span>
+            <textarea asp-for="Comentario" class="form-control"></textarea>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Documento"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <button class="btn btn-primary" type="button" onclick="PreviewPDF('@Model.DocumentoRuta.Replace("\\","\\\\")')">Visualizar</button>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label>Reemplazar Documento:</label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
+                <span id="danger_documento" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="Documento">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-2">
+            <label id="files_name">0 Archivos</label>
+        </div>
+        <input type="hidden" asp-for="DocumentoRuta" value="@Model.DocumentoRuta" />
+    </div>
+    @if (ViewBag.Error != null)
+    {
+        <div class="row mb-2 mr-2 d-flex justify-content-center">
+            <div class="col-8">
+                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+            </div>
+        </div>
+    }
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Versiones Anteriores</h2>
+        </div>
+    </div>
+    <div class="row mb-2 align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-12">
+            <table class="table" id="tabla_documentos">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Documento</th>
+                        <th>Versión / Revisión</th>
+                        <th>Fecha de Aprobación</th>
+                        <th>Condición</th>
+                        <th>Comentarios</th>
+                        <th>Fecha Tentativa de la Nueva Versión</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <input type="hidden" asp-for="Opcion" />
+    <div class="row mb-2 mr-2 d-flex justify-content-end">
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
+        <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
+    </div>
+</form>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div id="viewPDF">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
+    <script type="text/javascript">
+        var IdPrimerUsuario;
+
+        $(document).ready(function () {
+            ObtenerPredecesores();
+
+            IdPrimerUsuario = $("#select_usuario").val();
+            $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+        });
+
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                console.log(ruta)
+                //ruta = ruta.replace('\\', '\\\\');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo");
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
+        $("#Documento").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento").data('max-size');
+            var archivos = $("#Documento").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        function ObtenerPredecesores() {
+            $.ajax({
+                type: "POST",
+                url: "/SGADocumentacion/ConsultarPredecesores",
+                data: {
+                    "IdDocumento": $("#Id_Encriptado").val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_documentos tbody').empty()
+                    $('#tabla_documentos tbody').html(response.data)
+                }
+            });
+        }
+        $("#btn_guardar_estado").on("click", function () {
+            if (ValidarDatos()) {
+                $("#Opcion").val("GuardarEstado");
+                $("#form_editar_documento").submit();
+            }
+        });
+        $("#btn_registrar").on("click", function () {
+            if (ValidarDatos()) {
+                $("#Opcion").val("Registrar");
+                $("#form_editar_documento").submit();
+            }
+        });
+        //Validacion para guardar estado, registrar o agregar formato
+        function ValidarDatos() {
+            var tipo = $("#Id_SGA_Tipo_Documento").val();
+            var version = $("#Doc_Version").val();
+            var nombre = $("#Doc_Nombre").val();
+            var documento = $("#Documento").val();
+            var documentoRuta = $("#DocumentoRuta").val();
+
+            $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("");
+            $('span[data-valmsg-for="Doc_Version"]').text("");
+            $('span[data-valmsg-for="Doc_Nombre"]').text("");
+            $('span[data-valmsg-for="Documento"]').text("");
+
+            if (tipo != '0' && version != "" && nombre != "" && ( documento != "" || documentoRuta != ""))
+                return true;
+            else {
+                if (tipo == '0')
+                    $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("Este campo es requerido");
+                if (version == "")
+                    $('span[data-valmsg-for="Doc_Version"]').text("Este campo es requerido");
+                if (nombre == "")
+                    $('span[data-valmsg-for="Doc_Nombre"]').text("Este campo es requerido");
+                if (documento == "" &&  documentoRuta == "")
+                    $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
+
+                return false;
+            }
+        }
+        function LlenarTabla(tipo, lista) {
+            var html = "";
+            for (var i = 0; i < lista.length; i++) {
+                html += "<tr>" +
+                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
+                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
+                    "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
+                    "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
+                    "</tr>";
+            }
+            return html;
+        }
+
+    </script>
+}

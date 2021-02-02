@@ -5,11 +5,12 @@
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Cargar Documento</h2>
+        <h2>Cargar Documento @ViewBag.CategoriaDoc</h2>
     </div>
 </div>
-<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumentoSRevision" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
+        <input asp-for="Doc_Principal"  type="hidden" value="@ViewBag.DocPrincipal" />
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
         </div>
@@ -30,6 +31,13 @@
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
             <input type="text" asp-for="Doc_Nombre" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Codigo"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
@@ -65,7 +73,10 @@
     <input type="hidden" asp-for="Aprobadores" />
     <div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
-        <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        @if (ViewBag.DocPrincipal == null)
+        {
+            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+        }
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
 </form>

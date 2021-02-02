@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task Execute(int IdDoc, int IdTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
+        public async Task Execute(int IdDoc,int IdCategoriaTipo, string codigo, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value != 0)
@@ -32,9 +32,9 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
             var model = new Documento
             {
                 IdSGADocumento = IdDoc,
-                SGATipoDocumento = new TipoDocumento
+                SGACategoriaTipo = new CategoriaTipo
                 {
-                    IdSGATipoDocumento = IdTipoDoc
+                    IdSGACategoriaTipo = IdCategoriaTipo
                 },
                 DocNombre = nombreDoc,
                 DocVersion = versionDoc,
@@ -47,7 +47,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 },
                 DocCodigo = "TBD"
             };
-            if (opcion.Equals("GuardarEstado"))
+            if (opcion.Equals("GuardarEstado") || opcion.Equals("AgregarFormato"))
             {
                 //Pendiente
                 model.Condicion = new Condicion
@@ -68,6 +68,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 await _editarDocumentosReadOnlyRepository.ActivarPrimeraRevision(IdDoc);
 
             }
+            if (codigo != null && codigo.Length > 0)
+                model.DocCodigo = codigo;
             await _editarDocumentosReadOnlyRepository.EditarDocumento(model);
 
             var listRevisiones = new List<RevisionDocumento>();

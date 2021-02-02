@@ -13,7 +13,7 @@
         <div class="d-flex flex-column" style="width:100%;">
             <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
             <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
-            <div class="p-2" id="btn_normativo"><button class="btn btn-warning" style="width:100%;">Documentos Normativos</button></div>
+            <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
         </div>
     </div>
     <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sga">
@@ -36,7 +36,7 @@
             <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_normativo" style="display:none">
+    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
         <div class="card-deck text-center justify-content-center">
             <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
         </div>
@@ -74,6 +74,11 @@
     <div class="row mb-2 justify-content-center">
         <div class="col-lg-1 mt-1">
             <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-end">
+        <div class="col-lg-1 mt-1">
+            <button type="button" class="btn btn-warning" onclick="">Certificaciones Ambientales</button>
         </div>
     </div>
 </form>
@@ -196,32 +201,36 @@
                     $('#tabla_documentos_tipo tbody').empty()
                     $('#tabla_documentos_tipo tbody').html(response.data)
                     $('#paginado_documentos_tipo').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                    $("#filtro_tipoDoc").val([]);
                 }
             });
         }
         $("#btn_sga").on('click', function () {
             $("#opciones_sga").show();
             $("#opciones_sgi").hide();
-            $("#opciones_normativo").hide();
+            $("#opciones_externo").hide();
             $("#titulo_pagina").text("Documentos SGA");
             categoria = 1;
+            filtrar(1);
         });
         $("#btn_sgi").on('click', function () {
             $("#opciones_sgi").show();
             $("#opciones_sga").hide();
-            $("#opciones_normativo").hide();
+            $("#opciones_externo").hide();
             $("#titulo_pagina").text("Documentos SGI");
             categoria = 2;
+            filtrar(1);
         });
-        $("#btn_normativo").on('click', function () {
-            $("#opciones_normativo").show();
+        $("#btn_externos").on('click', function () {
+            $("#opciones_externo").show();
             $("#opciones_sga").hide();
             $("#opciones_sgi").hide();
-            $("#titulo_pagina").text("Documentos Normativos");
+            $("#titulo_pagina").text("Documentos Externos");
             categoria = 3;
+            filtrar(1);
         });
         function FiltrarTipo(tipos) {
+            $("#filtro_tipoDoc").val([]);
             $('#filtro_tipoDoc').val(tipos);
             $('#modal_docs_tipo').modal('show');
             $("#tipoDocModal").val(tipos)

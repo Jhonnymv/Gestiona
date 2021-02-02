@@ -216,19 +216,10 @@
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
-
-            @*var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
-            //Reemplazar parentesis "(" por guión
-            ruta = ruta.replace('-', '/');
-
-            var descargar = "<p><a href=\"/SGADocumentacion/Download?fileName=" + ruta + "\">"+'@Html.Raw(Model.Doc_Nombre)'+"</a></p>";
-            $("#Descargar_Documento").html(descargar);*@
         });
         $("#preview").on('click', function () {
             if (PDFObject.supportsPDFs) {
-                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
-                //Reemplazar parentesis "(" por guión
-                ruta = ruta.replace('-', '/')
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace("\\","\\\\"))';
 
                 $.ajax({
                     type: "POST",

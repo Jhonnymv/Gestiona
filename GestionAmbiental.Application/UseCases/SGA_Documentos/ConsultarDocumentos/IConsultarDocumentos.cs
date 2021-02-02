@@ -10,6 +10,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion,int pagina, int rpp);
         Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int[] condicion,int pagina, int rpp);
         Task<List<DocumentoOutput>> Execute();
-        Task<List<DocumentoOutput>> Execute(int Id);
+        Task<List<DocumentoOutput>> ExecutePredecesores(int Id);
+        Task<List<DocumentoOutput>> ExecuteSecundarios(int Id);
     }
 }

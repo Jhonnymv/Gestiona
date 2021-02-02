@@ -74,6 +74,7 @@
     <None Include="UseCases\Reportes\ConsumoAgua\AguaMar\Resumen.cshtml" />
     <None Include="UseCases\Reportes\ConsumoAgua\AguaSubterranea\Resumen.cshtml" />
     <None Include="UseCases\SGA_Documentos\Administracion\CargarDocumentoSRevision.cshtml" />
+    <None Include="UseCases\SGA_Documentos\Administracion\EditarDocumentoSRevision.cshtml" />
   </ItemGroup>
   
 </Project>

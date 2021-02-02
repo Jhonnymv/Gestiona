@@ -11,7 +11,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
     {
         [Key]
         public int Id_SGA_Documento { get; set; }
-        public int Id_SGA_Tipo_Documento { get; set; }
+        public int Id_SGA_Categoria_Tipo { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Doc_Codigo { get; set; }
         [Column(TypeName = "varchar(100)")]
@@ -20,6 +20,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public double Doc_Version { get; set; }
         [Column(TypeName = "int")]
         public int? Doc_Predecesor { get; set; }
+        [Column(TypeName = "int")]
+        public int? Doc_Principal { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Aprobacion { get; set; }
         [Column(TypeName = "int")]

@@ -13,7 +13,7 @@
         <div class="d-flex flex-column" style="width:100%;">
             <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
             <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
-            <div class="p-2" id="btn_normativo"><button class="btn btn-warning" style="width:100%;">Documentos Normativos</button></div>
+            <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
         </div>
     </div>
     <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_condicion">
@@ -62,7 +62,7 @@
 </form>
 <div class="row mb-2 justify-content-start">
     <div class="col-md mt-1">
-        <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
+        <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
         <a class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
     </div>
 </div>
@@ -143,19 +143,19 @@
         var categoria = 1;
         $("#btn_sga").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGA");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion")')
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })')
             categoria = 1;
             filtrar(1);
         });
         $("#btn_sgi").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGI");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion")')
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })')
             categoria = 2;
             filtrar(1);
         });
-        $("#btn_normativo").on('click', function () {
-            $("#titulo_pagina").text("Administracion de Documentos Normativos");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion")')
+        $("#btn_externos").on('click', function () {
+            $("#titulo_pagina").text("Administracion de Documentos Externos");
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })')
             categoria = 3;
             filtrar(1);
         });
@@ -200,6 +200,7 @@
                 },
                 traditional: true,
                 success: (response) => {
+                    $("#filtro_condicion").val([]);
                     $('#tabla_documentos_tipo tbody').empty()
                     $('#tabla_documentos_tipo tbody').html(response.data)
                     $('#paginado_documentos_tipo').html(response.paginador)
@@ -230,6 +231,7 @@
             $("#opcionesTipoDoc").html(html)
         }
         function FiltrarCondicion(condiciones) {
+            $("#filtro_condicion").val([]);
             $('#filtro_condicion').val(condiciones);
             $('#modal_docs_condicion').modal('show');
             $("#condicionDocModal").val(condiciones)

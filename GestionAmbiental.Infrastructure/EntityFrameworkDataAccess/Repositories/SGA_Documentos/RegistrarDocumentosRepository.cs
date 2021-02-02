@@ -22,7 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             
             var entidad = new Entities.SGA_Documentos.Documento();
-            entidad.Id_SGA_Tipo_Documento = documento.SGATipoDocumento.IdSGATipoDocumento;
+            entidad.Id_SGA_Categoria_Tipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
             entidad.Doc_Codigo = documento.DocCodigo;
             entidad.Doc_Nombre = documento.DocNombre;
             entidad.Doc_Version = documento.DocVersion;
@@ -38,6 +38,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Fecha_Creacion = DateTime.Today;
             entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
             entidad.Estado = documento.Estado;
+            if(documento.DocPrincipal != null)
+            {
+                entidad.Doc_Principal = documento.DocPrincipal.IdSGADocumento;
+            }
 
             _context.SGA_Documentos.Add(entidad);
             await _context.SaveChangesAsync();

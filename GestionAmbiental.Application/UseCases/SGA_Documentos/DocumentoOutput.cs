@@ -8,14 +8,20 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
     public class DocumentoOutput
     {
         public int IdSGADocumento { get; set; }
+        public int IdSGACategoriaTipo { get; set; }
         public int IdSGATipoDocumento { get; set; }
         public string SGATipoDocumento { get; set; }
+        public int IdSGACategoriaDocumento { get; set; }
+        public string SGACategoriaDocumento { get; set; }
         public string DocCodigo { get; set; }
         public string DocNombre { get; set; }
         public double DocVersion { get; set; }
         public int? IdDocPredecesor { get; set; }
         public string DocPredecesorNombre { get; set; }
         public string DocPredecesorCodigo { get; set; }
+        public int? IdDocPrincipal { get; set; }
+        public string DocPrincipalNombre { get; set; }
+        public string DocPrincipalCodigo { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public int IdCondicion { get; set; }
         public string Condicion { get; set; }
@@ -33,8 +39,11 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public DocumentoOutput(Documento documento)
         {
             IdSGADocumento = documento.IdSGADocumento;
-            IdSGATipoDocumento = documento.SGATipoDocumento.IdSGATipoDocumento;
-            SGATipoDocumento = documento.SGATipoDocumento.Descripcion;
+            IdSGACategoriaTipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
+            IdSGATipoDocumento = documento.SGACategoriaTipo.TipoDocumento.IdSGATipoDocumento;
+            SGATipoDocumento = documento.SGACategoriaTipo.TipoDocumento.Descripcion;
+            IdSGACategoriaDocumento = documento.SGACategoriaTipo.CategoriaDocumento.Id_SGA_Categoria_Documento;
+            SGACategoriaDocumento = documento.SGACategoriaTipo.CategoriaDocumento.Descripcion;
             DocCodigo = documento.DocCodigo;
             DocNombre = documento.DocNombre;
             DocVersion = documento.DocVersion;
@@ -43,6 +52,12 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
                 IdDocPredecesor = documento.DocPredecesor.IdSGADocumento;
                 DocPredecesorNombre = documento.DocPredecesor.DocNombre;
                 DocPredecesorCodigo = documento.DocPredecesor.DocCodigo;
+            }
+            if (documento.DocPrincipal != null)
+            {
+                IdDocPrincipal = documento.DocPrincipal.IdSGADocumento;
+                DocPrincipalNombre = documento.DocPrincipal.DocNombre;
+                DocPrincipalCodigo = documento.DocPrincipal.DocCodigo;
             }
             FechaAprobacion = documento.FechaAprobacion;
             IdCondicion = documento.Condicion.IdSGACondicion;
