@@ -21,6 +21,7 @@ using System.IO;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using Renci.SshNet;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.FirmarDocumento;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 {
@@ -34,6 +35,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         private readonly IGetUsuario _getUsuario;
         private readonly IEditarDocumento _editarDocumento;
         private readonly IRegistrarDocumento _registrarDocumento;
+        private readonly IFirmarDocumento _firmarDocumento;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
@@ -46,7 +48,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     IGetUsuario getUsuario,
                     IEditarDocumento editarDocumento,
                     IGetInfo_SGA info_SGA,
-                    IRegistrarDocumento registrarDocumento,
+                    IRegistrarDocumento registrarDocumento, 
+                    IFirmarDocumento firmarDocumento,
                     IDataProtectionProvider dataProtectionProvider,
                     DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -58,6 +61,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             _getUsuario = getUsuario;
             _info_SGA = info_SGA;
             _registrarDocumento = registrarDocumento;
+            _firmarDocumento = firmarDocumento;
             _editarDocumento = editarDocumento;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
@@ -101,8 +105,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()))
+                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) && !fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
                         filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
+                    else if (fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
+                        filasTabla += "<td><a href=\"/SGAAdministracion/FirmarDocumento?IdDocumento=" + id_encriptado + "&&IdCategoria="+fila.IdSGACategoriaDocumento+ "\">" + fila.DocCodigo + "</a></td>";
                     else {
                         if (fila.IdDocPrincipal.HasValue || !fila.IdSGACategoriaDocumento.Equals(1))
                             filasTabla += "<td><a href=\"/SGAAdministracion/EditarDocumentoSRevision?IdDocumento=" + id_encriptado + "&&IdCategoria="+fila.IdSGACategoriaDocumento+"\">" + fila.DocCodigo + "</a></td>";
@@ -160,8 +166,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()))
+                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) && !fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
                         filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
+                    else if (fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
+                        filasTabla += "<td><a href=\"/SGAAdministracion/FirmarDocumento?IdDocumento=" + id_encriptado + "&&IdCategoria=" + fila.IdSGACategoriaDocumento + "\">" + fila.DocCodigo + "</a></td>";
                     else
                     {
                         if (fila.IdDocPrincipal.HasValue &&!fila.IdSGACategoriaDocumento.Equals(1))
@@ -289,8 +297,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 return View(model);
             }
-        } 
-        
+        }         
         //Solo Documentos SGA
         public async Task<IActionResult> CargarDocumento(string Error, int IdCategoria)
         {
@@ -938,6 +945,116 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
                 }
 
+            }
+            return View(model);
+        }
+
+        public async Task<IActionResult> FirmarDocumento(string IdDocumento, int IdCategoria, string Error)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
+
+                var items = await _selectItems.Execute();
+                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tipos = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
+                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
+                tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+                ViewBag.Usuarios = usuarios;
+                ViewBag.Condiciones = condiciones;
+                ViewBag.TiposDoc = tipos;
+                ViewBag.TiposRevision = tiposRevision;
+                ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
+
+                var documento = await _consultarDocumento.Execute(IdDesencriptado);
+                //Obtener documentos que tienen como documento principal el actual
+                var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
+                var secundarios = documentosSecundarios.Select(x => new
+                {
+                    IdEncriptado = _protector.Protect(x.IdSGADocumento.ToString()),
+                    Codigo = x.DocCodigo,
+                    TipoDocumento = x.SGATipoDocumento,
+                    Nombre = x.DocNombre,
+                    Version = x.DocVersion,
+                    Condicion = x.Condicion,
+                    Ruta = x.DocRuta
+                }).ToList();
+
+                var revisores = documento.Revisores.Select(x => new {
+                    Orden = x.Orden,
+                    Usuario = x.Usuario.IdUsuario,
+                    UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
+                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")
+                })
+                    .ToList();
+
+                var aprobadores = documento.Aprobadores.Select(x => new {
+                    Orden = x.Orden,
+                    Usuario = x.Usuario.IdUsuario,
+                    UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
+                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
+                })
+                    .ToList();
+
+                var model = new SGADocumentoModel
+                {
+                    Id_Encriptado = IdDocumento,
+                    Id_SGA_Documento = documento.IdSGADocumento,
+                    Id_Categoria = IdCategoria,
+                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
+                    Doc_Nombre = documento.DocNombre,
+                    Doc_Predecesor = documento.IdDocPredecesor,
+                    Doc_Codigo = documento.DocCodigo,
+                    Doc_Version = documento.DocVersion,
+                    Comentario = documento.Comentario,
+                    Condicion = documento.IdCondicion,
+                    DocumentoRuta = documento.DocRuta,
+                    Revisores = JsonConvert.SerializeObject(revisores),
+                    Aprobadores = JsonConvert.SerializeObject(aprobadores),
+                    Secundarios = JsonConvert.SerializeObject(secundarios)
+                };
+
+                ViewBag.Error = Error;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> FirmarDocumento(SGADocumentoModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var items = await _selectItems.Execute();
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
+                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
+                if (!cargaDocumento.Equals("Error"))
+                {
+                        await _firmarDocumento.Execute(
+                            model.Id_SGA_Documento,
+                            cargaDocumento);
+                    return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
+                }
+                return RedirectToAction("FirmarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
             }
             return View(model);
         }

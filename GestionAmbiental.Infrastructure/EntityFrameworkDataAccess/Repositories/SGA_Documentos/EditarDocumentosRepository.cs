@@ -75,6 +75,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
             data.Condicion = documento.Condicion.IdSGACondicion;
             data.Estado = documento.Estado;
+            data.Fecha_Actualizacion = DateTime.Now;
 
             _context.SGA_Documentos.Update(data);
             await _context.SaveChangesAsync();
@@ -92,6 +93,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(IdDocumento));
             data.Estado = EstadosDocumentosSGA.Pendiente.ToString();
             data.Condicion = 1;
+            data.Fecha_Actualizacion = DateTime.Now;
 
             var revisiones = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento)).ToListAsync();
             foreach(var item in revisiones)
@@ -131,6 +133,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Estado = documento.Estado;
 
             _context.SGA_Documentos.Update(entidad);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task FirmarDocumento(Documento documento)
+        {
+            var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
+            data.Fecha_Aprobacion = DateTime.Now;
+            data.Fecha_Actualizacion = DateTime.Now;
+            data.Doc_Ruta = documento.DocRuta;
+            data.Condicion = documento.Condicion.IdSGACondicion;
+            data.Estado = documento.Estado;
+
+            _context.SGA_Documentos.Update(data);
             await _context.SaveChangesAsync();
         }
     }
