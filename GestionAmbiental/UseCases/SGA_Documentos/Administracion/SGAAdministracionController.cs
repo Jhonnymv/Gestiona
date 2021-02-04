@@ -224,21 +224,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);               
 
-                //Obtener ultimas versiones de documentos publicados
-                var documentos = await _consultarDocumentos.ExecutePredecesores(IdDesencriptado);
-                var documentosAgrupados = documentos.GroupBy(x => x.IdSGACategoriaDocumento).ToList();
-
-                var predecesoresTipo = new List<SelectListItem>();
-                foreach (var grupo in documentosAgrupados)
-                {
-                    var nuevoGrupo = new SelectListGroup() { Name = "(" + grupo.First().SGACategoriaDocumento + ")" + grupo.First().SGATipoDocumento, Disabled = false };
-                    foreach (var docPredecesor in grupo)
-                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
-                }
-                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
-
-                ViewBag.Predecesores = predecesoresTipo;
-
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
                 var revisores = documento.Revisores.Select(x => new {
@@ -269,6 +254,18 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var categoriasTipos = items.ItemsCategoriaTipo.Where(x => x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(documento.IdSGACategoriaDocumento)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriasTipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                //Obtener documentos que tienen como documento principal el actual
+                var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
+                var secundarios = documentosSecundarios.Select(x => new
+                {
+                    IdEncriptado = _protector.Protect(x.IdSGADocumento.ToString()),
+                    Codigo = x.DocCodigo,
+                    TipoDocumento = x.SGATipoDocumento,
+                    Nombre = x.DocNombre,
+                    Version = x.DocVersion,
+                    Condicion = x.Condicion,
+                    Ruta = x.DocRuta
+                }).ToList();
 
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriasTipos;
@@ -280,12 +277,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
                     Doc_Nombre = documento.DocNombre,
                     Doc_Predecesor = documento.IdDocPredecesor,
+                    Doc_Codigo = documento.DocCodigo,
                     Doc_Version = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
                     DocumentoRuta = documento.DocRuta,
                     Revisores = JsonConvert.SerializeObject(revisores),
-                    Aprobadores = JsonConvert.SerializeObject(aprobadores)
+                    Aprobadores = JsonConvert.SerializeObject(aprobadores),
+                    Secundarios = JsonConvert.SerializeObject(secundarios)
                 };
 
                 return View(model);
@@ -347,11 +346,11 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
                 var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
                 var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
                 var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
 
                 if (!cargaDocumento.Equals("Error"))
                 {
@@ -372,7 +371,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
                     else
                         //Falta IdCategoria
-                        return RedirectToAction("CargarDocumentoSRevision", new { IdDocPrincipal = idDocumento });
+                        return RedirectToAction("CargarDocumentoSRevision", new { IdDocPrincipal = idDocumento, IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
                 }
                 else
                 {
@@ -480,19 +479,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
-                var tituloCategoria = "";
-                switch (IdCategoria)
-                {
-                    case 1: tituloCategoria = "SGA"; break;
-                    case 2: tituloCategoria = "SGI"; break;
-                    case 3: tituloCategoria = "Externo"; break;
-                }
-                ViewBag.CategoriaDoc = tituloCategoria;
-
                 var items = await _selectItems.Execute();
-                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
-                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                //Obtener ultimas versiones de documentos publicados
+                //Obtener ultimas versiones de documentos publicados o obsoletos
                 var documentos = await _consultarDocumentos.ExecutePublicados();
                 //Filtrar documentos por categoria
                 documentos = documentos.Where(x => x.IdSGACategoriaDocumento.Equals(IdCategoria)).ToList();
@@ -501,27 +489,29 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 //Solo documentos SGA
                 var categoriasTipos = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria) && tiposDocExistentes.Contains(x.IdSGACategoriaTipo)).OrderBy(y => y.TipoDocumento.Descripcion).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriasTipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
                 var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
                 tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var documentosPublicados = JsonConvert.SerializeObject(documentos);
 
-                var documentosAgrupados = documentos.GroupBy(x => x.IdSGACategoriaTipo).ToList();
-
-                var predecesoresTipo = new List<SelectListItem>();
-                foreach (var grupo in documentosAgrupados)
+                var tituloCategoria = "";
+                switch (IdCategoria)
                 {
-                    var nuevoGrupo = new SelectListGroup() { Name = "(" + grupo.First().SGACategoriaDocumento + ")" + grupo.First().SGATipoDocumento, Disabled = false };
-                    foreach (var docPredecesor in grupo)
-                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
+                    case 1: tituloCategoria = "SGA"; break;
+                    case 2: tituloCategoria = "SGI"; break;
+                    case 3: tituloCategoria = "Externo"; break;
                 }
-                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
 
-                ViewBag.Predecesores = predecesoresTipo;
+                ViewBag.DocumentosPublicados = documentosPublicados;
+                ViewBag.CategoriaDoc = tituloCategoria;
                 ViewBag.Error = Error;
+                ViewBag.TiposDoc = categoriasTipos;
 
-                ViewBag.Condiciones = condiciones;
+                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                
+                ViewBag.DocumentosPublicados = documentosPublicados;
+                ViewBag.CategoriaDoc = tituloCategoria;
+                ViewBag.Error = Error;
                 ViewBag.TiposDoc = categoriasTipos;
                 ViewBag.Usuarios = usuarios;
                 ViewBag.TiposRevision = tiposRevision;
@@ -538,11 +528,11 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
                 var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
                 var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
                 var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
 
                 if (!cargaDocumento.Equals("Error"))
                 {
@@ -650,21 +640,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
-                //Obtener ultimas versiones de documentos publicados
-                var documentosPredecesores = await _consultarDocumentos.ExecutePredecesores(IdDesencriptado);
-                var documentosAgrupados = documentosPredecesores.GroupBy(x => x.IdSGACategoriaTipo).ToList();
-
-                var predecesoresTipo = new List<SelectListItem>();
-                foreach (var grupo in documentosAgrupados)
-                {
-                    var nuevoGrupo = new SelectListGroup() { Name = "(" + grupo.First().SGACategoriaDocumento + ")" + grupo.First().SGATipoDocumento, Disabled = false };
-                    foreach (var docPredecesor in grupo)
-                        predecesoresTipo.Add(new SelectListItem() { Value = docPredecesor.IdSGADocumento.ToString(), Text = "(" + docPredecesor.DocCodigo + ") " + docPredecesor.DocNombre + " v." + docPredecesor.DocVersion.ToString(), Group = nuevoGrupo });
-                }
-                predecesoresTipo.Insert(0, new SelectListItem("Ninguno", "0", true));
-
-                ViewBag.Predecesores = predecesoresTipo;
-
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
                 //Obtener documentos que tienen como documento principal el actual
                 var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
@@ -678,8 +653,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Condicion = x.Condicion,
                     Ruta = x.DocRuta
                 }).ToList();
-
-                ViewBag.Secundarios = secundarios;
 
                 var revisores = documento.Revisores.Select(x => new {
                     Orden = x.Orden,
@@ -705,6 +678,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
                     Doc_Nombre = documento.DocNombre,
                     Doc_Predecesor = documento.IdDocPredecesor,
+                    Doc_Codigo = documento.DocCodigo,
                     Doc_Version = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
@@ -727,7 +701,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
                 var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
                 var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
 
@@ -739,9 +713,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 if (model.Documento != null)
                 {
                     var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
                     if (!cargaDocumento.Equals("Error"))
                     {
+                        await DeleteFTPFileAsync(model.DocumentoRuta);
                         await _editarDocumento.Execute(
                             model.Id_SGA_Documento,
                             model.Id_SGA_Tipo_Documento,
@@ -758,9 +733,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         if (model.Opcion.Equals("Registrar") && !model.Opcion.Equals("AgregarFormato"))
                             return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
                         else if (model.Opcion.Equals("AgregarFormato"))
-                            return RedirectToAction("CargarDocumentoSRevision", new { IdDocPrincipal = model.Id_SGA_Documento });
+                            return RedirectToAction("CargarDocumentoSRevision", new { IdDocPrincipal = model.Id_SGA_Documento, IdCategoria = model.Id_Categoria });
                         else
-                            return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
+                            return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
                     }
                     return RedirectToAction("EditarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
                 }
@@ -784,7 +759,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     else if (model.Opcion.Equals("AgregarFormato"))
                         return RedirectToAction("CargarDocumentoSRevision", new { IdDocPrincipal = model.Id_SGA_Documento, IdCategoria = model.Id_Categoria });
                     else
-                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
+                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
                 }
 
             }
@@ -902,7 +877,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
                 var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
                 var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
 
@@ -914,9 +889,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 if (model.Documento != null)
                 {
                     var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
                     if (!cargaDocumento.Equals("Error"))
                     {
+                        await DeleteFTPFileAsync(model.DocumentoRuta);
                         await _editarDocumento.Execute(
                             model.Id_SGA_Documento,
                             model.Id_SGA_Tipo_Documento,
@@ -1103,6 +1079,34 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
             else
                 return "Error";
+        }
+        private async Task DeleteFTPFileAsync(string filename)
+        {
+            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in  serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            try
+            {
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    sftp.DeleteFile(filename);
+
+                    sftp.Dispose();
+                }
+            }catch(Exception e) { }
         }
     }
 }

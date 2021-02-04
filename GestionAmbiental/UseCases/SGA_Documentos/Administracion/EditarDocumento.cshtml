@@ -35,18 +35,18 @@
             <input type="text" asp-for="Doc_Nombre" class="form-control">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Predecesor"></label>
+            <label asp-for="Doc_Codigo"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Predecesor"></span>
-            <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores"></select>
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Condicion"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Condicion"></span>
-            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones"></select>
+            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
@@ -69,7 +69,7 @@
                 <span id="danger_documento" class=""></span>
             </span>
             <label class="btn btn-primary" for="Documento">Seleccione</label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf" data-max-size="8971520">
+            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
         </div>
         <div class="col-sm-12 col-md-7 col-lg-2">
             <label id="files_name">0 Archivos</label>
@@ -84,11 +84,12 @@
             </div>
         </div>
     }
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
-    </div>
-    @if (Model.Secundarios.Length > 2)
+    @if (Model.Secundarios.Length > 2 || Model.Id_Categoria.Equals(1))
     {
+        <div class="row mb-2 mr-2 d-flex justify-content-end">
+            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
+        </div>
+
         <div class="row mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
                 <h2>Documentos Relacionados</h2>
@@ -113,7 +114,7 @@
             </div>
         </div>
     }
-    @if (Model.Revisores.Length > 2 || Model.Aprobadores.Length > 2)
+    @if (Model.Revisores.Length > 2 || Model.Aprobadores.Length > 2 || Model.Id_Categoria.Equals(1))
     {
         <div class="row mb-2 mr-2 d-flex justify-content-center">
             <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
@@ -321,9 +322,9 @@
 
         function PreviewPDF(ruta) {
             if (PDFObject.supportsPDFs) {
-                console.log(ruta)       
+                console.log(ruta)
                 //ruta = ruta.replace('\\', '\\\\');
-                
+
                 $.ajax({
                     type: "POST",
                     url: "/SGADocumentacion/PreviewFile",
@@ -534,7 +535,18 @@
                 }
             }
         });
-
+        $("#btn_descargar").on('click', function () {
+            if (rutaArchivo == "") {
+                //href to
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+                //Reemplazar parentesis "(" por guión
+                ruta = ruta.replace('-', '/');
+                window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+            } else {
+                //descargar del ROOT
+                window.location.replace("/SGADocumentacion/DownloadPreviewFile?path=" + rutaArchivo);
+            }
+        });
         //Validacion para guardar estado, registrar o agregar formato
         function ValidarDatos() {
             var tipo = $("#Id_SGA_Tipo_Documento").val();

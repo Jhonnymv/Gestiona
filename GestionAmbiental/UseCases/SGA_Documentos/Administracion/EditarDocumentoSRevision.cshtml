@@ -39,7 +39,7 @@
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
-            <input type="text" asp-for="Doc_Codigo" class="form-control">
+            <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Condicion"></label>
@@ -299,6 +299,17 @@
             }
             return html;
         }
-
+        $("#btn_descargar").on('click', function () {
+            if (rutaArchivo == "") {
+                //href to
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+                //Reemplazar parentesis "(" por guión
+                ruta = ruta.replace('-', '/');
+                window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+            } else {
+                //descargar del ROOT
+                window.location.replace("/SGADocumentacion/DownloadPreviewFile?path=" + rutaArchivo);
+            }
+        });
     </script>
 }

@@ -33,11 +33,11 @@
             <input type="text" asp-for="Doc_Nombre" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Predecesor"></label>
+            <label asp-for="Doc_Codigo"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Predecesor"></span>
-            <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores" disabled></select>
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Condicion"></label>
@@ -60,6 +60,32 @@
             <button class="btn btn-primary" type="button" onclick="PreviewPDF('@Model.DocumentoRuta.Replace("\\","\\\\")')">Visualizar</button>
         </div>
     </div>
+    @if (Model.Secundarios.Length > 2)
+    {
+        <div class="row mb-2">
+            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                <h2>Documentos Relacionados</h2>
+            </div>
+        </div>
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <table class="table" id="tabla_secundarios">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código</th>
+                            <th>Tipo de Documento</th>
+                            <th>Nombre</th>
+                            <th>Versión / Revisión</th>
+                            <th>Condición</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
     @if (Model.Revisores.Length > 2)
     {
         <div class="row mb-2 mr-2">
@@ -216,6 +242,7 @@
     <script type="text/javascript">
         var xd = [];
         $(document).ready(function () {
+            CargarSecundarios();
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
@@ -268,6 +295,26 @@
                 }
             });
         }
+        function CargarSecundarios() {
+            var listSecundarios = @Html.Raw(Model.Secundarios);
+            var html = "";
+            for(var i = 0; i < listSecundarios.length; i++) {
+                html += "<tr>";
+                if (listSecundarios[i].Condicion == "Pendiente") {
+                    html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                } else {
+                    html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                }
+                html +="<td>" + listSecundarios[i].TipoDocumento +"</td>" +
+                    "<td>" + listSecundarios[i].Nombre +"</td>" +
+                    "<td>" + listSecundarios[i].Version +"</td >" +
+                    "<td>" + listSecundarios[i].Condicion +"</td >" +
+                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + listSecundarios[i].Ruta.replace('\\', '\\\\')+"\')\">Visualizar</button></td >" +
+                    "</tr>";
+            }
+            console.log(html)
+            $("#tabla_secundarios tbody").html(html);
+        }
         function CargarRevisores() {
             var revisores = JSON.parse('@Html.Raw(Model.Revisores)');
             $("#tabla_revisores tbody").empty();
@@ -291,5 +338,18 @@
             }
             return html;
         }
+        $("#btn_descargar").on('click', function () {
+            if (rutaArchivo == "") {
+                //href to
+                var ruta = '@Html.Raw(Model.DocumentoRuta.Replace('\\','-'))';
+                //Reemplazar parentesis "(" por guión
+                ruta = ruta.replace('-', '/');
+                window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+            } else {
+                //descargar del ROOT
+
+                window.location.replace("/SGADocumentacion/DownloadPreviewFile?path=" + rutaArchivo);
+            }
+        });
     </script>
 }

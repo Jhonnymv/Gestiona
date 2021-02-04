@@ -56,7 +56,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 };
                 model.Estado = EstadosDocumentosSGA.Pendiente.ToString();
             }
-            else if (opcion.Equals("Registrar"))
+            else if (opcion.Equals("Registrar")&& !(revisores.Count.Equals(0) && aprobadores.Count.Equals(0)))
             {
                //Registrado
                 model.Condicion = new Condicion
@@ -66,6 +66,30 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 model.Estado = EstadosDocumentosSGA.Registrado.ToString();
 
                 await _editarDocumentosReadOnlyRepository.ActivarPrimeraRevision(IdDoc);
+
+            }
+            else
+            {
+                //Publicar documentos SGI o Externos
+                model.Condicion = new Condicion
+                {
+                    IdSGACondicion = 6
+                };
+                model.Estado = EstadosDocumentosSGA.Publicado.ToString();
+                //Hacer obsoleto el predecesor si existe
+                if (idPredecesor.HasValue && idPredecesor.Value != 0)
+                {
+                    var predecesorDoc = new Documento
+                    {
+                        IdSGADocumento = idPredecesor.Value,
+                        Condicion = new Condicion
+                        {
+                            IdSGACondicion = 7
+                        },
+                        Estado = EstadosDocumentosSGA.Obsoleto.ToString()
+                    };
+                    await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(predecesorDoc);
+                }
 
             }
             if (codigo != null && codigo.Length > 0)

@@ -11,13 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\**" />
-    <Content Remove="Views\**" />
-    <EmbeddedResource Remove="Views\**" />
-    <None Remove="Views\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.4.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.1.1" />
@@ -57,13 +50,13 @@
     <Folder Include="UseCases\Notificaciones\RAC\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
-    <Folder Include="Views\SGAAdministracion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
     <Folder Include="wwwroot\img\uploads\AvistamientoFauna\" />
     <Folder Include="wwwroot\img\uploads\AvistamientoFauna\Arácnidos\" />
     <Folder Include="wwwroot\Temp\DownloadedDocs\" />
+    <Folder Include="wwwroot\Temp\DownloadedDocs\kevin\" />
   </ItemGroup>
 
   <ItemGroup>

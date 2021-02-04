@@ -8,7 +8,7 @@
         <h2>Actualizar Documento @ViewBag.CategoriaDoc</h2>
     </div>
 </div>
-<form class="form-group" id="form_registrar_documento" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
@@ -28,9 +28,16 @@
             <label asp-for="Doc_Nombre"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <input type="hidden" asp-for="Doc_Nombre" class="form-control">
             <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
-            <select asp-for="Doc_Predecesor" class="form-control" asp-items="ViewBag.Predecesores"></select>
+            <input type="hidden" asp-for="Doc_Nombre" class="form-control">
+            <select asp-for="Doc_Predecesor" class="form-control"></select>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Doc_Codigo"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
+            <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
@@ -199,13 +206,13 @@
 
 @section Scripts{
     <script type="text/javascript">
-
         var listAprobadores = [];
         var listRevisores = [];
         var IdPrimerUsuario;
-
+        var listDocumentosP = [];
 
         $(document).ready(function () {
+            listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
             IdPrimerUsuario = $("#select_usuario").val();
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
@@ -251,6 +258,37 @@
                     }
                 }
                 filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        $("#Id_SGA_Tipo_Documento").change(function () {
+            //Limpiar opciones de predecesores (nombre)
+            $('#Doc_Predecesor').empty();
+            //Contador para que se asigne el nombre, codigo y version una sola vez (la primera opcion agregada)
+            var count = 0;
+            var categoriaTipo = $("#Id_SGA_Tipo_Documento").val();
+            for (var i = 0; i < listDocumentosP.length; i++) {
+                if (categoriaTipo == listDocumentosP[i].IdSGACategoriaTipo) {
+                    //Actualizar a las opciones de predecesores (nombre)
+                    $('#Doc_Predecesor').append(new Option(listDocumentosP[i].DocNombre, listDocumentosP[i].IdSGADocumento));
+                    //Si es la primera opcion agregada actualiza nombre, codigo y version
+                    if (count == 0) {
+                        $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
+                        $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
+                        $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                        count++;
+                    }
+                }
+            }
+        });
+        $("#Doc_Predecesor").change(function () {
+            var IdDoc = $("#Doc_Predecesor").val();
+            for (var i = 0; i < listDocumentosP.length; i++) {
+                if (IdDoc == listDocumentosP[i].IdSGADocumento) {
+                    $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
+                    $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
+                    $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                    return;
+                }
             }
         });
         //Validacion para guardar estado, registrar o agregar formato
@@ -425,8 +463,7 @@
                     $("#Aprobadores").val(JSON.stringify(listAprobadores));
                 }
             }
-        });
-
+                    });
         function EliminarRevisor(tipo, orden) {
             if (tipo == 1) {
                 for (var i = 0; i < listRevisores.length; i++) {
