@@ -1051,7 +1051,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 {
                         await _firmarDocumento.Execute(
                             model.Id_SGA_Documento,
-                            cargaDocumento);
+                            cargaDocumento,
+                            tipoDoc.TipoDocumento.Codigo,
+                            tipoDoc.IdSGACategoriaTipo);
                     return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
                 }
                 return RedirectToAction("FirmarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });

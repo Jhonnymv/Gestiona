@@ -13,7 +13,8 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
         Task EditarEstadoDocumento(Documento documento);
         Task ActivarPrimeraRevision(int IdDocumento);
         Task RechazarDocumento(int IdDocumento);
-        Task EditarDocumento(Documento documento);
-        Task FirmarDocumento(Documento documento);
+        Task EditarDocumento(Documento documento); 
+        Task<string> GetUltimoCodigo(int IdCategoriaTipo);
+        Task FirmarDocumento(Documento documento); 
     }
 }

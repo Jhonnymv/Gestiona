@@ -208,6 +208,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         {
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
+                            Codigo = tipoItem.Codigo,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -310,6 +311,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         {
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
+                            Codigo = tipoItem.Codigo,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -397,6 +399,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         {
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
+                            Codigo = tipoItem.Codigo,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -508,6 +511,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             {
                                 IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                                 Descripcion = tipoItem.Descripcion,
+                                Codigo = tipoItem.Codigo,
                                 Estado = tipoItem.Estado
                             },
                             CategoriaDocumento = new CategoriaDocumento

@@ -21,7 +21,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GestionAmbiental.UseCases.SGA_Documentos.Doumentacion
+namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
 {
     public class SGADocumentacionController : Controller
     {

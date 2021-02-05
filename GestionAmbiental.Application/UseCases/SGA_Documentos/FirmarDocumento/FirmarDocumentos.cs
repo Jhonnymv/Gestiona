@@ -16,17 +16,24 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.FirmarDocumento
             _editarDocumentosReadOnlyRepository = editarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarDocumentosReadOnlyRepository));
         }
 
-        public async Task Execute(int IdDocumento, string DocFirmado)
+        public async Task Execute(int IdDocumento, string DocFirmado, string Codigo, int IdCategoriaTipo)
         {
             var input = new Documento { 
                 IdSGADocumento = IdDocumento,
-                DocRuta = DocFirmado,
+                DocRuta = DocFirmado,                
                 Condicion = new Condicion
                 {
                     IdSGACondicion = 6
                 },
                 Estado = EstadosDocumentosSGA.Publicado.ToString()
             };
+
+            var ultimo = await _editarDocumentosReadOnlyRepository.GetUltimoCodigo(IdCategoriaTipo);
+            if (ultimo != null)
+                input.DocCodigo = "JU-MAP-" + Codigo + "-" + (Convert.ToInt32(ultimo)+1).ToString().PadLeft(3, '0');
+            else
+                input.DocCodigo = "JU-MAP-" + Codigo + "-001";
+
             await _editarDocumentosReadOnlyRepository.FirmarDocumento(input);
         }
     }

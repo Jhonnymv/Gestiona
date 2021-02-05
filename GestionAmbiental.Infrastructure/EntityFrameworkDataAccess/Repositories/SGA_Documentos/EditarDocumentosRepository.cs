@@ -29,14 +29,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.SGA_Revisiones_Documento.Update(data);
             await _context.SaveChangesAsync();
         }
-        public async Task EditarRevisionesDocumento(List<RevisionDocumento> revision,int IdTipo,int IdDocumento)
+        public async Task EditarRevisionesDocumento(List<RevisionDocumento> revision, int IdTipo, int IdDocumento)
         {
-            var entities = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento) && x.Id_SGA_Tipo_Revision.Equals(IdTipo)).OrderBy(x=>x.Orden).ToListAsync();
+            var entities = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento) && x.Id_SGA_Tipo_Revision.Equals(IdTipo)).OrderBy(x => x.Orden).ToListAsync();
             var nuevos = new List<Entities.SGA_Documentos.Revision_Documento>();
             //Si se agregaron revisores
-            if(entities.Count < revision.Count)
+            if (entities.Count < revision.Count)
             {
-                for(int i = entities.Count; i < revision.Count; i++)
+                for (int i = entities.Count; i < revision.Count; i++)
                 {
                     nuevos.Add(new Entities.SGA_Documentos.Revision_Documento
                     {
@@ -50,10 +50,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 }
                 _context.SGA_Revisiones_Documento.AddRange(nuevos);
             }
-            for(int i = 0; i<entities.Count;i++)
+            for (int i = 0; i < entities.Count; i++)
             {
                 //Buscar las revisiones existentes por orden
-                if (revision.Count>i && entities[i].Orden == revision[i].Orden)
+                if (revision.Count > i && entities[i].Orden == revision[i].Orden)
                 {
                     entities[i].Fecha_Limite = revision[i].FechaLimite;
                     entities[i].Id_Usuario = revision[i].Usuario.IdUsuario;
@@ -66,10 +66,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 }
             }
             _context.SGA_Revisiones_Documento.UpdateRange(entities);
-            
+
             await _context.SaveChangesAsync();
         }
-
         public async Task EditarEstadoDocumento(Documento documento)
         {
             var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
@@ -96,7 +95,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             data.Fecha_Actualizacion = DateTime.Now;
 
             var revisiones = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(IdDocumento)).ToListAsync();
-            foreach(var item in revisiones)
+            foreach (var item in revisiones)
             {
                 item.Estado = EstadosRevisionDocSGA.Inactivo.ToString();
                 item.Comentario = null;
@@ -109,7 +108,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             await _context.SaveChangesAsync();
         }
-
         public async Task EditarDocumento(Documento documento)
         {
             var entidad = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
@@ -135,18 +133,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.SGA_Documentos.Update(entidad);
             await _context.SaveChangesAsync();
         }
-
         public async Task FirmarDocumento(Documento documento)
         {
             var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
             data.Fecha_Aprobacion = DateTime.Now;
             data.Fecha_Actualizacion = DateTime.Now;
             data.Doc_Ruta = documento.DocRuta;
+            data.Doc_Codigo = documento.DocCodigo;
             data.Condicion = documento.Condicion.IdSGACondicion;
+            data.Doc_Ruta = documento.DocRuta;
             data.Estado = documento.Estado;
 
             _context.SGA_Documentos.Update(data);
             await _context.SaveChangesAsync();
+        }
+        public async Task<string> GetUltimoCodigo(int IdCategoriaTipo)
+        {
+            var codigo = await _context.SGA_Documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString()) && x.Id_SGA_Categoria_Tipo.Equals(IdCategoriaTipo)).ToListAsync();
+            if (codigo.Count > 0)
+                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Split("-")[3])).Select(x => x.Doc_Codigo.Split("-")[3]).LastOrDefault();
+            else
+                return null;
         }
     }
 }
