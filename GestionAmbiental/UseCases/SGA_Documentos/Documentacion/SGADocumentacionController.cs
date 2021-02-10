@@ -408,7 +408,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -437,11 +437,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                dynamic response; 
-                var tipoDoc = fileName.Split('\\', 2)[0];
-                var nombreDoc = fileName.Split('\\', 2)[1];
+                dynamic response;
                 try
-                {                    
+                {
+                    var tipoDoc = fileName.Split('\\', 2)[0];
+                    var nombreDoc = fileName.Split('\\', 2)[1];
+                                 
                     var downloadedFile = await DownloadFTPFileAsync(fileName, tipoDoc, nombreDoc);
 
                     var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);
@@ -505,7 +506,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 }
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

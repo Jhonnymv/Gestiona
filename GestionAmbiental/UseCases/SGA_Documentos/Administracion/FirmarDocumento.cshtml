@@ -5,7 +5,7 @@
 }
 <div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Editar Documento</h2>
+        <h2>Firmar Documento</h2>
     </div>
 </div>
 <form class="form-group" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="FirmarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
@@ -263,7 +263,7 @@
                             }
 
                         } else {
-                            alert("No se pudo visualizar el archivo");
+                            alert("No se pudo visualizar el archivo: " + response.message);
                             $("#modal_preview_pdf").modal("show");
                         }
                     }

@@ -6,6 +6,7 @@ namespace GestionAmbiental.Application
 {
     public class ApplicationException : Exception
     {
+        public ApplicationException() { }
         internal ApplicationException(string businessMessage)
             : base(businessMessage)
         { }

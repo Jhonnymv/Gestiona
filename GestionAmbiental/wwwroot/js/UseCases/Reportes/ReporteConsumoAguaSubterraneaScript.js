@@ -335,7 +335,7 @@ function ActualizarCaudalFecha() {
                 "Resolucion": $("#Resolucion").val(),
                 "FechaInicio": $("#FInicio").val(),
                 "FechaFin": $("#FFin").val(),
-                "frecuencia": $("#frecuencia_consumo").val()    
+                "frecuencia": $("#frecuencia_caudal").val()    
             },
             success: (response) => {
                 if (data_caudal_fechas.length > 0) {

@@ -334,6 +334,7 @@
                     traditional: true,
                     success: (response) => {
                         if (response.result == "Ok") {
+                            console.log("response", response);
                             PDFObject.embed(response.path, "#viewPDF");
                             rutaArchivo = response.path
                             $("#modal_preview_pdf").modal("show");
@@ -344,7 +345,7 @@
                             }
 
                         } else {
-                            alert("No se pudo visualizar el archivo");
+                            alert("No se pudo visualizar el archivo: " + response.message);
                             $("#modal_preview_pdf").modal("show");
                         }
                     }
