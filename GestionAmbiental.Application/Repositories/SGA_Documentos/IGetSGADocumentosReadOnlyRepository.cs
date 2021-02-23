@@ -13,6 +13,7 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
         Task<List<Documento>> GetDocumentos();
         Task<Documento> GetDocumento(int Id);
         Task<List<Documento>> GetPredecesores(int Id);
+        Task<List<Documento>> GetSecundarios(int Id);
         Task<RevisionDocumento> GetRevisionDocumento(int Id);
         Task<List<RevisionDocumento>> GetRevisionesDocumento(int IdDocumento);
     }

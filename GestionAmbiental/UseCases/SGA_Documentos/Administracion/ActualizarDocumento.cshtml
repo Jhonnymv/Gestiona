@@ -8,14 +8,14 @@
         <h2>Actualizar Documento @ViewBag.CategoriaDoc</h2>
     </div>
 </div>
-<form class="form-group" id="form_registrar_documento" asp-action="CargarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
+<form class="form-group" id="form_registrar_documento" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Id_SGA_Tipo_Documento"></span>
-            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDocExistentes"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Doc_Version"></label>
@@ -68,8 +68,42 @@
             </div>
         </div>
     }
-    <div class="row mb-2 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
+    <div class="row mb-2 d-flex justify-content-center">
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Formatos</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <span class="text-danger" id="danger_formatos"></span>
+        </div>
+    </div>
+    <div class="row mb-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Secundarios" />
+            <table class="table" id="tabla_secundarios">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Tipo de Documento</th>
+                        <th>Nombre</th>
+                        <th>Versión / Revisión</th>
+                        <th>Condición</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="row mb-2 d-flex justify-content-center">
         <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
@@ -202,20 +236,88 @@
         </div>
     </div>
 </div>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div id="viewPDF">
 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
+
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var listAprobadores = [];
         var listRevisores = [];
+        var listSecundarios = [];
+        var listSecundariosHtml = [];
         var IdPrimerUsuario;
         var listDocumentosP = [];
 
         $(document).ready(function () {
-            listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
+            console.log('@Html.Raw(ViewBag.TiposDoc)')
             IdPrimerUsuario = $("#select_usuario").val();
+            listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
+            listSecundariosHtml = @Html.Raw(ViewBag.PublicadosHtml);
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                console.log(ruta)
+                //ruta = ruta.replace('\\', '\\\\');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            console.log("response", response);
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo: " + response.message);
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
         $("#Documento").change(function () {
             $("#danger_documento").html("");
             //Validacion del tamaño del archivo
@@ -372,12 +474,6 @@
                 $("#form_registrar_documento").submit();
             }
         });
-        $("#btn_agregar_formato").on("click", function () {
-            if (ValidarDatos()) {
-                $("#Opcion").val("AgregarFormato");
-                $("#form_registrar_documento").submit();
-            }
-        });
         $("#btn_agregar_revision").on("click", function () {
             $("#btn_editar_revisor").hide();
             $("#btn_confirmar_revisor").show();
@@ -524,6 +620,110 @@
             return html;
         }
 
+        //Scripts del Partial
+        $("#Documento_Formato").change(function () {
+            $("#danger_documento_formato").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento_Formato").data('max-size');
+            var archivos = $("#Documento_Formato").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento_formato").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name_formato").text(filesname);
+                            $("#danger_documento_formato").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name_formato").html(filesName) : null;
+            }
+        });
+        $("#btn_agregar_formato").on("click", function () {
+            $("#modal_agregar_formato").modal('show');
+        });
+        $("#btn_cargar_formato").on("click", function () {
+            $("#modal_formato").modal('show');
+        });
+        function AgregarFormato() {
+            var seleccionado = parseInt($("#Id_Formato_Publicado").val());
+            for (var i = 0; i < listSecundariosHtml.length; i++) {
+                if (seleccionado == listSecundariosHtml[i].Id) {
+                    $('#modal_agregar_formato').modal('toggle');
+                    listSecundarios.push(parseInt(seleccionado));
+                    $('#tabla_secundarios tbody').append(listSecundariosHtml[i].Html);
+                    $('#Id_Formato_Publicado option').each(function () {
+                        if ($(this).val() == seleccionado) {
+                            $(this).remove();
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+        function GuardarFormato() {
+            var formData = new FormData();
+            var files = document.getElementById("Documento_Formato").files;
+            for (var i = 0; i != files.length; i++) {
+                formData.append("Documento_Formato", files[i]);
+            }
+            formData.append("Id_Tipo_Documento_Formato", $("#Id_Tipo_Documento_Formato").val());
+            formData.append("Doc_Nombre_Formato", $("#Doc_Nombre_Formato").val());
+            formData.append("Doc_Version_Formato", $("#Doc_Version_Formato").val());
+            formData.append("Comentario_Formato", $("#Comentario_Formato").val());
+            $.ajax({
+                url: "@Url.Action("CargarFormato", "SGAAdministracion")",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        listSecundarios.push(response.idDoc);
+                        $('#tabla_formatos tbody').append(response.html);
+                        $('#modal_formato').modal('toggle');
+                        $('#Secundarios').val(JSON.stringify(listSecundarios));
+                        ReiniciarModalFormato();
+                    }
+                    else {
+                        alert("Ocurrió un error al cargar el formato")
+                    }
+                }
+            });
+        }
+        function ReiniciarModalFormato() {
+            $("#Id_Tipo_Documento_Formato").val('0');
+            $("#Doc_Nombre_Formato").val('');
+            $("#Doc_Version_Formato").val(parseFloat(1.0).toFixed(2));
+            $("#Comentario_Formato").val('');
+            $("#Documento_Formato").val('');
+        }
     </script>
 
 }

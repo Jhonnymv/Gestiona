@@ -190,14 +190,12 @@
     </div>
 </div>
 
-
 @section Scripts{
     <script type="text/javascript">
 
         var listAprobadores = [];
         var listRevisores = [];
         var IdPrimerUsuario;
-
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
@@ -270,11 +268,11 @@
         $("#btn_agregar_revision").on("click", function () {
             $("#btn_editar_revisor").hide();
             $("#btn_confirmar_revisor").show();
-            $("#modal_revision").modal('show');            
+            $("#modal_revision").modal('show');
         });
         $("#select_tipo_revision").on("change", function () {
             if ($(this).val() == 1) {
-                $("#input_orden_revision").val(listRevisores.length + 1);               
+                $("#input_orden_revision").val(listRevisores.length + 1);
             }
             else if ($(this).val() == 2) {
                 $("#input_orden_revision").val(listAprobadores.length + 1);
@@ -388,7 +386,7 @@
             $("#btn_editar_revisor").show();
             $("#btn_confirmar_revisor").hide();
             $("#modal_revision").modal('show');
-            
+
             $("#select_tipo_revision").val(tipo);
             if (tipo == 1) {
                 $("#input_orden_revision").val(listRevisores[orden - 1].Orden)

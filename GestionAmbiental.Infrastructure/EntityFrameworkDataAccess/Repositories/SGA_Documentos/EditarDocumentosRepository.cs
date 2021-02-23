@@ -111,12 +111,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task EditarDocumento(Documento documento)
         {
             var entidad = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
-
-            var secundarios = await _context.SGA_Documentos.Where(x => x.Doc_Principal.Equals(documento.IdSGADocumento)).ToListAsync();
-
+                       
             entidad.Id_SGA_Categoria_Tipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
             entidad.Doc_Codigo = documento.DocCodigo;
             entidad.Doc_Nombre = documento.DocNombre;
+            entidad.Principal = documento.Principal;
             entidad.Doc_Version = documento.DocVersion;
             if (documento.DocPredecesor.IdSGADocumento != 0)
                 entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
@@ -135,6 +134,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task FirmarDocumento(Documento documento)
         {
+            //Editar documento actual
             var data = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(documento.IdSGADocumento));
             data.Fecha_Aprobacion = DateTime.Now;
             data.Fecha_Actualizacion = DateTime.Now;
@@ -146,14 +146,81 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             _context.SGA_Documentos.Update(data);
             await _context.SaveChangesAsync();
+            //Actualizar estado del predecesor
+            if (data.Doc_Predecesor != null) {
+                var predecesorDoc = new Documento
+                {
+                    IdSGADocumento = data.Doc_Predecesor.Value,
+                    Condicion = new Condicion
+                    {
+                        IdSGACondicion = 7
+                    },
+                    Estado = EstadosDocumentosSGA.Superado.ToString()
+                };
+                await EditarEstadoDocumento(predecesorDoc);
+            }
         }
         public async Task<string> GetUltimoCodigo(int IdCategoriaTipo)
         {
-            var codigo = await _context.SGA_Documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString()) && x.Id_SGA_Categoria_Tipo.Equals(IdCategoriaTipo)).ToListAsync();
+            var codigo = await _context.SGA_Documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.Id_SGA_Categoria_Tipo.Equals(IdCategoriaTipo)).ToListAsync();
             if (codigo.Count > 0)
-                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Split("-")[3])).Select(x => x.Doc_Codigo.Split("-")[3]).LastOrDefault();
+                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Split(".")[0].Split("-")[3])).Select(x => x.Doc_Codigo.Split(".")[0].Split("-")[3]).LastOrDefault();
             else
                 return null;
+        }
+        public async Task EditarDocumentosRelacionados(List<int> secundarios, int idDocumento)
+        {
+            var data = await _context.SGA_Documentos_Relacionados
+                .Where(x => 
+                x.Id_Documento_Principal.Equals(idDocumento))
+                .ToListAsync();            
+
+            var eliminados = data.Where(x => !secundarios.Contains(x.Id_Documento_Secundario)).ToList();
+            var existentes = data.Where(x => secundarios.Contains(x.Id_Documento_Secundario)).ToList();
+
+            var entidades = new List<Entities.SGA_Documentos.Documentos_Relacionados>();
+
+            foreach (var id in secundarios)
+            {
+                //Agregar los que no pertencen a existentes o eliminados
+                if (!eliminados.Select(x => x.Id_Documento_Secundario).Contains(id) &&
+                    !existentes.Select(x => x.Id_Documento_Secundario).Contains(id))
+                {
+                    entidades.Add(new Entities.SGA_Documentos.Documentos_Relacionados
+                    {
+                        Id_Documento_Principal = idDocumento,
+                        Id_Documento_Secundario = id,
+                        Fecha_Relacion = DateTime.Now,
+                        Estado = "ACT"
+                    });
+                }
+            }
+
+            _context.SGA_Documentos_Relacionados.RemoveRange(eliminados);
+
+            await _context.SGA_Documentos_Relacionados.AddRangeAsync(entidades);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task EditarDocumentosSecundarios(List<Documento> secundarios)
+        {
+            var data = await _context.SGA_Documentos.Where(x =>
+                secundarios.Select(y=>y.IdSGADocumento).Contains(x.Id_SGA_Documento))
+               .ToListAsync();
+
+            foreach(var item in data)
+            {
+                var model = secundarios.Find(x => x.IdSGADocumento.Equals(item.Id_SGA_Documento));
+                item.Doc_Codigo = model.DocCodigo;
+                item.Estado = model.Estado;
+                item.Condicion = model.Condicion.IdSGACondicion;
+                item.Fecha_Actualizacion = model.FechaActualizacion;
+                item.Fecha_Aprobacion = model.FechaAprobacion;
+            }
+
+            _context.SGA_Documentos.UpdateRange(data);
+            await _context.SaveChangesAsync();
         }
     }
 }

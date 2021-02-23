@@ -21,14 +21,14 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task Execute(int IdDoc,int IdCategoriaTipo, string codigo, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
+        public async Task Execute(int IdDoc, int IdCategoria, int IdCategoriaTipo, string codigo, string codigoTipoDoc, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc,string fechaTentativa, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value != 0)
                 predecesor.IdSGADocumento = idPredecesor.Value;
 
             var usuario = await _getUsuario.Execute(usuarioRed);
-
+            
             var model = new Documento
             {
                 IdSGADocumento = IdDoc,
@@ -47,6 +47,52 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 },
                 DocCodigo = "TBD"
             };
+
+            //Actualizar listas de revisores y aprobadores antes de activar la primera revision
+            var listRevisiones = new List<RevisionDocumento>();
+            foreach (var item in revisores)
+            {
+                listRevisiones.Add(new RevisionDocumento
+                {
+                    IdSGADocumento = IdDoc,
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = item.Usuario
+                    },
+                    Orden = item.Orden,
+                    FechaLimite = Convert.ToDateTime(item.Fecha),
+                    SGATipoRevision = new TipoRevision { IdTipoRevision = 1 },
+                    Estado = item.Orden == 1 ? EstadosRevisionDocSGA.Activo.ToString() : EstadosRevisionDocSGA.Inactivo.ToString()
+                });
+            }
+            await _editarDocumentosReadOnlyRepository.EditarRevisionesDocumento(listRevisiones, 1, model.IdSGADocumento);
+            //Cargar aprobaciones
+            var listAprobaciones = new List<RevisionDocumento>();
+            foreach (var item in aprobadores)
+            {
+                listAprobaciones.Add(new RevisionDocumento
+                {
+                    IdSGADocumento = IdDoc,
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = item.Usuario
+                    },
+                    Orden = item.Orden,
+                    FechaLimite = Convert.ToDateTime(item.Fecha),
+                    SGATipoRevision = new TipoRevision { IdTipoRevision = 2 },
+                    Estado = EstadosRevisionDocSGA.Inactivo.ToString()
+                });
+            }
+            await _editarDocumentosReadOnlyRepository.EditarRevisionesDocumento(listAprobaciones, 2, model.IdSGADocumento);
+
+
+            if (fechaTentativa != null)
+            {
+                model.FechaTentativa = Convert.ToDateTime(fechaTentativa);
+            }
+            if (codigo != null && codigo.Length > 0)
+                model.DocCodigo = codigo;
+
             if (opcion.Equals("GuardarEstado") || opcion.Equals("AgregarFormato"))
             {
                 //Pendiente
@@ -68,6 +114,21 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 await _editarDocumentosReadOnlyRepository.ActivarPrimeraRevision(IdDoc);
 
             }
+            //Secundarios Pendientes
+            else if (opcion.Equals("Registrar")&& revisores.Count.Equals(0) && aprobadores.Count.Equals(0) && IdCategoria.Equals(1))
+            {                
+                var ultimo = await _editarDocumentosReadOnlyRepository.GetUltimoCodigo(IdCategoriaTipo);
+                if (ultimo != null)
+                    model.DocCodigo = "JU-MAP-" + codigoTipoDoc + "-" + (Convert.ToInt32(ultimo) + 1).ToString().PadLeft(3, '0');
+                else
+                    model.DocCodigo = "JU-MAP-" + codigoTipoDoc + "-001";
+                //Aprobado
+                model.Condicion = new Condicion
+                {
+                    IdSGACondicion = 6
+                };
+                model.Estado = EstadosDocumentosSGA.Aprobado.ToString();
+            }
             else
             {
                 //Publicar documentos SGI o Externos
@@ -75,7 +136,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 {
                     IdSGACondicion = 6
                 };
-                model.Estado = EstadosDocumentosSGA.Publicado.ToString();
+                model.Estado = EstadosDocumentosSGA.Aprobado.ToString();
                 //Hacer obsoleto el predecesor si existe
                 if (idPredecesor.HasValue && idPredecesor.Value != 0)
                 {
@@ -86,51 +147,21 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                         {
                             IdSGACondicion = 7
                         },
-                        Estado = EstadosDocumentosSGA.Obsoleto.ToString()
+                        Estado = EstadosDocumentosSGA.Superado.ToString()
                     };
                     await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(predecesorDoc);
                 }
 
             }
-            if (codigo != null && codigo.Length > 0)
-                model.DocCodigo = codigo;
+            if (secundarios.Count > 0)
+            {
+                model.Principal = true;
+                await _editarDocumentosReadOnlyRepository.EditarDocumentosRelacionados(secundarios, model.IdSGADocumento);
+            }
+
             await _editarDocumentosReadOnlyRepository.EditarDocumento(model);
 
-            var listRevisiones = new List<RevisionDocumento>();
-            foreach (var item in revisores)
-            {
-                listRevisiones.Add(new RevisionDocumento
-                {
-                    IdSGADocumento = IdDoc,
-                    Usuario = new Domain.ValueObjects.Usuario
-                    {
-                        IdUsuario = item.Usuario
-                    },
-                    Orden = item.Orden,
-                    FechaLimite = Convert.ToDateTime(item.Fecha),
-                    SGATipoRevision = new TipoRevision { IdTipoRevision = 1 },
-                    Estado = item.Orden == 1 ? EstadosRevisionDocSGA.Activo.ToString() : EstadosRevisionDocSGA.Inactivo.ToString()
-                });
-            }
-            await _editarDocumentosReadOnlyRepository.EditarRevisionesDocumento(listRevisiones,1,model.IdSGADocumento);
-            //Cargar aprobaciones
-            var listAprobaciones = new List<RevisionDocumento>();
-            foreach (var item in aprobadores)
-            {
-                listAprobaciones.Add(new RevisionDocumento
-                {
-                    IdSGADocumento = IdDoc,
-                    Usuario = new Domain.ValueObjects.Usuario
-                    {
-                        IdUsuario = item.Usuario
-                    },
-                    Orden = item.Orden,
-                    FechaLimite = Convert.ToDateTime(item.Fecha),
-                    SGATipoRevision = new TipoRevision { IdTipoRevision = 2 },
-                    Estado = EstadosRevisionDocSGA.Inactivo.ToString()
-                });
-            }
-            await _editarDocumentosReadOnlyRepository.EditarRevisionesDocumento(listAprobaciones,2, model.IdSGADocumento);
+            
         }
     }
 }

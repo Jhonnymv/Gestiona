@@ -12,15 +12,6 @@ namespace GestionAmbiental
 {
     public class Program
     {
-        /*public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
-
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
-                */
         public static void Main(string[] args)
         {
             var host = new HostBuilder()
@@ -35,12 +26,6 @@ namespace GestionAmbiental
                         .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                         .Enrich.FromLogContext()
                         .WriteTo.File(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "logs/log-" + DateTime.Today.ToString("yyyyMMdd") + ".log"));
-                        /*
-                        loggerConfiguration.MinimumLevel.Debug()
-                        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-                        .Enrich.FromLogContext()
-                        .WriteTo.File(Path.Combine(hostingContext.HostingEnvironment.ContentRootPath, "logs/log-"+DateTime.Now+".log"));
-                        */
                     })
                     .ConfigureServices(services => services.AddAutofac())
                     .UseStartup<Startup>();
@@ -53,9 +38,8 @@ namespace GestionAmbiental
                 .Build();
 
             host.Run();
-            //BuildWebHost(args).Run();
         }
-
+        // NET CORE 2.2
         //public static IHostBuilder BuildWebHost(string[] args)
         //{
             

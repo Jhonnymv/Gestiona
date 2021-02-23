@@ -12,8 +12,8 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public string DocCodigo { get; set; }
         public string DocNombre { get; set; }
         public double DocVersion { get; set; }
+        public bool Principal { get; set; }
         public Documento DocPredecesor { get; set; }
-        public Documento DocPrincipal { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public Condicion Condicion { get; set; }
         public string Comentario { get; set; }
@@ -26,5 +26,6 @@ namespace GestionAmbiental.Domain.SGA_Documentos
 
         public List<RevisionDocumento> Revisiones { get; set; }
         public List<RevisionDocumento> Aprobaciones { get; set; }
+        public List<Documento> Formatos { get; set; }
     }
 }

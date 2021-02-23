@@ -25,8 +25,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Id_SGA_Categoria_Tipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
             entidad.Doc_Codigo = documento.DocCodigo;
             entidad.Doc_Nombre = documento.DocNombre;
+            entidad.Principal = documento.Principal;
             entidad.Doc_Version = documento.DocVersion;
-            if (documento.DocPredecesor.IdSGADocumento != 0)
+            if (documento.DocPredecesor!=null && documento.DocPredecesor.IdSGADocumento != 0)
                 entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
 
             entidad.Fecha_Aprobacion = documento.FechaAprobacion;
@@ -37,11 +38,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Id_Usuario = documento.Usuario.IdUsuario;
             entidad.Fecha_Creacion = DateTime.Today;
             entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
-            entidad.Estado = documento.Estado;
-            if(documento.DocPrincipal != null)
-            {
-                entidad.Doc_Principal = documento.DocPrincipal.IdSGADocumento;
-            }
+            entidad.Estado = documento.Estado;           
 
             _context.SGA_Documentos.Add(entidad);
             await _context.SaveChangesAsync();
@@ -95,6 +92,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id_SGA_Revision_Documento;
+        }
+
+        public async Task RegistrarFormatos(List<int> idsFormato, int idDocumento)
+        {
+            var entidades = new List<Entities.SGA_Documentos.Documentos_Relacionados>();
+            foreach(var id in idsFormato)
+            {
+                entidades.Add(new Entities.SGA_Documentos.Documentos_Relacionados
+                {
+                    Id_Documento_Principal = idDocumento,
+                    Id_Documento_Secundario = id,
+                    Fecha_Relacion = DateTime.Now,
+                    Estado = "ACT"
+                });
+            }
+            await _context.SGA_Documentos_Relacionados.AddRangeAsync(entidades);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -32,6 +32,13 @@
             <input type="text" asp-for="Doc_Nombre" class="form-control">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha_Tentativa"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha_Tentativa"></span>
+            <input type="date" asp-for="Fecha_Tentativa" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
@@ -48,8 +55,11 @@
             <label class="btn btn-primary" for="Documento">Seleccione</label>
             <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
         </div>
-        <div class="col-sm-12 col-md-7 col-lg-2">
+        <div class="col-sm-12 col-md-5 col-lg-2">
             <label id="files_name">0 Archivos</label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-6 text-sm-center text-md-right text-lg-right text-xl-right mb-2">
+            <a class="btn btn-outline-primary" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
         </div>
     </div>
     @if (ViewBag.Error != null)
@@ -60,8 +70,42 @@
             </div>
         </div>
     }
-    <div class="row mb-2 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
+    <div class="row mb-2 d-flex justify-content-center">
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <h2>Formatos</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+            <span class="text-danger" id="danger_formatos"></span>
+        </div>
+    </div>
+    <div class="row mb-2 d-flex justify-content-center">
+        <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
+            <input type="hidden" asp-for="Secundarios" />
+            <table class="table" id="tabla_secundarios">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Tipo de Documento</th>
+                        <th>Nombre</th>
+                        <th>Versión / Revisión</th>
+                        <th>Condición</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
     <div class="row mb-2 d-flex justify-content-center">
         <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
@@ -194,20 +238,87 @@
         </div>
     </div>
 </div>
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="titulo_modal_preview_pdf">
+                    Previsualización
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <form>
+                <div class="modal-body">
+                    <div id="viewPDF">
 
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
-
         var listAprobadores = [];
         var listRevisores = [];
+        var listSecundarios = [];
+        var listSecundariosHtml = [];
         var IdPrimerUsuario;
-
+        var listTipoDocRuta = [];
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
+            listTipoDocRuta = @Html.Raw(ViewBag.TiposDocRuta);
+            listSecundariosHtml = @Html.Raw(ViewBag.PublicadosHtml);
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            $("#Fecha_Tentativa").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                console.log(ruta)
+                //ruta = ruta.replace('\\', '\\\\');
+
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            console.log("response", response);
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo: " + response.message);
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
         $("#Documento").change(function () {
             $("#danger_documento").html("");
             //Validacion del tamaño del archivo
@@ -267,30 +378,30 @@
             if (tipo != '0' && version != "" && nombre != "" && documento != "")
                 return true;
             else {
-                if (tipo == '0') 
-                    $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("Este campo es requerido");                
-                if (version == "") 
-                    $('span[data-valmsg-for="Doc_Version"]').text("Este campo es requerido");                
-                if (nombre == "") 
-                    $('span[data-valmsg-for="Doc_Nombre"]').text("Este campo es requerido");                
-                if (documento == "") 
+                if (tipo == '0')
+                    $('span[data-valmsg-for="Id_SGA_Tipo_Documento"]').text("Este campo es requerido");
+                if (version == "")
+                    $('span[data-valmsg-for="Doc_Version"]').text("Este campo es requerido");
+                if (nombre == "")
+                    $('span[data-valmsg-for="Doc_Nombre"]').text("Este campo es requerido");
+                if (documento == "")
                     $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
-                
+
                 return false;
             }
         }
         //Validacion adicional para registrar
-        function ValidarDatosRevisores() {           
+        function ValidarDatosRevisores() {
             $('#danger_revisores').text("");
             $('#danger_aprobadores').text("");
 
             if (listAprobadores.length != 0  && listRevisores.length != 0)
                 return true;
             else {
-                if (listAprobadores.length == 0) 
-                    $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");                
-                if (listRevisores.length == 0) 
-                    $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");                      
+                if (listAprobadores.length == 0)
+                    $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
+                if (listRevisores.length == 0)
+                    $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
                 return false;
             }
         }
@@ -321,6 +432,20 @@
             return false;
         }
 
+        $("#Id_SGA_Tipo_Documento").on("change", function () {
+            $("#btn_descargar_plantilla").hide();
+            var id = $("#Id_SGA_Tipo_Documento").val();
+            console.log("IdSelect", id);
+            console.log("---------------------------------");
+            for (var i = 0; i < listTipoDocRuta.length; i++) {
+                console.log("Id", listTipoDocRuta[i].Id);
+                if (id == listTipoDocRuta[i].Id && listTipoDocRuta[i].Ruta != 0) {
+                    $("#btn_descargar_plantilla").attr("href","@Url.Action("DescargarPlantilla", "SGAAdministracion")"+"?IdCategoriaTipo=" + id);
+                    $("#btn_descargar_plantilla").show();
+                    return;
+                }
+            }
+        });
         $("#btn_guardar_estado").on("click", function () {
             if (ValidarDatos()) {
                 $("#Opcion").val("GuardarEstado");
@@ -330,12 +455,6 @@
         $("#btn_registrar").on("click", function () {
             if (ValidarDatos() && ValidarDatosRevisores()) {
                 $("#Opcion").val("Registrar");
-                $("#form_registrar_documento").submit();
-            }
-        });
-        $("#btn_agregar_formato").on("click", function () {
-            if (ValidarDatos()) {
-                $("#Opcion").val("AgregarFormato");
                 $("#form_registrar_documento").submit();
             }
         });
@@ -486,6 +605,110 @@
             return html;
         }
 
+        //Scripts del Partial
+        $("#Documento_Formato").change(function () {
+            $("#danger_documento_formato").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento_Formato").data('max-size');
+            var archivos = $("#Documento_Formato").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento_formato").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name_formato").text(filesname);
+                            $("#danger_documento_formato").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name_formato").html(filesName) : null;
+            }
+        });
+        $("#btn_agregar_formato").on("click", function () {
+            $("#modal_agregar_formato").modal('show');
+        });
+        $("#btn_cargar_formato").on("click", function () {
+            $("#modal_formato").modal('show');
+        });
+        function AgregarFormato() {
+            var seleccionado = parseInt($("#Id_Formato_Publicado").val());
+            for (var i = 0; i < listSecundariosHtml.length; i++) {
+                if (seleccionado == listSecundariosHtml[i].Id) {
+                    $('#modal_agregar_formato').modal('toggle');
+                    listSecundarios.push(parseInt(seleccionado));
+                    $('#tabla_secundarios tbody').append(listSecundariosHtml[i].Html);
+                    $('#Id_Formato_Publicado option').each(function () {
+                        if ($(this).val() == seleccionado) {
+                            $(this).remove();
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+        function GuardarFormato() {
+            var formData = new FormData();
+            var files = document.getElementById("Documento_Formato").files;
+            for (var i = 0; i != files.length; i++) {
+                formData.append("Documento_Formato", files[i]);
+            }
+            formData.append("Id_Tipo_Documento_Formato", $("#Id_Tipo_Documento_Formato").val());
+            formData.append("Doc_Nombre_Formato", $("#Doc_Nombre_Formato").val());
+            formData.append("Doc_Version_Formato", $("#Doc_Version_Formato").val());
+            formData.append("Comentario_Formato", $("#Comentario_Formato").val());
+            $.ajax({
+                url: "@Url.Action("CargarFormato", "SGAAdministracion")",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        listSecundarios.push(response.idDoc);
+                        $('#tabla_formatos tbody').append(response.html);
+                        $('#modal_formato').modal('toggle');
+                        $('#Secundarios').val(JSON.stringify(listSecundarios));
+                        ReiniciarModalFormato();
+                    }
+                    else {
+                        alert("Ocurrió un error al cargar el formato")
+                    }
+                }
+            });
+        }
+        function ReiniciarModalFormato() {
+            $("#Id_Tipo_Documento_Formato").val('0');
+            $("#Doc_Nombre_Formato").val('');
+            $("#Doc_Version_Formato").val(parseFloat(1.0).toFixed(2));
+            $("#Comentario_Formato").val('');
+            $("#Documento_Formato").val('');
+        }
     </script>
 
 }

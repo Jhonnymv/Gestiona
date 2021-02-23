@@ -10,7 +10,6 @@
 </div>
 <form class="form-group" id="form_registrar_documento" asp-action="CargarDocumentoSRevision" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
-        <input asp-for="Doc_Principal"  type="hidden" value="@ViewBag.DocPrincipal" />
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Id_SGA_Tipo_Documento"></label>
         </div>
@@ -40,6 +39,13 @@
             <input type="text" asp-for="Doc_Codigo" class="form-control">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha_Tentativa"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha_Tentativa"></span>
+            <input type="date" asp-for="Fecha_Tentativa" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
@@ -49,15 +55,18 @@
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Documento"></label>
         </div>
-        <div class="col-sm-12 col-md-2 col-lg-1 mb-2">
+        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
             <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
                 <span id="danger_documento" class=""></span>
             </span>
             <label class="btn btn-primary" for="Documento">Seleccione</label>
             <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
         </div>
-        <div class="col-sm-12 col-md-7 col-lg-3">
+        <div class="col-sm-12 col-md-5 col-lg-2">
             <label id="files_name">0 Archivos</label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-6 text-sm-center text-md-right text-lg-right text-xl-right mb-2">
+            <a class="btn btn-outline-primary" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
         </div>
     </div>
     @if (ViewBag.Error != null)
@@ -85,13 +94,15 @@
         var listAprobadores = [];
         var listRevisores = [];
         var IdPrimerUsuario;
-
+        var listTipoDocRuta = [];
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
             $("#Revisores").val(JSON.stringify(listRevisores));
             $("#Aprobadores").val(JSON.stringify(listAprobadores));
+            listTipoDocRuta = @Html.Raw(ViewBag.TiposDocRuta);
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            $("#Fecha_Tentativa").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
         $("#Documento").change(function () {
             $("#danger_documento").html("");
@@ -147,7 +158,20 @@
                 return true;
             return false;
         }
-
+        $("#Id_SGA_Tipo_Documento").on("change", function () {
+            $("#btn_descargar_plantilla").hide();
+            var id = $("#Id_SGA_Tipo_Documento").val();
+            console.log("IdSelect", id);
+            console.log("---------------------------------");
+            for (var i = 0; i < listTipoDocRuta.length; i++) {
+                console.log("Id", listTipoDocRuta[i].Id);
+                if (id == listTipoDocRuta[i].Id && listTipoDocRuta[i].Ruta != 0) {
+                    $("#btn_descargar_plantilla").attr("href","@Url.Action("DescargarPlantilla", "SGAAdministracion")"+"?IdCategoriaTipo=" + id);
+                    $("#btn_descargar_plantilla").show();
+                    return;
+                }
+            }
+        });
         $("#btn_guardar_estado").on("click", function () {
             $("#Opcion").val("GuardarEstado");
             $("#form_registrar_documento").submit();

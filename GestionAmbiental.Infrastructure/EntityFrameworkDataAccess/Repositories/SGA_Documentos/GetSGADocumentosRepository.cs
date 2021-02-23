@@ -21,18 +21,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<Documento> GetDocumento(int Id)
         {
-            var data = await _context.SGA_Documentos.FindAsync(Id);
+            var data = await _context.SGA_Documentos.FindAsync(Id);         
 
             var revisiones = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(Id)).ToListAsync();
             var usuarios = await _context.Usuarios.Where(x => revisiones.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
 
             var categoriaTipoDoc = await _context.SGA_Categoria_Tipo.FindAsync(data.Id_SGA_Categoria_Tipo);
+            var tipoDoc = await _context.SGA_Tipos_Documento.FindAsync(categoriaTipoDoc.Id_SGA_Tipo_Documento);
 
             var docPredecesor = new Entities.SGA_Documentos.Documento();
             var predecesor = new Documento();
-
-            var docPrincipal = new Entities.SGA_Documentos.Documento();
-            var principal = new Documento();
 
             var condicionDoc = await _context.SGA_Condiciones.FindAsync(data.Condicion);
 
@@ -46,20 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     DocCodigo = docPredecesor.Doc_Codigo,
                     DocNombre = docPredecesor.Doc_Nombre,
                     DocVersion = docPredecesor.Doc_Version,
-                    DocRuta = docPredecesor.Doc_Ruta,
-                    FechaCreacion = docPredecesor.Fecha_Creacion,
-                    FechaActualizacion = docPredecesor.Fecha_Actualizacion,
-                    Estado = docPredecesor.Estado
-                };
-            }
-            if (data.Doc_Principal.HasValue) {
-                docPrincipal = await _context.SGA_Documentos.FindAsync(data.Doc_Principal.Value);
-                principal = new Documento
-                {
-                    IdSGADocumento = docPredecesor.Id_SGA_Documento,
-                    DocCodigo = docPredecesor.Doc_Codigo,
-                    DocNombre = docPredecesor.Doc_Nombre,
-                    DocVersion = docPredecesor.Doc_Version,
+                    Principal = docPredecesor.Principal,
                     DocRuta = docPredecesor.Doc_Ruta,
                     FechaCreacion = docPredecesor.Fecha_Creacion,
                     FechaActualizacion = docPredecesor.Fecha_Actualizacion,
@@ -124,7 +109,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     TipoDocumento = new TipoDocumento 
                     { 
-                        IdSGATipoDocumento = categoriaTipoDoc.Id_SGA_Tipo_Documento
+                        IdSGATipoDocumento = tipoDoc.Id_SGA_Tipo_Documento,
+                        Descripcion = tipoDoc.Descripcion,
+                        Estado = tipoDoc.Estado,
+                        Codigo = tipoDoc.Codigo,
+                        Formato = tipoDoc.Formato
                     },
                     Visible = categoriaTipoDoc.Visible,
                     Estado = categoriaTipoDoc.Estado
@@ -133,7 +122,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 DocNombre = data.Doc_Nombre,
                 DocVersion = data.Doc_Version,
                 DocPredecesor = predecesor,
-                DocPrincipal = principal,
+                Principal = data.Principal,
                 FechaAprobacion = data.Fecha_Aprobacion,
                 Condicion = new Condicion
                 {
@@ -209,6 +198,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
                             Codigo = tipoItem.Codigo,
+                            Formato = tipoItem.Formato,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -222,6 +212,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     DocCodigo = item.Doc_Codigo,
                     DocNombre = item.Doc_Nombre,
+                    Principal = item.Principal,
                     DocVersion = item.Doc_Version,                    
                     FechaAprobacion = item.Fecha_Aprobacion,
                     Condicion = new Condicion
@@ -251,13 +242,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     outputItem.DocPredecesor = new Documento
                     {
                         IdSGADocumento = item.Doc_Predecesor.Value
-                    };
-                }
-                if (item.Doc_Principal.HasValue)
-                {
-                    outputItem.DocPrincipal = new Documento
-                    {
-                        IdSGADocumento = item.Doc_Principal.Value
                     };
                 }
                 output.Add(outputItem);                    
@@ -312,6 +296,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
                             Codigo = tipoItem.Codigo,
+                            Formato = tipoItem.Formato,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -325,6 +310,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     DocCodigo = item.Doc_Codigo,
                     DocNombre = item.Doc_Nombre,
+                    Principal = item.Principal,
                     DocVersion = item.Doc_Version,
                     FechaAprobacion = item.Fecha_Aprobacion,
                     Condicion = new Condicion
@@ -354,13 +340,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     outputItem.DocPredecesor = new Documento
                     {
                         IdSGADocumento = item.Doc_Predecesor.Value
-                    };
-                }
-                if (item.Doc_Principal.HasValue)
-                {
-                    outputItem.DocPrincipal = new Documento
-                    {
-                        IdSGADocumento = item.Doc_Principal.Value
                     };
                 }
                 output.Add(outputItem);
@@ -400,6 +379,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                             Descripcion = tipoItem.Descripcion,
                             Codigo = tipoItem.Codigo,
+                            Formato = tipoItem.Formato,
                             Estado = tipoItem.Estado
                         },
                         CategoriaDocumento = new CategoriaDocumento
@@ -413,6 +393,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     DocCodigo = item.Doc_Codigo,
                     DocNombre = item.Doc_Nombre,
+                    Principal = item.Principal,
                     DocVersion = item.Doc_Version,
                     FechaAprobacion = item.Fecha_Aprobacion,
                     Condicion = new Condicion
@@ -444,13 +425,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         IdSGADocumento = item.Doc_Predecesor.Value
                     };
                 }
-                if (item.Doc_Principal.HasValue)
-                {
-                    outputItem.DocPrincipal = new Documento
-                    {
-                        IdSGADocumento = item.Doc_Principal.Value
-                    };
-                }
                 output.Add(outputItem);
             }
             return output;
@@ -461,7 +435,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var data = await _context.SGA_Documentos.ToListAsync();
             //Nueva lista con Ids y Ids de Predecesores
-            var dataIdPred = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString()) || x.Estado.Equals(EstadosDocumentosSGA.Obsoleto.ToString())).Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
+            var dataIdPred = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) || x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString())).Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
             //Definir el documento de Origen
             var origen = data.First(x => x.Id_SGA_Documento.Equals(Id));
             
@@ -512,6 +486,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                                 IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
                                 Descripcion = tipoItem.Descripcion,
                                 Codigo = tipoItem.Codigo,
+                                Formato = tipoItem.Formato,
                                 Estado = tipoItem.Estado
                             },
                             CategoriaDocumento = new CategoriaDocumento
@@ -525,6 +500,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         },
                         DocCodigo = item.Doc_Codigo,
                         DocNombre = item.Doc_Nombre,
+                        Principal = item.Principal,
                         DocVersion = item.Doc_Version,
                         FechaAprobacion = item.Fecha_Aprobacion,
                         Condicion = new Condicion
@@ -552,6 +528,83 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                     output.Add(outputItem);
                 }
+            }
+            return output;
+        }
+        public async Task<List<Documento>> GetSecundarios(int Id)
+        {
+            var output = new List<Documento>();
+
+            var relacionSecundarios = await _context.SGA_Documentos_Relacionados.Where(x => x.Id_Documento_Principal.Equals(Id) && x.Estado.Equals("ACT")).Select(x=>x.Id_Documento_Secundario).ToListAsync();
+
+            var data = await _context.SGA_Documentos.Where(x=> relacionSecundarios.Contains(x.Id_SGA_Documento)).ToListAsync();
+            
+            var tiposCategoria = await _context.SGA_Categoria_Tipo.ToListAsync();
+            var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();
+            var tiposData = await _context.SGA_Tipos_Documento.ToListAsync();
+            var condiciones = await _context.SGA_Condiciones.ToListAsync();
+            var usuarios = await _context.Usuarios.Where(x => data.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
+
+            foreach (var item in data)
+            {
+                var tipoCategoria = tiposCategoria.First(x => x.Id_SGA_Categoria_Tipo.Equals(item.Id_SGA_Categoria_Tipo));
+                var tipoItem = tiposData.First(x => x.Id_SGA_Tipo_Documento.Equals(tipoCategoria.Id_SGA_Tipo_Documento));
+                var categoriaItem = categoriasData.First(x => x.Id_SGA_Categoria_Documento.Equals(tipoCategoria.Id_SGA_Categoria_Documento));
+                var condicionModel = condiciones.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
+                var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+
+                var outputItem = new Documento
+                {
+                    IdSGADocumento = item.Id_SGA_Documento,
+                    SGACategoriaTipo = new CategoriaTipo
+                    {
+                        IdSGACategoriaTipo = tipoCategoria.Id_SGA_Categoria_Tipo,
+                        TipoDocumento = new TipoDocumento
+                        {
+                            IdSGATipoDocumento = tipoItem.Id_SGA_Tipo_Documento,
+                            Descripcion = tipoItem.Descripcion,
+                            Codigo = tipoItem.Codigo,
+                            Formato = tipoItem.Formato,
+                            Estado = tipoItem.Estado
+                        },
+                        CategoriaDocumento = new CategoriaDocumento
+                        {
+                            Id_SGA_Categoria_Documento = categoriaItem.Id_SGA_Categoria_Documento,
+                            Descripcion = categoriaItem.Descripcion,
+                            Estado = categoriaItem.Estado
+                        },
+                        Visible = tipoCategoria.Visible,
+                        Estado = tipoCategoria.Estado
+                    },
+                    DocCodigo = item.Doc_Codigo,
+                    DocNombre = item.Doc_Nombre,
+                    Principal = item.Principal,
+                    DocVersion = item.Doc_Version,
+                    FechaAprobacion = item.Fecha_Aprobacion,
+                    Condicion = new Condicion
+                    {
+                        IdSGACondicion = condicionModel.Id_SGA_Condicion,
+                        Descripcion = condicionModel.Descripcion,
+                        Estado = condicionModel.Estado
+                    },
+                    Comentario = item.Comentario,
+                    FechaTentativa = item.Fecha_Tentativa,
+                    DocRuta = item.Doc_Ruta,
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = usuario.Id_Usuario,
+                        Nombres = usuario.Nombres,
+                        Apellidos = usuario.Apellidos,
+                        IdRol = usuario.Id_Rol,
+                        Email = usuario.Email,
+                        Estado = usuario.Estado
+                    },
+                    FechaCreacion = item.Fecha_Creacion,
+                    FechaActualizacion = item.Fecha_Actualizacion,
+                    Estado = item.Estado
+                };
+
+                output.Add(outputItem);
             }
             return output;
         }

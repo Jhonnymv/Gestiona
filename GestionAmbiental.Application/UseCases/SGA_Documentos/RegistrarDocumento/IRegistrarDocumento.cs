@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
 {
     public interface IRegistrarDocumento
     {
-        Task<int> Execute(int IdTipoDoc,string codigo, int IdDocPrincipal, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput>revisores, List<RevisionAprobacionInputOutput> aprobadores);
+        Task<int> Execute(int IdTipoDoc,string codigo, int IdDocPrincipal, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc, string fechaTentativa, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput>revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios);
     }
 }

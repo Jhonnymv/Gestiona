@@ -29,11 +29,11 @@
     <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sgi" style="display:none">
         <div class="card-deck text-center justify-content-center">
             <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+            <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13,21])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
             <div><p>Reglamentos y Estándar de Gestión</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
             <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
             <div><p>Programas e Instructivos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
-            <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
+            <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14,22])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
         </div>
     </div>
     <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
@@ -78,7 +78,8 @@
     </div>
     <div class="row mb-2 justify-content-end">
         <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
-            <button type="button" class="btn btn-warning" onclick="">Certificaciones Ambientales</button>
+            <button id="btn_permisos" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([19])">Permisos</button>
+            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])" style="display:none">Certificaciones Ambientales</button>
         </div>
     </div>
 </form>
@@ -209,6 +210,10 @@
             $("#opciones_sga").show();
             $("#opciones_sgi").hide();
             $("#opciones_externo").hide();
+            //Botones adicionales
+            $("#btn_permisos").show();
+            $("#btn_certificaciones").hide();
+            
             $("#titulo_pagina").text("Documentos SGA");
             categoria = 1;
             filtrar(1);
@@ -217,6 +222,11 @@
             $("#opciones_sgi").show();
             $("#opciones_sga").hide();
             $("#opciones_externo").hide();
+
+            //Botones adicionales
+            $("#btn_permisos").hide();
+            $("#btn_certificaciones").hide();
+
             $("#titulo_pagina").text("Documentos SGI");
             categoria = 2;
             filtrar(1);
@@ -225,6 +235,10 @@
             $("#opciones_externo").show();
             $("#opciones_sga").hide();
             $("#opciones_sgi").hide();
+            //Botones adicionales
+            $("#btn_permisos").hide();
+            $("#btn_certificaciones").show();
+
             $("#titulo_pagina").text("Documentos Externos");
             categoria = 3;
             filtrar(1);

@@ -35,6 +35,13 @@
             <input type="text" asp-for="Doc_Nombre" class="form-control">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha_Tentativa"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha_Tentativa"></span>
+            <input type="date" asp-for="Fecha_Tentativa" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Doc_Codigo"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
@@ -84,19 +91,25 @@
             </div>
         </div>
     }
+
+    <div class="row mb-2 d-flex justify-content-center">
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
+        </div>
+        <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
+            <button type="button" class="btn btn-primary mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
+        </div>
+    </div>
     @if (Model.Secundarios.Length > 2 || Model.Id_Categoria.Equals(1))
     {
-        <div class="row mb-2 mr-2 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato (Opcional)</button>
-        </div>
-
         <div class="row mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Documentos Relacionados</h2>
+                <h2>Formatos</h2>
             </div>
         </div>
         <div class="row mb-2 align-items-center">
             <div class="col-sm-12 col-md-12 col-lg-12">
+                <input type="hidden" asp-for="Secundarios" />
                 <table class="table" id="tabla_secundarios">
                     <thead class="thead-mcolor">
                         <tr>
@@ -302,12 +315,16 @@
     </div>
 </div>
 
+<partial name="_CrearFormato.cshtml" />
+
 @section Scripts{
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
 
         var listAprobadores = [];
         var listRevisores = [];
+        var listSecundarios = [];
+        var listSecundariosHtml = [];
         var IdPrimerUsuario;
 
         $(document).ready(function () {
@@ -316,8 +333,10 @@
             CargarRevisores();
             CargarAprobadores();
 
+            listSecundariosHtml = @Html.Raw(ViewBag.PublicadosHtml);
             IdPrimerUsuario = $("#select_usuario").val();
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
+            $("#Fecha_Tentativa").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
 
         function PreviewPDF(ruta) {
@@ -399,23 +418,23 @@
             }
         });
         function CargarSecundarios() {
-            var listSecundarios = @Html.Raw(Model.Secundarios);
+            var htmlData = @Html.Raw(ViewBag.SecundariosData);
             var html = "";
-            for(var i = 0; i < listSecundarios.length; i++) {
+            for (var i = 0; i < htmlData.length; i++) {
+                listSecundarios.push(htmlData[i].Id);
                 html += "<tr>";
-                if (listSecundarios[i].Condicion == "Pendiente") {
-                    html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                if (htmlData[i].Condicion == "Pendiente") {
+                    html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + htmlData[i].IdEncriptado + "&IdCategoria=" + "@Model.Id_Categoria"+ "\">" + htmlData[i].Codigo + "</a></td>";
                 } else {
-                    html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
+                    html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + htmlData[i].IdEncriptado + "\">" + htmlData[i].Codigo + "</a></td>";
                 }
-                html +="<td>" + listSecundarios[i].TipoDocumento +"</td>" +
-                    "<td>" + listSecundarios[i].Nombre +"</td>" +
-                    "<td>" + listSecundarios[i].Version +"</td >" +
-                    "<td>" + listSecundarios[i].Condicion +"</td >" +
-                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + listSecundarios[i].Ruta.replace('\\', '\\\\')+"\')\">Visualizar</button></td >" +
+                html += "<td>" + htmlData[i].TipoDocumento +"</td>" +
+                    "<td>" + htmlData[i].Nombre +"</td>" +
+                    "<td>" + htmlData[i].Version +"</td >" +
+                    "<td>" + htmlData[i].Condicion +"</td >" +
+                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + htmlData[i].Ruta.replace('\\', '\\\\')+"\')\">Visualizar</button></td >" +
                     "</tr>";
             }
-            console.log(html)
             $("#tabla_secundarios tbody").html(html);
         }
         function ObtenerPredecesores() {
@@ -441,12 +460,6 @@
         $("#btn_registrar").on("click", function () {
             if (ValidarDatos() && ValidarDatosRevisores()) {
                 $("#Opcion").val("Registrar");
-                $("#form_editar_documento").submit();
-            }
-        });
-        $("#btn_agregar_formato").on("click", function () {
-            if (ValidarDatos()) {
-                $("#Opcion").val("AgregarFormato");
                 $("#form_editar_documento").submit();
             }
         });
@@ -689,5 +702,110 @@
             return html;
         }
 
+        //Modal CargarFormato
+        $("#btn_cargar_formato").on("click", function () {
+            $("#modal_formato").modal('show');
+        });
+        $("#btn_agregar_formato").on("click", function () {
+            $("#modal_agregar_formato").modal('show');
+        });
+        $("#Documento_Formato").change(function () {
+            $("#danger_documento_formato").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Documento_Formato").data('max-size');
+            var archivos = $("#Documento_Formato").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento_formato").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name_formato").text(filesname);
+                            $("#danger_documento_formato").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name_formato").html(filesName) : null;
+            }
+        });
+        function AgregarFormato() {
+            var seleccionado = $("#Id_Formato_Publicado").val();
+            for (var i = 0; i < listSecundariosHtml.length; i++) {
+                if (seleccionado == listSecundariosHtml[i].Id) {
+                    $('#modal_agregar_formato').modal('toggle');
+                    listSecundarios.push(parseInt(seleccionado));
+                    $('#Secundarios').val(JSON.stringify(listSecundarios));
+                    $('#tabla_secundarios tbody').append(listSecundariosHtml[i].Html);
+                    $('#Id_Formato_Publicado option').each(function () {
+                        if ($(this).val() == seleccionado) {
+                            $(this).remove();
+                        }
+                    });
+                    return;
+                }
+            }
+        }
+        function GuardarFormato() {
+            var formData = new FormData();
+            var files = document.getElementById("Documento_Formato").files;
+            for (var i = 0; i != files.length; i++) {
+                formData.append("Documento_Formato", files[i]);
+            }
+            formData.append("Id_Tipo_Documento_Formato", $("#Id_Tipo_Documento_Formato").val());
+            formData.append("Doc_Nombre_Formato", $("#Doc_Nombre_Formato").val());
+            formData.append("Doc_Version_Formato", $("#Doc_Version_Formato").val());
+            formData.append("Comentario_Formato", $("#Comentario_Formato").val());
+            $.ajax({
+                url: "@Url.Action("CargarFormato", "SGAAdministracion")",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        listSecundarios.push(response.idDoc);
+                        $('#tabla_secundarios tbody').append(response.html);
+                        $('#modal_formato').modal('toggle');
+                        $('#Secundarios').val(JSON.stringify(listSecundarios));
+                        ReiniciarModalFormato();
+                    }
+                    else {
+                        alert("Ocurrió un error al cargar el formato")
+                    }
+                }
+            });
+        }
+        function ReiniciarModalFormato() {
+            $("#Id_Tipo_Documento_Formato").val('0');
+            $("#Doc_Nombre_Formato").val('');
+            $("#Doc_Version_Formato").val(parseFloat(1.0).toFixed(2));
+            $("#Comentario_Formato").val('');
+            $("#Documento_Formato").val('');
+        }
     </script>
 }

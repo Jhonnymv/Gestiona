@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
-using GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDocumento;
 
 namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento
 {
@@ -23,31 +22,36 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int IdCategoriaTipo,string codigo, int IdDocPrincipal, string nombreDoc, double versionDoc, int? idPredecesor, string comentario,  string rutaDoc, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores)
+        public async Task<int> Execute(int IdCategoriaTipo, string codigo, int IdDocPrincipal, string nombreDoc, double versionDoc, int? idPredecesor, string comentario, string rutaDoc,string fechaTentativa, string usuarioRed, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int>secundarios)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value!=0)
                 predecesor.IdSGADocumento = idPredecesor.Value;
 
             var usuario = await _getUsuario.Execute(usuarioRed);
-
+                        
             var model = new Documento
             {
                 SGACategoriaTipo = new CategoriaTipo
                 {
                     IdSGACategoriaTipo = IdCategoriaTipo
-                },               
+                },
                 DocNombre = nombreDoc,
                 DocVersion = versionDoc,
                 DocPredecesor = predecesor,
                 Comentario = comentario,
                 DocRuta = rutaDoc,
+                Principal = false,
                 Usuario = new Domain.ValueObjects.Usuario
                 {
                     IdUsuario = usuario.IdUsuario
                 },
                 DocCodigo = "TBD"
             };
+            if (fechaTentativa != null)
+            {
+                model.FechaTentativa = Convert.ToDateTime(fechaTentativa);
+            }
             if (opcion.Equals("GuardarEstado") || opcion.Equals("AgregarFormato"))
             {        
                 //Pendiente
@@ -76,10 +80,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 {
                     IdSGACondicion = 1
                 };
-                model.DocPrincipal = new Documento
-                {
-                    IdSGADocumento = IdDocPrincipal
-                };
+                model.Principal = false;
                 model.Estado = EstadosDocumentosSGA.Pendiente.ToString();
             }
             //Si es un documento sin revision directamente se registra como publicado
@@ -89,7 +90,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 {
                     IdSGACondicion = 6
                 };
-                model.Estado = EstadosDocumentosSGA.Publicado.ToString();
+                model.Estado = EstadosDocumentosSGA.Aprobado.ToString();
                 //Hacer obsoleto el predecesor si existe
                 if (idPredecesor.HasValue && idPredecesor.Value != 0)
                 {
@@ -100,14 +101,18 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                         {
                             IdSGACondicion = 7
                         },
-                        Estado = EstadosDocumentosSGA.Obsoleto.ToString()
+                        Estado = EstadosDocumentosSGA.Superado.ToString()
                     };
                     await _editarDocumentosReadOnlyRepository.EditarEstadoDocumento(predecesorDoc);
                 }
             }
+            if (secundarios.Count > 0)
+                model.Principal = true;
 
             var IdDoc =  await _registrarDocumentosReadOnlyRepository.RegistrarDocumento(model);
             
+            await _registrarDocumentosReadOnlyRepository.RegistrarFormatos(secundarios,IdDoc);
+
             //Cargar revisiones
             var listRevisiones = new List<RevisionDocumento>();
             foreach(var item in revisores)

@@ -320,6 +320,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.0}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
                 var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
                 var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
+                var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
                 var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
 
                 if (!cargaDocumento.Equals("Error"))
@@ -333,10 +334,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                         model.Doc_Predecesor,
                         model.Comentario,
                         cargaDocumento,
+                        model.Fecha_Tentativa,
                         userInfo.NombreUsuario,
                         model.Opcion,
                         revisores,
-                        aprobadores);
+                        aprobadores,
+                        secundarios);
                     return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
                 }
                 else
@@ -509,7 +512,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             }
             else
                 return "Error";
-        }
+        }       
         public async Task<IActionResult> Download(string fileName)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

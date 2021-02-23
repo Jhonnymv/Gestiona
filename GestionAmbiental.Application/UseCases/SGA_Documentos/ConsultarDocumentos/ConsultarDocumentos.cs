@@ -20,28 +20,25 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         public async Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion,int pagina, int rpp)
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, categoria, tipos, codigo, condicion);
-            /*
-            var dataNoTBD = data.Where(x=>!x.DocCodigo.Equals("TBD")).OrderByDescending(x => Int32.Parse(x.DocCodigo.Remove(0, 2))).ToList();
-            //Buscar los Ids de documentos predecesores
-            var predecesores = dataNoTBD.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
-            //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
-            var ultimasVersiones = dataNoTBD.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).ToList();
+            
+            data = data
+                .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
+                !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))
+                .OrderByDescending(x => x.FechaCreacion)
+                .ToList();
 
-            var dataTBD = data.Where(x=>x.DocCodigo.Equals("TBD")).OrderByDescending(x => x.FechaCreacion).ToList();
-            data = dataTBD;
-            data.AddRange(ultimasVersiones);
-            */
             var output = new DocumentosOutput
             {
                 Documentos = new List<DocumentoOutput>(),
                 NRegistros = data.Count
             };
-
+            
             data = data.Skip((pagina - 1) * rpp).Take(rpp).ToList();
             foreach (var item in data)
             {
                 output.Documentos.Add(new DocumentoOutput(item));
             }
+            
             return output;
         }
 
@@ -54,7 +51,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             //Buscar los Ids de documentos predecesores
             var predecesores = data.Where(x=>x.DocPredecesor != null).Select(x=>x.DocPredecesor.IdSGADocumento).ToList();
             //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
-            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && (x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())|| x.Estado.Equals(EstadosDocumentosSGA.Obsoleto.ToString()))).ToList();
+            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && (x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())|| x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))).ToList();
 
             foreach (var item in ultimasVersiones)
             {
@@ -72,7 +69,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             //Buscar los Ids de documentos predecesores
             var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
             //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
-            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).ToList();
+            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())).ToList();
             if (actual.DocPredecesor != null)
             {
                 var predecesor = data.First(x => x.IdSGADocumento.Equals(actual.DocPredecesor.IdSGADocumento));
@@ -86,15 +83,11 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         }
         public async Task<List<DocumentoOutput>> ExecuteSecundarios(int Id)
         {
-            var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos();
-            var actual = data.First(x => x.IdSGADocumento.Equals(Id));
+            var data = await _getSGADocumentosReadOnlyRepository.GetSecundarios(Id);
 
             var output = new List<DocumentoOutput>();
 
-            //Buscar los documentos secundarios (formatos)
-            var secundarios = data.Where(x => x.DocPrincipal != null && x.DocPrincipal.IdSGADocumento.Equals(actual.IdSGADocumento)).ToList();
-           
-            foreach (var item in secundarios)
+            foreach (var item in data)
             {
                 output.Add(new DocumentoOutput(item));
             }

@@ -44,6 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     IdSGATipoDocumento = item.Id_SGA_Tipo_Documento,
                     Descripcion = item.Descripcion,
                     Codigo = item.Codigo,
+                    Formato = item.Formato,
                     Estado = item.Estado
                 };
                 output.Add(outputItem);
@@ -126,6 +127,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         IdSGATipoDocumento  = tipo.Id_SGA_Tipo_Documento,
                         Descripcion = tipo.Descripcion,
                         Codigo = tipo.Codigo,
+                        Formato = tipo.Formato,
                         Estado = tipo.Estado
                     },
                     Visible = item.Visible,

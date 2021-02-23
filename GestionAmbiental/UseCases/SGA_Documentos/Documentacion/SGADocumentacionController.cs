@@ -97,7 +97,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         public async Task<IActionResult> GetTablaResumenFiltrada(string nombre,int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp)
         {
             var datosTabla = await _consultarDocumentos.Execute(nombre,categoria, tipos, codigo, condicion, pagina, rpp);
-            datosTabla.Documentos = datosTabla.Documentos.Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString())).ToList();
+            
             datosTabla.NRegistros = datosTabla.Documentos.Count();
             var filasTabla = "";
             var paginador = "";
@@ -111,11 +111,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     filasTabla += "<td><a href=\"/SGADocumentacion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
-                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
                     filasTabla += "<td>" + fila.Condicion + "</td>";
                     filasTabla += "<td>" + fila.Comentario + "</td>";
-                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
-                    filasTabla += "</tr>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
                 }
 
                 paginador += "<ul class=\"pagination\">";
@@ -151,7 +154,11 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int pagina, int rpp)
         {
             var datosTabla = await _consultarDocumentos.Execute("",categoria, tipos, "", 0, pagina, rpp);
-            datosTabla.Documentos = datosTabla.Documentos.Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString())).ToList();
+            datosTabla.Documentos = datosTabla.Documentos
+                .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
+                !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))
+                .OrderByDescending(x => x.FechaCreacion)
+                .ToList();
             datosTabla.NRegistros = datosTabla.Documentos.Count();
             var filasTabla = "";
             var paginador = "";
@@ -165,11 +172,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     filasTabla += "<td><a href=\"/SGADocumentacion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
-                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
                     filasTabla += "<td>" + fila.Condicion + "</td>";
                     filasTabla += "<td>" + fila.Comentario + "</td>";
-                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
-                    filasTabla += "</tr>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
                 }
 
                 paginador += "<ul class=\"pagination\">";
@@ -276,6 +286,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
                     DocumentoRuta = documento.DocRuta,
+                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("dd/MM/yyyy") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
                     Secundarios = JsonConvert.SerializeObject(secundarios)

@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.FirmarDocumento
 {
     public interface IFirmarDocumento
     {
-        Task Execute(int IdDocumento, string DocFirmado,string Codigo, int IdCategoriaTipo);
+        Task Execute(int IdDocumento, string DocFirmado,string CodigoTipo,string CodigoDoc, int IdCategoriaTipo);
     }
 }

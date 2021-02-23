@@ -18,10 +18,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public string Doc_Nombre { get; set; }
         [Column(TypeName = "decimal(5,2)")]
         public double Doc_Version { get; set; }
+        [Column(TypeName = "bit")]
+        public bool Principal { get; set; }
         [Column(TypeName = "int")]
         public int? Doc_Predecesor { get; set; }
-        [Column(TypeName = "int")]
-        public int? Doc_Principal { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Aprobacion { get; set; }
         [Column(TypeName = "int")]

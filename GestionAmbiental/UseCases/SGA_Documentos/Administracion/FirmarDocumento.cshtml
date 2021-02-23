@@ -42,6 +42,13 @@
             <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="Fecha_Tentativa"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="Fecha_Tentativa"></span>
+            <input type="date" asp-for="Fecha_Tentativa" class="form-control" readonly>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Condicion"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">

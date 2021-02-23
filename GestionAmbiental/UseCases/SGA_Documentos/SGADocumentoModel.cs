@@ -27,6 +27,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public int? Doc_Predecesor { get; set; }
         [DisplayName("Estado:")]
         public int Condicion { get; set; }
+        [DisplayName("Fecha Tentaiva de la Nueva Versión:")]
+        public string Fecha_Tentativa { get; set; }
         [DisplayName("Comentario:")]
         public string Comentario { get; set; }
         [DisplayName("Documento:")]

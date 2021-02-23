@@ -19,9 +19,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public int? IdDocPredecesor { get; set; }
         public string DocPredecesorNombre { get; set; }
         public string DocPredecesorCodigo { get; set; }
-        public int? IdDocPrincipal { get; set; }
-        public string DocPrincipalNombre { get; set; }
-        public string DocPrincipalCodigo { get; set; }
+        public bool Principal { get; set; }
         public DateTime? FechaAprobacion { get; set; }
         public int IdCondicion { get; set; }
         public string Condicion { get; set; }
@@ -53,12 +51,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
                 DocPredecesorNombre = documento.DocPredecesor.DocNombre;
                 DocPredecesorCodigo = documento.DocPredecesor.DocCodigo;
             }
-            if (documento.DocPrincipal != null)
-            {
-                IdDocPrincipal = documento.DocPrincipal.IdSGADocumento;
-                DocPrincipalNombre = documento.DocPrincipal.DocNombre;
-                DocPrincipalCodigo = documento.DocPrincipal.DocCodigo;
-            }
+            Principal = documento.Principal;
             FechaAprobacion = documento.FechaAprobacion;
             IdCondicion = documento.Condicion.IdSGACondicion;
             Condicion = documento.Condicion.Descripcion;
