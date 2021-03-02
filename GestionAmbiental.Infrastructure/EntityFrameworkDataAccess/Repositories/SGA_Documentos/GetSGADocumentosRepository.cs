@@ -250,7 +250,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int[] condiciones)
         {
-
             var output = new List<Documento>();
 
             var data = await _context.SGA_Documentos.ToListAsync();
@@ -611,6 +610,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<RevisionDocumento> GetRevisionDocumento(int Id)
         {            
             var data = await _context.SGA_Revisiones_Documento.FirstAsync(x=>x.Id_SGA_Revision_Documento.Equals(Id));
+            var usuario = await _context.Usuarios.FindAsync(data.Id_Usuario);
             var output = new RevisionDocumento { 
                 IdSGARevisionDocumento = data.Id_SGA_Revision_Documento,
                 IdSGADocumento = data.Id_SGA_Documento,
@@ -620,7 +620,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Estado = data.Estado,
                 FechaRevision = data.Fecha_Revision,
                 SGATipoRevision = new TipoRevision { IdTipoRevision = data.Id_SGA_Tipo_Revision},
-                Usuario = new Domain.ValueObjects.Usuario { IdUsuario = data.Id_Usuario}
+                Usuario = new Domain.ValueObjects.Usuario {
+                    IdUsuario = usuario.Id_Usuario,
+                    Nombres = usuario.Nombres,
+                    Apellidos = usuario.Apellidos,
+                    Email = usuario.Email,
+                    IdRol = usuario.Id_Rol,
+                    UsuarioRed = usuario.usuario_red,
+                    Estado = usuario.Estado                    
+                }
             };
             return output;
         }

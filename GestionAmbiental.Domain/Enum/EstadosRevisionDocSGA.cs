@@ -9,6 +9,7 @@ namespace GestionAmbiental.Domain.Enum
         Inactivo = 1,
         Activo = 2,
         Aprobado = 3,
-        Rechazado = 4
+        Rechazado = 4,
+        Vencido = 5
     }
 }

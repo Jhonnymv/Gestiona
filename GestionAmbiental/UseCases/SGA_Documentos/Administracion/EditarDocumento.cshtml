@@ -119,6 +119,7 @@
                             <th>Versión / Revisión</th>
                             <th>Condición</th>
                             <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -422,7 +423,7 @@
             var html = "";
             for (var i = 0; i < htmlData.length; i++) {
                 listSecundarios.push(htmlData[i].Id);
-                html += "<tr>";
+                html += "<tr iddoc=\"" + htmlData[i].Id + "\">";
                 if (htmlData[i].Condicion == "Pendiente") {
                     html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + htmlData[i].IdEncriptado + "&IdCategoria=" + "@Model.Id_Categoria"+ "\">" + htmlData[i].Codigo + "</a></td>";
                 } else {
@@ -432,7 +433,8 @@
                     "<td>" + htmlData[i].Nombre +"</td>" +
                     "<td>" + htmlData[i].Version +"</td >" +
                     "<td>" + htmlData[i].Condicion +"</td >" +
-                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + htmlData[i].Ruta.replace('\\', '\\\\')+"\')\">Visualizar</button></td >" +
+                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + htmlData[i].Ruta.replace('\\', '\\\\') + "\')\">Visualizar</button></td >" +
+                    "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + htmlData[i].Id + ")\">Eliminar</button></td>" +
                     "</tr>";
             }
             $("#tabla_secundarios tbody").html(html);
@@ -702,6 +704,19 @@
             return html;
         }
 
+        function EliminarSecundario(id) {
+            var trToFind = "#tabla_secundarios tbody tr[iddoc=" + id + "]";
+            $(trToFind).remove();
+            quitarItemArray(listSecundarios, id);
+            $('#Secundarios').val(JSON.stringify(listSecundarios));
+        }
+        function quitarItemArray(arr, value) {
+            var index = arr.indexOf(value);
+            if (index > -1) {
+                arr.splice(index, 1);
+            }
+            return arr;
+        }
         //Modal CargarFormato
         $("#btn_cargar_formato").on("click", function () {
             $("#modal_formato").modal('show');

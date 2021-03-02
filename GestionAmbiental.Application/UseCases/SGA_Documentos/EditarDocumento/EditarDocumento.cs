@@ -26,9 +26,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value != 0)
                 predecesor.IdSGADocumento = idPredecesor.Value;
-
-            var usuario = await _getUsuario.Execute(usuarioRed);
-            
+                        
             var model = new Documento
             {
                 IdSGADocumento = IdDoc,
@@ -41,10 +39,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 DocPredecesor = predecesor,
                 Comentario = comentario,
                 DocRuta = rutaDoc,
-                Usuario = new Domain.ValueObjects.Usuario
-                {
-                    IdUsuario = usuario.IdUsuario
-                },
                 DocCodigo = "TBD"
             };
 

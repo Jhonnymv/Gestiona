@@ -605,6 +605,19 @@
             return html;
         }
 
+        function EliminarSecundario(id) {
+            var trToFind = "#tabla_secundarios tbody tr[iddoc=" + id + "]";
+            $(trToFind).remove();
+            quitarItemArray(listSecundarios, id);
+            $('#Secundarios').val(JSON.stringify(listSecundarios));
+        }
+        function quitarItemArray(arr, value) {
+            var index = arr.indexOf(value);
+            if (index > -1) {
+                arr.splice(index, 1);
+            }
+            return arr;
+        }
         //Scripts del Partial
         $("#Documento_Formato").change(function () {
             $("#danger_documento_formato").html("");

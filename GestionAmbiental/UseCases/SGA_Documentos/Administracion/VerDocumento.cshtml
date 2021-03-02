@@ -109,6 +109,7 @@
                             <th>Orden</th>
                             <th>Usuario</th>
                             <th>Fecha Limite</th>
+                            <th></th>
                             @*if(permiso)
                                 <th></th>
                                 <th></th>
@@ -137,6 +138,7 @@
                             <th>Orden</th>
                             <th>Usuario</th>
                             <th>Fecha Limite</th>
+                            <th></th>
                             @*if(permiso)
                                 <th></th>
                                 <th></th>
@@ -177,43 +179,35 @@
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
     </div>
 </form>
-<!--Modal Revisión-->
-<div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
+<!-- Modal Ampliar Fecha-->
+<div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
      aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_revision">
-                    Revisión de Documento
+                <h5 class="modal-title" id="titulo_modal_ampliacion">
+                    Ampliar Fecha Límite
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
             </div>
-            <form>
-                <div class="modal-body">
-                    <input type="hidden" id="IdSGADocRevision" />
-                    <div class="row mb-2">
-                        <input type="hidden" id="Id_Revision" />
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <span class="text-danger" id="danger_revision"></span>
-                        </div>
+            <div class="modal-body">
+                <div class="row mb-2">
+
+                    <div class="col-lg-4">
+                        <label>Nueva Fecha:</label>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Comentario:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <textarea class="form-control" id="ComentarioRevision" rows="3"></textarea>
-                        </div>
+                    <div class="col-8">
+                        <input type="hidden" class="form-control" id="idRevisionAmpliar" />
+                        <input type="date" class="form-control" id="nuevaFecha" />
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn_aceptar">Aceptar</button>
-                    <button type="button" class="btn btn-danger" id="btn_rechazar">Rechazar</button>
-                </div>
-            </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
+            </div>
         </div>
     </div>
 </div>
@@ -247,18 +241,17 @@
 @section Scripts{
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
-        var xd = [];
+
         $(document).ready(function () {
             CargarSecundarios();
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
+            $("#nuevaFecha").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
 
         function PreviewPDF(ruta) {
             if (PDFObject.supportsPDFs) {
-                console.log(ruta)
-                //ruta = ruta.replace('\\', '\\\\');
 
                 $.ajax({
                     type: "POST",
@@ -338,9 +331,14 @@
             var html = "";
             for (var i = 0; i < lista.length; i++) {
                 html += "<tr>" +
-                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +
-                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
+                    "<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +
+                    "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                     "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
+                if (lista[i].Estado == "Vencido" && lista[i].Permiso)
+                    html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(\'" + lista[i].Id + "\')\">Ampliar</button></td>";
+                else
+                    html += "<td style=\"width: 10%\"></td>";
+
                 html +=   "</tr>";
             }
             return html;
@@ -354,9 +352,30 @@
                 window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
             } else {
                 //descargar del ROOT
-
                 window.location.replace("/SGADocumentacion/DownloadPreviewFile?path=" + rutaArchivo);
             }
         });
+        function AmpliarFecha(Id) {
+            $("#modal_ampliacion").modal("show");
+            $("#idRevisionAmpliar").val(Id);
+        }
+        function EnviarNuevaFecha() {
+            $.ajax({
+                type: "POST",
+                url: "/SGAAdministracion/AmpliarFecha",
+                data: {
+                    "IdRevision": $("#idRevisionAmpliar").val(),
+                    "NuevaFecha": $("#nuevaFecha").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        console.log(response.error);
+                    }
+                }
+            });
+        }
     </script>
 }

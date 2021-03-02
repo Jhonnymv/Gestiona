@@ -38,7 +38,10 @@
     </div>
     <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
         <div class="card-deck text-center justify-content-center">
-            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+            <div><p>Legislación Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([23])"><p class="texto-tipoDoc">LP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+            <div><p>Norma Técnica Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([24])"><p class="texto-tipoDoc">NTP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+            <div><p>Estándares Corporativos</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([25])"><p class="texto-tipoDoc">EC</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+            <div><p>Estándares Internacionales</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([26])"><p class="texto-tipoDoc">EI</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
         </div>
     </div>
 </div>
@@ -78,8 +81,7 @@
     </div>
     <div class="row mb-2 justify-content-end">
         <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
-            <button id="btn_permisos" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([19])">Permisos</button>
-            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])" style="display:none">Certificaciones Ambientales</button>
+            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])">Certificaciones Ambientales</button>
         </div>
     </div>
 </form>
@@ -211,8 +213,7 @@
             $("#opciones_sgi").hide();
             $("#opciones_externo").hide();
             //Botones adicionales
-            $("#btn_permisos").show();
-            $("#btn_certificaciones").hide();
+            $("#btn_certificaciones").show();
             
             $("#titulo_pagina").text("Documentos SGA");
             categoria = 1;
@@ -224,7 +225,6 @@
             $("#opciones_externo").hide();
 
             //Botones adicionales
-            $("#btn_permisos").hide();
             $("#btn_certificaciones").hide();
 
             $("#titulo_pagina").text("Documentos SGI");
@@ -236,8 +236,7 @@
             $("#opciones_sga").hide();
             $("#opciones_sgi").hide();
             //Botones adicionales
-            $("#btn_permisos").hide();
-            $("#btn_certificaciones").show();
+            $("#btn_certificaciones").hide();
 
             $("#titulo_pagina").text("Documentos Externos");
             categoria = 3;

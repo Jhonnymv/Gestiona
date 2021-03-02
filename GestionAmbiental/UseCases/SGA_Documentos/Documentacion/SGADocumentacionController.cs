@@ -237,6 +237,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
                     Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
                     Estado = x.Estado,
+                    //El responsable es el usuario conectado?
                     Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
                 })
                     .ToList();
@@ -248,6 +249,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
                     Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
                     Estado = x.Estado,
+                    //El responsable es el usuario conectado?
                     Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
                 })
                     .ToList();
@@ -345,7 +347,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 var IdDocumentoInt = Int32.Parse(_protector.Unprotect(IdDocumento));
                 //Validar que el usuario revisor del IdDocumentoRevisionInt es el usuario conectado
                 var documentoRevision = await _consultarRevisionDocumento.Execute(IdDocumentoRevisionInt);
-                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
+                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);                
                 dynamic response;
                 if (!documentoRevision.Usuario.Equals(usuarioActual.IdUsuario))
                 {
@@ -359,18 +361,22 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 else
                 {
                     //Validar si se puede enviar la variable "documentoRevision" a la notificacion, incluir comentario
-                    /*
-                    if (Opcion.Equals("Rechazado"))
+                    
+                    if (!Opcion.Equals("Aceptar"))
                     {
-                        //Notificar
                         //Editar
+                        await _editarRevisionDocumento.Execute(IdDocumentoInt, IdDocumentoRevisionInt, Comentario, Opcion);
+                        //Notificar
+                        return RedirectToAction("NotificarRevisionRechazada", "NotificacionesSGADocumentacion", new { IdSGADocumento=documentoRevision.IdSGADocumento, UsuarioNombre= documentoRevision.UsuarioNombre, Comentario= Comentario });
                     }
                     else
                     {
                         //Editar
+                        await _editarRevisionDocumento.Execute(IdDocumentoInt, IdDocumentoRevisionInt, Comentario, Opcion);
                         //Notificar
+                        return RedirectToAction("NotificarRevisionAprobada", "NotificacionesSGADocumentacion", new { IdSGADocumento = documentoRevision.IdSGADocumento, UsuarioNombre = documentoRevision.UsuarioNombre, Comentario = Comentario });
                     }
-                    */
+                    
                     await _editarRevisionDocumento.Execute(IdDocumentoInt, IdDocumentoRevisionInt, Comentario, Opcion);
 
                     response = new

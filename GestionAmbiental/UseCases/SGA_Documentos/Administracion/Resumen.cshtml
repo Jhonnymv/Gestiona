@@ -59,12 +59,28 @@
             <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
         </div>
     </div>
+    @*<div class="row mb-2 justify-content-end">
+        <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
+            <button id="btn_permisos" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])">Permisos</button>
+            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([19])">Certificaciones Ambientales</button>
+        </div>
+    </div>*@
 </form>
-<div class="row mb-2 justify-content-start">
-    <div class="col-md mt-1">
-        <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
-        <a id="btn_actualizar_documento" class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
+<div class="row mb-2">
+    <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
+        <div class="d-flex justify-content-between bd-highlight mb-3">
+            <div class="p-2 bd-highlight">
+                <a id="btn_cargar_documento" class="btn btn-danger float-left mr-2" asp-action="CargarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Cargar Documento</a>
+                <a id="btn_actualizar_documento" class="btn btn-danger float-left" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" asp-route-IdCategoria="1"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Actualizar Documento</a>
+            </div>
+            <div class="p-2 bd-highlight"></div>
+            <div class="p-2 bd-highlight">
+                <button id="btn_permisos" type="button" class="btn btn-warning float-right ml-2" onclick="FiltrarTipo([20])">Permisos</button>
+                <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([19])">Certificaciones Ambientales</button>
+            </div>
+        </div>
     </div>
+    
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-12">
@@ -97,7 +113,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="titulo_modal_docs_condicion">
-                    TITULO
+                    Documentos Filtrados
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
@@ -143,28 +159,34 @@
         var categoria = 1;
         $("#btn_sga").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGA");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })')
-            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumento", "SGAAdministracion", new { IdCategoria = 1 })')
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
+            $("#btn_permisos").show();
+            $("#btn_certificaciones").show();
             categoria = 1;
             filtrar(1);
         });
         $("#btn_sgi").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGI");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })')
-            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })')
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
+            $("#btn_permisos").hide();
+            $("#btn_certificaciones").hide();
             categoria = 2;
             filtrar(1);
         });
         $("#btn_externos").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos Externos");
-            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })')
-            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })')
+            $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
+            $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
+            $("#btn_permisos").hide();
+            $("#btn_certificaciones").hide();
             categoria = 3;
             filtrar(1);
         });
         $(document).ready(function () {
             filtrar(1);
-            //cargarOpciones();
+            $("#filtro_tipoDoc").val([]);
         });
         function filtrar(pag) {
             $.ajax({
@@ -197,7 +219,7 @@
                     "rpp": 10,
                     "nombre": $('#filtro_nombre').val(),
                     "categoria": categoria,
-                    "tipos": $("#tipoDocModal").val(),
+                    "tipos": $("#filtro_tipoDoc").val(),
                     "condiciones": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
@@ -210,28 +232,11 @@
                 }
             });
         }
-        function cargarOpciones() {
-            var azul = 255;
-            var verde = 0;
-            var variacion = 50;
-
-           tipos = JSON.parse('@Html.Raw(ViewBag.TiposDocJson)');
-            var html = "";
-            for (var i = 0; i < tipos.length; i++) {
-                var palabras = tipos[i].Descripcion.split(' ');
-                var iniciales = "";
-                for (var j = 0; j < palabras.length; j++) {
-                    if (palabras[j].charAt(0) != 'y') {
-                        iniciales += palabras[j].charAt(0);
-                    }
-                }
-                html += "<div><p>" + tipos[i].Descripcion+"</p><div class=\"tipoDoc\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\" onclick=\"FiltrarTipo(" + tipos[i].IdSGATipoDocumento + ")\"><p class=\"texto-tipoDoc\">" + iniciales + "</p></div><div class=\"tipoDocUnion\" style=\"--my-color-var: rgb(0," + verde + "," + azul + ");\"></div></div>";
-                if (verde + variacion <= 255 && azul - variacion > 0) {
-                    verde += variacion;
-                    azul -= variacion;
-                }
-            }
-            $("#opcionesTipoDoc").html(html)
+        function FiltrarTipo(tipos) {
+            $("#filtro_tipoDoc").val([]);
+            $('#filtro_tipoDoc').val(tipos);
+            $('#modal_docs_condicion').modal('show');
+            filtrarModal(1);
         }
         function FiltrarCondicion(condiciones) {
             $("#filtro_condicion").val([]);

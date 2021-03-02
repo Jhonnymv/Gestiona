@@ -28,6 +28,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public string DocRuta { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
+        public string UsuarioEmail { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
         public List<RevisionDocumento> Revisores { get; set; } 
@@ -64,6 +65,10 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
             DocRuta = documento.DocRuta;
             IdUsuario = documento.Usuario.IdUsuario;
             Usuario = documento.Usuario.Nombres + " " + documento.Usuario.Apellidos;
+            UsuarioEmail = documento.Usuario.Email;
+            FechaCreacion = documento.FechaCreacion;
+            FechaActualizacion = documento.FechaActualizacion;
+            FechaAprobacion = documento.FechaAprobacion;
         }
     }
 }

@@ -125,7 +125,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Comentario = documento.Comentario;
             entidad.Fecha_Tentativa = documento.FechaTentativa;
             entidad.Doc_Ruta = documento.DocRuta;
-            entidad.Id_Usuario = documento.Usuario.IdUsuario;
             entidad.Fecha_Actualizacion = DateTime.Today;
             entidad.Estado = documento.Estado;
 
@@ -202,7 +201,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             await _context.SaveChangesAsync();
         }
-
         public async Task EditarDocumentosSecundarios(List<Documento> secundarios)
         {
             var data = await _context.SGA_Documentos.Where(x =>
@@ -220,6 +218,29 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
 
             _context.SGA_Documentos.UpdateRange(data);
+            await _context.SaveChangesAsync();
+        }
+        public async Task AmpliarFechaRevision(RevisionDocumento revision)
+        {
+            //Buscar las revision vencida
+            var revisionVencida = await _context.SGA_Revisiones_Documento.FirstAsync(x => x.Id_SGA_Revision_Documento.Equals(revision.IdSGARevisionDocumento));            
+            //Calcular la cantidad de dias agregados
+            var difDias = revision.FechaLimite.Value.Subtract(revisionVencida.Fecha_Limite.Value).TotalDays;
+            //actualizar fecha y estado
+            revisionVencida.Fecha_Limite = revision.FechaLimite;
+            revisionVencida.Estado = EstadosRevisionDocSGA.Activo.ToString();
+            //Buscar las revisiones del documento inactivas
+            var revisionesSgtes  = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(revisionVencida.Id_SGA_Documento) && x.Estado.Equals(EstadosRevisionDocSGA.Inactivo.ToString())).ToListAsync();
+            //Modificar cada fecha de las siguientes revisiones
+            foreach(var revisionSgte in revisionesSgtes)
+            {
+                //Sumar la candidad de dias agregados a la fecha de la revision vencida
+                var nuevaFecha = revisionSgte.Fecha_Limite.Value.AddDays(difDias);
+                revisionSgte.Fecha_Limite = nuevaFecha;
+            }
+            _context.SGA_Revisiones_Documento.Update(revisionVencida);
+            _context.SGA_Revisiones_Documento.UpdateRange(revisionesSgtes);
+
             await _context.SaveChangesAsync();
         }
     }

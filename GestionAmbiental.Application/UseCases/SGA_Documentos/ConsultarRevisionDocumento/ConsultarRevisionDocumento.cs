@@ -27,7 +27,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevision
                 FechaRevision = data.FechaRevision,
                 IdSGATipoRevision = data.SGATipoRevision.IdTipoRevision,
                 Orden = data.Orden,
-                Usuario = data.Usuario.IdUsuario
+                Usuario = data.Usuario.IdUsuario,
+                UsuarioNombre = data.Usuario.Nombres+" "+ data.Usuario.Apellidos
             };
             return output;
         }
