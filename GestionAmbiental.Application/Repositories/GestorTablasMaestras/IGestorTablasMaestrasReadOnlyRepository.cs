@@ -2,6 +2,7 @@
 using GestionAmbiental.Domain.ConsumoAgua;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
+using GestionAmbiental.Domain.SGA_Documentos;
 using GestionAmbiental.Domain.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -228,6 +229,15 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task UpdateUsuario_Notificar_Consumo_Agua(UsuarioNotificarConsumoAgua usuario_notifcar);
         Task QuitarUsuario_Notificar_Consumo_Agua(int id_usuario_notificar);
         Task<int> AddUsuario_Notificar_Consumo_Agua(int Id_Usuario_AD);
-
+        //Tb_SGA_Tipo_Documento
+        Task<List<TipoDocumento>> GetTipoDocumento(string filtro);
+        Task<TipoDocumento> GetTipoDocumento(int id_tipo_documento);
+        Task<int> AddTipoDocumento(TipoDocumento TipoDocumento);
+        Task UpdateTipoDocumento(TipoDocumento TipoDocumento);
+        //Tb_SGA_Categoria_Tipo
+        Task<List<CategoriaTipo>> GetCategoriaTipo(string filtro);
+        Task<CategoriaTipo> GetCategoriaTipo(int id_categoria_tipo);
+        Task<int> AddCategoriaTipo(CategoriaTipo CategoriaTipo);
+        Task UpdateCategoriaTipo(CategoriaTipo CategoriaTipo);
     }
 }

@@ -315,7 +315,23 @@
         </div>
     </div>
 </div>
-
+<!-- Modal Registrando-->
+<div class="modal fade" id="modal_registrando" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Guardando Información</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
@@ -456,12 +472,14 @@
         $("#btn_guardar_estado").on("click", function () {
             if (ValidarDatos()) {
                 $("#Opcion").val("GuardarEstado");
+                $("#modal_registrando").modal("show");
                 $("#form_editar_documento").submit();
             }
         });
         $("#btn_registrar").on("click", function () {
             if (ValidarDatos() && ValidarDatosRevisores()) {
                 $("#Opcion").val("Registrar");
+                $("#modal_registrando").modal("show");
                 $("#form_editar_documento").submit();
             }
         });

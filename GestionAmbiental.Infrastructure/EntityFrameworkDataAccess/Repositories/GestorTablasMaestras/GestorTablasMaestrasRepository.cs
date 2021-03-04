@@ -3,6 +3,7 @@ using GestionAmbiental.Domain.AvistamientoFauna.Items;
 using GestionAmbiental.Domain.ConsumoAgua;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.Items;
+using GestionAmbiental.Domain.SGA_Documentos;
 using GestionAmbiental.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -1980,5 +1981,149 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
             return entity.Id_Usuarios_Notificar_Consumo_Agua;
         }
+        //Tb_SGA_Tipo_Documento
+        public async Task<List<TipoDocumento>> GetTipoDocumento(string filtro)
+        {
+            var entities = await _context.SGA_Tipos_Documento.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).ToListAsync();
+           
+            var output = new List<TipoDocumento>();
+            foreach (var item in entities)
+            {
+                output.Add(new TipoDocumento
+                {
+                    IdSGATipoDocumento = item.Id_SGA_Tipo_Documento,
+                    Codigo = item.Codigo,
+                    Descripcion = item.Descripcion,
+                    Formato = item.Formato,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<TipoDocumento> GetTipoDocumento(int id_tipo_documento)
+        {
+            var entity = await _context.SGA_Tipos_Documento.FirstOrDefaultAsync(x => x.Id_SGA_Tipo_Documento.Equals(id_tipo_documento));
+
+            var output = new TipoDocumento
+            {
+                IdSGATipoDocumento = entity.Id_SGA_Tipo_Documento,
+                Codigo = entity.Codigo,
+                Descripcion = entity.Descripcion,
+                Formato = entity.Formato,
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddTipoDocumento(TipoDocumento TipoDocumento)
+        {
+            var entity = new Entities.SGA_Documentos.Tipo_Documento
+            {
+                Codigo = TipoDocumento.Codigo,
+                Descripcion = TipoDocumento.Descripcion,
+                Formato = TipoDocumento.Formato,
+                Estado = "ACT"
+            };
+            _context.SGA_Tipos_Documento.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_SGA_Tipo_Documento;
+        }
+        public async Task UpdateTipoDocumento(TipoDocumento TipoDocumento)
+        {
+            var entity = await _context.SGA_Tipos_Documento.FirstOrDefaultAsync(x => x.Id_SGA_Tipo_Documento.Equals(TipoDocumento.IdSGATipoDocumento));
+            entity.Descripcion = TipoDocumento.Descripcion;
+            entity.Codigo = TipoDocumento.Codigo;
+            entity.Formato = TipoDocumento.Formato;
+            entity.Estado = TipoDocumento.Estado;
+
+            _context.SGA_Tipos_Documento.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+        //Tb_SGA_Categoria_Tipo
+        public async Task<List<CategoriaTipo>> GetCategoriaTipo(string filtro)
+        {
+            var tiposDoc = await _context.SGA_Tipos_Documento.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).ToListAsync();
+            var categorias = await _context.SGA_Categoria_Documento.ToListAsync();
+            var entities = await _context.SGA_Categoria_Tipo.Where(x=>tiposDoc.Select(y=>y.Id_SGA_Tipo_Documento).Contains(x.Id_SGA_Tipo_Documento)).ToListAsync();
+            
+            var output = new List<CategoriaTipo>();
+            foreach (var item in entities)
+            {
+                var tipoDoc = tiposDoc.First(x => x.Id_SGA_Tipo_Documento.Equals(item.Id_SGA_Tipo_Documento));
+                var categoria = categorias.First(x => x.Id_SGA_Categoria_Documento.Equals(item.Id_SGA_Categoria_Documento));
+
+                output.Add(new CategoriaTipo
+                {
+                    IdSGACategoriaTipo = item.Id_SGA_Categoria_Tipo,
+                    CategoriaDocumento = new CategoriaDocumento { 
+                        Id_SGA_Categoria_Documento = categoria.Id_SGA_Categoria_Documento,
+                        Descripcion = categoria.Descripcion,
+                        Estado = categoria.Estado
+                    },
+                    TipoDocumento = new TipoDocumento
+                    {
+                        IdSGATipoDocumento = tipoDoc.Id_SGA_Tipo_Documento,
+                        Codigo = tipoDoc.Codigo,
+                        Descripcion = tipoDoc.Descripcion,
+                        Formato = tipoDoc.Formato,
+                        Estado = tipoDoc.Estado
+                    },
+                    Visible = item.Visible,
+                    Estado = item.Estado
+                });
+            }
+            return output;
+        }
+        public async Task<CategoriaTipo> GetCategoriaTipo(int id_categoria_tipo)
+        {
+            var entity = await _context.SGA_Categoria_Tipo.FirstOrDefaultAsync(x => x.Id_SGA_Categoria_Tipo.Equals(id_categoria_tipo));
+            var tipoDoc = await _context.SGA_Tipos_Documento.FirstOrDefaultAsync(x => x.Id_SGA_Tipo_Documento.Equals(entity.Id_SGA_Tipo_Documento));
+            var categoria = await _context.SGA_Categoria_Documento.FirstOrDefaultAsync(x => x.Id_SGA_Categoria_Documento.Equals(entity.Id_SGA_Categoria_Documento));
+
+            var output = new CategoriaTipo
+            {
+                IdSGACategoriaTipo = entity.Id_SGA_Tipo_Documento,
+                CategoriaDocumento = new CategoriaDocumento
+                {
+                    Id_SGA_Categoria_Documento = categoria.Id_SGA_Categoria_Documento,
+                    Descripcion = categoria.Descripcion,
+                    Estado = categoria.Estado
+                },
+                TipoDocumento = new TipoDocumento
+                {
+                    IdSGATipoDocumento = tipoDoc.Id_SGA_Tipo_Documento,
+                    Codigo = tipoDoc.Codigo,
+                    Descripcion = tipoDoc.Descripcion,
+                    Formato = tipoDoc.Formato,
+                    Estado = tipoDoc.Estado
+                },
+                Estado = entity.Estado
+            };
+            return output;
+        }
+        public async Task<int> AddCategoriaTipo(CategoriaTipo CategoriaTipo)
+        {
+            var entity = new Entities.SGA_Documentos.Categoria_Tipo
+            {
+                Id_SGA_Categoria_Documento = CategoriaTipo.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                Id_SGA_Tipo_Documento = CategoriaTipo.TipoDocumento.IdSGATipoDocumento,
+                Visible = true,
+                Estado = "ACT"
+            };
+            _context.SGA_Categoria_Tipo.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_SGA_Tipo_Documento;
+        }
+        public async Task UpdateCategoriaTipo(CategoriaTipo CategoriaTipo)
+        {
+            var entity = await _context.SGA_Categoria_Tipo.FirstOrDefaultAsync(x => x.Id_SGA_Categoria_Tipo.Equals(CategoriaTipo.IdSGACategoriaTipo));
+            entity.Id_SGA_Categoria_Documento = CategoriaTipo.CategoriaDocumento.Id_SGA_Categoria_Documento;
+            entity.Id_SGA_Tipo_Documento = CategoriaTipo.TipoDocumento.IdSGATipoDocumento;
+            entity.Visible = true;
+            entity.Estado = CategoriaTipo.Estado;
+
+            _context.SGA_Categoria_Tipo.Update(entity);
+            await _context.SaveChangesAsync();
+        }
+
     }
 }

@@ -246,6 +246,24 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Registrando-->
+<div class="modal fade" id="modal_registrando" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Guardando Información</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
@@ -379,6 +397,7 @@
             EnviarRevision("Rechazar");
         });
         function EnviarRevision(Opcion) {
+            $("#modal_registrando").modal("show");
             $.ajax({
                 type: "GET",
                 url: "/SGADocumentacion/RevisarDocumento",
@@ -390,7 +409,12 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    location.reload();
+                    if (response.success)
+                        location.reload();
+                    else {
+                        $("#modal_registrando").modal("toggle");
+                        alert(response.message);
+                    }
                 }
             });
         }

@@ -353,8 +353,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 {
                     response = new
                     {
-                        Result = "Error",
-                        Message = "El usuario actualmente conectado no es el mismo al usuario asignado a esta revisión"
+                        success = false,
+                        message = "El usuario actualmente conectado no es el mismo al usuario asignado a esta revisión"
                     };
                     return Ok(response);
                 }
@@ -381,7 +381,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
 
                     response = new
                     {
-                        Result = "Ok",
+                        success = true,
 
                     };
                     return Ok(response);
