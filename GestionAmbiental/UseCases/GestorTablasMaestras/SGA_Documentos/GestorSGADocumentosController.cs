@@ -6,14 +6,17 @@ using GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documentos.
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documentos.TipoDocumento.EditarTipoDocumento;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documentos.TipoDocumento.GetTipoDocumento;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documentos.TipoDocumento.GetTiposDocumento;
+using GestionAmbiental.Application.UseCases.SGA_Documentos.Items;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -31,6 +34,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
         private readonly IGetTipoDocumento _getTipoDocumento;
         private readonly IGetTiposDocumento _getTiposDocumento;
 
+        private readonly ISelectItems _selectItems;
+
         private readonly IHostingEnvironment _hostingEnvironment;
 
         public GestorSGADocumentosController(
@@ -42,6 +47,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
             IEditarTipoDocumento editarTipoDocumento,
             IGetTipoDocumento getTipoDocumento,
             IGetTiposDocumento getTiposDocumento,
+            ISelectItems selectItems,
             IHostingEnvironment hostingEnvironment)
         {
             _agregarCategoriaTipo = agregarCategoriaTipo;
@@ -52,6 +58,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
             _editarTipoDocumento = editarTipoDocumento;
             _getTipoDocumento = getTipoDocumento;
             _getTiposDocumento = getTiposDocumento;
+            _selectItems = selectItems;
             _hostingEnvironment = hostingEnvironment;
         }
 
@@ -71,7 +78,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 return View();
             }
         }
-
         //Tipo Documento
         [HttpPost]
         public async Task<IActionResult> FiltrarTipoDocumento(string filtro, int pagina, int rpp)
@@ -98,7 +104,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                     filasTabla += "<tr>";
                     filasTabla += "<td>" + fila.Descripcion + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
-                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleTipoDocumento?IdTipoDocumento=" + fila.IdSGATipoDocumento + "\">Detalle</a></td>";
+                    filasTabla += "<td><a href=\"/GestorSGADocumentos/DetalleTipoDocumento?IdTipoDocumento=" + fila.IdSGATipoDocumento + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -150,7 +156,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 model.IdSGATipoDocumento = data.IdSGATipoDocumento;
                 model.Descripcion = data.Descripcion;
                 model.Codigo = data.Codigo;
-                model.Formato = data.Formato;
+                model.RutaFormato = data.Formato!=null? data.Formato.Replace("\\","--"):null;
                 model.Estado = data.Estado;
                 return View(model);
             }
@@ -169,7 +175,22 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 if (ModelState.IsValid)
-                    await _editarTipoDocumento.Execute(model.IdSGATipoDocumento, model.Descripcion, model.Codigo,model.Formato, model.Estado);
+                {
+                    var rutaDB = Path.Combine("DocTemplates", "SGA", model.Formato.FileName);
+                    var rutaArchivo = Path.Combine(_hostingEnvironment.WebRootPath, rutaDB);
+
+                    using (var fileStream = new FileStream(rutaArchivo, FileMode.Create))
+                    {
+                        await model.Formato.CopyToAsync(fileStream);
+                    }
+
+                    await _editarTipoDocumento.Execute(model.IdSGATipoDocumento, model.Descripcion, model.Codigo, rutaDB, model.Estado);
+
+                    if (model.RutaFormato != null && System.IO.File.Exists(Path.Combine(_hostingEnvironment.WebRootPath, model.RutaFormato)))
+                    {
+                        System.IO.File.Delete(Path.Combine(_hostingEnvironment.WebRootPath, model.RutaFormato));
+                    }
+                }
                 return RedirectToAction("DetalleTipoDocumento", new { IdTipoDocumento = model.IdSGATipoDocumento });
             }
         }
@@ -203,7 +224,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 {
                     if (ModelState.IsValid)
                     {
-                        var idTipoDocumento = await _agregarTipoDocumento.Execute(model.Descripcion, model.Codigo,model.Formato);
+                        var rutaDB = Path.Combine("DocTemplates", "SGA", model.Formato.FileName);
+                        var rutaArchivo = Path.Combine(_hostingEnvironment.WebRootPath, rutaDB);                        
+
+                        using (var fileStream = new FileStream(rutaArchivo, FileMode.Create))
+                        {
+                            await model.Formato.CopyToAsync(fileStream);
+                        }
+
+                        var idTipoDocumento = await _agregarTipoDocumento.Execute(model.Descripcion, model.Codigo, rutaDB);
                         return RedirectToAction("DetalleTipoDocumento", new { IdTipoDocumento = idTipoDocumento });
                     }
                     return RedirectToAction("AgregarTipoDocumento");
@@ -238,7 +267,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                     filasTabla += "<td>" + fila.SGACategoriaDocumento + "</td>";
                     filasTabla += "<td>" + fila.SGATipoDocumento + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
-                    filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleCategoriaTipo?IdCategoriaTipo=" + fila.IdSGACategoriaTipo + "\">Detalle</a></td>";
+                    filasTabla += "<td><a href=\"/GestorSGADocumentos/DetalleCategoriaTipo?IdCategoriaTipo=" + fila.IdSGACategoriaTipo + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
 
@@ -284,6 +313,17 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+
+                var tiposDocumento = items.ItemsTipoDocumento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tiposDocumento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var categoriasDocumento = items.ItemsCategoriaDocumento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_SGA_Categoria_Documento.ToString(), Text = g.Descripcion }).ToList();
+                categoriasDocumento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.TiposDoc = tiposDocumento;
+                ViewBag.CategoriasDoc = categoriasDocumento;
+
                 var data = await _getCategoriaTipo.Execute(IdCategoriaTipo);
                 var model = new CategoriaTipoModel();
                 model.IdSGACategoriaTipo = data.IdSGACategoriaTipo;
@@ -326,6 +366,16 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var items = await _selectItems.Execute();
+
+                var tiposDocumento = items.ItemsTipoDocumento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
+                tiposDocumento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var categoriasDocumento = items.ItemsCategoriaDocumento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_SGA_Categoria_Documento.ToString(), Text = g.Descripcion }).ToList();
+                categoriasDocumento.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.TiposDoc = tiposDocumento;
+                ViewBag.CategoriasDoc = categoriasDocumento;
+
                 return View();
             }
         }
@@ -348,6 +398,39 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                     }
                     return RedirectToAction("AgregarCategoriaTipo");
                 }
+            }
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".gif", "image/gif"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.ms-word"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
+            };
+        }
+        public async Task<IActionResult> DescargarFormato(string path)
+        {
+            try
+            {
+                var completePath = _hostingEnvironment.WebRootPath + "\\" + path.Replace("--", "\\");
+                FileStream stream = new FileStream(completePath, FileMode.Open);
+                return File(stream, GetContentType(path), Path.GetFileName(path.Replace("--", "\\")));
+            }catch(Exception e)
+            {
+                return Ok();
             }
         }
     }

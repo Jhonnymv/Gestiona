@@ -2016,16 +2016,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<int> AddTipoDocumento(TipoDocumento TipoDocumento)
         {
-            var entity = new Entities.SGA_Documentos.Tipo_Documento
+            try
             {
-                Codigo = TipoDocumento.Codigo,
-                Descripcion = TipoDocumento.Descripcion,
-                Formato = TipoDocumento.Formato,
-                Estado = "ACT"
-            };
-            _context.SGA_Tipos_Documento.Add(entity);
-            await _context.SaveChangesAsync();
-            return entity.Id_SGA_Tipo_Documento;
+                var entity = new Entities.SGA_Documentos.Tipo_Documento
+                {
+                    Codigo = TipoDocumento.Codigo,
+                    Descripcion = TipoDocumento.Descripcion,
+                    Formato = TipoDocumento.Formato,
+                    Estado = "ACT"
+                };
+                _context.SGA_Tipos_Documento.Add(entity);
+                await _context.SaveChangesAsync();
+                return entity.Id_SGA_Tipo_Documento;
+            }catch(Exception e)
+            {
+                return 0;
+            }
         }
         public async Task UpdateTipoDocumento(TipoDocumento TipoDocumento)
         {
@@ -2081,7 +2087,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var output = new CategoriaTipo
             {
-                IdSGACategoriaTipo = entity.Id_SGA_Tipo_Documento,
+                IdSGACategoriaTipo = entity.Id_SGA_Categoria_Tipo,
                 CategoriaDocumento = new CategoriaDocumento
                 {
                     Id_SGA_Categoria_Documento = categoria.Id_SGA_Categoria_Documento,
@@ -2111,7 +2117,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             };
             _context.SGA_Categoria_Tipo.Add(entity);
             await _context.SaveChangesAsync();
-            return entity.Id_SGA_Tipo_Documento;
+            return entity.Id_SGA_Categoria_Tipo;
         }
         public async Task UpdateCategoriaTipo(CategoriaTipo CategoriaTipo)
         {

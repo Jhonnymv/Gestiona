@@ -253,15 +253,12 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 causa_Incidente.AddRange(items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion, Group = grupoCondicion }).ToList());
                 causa_Incidente.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-
-
                 ViewBag.Tipo_Incidente = tipo_Incidente;
                 ViewBag.Nivel_Incidente = nivel_Incidente;
                 ViewBag.Unidad_Derramado = unidad_Derramado;
                 ViewBag.Unidad_Area = unidad_Area;
                 ViewBag.Componente_Ambiental = componente_Ambiental;
                 ViewBag.Causa_Incidente = causa_Incidente;
-
 
                 return View();
             }

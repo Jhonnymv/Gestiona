@@ -1,0 +1,171 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos.Model.TipoDocumentoModel
+@{
+    ViewData["Title"] = "DetalleTipoDocumento";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Detalle Tipo de Documento</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="EditarTipoDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" class="form-control" asp-for="IdSGATipoDocumento">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Codigo"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Codigo"></span>
+                    <input type="text" class="form-control" asp-for="Codigo" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="RutaFormato"></label>
+                </div>
+                @if (Model.RutaFormato != null)
+                {
+                    <div class="col-lg-8">
+                        <input type="hidden" class="form-control" asp-for="RutaFormato" value="@Model.RutaFormato">
+                        <button type="button" class="btn btn-link" onclick="DescargarFormato()">Descargar</button>
+                    </div>
+                }
+            </div>
+            <div class="row mb-2" id="nuevoFormato" style="display:none">
+                <div class="col-lg-4">
+                    <label asp-for="Formato"></label>
+                </div>
+                <div class="col-lg-2">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="Formato">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
+                </div>
+                <div class="col-lg-4">
+                    <label id="files_name">0 Archivos</label>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estado"></span>
+                    <select class="form-control" asp-for="Estado" disabled>
+                        <option value="">--SELECCIONE--</option>
+                        <option value="ACT">ACT</option>
+                        <option value="INA">INA</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#nuevoFormato").show();
+            $("#Codigo").prop('disabled', false);
+            $("#Descripcion").prop('disabled', false);
+            $("#Estado").prop('disabled', false);
+        });
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#nuevoFormato").hide();
+            $("#Codigo").prop('disabled', true);
+            $("#Descripcion").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
+        });
+        $("#Formato").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Formato").data('max-size');
+            var archivos = $("#Formato").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+            }
+        });
+        function DescargarFormato() {
+            var ruta = '@Html.Raw(Model.RutaFormato)';
+            var w = window.open('@Url.Action("DescargarFormato", "GestorSGADocumentos",new { path = Model.RutaFormato})', '_blank');
+            w.focus();
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/GestorSGADocumentos/DescargarFormato",
+            //    data: {
+            //        "path": ruta,
+            //    }
+            //});
+        }
+    </script>
+}

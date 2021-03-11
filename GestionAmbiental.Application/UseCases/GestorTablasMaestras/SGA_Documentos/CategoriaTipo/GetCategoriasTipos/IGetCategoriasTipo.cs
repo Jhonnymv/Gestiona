@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
     public interface IGetCategoriasTipo
     {
         Task<CategoriasTiposOutput> Execute(string filtro, int pagina, int rpp);
+        Task<CategoriasTiposOutput> Execute();
     }
 }

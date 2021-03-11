@@ -39,5 +39,28 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
 
             return output;
         }
+
+        public async Task<TiposDocumentoOutput> Execute()
+        {
+            var input = await _gestorTablasMaestrasReadOnlyRepository.GetTipoDocumento(null);
+            var outputs = new List<TipoDocumentoOutput>();
+            foreach (var item in input)
+            {
+                var temp = new TipoDocumentoOutput();
+                temp.IdSGATipoDocumento = item.IdSGATipoDocumento;
+                temp.Descripcion = item.Descripcion;
+                temp.Codigo = item.Codigo;
+                temp.Formato = item.Formato;
+                temp.Estado = item.Estado;
+                outputs.Add(temp);
+            }
+            var output = new TiposDocumentoOutput
+            {
+                NTipos = input.Count,
+                TiposDocumento = outputs
+            };
+
+            return output;
+        }
     }
 }

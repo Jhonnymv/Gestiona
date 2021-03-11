@@ -258,7 +258,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var categoriasTipos = items.ItemsCategoriaTipo.Where(x => x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(documento.IdSGACategoriaDocumento)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
+                var categoriasTipos = items.ItemsCategoriaTipo.Where(x =>x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(documento.IdSGACategoriaDocumento)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriasTipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 //Obtener documentos que tienen como documento principal el actual
                 var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);

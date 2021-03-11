@@ -22,6 +22,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
             foreach (var item in input)
             {
                 var temp = new CategoriaTipoOutput();
+                temp.IdSGACategoriaTipo = item.IdSGACategoriaTipo;
                 temp.IdSGACategoriaDocumento = item.CategoriaDocumento.Id_SGA_Categoria_Documento;
                 temp.SGACategoriaDocumento = item.CategoriaDocumento.Descripcion;
                 temp.IdSGATipoDocumento = item.TipoDocumento.IdSGATipoDocumento;
@@ -33,6 +34,30 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
             {
                 NCategorias = input.Count,
                 CategoriasTipo = outputs.Skip((pagina - 1) * rpp).Take(rpp).ToList()
+            };
+
+            return output;
+        }
+
+        public async Task<CategoriasTiposOutput> Execute()
+        {
+            var input = await _gestorTablasMaestrasReadOnlyRepository.GetCategoriaTipo(null);
+
+            var outputs = new List<CategoriaTipoOutput>();
+            foreach (var item in input)
+            {
+                var temp = new CategoriaTipoOutput();
+                temp.IdSGACategoriaDocumento = item.CategoriaDocumento.Id_SGA_Categoria_Documento;
+                temp.SGACategoriaDocumento = item.CategoriaDocumento.Descripcion;
+                temp.IdSGATipoDocumento = item.TipoDocumento.IdSGATipoDocumento;
+                temp.SGATipoDocumento = item.TipoDocumento.Descripcion;
+                temp.Estado = item.Estado;
+                outputs.Add(temp);
+            }
+            var output = new CategoriasTiposOutput
+            {
+                NCategorias = input.Count,
+                CategoriasTipo = outputs
             };
 
             return output;
