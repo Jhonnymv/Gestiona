@@ -1,0 +1,109 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.TarjetaModel
+
+@{
+    ViewData["Title"] = "Agregar Tarjeta";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Información de Nombres Comunes de Fauna</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form autocomplete="off" asp-controller="GestorGestiona" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Orden"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Orden"></span>
+                    <input type="text" class="form-control" asp-for="Orden">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Tipo"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Tipo"></span>
+                    <select class="form-control" asp-for="Tipo" asp-items="@ViewBag.Tipos"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Titulo"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Titulo"></span>
+                    <input type="text" class="form-control" asp-for="Titulo">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <textarea class="form-control" asp-for="Descripcion" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="ImagenNueva"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger field-validation-error" data-valmsg-for="ImagenNueva" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="ImagenNueva">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4"></div>
+                <div class="col-lg-8">
+                    <img id="output_image" style="width:100%;height:auto"/>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="LugarImg"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="LugarImg"></span>
+                    <select class="form-control" asp-for="LugarImg" asp-items="@ViewBag.Posiciones"></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="AnchoImg"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="AnchoImg"></span>
+                    <select class="form-control" asp-for="AnchoImg" asp-items="@ViewBag.Anchos"></select>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorGestiona" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="submit" class="btn btn-primary" id="btnAgregar">Agregar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function preview_image(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output_image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

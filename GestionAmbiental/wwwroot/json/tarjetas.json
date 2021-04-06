@@ -1,0 +1,57 @@
+[
+  {
+    "Id": 1,
+    "Orden": 1,
+    "Titulo": "Primera Tarjeta",
+    "Descripcion": "<p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p> Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p>",
+    "ImagenNueva": null,
+    "Imagen": "/img/uploads/Home/bart.jpg",
+    "Tipo": "pequeño",
+    "LugarImg": "izquierda",
+    "AnchoImg": 3
+  },
+  {
+    "Id": 2,
+    "Orden": 2,
+    "Titulo": "Segundo Tarjeta",
+    "Descripcion": "<p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p>",
+    "ImagenNueva": null,
+    "Imagen": "/img/uploads/Home/groot.jpg",
+    "Tipo": "pequeño",
+    "LugarImg": "izquierda",
+    "AnchoImg": 3
+  },
+  {
+    "Id": 3,
+    "Orden": 3,
+    "Titulo": "Segundo Tarjeta",
+    "Descripcion": "<p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p>",
+    "ImagenNueva": null,
+    "Imagen": "/img/uploads/Home/groot.jpg",
+    "Tipo": "pequeño",
+    "LugarImg": "izquierda",
+    "AnchoImg": 3
+  },
+  {
+    "Id": 4,
+    "Orden": 4,
+    "Titulo": "Segundo Tarjeta",
+    "Descripcion": "<p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p><p>Sámé quíck example text tó búild on the card title and make up the bulk of the card's content.</p>",
+    "ImagenNueva": null,
+    "Imagen": "/img/uploads/Home/bart.jpg",
+    "Tipo": "pequeño",
+    "LugarImg": "izquierda",
+    "AnchoImg": 3
+  },
+  {
+    "Id": 6,
+    "Orden": 6,
+    "Titulo": "¿Quienes Somos?",
+    "Descripcion": "<p>Somos una empresa socialmente responsable y buscamos consolidarnos como una mina de clase mundial, apoyados en nuestro modelo de respeto por el medio ambiente, la seguridad en nuestras actividades y siendo un referente en Gestión Social. Así, siendo un socio estratégico para nuestros vecinos, lograremos un impacto positivo en la economía del país.</p>",
+    "ImagenNueva": null,
+    "Imagen": "\\img\\uploads\\Home\\Tarjeta_620210406232311.jpg",
+    "Tipo": "largo",
+    "LugarImg": "derecha",
+    "AnchoImg": 4
+  }
+]
