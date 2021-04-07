@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Configuracion";
+    ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
@@ -43,7 +43,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             FiltrarTarjetas(1);
-            $("#btn_agregar").prop("href", "/GestorGestiona/AgregarTarjeta");
+            $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
         });
 
         $("#btn_enviar").on('click', function (e) {
@@ -55,14 +55,14 @@
             $(this).tab('show');
             $('#filtro').val("");
             $("#btn_agregar").show();
-            $("#btn_agregar").prop("href", "/GestorGestiona/AgregarTarjeta");
+            $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
             FiltrarTarjetas(1);
         });
 
         function FiltrarTarjetas(pag) {
             $.ajax({
                 type: "POST",
-                url: "/GestorGestiona/FiltrarTarjetas",
+                url: "/GestorContenido/FiltrarTarjetas",
                 data: {
                     "pagina": pag,
                     "rpp": 10,
@@ -76,7 +76,25 @@
                 }
             });
         }
-
+        function EliminarTarjeta(id) {
+            if (confirm('¿Esta seguro que desea eliminar la tarjeta?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/GestorContenido/EliminarTarjeta",
+                    data: {
+                        IdTarjeta : id
+                    },
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            FiltrarTarjetas(1);
+                        }
+                        else {
+                            console.log(response.message);
+                        }
+                    }
+                });
+            }
+        }
     </script>
 }
 

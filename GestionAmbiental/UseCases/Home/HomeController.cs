@@ -46,19 +46,12 @@ namespace GestionAmbiental.Controllers
                 var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
 
                 model.Configuraciones = config;
-                model.Tarjetas = cards;
+                model.Tarjetas = cards.OrderBy(x=>x.Orden).ToList();
             }
             catch(Exception e)
             {
 
             }
-            //using (StreamReader r = new StreamReader(jsonConfigPath))
-            //{
-            //    string json = r.ReadToEnd();
-            //    string items = JsonConvert.DeserializeObject<string>(json);
-            //}
-
-
 
             var rol = await _getRolUsuario.Execute("kevin");
 

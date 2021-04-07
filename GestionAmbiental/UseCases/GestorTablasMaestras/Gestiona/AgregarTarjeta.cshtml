@@ -12,7 +12,7 @@
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorGestiona" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
+        <form autocomplete="off" asp-controller="GestorContenido" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
             <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Orden"></label>
@@ -76,7 +76,7 @@
                     <select class="form-control" asp-for="LugarImg" asp-items="@ViewBag.Posiciones"></select>
                 </div>
             </div>
-            <div class="row mb-2">
+            <div id="seccion_ancho_imagen" class="row mb-2" style="display:none">
                 <div class="col-lg-4">
                     <label asp-for="AnchoImg"></label>
                 </div>
@@ -90,14 +90,23 @@
                 <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
             </div>
             <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorGestiona" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <a asp-controller="GestorContenido" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
                 <button type="submit" class="btn btn-primary" id="btnAgregar">Agregar</button>
             </div>
         </form>
     </div>
 </div>
-
+@section Scripts{ 
 <script type="text/javascript">
+    $("#LugarImg").on("change", function () {
+        var lugarImagen = $("#LugarImg").val();
+        if (lugarImagen == "izquierda" || lugarImagen == "derecha") {
+            $("#seccion_ancho_imagen").show();
+        } else {
+            $("#seccion_ancho_imagen").hide();
+            $("#AnchoImg").val(0);
+        }
+    });
     function preview_image(event) {
         var reader = new FileReader();
         reader.onload = function () {
@@ -107,3 +116,4 @@
         reader.readAsDataURL(event.target.files[0]);
     }
 </script>
+    }
