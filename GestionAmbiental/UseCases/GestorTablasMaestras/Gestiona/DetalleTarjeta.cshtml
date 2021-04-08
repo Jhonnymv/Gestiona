@@ -12,7 +12,7 @@
 </div>
 <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
+        <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" value="@Model.Id" />
             <div class="row mb-2">
                 <div class="col-lg-4">
@@ -45,9 +45,11 @@
                 <div class="col-lg-4">
                     <label asp-for="Descripcion"></label>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-8" style="height: 400px;">
                     <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <textarea class="form-control" asp-for="Descripcion" rows="3" disabled></textarea>
+                    <input type="hidden" class="form-control" asp-for="Descripcion" value="@Model.Descripcion">
+                    <div id="editor" style="max-height:350px;">
+                    </div>
                 </div>
             </div><div class="row mb-2">
                 <div class="col-lg-4">
@@ -55,7 +57,7 @@
                 </div>
                 <div class="col-lg-8" id="image_preview">
                     <input type="hidden" asp-for="Imagen" value="@Model.Imagen" />
-                    <img src="@Model.Imagen" style="width:auto;height:auto; max-height:300px"/>
+                    <img src="@Model.Imagen" style="width:auto;height:auto; max-height:300px" />
                 </div>
             </div>
             <div id="seccion_nueva_imagen" style="display:none;">
@@ -74,7 +76,7 @@
                 <div class="row mb-2">
                     <div class="col-lg-4"></div>
                     <div class="col-lg-8">
-                        <img id="output_image" style="width:auto;height:auto; max-height:300px"/>
+                        <img id="output_image" style="width:auto;height:auto; max-height:300px" />
                     </div>
                 </div>
             </div>
@@ -108,10 +110,16 @@
     </div>
 </div>
 @section scripts{
+    <!-- Include the Quill library -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
+        var quill = new Quill('#editor', {
+            theme: 'snow'
+        });
+        var descripcion = $("#Descripcion").val();       
         $(document).ready(function () {
             var lugarImagen = $("#LugarImg").val();
-
             if (lugarImagen == "izquierda" || lugarImagen == "derecha") {
                 $("#seccion_ancho_imagen").show();
             }
@@ -119,6 +127,10 @@
                 $("#seccion_ancho_imagen").hide();
                 $("#AnchoImg").val(0);
             }
+            $(".ql-editor").css("background-color", "#e4e7ea");
+            $(".ql-toolbar").css("background-color", "#e4e7ea");
+            $(".ql-editor").html(descripcion)
+            quill.disable();
         });
         $("#LugarImg").on("change", function () {
             var lugarImagen = $("#LugarImg").val();
@@ -129,7 +141,6 @@
                 $("#AnchoImg").val(0);
             }
         });
-
         $("#btnEditar").on('click', function () {
             $("#bntsEditar").show();
             $("#bntsDetalle").hide();
@@ -137,7 +148,10 @@
             $("#btnEditar").prop('disabled', true);
             $("#btnCancelar").prop('disabled', false);
             $("#btnGuardar").prop('disabled', false);
-            //Habilitar inputs
+            //Habilitar inputs       
+            quill.enable();
+            $(".ql-editor").css("background-color", "#ffffff");
+            $(".ql-toolbar").css("background-color", "#ffffff");
             $("#Orden").prop('disabled', false);
             $("#Tipo").prop('disabled', false);
             $("#Titulo").prop('disabled', false);
@@ -155,6 +169,9 @@
             $("#btnCancelar").prop('disabled', true);
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
+            quill.disable();
+            $(".ql-editor").css("background-color", "#e4e7ea");
+            $(".ql-toolbar").css("background-color", "#e4e7ea");
             $("#Orden").prop('disabled', true);
             $("#Tipo").prop('disabled', true);
             $("#Titulo").prop('disabled', true);
@@ -171,6 +188,11 @@
             }
             reader.readAsDataURL(event.target.files[0]);
         }
+        $("#form_editar_tarjeta").submit(function () {
+            var htmlText = $("#editor .ql-editor").html();
+            quill.disable();
+            $("#Descripcion").val(htmlText);
+        });
     </script>
 }
 
