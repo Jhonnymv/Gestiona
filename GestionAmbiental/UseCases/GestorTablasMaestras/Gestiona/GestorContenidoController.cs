@@ -38,6 +38,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 return View();
             }
         }
+        //Tarjetas
         [HttpPost]
         public async Task<IActionResult> FiltrarTarjetas(string filtro, int pagina, int rpp)
         {
@@ -383,6 +384,188 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         }
         private string CreateUniqueFileName(int idTarjeta) { 
             return  "Tarjeta_" + idTarjeta.ToString() + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
+        }
+        //Colores
+        public async Task<IActionResult> FiltrarColores(string filtro, int pagina, int rpp)
+        {
+            var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+            var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Descripción</th>";
+            tabla += "<th>Código Color</th>";
+            tabla += "<th>Color</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = variables.Count % rpp != 0 ? (variables.Count / rpp) + 1 : variables.Count / rpp;
+            if (variables.Count > 0)
+            {
+                foreach (var fila in variables)
+                {
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Descripcion + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Valor + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><div style=\"height:30px; width:auto; background-color:" + fila.Valor + ";\"></div></td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleColor?Id=" + fila.Id + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarColores(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+
+            }
+            else
+            {
+                var nCol = tabla.Split("</th>").Count() - 1;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
+            }
+
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> DetalleColor(int Id)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                
+                var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+                var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+
+                var data = variables.Find(x => x.Id.Equals(Id));
+                var model = new GestorTablasMaestras.Gestiona.VariablesEstiloModel();
+                model = data;
+                //model.Id = data.Id;
+                //model.Descripcion = data.Descripcion;
+                //model.Variable = data.Variable;
+                //model.Valor = data.Valor;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarColor(VariablesEstiloModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                {
+                    var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+                    var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+
+                    var variable = variables.FirstOrDefault(x => x.Id.Equals(model.Id));
+
+                    if (variable != null)
+                    {
+                        variable.Id = model.Id;
+                        variable.Descripcion = model.Descripcion;
+                        variable.Variable = model.Variable;
+                        variable.Valor = model.Valor;
+                        //Actualizar json
+                        string json = JsonConvert.SerializeObject(variables);
+                        System.IO.File.WriteAllText(variablesPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        //Actualizar css
+                        ActualizarCSS();
+                    }
+                }
+                return RedirectToAction("DetalleColor", new { IdC = model.Id });
+            }
+        }
+        public bool ActualizarCSS()
+        {
+            //buscar json actualizado
+            var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+            var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+
+            var cssPath = Path.Combine(_hostingEnvironment.WebRootPath, "css", "site.css");
+            var cssText = System.IO.File.ReadAllText(cssPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+            //root es el primero que contiene { }
+            //buscar los índices de las primeras { }
+            var firstPtsIndex = cssText.IndexOf('{');
+            var lastPtsIndex = cssText.IndexOf('}');
+            try
+            {
+                //buscar texto root contenido
+                var rootText = cssText.Substring(firstPtsIndex, (lastPtsIndex - firstPtsIndex + 1));
+         
+                //actualizar valores de cada variable
+                foreach(var variable in variables)
+                {
+                    if (rootText.Contains(variable.Variable))
+                    {
+                        //Buscar indice donde termina la variable (luego de cada valor hay un ;)
+                        int firstTemp = rootText.IndexOf(variable.Variable) + variable.Variable.Length;
+                        //Substring temporal para hallar ; que determina hasta donde es el índice del valor de la variable
+                        var temp = rootText.Substring(firstTemp, (rootText.Length - firstTemp));
+                        int first = rootText.IndexOf(":");
+                        int last = rootText.IndexOf(";");
+                        //Texto a reemplazar
+                        string replaced = rootText.Substring(0, first+1) + variable.Valor + rootText.Substring(last);
+                        //var toBeReplaced = rootText.Substring(first+1, (last - first)-1);
+                        rootText = replaced;
+                    }
+                }
+                var toBeReplaced2 = cssText.Substring(firstPtsIndex, (lastPtsIndex - firstPtsIndex)-1);
+                string newCSS = cssText.Substring(0, firstPtsIndex) + rootText + cssText.Substring(lastPtsIndex+1);
+                System.IO.File.WriteAllText(cssPath, newCSS, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            }
+            catch (Exception e)
+            { 
+            }
+            
+            return true;
         }
     }
 }

@@ -58,11 +58,34 @@
             $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
             FiltrarTarjetas(1);
         });
+        $("#Colores").on('click', function (e) {
+            $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").hide();
+            FiltrarColores(1);
+        });
 
         function FiltrarTarjetas(pag) {
             $.ajax({
                 type: "POST",
                 url: "/GestorContenido/FiltrarTarjetas",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarColores(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/FiltrarColores",
                 data: {
                     "pagina": pag,
                     "rpp": 10,
