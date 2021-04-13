@@ -1,4 +1,4 @@
-﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.VariablesEstiloModel
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.ColoresModel
 
 @{
     ViewData["Title"] = "DetalleColor";
@@ -36,9 +36,11 @@
                 <div class="col-lg-4">
                     <label asp-for="Valor"></label>
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-8" style="height:100px;">
                     <span class="text-danger" asp-validation-for="Valor"></span>
-                    <input type="text" class="form-control" asp-for="Valor" disabled>
+                    <input type="hidden" class="form-control" asp-for="Valor" disabled>
+                    <div id="basic">                         
+                    </div>
                 </div>
             </div>
             <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
@@ -53,7 +55,46 @@
     </div>
 </div>
 @section scripts{
-    <script>        
+    <!-- One of the following themes -->
+    <link rel="stylesheet" href="~/lib/pickr/themes/nano.min.css" /> 
+    <!-- Modern or es5 bundle -->
+    <script src="~/lib/pickr/pickr.min.js"></script>
+    <script src="~/lib/pickr/pickr.es5.min.js"></script>
+    <script>
+        // Simple example, see optional options for more configuration.
+        const pickr = Pickr.create({
+            el: '#basic',
+            theme: 'nano', // or 'monolith', or 'nano'
+            default: '@Model.Valor',
+            disabled: true,
+            components: {
+
+                // Main components
+                preview: true,
+                opacity: true,
+                hue: true,
+
+                // Input / output Options
+                interaction: {
+                    input: true,
+                    clear: true,
+                    save: true
+                }
+            }
+        });
+        pickr.on('init', instance => {
+            $(".pickr").css("height", "100%");
+            $(".pickr").css("width", "25%");
+            $(".pickr button").css("height", "100%");
+            $(".pickr button").css("width", "100%");
+            $(".pickr").addClass("shadow");
+
+        })
+        pickr.on('save', (color, instance) => {
+            console.log('Event: "save"', color.toHEXA().toString());
+            pickr.hide();
+            $("#Valor").val(color.toHEXA().toString());
+        })
         $("#btnEditar").on('click', function () {
             $("#bntsEditar").show();
             $("#bntsDetalle").hide();
@@ -62,6 +103,7 @@
             $("#btnCancelar").prop('disabled', false);
             $("#btnGuardar").prop('disabled', false);
             //Habilitar inputs
+            pickr.enable();
             $("#Variable").prop('disabled', false);
             $("#Descripcion").prop('disabled', false);
             $("#Valor").prop('disabled', false);
@@ -75,6 +117,7 @@
             $("#btnCancelar").prop('disabled', true);
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
+            pickr.disable();
             $("#Variable").prop('disabled', true);
             $("#Descripcion").prop('disabled', true);
             $("#Valor").prop('disabled', true);

@@ -1,0 +1,88 @@
+﻿@model GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.FuentesTextoModel
+
+@{
+    ViewData["Title"] = "DetalleFuente";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Detalle de Fuente de Texto</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarFuente" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" value="@Model.Id" />
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label asp-for="Descripcion"></label>
+                </div>
+                <div class="col-lg-8">
+                    <span class="text-danger" asp-validation-for="Descripcion"></span>
+                    <select class="form-control" asp-for="Descripcion" disabled></select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div id="fuente-ejemplo" class="col-lg-12 bg-gray-100 border-1" style="font-family:'@Model.Descripcion'">
+                    <p><h2 id="fuente-descripcion">@Model.Descripcion</h2></p>
+                    <p><h2>Texto de prueba para visualizar fuente de texto</h2></p>
+                    <p><h2>0123456789</h2></p>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorContenido" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts{ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        ObtenerFuentes();
+    });
+    function ObtenerFuentes() {
+        $.ajax({
+            type: "GET",
+            url: "/GestorContenido/ObtenerFuentes",            
+            traditional: true,
+            success: (response) => {
+                if (response.result == "Ok") {
+                    $('#Descripcion').html(response.fuentes);
+                    $('#Descripcion').val("@Model.Descripcion");
+                }
+            }
+        });
+    }
+    $("#Descripcion").on('change', function () {
+        $('#fuente-ejemplo').css("font-family", $("#Descripcion").val());
+        $('#fuente-descripcion').text($("#Descripcion").val());
+    });
+    $("#btnEditar").on('click', function () {
+        $("#bntsEditar").show();
+        $("#bntsDetalle").hide();
+        $("#btnVolver").prop('disabled', true);
+        $("#btnEditar").prop('disabled', true);
+        $("#btnCancelar").prop('disabled', false);
+        $("#btnGuardar").prop('disabled', false);
+        //Habilitar inputs
+        $("#Descripcion").prop('disabled', false);
+    });
+
+    $("#btnCancelar").on('click', function () {
+        $("#bntsEditar").hide();
+        $("#bntsDetalle").show();
+        $("#btnVolver").prop('disabled', false);
+        $("#btnEditar").prop('disabled', false);
+        $("#btnCancelar").prop('disabled', true);
+        $("#btnGuardar").prop('disabled', true);
+        //Deshabilitar inputs
+        $("#Descripcion").prop('disabled', true);
+    });
+</script>
+}

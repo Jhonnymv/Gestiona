@@ -239,5 +239,8 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<CategoriaTipo> GetCategoriaTipo(int id_categoria_tipo);
         Task<int> AddCategoriaTipo(CategoriaTipo CategoriaTipo);
         Task UpdateCategoriaTipo(CategoriaTipo CategoriaTipo);
+        //Tb_Archivo_Configuracion
+        Task<ArchivoConfiguracion> GetArchivoConfiguracion(string nombre);
+        Task UpdateArchivoConfiguracion(ArchivoConfiguracion configuracion);
     }
 }

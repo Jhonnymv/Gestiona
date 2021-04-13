@@ -10,16 +10,22 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.ObtenerConfiguracion;
+using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.EditarConfiguracion;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 {
     public class GestorContenidoController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IObtenerConfiguracion _obtenerConfiguracion;
+        private readonly IEditarConfiguracion _editarConfiguracion;
 
-        public GestorContenidoController(IHostingEnvironment hostingEnvironment)
+        public GestorContenidoController(IHostingEnvironment hostingEnvironment, IObtenerConfiguracion obtenerConfiguracion, IEditarConfiguracion editarConfiguracion)
         {
             _hostingEnvironment = hostingEnvironment;
+            _obtenerConfiguracion = obtenerConfiguracion;
+            _editarConfiguracion = editarConfiguracion;
         }
 
         public async Task<IActionResult> Resumen()
@@ -66,6 +72,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             int nPaginas = cards.Count % rpp != 0 ? (cards.Count / rpp) + 1 : cards.Count / rpp;
             if (cards.Count > 0)
             {
+                if(filtro!=null)
+                    cards = cards.Where(x=>x.Titulo.ToLower().Contains(filtro.ToLower()) || x.Descripcion.ToLower().Contains(filtro.ToLower())).ToList();
+
                 cards = cards.OrderBy(x => x.Orden).ToList();
                 foreach (var fila in cards)
                 {
@@ -215,6 +224,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     string json = JsonConvert.SerializeObject(cards);
                     System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
+                    await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+
+
                     return RedirectToAction("DetalleTarjeta", new { IdTarjeta = model.Id });                    
                 }
                 return RedirectToAction("DetalleTarjeta", new { IdTarjeta = model.Id });
@@ -297,6 +309,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             string json = JsonConvert.SerializeObject(cards);
                             System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
+                            await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+
                             return RedirectToAction("DetalleTarjeta", new { IdTarjeta = card.Id });
                         }
                     }
@@ -335,6 +349,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                     string json = JsonConvert.SerializeObject(cards);
                     System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                    await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
                     response = new
                     {
                         Result = "Ok"
@@ -390,7 +406,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
             var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-            var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+            var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
 
             var tabla = "<table class=\"table\">";
             tabla += "<thead class=\"thead-mcolor\">";
@@ -404,16 +420,21 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             tabla += "<tbody>";
             var filasTabla = "";
             var paginador = "";
-            int nPaginas = variables.Count % rpp != 0 ? (variables.Count / rpp) + 1 : variables.Count / rpp;
-            if (variables.Count > 0)
+            int nPaginas = variables.Colores.Count % rpp != 0 ? (variables.Colores.Count / rpp) + 1 : variables.Colores.Count / rpp;
+            if (variables.Colores.Count > 0)
             {
-                foreach (var fila in variables)
+                if (filtro != null)
+                    variables.Colores = variables.Colores.Where(x => x.Variable.ToLower().Contains(filtro.ToLower()) || x.Descripcion.ToLower().Contains(filtro.ToLower())).ToList();
+
+                variables.Colores = variables.Colores.OrderBy(x => x.Variable).ToList();
+
+                foreach (var fila in variables.Colores)
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Descripcion + "</td>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Valor + "</td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\"><div style=\"height:30px; width:auto; background-color:" + fila.Valor + ";\"></div></td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><div class=\"shadow\" style=\"height:30px; width:auto; background-color:" + fila.Valor + ";\"></div></td>";
                     filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleColor?Id=" + fila.Id + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
@@ -455,7 +476,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleColor(int Id)
+        public async Task<IActionResult> DetalleColor(int Id,string Msg)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -470,21 +491,17 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 
                 var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
                 var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+                var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
 
-                var data = variables.Find(x => x.Id.Equals(Id));
-                var model = new GestorTablasMaestras.Gestiona.VariablesEstiloModel();
+                var data = variables.Colores.Find(x => x.Id.Equals(Id));
+                var model = new GestorTablasMaestras.Gestiona.ColoresModel();
                 model = data;
-                //model.Id = data.Id;
-                //model.Descripcion = data.Descripcion;
-                //model.Variable = data.Variable;
-                //model.Valor = data.Valor;
 
                 return View(model);
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarColor(VariablesEstiloModel model)
+        public async Task<IActionResult> EditarColor(ColoresModel model)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -501,32 +518,41 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 {
                     var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
                     var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                    var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+                    var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
 
-                    var variable = variables.FirstOrDefault(x => x.Id.Equals(model.Id));
+                    var variable = variables.Colores.FirstOrDefault(x => x.Id.Equals(model.Id));
 
                     if (variable != null)
                     {
-                        variable.Id = model.Id;
-                        variable.Descripcion = model.Descripcion;
-                        variable.Variable = model.Variable;
-                        variable.Valor = model.Valor;
-                        //Actualizar json
-                        string json = JsonConvert.SerializeObject(variables);
-                        System.IO.File.WriteAllText(variablesPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                        //Actualizar css
-                        ActualizarCSS();
+                        try
+                        {
+                            variable.Id = model.Id;
+                            variable.Descripcion = model.Descripcion;
+                            variable.Variable = model.Variable;
+                            variable.Valor = model.Valor;
+                            //Actualizar json
+                            string json = JsonConvert.SerializeObject(variables);
+                            System.IO.File.WriteAllText(variablesPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                            //Actualizar css
+                            ActualizarColoresCSS();
+                            
+                            await _editarConfiguracion.Exectue("variables-estilo.json", variablesPath, json);
+                        }
+                        catch(Exception e)
+                        {
+                            return RedirectToAction("DetalleColor", new { Id = model.Id, Msg= "No se pudo cambiar el color: "+e.Message });
+                        }
                     }
                 }
-                return RedirectToAction("DetalleColor", new { IdC = model.Id });
+                return RedirectToAction("DetalleColor", new { Id = model.Id });
             }
         }
-        public bool ActualizarCSS()
+        public bool ActualizarColoresCSS()
         {
             //buscar json actualizado
             var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
             var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-            var variables = JsonConvert.DeserializeObject<List<VariablesEstiloModel>>(variablesText);
+            var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
 
             var cssPath = Path.Combine(_hostingEnvironment.WebRootPath, "css", "site.css");
             var cssText = System.IO.File.ReadAllText(cssPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -541,7 +567,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 var rootText = cssText.Substring(firstPtsIndex, (lastPtsIndex - firstPtsIndex + 1));
          
                 //actualizar valores de cada variable
-                foreach(var variable in variables)
+                foreach(var variable in variables.Colores)
                 {
                     if (rootText.Contains(variable.Variable))
                     {
@@ -566,6 +592,210 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
             
             return true;
+        }
+        //Fuentes
+        public async Task<IActionResult> FiltrarFuentes(string filtro, int pagina, int rpp)
+        {
+            var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+            var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
+
+            var tabla = "<table class=\"table\">";
+            tabla += "<thead class=\"thead-mcolor\">";
+            tabla += "<tr>";
+            tabla += "<th>Fuentes</th>";
+            tabla += "<th></th>";
+            tabla += "</tr>";
+            tabla += "</thead>";
+            tabla += "<tbody>";
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = variables.Colores.Count % rpp != 0 ? (variables.Colores.Count / rpp) + 1 : variables.Colores.Count / rpp;
+            if (variables.Fuentes.Count > 0)
+            {
+                if (filtro != null)
+                    variables.Fuentes = variables.Fuentes.Where(x =>x.Descripcion.ToLower().Contains(filtro.ToLower())).ToList();
+                variables.Fuentes = variables.Fuentes.OrderBy(x => x.Id).ToList();
+                foreach (var fila in variables.Fuentes)
+                {
+                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><h4 style=\"font-family:\'"+ fila.Descripcion + "\'\">" + fila.Descripcion + "</h4></td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleFuente?Id=" + fila.Id + "\">Detalle</a></td>";
+                    filasTabla += "</tr>";
+                }
+                paginador += "<ul class=\"pagination\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                paginador += "</ul>";
+            }
+            else
+            {
+                var nCol = tabla.Split("</th>").Count() - 1;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
+            }
+            tabla += filasTabla;
+            tabla += "</tbody>";
+            tabla += "</table>";
+            dynamic response = new
+            {
+                Tabla = tabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> DetalleFuente(int Id, string Msg)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;          
+                ViewBag.Mensaje = Msg;          
+
+                var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+                var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
+
+                var data = variables.Fuentes.Find(x => x.Id.Equals(Id));
+                var model = new GestorTablasMaestras.Gestiona.FuentesTextoModel();
+                model = data;
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarFuente(FuentesTextoModel model)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                if (ModelState.IsValid)
+                {
+                    var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+                    var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
+
+                    var variable = variables.Fuentes.FirstOrDefault(x => x.Id.Equals(model.Id));
+
+                    if (variable != null)
+                    {
+                        try
+                        {
+                            variable.Id = model.Id;
+                            variable.Descripcion = model.Descripcion;
+                            //Actualizar json
+                            string json = JsonConvert.SerializeObject(variables);
+                            System.IO.File.WriteAllText(variablesPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                            //Actualizar css
+                            ActualizarFuentesCSS();
+
+                            await _editarConfiguracion.Exectue("variables-estilo.json", variablesPath, json);
+                        }
+                        catch (Exception e)
+                        {
+                            return RedirectToAction("DetalleFuente", new { Id = model.Id, Msg = "No se pudo cambiar el color: " + e.Message });
+                        }
+                    }
+                }
+                return RedirectToAction("DetalleFuente", new { Id = model.Id });
+            }
+        }
+        public async Task<IActionResult> ObtenerFuentes()
+        {
+            var fuentesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "fuentes-texto.json");
+            var fuentesText = System.IO.File.ReadAllText(fuentesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var fuentes = JsonConvert.DeserializeObject<List<string>>(fuentesText);
+
+            var html = "";
+            foreach(var item in fuentes)
+            {
+                html+="<option value=\""+item+ "\" style=\"font-family: \'"+item+"\';\">" + item + "</option>";
+            }
+            dynamic response = new
+            {
+                result = "Ok",
+                fuentes = html
+            };
+
+            return Ok(response);
+        }
+        public bool ActualizarFuentesCSS()
+        {
+            //buscar json actualizado
+            var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+            var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            var variables = JsonConvert.DeserializeObject<VariablesEstiloModel>(variablesText);
+
+            var cssPath = Path.Combine(_hostingEnvironment.WebRootPath, "css", "site.css");
+            var cssText = System.IO.File.ReadAllText(cssPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+            //buscar los índices de body { }
+            var firstPtsIndex = cssText.IndexOf("body");
+            var colonsIndex = cssText.Substring(firstPtsIndex).IndexOf(':') + firstPtsIndex;
+            var lastPtsIndex = cssText.Substring(firstPtsIndex).IndexOf('}')+ firstPtsIndex;
+            try
+            {
+                //buscar texto font family contenido
+                var fontText = cssText.Substring(firstPtsIndex, (lastPtsIndex - firstPtsIndex + 1));
+                var newFonts = "";
+                //actualizar valores de cada variable
+                newFonts += "\'" + variables.Fuentes[0].Descripcion + "\',";
+                newFonts += "\'" + variables.Fuentes[1].Descripcion + "\',";
+                newFonts += "\'" + variables.Fuentes[2].Descripcion + "\';";
+
+                string newCSS = cssText.Substring(0, colonsIndex+1) + newFonts + cssText.Substring(lastPtsIndex);
+                System.IO.File.WriteAllText(cssPath, newCSS, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            }
+            catch (Exception e)
+            {
+            }
+
+            return true;
+        }
+
+        public async Task ActualizarColoresFuentes()
+        {
+            var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
+            var variables = await _obtenerConfiguracion.Execute("variables-estilo.json");
+            var json = variables.Texto;
+            System.IO.File.WriteAllText(variablesPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+            
+        }
+        public async Task ActualizarTarjetas()
+        {
+            var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
+            var cards = await _obtenerConfiguracion.Execute("tarjetas.json");
+            var json = cards.Texto;
+            System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
         }
     }
 }

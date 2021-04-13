@@ -1,1 +1,1 @@
-[{"Id":1,"Descripcion":"Barra de navegación superior","Variable":"--top-navbar-color","Valor":"#000000"}]
+{"Colores":[{"Id":1,"Descripcion":"Barra de Navegación Superior","Variable":"--top-navbar-color","Valor":"#FFFFFF"}],"Fuentes":[{"Id":1,"Descripcion":"Arial"},{"Id":2,"Descripcion":"Times New Roman"},{"Id":3,"Descripcion":"Verdana"}]}

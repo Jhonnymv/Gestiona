@@ -46,7 +46,6 @@
     <Folder Include="UseCases\Notificaciones\RAC\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
-    <Folder Include="Views\GestorContenido\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
@@ -67,6 +66,10 @@
     <None Include="UseCases\SGA_Documentos\Administracion\EditarDocumentoSRevision.cshtml" />
     <None Include="UseCases\SGA_Documentos\Administracion\ActualizarDocumento.cshtml" />
     <None Include="UseCases\SGA_Documentos\Administracion\ActualizarDocumentoSRevision.cshtml" />
+    <None Include="wwwroot\lib\pickr\pickr.es5.min.js" />
+    <None Include="wwwroot\lib\pickr\pickr.es5.min.js.map" />
+    <None Include="wwwroot\lib\pickr\pickr.min.js" />
+    <None Include="wwwroot\lib\pickr\pickr.min.js.map" />
   </ItemGroup>
   
 </Project>

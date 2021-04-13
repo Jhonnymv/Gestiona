@@ -2016,22 +2016,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<int> AddTipoDocumento(TipoDocumento TipoDocumento)
         {
-            try
+            var entity = new Entities.SGA_Documentos.Tipo_Documento
             {
-                var entity = new Entities.SGA_Documentos.Tipo_Documento
-                {
-                    Codigo = TipoDocumento.Codigo,
-                    Descripcion = TipoDocumento.Descripcion,
-                    Formato = TipoDocumento.Formato,
-                    Estado = "ACT"
-                };
-                _context.SGA_Tipos_Documento.Add(entity);
-                await _context.SaveChangesAsync();
-                return entity.Id_SGA_Tipo_Documento;
-            }catch(Exception e)
-            {
-                return 0;
-            }
+                Codigo = TipoDocumento.Codigo,
+                Descripcion = TipoDocumento.Descripcion,
+                Formato = TipoDocumento.Formato,
+                Estado = "ACT"
+            };
+            _context.SGA_Tipos_Documento.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_SGA_Tipo_Documento;
         }
         public async Task UpdateTipoDocumento(TipoDocumento TipoDocumento)
         {
@@ -2130,6 +2124,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.SGA_Categoria_Tipo.Update(entity);
             await _context.SaveChangesAsync();
         }
+        //Tb_Archivo_Configuracion
+        //Tb_Archivo_Configuracion
+        public async Task<ArchivoConfiguracion> GetArchivoConfiguracion(string nombre) {
+            var entity = await _context.Archivos_Configuracion.FirstOrDefaultAsync(x => x.Nombre.Equals(nombre));
 
+            var output = new ArchivoConfiguracion
+            {
+                Id = entity.Id,
+                Nombre = entity.Nombre,
+                Ruta = entity.Ruta,
+                Texto = entity.Texto
+            };
+            return output;
+        }
+        public async Task UpdateArchivoConfiguracion(ArchivoConfiguracion configuracion)
+        {
+            var entity = await _context.Archivos_Configuracion.FirstOrDefaultAsync(x => x.Nombre.Equals(configuracion.Nombre));
+            entity.Ruta = configuracion.Ruta;
+            entity.Texto = configuracion.Texto;
+
+            _context.Archivos_Configuracion.Update(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

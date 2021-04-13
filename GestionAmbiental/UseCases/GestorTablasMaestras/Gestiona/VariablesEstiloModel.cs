@@ -7,9 +7,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 {
     public class VariablesEstiloModel
     {
-        public int Id { get; set; }
-        public string Descripcion { get; set; }
-        public string Variable { get; set; }
-        public string Valor { get; set; }
+        public List<ColoresModel> Colores { get; set; }
+        public List<FuentesTextoModel> Fuentes { get; set; }
     }
 }
