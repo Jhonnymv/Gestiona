@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace GestionAmbiental.Controllers
 {
@@ -50,9 +51,11 @@ namespace GestionAmbiental.Controllers
             }
             catch(Exception e)
             {
-
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error("AQUI MANITO"); 
+                Log.Error(e.Message);
             }
-
+            /*
             var rol = await _getRolUsuario.Execute("kevin");
 
              var userInfo = new UserInfo { NombreUsuario = "kevin", Rol = rol.Value };
@@ -60,27 +63,35 @@ namespace GestionAmbiental.Controllers
 
              ViewBag.Rol = userInfo.Rol.ToString();
              ViewBag.Usuario = userInfo.NombreUsuario;
-            /*
+            */
+            
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
             }
-            */
+            
             return View(model);
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Modulos()
         {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+            }
             return View();
         }
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult Error()
+        //{
+        //    return View();
+        //}
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View();
-        }
+
         public IActionResult NoAutorizado()
         {
             return View();

@@ -1,0 +1,73 @@
+﻿<div class="modal" id="modal_opciones_inspecciones" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_inspecciones"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--inspecciones-color);">
+                <h5 class="modal-title" id="titulo_modal_opciones_inspecciones">
+                    INSPECCIONES
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2" style="height:50px;">
+                </div>
+                <div class="row mb-2 justify-content-center" style="height:50px;">
+                    <div class="col-10 opcion-modal-menu">
+                        <a asp-controller="Inspecciones" asp-action="Resumen">
+                            <div class="d-flex align-items-center" style="height:100%;">
+                                <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                <div class="align-self-center opcion-modal-menu-texto">Resumen</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <div class="row mb-2" style="height:25px;">
+                </div>
+                @if (ViewBag.Rol != "Admin")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="InspeccionesImplementacion" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Obs. Pendientes de Implementación</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
+                    {
+                        <div class="row mb-2" style="height:25px;">
+                        </div>
+                        <div class="row mb-2 justify-content-center" style="height:50px;">
+                            <div class="col-10 opcion-modal-menu">
+                                <a asp-controller="InspeccionesVerificacionMA" asp-action="Resumen">
+                                    <div class="d-flex align-items-center" style="height:100%;">
+                                        <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
+                                        <div class="align-self-center opcion-modal-menu-texto">Obs. Pendientes de Verificación</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row mb-2" style="height:25px;">
+                        </div>
+                        <div class="row mb-2 justify-content-center" style="height:50px;">
+                            <div class="col-10 opcion-modal-menu">
+                                <a asp-controller="ReportesInspecciones" asp-action="Resumen">
+                                    <div class="d-flex align-items-center" style="height:100%;">
+                                        <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
+                                        <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos</div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        }
+                    }
+                    <div class="row mb-2" style="height:50px;">
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>

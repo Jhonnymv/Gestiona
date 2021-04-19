@@ -1,0 +1,147 @@
+﻿<div class="modal" id="modal_opciones_residuos_solidos" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_residuos_solidos"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style=" background-color: var(--residuos-solidos-color);">
+                <h5 class="modal-title" id="titulo_modal_opciones_residuos_solidos">
+                    RESIDUOS SÓLIDOS
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row mb-2" style="height:50px;">
+                </div>
+                @if (ViewBag.Rol == "AsesorMAP")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesIngresoSalida" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos Ingreso y Salida</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="CompletarManifiesto" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Control de Manifiestos de Residuos Sólidos MA</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesManifiestoRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Manifiestos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+                @if (ViewBag.Rol == "Contratista")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesIngresoSalida" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Ingreso y Salida de Residuos Sólidos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ManifiestoRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Residuos Sólidos Peligrosos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesManifiestoRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Manifiestos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+                @if (ViewBag.Rol == "Admin")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ManifiestoRS" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Control de Manifiestos de Residuos Sólidos</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+                <div class="row mb-2" style="height:50px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

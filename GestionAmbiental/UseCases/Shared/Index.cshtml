@@ -67,8 +67,14 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-12 justify-content-end align-items-center m-2">
+            <button id="login_btn" class="btn btn-primary" type="button" data-toggle="modal" data-target="#modal_login">Login</button>
+        </div>
+    </div>
 </div>
 <div class="row">
+    @if(Model.Tarjetas != null)
     @foreach (var tarjeta in Model.Tarjetas)
     {
         TamanioColumna colTipe = Model.Configuraciones.TiposTarjeta.Find(x => x.Nombre.Equals(tarjeta.Tipo)).Caracteristicas;
@@ -123,7 +129,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="col-@tarjeta.AnchoImg" style="height:100%; padding-right:0px; padding-left: 0px;">*@
                         <div class="col-@tarjeta.AnchoImg" style="height:100%;">
                             <img class="card-img-top rounded" src="@tarjeta.Imagen" alt="@tarjeta.Titulo" style="height:100%;">
                         </div>
@@ -132,7 +137,6 @@
                 else
                 {
                     <div class="row" style="height:100%;">
-                        @*<div class="col-@tarjeta.AnchoImg" style="height:100%; padding-right:0px; padding-left: 0px;">*@
                         <div class="col-@tarjeta.AnchoImg" style="height:100%;">
                             <img class="card-img-top rounded" src="@tarjeta.Imagen" alt="@tarjeta.Titulo" style="height:100%;">
                         </div>
@@ -156,8 +160,30 @@
         </div>
     }
 </div>
+@Html.Partial("_Login.cshtml", new GestionAmbiental.UseCases.Autenticacion.SigninModel())
+
 @section Scripts{
     <script type="text/javascript">
-
+        $("#btnIniciarSesion").click(function () {
+        var user = $("#User").val();
+        var password = $("#Password").val();
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("IniciarSesion", "Autenticacion")",
+            data: {
+                User: user,
+                Password:password
+            },
+            success: function (result) {
+                if (result.success) {
+                    //window.location.reload();
+                    window.location = '@Url.Action("Modulos", "Home")';
+                } else {
+                    $('#mensaje_row').show();
+                    $('#mensaje_row .text-danger').text(result.mensaje);
+                }
+            }
+        });
+    });
     </script>
 }

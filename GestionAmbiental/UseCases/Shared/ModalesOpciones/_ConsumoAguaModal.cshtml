@@ -1,0 +1,119 @@
+﻿<div class="modal" id="modal_opciones_consumo_agua" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_consumo_agua"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: var(--consumo-agua-color);">
+                <h5 class="modal-title" id="titulo_modal_opciones_consumo_agua">
+                    CONSUMO DE AGUA
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-2" style="height:50px;">
+                </div>
+                @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ConsumoAguaMar" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Agua de Mar</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesConsumoAguaMar" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos Agua de Mar</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Agua Subterranea</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ReportesConsumoAguaSubterranea" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos Agua Subterranea</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="GestorConsumoAgua" asp-action="CargaDataExcel">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#4800ff;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Cargar datos desde Excel</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+                @if (ViewBag.Rol == "Admin")
+                {
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ConsumoAguaMar" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Agua de Mar</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Agua Subterranea</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mb-2" style="height:25px;">
+                    </div>
+                    <div class="row mb-2 justify-content-center" style="height:50px;">
+                        <div class="col-10 opcion-modal-menu">
+                            <a asp-controller="GestorConsumoAgua" asp-action="CargaDataExcel">
+                                <div class="d-flex align-items-center" style="height:100%;">
+                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
+                                    <div class="align-self-center opcion-modal-menu-texto">Cargar datos desde Excel</div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                }
+                <div class="row mb-2" style="height:50px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

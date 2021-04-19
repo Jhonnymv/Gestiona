@@ -26,7 +26,7 @@ var data_rep_causa_incidente = [];
 var graph_rep_causa_incidente;
 
 $(document).ready(function () {
-    ActualizarAvistamientosFaunaFecha();
+    ActualizarRerpotesPreliminaresFechas();
     ActualizaImpactoAgua();
     ActualizarDatosGraficoNivelIncidente();
     ActualizarDatosGraficoGerenciaIncidente();
@@ -34,14 +34,14 @@ $(document).ready(function () {
 });
 
 function Filtrar() {
-    ActualizarAvistamientosFaunaFecha();
+    ActualizarRerpotesPreliminaresFechas();
     ActualizaImpactoAgua();
     ActualizarDatosGraficoNivelIncidente();
     ActualizarDatosGraficoGerenciaIncidente();
     ActualizarDatosGraficoCausaIncidente();
 }
 
-function ActualizarAvistamientosFaunaFecha() {
+function ActualizarRerpotesPreliminaresFechas() {
     tipo = $("#TipoIncidente").val();
     nivel = $("#NivelIncidente").val();
     gerencia = $("#Gerencia").val();
@@ -89,7 +89,7 @@ function ActualizarAvistamientosFaunaFecha() {
                         data.push(data_inv_fechas[i].valor);
                     }
                     //Crear gráfica
-                    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
+                    CrearGraficaRerpotesPreliminaresFechas(labels, data, Math.max(data) / 10);
                 }
                 //ActualizarContadorOxFecha();
             }
@@ -99,7 +99,7 @@ function ActualizarAvistamientosFaunaFecha() {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
 }
-function CrearGraficaAvistamientosFaunaFecha(labels, data, stepSize) {
+function CrearGraficaRerpotesPreliminaresFechas(labels, data, stepSize) {
     graph_inv_fechas = new Chart(
         document.getElementById("chart_rep_fechas"),
         {

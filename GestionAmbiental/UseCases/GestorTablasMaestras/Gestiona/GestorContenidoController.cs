@@ -572,11 +572,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     if (rootText.Contains(variable.Variable))
                     {
                         //Buscar indice donde termina la variable (luego de cada valor hay un ;)
-                        int firstTemp = rootText.IndexOf(variable.Variable) + variable.Variable.Length;
+                        int variableIndex = rootText.IndexOf(variable.Variable);
                         //Substring temporal para hallar ; que determina hasta donde es el índice del valor de la variable
-                        var temp = rootText.Substring(firstTemp, (rootText.Length - firstTemp));
-                        int first = rootText.IndexOf(":");
-                        int last = rootText.IndexOf(";");
+                        int first = rootText.Substring(variableIndex).IndexOf(':') + variableIndex;
+                        int last = rootText.Substring(variableIndex).IndexOf(';') + variableIndex;
                         //Texto a reemplazar
                         string replaced = rootText.Substring(0, first+1) + variable.Valor + rootText.Substring(last);
                         //var toBeReplaced = rootText.Substring(first+1, (last - first)-1);

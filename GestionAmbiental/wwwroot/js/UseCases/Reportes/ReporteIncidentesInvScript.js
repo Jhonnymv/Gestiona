@@ -62,7 +62,7 @@ $(document).ready(function () {
 });
 
 function Filtrar() {
-    ActualizarAvistamientosFaunaFecha();
+    ActualizarInvestigacionesFecha();
     ActualizaNombreComun();
     ActualizaTipoIncidente();
     ActualizaGerenciaIncidente();
@@ -81,7 +81,7 @@ function Filtrar() {
     //ActualizaResiduoAgua();
 }
 
-function ActualizarAvistamientosFaunaFecha() {
+function ActualizarInvestigacionesFecha() {
     tipo = $("#TipoIncidente").val();
     nivel = $("#NivelIncidente").val();
     gerencia = $("#Gerencia").val();
@@ -129,7 +129,7 @@ function ActualizarAvistamientosFaunaFecha() {
                         data.push(data_inv_fechas[i].valor);
                     }
                     //Crear gráfica
-                    CrearGraficaAvistamientosFaunaFecha(labels, data, Math.max(data) / 10);
+                    CrearGraficaInvestigacionesFecha(labels, data, Math.max(data) / 10);
                 }
                 //ActualizarContadorOxFecha();
             }
@@ -139,7 +139,7 @@ function ActualizarAvistamientosFaunaFecha() {
         alert("La fecha de fin debe ser mayor a la fecha de inicio");
     }
 }
-function CrearGraficaAvistamientosFaunaFecha(labels, data, stepSize) {
+function CrearGraficaInvestigacionesFecha(labels, data, stepSize) {
     graph_inv_fechas = new Chart(
         document.getElementById("chart_inv_fechas"),
         {

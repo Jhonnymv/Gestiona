@@ -1,17 +1,206 @@
 /* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 :root {
-    --top-navbar-color  :#FFFFFF;
+    --marcobre-color:#2e6793;
+    --top-navbar-color:#FFFFFF;
+    --inspecciones-color:#FE3838;
+    --rac-color:#FFFE00;
+    --residuos-solidos-color:#BEF300;
+    --incidentes-color:#FFA400;
+    --avistamiento-color:#14A700;
+    --consumo-agua-color:#00B7C5;
+    --sga-color:#FF47F5;
+    --tablas-maestras-color:#007DC9;
 }
 body {
-    font-family:'Arial','Times New Roman','Verdana';}
+    font-family:'Arial','Times New Roman','Verdana';
+}
+.tarjeta-modulos {
+    color: var(--marcobre-color);
+}
+.tarjeta-modulos:hover {
+        background-color: white;
+        border-width:2px;
+    }
+/*Inspecciones*/
+.tarjeta-inspecciones {
+    border-radius: 25px;
+}
+.tarjeta-inspecciones-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+    .tarjeta-inspecciones:hover {
+        color: var(--inspecciones-color);
+        border-color: var(--inspecciones-color);
+    }
+        .tarjeta-inspecciones:hover .tarjeta-inspecciones-img {
+            background-color: var(--inspecciones-color);
+        }
+/*RAC*/
+.tarjeta-rac {
+    border-radius: 25px;
+}
+
+.tarjeta-rac-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-rac:hover {
+    color: var(--rac-color);
+    border-color: var(--rac-color);
+}
+
+    .tarjeta-rac:hover .tarjeta-rac-img {
+        background-color: var(--rac-color);
+    }
+/*Residuos Solidos*/
+.tarjeta-residuos-solidos {
+    border-radius: 25px;
+}
+
+.tarjeta-residuos-solidos-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-residuos-solidos:hover {
+    color: var(--residuos-solidos-color);
+    border-color: var(--residuos-solidos-color);
+}
+
+    .tarjeta-residuos-solidos:hover .tarjeta-residuos-solidos-img {
+        background-color: var(--residuos-solidos-color);
+    }
+/*Incidentes*/
+.tarjeta-incidentes {
+    border-radius: 25px;
+}
+
+.tarjeta-incidentes-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-incidentes:hover {
+    color: var(--incidentes-color);
+    border-color: var(--incidentes-color);
+}
+
+    .tarjeta-incidentes:hover .tarjeta-incidentes-img {
+        background-color: var(--incidentes-color);
+    }
+/*Avistamiento*/
+.tarjeta-avistamiento {
+    border-radius: 25px;
+}
+
+.tarjeta-avistamiento-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-avistamiento:hover {
+    color: var(--avistamiento-color);
+    border-color: var(--avistamiento-color);
+}
+
+    .tarjeta-avistamiento:hover .tarjeta-avistamiento-img {
+        background-color: var(--avistamiento-color);
+    }
+/*Consumo Agua*/
+.tarjeta-consumo-agua {
+    border-radius: 25px;
+}
+
+.tarjeta-consumo-agua-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-consumo-agua:hover {
+    color: var(--consumo-agua-color);
+    border-color: var(--consumo-agua-color);
+}
+
+    .tarjeta-consumo-agua:hover .tarjeta-consumo-agua-img {
+        background-color: var(--consumo-agua-color);
+    }
+/*SGA*/
+.tarjeta-sga {
+    border-radius: 25px;
+}
+
+.tarjeta-sga-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-sga:hover {
+    color: var(--sga-color);
+    border-color: var(--sga-color);
+}
+
+    .tarjeta-sga:hover .tarjeta-sga-img {
+        background-color: var(--sga-color);
+    }
+/*Tablas Maestras*/
+.tarjeta-tablas-maestras {
+    border-radius: 25px;
+}
+
+.tarjeta-tablas-maestras-img {
+    justify-content: center;
+    background-color: var(--marcobre-color);
+    width: fit-content;
+    display: inline-block;
+}
+
+.tarjeta-tablas-maestras:hover {
+    color: var(--tablas-maestras-color);
+    border-color: var(--tablas-maestras-color);
+}
+
+    .tarjeta-tablas-maestras:hover .tarjeta-tablas-maestras-img {
+        background-color: var(--tablas-maestras-color);
+    }
+.opcion-modal-menu {
+    border-radius: 0.25rem;
+    vertical-align: middle;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important
+}
+    .opcion-modal-menu-texto {
+        font-size: 1.2rem;
+        color: var(--marcobre-color);
+    }
+.opcion-modal-menu:hover {
+    background-color:var(--marcobre-color);
+}
+    .opcion-modal-menu:hover .opcion-modal-menu-texto {
+        color: white;
+    }
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
   word-break: break-all;
   width:200px;
 }
-
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
