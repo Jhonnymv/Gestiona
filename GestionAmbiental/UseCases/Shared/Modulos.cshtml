@@ -4,133 +4,134 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-
-<div class="row">
-    <!--Modulo 1-->
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="tarjeta-modulos tarjeta-inspecciones card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_inspecciones">
-            <div class="card-body text-center">
-                <div class="tarjeta-inspecciones-img">
-                    <img src="~/img/iconos nuevos gestiona/inspecciones.png" />
-                </div>
-                <div>
-                    <h1 class="card-title">INSPECCIONES</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    <partial name="../Shared/ModalesOpciones/_InspeccionesModal.cshtml" />
-    <!--Modulo 2-->
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="tarjeta-modulos tarjeta-rac card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_rac">
-            <div class="card-body text-center">
-                <div class="tarjeta-rac-img">
-                    <img src="~/img/iconos nuevos gestiona/rac.png" />
-                </div>
-                <div>
-                    <h1 class="card-title">RAC</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    <partial name="../Shared/ModalesOpciones/_RACModal.cshtml" />
-    @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Contratista" || ViewBag.Rol == "Admin")
-    {
-        <!--Modulo 3-->
+<div id="modulos" class="fondo-modulos">
+    <div class="row" style="height: inherit;">
+        <!--Modulo 1-->
         <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="tarjeta-modulos tarjeta-residuos-solidos card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_residuos_solidos">
+            <div class="tarjeta-modulos tarjeta-inspecciones card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_inspecciones">
                 <div class="card-body text-center">
-                    <div class="tarjeta-residuos-solidos-img">
-                        <img src="~/img/iconos nuevos gestiona/residuos_solidos.png" />
+                    <div class="tarjeta-inspecciones-img">
+                        <img src="~/img/iconos nuevos gestiona/inspecciones.png" />
                     </div>
                     <div>
-                        <h1 class="card-title">RESIDUOS SÓLIDOS</h1>
+                        <h1 class="card-title">INSPECCIONES</h1>
                     </div>
                 </div>
             </div>
         </div>
-        <partial name="../Shared/ModalesOpciones/_ResiduosSolidosModal.cshtml" />
-    }
-    <!--Modulo 4-->
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="tarjeta-modulos tarjeta-incidentes card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_incidentes">
-            <div class="card-body text-center">
-                <div class="tarjeta-incidentes-img">
-                    <img src="~/img/iconos nuevos gestiona/incidentes.png" />
-                </div>
-                <div>
-                    <h1 class="card-title">INCIDENTES AMBIENTALES</h1>
+        <partial name="../Shared/ModalesOpciones/_InspeccionesModal.cshtml" />
+        <!--Modulo 2-->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="tarjeta-modulos tarjeta-rac card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_rac">
+                <div class="card-body text-center">
+                    <div class="tarjeta-rac-img">
+                        <img src="~/img/iconos nuevos gestiona/rac.png" />
+                    </div>
+                    <div>
+                        <h1 class="card-title">RAC</h1>
+                    </div>
                 </div>
             </div>
         </div>
+        <partial name="../Shared/ModalesOpciones/_RACModal.cshtml" />
+        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "Contratista" || ViewBag.Rol == "Admin")
+        {
+            <!--Modulo 3-->
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="tarjeta-modulos tarjeta-residuos-solidos card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_residuos_solidos">
+                    <div class="card-body text-center">
+                        <div class="tarjeta-residuos-solidos-img">
+                            <img src="~/img/iconos nuevos gestiona/residuos_solidos.png" />
+                        </div>
+                        <div>
+                            <h1 class="card-title">RESIDUOS SÓLIDOS</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <partial name="../Shared/ModalesOpciones/_ResiduosSolidosModal.cshtml" />
+        }
+        <!--Modulo 4-->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="tarjeta-modulos tarjeta-incidentes card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_incidentes">
+                <div class="card-body text-center">
+                    <div class="tarjeta-incidentes-img">
+                        <img src="~/img/iconos nuevos gestiona/incidentes.png" />
+                    </div>
+                    <div>
+                        <h1 class="card-title">INCIDENTES AMBIENTALES</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="../Shared/ModalesOpciones/_IncidentesModal.cshtml" />
+        <!--Modulo 5-->
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <div class="tarjeta-modulos tarjeta-avistamiento card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_avistamiento">
+                <div class="card-body text-center">
+                    <div class="tarjeta-avistamiento-img">
+                        <img src="~/img/iconos nuevos gestiona/avistamiento.png" />
+                    </div>
+                    <div>
+                        <h1 class="card-title">AVISTAMIENTO DE FAUNA</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <partial name="../Shared/ModalesOpciones/_AvistamientoModal.cshtml" />
+        @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua" || ViewBag.Rol == "Admin")
+        {
+            <!--Modulo 6-->
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="tarjeta-modulos tarjeta-consumo-agua card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_consumo_agua">
+                    <div class="card-body text-center">
+                        <div class="tarjeta-consumo-agua-img">
+                            <img src="~/img/iconos nuevos gestiona/consumo_agua.png" />
+                        </div>
+                        <div>
+                            <h1 class="card-title">CONSUMO DE AGUA</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <partial name="../Shared/ModalesOpciones/_ConsumoAguaModal.cshtml" />
+        }
+        @if (ViewBag.Rol == "Admin")
+        {
+            <!--Modulo 7-->
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="tarjeta-modulos tarjeta-sga card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_sga">
+                    <div class="card-body text-center">
+                        <div class="tarjeta-sga-img">
+                            <img src="~/img/iconos nuevos gestiona/sga.png" />
+                        </div>
+                        <div>
+                            <h1 class="card-title">SGA</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <partial name="../Shared/ModalesOpciones/_SGAModal.cshtml" />
+            <!--Modulo 8-->
+            <div class="col-sm-12 col-md-6 col-lg-4">
+                <div class="tarjeta-modulos tarjeta-tablas-maestras card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_tablas_maestras">
+                    <div class="card-body text-center">
+                        <div class="tarjeta-tablas-maestras-img">
+                            <img src="~/img/iconos nuevos gestiona/tablas_maestras.png" />
+                        </div>
+                        <div>
+                            <h1 class="card-title">TABLAS MAESTRAS</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <partial name="../Shared/ModalesOpciones/_TablasMaestrasModal.cshtml" />
+        }
     </div>
-    <partial name="../Shared/ModalesOpciones/_IncidentesModal.cshtml" />
-    <!--Modulo 5-->
-    <div class="col-sm-12 col-md-6 col-lg-4">
-        <div class="tarjeta-modulos tarjeta-avistamiento card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_avistamiento">
-            <div class="card-body text-center">
-                <div class="tarjeta-avistamiento-img">
-                    <img src="~/img/iconos nuevos gestiona/avistamiento.png" />
-                </div>
-                <div>
-                    <h1 class="card-title">AVISTAMIENTO DE FAUNA</h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    <partial name="../Shared/ModalesOpciones/_AvistamientoModal.cshtml" />
-    @if (ViewBag.Rol == "AsesorMAP" || ViewBag.Rol == "OperadorAgua" || ViewBag.Rol == "Admin")
-    {
-        <!--Modulo 6-->
-        <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="tarjeta-modulos tarjeta-consumo-agua card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_consumo_agua">
-                <div class="card-body text-center">
-                    <div class="tarjeta-consumo-agua-img">
-                        <img src="~/img/iconos nuevos gestiona/consumo_agua.png" />
-                    </div>
-                    <div>
-                        <h1 class="card-title">CONSUMO DE AGUA</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <partial name="../Shared/ModalesOpciones/_ConsumoAguaModal.cshtml" />
-    }
-    @if (ViewBag.Rol == "Admin")
-    {
-        <!--Modulo 7-->
-        <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="tarjeta-modulos tarjeta-sga card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_sga">
-                <div class="card-body text-center">
-                    <div class="tarjeta-sga-img">
-                        <img src="~/img/iconos nuevos gestiona/sga.png" />
-                    </div>
-                    <div>
-                        <h1 class="card-title">SGA</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <partial name="../Shared/ModalesOpciones/_SGAModal.cshtml" />
-        <!--Modulo 8-->
-        <div class="col-sm-12 col-md-6 col-lg-4">
-            <div class="tarjeta-modulos tarjeta-tablas-maestras card mb-4 box-shadow" data-toggle="modal" data-target="#modal_opciones_tablas_maestras">
-                <div class="card-body text-center">
-                    <div class="tarjeta-tablas-maestras-img">
-                        <img src="~/img/iconos nuevos gestiona/tablas_maestras.png" />
-                    </div>
-                    <div>
-                        <h1 class="card-title">TABLAS MAESTRAS</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <partial name="../Shared/ModalesOpciones/_TablasMaestrasModal.cshtml" />
-    }
 </div>
-
 @section Scripts{
     <script type="text/javascript">
-
+        $('#modulos').parent().removeClass("container-fluid mt-2");
+        $('#modulos').parent().addClass("h-100");
     </script>
 }

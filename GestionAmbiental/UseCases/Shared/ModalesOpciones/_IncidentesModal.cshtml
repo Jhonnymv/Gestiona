@@ -1,16 +1,21 @@
 ﻿<div class="modal" id="modal_opciones_incidentes" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_incidentes"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: var(--incidentes-color);">
-                <h5 class="modal-title" id="titulo_modal_opciones_incidentes">
-                    INCIDENTES AMBIENTALES
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
+        <div class="modal-content" style="background-color: var(--modal-content-color);">
+            <div class="modal-incidentes-header-capa1">
+                <div class="modal-incidentes-header-capa2">
+                    <div class="modal-header modal-incidentes-header-capa3" style="background-color:transparent;">
+                        <h5 class="modal-title" id="titulo_modal_opciones_avistamiento">
+                            <img class="mr-2" src="/img/iconos nuevos gestiona/incidentes-blanco.png" style="height:2rem;"><b>INCIDENTES AMBIENTALES</b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </div>
+            </div>            
             <div class="modal-body">
+                <hr />
                 <div class="row mb-2" style="height:50px;">
                 </div>
                 @if (ViewBag.Rol == "Inspector" || ViewBag.Rol == "AsesorSSO")

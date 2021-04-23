@@ -3,20 +3,37 @@ for details on configuring this project to bundle and minify static web assets. 
 :root {
     --marcobre-color:#2e6793;
     --top-navbar-color:#FFFFFF;
-    --inspecciones-color:#FE3838;
-    --rac-color:#FFFE00;
-    --residuos-solidos-color:#BEF300;
-    --incidentes-color:#FFA400;
-    --avistamiento-color:#14A700;
-    --consumo-agua-color:#00B7C5;
-    --sga-color:#FF47F5;
-    --tablas-maestras-color:#007DC9;
+    --inspecciones-color:#387FFEC7;
+    --rac-color:#FF0000A6;
+    --residuos-solidos-color:#BEF30080;
+    --incidentes-color:#FFA40080;
+    --avistamiento-color:#3BFF207D;
+    --consumo-agua-color:#00B7C56B;
+    --sga-color:#FF47F58C;
+    --tablas-maestras-color:#007DC987;
+    --modal-content-color:#F6F6F6;
 }
 body {
     font-family:'Arial','Times New Roman','Verdana';
 }
+.fondo-modulos {
+    width: 100%;
+    height: 100%;
+    background-image: url('/img/fondo-modulos.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+@media screen and (max-width:768px) {
+    .fondo-modulos {
+        background-image: url('/img/fondo-modulos-telefono.jpg');
+    }
+}
 .tarjeta-modulos {
     color: var(--marcobre-color);
+    margin: 3rem !important;
+    height: 14rem;
 }
 .tarjeta-modulos:hover {
         background-color: white;
@@ -39,6 +56,31 @@ body {
         .tarjeta-inspecciones:hover .tarjeta-inspecciones-img {
             background-color: var(--inspecciones-color);
         }
+.modal-inspecciones-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/inspecciones-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-inspecciones-header-capa2 {
+    height: 100%;
+    background-color: var(--inspecciones-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-inspecciones-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*RAC*/
 .tarjeta-rac {
     border-radius: 25px;
@@ -59,6 +101,31 @@ body {
     .tarjeta-rac:hover .tarjeta-rac-img {
         background-color: var(--rac-color);
     }
+.modal-rac-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/rac-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-rac-header-capa2 {
+    height: 100%;
+    background-color: var(--rac-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-rac-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*Residuos Solidos*/
 .tarjeta-residuos-solidos {
     border-radius: 25px;
@@ -79,6 +146,31 @@ body {
     .tarjeta-residuos-solidos:hover .tarjeta-residuos-solidos-img {
         background-color: var(--residuos-solidos-color);
     }
+.modal-residuos-solidos-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/residuos-solidos-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-residuos-solidos-header-capa2 {
+    height: 100%;
+    background-color: var(--residuos-solidos-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-residuos-solidos-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*Incidentes*/
 .tarjeta-incidentes {
     border-radius: 25px;
@@ -99,6 +191,31 @@ body {
     .tarjeta-incidentes:hover .tarjeta-incidentes-img {
         background-color: var(--incidentes-color);
     }
+.modal-incidentes-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/incidentes-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-incidentes-header-capa2 {
+    height: 100%;
+    background-color: var(--incidentes-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-incidentes-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*Avistamiento*/
 .tarjeta-avistamiento {
     border-radius: 25px;
@@ -119,6 +236,29 @@ body {
     .tarjeta-avistamiento:hover .tarjeta-avistamiento-img {
         background-color: var(--avistamiento-color);
     }
+.modal-avistamiento-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/avistamiento-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+.modal-avistamiento-header-capa2 {
+    height: 100%;
+    background-color: var(--avistamiento-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+.modal-avistamiento-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*Consumo Agua*/
 .tarjeta-consumo-agua {
     border-radius: 25px;
@@ -139,6 +279,31 @@ body {
     .tarjeta-consumo-agua:hover .tarjeta-consumo-agua-img {
         background-color: var(--consumo-agua-color);
     }
+.modal-consumo-agua-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/consumo-agua-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-consumo-agua-header-capa2 {
+    height: 100%;
+    background-color: var(--consumo-agua-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-consumo-agua-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*SGA*/
 .tarjeta-sga {
     border-radius: 25px;
@@ -159,6 +324,31 @@ body {
     .tarjeta-sga:hover .tarjeta-sga-img {
         background-color: var(--sga-color);
     }
+.modal-sga-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/sga-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-sga-header-capa2 {
+    height: 100%;
+    background-color: var(--sga-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-sga-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
 /*Tablas Maestras*/
 .tarjeta-tablas-maestras {
     border-radius: 25px;
@@ -179,8 +369,35 @@ body {
     .tarjeta-tablas-maestras:hover .tarjeta-tablas-maestras-img {
         background-color: var(--tablas-maestras-color);
     }
+.modal-tablas-maestras-header-capa1 {
+    width: 90%;
+    height: 6rem;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('/img/iconos nuevos gestiona/tablas-maestras-fondo.jpg');
+    background-size: cover;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    align-self: center;
+}
+
+.modal-tablas-maestras-header-capa2 {
+    height: 100%;
+    background-color: var(--sga-color);
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+
+.modal-tablas-maestras-header-capa3 {
+    height: 100%;
+    align-items: center;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+}
+/*modal menu*/
 .opcion-modal-menu {
-    border-radius: 0.25rem;
+    background-color:white;
+    border-radius: 1rem;
     vertical-align: middle;
     box-shadow: 0 .5rem 1rem rgba(0,0,0,.15) !important
 }

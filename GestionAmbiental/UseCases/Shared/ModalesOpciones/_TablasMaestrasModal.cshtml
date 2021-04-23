@@ -1,16 +1,21 @@
 ﻿<div class="modal" id="modal_opciones_tablas_maestras" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_tablas_maestras"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="background-color: var(--tablas-maestras-color);">
-                <h5 class="modal-title" id="titulo_modal_opciones_tablas_maestras">
-                    TABLAS MAESTRAS
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+        <div class="modal-content" style="background-color: var(--modal-content-color);">
+            <div class="modal-tablas-maestras-header-capa1">
+                <div class="modal-tablas-maestras-header-capa2">
+                    <div class="modal-header modal-tablas-maestras-header-capa3" style="background-color:transparent;">
+                        <h5 class="modal-title" id="titulo_modal_opciones_tablas_maestras">
+                            <img class="mr-2" src="/img/iconos nuevos gestiona/tablas_maestras-blanco.png" style="height:2rem;"><b>Tablas Maestras</b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                </div>
             </div>
             <div class="modal-body">
+                <hr />
                 <div class="row mb-2" style="height:50px;">
                 </div>
                 @if (ViewBag.Rol == "Admin")
