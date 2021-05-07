@@ -3,7 +3,75 @@
 @model GestionAmbiental.UseCases.Home.HomeModel
 @{
     ViewData["Title"] = "Bienvenido";
+    Layout = "~/UseCases/Shared/_HomeLayout.cshtml";
 }
+<div class="articles">
+    <div class="article-card small-article">
+        <div class="article-content">
+            <div class="article-title">
+                <h3>Título de Artículo</h3>
+                <span>Fecha: 30/03/2021</span>
+            </div>
+            <div class="article-body">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
+                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
+                    rerum tempore veniam, voluptatibus?
+                </p>
+            </div>
+            <div class="article-footer">
+                <span>Escrito por Jhonny Moncada</span>
+            </div>
+        </div>
+        <div class="article-image">
+            <img src="~/img/landing-page-img.png" alt="">
+        </div>
+    </div>
+
+    <div class="article-card large-article">
+        <div class="article-content">
+            <div class="article-title">
+                <h3>Título de Artículo</h3>
+                <span>Fecha: 30/03/2021</span>
+            </div>
+            <div class="article-body">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
+                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
+                    rerum tempore veniam, voluptatibus?
+                </p>
+            </div>
+            <div class="article-footer">
+                <span>Escrito por Jhonny Moncada</span>
+            </div>
+        </div>
+        <div class="article-image">
+            <img src="~/img/article-image2.png" alt="">
+        </div>
+    </div>
+
+    <div class="article-card small-article">
+        <div class="article-content col-12">
+            <div class="article-title">
+                <h3>Título de Artículo</h3>
+                <span>Fecha: 30/03/2021</span>
+            </div>
+            <div class="article-body">
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
+                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
+                    rerum tempore veniam, voluptatibus?
+                </p>
+            </div>
+            <div class="article-footer">
+                <span>Escrito por Jhonny Moncada</span>
+            </div>
+        </div>
+        <div class="article-image">
+            <img src="~/img/article-image1.png" alt="">
+        </div>
+    </div>
+</div>
 <div class="container">
     <div class="row">
         <div class="col-12 justify-content-end align-items-center m-2">
@@ -164,9 +232,12 @@
 
 @section Scripts{
     <script type="text/javascript">
+        var count = 1;
         $("#btnIniciarSesion").click(function () {
         var user = $("#User").val();
-        var password = $("#Password").val();
+            var password = $("#Password").val();
+            console.log(count);
+            count = count + 1;
         $.ajax({
             type: "POST",
             url: "@Url.Action("IniciarSesion", "Autenticacion")",
@@ -177,6 +248,7 @@
             success: function (result) {
                 if (result.success) {
                     //window.location.reload();
+                    console.log('Hola Mundo');
                     window.location = '@Url.Action("Modulos", "Home")';
                 } else {
                     $('#mensaje_row').show();

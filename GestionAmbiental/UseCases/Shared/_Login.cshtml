@@ -1,7 +1,45 @@
 ﻿@using GestionAmbiental.UseCases.Autenticacion
 @model SigninModel
 
-<div class="modal" id="modal_login" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_login"
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="login-image-background">
+                <div class="modal-content">
+                    <form class="form-group" id="form_login" asp-controller="Autenticacion" asp-action="IniciarSesion" enctype="multipart/form-data" autocomplete="off">
+                        <div class="modal-body">
+                            <div class="loginImg d-flex justify-content-center">
+                                <img src="~/img/logo-white.png" alt="">
+                            </div>
+                            <div class="loginForm">
+                                <div class="input-login-mc">
+                                    <input  asp-for="User" class="form-control input-login" type="text" placeholder="">
+                                    <label asp-for="User" for="">Usuario</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                                <div class="input-login-mc">
+                                    <input asp-for="Password" class="form-control input-login" type="password" placeholder="">
+                                    <label asp-for="Password" for="">Contraseña</label>
+                                    <span class="focus-border"></span>
+                                </div>
+                            </div>
+                            <div class="loginRemember">
+                                <input id="check_remember" class="checkbox form-check-input" type="checkbox">
+                                <label for="check_remember" class="form-check-label">Recordar Cuenta</label>
+                            </div>
+                            <div class="login-button">
+                                <button id="btnIniciarSesion" class="btn btn-outline">Iniciar Sesión</button>
+                            </div>
+                            <div class="login-forgot">
+                                <a href=""><span>¿Olvidaste tu Contraseña?</span></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@*<div class="modal" id="modal_login" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_login"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog" role="document">
         <div class="modal-content" style="background-color: rgba(43,103,147,0.9);">
@@ -58,4 +96,4 @@
             </form>
         </div>
     </div>
-</div>
+</div>*@

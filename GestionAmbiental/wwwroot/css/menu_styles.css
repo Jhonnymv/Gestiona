@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+body::-webkit-scrollbar{
+    -webkit-appearance: none;
+    transition: 0.3s;
+}
+
+body::-webkit-scrollbar:vertical {
+    width:10px;
+}
+
+body::-webkit-scrollbar-button:increment, #sidebar::-webkit-scrollbar-button {
+    display: none;
+}
+
+body::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+.navbar {
+    width: 100%;
+    padding: 10px 10px;
+    background: #fff;
+    border: none;
+    position: sticky;
+    position: -webkit-sticky;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin-bottom: 40px;
+    box-shadow: 0px 4px 4px rgba(0 ,0 ,0, 0.25);
+}
+
+.navbar .img-logo {
+    width: 50%;
+}
+
+.navbar .img-logo img {
+    width: 10rem;
+}
+
+.navbar-light .navbar-toggler{
+    border: none;
+}
+
+.navbar .btn-logout svg {
+    transform: rotate(180deg);
+}
+
+.navbar .btn-logout svg path {
+    fill: #2D649B;
+}
+
+.navbar .logout-btn {
+    display: none;
+}
+
+.menu_background {
+    min-height: 100vh;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.menu_img_bg{
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.menu_items {
+    padding: 10px 30px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.menu_item_container{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.menu_item {
+    margin-bottom: 25px;
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #ffffff;
+    text-decoration: none;
+}
+
+.menu_item span{
+    font-family: 'Titillium Web', sans-serif;
+    color: #2D649B;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0px;
+    text-transform: uppercase;
+    text-align: center;
+    width: 100%;
+    transition: 0.3s;
+}
+
+.menu_item svg{
+    height: 2.5em;
+    width: 2.5em;
+    margin: 0px 10px;
+}
+
+.menu_item svg path{
+    fill: #2D649B;
+    transition: 0.3s;
+}
+
+
+
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (min-width: 640px) {
+    .menu_items {
+        padding: 10px 25px;
+    }
+
+    .menu_item_container{
+        width: 45%;
+        margin: 0px 10px;
+    }
+}
+
+
+@media (min-width: 768px) {
+    .navbar .btn-logout {
+        display: none;
+    }
+
+    .navbar .logout-btn, .navbar .logout-btn svg {
+        display: block;
+        vertical-align: middle;
+    }
+
+    .navbar .logout-btn {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .navbar .logout-btn svg {
+        transform: rotate(180deg);
+    }
+
+    .navbar .logout-btn span {
+        font-size: 15px;
+        color: #2D649B;
+        margin: 0px 10px;
+    }
+
+    .navbar .logout-btn svg path {
+        fill: #2D649B;
+    }
+}
+
+@media (min-width: 900px) {
+    .menu_items {
+        padding: 10px 25px;
+    }
+
+    .menu_item_container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
+        height: 25vh;
+        margin: 0px 10px;
+    }
+
+    .menu_item {
+        margin: 0;
+        width: 85%;
+        height: 70%;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .menu_item span{
+        font-size: 15px;
+    }
+
+    .menu_item svg{
+        margin: 0;
+    }
+}
+
+@media (min-width: 1365px) {
+    .menu_item {
+        width: 60%;
+        height: 95%;
+    }
+
+    .menu_item_container{
+        margin: 25px 0px;
+    }
+}
+
+
+@media (min-width: 1600px) {
+    .menu_item {
+        width: 55%;
+        height: 75%;
+    }
+
+    .menu_item_container{
+        margin: 25px 0px;
+    }
+
+    .menu_item span{
+        font-size: 16px;
+    }
+}

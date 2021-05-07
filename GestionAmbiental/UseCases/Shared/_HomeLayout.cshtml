@@ -1,0 +1,105 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>@ViewData["Title"] - PLATAFORMA GESTIONA</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/bootstrap/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/home_styles.css">
+</head>
+<body>
+
+
+    <div class="landing-page">
+        <nav class="navbar sticky-top navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><img src="~/img/logo-white.png" alt=""></a>
+                <div class="nav-div-actions">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                            aria-label="Toggle navigation">
+                        <svg width="24" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M2 24H34C35.1 24 36 23.1 36 22C36 20.9 35.1 20 34 20H2C0.9 20 0 20.9 0 22C0 23.1 0.9 24 2 24ZM2 14H34C35.1 14 36 13.1 36 12C36 10.9 35.1 10 34 10H2C0.9 10 0 10.9 0 12C0 13.1 0.9 14 2 14ZM0 2C0 3.1 0.9 4 2 4H34C35.1 4 36 3.1 36 2C36 0.9 35.1 0 34 0H2C0.9 0 0 0.9 0 2Z"
+                                  fill="#FFBE0B" />
+                        </svg>
+                    </button>
+                    <button class="navbar-toggler btn-login" type="button" data-bs-toggle="modal"
+                            data-bs-target="#loginModal">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.79597 20.3265C9.7653 20.2449 9.75474 20.1755 9.76514 20.1194C9.77549 20.0636 9.73984 20.0174 9.65808 19.9818C9.57633 19.9462 9.53553 19.918 9.53553 19.8978C9.53553 19.8774 9.47693 19.8621 9.35947 19.852C9.24206 19.8417 9.18347 19.8365 9.18347 19.8365H8.98457H8.81624H4.40806C3.73461 19.8365 3.15803 19.597 2.67838 19.117C2.19883 18.6374 1.95909 18.061 1.95909 17.3877V6.61207C1.95909 5.93862 2.19878 5.36225 2.67838 4.88265C3.15803 4.403 3.73461 4.1631 4.40806 4.1631H9.30597C9.43865 4.1631 9.54298 4.13018 9.6197 4.0637C9.69609 3.99739 9.74702 3.89783 9.77265 3.7652C9.79817 3.63257 9.81355 3.5128 9.8187 3.40563C9.82374 3.29857 9.82127 3.16326 9.81098 3.00002C9.80085 2.83683 9.79575 2.73481 9.79575 2.69379C9.79575 2.56116 9.74724 2.4466 9.65036 2.34945C9.55338 2.25274 9.43865 2.20422 9.30602 2.20422H4.40806C3.1939 2.20422 2.15557 2.63536 1.29324 3.49758C0.431135 4.35979 0 5.39796 0 6.61223V17.3876C0 18.6018 0.431135 19.6402 1.29324 20.5021C2.15557 21.3648 3.1939 21.7959 4.40806 21.7959H9.30618C9.43887 21.7959 9.54325 21.7625 9.61991 21.6965C9.69631 21.6301 9.74724 21.5306 9.77286 21.3978C9.79838 21.2654 9.81377 21.145 9.81891 21.0383C9.82395 20.9311 9.82149 20.7961 9.81119 20.6328C9.80095 20.4694 9.79597 20.3674 9.79597 20.3265Z"
+                                  fill="white" />
+                            <path d="M23.653 11.3112L15.3265 2.98451C15.1328 2.79087 14.9031 2.69373 14.6378 2.69373C14.3725 2.69373 14.1428 2.79087 13.9488 2.98451C13.7549 3.17842 13.6581 3.40825 13.6581 3.6734V8.08157H6.80097C6.53549 8.08157 6.30598 8.17872 6.11207 8.37236C5.91816 8.56627 5.82129 8.79593 5.82129 9.06125V14.9389C5.82129 15.2042 5.91816 15.4338 6.11207 15.6276C6.3062 15.8212 6.53565 15.9186 6.80097 15.9186H13.6581V20.3267C13.6581 20.5918 13.755 20.8217 13.9489 21.0154C14.1428 21.2093 14.3725 21.3064 14.6378 21.3064C14.9031 21.3064 15.1328 21.2093 15.3266 21.0154L23.653 12.6891C23.8469 12.495 23.9438 12.2657 23.9438 12.0003C23.9438 11.735 23.8469 11.5051 23.653 11.3112Z"
+                                  fill="white" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
+                    <ul class="navbar-nav">
+                        <li class="nav-item active">
+                            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Noticias</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Gestión Social</a>
+                        </li>
+                        <!--                <li class="nav-item dropdown">-->
+                        <!--                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
+                        <!--                        Dropdown link-->
+                        <!--                    </a>-->
+                        <!--                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
+                        <!--                        <li><a class="dropdown-item" href="#">Action</a></li>-->
+                        <!--                        <li><a class="dropdown-item" href="#">Another action</a></li>-->
+                        <!--                        <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+                        <!--                    </ul>-->
+                        <!--                </li>-->
+                    </ul>
+                </div>
+                <a class="navbar-brand login-btn pull-right" href="#" data-bs-toggle="modal"
+                   data-bs-target="#loginModal">
+                    <span>Iniciar Sesión</span>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.79597 20.3265C9.7653 20.2449 9.75474 20.1755 9.76514 20.1194C9.77549 20.0636 9.73984 20.0174 9.65808 19.9818C9.57633 19.9462 9.53553 19.918 9.53553 19.8978C9.53553 19.8774 9.47693 19.8621 9.35947 19.852C9.24206 19.8417 9.18347 19.8365 9.18347 19.8365H8.98457H8.81624H4.40806C3.73461 19.8365 3.15803 19.597 2.67838 19.117C2.19883 18.6374 1.95909 18.061 1.95909 17.3877V6.61207C1.95909 5.93862 2.19878 5.36225 2.67838 4.88265C3.15803 4.403 3.73461 4.1631 4.40806 4.1631H9.30597C9.43865 4.1631 9.54298 4.13018 9.6197 4.0637C9.69609 3.99739 9.74702 3.89783 9.77265 3.7652C9.79817 3.63257 9.81355 3.5128 9.8187 3.40563C9.82374 3.29857 9.82127 3.16326 9.81098 3.00002C9.80085 2.83683 9.79575 2.73481 9.79575 2.69379C9.79575 2.56116 9.74724 2.4466 9.65036 2.34945C9.55338 2.25274 9.43865 2.20422 9.30602 2.20422H4.40806C3.1939 2.20422 2.15557 2.63536 1.29324 3.49758C0.431135 4.35979 0 5.39796 0 6.61223V17.3876C0 18.6018 0.431135 19.6402 1.29324 20.5021C2.15557 21.3648 3.1939 21.7959 4.40806 21.7959H9.30618C9.43887 21.7959 9.54325 21.7625 9.61991 21.6965C9.69631 21.6301 9.74724 21.5306 9.77286 21.3978C9.79838 21.2654 9.81377 21.145 9.81891 21.0383C9.82395 20.9311 9.82149 20.7961 9.81119 20.6328C9.80095 20.4694 9.79597 20.3674 9.79597 20.3265Z"
+                              fill="white" />
+                        <path d="M23.653 11.3112L15.3265 2.98451C15.1328 2.79087 14.9031 2.69373 14.6378 2.69373C14.3725 2.69373 14.1428 2.79087 13.9488 2.98451C13.7549 3.17842 13.6581 3.40825 13.6581 3.6734V8.08157H6.80097C6.53549 8.08157 6.30598 8.17872 6.11207 8.37236C5.91816 8.56627 5.82129 8.79593 5.82129 9.06125V14.9389C5.82129 15.2042 5.91816 15.4338 6.11207 15.6276C6.3062 15.8212 6.53565 15.9186 6.80097 15.9186H13.6581V20.3267C13.6581 20.5918 13.755 20.8217 13.9489 21.0154C14.1428 21.2093 14.3725 21.3064 14.6378 21.3064C14.9031 21.3064 15.1328 21.2093 15.3266 21.0154L23.653 12.6891C23.8469 12.495 23.9438 12.2657 23.9438 12.0003C23.9438 11.735 23.8469 11.5051 23.653 11.3112Z"
+                              fill="white" />
+                    </svg>
+                </a>
+            </div>
+        </nav>
+        <div class="landing-accesories">
+            <div class="cover-div">
+
+            </div>
+            <div class="bottom-bar">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        @RenderBody()
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/js/jquery-3.6.0.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+            integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+            crossorigin="anonymous"></script>
+
+    <!-- Custom JS -->
+    <script src="~/js/template_script.js"></script>
+    <script src="~/js/home.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

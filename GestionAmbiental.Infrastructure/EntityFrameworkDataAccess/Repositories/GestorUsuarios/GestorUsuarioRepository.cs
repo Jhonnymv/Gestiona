@@ -20,25 +20,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<InspeccionRol?> GetRolUsuario(string usuario_red)
         {
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.usuario_red.Equals(usuario_red) && x.Estado.Equals("ACT"));
-
-            if (usuario != null)
+            try
             {
-                var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
+                var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.usuario_red.Equals(usuario_red) && x.Estado.Equals("ACT"));
 
-                return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
+                if (usuario != null)
+                {
+                    var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
 
-                /*if (usuario.Id_Rol.Equals((int)InspeccionRol.Admin))
-                    return InspeccionRol.Admin;
-                else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorMAP))
-                    return InspeccionRol.AsesorMAP;
-                else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorSSO))
-                    return InspeccionRol.AsesorSSO;
+                    return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
+
+                    /*if (usuario.Id_Rol.Equals((int)InspeccionRol.Admin))
+                        return InspeccionRol.Admin;
+                    else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorMAP))
+                        return InspeccionRol.AsesorMAP;
+                    else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorSSO))
+                        return InspeccionRol.AsesorSSO;
+                    else
+                        return InspeccionRol.Inspector;*/
+                }
                 else
-                    return InspeccionRol.Inspector;*/
+                    return null;
             }
-            else
+            catch (Exception e)
+            {
                 return null;
+                throw;
+            }
         }
 
         public async Task<Usuario> GetUsuario(string usuario_red)

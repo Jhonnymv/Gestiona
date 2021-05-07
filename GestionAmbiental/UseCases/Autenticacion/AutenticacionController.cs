@@ -71,10 +71,10 @@ namespace GestionAmbiental.UseCases.Autenticacion
         }
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(SigninModel model)
-        { 
+        {
+            dynamic result;
             if (ModelState.IsValid)
-            {
-                dynamic result;
+            {                
                 var rol = await _getRolUsuario.Execute(model.User);
                 if (!rol.HasValue)
                 {
@@ -95,38 +95,14 @@ namespace GestionAmbiental.UseCases.Autenticacion
                         success = true
                     };
                 }
-                return Json(result);
-                //// Get LDAP connection data
-                //var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-                //string ldap_path = "", ldap_domain = "";
-                //foreach (var item in info.Info)
-                //{
-                //    switch (item.Key)
-                //    {
-                //        case "ldap_path": ldap_path = item.Value; break;
-                //        case "ldap_domain": ldap_domain = item.Value; break;
-                //    }
-                //}
-                //// Validate credentials
-                //using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
-                //{
-                //    if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
-                //    {
-                //        var rol = await _getRolUsuario.Execute(model.User);
-                //        if (!rol.HasValue)
-                //            return RedirectToAction("NoAutorizado", "Home");
-                //        else
-                //        {
-                //            var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                //            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                //            return RedirectToAction("Index", "Home");
-                //        }
-                //    }
-                //    else
-                //        return View(new SigninModel { MensajeAut = "El usuario o la contraseña son incorrectas" });
-                //}
+                
             }
-            return View();
+            result = new
+            {
+                success = false,
+                mensaje = "Error en login"
+            }; 
+            return Ok(result);
         }
         public async Task<IActionResult> SignOut()
         {
