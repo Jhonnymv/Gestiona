@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="card text-center">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="listItems">
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Empresa" id="Empresa" >Empresas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#Gerencia" id="Gerencia">Gerencias</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"  data-toggle="tab" href="#TipoCondicion" id="TipoCondicion">Acto/Condición Subestándar</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                <label>Buscar:</label>
+            </div>
+            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro">
+            </div>
+            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                <button class="btn btn-primary" type="button" id="btn_enviar">Enviar</button>
+            </div>
+        </div>
+        <div class="row justify-content-start mt-2">
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+            </div>
+        </div>
+        <div class="row" id="tab_content">
+        </div>
+        <div class="row justify-content-center" id="paginado">
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {            
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabEmpresaGerenciaTipoCondicion');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FiltrarEmpresa(1);
+                $("#btn_agregar").prop("href", "/GestorEGTC/AgregarEmpresa");
+            }
+        });
+        //Guardar tab activo en local storage
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabEmpresaGerenciaTipoCondicion', $(e.target).attr('href'));
+            console.log($(e.target).attr('id'))
+            switch ($(e.target).attr('id')) {
+                case "Empresa":
+                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarEmpresa");
+                    FiltrarEmpresa(1);
+                    break;
+                case "Gerencia":
+                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarGerencia");
+                    FiltrarGerencia(1);
+                    break;
+                case "TipoCondicion":
+                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarGerencia");
+                    FiltrarGerencia(1);
+                    break;
+            }
+        });
+        $("#Empresa").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorEGTC/AgregarEmpresa");
+            FiltrarEmpresa(1);
+        });
+        $("#Gerencia").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorEGTC/AgregarGerencia");
+            FiltrarGerencia(1);
+        });
+        $("#TipoCondicion").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorEGTC/AgregarTipoCondicion");
+            FiltrarTipoCondicion(1);
+        });
+        $("#btn_enviar").on('click', function (e) {
+            if ($("#Empresa").hasClass("active")) {
+                FiltrarEmpresa(1);
+            }
+            if ($("#Gerencia").hasClass("active")) {
+                FiltrarGerencia(1);
+            }
+            if ($("#TipoCondicion").hasClass("active")) {
+                FiltrarTipoCondicion(1);
+            }
+        });
+        function FiltrarEmpresa(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/FiltrarEmpresa",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function FiltrarGerencia(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/FiltrarGerencia",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                    /*$('#nRegistros').html(response.nRegistros)*/
+                }
+            });
+        }
+        function FiltrarTipoCondicion(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorEGTC/FiltrarTipoCondicion",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+    </script>
+}
+

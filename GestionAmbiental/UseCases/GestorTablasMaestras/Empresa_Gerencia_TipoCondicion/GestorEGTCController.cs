@@ -57,7 +57,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
             _agregarTipoCondicion = agregarTipoCondicion;
         }
 
-        public IActionResult EGTCs()
+        public IActionResult Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
@@ -74,7 +74,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Empresas(string filtro, int pagina, int rpp)
+        public async Task<IActionResult> FiltrarEmpresa(string filtro, int pagina, int rpp)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
@@ -86,7 +86,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                 else
                 {
                     var data = await _getEmpresas.Execute(filtro, pagina, rpp);
-                    var filasTabla = "";
+                    var filasTabla = "<table class=\"table\">";
+                    filasTabla += "<thead class=\"thead-mcolor\">";
+                    filasTabla += "<tr>";
+                    filasTabla += "<th>Razón Social</th>";
+                    filasTabla += "<th>Estado</th>";
+                    filasTabla += "<th></th>";
+                    filasTabla += "</tr>";
+                    filasTabla += "</thead>";
+                    filasTabla += "<tbody>";
                     var paginador = "";
                     int nPaginas = data.nEmpresas % rpp != 0 ? (data.nEmpresas / rpp) + 1 : data.nEmpresas / rpp;
                     if (data.nEmpresas > 0)
@@ -103,20 +111,20 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
 
                         paginador += "<ul class=\"pagination\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
                             if (i > 0 && i <= nPaginas)
                             {
                                 if (i == pagina)
-                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + i + ")\">" + i + "</a></li>";
                                 else
-                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + i + ")\">" + i + "</a></li>";
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarEmpresas(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
 
                     }
@@ -124,9 +132,11 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     {
                         filasTabla = "Sin datos";
                     }
+                    filasTabla += "</tbody>";
+                    filasTabla += "</table>";
                     dynamic response = new
                     {
-                        Data = filasTabla,
+                        Tabla = filasTabla,
                         Paginador = paginador
                     };
                     return Ok(response);
@@ -213,7 +223,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
             }
         }
         [HttpPost]
-        public async Task<IActionResult> Gerencias(string filtro, int pagina, int rpp)
+        public async Task<IActionResult> FiltrarGerencia(string filtro, int pagina, int rpp)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
@@ -225,7 +235,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                 else
                 {
                     var data = await _getGerencias.Execute(filtro, pagina, rpp);
-                    var filasTabla = "";
+                    var filasTabla = "<table class=\"table\">";
+                    filasTabla += "<thead class=\"thead-mcolor\">";
+                    filasTabla += "<tr>";
+                    filasTabla += "<th>Gerencia</th>";
+                    filasTabla += "<th></th>";
+                    filasTabla += "</tr>";
+                    filasTabla += "</thead>";
+                    filasTabla += "<tbody>";
                     var paginador = "";
                     int nPaginas = data.nGerencias % rpp != 0 ? (data.nGerencias / rpp) + 1 : data.nGerencias / rpp;
                     if (data.nGerencias > 0)
@@ -241,29 +258,31 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
 
                         paginador += "<ul class=\"pagination\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
                             if (i > 0 && i <= nPaginas)
                             {
                                 if (i == pagina)
-                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + i + ")\">" + i + "</a></li>";
                                 else
-                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + i + ")\">" + i + "</a></li>";
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarGerencias(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else
                     {
                         filasTabla = "Sin datos";
                     }
+                    filasTabla += "</tbody>";
+                    filasTabla += "</table>";
                     dynamic response = new
                     {
-                        Data = filasTabla,
+                        Tabla = filasTabla,
                         Paginador = paginador
                     };
                     return Ok(response);
@@ -348,7 +367,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
             }
         }
         [HttpPost]
-        public async Task<IActionResult> TiposCondicion(string filtro, int pagina, int rpp)
+        public async Task<IActionResult> FiltrarTipoCondicion(string filtro, int pagina, int rpp)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
                 return RedirectToAction("NoAutorizado", "Home");
@@ -360,7 +379,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                 else
                 {
                     var data = await _getTiposCondicion.Execute(filtro, pagina, rpp);
-                    var filasTabla = "";
+                    var filasTabla = "<table class=\"table\">";
+                    filasTabla += "<thead class=\"thead-mcolor\">";
+                    filasTabla += "<tr>";
+                    filasTabla += "<th>Tipo Acto/Condición Subestándar</th>";
+                    filasTabla += "<th>Clasificación</th>";
+                    filasTabla += "<th></th>";
+                    filasTabla += "</tr>";
+                    filasTabla += "</thead>";
+                    filasTabla += "<tbody>";
                     var paginador = "";
                     int nPaginas = data.nTiposCondicion % rpp != 0 ? (data.nTiposCondicion / rpp) + 1 : data.nTiposCondicion / rpp;
                     if (data.nTiposCondicion > 0)
@@ -376,29 +403,31 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
 
                         paginador += "<ul class=\"pagination\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
                             if (i > 0 && i <= nPaginas)
                             {
                                 if (i == pagina)
-                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + i + ")\">" + i + "</a></li>";
                                 else
-                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + i + ")\">" + i + "</a></li>";
+                                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + i + ")\">" + i + "</a></li>";
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrarTipos(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else
                     {
                         filasTabla = "Sin datos";
                     }
+                    filasTabla += "</tbody>";
+                    filasTabla += "</table>";
                     dynamic response = new
                     {
-                        Data = filasTabla,
+                        Tabla = filasTabla,
                         Paginador = paginador
                     };
                     return Ok(response);

@@ -10,6 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\**" />
+    <Content Remove="Views\**" />
+    <EmbeddedResource Remove="Views\**" />
+    <None Remove="Views\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="C:\Users\kevin\.nuget\packages\dotnetcore.npoi\1.2.3\contentFiles\any\netstandard2.0\NOTICE.TXT" />
   </ItemGroup>
 
@@ -46,7 +53,6 @@
     <Folder Include="UseCases\Notificaciones\RAC\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
-    <Folder Include="Views\Home\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
