@@ -14,6 +14,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/sidebar_styles.css">
     <link rel="stylesheet" href="~/css/styles.css">
+    @RenderSection("Styles", required: false)
 
 </head>
 
@@ -21,21 +22,20 @@
 
     <div class="wrapper">
 
-        
+
 
         <!-- LEFT SIDEBAR -->
         <partial name="_SideBar" />
         <!-- END LEFT SIDEBAR -->
-
         <!-- MAIN CONTENT -->
-        
+
 
         <div id="content">
 
             <!-- NAVBAR -->
             <partial name="_NavBar" />
             <!-- END NAVBAR -->
-        
+
 
             @RenderBody()
 
