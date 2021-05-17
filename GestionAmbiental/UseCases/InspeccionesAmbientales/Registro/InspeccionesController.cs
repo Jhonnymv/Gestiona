@@ -136,13 +136,19 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance + "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
+                    filasTabla += "<td><div class=\"progress\">" +
+                                          "<span class=\"percent\" >" + avance + "%</span>" +
+                                          "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">" 
+                                           +
+                                          "</div>" +
+                                      "</div>" +
+                                  "</td>";
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {

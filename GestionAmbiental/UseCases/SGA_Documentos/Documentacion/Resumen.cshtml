@@ -3,251 +3,630 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2 id="titulo_pagina">Documentos SGA</h2>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-3 col-lg-2 text-center">
-        <div class="d-flex flex-column" style="width:100%;">
-            <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
-            <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
-            <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sga">
-        <div class="card-deck text-center justify-content-center">
-            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Matrices Base</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-            <div><p>Manuales, Planes y Programas</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-            <div><p>Instructivos y Protocolos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
-            <div><p>Formatos</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sgi" style="display:none">
-        <div class="card-deck text-center justify-content-center">
-            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13,21])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-            <div><p>Reglamentos y Estándar de Gestión</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-            <div><p>Programas e Instructivos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
-            <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14,22])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
-        <div class="card-deck text-center justify-content-center">
-            <div><p>Legislación Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([23])"><p class="texto-tipoDoc">LP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Norma Técnica Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([24])"><p class="texto-tipoDoc">NTP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-            <div><p>Estándares Corporativos</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([25])"><p class="texto-tipoDoc">EC</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-            <div><p>Estándares Internacionales</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([26])"><p class="texto-tipoDoc">EI</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-        </div>
-    </div>
-</div>
-<form autocomplete="off">
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Nombre de Documento:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="text" class="form-control" id="filtro_nombre">
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Código:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="text" class="form-control" id="filtro_codigo">
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Tipo de Documento:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple></select>
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Estado:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones"></select>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-end">
-        <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
-            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])">Certificaciones Ambientales</button>
-        </div>
-    </div>
-</form>
-<div class="row mb-2 justify-content-center">
-    <div class="col-md">
-        <table class="table" id="tabla_documentos">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Código</th>
-                    <th>Documento</th>
-                    <th>Versión / Revisión</th>
-                    <th>Fecha de Aprobación</th>
-                    <th>Estado</th>
-                    <th>Comentarios</th>
-                    <th>Fecha Tentativa de la Nueva Versión</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <nav id="paginado" aria-label="pagination">
-    </nav>
-</div>
-<!--Modal Docs Tipo-->
-<div class="modal fade" id="modal_docs_tipo" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_tipo"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_docs_tipo">
-                    Documentos Filtrados
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+<div class="sga">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title sga-opacity-color">
+                <h3><span id="titulo_pagina">Documentos SGA</span></h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
-            <form>
-                <div class="modal-body">
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-md">
-                            <input type="hidden" id="tipoDocModal" />
-                            <table class="table table-modal" id="tabla_documentos_tipo">
-                                <thead class="thead-mcolor">
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Documento</th>
-                                        <th>Versión / Revisión</th>
-                                        <th>Fecha de Aprobación</th>
-                                        <th>Condición</th>
-                                        <th>Comentarios</th>
-                                        <th>Fecha Tentativa de la Nueva Versión</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-docsga-tab" data-bs-toggle="pill" data-bs-target="#pills-docsga" type="button" role="tab" aria-controls="pills-docsga" aria-selected="true">Documentos SGA</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-docsgi-tab" data-bs-toggle="pill" data-bs-target="#pills-docsgi" type="button" role="tab" aria-controls="pills-docsgi" aria-selected="false">Documentos SGI</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">Documentos Externos</button>
+                </li>
+
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container sga-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <button type="button" id="btn_certificaciones" class="btn btn-special-action-outline sga-color" onclick="FiltrarTipo([20])">CERTIFICACIONES AMBIENTALES</button>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Nombre de Documento</label>
+                                <input type="text" class="form-control" id="filtro_nombre">
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_codigo">Código</label>
+                                <input type="text" class="form-control" id="filtro_codigo">
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">Tipo de Documento</label>
+                                <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple>
+                                </select>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">Estado</label>
+                                <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        @*<div class="col-12 col-sm-12 row-center-center">*@
+                            <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                        @*</div>*@
+                    </div>    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondary-content filters-mc col-12">
+        <div class="filter-mc-title">
+            <span>FILTROS ADICIONALES</span>
+        </div>
+
+        <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-docsga" role="tabpanel" aria-labelledby="pills-docsga-tab">
+                <div class="filter-mc-content d-flex justify-content-center">
+                    <div class="div-scroll-horizontal">
+                        <a class="filter-mc-item" onclick="FiltrarTipo([1])">
+                            <div class="filter-mc-item-title">
+                                <span>Política</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">P</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([13])">
+                            <div class="filter-mc-item-title">
+                                <span>Matrices Base</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">M</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([2,12,11])">
+                            <div class="filter-mc-item-title">
+                                <span>Manuales, Planes y Programas</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">MP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([7,12])">
+                            <div class="filter-mc-item-title">
+                                <span>Procedimientos y Planes</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">PR</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([9,10])">
+                            <div class="filter-mc-item-title">
+                                <span>Instructivos y Protocolos</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">IP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([14])">
+                            <div class="filter-mc-item-title">
+                                <span>Formatos</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">F</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-docsgi" role="tabpanel" aria-labelledby="pills-docsgi-tab">
+                <div class="filter-mc-content d-flex justify-content-center">
+                    <div class="div-scroll-horizontal">
+                        <a class="filter-mc-item" onclick="FiltrarTipo([1])">
+                            <div class="filter-mc-item-title">
+                                <span>Política</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">P</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([13,21])">
+                            <div class="filter-mc-item-title">
+                                <span>Manuales y Directrices</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">M</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([2,12,11])">
+                            <div class="filter-mc-item-title">
+                                <span>Reglamentos y Estándar de Gestión</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">MP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([7,12])">
+                            <div class="filter-mc-item-title">
+                                <span>Procedimientos y Planes</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">PR</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([9,10])">
+                            <div class="filter-mc-item-title">
+                                <span>Programas e Instructivos</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">IP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([14,22])">
+                            <div class="filter-mc-item-title">
+                                <span>Formatos y Plantillas</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">F</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="pills-docext" role="tabpanel" aria-labelledby="pills-docext-tab">
+                <div class="filter-mc-content d-flex justify-content-center">
+                    <div class="div-scroll-horizontal">
+                        <a class="filter-mc-item" onclick="FiltrarTipo([23])">
+                            <div class="filter-mc-item-title">
+                                <span>Legislación Peruana</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">LP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([24])">
+                            <div class="filter-mc-item-title">
+                                <span>Norma Técnica Peruana</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">NTP</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([25])">
+                            <div class="filter-mc-item-title">
+                                <span>Estándares Corporativos</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">EC</span>
+                            </div>
+                        </a>
+                        <a class="filter-mc-item" onclick="FiltrarTipo([26])">
+                            <div class="filter-mc-item-title">
+                                <span>Estándares Internacionales</span>
+                            </div>
+                            <div class="filter-mc-item-body">
+
+                                <svg width="136" height="73" viewBox="0 0 136 73" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M108.704 36.224L108.704 36.2243C108.774 36.4012 108.774 36.5988 108.704 36.7757L108.704 36.776L95.0489 71.5376C94.9944 71.6762 94.9006 71.7934 94.7813 71.8752C94.6622 71.9569 94.5226 71.9999 94.3807 72C94.3806 72 94.3805 72 94.3805 72H1.72329C1.60752 71.9999 1.49306 71.9713 1.38979 71.916C1.28647 71.8607 1.19703 71.7801 1.13002 71.6804C1.06296 71.5807 1.0206 71.4651 1.00738 71.3438C0.994149 71.2224 1.01056 71.0998 1.05486 70.9868L14.2066 37.5076C14.2066 37.5075 14.2067 37.5074 14.2067 37.5073C14.4611 36.8602 14.4611 36.1398 14.2067 35.4927C14.2067 35.4926 14.2066 35.4925 14.2066 35.4924L1.05486 2.01315C1.05483 2.01307 1.05479 2.01298 1.05476 2.0129C1.01054 1.90003 0.994159 1.77751 1.00738 1.65624C1.0206 1.53489 1.06296 1.41933 1.13001 1.31959C1.19703 1.2199 1.28647 1.13931 1.3898 1.08399C1.49302 1.02872 1.6074 1.00009 1.7231 1H94.3805C94.3805 1 94.3806 1 94.3807 1C94.5226 1.00007 94.6622 1.04311 94.7813 1.1248C94.9006 1.20662 94.9944 1.32383 95.0489 1.46241L108.704 36.224Z" stroke="#2D649B" stroke-width="2" />
+                                    <path d="M120.7 72H120.7C120.842 72 120.981 71.9574 121.1 71.8764C121.219 71.7953 121.312 71.6793 121.367 71.5418L120.7 72ZM120.7 72H113.642H113.64C113.524 72.0003 113.409 71.9718 113.306 71.9166C113.202 71.8614 113.112 71.7808 113.045 71.681C112.978 71.5811 112.935 71.4654 112.922 71.3438C112.909 71.2224 112.925 71.0997 112.97 70.9868C112.97 70.9866 112.97 70.9864 112.97 70.9862L126.054 37.7937L126.055 37.7909C126.307 37.1473 126.307 36.4318 126.056 35.7881C126.056 35.7877 126.055 35.7874 126.055 35.787L112.959 2.01005C112.959 2.00999 112.959 2.00994 112.959 2.00988C112.915 1.89703 112.899 1.77471 112.913 1.65374C112.927 1.53273 112.969 1.41757 113.036 1.31822C113.103 1.21892 113.193 1.13868 113.296 1.0836C113.399 1.02859 113.513 1.00009 113.628 1H120.683H120.683C120.826 0.999972 120.967 1.04358 121.087 1.12637C121.206 1.20925 121.3 1.32793 121.354 1.468L134.95 36.9416C134.95 36.9417 134.95 36.9418 134.95 36.9419C135.018 37.1183 135.016 37.3145 134.947 37.4899L121.368 71.5413L120.7 72Z" stroke="#2D649B" stroke-width="2" />
+                                </svg>
+                                <span class="filter-mc-item-abr">EI</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive sga-color">
+            <table class="table" id="tabla_documentos">
+                <thead class="">
+                    <tr>
+                        <th>Código</th>
+                        <th>Documento</th>
+                        <th>Versión / Revisión</th>
+                        <th>Fecha de Aprobación</th>
+                        <th>Estado</th>
+                        <th>Comentarios</th>
+                        <th>Fecha Tentativa de la Nueva Versión</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container sga-color" id="paginado" aria-label="pagination">
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3>Documentos</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer justify-content-center">
-                    <div class="row mb-2 justify-content-center">
-                        <nav id="paginado_documentos_tipo" aria-label="pagination">
-                        </nav>
+                <div class="modal-body">
+                    <div class="sga">
+                        <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
+                            <div class="table-responsive sga-color">
+                                <input type="hidden" id="tipoDocModal" />
+                                <table class="table" id="tabla_documentos_tipo">
+                                    <thead class="">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Documento</th>
+                                            <th>Versión / Revisión</th>
+                                            <th>Fecha de Aprobación</th>
+                                            <th>Condición</th>
+                                            <th>Comentarios</th>
+                                            <th>Fecha Tentativa de la Nueva Versión</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="pagination-container sga-color" id="paginado_documentos_tipo" aria-label="pagination">
+
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
 
-@section scripts{
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
-    <script type="text/javascript">
-        var categoria = 1;
-        var tipos = [];
-        var tiposFiltro = [];
-        $(document).ready(function () {
-            filtrar(1);
-        });
-        function filtrar(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/GetTablaResumenFiltrada",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "nombre": $('#filtro_nombre').val(),
-                    "categoria": categoria,
-                    "tipos": $('#filtro_tipoDoc').val(),
-                    "condicion": $('#filtro_condicion').val(),
-                    "codigo": $("#filtro_codigo").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_documentos tbody').empty()
-                    $('#tabla_documentos tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
-                }
+
+
+
+
+
+
+    @*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2 id="titulo_pagina">Documentos SGA</h2>
+        </div>
+    </div>
+    <div class="row mb-2">*@
+        @*<div class="col-sm-12 col-md-3 col-lg-2 text-center">
+                <div class="d-flex flex-column" style="width:100%;">
+                    <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
+                    <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
+                    <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sga">
+                <div class="card-deck text-center justify-content-center">
+                    <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+                    <div><p>Matrices Base</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+                    <div><p>Manuales, Planes y Programas</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+                    <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
+                    <div><p>Instructivos y Protocolos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
+                    <div><p>Formatos</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
+                </div>
+            </div>*@
+        @*<div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sgi" style="display:none">
+            <div class="card-deck text-center justify-content-center">
+                <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+                <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13,21])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+                <div><p>Reglamentos y Estándar de Gestión</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+                <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
+                <div><p>Programas e Instructivos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
+                <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14,22])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
+            </div>
+        </div>*@
+        @*<div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
+            <div class="card-deck text-center justify-content-center">
+                <div><p>Legislación Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([23])"><p class="texto-tipoDoc">LP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
+                <div><p>Norma Técnica Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([24])"><p class="texto-tipoDoc">NTP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
+                <div><p>Estándares Corporativos</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([25])"><p class="texto-tipoDoc">EC</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
+                <div><p>Estándares Internacionales</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([26])"><p class="texto-tipoDoc">EI</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
+            </div>
+        </div>
+    </div>*@
+    @*<form autocomplete="off">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-2 mt-1">
+                <label>Nombre de Documento:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro_nombre">
+            </div>
+            <div class="col-lg-2 mt-1">
+                <label>Código:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro_codigo">
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-2 mt-1">
+                <label>Tipo de Documento:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple></select>
+            </div>
+            <div class="col-lg-2 mt-1">
+                <label>Estado:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones"></select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-1 mt-1">
+                <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+            </div>
+        </div>*@
+    @*<div class="row mb-2 justify-content-end">
+            <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
+                <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])">Certificaciones Ambientales</button>
+            </div>
+        </div>*@
+    @*</form>*@
+    @*<div class="row mb-2 justify-content-center">
+            <div class="col-md">
+                <table class="table" id="tabla_documentos">
+                    <thead class="thead-mcolor">
+                        <tr>
+                            <th>Código</th>
+                            <th>Documento</th>
+                            <th>Versión / Revisión</th>
+                            <th>Fecha de Aprobación</th>
+                            <th>Estado</th>
+                            <th>Comentarios</th>
+                            <th>Fecha Tentativa de la Nueva Versión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <nav id="paginado" aria-label="pagination">
+            </nav>
+        </div>*@
+
+    <!--Modal Docs Tipo-->
+    @*<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_tipo"
+             aria-hidden="true" style="display: none;">
+            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titulo_modal_docs_tipo">
+                            Documentos Filtrados
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <form>
+                        <div class="modal-body">
+                            <div class="row mb-2 justify-content-center">
+                                <div class="col-md">
+                                    <input type="hidden" id="tipoDocModal" />
+                                    <table class="table table-modal" id="tabla_documentos_tipo">
+                                        <thead class="thead-mcolor">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Documento</th>
+                                                <th>Versión / Revisión</th>
+                                                <th>Fecha de Aprobación</th>
+                                                <th>Condición</th>
+                                                <th>Comentarios</th>
+                                                <th>Fecha Tentativa de la Nueva Versión</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <div class="row mb-2 justify-content-center">
+                                <nav id="paginado_documentos_tipo" aria-label="pagination">
+                                </nav>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>*@
+
+    @section scripts{
+        @*<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>*@
+        <script type="text/javascript">
+            var categoria = 1;
+            var tipos = [];
+            var tiposFiltro = [];
+            $(document).ready(function () {
+                filtrar(1);
             });
-        }
-        function filtrarModal(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "nombre": $('#filtro_nombre').val(),
-                    "categoria": categoria,
-                    "tipos": $("#filtro_tipoDoc").val(),
-                    "condicion": $('#filtro_condicion').val(),
-                    "codigo": $("#filtro_codigo").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_documentos_tipo tbody').empty()
-                    $('#tabla_documentos_tipo tbody').html(response.data)
-                    $('#paginado_documentos_tipo').html(response.paginador)
-                    $("#filtro_tipoDoc").val([]);
-                }
+            function filtrar(pag) {
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/GetTablaResumenFiltrada",
+                    data: {
+                        "pagina": pag,
+                        "rpp": 10,
+                        "nombre": $('#filtro_nombre').val(),
+                        "categoria": categoria,
+                        "tipos": $('#filtro_tipoDoc').val(),
+                        "condicion": $('#filtro_condicion').val(),
+                        "codigo": $("#filtro_codigo").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        $('#tabla_documentos tbody').empty()
+                        $('#tabla_documentos tbody').html(response.data)
+                        $('#paginado').html(response.paginador)
+                        /*$('#nRegistros').html(response.nRegistros)*/
+                        let r7 = 129;
+                        let g7 = 110;
+                        let b7 = 12;
+                        sgaStyle(r7, g7, b7);
+                    }
+                });
+            }
+            function filtrarModal(pag) {
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
+                    data: {
+                        "pagina": pag,
+                        "rpp": 10,
+                        "nombre": $('#filtro_nombre').val(),
+                        "categoria": categoria,
+                        "tipos": $("#filtro_tipoDoc").val(),
+                        "condicion": $('#filtro_condicion').val(),
+                        "codigo": $("#filtro_codigo").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        $('#tabla_documentos_tipo tbody').empty()
+                        $('#tabla_documentos_tipo tbody').html(response.data)
+                        $('#paginado_documentos_tipo').html(response.paginador)
+                        $("#filtro_tipoDoc").val([]);
+                        let r7 = 129;
+                        let g7 = 110;
+                        let b7 = 12;
+                        sgaStyle(r7, g7, b7);
+                    }
+                });
+            }
+            $("#pills-docsga-tab").on('click', function () {
+                $("#opciones_sga").show();
+                $("#opciones_sgi").hide();
+                $("#opciones_externo").hide();
+                //Botones adicionales
+                $("#btn_certificaciones").show();
+
+                $("#titulo_pagina").text("Documentos SGA");
+                categoria = 1;
+                filtrar(1);
             });
-        }
-        $("#btn_sga").on('click', function () {
-            $("#opciones_sga").show();
-            $("#opciones_sgi").hide();
-            $("#opciones_externo").hide();
-            //Botones adicionales
-            $("#btn_certificaciones").show();
-            
-            $("#titulo_pagina").text("Documentos SGA");
-            categoria = 1;
-            filtrar(1);
-        });
-        $("#btn_sgi").on('click', function () {
-            $("#opciones_sgi").show();
-            $("#opciones_sga").hide();
-            $("#opciones_externo").hide();
+            $("#pills-docsgi-tab").on('click', function () {
+                $("#opciones_sgi").show();
+                $("#opciones_sga").hide();
+                $("#opciones_externo").hide();
 
-            //Botones adicionales
-            $("#btn_certificaciones").hide();
+                //Botones adicionales
+                $("#btn_certificaciones").hide();
 
-            $("#titulo_pagina").text("Documentos SGI");
-            categoria = 2;
-            filtrar(1);
-        });
-        $("#btn_externos").on('click', function () {
-            $("#opciones_externo").show();
-            $("#opciones_sga").hide();
-            $("#opciones_sgi").hide();
-            //Botones adicionales
-            $("#btn_certificaciones").hide();
+                $("#titulo_pagina").text("Documentos SGI");
+                categoria = 2;
+                filtrar(1);
+            });
+            $("#pills-docext-tab").on('click', function () {
+                $("#opciones_externo").show();
+                $("#opciones_sga").hide();
+                $("#opciones_sgi").hide();
+                //Botones adicionales
+                $("#btn_certificaciones").hide();
 
-            $("#titulo_pagina").text("Documentos Externos");
-            categoria = 3;
-            filtrar(1);
-        });
-        function FiltrarTipo(tipos) {
-            $("#filtro_tipoDoc").val([]);
-            $('#filtro_tipoDoc').val(tipos);
-            $('#modal_docs_tipo').modal('show');
-            $("#tipoDocModal").val(tipos)
-            filtrarModal(1);
-        }
-    </script>
-}
+                $("#titulo_pagina").text("Documentos Externos");
+                categoria = 3;
+                filtrar(1);
+            });
+            function FiltrarTipo(tipos) {
+                $("#filtro_tipoDoc").val([]);
+                $('#filtro_tipoDoc').val(tipos);
+                $('#modal_docs_tipo').modal('show');
+                $("#tipoDocModal").val(tipos)
+                filtrarModal(1);
+            }
+        </script>
+    }

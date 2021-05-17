@@ -44,7 +44,37 @@
         </div>
     </div>
 </form>
-<div class="row mb-2">
+
+<div class="inspection">
+    <div class="secondary-content col-12">
+        <div class="table-responsive inspection-color">
+            <table class="table" id="tabla_resumen_inspecciones">
+                <thead class="">
+                    <tr>
+                        <th>Código</th>
+                        <th>Área Ejecutora de la Inspección</th>
+                        <th>Empresa Inspeccionada</th>
+                        <th>Área Inspeccionada</th>
+                        <th>Fecha de Inspección</th>
+                        <th>N° Observaciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container inspection-color">
+            <ul class="pagination pagination-sm" id="paginado">
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-md">
         <table class="table" id="tabla_resumen_inspecciones">
             <thead class="thead-mcolor">
@@ -61,11 +91,11 @@
             </tbody>
         </table>
     </div>
-</div>
-<div class="row mb-2 justify-content-center">
+</div>*@
+@*<div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
 @section scripts{
     <script>
         $(document).ready(function () {

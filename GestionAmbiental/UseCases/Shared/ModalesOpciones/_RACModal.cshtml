@@ -1,79 +1,67 @@
-﻿<div class="modal" id="modal_opciones_rac" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_rac"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: var(--modal-content-color);">
-            <div class="modal-rac-header-capa1">
-                <div class="modal-rac-header-capa2">
-                    <div class="modal-header modal-rac-header-capa3" style="background-color:transparent;">
-                        <h5 class="modal-title" id="titulo_modal_opciones_rac">
-                            <img class="mr-2" src="/img/iconos nuevos gestiona/rac-blanco.png" style="height:2rem;">
-                            <b>
-                            REPORTE DE ACTO/CONDICIÓN SUBESTÁNDAR
-                            </b>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+﻿<div class="modal fade" id="racMenuModal" tabindex="-1" aria-labelledby="racMenuModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-menu modal-menu-rac">
+            <div class="modal-content">
+                <div class="modal-image-header-container">
+                    <div class="modal-header">
+                        <h3>
+                            <i>
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M23.3251 21.9891L12.8532 1.04999C12.3329 0.145302 11.3391 0.562489 11.1422 1.04999L0.609431 22.0969C0.248494 22.9406 0.984431 23.5078 1.46724 23.4797H22.5235C22.5282 23.4797 22.5282 23.4797 22.5329 23.4797C23.2876 23.5219 23.7422 22.6266 23.3251 21.9891ZM3.01412 21.5719L11.9954 3.61874L20.9766 21.5719H3.01412Z"
+                                          fill="#2E6395" />
+                                    <path d="M11.0391 9.52967V15.4312C11.0391 15.9609 11.4656 16.3875 11.9953 16.3875C12.525 16.3875 12.9516 15.9609 12.9516 15.4312V9.52967C12.9516 8.99999 12.525 8.57343 11.9953 8.57343C11.4656 8.57343 11.0391 8.99999 11.0391 9.52967Z"
+                                          fill="#2E6395" />
+                                    <path d="M11.9954 19.7578C12.5261 19.7578 12.9563 19.3276 12.9563 18.7969C12.9563 18.2662 12.5261 17.8359 11.9954 17.8359C11.4647 17.8359 11.0344 18.2662 11.0344 18.7969C11.0344 19.3276 11.4647 19.7578 11.9954 19.7578Z"
+                                          fill="#2E6395" />
+                                </svg>
+                            </i>
+                            <span>Reporte de Acto/Condición Subestándar</span>
+                        </h3>
                     </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <hr />
-                <div class="row mb-2" style="height:50px;">
-                </div>
-                <div class="row mb-2 justify-content-center" style="height:50px;">
-                    <div class="col-10 opcion-modal-menu">
-                        <a asp-controller="RegistroRAC" asp-action="Resumen">
-                            <div class="d-flex align-items-center" style="height:100%;">
-                                <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                <div class="align-self-center opcion-modal-menu-texto">Resumen</div>
+                <div class="menu-modal-separator"></div>
+                <div class="modal-body">
+                    <div class="modal-menu-options">
+                        <a class="modal-menu-option" asp-controller="RegistroRAC" asp-action="Resumen">
+                            <div class="icon-modal-menu-red">
+
+                            </div>
+                            <div class="text-modal-menu-option">
+                                <span>Resumen</span>
                             </div>
                         </a>
-                    </div>
-                </div>
-                <div class="row mb-2" style="height:25px;">
-                </div>
-                @if (ViewBag.Rol != "Admin")
-                {
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ImplementacionRAC" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Pendientes de Implementación</div>
+                        @if (ViewBag.Rol != "Admin")
+                        {
+                            <a class="modal-menu-option" asp-controller="ImplementacionRAC" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Pendientes de Implementación</span>
                                 </div>
                             </a>
-                        </div>
+                            @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
+                            {
+                                <a class="modal-menu-option" asp-controller="VerificacionRAC" asp-action="Resumen">
+                                    <div class="icon-modal-menu-yellow">
+
+                                    </div>
+                                    <div class="text-modal-menu-option">
+                                        <span>Pendientes de Verificación</span>
+                                    </div>
+                                </a>
+                                <a class="modal-menu-option" asp-controller="ReportesRAC" asp-action="Resumen">
+                                    <div class="icon-modal-menu-bluesky">
+
+                                    </div>
+                                    <div class="text-modal-menu-option">
+                                        <span>Reportes Estadísticos</span>
+                                    </div>
+                                </a>
+                            }
+                        }
                     </div>
-                    @if (ViewBag.Rol == "AsesorSSO" || ViewBag.Rol == "AsesorMAP")
-                    {
-                        <div class="row mb-2" style="height:25px;">
-                        </div>
-                        <div class="row mb-2 justify-content-center" style="height:50px;">
-                            <div class="col-10 opcion-modal-menu">
-                                <a asp-controller="VerificacionRAC" asp-action="Resumen">
-                                    <div class="d-flex align-items-center" style="height:100%;">
-                                        <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                        <div class="align-self-center opcion-modal-menu-texto">Pendientes de Verificación</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="row mb-2" style="height:25px;">
-                        </div>
-                        <div class="row mb-2 justify-content-center" style="height:50px;">
-                            <div class="col-10 opcion-modal-menu">
-                                <a asp-controller="ReportesRAC" asp-action="Resumen">
-                                    <div class="d-flex align-items-center" style="height:100%;">
-                                        <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
-                                        <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    }
-                }
-                <div class="row mb-2" style="height:50px;">
                 </div>
             </div>
         </div>

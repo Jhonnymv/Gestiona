@@ -1,9 +1,71 @@
 ﻿<!DOCTYPE html>
 <html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>@ViewData["Title"] - PLATAFORMA GESTIONA</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="~/bootstrap/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/sidebar_styles.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+
+</head>
+
+<body>
+
+    <div class="wrapper">
+
+        
+
+        <!-- LEFT SIDEBAR -->
+        <partial name="_SideBar" />
+        <!-- END LEFT SIDEBAR -->
+
+        <!-- MAIN CONTENT -->
+        
+
+        <div id="content">
+
+            <!-- NAVBAR -->
+            <partial name="_NavBar" />
+            <!-- END NAVBAR -->
+        
+
+            @RenderBody()
+
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="~/js/jquery-3.6.0.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="~/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+
+    <!-- Custom JS -->
+    <script src="~/js/sidebar_script.js"></script>
+    <script src="~/js/template_script.js"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+
+</html>
+
+
+
+<!--<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PLATAFORMA GESTIONA</title>
+    <title></title>
 
     <environment include="Production">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -15,58 +77,52 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">-->
+@* Prueba COREUI *@
+<!--<environment include="Development">
+    <!-- VENDOR CSS -->
+<!-- Icons-->
+<!--<link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
+<link href="~/lib/coreui/icons/css/coreui-icons.css" rel="stylesheet" />
+<link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" />
+<link href="~/lib/pace-progress/css/pace.css" rel="stylesheet" />-->
+<!-- MAIN CSS -->
+<!--<link href="~/lib/coreui/css/style.css" rel="stylesheet" />
 
-    @* Prueba COREUI *@
-    <environment include="Development">
-        <!-- VENDOR CSS -->
-        <!-- Icons-->
-        <link href="~/lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
-        <link href="~/lib/coreui/icons/css/coreui-icons.css" rel="stylesheet" />
-        <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" />
-        <link href="~/lib/pace-progress/css/pace.css" rel="stylesheet" />
-        <!-- MAIN CSS -->
-        <link href="~/lib/coreui/css/style.css" rel="stylesheet" />
-
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        <!-- VENDOR CSS -->
-        <link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-        <link href="~/lib/coreui/icons/css/coreui-icons.min.css" rel="stylesheet" />
-        <link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" />
-        <link href="~/lib/pace-progress/css/pace.css" rel="stylesheet" />
-        <!-- MAIN CSS -->
-        <link href="~/lib/coreui/css/style.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</environment>
+<environment exclude="Development">-->
+<!-- VENDOR CSS -->
+<!--<link href="~/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/lib/coreui/icons/css/coreui-icons.min.css" rel="stylesheet" />
+<link href="~/lib/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" />
+<link href="~/lib/pace-progress/css/pace.css" rel="stylesheet" />-->
+<!-- MAIN CSS -->
+<!--<link href="~/lib/coreui/css/style.min.css" rel="stylesheet" />
 
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 
 </head>
-<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
-    @*<partial name="_CookieConsentPartial" />*@
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">-->
+@*<partial name="_CookieConsentPartial" />*@
 
-    <!-- NAVBAR -->
-    <partial name="_NavBar" />
-    <!-- END NAVBAR -->
-
-    <div class="app-body">
-
-        <!-- LEFT SIDEBAR -->
-        <partial name="_SideBar" />
-        <!-- END LEFT SIDEBAR -->
-        <!-- MAIN CONTENT -->
-
-        <main class="main" style="background-color:white">
-            <div class="container-fluid mt-2">
-                @RenderBody()
-            </div>
-        </main>
-        <!-- END MAIN CONTENT -->
+<!--<!-- NAVBAR -->
+<!--<partial name="_NavBar" />-->
+<!-- END NAVBAR -->
+<!--<div class="app-body">-->
+<!-- LEFT SIDEBAR -->
+<!--<partial name="_SideBar" />-->
+<!-- END LEFT SIDEBAR -->
+<!-- MAIN CONTENT -->
+<!--<main class="main" style="background-color:white">
+    <div class="container-fluid mt-2">
     </div>
-
-    @*Iconos diseñados por <a href="https://www.flaticon.es/autores/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.es/" title="Flaticon"> www.flaticon.es</a>*@
-<environment include="Production">
+</main>-->
+<!-- END MAIN CONTENT -->
+<!--</div>-->
+@*Iconos diseñados por <a href="https://www.flaticon.es/autores/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.es/" title="Flaticon"> www.flaticon.es</a>*@
+<!--<environment include="Production">
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -94,25 +150,23 @@
     <script src="~/lib/charts/chartjs-plugin-datalabels.min.js"></script>
     <script src="~/lib/charts/chartjs-plugin-annotation.min.js"></script>
 </environment>
+    <script src="~/js/site.js" asp-append-version="true"></script>-->
+@*Prueba COREUI*@
+<!-- <environment include="Development">-->
+<!-- CoreUI and necessary plugins-->
+<!--<script src="~/lib/pace-progress/js/pace.min.js"></script>
+    <script src="~/lib/coreui/dist/js/coreui.js"></script>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @*Prueba COREUI*@
-    <environment include="Development">
-        <!-- CoreUI and necessary plugins-->
-        <script src="~/lib/pace-progress/js/pace.min.js"></script>
-        <script src="~/lib/coreui/dist/js/coreui.js"></script>
-
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <!-- CoreUI and necessary plugins-->
-        <script src="~/lib/pace-progress/pace.min.js"></script>
+</environment>
+<environment exclude="Development">-->
+<!-- CoreUI and necessary plugins-->
+<!--<script src="~/lib/pace-progress/pace.min.js"></script>
 
         <script src="~/lib/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
         <script src="~/lib/coreui/dist/js/coreui.min.js"></script>
 
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-    @RenderSection("Scripts", required: false)
 </body>
-</html>
+</html>-->

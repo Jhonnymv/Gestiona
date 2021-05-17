@@ -3,7 +3,78 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="inspection">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title inspection-opacity-color">
+                <h3>Inspecciones - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container inspection-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline inspection-color" asp-action="NuevaInspeccion" asp-controller="Inspecciones">NUEVA INSPECCIÓN</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Inspección</label>
+                            <input type="date" class="form-control" id="fecha_filtro">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Empresa Inspeccionada</label>
+                            <select id="empresaInspec_filtro" asp-items="@ViewBag.Empresas" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Registrado Por</label>
+                            <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Buscar Código</label>
+                            <input type="text" class="form-control" placeholder="Introducir Texto" id="codigo_filtro">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive inspection-color">
+            <table class="table" id="tabla_resumen_inspecciones">
+                <thead class="">
+                    <tr>
+                        <th>Código</th>
+                        <th>Área Ejecutora de la Inspección</th>
+                        <th>Empresa Inspeccionada</th>
+                        <th>Área Inspeccionada</th>
+                        <th>Fecha de Inspección</th>
+                        <th>N° Observaciones</th>
+                        <th>Avance</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container inspection-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Inspecciones - Resumen</h2>
     </div>
@@ -47,35 +118,38 @@
     <div class="col-md mt-1">
         <a class="btn btn-danger float-left" asp-action="NuevaInspeccion" asp-controller="Inspecciones"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub">  Nueva Inspección</a>
     </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-md">
-        <table class="table" id="tabla_resumen_inspecciones">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Código</th>
-                    <th>Área Ejecutora de la Inspección</th>
-                    <th>Empresa Inspeccionada</th>
-                    <th>Área Inspeccionada</th>
-                    <th>Fecha de Inspección</th>
-                    <th>N° Observaciones</th>
-                    <th>Avance</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+</div>*@
+
+@*<div class="row mb-2 justify-content-center">
+        <div class="col-md">
+            <table class="table" id="tabla_resumen_inspecciones">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Código</th>
+                        <th>Área Ejecutora de la Inspección</th>
+                        <th>Empresa Inspeccionada</th>
+                        <th>Área Inspeccionada</th>
+                        <th>Fecha de Inspección</th>
+                        <th>N° Observaciones</th>
+                        <th>Avance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>  
-<div class="row mb-2 justify-content-center">
-    <nav id="paginado" aria-label="pagination">        
-    </nav>
-</div>  
+    <div class="row mb-2 justify-content-center">
+        <nav id="paginado" aria-label="pagination">
+        </nav>
+    </div>*@
 
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             filtrar(1);
+            
+
         });
         function filtrar(pag) {
             $.ajax({
@@ -83,7 +157,7 @@
                 url: "/Inspecciones/GetTablaResumenFiltrada",
                 data: {
                     "pagina": pag,
-                    "rpp":10,
+                    "rpp": 10,
                     "filtroFecha": $('#fecha_filtro').val(),
                     "filtroEmpresa": $('#empresaInspec_filtro').val(),
                     "filtroUsuario": $("#registrado_por_filtro").val(),
@@ -95,8 +169,14 @@
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
                     $('#paginado').html(response.paginador)
                     /*$('#nRegistros').html(response.nRegistros)*/
+
+                    
                 }
             });
+            let r1 = 20;
+            let g1 = 27;
+            let b1 = 89;
+            inspectionStyle(r1, g1, b1);
         }
     </script>
 }

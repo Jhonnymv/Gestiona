@@ -4,13 +4,87 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Reportes de Acto y Condición Subestándar - Resumen</h2>
+<div class="rac">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title rac-opacity-color">
+                <h3>Reportes de Acto y Condición Subestándar - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container rac-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline rac-color" asp-action="NuevoRAC" asp-controller="RegistroRAC">NUEVO REPORTE</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha Reporte</label>
+                            <input type="date" class="form-control" id="fecha_filtro">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Buscar Código</label>
+                            <input type="text" class="form-control" placeholder="Introducir Texto" id="codigo_filtro">
+                        </div>
+                        
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Registrado Por</label>
+                            <select class="form-control" id="filtro_usuario" asp-items="@ViewBag.Usuarios">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Gerencia Observada</label>
+                            <select id="filtro_gerencias_obs" asp-items="@ViewBag.GerenciasObs" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive rac-color">
+            <table class="table" id="tabla_resumen_inspecciones">
+                <thead class="">
+                    <tr>
+                        <th>Código</th>
+                        <th>Empresa Observada</th>
+                        <th>Gerencia Observada</th>
+                        <th>SSO/MA</th>
+                        <th>Clasificación</th>
+                        <th>Nivel de Riesgo</th>
+                        <th>Tipo</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container rac-color" id="paginado" aria-label="pagination">
+        </div>
     </div>
 </div>
 
-<form autocomplete="off">
+@*<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Reportes de Acto y Condición Subestándar - Resumen</h2>
+    </div>
+</div>*@
+
+@*<form autocomplete="off">
     <div class="row mb-2 justify-content-center">
         <div class="col-lg-2 mt-1">
             <label>Fecha de Reporte:</label>
@@ -74,7 +148,8 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
+
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -97,7 +172,11 @@
                     $('#tabla_resumen_inspecciones tbody').empty()
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                /*$('#nRegistros').html(response.nRegistros)*/
+                    let r2 = 152;
+                    let g2 = 0;
+                    let b2 = 0;
+                    racStyle(r2, g2, b2);
                 }
             });
         }

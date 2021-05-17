@@ -1,149 +1,120 @@
-﻿<div class="modal" id="modal_opciones_residuos_solidos" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_residuos_solidos"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: var(--modal-content-color);">
-            <div class="modal-residuos-solidos-header-capa1">
-                <div class="modal-residuos-solidos-header-capa2">
-                    <div class="modal-header modal-residuos-solidos-header-capa3" style="background-color:transparent;">
-                        <h5 class="modal-title" id="titulo_modal_opciones_residuos_solidos">
-                            <img class="mr-2" src="/img/iconos nuevos gestiona/residuos_solidos-blanco.png" style="height:2rem;"><b>RESIDUOS SÓLIDOS</b>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+﻿<div class="modal fade" id="residuosMenuModal" tabindex="-1" aria-labelledby="residuosMenuModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-menu modal-menu-residuos">
+            <div class="modal-content">
+                <div class="modal-image-header-container">
+                    <div class="modal-header">
+                        <h3>
+                            <i class="">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.46154 4.8H4.92308V8.4H17.2308V4.8H19.6923V10.8H22.1538V4.8C22.1538 3.48 21.0462 2.4 19.6923 2.4H14.5477C14.0308 1.008 12.6769 0 11.0769 0C9.47692 0 8.12308 1.008 7.60615 2.4H2.46154C1.10769 2.4 0 3.48 0 4.8V21.6C0 22.92 1.10769 24 2.46154 24H9.84615V21.6H2.46154V4.8ZM11.0769 2.4C11.7538 2.4 12.3077 2.94 12.3077 3.6C12.3077 4.26 11.7538 4.8 11.0769 4.8C10.4 4.8 9.84615 4.26 9.84615 3.6C9.84615 2.94 10.4 2.4 11.0769 2.4Z"
+                                          fill="#FFBE0B" />
+                                    <path d="M22.1539 12.6L15.397 19.2L11.6923 15.6L9.84619 17.4L15.397 22.8L24 14.4L22.1539 12.6Z"
+                                          fill="#FFBE0B" />
+                                </svg>
+                            </i>
+                            <span>Residuos Sólidos</span>
+                        </h3>
                     </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <hr />
-                <div class="row mb-2" style="height:50px;">
-                </div>
-                @if (ViewBag.Rol == "AsesorMAP")
-                {
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ReportesIngresoSalida" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos Ingreso y Salida</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
+                <div class="menu-modal-separator"></div>
+                <div class="modal-body">
+                    <div class="modal-menu-options">
+                        @if (ViewBag.Rol == "AsesorMAP")
+                        {
+                            <a class="modal-menu-option" asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-red">
 
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="CompletarManifiesto" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Control de Manifiestos de Residuos Sólidos MA</div>
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Ingreso y Salida de Residuos Sólidos</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ReportesManifiestoRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Manifiestos</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                }
-                @if (ViewBag.Rol == "Contratista")
-                {
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ReportesIngresoSalida" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Ingreso y Salida de Residuos Sólidos</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
 
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ManifiestoRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Residuos Sólidos Peligrosos</div>
+                            <a class="modal-menu-option" asp-controller="ReportesIngresoSalida" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos Ingreso y Salida</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ReportesManifiestoRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Reportes Estadísticos de Manifiestos</div>
+                            <a class="modal-menu-option" asp-controller="CompletarManifiesto" asp-action="Resumen">
+                                <div class="icon-modal-menu-yellow">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Control de Manifiestos de Residuos Sólidos MA</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                }
-                @if (ViewBag.Rol == "Admin")
-                {
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="IngresoSalidaRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso y Salida de Residuos Sólidos</div>
+                            <a class="modal-menu-option" asp-controller="ReportesManifiestoRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-bluesky">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos de Manifiestos</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="ManifiestoRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Control de Manifiestos de Residuos Sólidos</div>
+                        }
+
+                        @if (ViewBag.Rol == "Contratista")
+                        {
+                            <a class="modal-menu-option" asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-red">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Ingreso y Salida de Residuos Sólidos</span>
                                 </div>
                             </a>
-                        </div>
+
+                            <a class="modal-menu-option" asp-controller="ReportesIngresoSalida" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos de Ingreso y Salida de Residuos Sólidos</span>
+                                </div>
+                            </a>
+                            <a class="modal-menu-option" asp-controller="ManifiestoRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-yellow">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Residuos Sólidos Peligrosos</span>
+                                </div>
+                            </a>
+                            <a class="modal-menu-option" asp-controller="ReportesManifiestoRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-bluesky">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Reportes Estadísticos de Manifiestos</span>
+                                </div>
+                            </a>
+                        }
+                        @if (ViewBag.Rol == "Admin")
+                        {
+                            <a class="modal-menu-option" asp-controller="IngresoSalidaRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-red">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Ingreso y Salida de Residuos Sólidos</span>
+                                </div>
+                            </a>
+
+                            <a class="modal-menu-option" asp-controller="ManifiestoRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Control de Manifiestos de Residuos Sólidos</span>
+                                </div>
+                            </a>
+                        }
                     </div>
-                }
-                <div class="row mb-2" style="height:50px;">
                 </div>
             </div>
         </div>

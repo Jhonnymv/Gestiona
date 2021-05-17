@@ -237,13 +237,19 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filasTabla += "<td>" + fila.Lugar_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
                     filasTabla += "<td>" + fila.Supervisor_MA + "</td>"; 
-                    filasTabla += "<td><div class=\"progress\"><div class=\"progress-bar bg-info\" role=\"progressbar\" style=\"width:" + avance + "%; color: black;font-weight: bold;\" aria-valuemin=\"0\" aria-valuemax=\"100\">" + avance + "%</div></div></td>";
+                    filasTabla += "<td><div class=\"progress\">" +
+                                          "<span class=\"percent\" >" + avance + "%</span>" +
+                                          "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">"
+                                           +
+                                          "</div>" +
+                                      "</div>" +
+                                    "</td>";
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1008,12 +1014,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     //Estado
                     switch (fila.Estado)
                     {
-                        case "Registrado": filas_acciones += "<td><span class=\"badge badge-secondary\">" + fila.Estado + "</span></td>"; break;
-                        case "Aprobado": filas_acciones += "<td><span class=\"badge badge-success\">" + fila.Estado + "</span></td>"; break;
-                        case "Rechazado": filas_acciones += "<td><span class=\"badge badge-danger\">" + fila.Estado + "</span></td>"; break;
-                        case "Vencido": filas_acciones += "<td><span class=\"badge badge-danger\">" + fila.Estado + "</span></td>"; break;
-                        case "Ampliado": filas_acciones += "<td><span class=\"badge badge-warning\">" + fila.Estado + "</span></td>"; break;
-                        default: filas_acciones += "<td><span class=\"badge badge-secondary\">" + fila.Estado + "</span>"; break;
+                        case "Registrado": filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span></td>"; break;
+                        case "Aprobado": filas_acciones += "<td><span class=\"badge bg-success\">" + fila.Estado + "</span></td>"; break;
+                        case "Rechazado": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
+                        case "Vencido": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
+                        case "Ampliado": filas_acciones += "<td><span class=\"badge bg-warning\">" + fila.Estado + "</span></td>"; break;
+                        default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
                     }
                     if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
                         filas_acciones += "<td><a class=\"btn btn-primary\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";

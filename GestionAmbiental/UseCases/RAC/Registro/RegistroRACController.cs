@@ -116,13 +116,13 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     filasTabla += "<td>" + fila.Clasificacion + "</td>";
                     switch (fila.NivelRiesgo)
                     {
-                        case "Tolerable": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Alerta": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "No Aceptable": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Bajo": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Medio": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Alto": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        default: filasTabla += "<td><span class=\"badge badge-secondary\">" + fila.NivelRiesgo + "</span>"; break;
+                        case "Tolerable": filasTabla += "<td><span class=\"badge bg-success\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alerta": filasTabla += "<td><span class=\"badge bg-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "No Aceptable": filasTabla += "<td><span class=\"badge bg-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Bajo": filasTabla += "<td><span class=\"badge bg-success\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Medio": filasTabla += "<td><span class=\"badge bg-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alto": filasTabla += "<td><span class=\"badge bg-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        default: filasTabla += "<td><span class=\"badge bg-secondary\">" + fila.NivelRiesgo + "</span>"; break;
                     }
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Fecha.ToString("dd/MM/yyyy HH:mm") + "</td>";
@@ -130,9 +130,9 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {

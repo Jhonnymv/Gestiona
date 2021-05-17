@@ -5,7 +5,81 @@
 }
 
 
-<div class="row mb-2">
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Investigaciones de Incidentes Ambientales</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            @*<div class="action-container incidentes-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline incidentes-color">NUEVO REGISTRO</a>
+                </div>
+            </div>*@
+            <form autocomplete="off" class="custom-form w-100">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Incidente</label>
+                            <input type="date" class="form-control" id="fecha_filtro">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Supervisor MA</label>
+                            <select id="filtro_asesores" asp-items="ViewBag.Asesores" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Gerencia Involucrada</label>
+                            <select id="filtro_gerencia" asp-items="ViewBag.Gerencias" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Supervisor Inmediato (Titular Minero)</label>
+                            <select id="filtro_usuarios" asp-items="ViewBag.Usuarios" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive incidentes-color">
+            <table class="table" id="tabla_resumen_incidentes">
+                <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>Código</th>
+                        <th>Tipo de Incidente</th>
+                        <th>Nivel de Incidente</th>
+                        <th>Fecha de Incidente</th>
+                        <th>Lugar del Incidente</th>
+                        <th>Gerencia Involucrada</th>
+                        <th>Supervisor Marcobre</th>
+                        <th>Progreso de Verificación</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container incidentes-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Investigaciones de Incidentes Ambientales</h2>
     </div>
@@ -69,7 +143,8 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
+
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -94,7 +169,11 @@
                     $('#tabla_resumen_incidentes tbody').empty()
                     $('#tabla_resumen_incidentes tbody').html(response.data)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                /*$('#nRegistros').html(response.nRegistros)*/
+                    let r4 = 0;
+                    let g4 = 188;
+                    let b4 = 228;
+                    incidentesStyle(r4, g4, b4);
                 }
             });
         }

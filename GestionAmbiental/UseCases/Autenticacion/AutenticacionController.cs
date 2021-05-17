@@ -73,6 +73,11 @@ namespace GestionAmbiental.UseCases.Autenticacion
         public async Task<IActionResult> IniciarSesion(SigninModel model)
         {
             dynamic result;
+            result = new
+            {
+                success = false,
+                mensaje = "Error en login"
+            };
             if (ModelState.IsValid)
             {                
                 var rol = await _getRolUsuario.Execute(model.User);
@@ -97,11 +102,6 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 }
                 
             }
-            result = new
-            {
-                success = false,
-                mensaje = "Error en login"
-            }; 
             return Ok(result);
         }
         public async Task<IActionResult> SignOut()

@@ -130,7 +130,151 @@ body::-webkit-scrollbar-track {
     transition: 0.3s;
 }
 
+.modal-menu {
+    background-color: #EEEEEE;
+    width: 100%;
+    line-height: normal;
+    border-radius: 10px;
+}
 
+.modal-menu .modal-content {
+    background-color: #EEEEEE;
+    padding: 0px 10px;
+    border-radius: 10px;
+    border:none;
+}
+
+.modal-menu .modal-content .modal-image-header-container {
+    background-size: cover;
+    background-position: center;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.modal-menu .modal-content .menu-modal-separator{
+    border-bottom: 2px solid rgba(45, 100, 155, 0.25);
+    margin: 10px 0px;
+}
+
+.modal-menu .modal-content .modal-header{
+    border: none;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0px 2px 2px rgba(0 ,0 ,0, 0.25);
+}
+
+.modal-menu .modal-content .modal-header h3{
+    width: 100%;
+    text-align: center;
+}
+
+.modal-menu .modal-content .modal-header h3 i svg path{
+    fill: #ffffff;
+}
+
+.modal-menu .modal-content .modal-header h3 i svg{
+    width: 30px;
+    height: 30px;
+}
+
+.modal-menu .modal-content .modal-header h3 i {
+    margin: 0px 5px;
+}
+
+.modal-menu .modal-content .modal-header h3 span {
+    color: #ffffff;
+    font-family: 'Titillium Web', sans-serif;
+}
+
+.modal-menu-option {
+    cursor: pointer;
+    background-color: #ffffff;
+    padding: 5px 5px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: 0.3s;
+    transition-property: background-color;
+    box-shadow: 0px 2px 2px rgba(0 ,0 ,0, 0.25);
+}
+
+.icon-modal-menu-red {
+    width: 43.5px;
+    height: 40px;
+    background-color: #8C3333;
+    border: 2px solid #2D649B;
+    border-radius: 7px;
+    transition: 0.3s;
+    transition-property: border;
+}
+
+.icon-modal-menu-green {
+    width: 43.5px;
+    height: 40px;
+    background-color: #21A179;
+    border: 2px solid #2D649B;
+    border-radius: 7px;
+    transition: 0.3s;
+    transition-property: border;
+}
+
+.icon-modal-menu-yellow {
+    width: 43.5px;
+    height: 40px;
+    background-color: #FFBE0B;
+    border: 2px solid #2D649B;
+    border-radius: 7px;
+    transition: 0.3s;
+    transition-property: border;
+}
+
+.icon-modal-menu-bluesky {
+    width: 43.5px;
+    height: 40px;
+    background-color: #00BCE4;
+    border: 2px solid #2D649B;
+    border-radius: 7px;
+    transition: 0.3s;
+    transition-property: border;
+}
+
+.text-modal-menu-option {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.text-modal-menu-option span{
+    color: #2D649B;
+    font-family: 'HelveticaNeueLT Std', sans-serif;
+    font-weight: bold;
+    transition: 0.3s;
+    transition-property: color;
+    text-align: center;
+}
+
+.modal-menu-option:hover > .text-modal-menu-option span{
+    color: #ffffff;
+}
+
+.modal-menu-option:hover > .icon-modal-menu-red, .modal-menu-option:hover > .icon-modal-menu-green,
+.modal-menu-option:hover > .icon-modal-menu-yellow, .modal-menu-option:hover > .icon-modal-menu-bluesky
+{
+    border-color: #ffffff;
+}
+
+.modal-menu-option:hover{
+    background-color: #2D649B;
+}
+
+.modal-open {
+    overflow:hidden;
+    overflow-y:hidden;
+    padding-right:0 !important;
+}
 
 
 /* ---------------------------------------------------
@@ -145,6 +289,10 @@ body::-webkit-scrollbar-track {
     .menu_item_container{
         width: 45%;
         margin: 0px 10px;
+    }
+
+    .modal-menu .modal-content {
+        padding: 0px 30px;
     }
 }
 

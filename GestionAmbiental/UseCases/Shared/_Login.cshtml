@@ -11,6 +11,9 @@
                                 <img src="~/img/logo-white.png" alt="">
                             </div>
                             <div class="loginForm">
+                                <div class="error-message">
+                                    <span id="error_message"></span>
+                                </div>
                                 <div class="input-login-mc">
                                     <input  asp-for="User" class="form-control input-login" type="text" placeholder="">
                                     <label asp-for="User" for="">Usuario</label>
@@ -27,7 +30,7 @@
                                 <label for="check_remember" class="form-check-label">Recordar Cuenta</label>
                             </div>
                             <div class="login-button">
-                                <button id="btnIniciarSesion" class="btn btn-outline">Iniciar Sesión</button>
+                                <button id="btnIniciarSesion" type="button" class="btn btn-outline" style="width: 150px; height: 35px"><span>Iniciar Sesión</span></button>
                             </div>
                             <div class="login-forgot">
                                 <a href=""><span>¿Olvidaste tu Contraseña?</span></a>
@@ -82,7 +85,7 @@
                     </div>
                     <div class="row mb-2 justify-content-center text-center">
                         <div class="col-sm-6 col-md-8 col-lg-10 m-2">
-                            <button id="btnIniciarSesion" type="button" class="btn btn-primary border-white">Iniciar Sesión</button>
+                            <button id="btnIniciarSesion"   class="btn btn-primary border-white">Iniciar Sesión</button>
                         </div>
                     </div>
                     <div class="row mb-2 justify-content-center text-center">

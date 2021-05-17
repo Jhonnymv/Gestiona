@@ -1,156 +1,128 @@
-﻿<div class="modal" id="modal_opciones_tablas_maestras" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_opciones_tablas_maestras"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content" style="background-color: var(--modal-content-color);">
-            <div class="modal-tablas-maestras-header-capa1">
-                <div class="modal-tablas-maestras-header-capa2">
-                    <div class="modal-header modal-tablas-maestras-header-capa3" style="background-color:transparent;">
-                        <h5 class="modal-title" id="titulo_modal_opciones_tablas_maestras">
-                            <img class="mr-2" src="/img/iconos nuevos gestiona/tablas_maestras-blanco.png" style="height:2rem;"><b>Tablas Maestras</b>
-                        </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">×</span>
-                        </button>
+﻿<div class="modal fade" id="tablasMenuModal" tabindex="-1" aria-labelledby="tablasMenuModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-menu modal-menu-tablas">
+            <div class="modal-content">
+                <div class="modal-image-header-container">
+                    <div class="modal-header">
+                        <h3>
+                            <i class="">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M2.46154 4.8H4.92308V8.4H17.2308V4.8H19.6923V10.8H22.1538V4.8C22.1538 3.48 21.0462 2.4 19.6923 2.4H14.5477C14.0308 1.008 12.6769 0 11.0769 0C9.47692 0 8.12308 1.008 7.60615 2.4H2.46154C1.10769 2.4 0 3.48 0 4.8V21.6C0 22.92 1.10769 24 2.46154 24H9.84615V21.6H2.46154V4.8ZM11.0769 2.4C11.7538 2.4 12.3077 2.94 12.3077 3.6C12.3077 4.26 11.7538 4.8 11.0769 4.8C10.4 4.8 9.84615 4.26 9.84615 3.6C9.84615 2.94 10.4 2.4 11.0769 2.4Z"
+                                          fill="#FFBE0B" />
+                                    <path d="M22.1539 12.6L15.397 19.2L11.6923 15.6L9.84619 17.4L15.397 22.8L24 14.4L22.1539 12.6Z"
+                                          fill="#FFBE0B" />
+                                </svg>
+                            </i>
+                            <span>Gestor de Tablas Maestras</span>
+                        </h3>
                     </div>
                 </div>
-            </div>
-            <div class="modal-body">
-                <hr />
-                <div class="row mb-2" style="height:50px;">
-                </div>
-                @if (ViewBag.Rol == "Admin")
-                {
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorContenido" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Configuración Plataforma</div>
+                <div class="menu-modal-separator"></div>
+                <div class="modal-body">
+                    <div class="modal-menu-options">
+                        @if (ViewBag.Rol == "Admin")
+                        {
+                            <a class="modal-menu-option" asp-controller="GestorContenido" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Configuración Plataforma</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorUsuarios" asp-action="Usuarios">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Usuarios</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorUsuarios" asp-action="Usuarios">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Usuarios</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorEGTC" asp-action="EGTCs">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Empresas, Gerencias y Tipos de Acto/Condición</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorEGTC" asp-action="EGTCs">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Empresas, Gerencias y Tipos de Acto/Condición</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorInfo_SGA" asp-action="Info_SGA">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Información del Sistema</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorInfo_SGA" asp-action="Info_SGA">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Información del Sistema</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Ingreso/Salida Residuos Sólidos</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorIngresoSalidaRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Ingreso/Salida Residuos Sólidos</span>
                                 </div>
                             </a>
-                        </div>
-                    </div><div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorManifiestoRS" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Manifiesto Residuos Sólidos</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorManifiestoRS" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Manifiesto Residuos Sólidos</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorIncidentes" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Incidentes Ambientales</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorIncidentes" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Incidentes Ambientales</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorIncidentes" asp-action="ResumenImpacto">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ffff;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Componentes Ambientales</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorIncidentes" asp-action="ResumenImpacto">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Componentes Ambientales</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ff0000;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Avistamiento de Fauna</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorAvistamientoFauna" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Avistamiento de Fauna</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorConsumoAgua" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#00ff90;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">Consumo de Agua</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorConsumoAgua" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Consumo de Agua</span>
                                 </div>
                             </a>
-                        </div>
-                    </div>
-                    <div class="row mb-2" style="height:25px;">
-                    </div>
-                    <div class="row mb-2 justify-content-center" style="height:50px;">
-                        <div class="col-10 opcion-modal-menu">
-                            <a asp-controller="GestorSGADocumentos" asp-action="Resumen">
-                                <div class="d-flex align-items-center" style="height:100%;">
-                                    <div class="rounded mr-4" style="width:40px;height:40px;background-color:#ffd800;"></div>
-                                    <div class="align-self-center opcion-modal-menu-texto">SGA Documentos</div>
+
+                            <a class="modal-menu-option" asp-controller="GestorSGADocumentos" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>SGA Documentos</span>
                                 </div>
                             </a>
-                        </div>
+                        }
                     </div>
-                }
-                <div class="row mb-2" style="height:50px;">
                 </div>
             </div>
         </div>

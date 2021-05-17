@@ -4,7 +4,94 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="residuos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title residuos-opacity-color">
+                <h3>Control de Ingreso y Salida de Residuos Sólidos del ACR o CMRS</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container residuos-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline residuos-color" asp-action="NuevoRegistro" asp-controller="IngresoSalidaRS">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">ACR/CMRS</label>
+                            <select id="filtro_acr_cmrs" asp-items="ViewBag.ACR_CMRS" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Ingreso o Salida</label>
+                            <select id="filtro_ing_sal" asp-items="ViewBag.IngresoSalida" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Tipo de Residuo</label>
+                            <select id="filtro_tipoResiduo" asp-items="ViewBag.TipoResiduo" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Ingreso o Salida</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Empresa Genera o Retira el Residuo</label>
+                            <select id="filtro_empresa" asp-items="ViewBag.Empresa" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Gerencia de Marcobre que entrega o retira residuo</label>
+                            <select id="filtro_gerencia" asp-items="ViewBag.Gerencias" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive residuos-color">
+            <table class="table" id="tabla_resumen_inspecciones">
+                <thead class="">
+                    <tr>
+                        <th>Item</th>
+                        <th>ACR/CMRS</th>
+                        <th>Responsable del ACR/CMRS que Recibe/Entrega el Residuo</th>
+                        <th>Ingreso o Salida de Residuos</th>
+                        <th>Motivo de Ingreso o Salida de Residuo</th>
+                        <th>Fecha de Ingreso o Salida</th>
+                        <th>Tipo de Residuo</th>
+                        <th>Nombre del Residuo</th>
+                        <th>Cantidad Ingresada o Retirada (kg)</th>
+                        <th>Empresa que Generó/Retiró el Residuo</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container residuos-color" id="paginado" aria-label="pagination">
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Control de Ingreso y Salida de Residuos Sólidos del ACR o CMRS</h2>
     </div>
@@ -88,7 +175,8 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
+
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
