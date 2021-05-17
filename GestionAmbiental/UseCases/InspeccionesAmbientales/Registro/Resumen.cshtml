@@ -148,7 +148,6 @@
     <script type="text/javascript">
         $(document).ready(function () {
             filtrar(1);
-            
 
         });
         function filtrar(pag) {
@@ -170,13 +169,14 @@
                     $('#paginado').html(response.paginador)
                     /*$('#nRegistros').html(response.nRegistros)*/
 
-                    
+                    let r1 = 20;
+                    let g1 = 27;
+                    let b1 = 89;
+                    inspectionStyle(r1, g1, b1);
                 }
             });
-            let r1 = 20;
-            let g1 = 27;
-            let b1 = 89;
-            inspectionStyle(r1, g1, b1);
+
+
         }
     </script>
 }
