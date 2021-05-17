@@ -3,7 +3,103 @@
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
+<div class="residuos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title residuos-opacity-color">
+                <h3>Control de Manifiestos de Residuos Peligrosos</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container residuos-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline residuos-color" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">N° Manifiesto</label>
+                            <input type="text" class="form-control" id="filtro_num_manifiesto" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Emisión</label>
+                            <input type="date" class="form-control" id="filtro_fecha_emision" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Observación</label>
+                            <select class="form-control" id="filtro_observacion">
+                                <option value="">--SELECCIONE--</option>
+                                <option value="Conforme">Conforme</option>
+                                <option value="Anulado">Anulado</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de Residuo Sólido</label>
+                            <select id="filtro_residuos_solidos" asp-items="ViewBag.ResiduosSolidos" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de EO-RS (Recolección y Transporte)</label>
+                            <select id="filtro_eors_salida" asp-items="ViewBag.EO_RS" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de EO-RS (Destino Final y/o Comercialización)</label>
+                            <select id="id="filtro_eors_llegada" asp-items="ViewBag.EO_RS" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Asesor MA</label>
+                            <select id="id="filtro_asesores_ma" asp-items="ViewBag.AsesoresMA" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive residuos-color">
+            <table class="table" id="tabla_resumen_manifiestos">
+                <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>Item</th>
+                        <th>Serie Manifiesto</th>
+                        <th>Num Manifiesto</th>
+                        <th>Fecha Emision_Manifiesto</th>
+                        <th>Observacion Manifiesto</th>
+                        <th>Residuo Solido</th>
+                        <th>Cantidad de Residuos Sólidos Evacuado (t)</th>
+                        <th>EO-RS Salida</th>
+                        <th>EO-RS Llegada</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container residuos-color" id="paginado" aria-label="pagination">
+        </div>
+    </div>
+</div>
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Control de Manifiestos de Residuos Peligrosos</h2>
     </div>
@@ -93,7 +189,7 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -116,10 +212,14 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_resumen_inspecciones tbody').empty()
-                    $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
+                    $('#tabla_resumen_manifiestos tbody').empty()
+                    $('#tabla_resumen_manifiestos tbody').html(response.data)
+                    $('#paginado').html(response.paginador)               
                     /*$('#nRegistros').html(response.nRegistros)*/
+                    let r3 = 110;
+                    let g3 = 41;
+                    let b3 = 141;
+                    residuosStyle(r3, g3, b3);
                 }
             });
         }
