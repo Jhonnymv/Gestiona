@@ -139,7 +139,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 6;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

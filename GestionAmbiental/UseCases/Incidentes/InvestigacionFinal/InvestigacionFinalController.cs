@@ -268,7 +268,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             }
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 9;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {
