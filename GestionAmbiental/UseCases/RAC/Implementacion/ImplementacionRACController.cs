@@ -100,13 +100,13 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     filasTabla += "<td>" + fila.Clasificacion + "</td>";
                     switch (fila.NivelRiesgo)
                     {
-                        case "Tolerable": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Alerta": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "No Aceptable": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Bajo": filasTabla += "<td><span class=\"badge badge-success\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Medio": filasTabla += "<td><span class=\"badge badge-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        case "Alto": filasTabla += "<td><span class=\"badge badge-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
-                        default: filasTabla += "<td><span class=\"badge badge-secondary\">" + fila.NivelRiesgo + "</span>"; break;
+                        case "Tolerable": filasTabla += "<td><span class=\"badge bg-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alerta": filasTabla += "<td><span class=\"badge bg-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "No Aceptable": filasTabla += "<td><span class=\"badge bg-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Bajo": filasTabla += "<td><span class=\"badge bg-success\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Medio": filasTabla += "<td><span class=\"badge bg-warning\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        case "Alto": filasTabla += "<td><span class=\"badge bg-danger\">" + fila.NivelRiesgo + "</span></td>"; break;
+                        default: filasTabla += "<td><span class=\"badge bg-secondary\">" + fila.NivelRiesgo + "</span>"; break;
                     }
                     filasTabla += "<td>" + fila.TipoCondicion + "</td>";
                     filasTabla += "<td>" + fila.Responsable_Cierre + "</td>";
@@ -146,7 +146,10 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             }
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 10;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

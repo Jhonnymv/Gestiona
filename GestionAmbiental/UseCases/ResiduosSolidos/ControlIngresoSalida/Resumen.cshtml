@@ -65,7 +65,7 @@
 
     <div class="secondary-content col-12">
         <div class="table-responsive residuos-color">
-            <table class="table" id="tabla_resumen_inspecciones">
+            <table class="table" id="tabla_resumen_residuos">
                 <thead class="">
                     <tr>
                         <th>Item</th>
@@ -198,10 +198,14 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_resumen_inspecciones tbody').empty()
-                    $('#tabla_resumen_inspecciones tbody').html(response.data)
+                    $('#tabla_resumen_residuos tbody').empty()
+                    $('#tabla_resumen_residuos tbody').html(response.data)
                     $('#paginado').html(response.paginador)
                     /*$('#nRegistros').html(response.nRegistros)*/
+                    let r3 = 110;
+                    let g3 = 41;
+                    let b3 = 141;
+                    residuosStyle(r3, g3, b3);
                 }
             });
         }

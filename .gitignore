@@ -341,4 +341,7 @@ ASALocalRun/
 healthchecksdb
 
 #uploaded files
-GestionAmbiental/wwwroot/img/uploads/AvistamientoFauna/
+GestionAmbiental/wwwroot/img/uploads
+
+#autofact
+GestionAmbiental/autofact.json

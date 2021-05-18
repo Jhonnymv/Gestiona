@@ -3,123 +3,214 @@
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Control de Manifiestos de Residuos Peligrosos</h2>
+<div class="residuos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title residuos-opacity-color">
+                <h3>Control de Manifiestos de Residuos Peligrosos</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container residuos-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline residuos-color" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">N° Manifiesto</label>
+                            <input type="text" class="form-control" id="filtro_num_manifiesto" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Emisión</label>
+                            <input type="date" class="form-control" id="filtro_fecha_emision" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Observación</label>
+                            <select class="form-control" id="filtro_observacion">
+                                <option value="">--SELECCIONE--</option>
+                                <option value="Conforme">Conforme</option>
+                                <option value="Anulado">Anulado</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de Residuo Sólido</label>
+                            <select id="filtro_residuos_solidos" asp-items="ViewBag.ResiduosSolidos" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de EO-RS (Recolección y Transporte)</label>
+                            <select id="filtro_eors_salida" asp-items="ViewBag.EO_RS" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Nombre de EO-RS (Destino Final y/o Comercialización)</label>
+                            <select id="id="filtro_eors_llegada" asp-items="ViewBag.EO_RS" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-<form autocomplete="off">
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>N° Manifiesto:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="text" class="form-control" id="filtro_num_manifiesto" />
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Fecha de Emisión:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="date" class="form-control" id="filtro_fecha_emision" />
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Observación:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_observacion">
-                <option value="">--SELECCIONE--</option>
-                <option value="Conforme">Conforme</option>
-                <option value="Anulado">Anulado</option>
-            </select>
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Nombre de Residuo Sólido:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_residuos_solidos" asp-items="ViewBag.ResiduosSolidos"></select>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Nombre de EO-RS (Recolección y Transporte):</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_eors_salida" asp-items="ViewBag.EO_RS"></select>
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Nombre de EO-RS (Destino Final y/o Comercialización):</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_eors_llegada" asp-items="ViewBag.EO_RS"></select>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">        
-        <div class="col-lg-12 mt-1 d-flex justify-content-center">
-            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-        </div>
-    </div>
-</form>
-<div class="row mb-2 justify-content-start">
-    <div class="col-md mt-1">
-        <a class="btn btn-danger float-left" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Manifiesto</a>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-md">
-        <table class="table" id="tabla_resumen_inspecciones">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Item</th>
-                    <th>Serie Manifiesto</th>
-                    <th>Num Manifiesto</th>
-                    <th>Fecha Emision_Manifiesto</th>
-                    <th>Observacion Manifiesto</th>
-                    <th>Residuo Solido</th>
-                    <th>Cantidad de Residuos Sólidos Evacuado (t)</th>
-                    <th>EO-RS Salida</th>
-                    <th>EO-RS Llegada</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">   
-    <nav id="paginado" aria-label="pagination" class="d-flex flex-wraps">
 
-    </nav>
+    <div class="secondary-content col-12">
+        <div class="table-responsive residuos-color">
+            <table class="table" id="tabla_resumen_manifiestos">
+                <thead class="">
+                    <tr>
+                        <th>Item</th>
+                        <th>Serie Manifiesto</th>
+                        <th>Num Manifiesto</th>
+                        <th>Fecha Emision_Manifiesto</th>
+                        <th>Observacion Manifiesto</th>
+                        <th>Residuo Solido</th>
+                        <th>Cantidad de Residuos Sólidos Evacuado (t)</th>
+                        <th>EO-RS Salida</th>
+                        <th>EO-RS Llegada</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container residuos-color" id="paginado" aria-label="pagination">
+        </div>
+    </div>
 </div>
-@section scripts{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            filtrar(1);
-        });
-        function filtrar(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/ManifiestoRS/GetTablaResumenFiltrada",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "nManifiesto": $('#filtro_num_manifiesto').val(),
-                    "fechaEmision": $('#filtro_fecha_emision').val(),
-                    "observacion": $('#filtro_observacion').val(),
-                    "residuoSolido": $("#filtro_residuos_solidos").val(),
-                    "eors_salida": $("#filtro_eors_salida").val(),
-                    "eors_llegada": $("#filtro_eors_llegada").val(),
-                    //"asesorMAP": $("#filtro_asesores_ma").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_resumen_inspecciones tbody').empty()
-                    $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
-                }
+    @*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Control de Manifiestos de Residuos Peligrosos</h2>
+        </div>
+    </div>
+    <form autocomplete="off">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-2 mt-1">
+                <label>N° Manifiesto:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <input type="text" class="form-control" id="filtro_num_manifiesto" />
+            </div>
+            <div class="col-lg-2 mt-1">
+                <label>Fecha de Emisión:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <input type="date" class="form-control" id="filtro_fecha_emision" />
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-2 mt-1">
+                <label>Observación:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="form-control" id="filtro_observacion">
+                    <option value="">--SELECCIONE--</option>
+                    <option value="Conforme">Conforme</option>
+                    <option value="Anulado">Anulado</option>
+                </select>
+            </div>
+            <div class="col-lg-2 mt-1">
+                <label>Nombre de Residuo Sólido:</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="form-control" id="filtro_residuos_solidos" asp-items="ViewBag.ResiduosSolidos"></select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-2 mt-1">
+                <label>Nombre de EO-RS (Recolección y Transporte):</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="form-control" id="filtro_eors_salida" asp-items="ViewBag.EO_RS"></select>
+            </div>
+            <div class="col-lg-2 mt-1">
+                <label>Nombre de EO-RS (Destino Final y/o Comercialización):</label>
+            </div>
+            <div class="col-lg-3 mt-1">
+                <select class="form-control" id="filtro_eors_llegada" asp-items="ViewBag.EO_RS"></select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-lg-12 mt-1 d-flex justify-content-center">
+                <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+            </div>
+        </div>
+    </form>
+    <div class="row mb-2 justify-content-start">
+        <div class="col-md mt-1">
+            <a class="btn btn-danger float-left" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Manifiesto</a>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-md">
+            <table class="table" id="tabla_resumen_manifiestos">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Item</th>
+                        <th>Serie Manifiesto</th>
+                        <th>Num Manifiesto</th>
+                        <th>Fecha Emision_Manifiesto</th>
+                        <th>Observacion Manifiesto</th>
+                        <th>Residuo Solido</th>
+                        <th>Cantidad de Residuos Sólidos Evacuado (t)</th>
+                        <th>EO-RS Salida</th>
+                        <th>EO-RS Llegada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <nav id="paginado" aria-label="pagination" class="d-flex flex-wraps">
+
+        </nav>
+    </div>*@
+    @section scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                filtrar(1);
             });
-        }
-    </script>
-}
+            function filtrar(pag) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ManifiestoRS/GetTablaResumenFiltrada",
+                    data: {
+                        "pagina": pag,
+                        "rpp": 10,
+                        "nManifiesto": $('#filtro_num_manifiesto').val(),
+                        "fechaEmision": $('#filtro_fecha_emision').val(),
+                        "observacion": $('#filtro_observacion').val(),
+                        "residuoSolido": $("#filtro_residuos_solidos").val(),
+                        "eors_salida": $("#filtro_eors_salida").val(),
+                        "eors_llegada": $("#filtro_eors_llegada").val(),
+                        //"asesorMAP": $("#filtro_asesores_ma").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        $('#tabla_resumen_manifiestos tbody').empty()
+                        $('#tabla_resumen_manifiestos tbody').html(response.data)
+                        $('#paginado').html(response.paginador)
+                        /*$('#nRegistros').html(response.nRegistros)*/
+                        let r3 = 110;
+                        let g3 = 41;
+                        let b3 = 141;
+                        residuosStyle(r3, g3, b3);
+                    }
+                });
+            }
+        </script>
+    }

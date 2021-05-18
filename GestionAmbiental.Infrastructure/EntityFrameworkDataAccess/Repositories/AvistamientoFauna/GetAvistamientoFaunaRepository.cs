@@ -143,8 +143,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var tiposFauna = await _context.Tipos_Fauna.Where(x => x.Id_Tipo_Fauna.Equals(tipo_fauna != 0 ? tipo_fauna : x.Id_Tipo_Fauna)).ToListAsync();
             var estadosFauna = await _context.Estados_Fauna.ToListAsync();
-            var lugaresReferencia = await _context.Lugares_Referencia_AF.ToListAsync();
             var nombresComunes = await _context.Nombres_Comunes_Fauna.Where(x => x.Id_Tipo_Fauna.Equals(tipo_fauna != 0 ? tipo_fauna : x.Id_Tipo_Fauna)).ToListAsync();
+            var lugaresReferencia = await _context.Lugares_Referencia_AF.ToListAsync();
             var tiposAvistamiento = await _context.Tipos_Avistamiento.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var areas = await _context.Areas_Trabajo.ToListAsync();
@@ -154,10 +154,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             avistamientos = avistamientos.Where(x =>
             !x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()) &&
             x.Fecha_Avistamiento.Date.Equals(fecha.HasValue ? fecha.Value.Date : x.Fecha_Avistamiento.Date) &&
-            nombresComunes.Select(y => y.Id_Nombre_Comun_Fauna).Contains(x.Id_Nombre_Comun_Fauna.Value) &&
             x.Id_Lugar_Referencia.Equals(lugar_referencia != 0 ? lugar_referencia : x.Id_Lugar_Referencia) &&
             x.Id_Estado_Fauna.Equals(estado_fauna != 0 ? estado_fauna : x.Id_Estado_Fauna))
                 .ToList();
+
+            if (tipo_fauna != 0)
+            {
+                avistamientos = avistamientos.Where(x =>x.Id_Nombre_Comun_Fauna.HasValue && nombresComunes.Select(y => y.Id_Nombre_Comun_Fauna).Contains(x.Id_Nombre_Comun_Fauna.Value)).ToList();
+            }
 
             var output = new List<Domain.AvistamientoFauna.AvistamientoFauna>();
 

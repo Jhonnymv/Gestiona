@@ -97,7 +97,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 {
                     var id_encriptado = _protector.Protect(fila.Id_Ingreso_Salida_RS.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/IngresoSalidaRS/EditarRegistro?IdRegistro="+ id_encriptado + "\">"+fila.Item + "</a></td>";
+                    filasTabla += "<td><a href=\"/IngresoSalidaRS/EditarRegistro?IdRegistro=" + id_encriptado + "\">" + fila.Item + "</a></td>";
                     filasTabla += "<td>" + fila.ACR_CMRS + "</td>";
                     filasTabla += "<td>" + fila.Responsable_ACR_CMRS + "</td>";
                     filasTabla += "<td>" + fila.Ingreso_Salida + "</td>";
@@ -130,8 +130,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 
             }
             else
-            {
-                filasTabla = "Sin datos";
+            { 
+                var nCol = 10;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

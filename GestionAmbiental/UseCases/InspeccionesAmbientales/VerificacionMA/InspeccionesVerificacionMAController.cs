@@ -125,9 +125,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
             }
+
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 6;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

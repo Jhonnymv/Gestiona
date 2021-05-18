@@ -177,7 +177,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             }
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 10;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

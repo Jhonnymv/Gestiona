@@ -52,7 +52,6 @@ namespace GestionAmbiental.Controllers
             catch(Exception e)
             {
                 Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
-                Log.Error("AQUI MANITO"); 
                 Log.Error(e.Message);
             }
             /*
