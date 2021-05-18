@@ -136,7 +136,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
-                    filasTabla += "<td><div class=\"progress\">" +
+                    filasTabla += "<td style=\"width: 10%\"><div class=\"progress\">" +
                                           "<span class=\"percent\" >" + avance + "%</span>" +
                                           "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">" 
                                            +

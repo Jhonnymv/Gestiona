@@ -237,7 +237,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filasTabla += "<td>" + fila.Lugar_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
                     filasTabla += "<td>" + fila.Supervisor_MA + "</td>"; 
-                    filasTabla += "<td><div class=\"progress\">" +
+                    filasTabla += "<td style=\"width: 10%\"><div class=\"progress\">" +
                                           "<span class=\"percent\" >" + avance + "%</span>" +
                                           "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">"
                                            +

@@ -274,6 +274,30 @@ function faunaStyle(r, g, b) {
 }
 
 function aguaStyle(r, g, b) {
+    $('.agua-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
+    $('.table-responsive.agua-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
+    $('.action-container.agua-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.agua .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    //PROGRESS BAR
+    $('.table-responsive.agua-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.table-responsive.agua-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
+    //PAGINATION STYLE
+    $('.pagination-container.agua-color .pagination .page-item .page-link').attr('style', 'color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.agua-color .pagination .page-item.active .page-link').attr('style', 'border-color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.agua-color .pagination .page-item.active .page-link').attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important');
+
+
+    //MAIN BUTTON
+    $('.btn-special-action-outline.agua-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action-outline.agua-color').mouseenter(function () {
+        $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'background-color: transparent; color: rgb(' + r + ', ' + g + ', ' + b + '); border-color: rgb(' + r + ', ' + g + ', ' + b + ')');
+        });
+    });
+
     //MENU MODAL
     $('.modal-menu-agua .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
 }
@@ -308,6 +332,30 @@ function sgaStyle(r, g, b) {
 }
 
 function tablasStyle(r, g, b) {
+    $('.tablas-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
+    $('.table-responsive.tablas-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
+    $('.action-container.tablas-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.tablas .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    //PROGRESS BAR
+    $('.table-responsive.tablas-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.table-responsive.tablas-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
+    //PAGINATION STYLE
+    $('.pagination-container.tablas-color .pagination .page-item .page-link').attr('style', 'color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.tablas-color .pagination .page-item.active .page-link').attr('style', 'border-color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.tablas-color .pagination .page-item.active .page-link').attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important');
+
+
+    //MAIN BUTTON
+    $('.btn-special-action-outline.tablas-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action-outline.tablas-color').mouseenter(function () {
+        $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'background-color: transparent; color: rgb(' + r + ', ' + g + ', ' + b + '); border-color: rgb(' + r + ', ' + g + ', ' + b + ')');
+        });
+    });
+
     //MENU MODAL
     $('.modal-menu-tablas .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
 }

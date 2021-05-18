@@ -4,7 +4,68 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="agua">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Consumo de Agua de Mar - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container agua-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline agua-color" asp-action="NuevoRegistro" asp-controller="ConsumoAguaMar">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha de Inspección</label>
+                            <input type="date" class="form-control" id="fecha_filtro">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Empresa Inspeccionada</label>
+                            <select id="filtro_resolucion" asp-items="ViewBag.Resoluciones" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive agua-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Resolución</th>
+                        <th>Fuente de Agua</th>
+                        <th>Fecha</th>
+                        <th>Tiempo de Bombeo (H)</th>
+                        <th>Lectura Inicial Flujómetro en el día (m3)</th>
+                        <th>Lectura Final Flujómetro en el día (m3)</th>
+                        <th>Volumen de Agua Bombeado (consumo)</th>
+                        <th>Caudal promedio consumido (m3/s)</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container agua-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Consumo de Agua de Mar - Resumen</h2>
     </div>
@@ -60,7 +121,8 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
+
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -81,6 +143,10 @@
                     $('#tabla_resumen tbody').empty()
                     $('#tabla_resumen tbody').html(response.data)
                     $('#paginado').html(response.paginador)
+                    let r6 = 65;
+                    let g6 = 182;
+                    let b6 = 230;
+                    aguaStyle(r6, g6, b6);
                 }
             });
         }
