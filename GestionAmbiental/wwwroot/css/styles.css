@@ -497,7 +497,53 @@ a:focus {
 }
 
 /*MODALES*/
+/*MODAL GENERAL MARCOBRE*/
+.mc-modal .modal-body {
+    padding: 2.5em;
+    padding-top: 0;
+}
 
+.mc-modal .modal-content {
+    border-radius: 10px;
+    border: none;
+    background-color: rgba(45,100,155,0.9);
+    z-index: 1;
+}
+
+.mc-modal-image-background {
+    border-radius: 10px;
+}
+
+.mc-modal .modal-content div img {
+    margin: 10px;
+    width: 70%;
+}
+
+.modal-scrollbar-measure {
+    overflow: hidden
+}
+
+.mc-modal .modal-content .modal-body h2 {
+    text-align: center;
+    color: #ffffff;
+}
+
+.mc-modal .modal-content .modal-body .modal-div-body {
+    padding: 10px;
+}
+
+.btn-close {
+    padding: 1em;
+    transition: 0.3s;
+    filter: invert(1);
+}
+
+.btn-close:focus {
+        box-shadow: none;
+}    
+/*END MODAL GENERAL MARCOBRE*/
+
+/*MODAL WITH HEADER*/
 .modal-menu {
     background-color: #EEEEEE;
     width: 100%;

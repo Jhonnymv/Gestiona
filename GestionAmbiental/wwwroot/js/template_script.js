@@ -23,6 +23,9 @@ $(document).ready(function () {
     //MAIN MODALS
     $('.modal-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
+    //MARCOBRE MESSAGE MODAL
+    $('div.modal .mc-modal-image-background').css('background-image', 'url("/img/landing-page-img.png")');
+
     //INSPECCIONES
     let r1 = 20;
     let g1 = 27;

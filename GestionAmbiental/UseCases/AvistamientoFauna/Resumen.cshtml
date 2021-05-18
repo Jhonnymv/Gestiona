@@ -155,7 +155,30 @@
     </nav>
 </div>*@
 
-<div class="modal fade" id="modal_telefonos" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_telefonos"
+<div class="modal fade mc-modal" id="modal_telefonos" tabindex="-1" aria-labelledby="titulo_modal_telefonos" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="mc-modal-image-background">
+            <div class="modal-content">
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <img src="~/img/logo-white.png" alt="">
+                    </div>
+                    <div class="col-12 modal-div-body">
+                        <h2 id="mensaje">Comunicate con MAP:</h2>
+                    </div>
+                    <div class="col-12 modal-div-body">
+                        <h2 id="telefonos"></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="modal_telefonos" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_telefonos"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -176,7 +199,7 @@
             </div>            
         </div>
     </div>
-</div>
+</div>*@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {            
