@@ -3,7 +3,65 @@
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="card text-center">
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Empresas, Gerencias y Tipos de Acto/Condición</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" type="button" id="Empresa" href="#Empresa" data-bs-toggle="pill" aria-selected="true">Empresas</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Gerencia" href="#Gerencia" data-bs-toggle="pill" aria-selected="false">Gerencias</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" href="#TipoCondicion" id="TipoCondicion" aria-selected="false">Acto/Condición Subestándar</a>
+                </li>
+
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container tablas-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <button type="button" class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</button>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Buscar</label>
+                                <input type="text" class="form-control" id="filtro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Enviar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
+
+        </div>
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
+
+        </div>
+    </div>
+</div>
+
+
+@*<div class="card text-center">
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="listItems">
             <li class="nav-item">
@@ -39,7 +97,9 @@
         <div class="row justify-content-center" id="paginado">
         </div>
     </div>
-</div>
+</div>*@
+
+
 @section scripts{
     <script>
         $(document).ready(function () {            
@@ -47,17 +107,18 @@
             var activeTab = localStorage.getItem('activeTabEmpresaGerenciaTipoCondicion');
             //Si existe el objeto en local storage mostrar
             if (activeTab) {
-                $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+                $('.nav-pills a[href="' + activeTab + '"]').click();
             }
             //Si no existe, mostrar primer tab
             else {
                 FiltrarEmpresa(1);
                 $("#btn_agregar").prop("href", "/GestorEGTC/AgregarEmpresa");
-                $("#Empresa").addClass("active");
+                $("#Empresa").click();
+                /*$("#Empresa").addClass("active");*/
             }
         });
         //Guardar tab activo en local storage
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
             localStorage.setItem('activeTabEmpresaGerenciaTipoCondicion', $(e.target).attr('href'));
             console.log($(e.target).attr('id'))
             switch ($(e.target).attr('id')) {
@@ -115,7 +176,11 @@
                     $('#tab_content').empty()
                     $('#tab_content').html(response.tabla)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                /*$('#nRegistros').html(response.nRegistros)*/
+                    let r8 = 196;
+                    let g8 = 34;
+                    let b8 = 151;
+                    tablasStyle(r8, g8, b8);
                 }
             });
         }
@@ -133,7 +198,11 @@
                     $('#tab_content').empty()
                     $('#tab_content').html(response.tabla)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                /*$('#nRegistros').html(response.nRegistros)*/
+                    let r8 = 196;
+                    let g8 = 34;
+                    let b8 = 151;
+                    tablasStyle(r8, g8, b8);
                 }
             });
         }
@@ -151,6 +220,10 @@
                     $('#tab_content').empty()
                     $('#tab_content').html(response.tabla)
                     $('#paginado').html(response.paginador)
+                    let r8 = 196;
+                    let g8 = 34;
+                    let b8 = 151;
+                    tablasStyle(r8, g8, b8);
                 }
             });
         }

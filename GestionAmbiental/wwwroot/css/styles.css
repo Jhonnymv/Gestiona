@@ -230,7 +230,7 @@ a:focus {
 
 .secondary-content .table-responsive table tbody tr td{
     vertical-align: middle;
-    padding: 20px 5px;
+    padding: 20px;
     text-align: center;
     border-style: none;
     background-color: rgba(68, 68, 68, 0.1);

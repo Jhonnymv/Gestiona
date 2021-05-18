@@ -109,9 +109,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             filasTabla += "</tr>";
                         }
 
-                        paginador += "<ul class=\"pagination\">";
+                        paginador += "<ul class=\"pagination pagination-sm\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
@@ -124,7 +124,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEmpresa(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
 
                     }
@@ -256,9 +256,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                         }
 
 
-                        paginador += "<ul class=\"pagination\">";
+                        paginador += "<ul class=\"pagination pagination-sm\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
@@ -271,7 +271,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarGerencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else
@@ -401,9 +401,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             filasTabla += "</tr>";
                         }
 
-                        paginador += "<ul class=\"pagination\">";
+                        paginador += "<ul class=\"pagination pagination-sm\">";
                         if (pagina >= 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                         for (int i = pagina - 2; i <= pagina + 2; i++)
                         {
@@ -416,7 +416,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                             }
                         }
                         if (pagina <= nPaginas - 4 && nPaginas > 5)
-                            paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoCondicion(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                         paginador += "</ul>";
                     }
                     else
