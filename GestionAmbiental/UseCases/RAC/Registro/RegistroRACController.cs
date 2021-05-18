@@ -20,6 +20,7 @@ using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -31,6 +32,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
 {
     public class RegistroRACController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarRAC _registrarRAC;
@@ -42,6 +44,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public RegistroRACController(
+            IHostingEnvironment hostingEnvironment,
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
             ISelectItems selectItems,
@@ -53,6 +56,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
+            _hostingEnvironment = hostingEnvironment;
             _consultarRACs = consultarRACs;
             _consultarRAC = consultarRAC;
             _selectItems = selectItems;
@@ -62,6 +66,31 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _eliminarRAC = eliminarRAC;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
+        }
+        public async Task<IActionResult> PropiedadesModulo()
+        {
+            dynamic response;
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("RAC"));
+                response = new
+                {
+                    success = true,
+                    data = JsonConvert.SerializeObject(dataModulo)
+                };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    msg = e.Message
+                };
+            }
+            return Ok(response);
         }
         public async Task<IActionResult> Resumen()
         {
@@ -132,7 +161,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
 
                 paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -145,7 +174,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }

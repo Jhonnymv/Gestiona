@@ -92,9 +92,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTarjetas(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTarjetas(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -107,7 +107,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTarjetas(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTarjetas(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -439,9 +439,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -454,7 +454,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarColores(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -623,9 +623,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleFuente?Id=" + fila.Id + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
                 }
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -638,7 +638,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarFuentes(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
             }
             else

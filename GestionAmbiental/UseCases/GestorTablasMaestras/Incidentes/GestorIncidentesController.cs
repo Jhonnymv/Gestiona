@@ -311,9 +311,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoSuelo(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoSuelo(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -326,7 +326,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoSuelo(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoSuelo(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -434,9 +434,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFlora(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFlora(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -449,7 +449,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFlora(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFlora(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -557,9 +557,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFauna(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFauna(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -572,7 +572,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFauna(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEspecieFauna(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -680,9 +680,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAgua(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoAgua(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -695,7 +695,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAgua(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoAgua(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -826,9 +826,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -841,7 +841,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
             }
 
@@ -986,9 +986,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarFactorCausa(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarFactorCausa(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1001,7 +1001,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarFactorCausa(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarFactorCausa(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1110,9 +1110,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarLugarDiposicion(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarLugarDiposicion(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1125,7 +1125,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarLugarDiposicion(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarLugarDiposicion(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1233,9 +1233,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarComponenteAmbiental(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarComponenteAmbiental(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1248,7 +1248,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltarComponenteAmbiental(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltarComponenteAmbiental(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1356,9 +1356,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoEquipo(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEstadoEquipo(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1371,7 +1371,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoEquipo(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEstadoEquipo(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1479,9 +1479,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoProducto(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoProducto(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1494,7 +1494,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoProducto(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoProducto(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1602,9 +1602,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarProductoIncidente(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarProductoIncidente(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1617,7 +1617,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarProductoIncidente(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarProductoIncidente(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1725,9 +1725,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarNivelIncidente(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarNivelIncidente(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1740,7 +1740,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarNivelIncidente(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarNivelIncidente(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1848,9 +1848,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoIncidente(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoIncidente(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1863,7 +1863,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoIncidente(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoIncidente(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1973,9 +1973,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1988,7 +1988,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUnidadMedida(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }

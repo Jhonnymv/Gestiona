@@ -196,9 +196,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoFauna(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoFauna(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -211,7 +211,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoFauna(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoFauna(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -335,9 +335,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarNombreComun(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarNombreComun(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -350,7 +350,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarNombreComun(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarNombreComun(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -521,9 +521,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -536,7 +536,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarEstadoFauna(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -658,9 +658,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -673,7 +673,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarTipoAvistamiento(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -799,9 +799,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -814,7 +814,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarContactoEmergencia(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -989,9 +989,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1004,7 +1004,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarLugarReferencia(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -1206,9 +1206,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination\">";
+                paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -1221,7 +1221,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"FiltrarUsuario(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
                 paginador += "</ul>";
             }
 
