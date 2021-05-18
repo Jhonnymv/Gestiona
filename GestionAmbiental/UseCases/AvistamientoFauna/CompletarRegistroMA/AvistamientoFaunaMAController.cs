@@ -75,10 +75,13 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
                 var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var lugaresReferencia = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                lugaresReferencia.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
 
                 ViewBag.Contactos = contactosEmergencia;
-
+                ViewBag.LugarReferencia = lugaresReferencia;
                 ViewBag.TipoFauna = tiposFauna;
                 ViewBag.EstadoFauna = estadosFauna;
 
@@ -95,7 +98,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NAvistamientos % rpp != 0 ? (datosTabla.NAvistamientos / rpp) + 1 : datosTabla.NAvistamientos / rpp;
-            if (datosTabla.NAvistamientos > 0)
+            if (datosTabla.Avistamientos.Count > 0)
             {
                 foreach (var fila in datosTabla.Avistamientos)
                 {
@@ -146,7 +149,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
             }
             else
             {
-                filasTabla = "Sin datos";
+                var nCol = 10;
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "</tr>";
             }
             dynamic response = new
             {

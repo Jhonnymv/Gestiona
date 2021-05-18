@@ -15,10 +15,10 @@
         <div class="content-header">
             <div class="action-container fauna-color">
                 <div class="w-100 row-center-center">
-                    <a class="btn btn-special-action-outline fauna-color">NUEVO REGISTRO</a>
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna">NUEVO REGISTRO</a>
                 </div>
                 <div class="w-100 row-center-center">
-                    <a class="btn btn-special-action-outline fauna-color" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna">Catálogo</a>
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna">CATÁLOGO</a>
                 </div>
             </div>
             <form autocomplete="off" class="custom-form">
@@ -26,7 +26,7 @@
                     <div class="row input_container">
                         <div class="col-12 col-md-6">
                             <label for="">Fecha</label>
-                            <input type="date" class="form-control" id="fecha_filtro">
+                            <input type="date" class="form-control" id="filtro_fecha">
                         </div>
                         <div class="col-12 col-md-6">
                             <label for="">Tipo de Fauna</label>

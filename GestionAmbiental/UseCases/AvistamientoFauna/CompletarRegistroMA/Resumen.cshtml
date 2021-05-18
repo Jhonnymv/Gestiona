@@ -3,8 +3,84 @@
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Avistamiento de Fauna MA - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container fauna-color">
+                @*<div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color">NUEVO REGISTRO</a>
+                </div>*@
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna">CATÁLOGO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Tipo de Fauna</label>
+                            <select id="filtro_tipo_fauna" asp-items="ViewBag.TipoFauna" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Estado de Fauna</label>
+                            <select id="filtro_estado_fauna" asp-items="ViewBag.EstadoFauna" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Lugar de Referencia</label>
+                            <select id="filtro_lugar_referencia" asp-items="ViewBag.LugarReferencia" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<div class="row mb-2">
+    <div class="secondary-content col-12">
+        <div class="table-responsive fauna-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>Item</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Ubicación</th>
+                        <th>Cantidad</th>
+                        <th>Tipo de Fauna</th>
+                        <th>Nombre Común</th>
+                        <th>Estado de la Fauna</th>
+                        <th>Tipo de Avistamiento</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container fauna-color" id="paginado">
+        </div>
+    </div>
+</div>
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Avistamiento de Fauna - Resumen</h2>
     </div>
@@ -73,7 +149,7 @@
 <div class="row mb-2 justify-content-center">
     <nav id="paginado" aria-label="pagination">
     </nav>
-</div>
+</div>*@
 @section scripts{
     <script type="text/javascript">
         $(document).ready(function () {
@@ -102,6 +178,10 @@
                     $('#tabla_resumen tbody').html(response.data)
                     $('#paginado').html(response.paginador)
                     /*$('#nRegistros').html(response.nRegistros)*/
+                    let r5 = 8;
+                    let g5 = 99;
+                    let b5 = 61;
+                    faunaStyle(r5, g5, b5);
                 }
             });
         }
