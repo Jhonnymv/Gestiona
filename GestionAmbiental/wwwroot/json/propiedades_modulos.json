@@ -1,0 +1,65 @@
+[
+  {
+    "modulo": "Inspecciones",
+    "r": 20,
+    "g": 27,
+    "b": 89,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "RAC",
+    "r": 152,
+    "g": 0,
+    "b": 0,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Residuos",
+    "r": 110,
+    "g": 41,
+    "b": 141,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Incidentes",
+    "r": 0,
+    "g": 188,
+    "b": 228,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Fauna",
+    "r": 8,
+    "g": 99,
+    "b": 61,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Agua",
+    "r": 65,
+    "g": 182,
+    "b": 230,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "SGA",
+    "r": 129,
+    "g": 110,
+    "b": 12,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Tablas",
+    "r": 196,
+    "g": 34,
+    "b": 151,
+    "img_url": "/img/back-inspection.png"
+  },
+  {
+    "modulo": "Dashboard",
+    "r": 152,
+    "g": 0,
+    "b": 0,
+    "img_url": "/img/back-inspection.png"
+  }
+]
