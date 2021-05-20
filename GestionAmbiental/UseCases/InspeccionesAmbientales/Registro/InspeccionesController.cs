@@ -91,12 +91,19 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
                 var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
                 var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
-                var dataModulo = prop.Find(x => x.modulo.Equals("Inspecciones"));
-                response = new
-                {
-                    success = true,
-                    data = JsonConvert.SerializeObject(dataModulo)
-                };
+                var dataModulo = prop.Find(x => x.modulo.Equals("Inspection"));
+                if (dataModulo != null)
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(dataModulo)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        msg = "No se encontraron las propiedades del módulo"
+                    };
             }
             catch (Exception e)
             {

@@ -17,6 +17,9 @@
             <li class="nav-item">
                 <a class="nav-link" data-toggle="tab" id="Fuentes" href="#Fuentes">Fuentes</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" id="Propiedades" href="#Propiedades">Propiedades Módulos</a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -77,6 +80,10 @@
                     FiltrarFuentes(1);
                     $("#btn_agregar").hide();
                     break;
+                case "Propiedades":
+                    FiltrarPropiedades(1);
+                    $("#btn_agregar").hide();
+                    break;
             }
         });
 
@@ -111,6 +118,13 @@
             $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
             FiltrarFuentes(1);
         });
+        $("#Propiedades").on('click', function (e) {
+            $(this).tab('show');
+            $('#filtro').val("");
+            $("#btn_agregar").hide();
+            $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
+            FiltrarPropiedades(1);
+        });
         function FiltrarTarjetas(pag) {
             $.ajax({
                 type: "POST",
@@ -144,11 +158,28 @@
                     $('#paginado').html(response.paginador)
                 }
             });
-        }
+        }        
         function FiltrarFuentes(pag) {
             $.ajax({
                 type: "POST",
                 url: "/GestorContenido/FiltrarFuentes",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function FiltrarPropiedades(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/FiltrarPropiedades",
                 data: {
                     "pagina": pag,
                     "rpp": 10,

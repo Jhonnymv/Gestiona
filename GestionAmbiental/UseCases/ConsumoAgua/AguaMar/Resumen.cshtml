@@ -22,11 +22,11 @@
                 <div class="col-12 col-lg-9">
                     <div class="row input_container">
                         <div class="col-12 col-md-6">
-                            <label for="">Fecha de Inspección</label>
-                            <input type="date" class="form-control" id="fecha_filtro">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="">Empresa Inspeccionada</label>
+                            <label for="">Resolución</label>
                             <select id="filtro_resolucion" asp-items="ViewBag.Resoluciones" class="form-control">
                             </select>
                         </div>
@@ -125,9 +125,32 @@
 
 @section scripts{
     <script type="text/javascript">
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
         $(document).ready(function () {
+            dataModulo();
             filtrar(1);
         });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ConsumoAguaMar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
         function filtrar(pag) {
             $.ajax({
                 type: "POST",
@@ -140,13 +163,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_resumen tbody').empty()
-                    $('#tabla_resumen tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
-                    let r6 = 65;
-                    let g6 = 182;
-                    let b6 = 230;
-                    aguaStyle(r6, g6, b6);
+                    $('#tabla_resumen tbody').empty();
+                    $('#tabla_resumen tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
+                    aguaStyle(r, g, b);
                 }
             });
         }
