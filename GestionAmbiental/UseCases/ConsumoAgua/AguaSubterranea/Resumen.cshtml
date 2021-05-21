@@ -4,69 +4,151 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
+<div class="agua">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Consumo de Agua de Mar - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container agua-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline agua-color" asp-action="NuevoRegistro" asp-controller="ConsumoAguaSubterranea">NUEVO REGISTRO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Resolución</label>
+                            <select id="filtro_resolucion" asp-items="ViewBag.Resoluciones" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Consumo de Agua Subterranea - Resumen</h2>
+    <div class="secondary-content col-12">
+        <div class="table-responsive agua-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Resolución</th>
+                        <th>Fuente de Agua</th>
+                        <th>Fecha</th>
+                        <th>Tiempo de Bombeo (H)</th>
+                        <th>Lectura Inicial Flujómetro en el día (m3)</th>
+                        <th>Lectura Final Flujómetro en el día (m3)</th>
+                        <th>Volumen de Agua Bombeado (consumo)</th>
+                        <th>Caudal promedio consumido (m3/s)</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container agua-color" id="paginado">
+        </div>
     </div>
 </div>
-<form autocomplete="off">
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Consumo de Agua Subterranea - Resumen</h2>
+        </div>
+    </div>
+    <form autocomplete="off">
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+                <label>Fecha:</label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+                <input type="date" class="form-control" id="filtro_fecha">
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+                <label>Resolución:</label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
+                <select id="filtro_resolucion" class="form-control" asp-items="ViewBag.Resoluciones"></select>
+            </div>
+        </div>
+        <div class="row mb-2 justify-content-center">
+            <div class="col-sm-12 col-md-1 col-lg-1 mt-1">
+                <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
+            </div>
+        </div>
+    </form>
+    <div class="row mb-2 justify-content-start d-flex align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
+            <a class="btn btn-danger float-left" asp-action="NuevoRegistro" asp-controller="ConsumoAguaSubterranea"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Registro</a>
+        </div>
+    </div>
     <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <label>Fecha:</label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <input type="date" class="form-control" id="filtro_fecha">
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <label>Resolución:</label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <select id="filtro_resolucion" class="form-control" asp-items="ViewBag.Resoluciones"></select>
+        <div class="col-md">
+            <table class="table" id="tabla_resumen">
+                <thead class="thead-mcolor">
+                    <tr>
+                        <th>Actividad</th>
+                        <th>Resolución</th>
+                        <th>Fuente de Agua</th>
+                        <th>Fecha</th>
+                        <th>Tiempo de Bombeo (H)</th>
+                        <th>Lectura Inicial Flujómetro en el día (m3)</th>
+                        <th>Lectura Final Flujómetro en el día (m3)</th>
+                        <th>Volumen de Agua Bombeado (consumo)</th>
+                        <th>Caudal promedio consumido (m3/s)</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
     <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-1 col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-        </div>
-    </div>
-</form>
-<div class="row mb-2 justify-content-start d-flex align-items-center">
-    <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
-        <a class="btn btn-danger float-left" asp-action="NuevoRegistro" asp-controller="ConsumoAguaSubterranea"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Registro</a>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-md">
-        <table class="table" id="tabla_resumen">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Actividad</th>
-                    <th>Resolución</th>
-                    <th>Fuente de Agua</th>
-                    <th>Fecha</th>
-                    <th>Tiempo de Bombeo (H)</th>
-                    <th>Lectura Inicial Flujómetro en el día (m3)</th>
-                    <th>Lectura Final Flujómetro en el día (m3)</th>
-                    <th>Volumen de Agua Bombeado (consumo)</th>
-                    <th>Caudal promedio consumido (m3/s)</th>
-                    <th>Detalle</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <nav id="paginado" aria-label="pagination">
-    </nav>
-</div>
+        <nav id="paginado" aria-label="pagination">
+        </nav>
+    </div>*@
 @section scripts{
     <script type="text/javascript">
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
         $(document).ready(function () {
+            dataModulo();
             filtrar(1);
         });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ConsumoAguaMar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
         function filtrar(pag) {
             $.ajax({
                 type: "POST",
@@ -79,9 +161,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_resumen tbody').empty()
-                    $('#tabla_resumen tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
+                    $('#tabla_resumen tbody').empty();
+                    $('#tabla_resumen tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
+                    aguaStyle(r,g,b);
                 }
             });
         }

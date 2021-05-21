@@ -34,11 +34,13 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.GetInvolucrados;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
     public class ReportePreliminarController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
 
         private readonly IRegistrarParte1 _registrarReporteParte1;
         private readonly IRegistrarParte2 _registrarReporteParte2;
@@ -68,6 +70,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
 
         public ReportePreliminarController(
+            IHostingEnvironment hostingEnvironment,
             IRegistrarParte1 registrarReporteParte1,
             IRegistrarParte2 registrarReporteParte2,
             IGetReportesPreliminares getReportesPreliminares,
@@ -94,6 +97,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
+            _hostingEnvironment = hostingEnvironment;
             _registrarReporteParte1 = registrarReporteParte1;
             _registrarReporteParte2 = registrarReporteParte2;
             _getReportesPreliminares = getReportesPreliminares;
@@ -119,6 +123,38 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _info_SGA = info_SGA;
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
+        }
+        public async Task<IActionResult> PropiedadesModulo()
+        {
+            dynamic response;
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Incidentes"));
+                if (dataModulo != null)
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(dataModulo)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        msg = "No se encontraron las propiedades del módulo"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    msg = e.Message
+                };
+            }
+            return Ok(response);
         }
         public async Task<IActionResult> Resumen()
         {

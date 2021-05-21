@@ -77,7 +77,38 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
         }
-
+        public async Task<IActionResult> PropiedadesModulo()
+        {
+            dynamic response;
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Fauna"));
+                if (dataModulo != null)
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(dataModulo)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        msg = "No se encontraron las propiedades del módulo"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    msg = e.Message
+                };
+            }
+            return Ok(response);
+        }
         public async Task<IActionResult> Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

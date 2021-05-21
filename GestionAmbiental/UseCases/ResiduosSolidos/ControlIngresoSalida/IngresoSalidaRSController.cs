@@ -19,11 +19,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 {
     public class IngresoSalidaRSController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IGetSelectItems _getSelectItems;
         private readonly IConsultarIngresoSalidaRSs _consultarIngresoSalidaRSs;
         private readonly IRegistrarIngresoSalidaRS _registrarIngresoSalidaRS;
@@ -33,6 +36,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 
         private readonly IDataProtector _protector;
         public IngresoSalidaRSController(
+            IHostingEnvironment hostingEnvironment,
             IGetSelectItems getSelectItems,
             IConsultarIngresoSalidaRSs consultarIngresoSalidaRSs,
             IRegistrarIngresoSalidaRS registrarIngresoSalidaRS,
@@ -42,6 +46,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _hostingEnvironment = hostingEnvironment;
             _getSelectItems = getSelectItems;
             _consultarIngresoSalidaRSs = consultarIngresoSalidaRSs;
             _registrarIngresoSalidaRS = registrarIngresoSalidaRS;
@@ -49,6 +54,38 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
             _editarIngresoSalidaRS = editarIngresoSalidaRS;
             _eliminarRegistroIngresoSalidaRS = eliminarRegistroIngresoSalidaRS;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoSalidaRSIdRouteValue);
+        }
+        public async Task<IActionResult> PropiedadesModulo()
+        {
+            dynamic response;
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Residuos"));
+                if (dataModulo != null)
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(dataModulo)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        msg = "No se encontraron las propiedades del módulo"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    msg = e.Message
+                };
+            }
+            return Ok(response);
         }
         public async Task<IActionResult> Resumen()
         {

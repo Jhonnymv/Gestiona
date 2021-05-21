@@ -160,7 +160,6 @@
                 url: "/Inspecciones/PropiedadesModulo",
                 traditional: true,
                 success: (response) => {
-                    console.log(response);
                     if (response.success) {
                         let data = JSON.parse(response.data);
                         r = data.r;
@@ -187,9 +186,9 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_resumen_inspecciones tbody').empty()
-                    $('#tabla_resumen_inspecciones tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
+                    $('#tabla_resumen_inspecciones tbody').empty();
+                    $('#tabla_resumen_inspecciones tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
                     inspectionStyle(r, g, b);
                 }
             });

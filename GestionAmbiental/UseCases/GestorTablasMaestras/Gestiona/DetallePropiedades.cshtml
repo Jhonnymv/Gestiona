@@ -1,0 +1,139 @@
+﻿@model GestionAmbiental.UseCases.PropiedadModulos
+@{
+    ViewData["Title"] = "Detalle Propiedades";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="row mb-2">
+    <div class="col-12 titulo-pagina">
+        <h2>Detalle de Propiedades del Módulo</h2>
+    </div>
+</div>
+<div class="row mb-2 justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+        <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarPropiedades" method="post" enctype="multipart/form-data">
+            <input type="hidden" class="form-control" asp-for="id" value="@Model.id"/>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label>Modulo:</label>
+                </div>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" asp-for="modulo" readonly />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label>Imagen de Fondo:</label>
+                </div>
+                <div class="col-lg-8">
+                    <img src="@Model.img_url" style="width:100%;height:auto;; max-height:300px;" />
+                </div>
+            </div>
+            <div id="seccion_nueva_imagen" style="display:none;">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label>Nueva Imagen</label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger field-validation-error" data-valmsg-for="nuevaImagen" data-valmsg-replace="true">
+                            <span id="danger_imagen_nueva" class=""></span>
+                        </span>
+                        <label class="btn btn-primary" for="nuevaImagen">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="nuevaImagen" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <img id="output_image" style="width:auto;height:auto; max-height:300px;" />
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-4">
+                    <label>Color</label>
+                </div>
+                <div class="col-lg-8" style="height:100px;">
+                    <input type="hidden" asp-for="r">
+                    <input type="hidden" asp-for="g">
+                    <input type="hidden" asp-for="b">
+                    <input type="color" id="colorPicker" class="mc_color_picker" style="width:100%" disabled>
+                </div>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+            </div>
+            <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                <a asp-controller="GestorContenido" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+            </div>
+        </form>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            var rgb = "rgb(@Model.r,@Model.g,@Model.b)";
+            console.log(rgb);
+            $("#colorPicker").val(parseColor(rgb).hex);
+        });
+        $("#colorPicker").on('change', function(){
+            var rgb = hexToRgb($("#colorPicker").val());
+            console.log(rgb);
+            $("#r").val(rgb[0]);
+            $("#g").val(rgb[1]);
+            $("#b").val(rgb[2]);
+        });
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#seccion_nueva_imagen").show();
+            $("#nuevaImagen").prop('disabled', false);
+            $("#colorPicker").prop('disabled', false);
+        });
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#seccion_nueva_imagen").hide();
+            $("#nuevaImagen").prop('disabled', true);
+            $("#colorPicker").prop('disabled', true);
+        });
+        const hexToRgb = hex =>
+            hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
+                , (m, r, g, b) => '#' + r + r + g + g + b + b)
+                .substring(1).match(/.{2}/g)
+                .map(x => parseInt(x, 16));
+
+        function parseColor(color) {
+            var arr = []; color.replace(/[\d+\.]+/g, function (v) { arr.push(parseFloat(v)); });
+            return {
+                hex: "#" + arr.slice(0, 3).map(toHex).join(""),
+                opacity: arr.length == 4 ? arr[3] : 1
+            };
+        }
+        function toHex(int) {
+            var hex = int.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+
+        function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('output_image');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}
