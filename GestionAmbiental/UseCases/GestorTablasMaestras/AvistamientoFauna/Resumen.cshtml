@@ -3,7 +3,74 @@
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="card text-center">
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Tablas Maestras - Avistamiento de Fauna</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" type="button" id="TipoFauna" href="#TipoFauna" data-bs-toggle="pill" aria-selected="true">Tipo de Fauna</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="EstadoFauna" href="#EstadoFauna" data-bs-toggle="pill" aria-selected="false">Estado de Fauna</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="TipoAvistamiento" href="#TipoAvistamiento" aria-selected="false">Tipo de Avistamiento</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="ContactoEmergencia" href="#ContactoEmergencia" aria-selected="false">Contacto Emergencia</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="LugarReferencia" href="#LugarReferencia" aria-selected="false">Lugares de Referencia</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Usuarios" href="#Usuarios" aria-selected="false">Usuarios a Notificar</a>
+                </li>
+
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container tablas-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
+                    </div>
+                    <div class="w-100 row-center-center">
+                        <a class="btn btn-special-action-outline tablas-color" id="btn_editar_mensaje" asp-controller="GestorAvistamientoFauna" asp-action="DetalleMensajeContactoEmergencia">Editar Mensaje</a>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Buscar</label>
+                                <input type="text" class="form-control" id="filtro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
+
+        </div>
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
+
+        </div>
+    </div>
+</div>
+@*<div class="card text-center">
     <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs" id="listItems">
             <li class="nav-item">
@@ -55,68 +122,103 @@
         <div class="row justify-content-center" id="paginado">
         </div>
     </div>
-</div>
+</div>*@
 @section Scripts{
     <script type="text/javascript">
-        $(document).ready(function () {           
-            FiltrarNombreComun(1);
-            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
+        $(document).ready(function () {
+            dataModulo();
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabAvistamientoFauna');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('.nav-pills a[href="' + activeTab + '"]').click();
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FiltrarNombreComun(1);
+                $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
+            }
         });
-
-        $("#btn_enviar").on('click', function (e) {
-            if ($("#Tipo_Fauna").hasClass("active")) {
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        //Guardar tab activo en local storage
+        $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabAvistamientoFauna', $(e.target).attr('href'));
+        });
+        $("#btnenviar").on('click', function (e) {
+            if ($("#TipoFauna").hasClass("active")) {
                 FiltrarTipoFauna(1);
             }
-            if ($("#Nombre_Comun").hasClass("active")) {
+            if ($("#NombreComun").hasClass("active")) {
                 FiltrarNombreComun(1);
             }
-            if ($("#Estado_Fauna").hasClass("active")) {
+            if ($("#EstadoFauna").hasClass("active")) {
                 FiltrarEstadoFauna(1);
             }
-            if ($("#Tipo_Avistamiento").hasClass("active")) {
+            if ($("#TipoAvistamiento").hasClass("active")) {
                 FiltrarTipoAvistamiento(1);
             }
-            if ($("#Contacto_Emergencia").hasClass("active")) {
+            if ($("#ContactoEmergencia").hasClass("active")) {
                 FiltrarContactoEmergencia(1);
             }
-            if ($("#Lugar_Referencia").hasClass("active")) {
+            if ($("#LugarReferencia").hasClass("active")) {
                 FiltrarLugarReferencia(1);
             }
             if ($("#Usuarios").hasClass("active")) {
                 FiltrarUsuario(1);
             }
         });
-        $("#Tipo_Fauna").on('click', function (e) {
+        $("#TipoFauna").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoFauna");
             $("#opcion_editar_mensaje").hide();
             FiltrarTipoFauna(1);
         });
-        $("#Nombre_Comun").on('click', function (e) {
+        $("#NombreComun").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
             $("#opcion_editar_mensaje").hide();
             FiltrarNombreComun(1);
         });
-        $("#Estado_Fauna").on('click', function (e) {
+        $("#EstadoFauna").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarEstadoFauna");
             $("#opcion_editar_mensaje").hide();
             FiltrarEstadoFauna(1);
         });
-        $("#Tipo_Avistamiento").on('click', function (e) {
+        $("#TipoAvistamiento").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoAvistamiento");
             $("#opcion_editar_mensaje").hide();
             FiltrarTipoAvistamiento(1);
         });
-        $("#Contacto_Emergencia").on('click', function (e) {
+        $("#ContactoEmergencia").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarContactoEmergencia");
             $("#opcion_editar_mensaje").show();
             FiltrarContactoEmergencia(1);
         });
-        $("#Lugar_Referencia").on('click', function (e) {
+        $("#LugarReferencia").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarLugarReferencia");
             $("#opcion_editar_mensaje").hide();
@@ -140,9 +242,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -157,9 +260,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -174,9 +278,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -191,9 +296,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -208,9 +314,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -225,9 +332,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -242,9 +350,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
