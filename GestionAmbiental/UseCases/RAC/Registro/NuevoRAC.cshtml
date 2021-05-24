@@ -3,7 +3,244 @@
     ViewData["Title"] = "Nuevo Reporte de Acto y Condición Subestándar";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="container-fluid">
+
+<div class="rac">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title rac-opacity-color">
+                <h3>RAC - Nuevo Reporte</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form form-flex w-100" id="form_nuevoRAC" asp-action="NuevoRAC" asp-controller="RegistroRAC" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="mc-container col-12 col-xl-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center">Datos del Personal que Reporta</span>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label asp-for="Nombres_Apellidos">Nombres y Apellidos</label>
+                            <span class="text-danger" asp-validation-for="Nombres_Apellidos"></span>
+                            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.NombreUsuario" disabled>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label asp-for="Id_Gerencia">Área de Marcobre</label>
+                            <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
+                            <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label asp-for="Id_Empresa">Empresa</label>
+                            <span class="text-danger" asp-validation-for="Id_Empresa"></span>
+                            <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label asp-for="Otra_Empresa">Otra Empresa</label>
+                            <span class="text-danger field-validation-error" data-valmsg-for="Otra_Empresa" data-valmsg-replace="true">
+                                <span id="danger_empresa" class=""></span>
+                            </span>
+                            <input type="text" class="form-control" asp-for="Otra_Empresa" disabled />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-tabs-mc mc-separator-left col-12 col-xl-8">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold">Descripción de la Observación</span>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4 mb-4">
+                        <ul class="nav nav-pills col-9 div-scroll-horizontal" id="pills-tab" role="tablist">
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Paso 1</button>
+                            </li>
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Paso 2</button>
+                            </li>
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-ext" aria-selected="false" disabled>Paso 3</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-step1" role="tabpanel" aria-labelledby="pills-step1-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Id_Empresa_Obs">Empresa Observada</label>
+                                    <span class="text-danger" asp-validation-for="Id_Empresa_Obs"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa_Obs"></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Id_Gerencia_Obs">Gerencia a la que Pertenece</label>
+                                    <span class="text-danger" asp-validation-for="Id_Gerencia_Obs"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Obs"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Ubicacion">Ubicación de la Observación</label>
+                                    <span class="text-danger" asp-validation-for="Ubicacion"></span>
+                                    <input type="text" class="form-control" asp-for="Ubicacion" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <div class="row mt-0 mb-0">
+                                        <div class="col-5 mt-0 mb-0">
+                                            <label asp-for="Hora">Hora (24h)</label>
+                                            <span class="text-danger" asp-validation-for="Hora"></span>
+                                            <input type="time" class="form-control" asp-for="Hora">
+                                        </div>
+                                        <div class="col-7 mt-0 mb-0">
+                                            <label asp-for="Fecha">Fecha</label>
+                                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                                            <input type="date" class="form-control" asp-for="Fecha">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="SSO_MA">Observación SSO/MA</label>
+                                    <span class="text-danger" asp-validation-for="SSO_MA"></span>
+                                    <select class="form-control" asp-for="SSO_MA">
+                                        <option value="0">--SELECCIONE--</option>
+                                        <option value="SSO">SSO</option>
+                                        <option value="MA">MA</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Clasificacion">Clasificación</label>
+                                    <span class="text-danger" asp-validation-for="Clasificacion"></span>
+                                    <select class="form-control" asp-for="Clasificacion">
+                                        <option value="0">-- SELECCIONE --</option>
+                                        <option value="Acto Subestándar">Acto Subestándar</option>
+                                        <option value="Condición Subestándar">Condición Subestándar</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="NivelRiesgo">Nivel de Riesgo</label>
+                                    <span class="text-danger" asp-validation-for="NivelRiesgo"></span>
+                                    <select class="form-control" asp-for="NivelRiesgo">
+                                        <option value="0" style="background-color:white; color:black;">--SELECCIONE--</option>
+                                        <!--Agregar option por js-->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="Id_Tipo_Condicion">Tipo</label>
+                                    <span class="text-danger" asp-validation-for="Id_Tipo_Condicion"></span>
+                                    <select class="form-control Vacio" asp-for="Id_Tipo_Condicion">
+                                        <option class="Vacio" value="0">--SELECCIONE--</option>
+                                    </select>
+
+                                    <select class="form-control MA-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoMA" style="display:none"></select>
+                                    <select class="form-control MA-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionMA" style="display:none"></select>
+                                    <select class="form-control SEG-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoSSO" style="display:none"></select>
+                                    <select class="form-control SEG-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionSSO" style="display:none"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="Descripcion_Acto_Cond">Descripción del Acto o Condición Subestándar</label>
+                                    <span class="text-danger" asp-validation-for="Descripcion_Acto_Cond"></span>
+                                    <textarea class="form-control" asp-for="Descripcion_Acto_Cond" rows="1" maxlength="250"></textarea>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12">
+                                    <label asp-for="Medida_Control">Medidas de Control Inmediata</label>
+                                    <span class="text-danger" asp-validation-for="Medida_Control"></span>
+                                    <textarea class="form-control" asp-for="Medida_Control" rows="1" maxlength="250"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-step3" role="tabpanel" aria-labelledby="pills-step3-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label for="">¿Se Planteó una primera acción correctiva?</label>
+                                    <span class="text-danger" asp-validation-for="PAC"></span>
+                                    <select class="form-control" asp-for="PAC">
+                                        <option value="0">Seleccionar</option>
+                                        <option value="No">No</option>
+                                        <option value="Si">Si</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Id_Responsable_Cierre">Responsable de Marcobre del cierre de la observación</label>
+                                    <span class="text-danger" asp-validation-for="Id_Responsable_Cierre"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Id_Responsable_Cierre">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Fecha_Cierre">Fecha de Cierre Programada</label>
+                                    <span class="text-danger" asp-validation-for="Fecha_Cierre"></span>
+                                    <input type="date" class="form-control" asp-for="Fecha_Cierre">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Id_Supervisor">Verificador de SSO/MA (Marcobre) a notificar</label>
+                                    <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                                    <select class="form-control AsesorTemporal" asp-for="Id_Supervisor"><option value="0">--SELECCIONE--</option></select>
+                                    <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMA" asp-for="Id_Supervisor" style="display:none" disabled></select>
+                                    <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor" style="display:none" disabled></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label for="">Evidencia de la Observación</label>
+                                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Obs" data-valmsg-replace="true">
+                                        <span id="danger_evidencia" class=""></span>
+                                    </span>
+                                    <input type="file" asp-for="Evidencia_Obs" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-mc-outline-danger">Cancelar</button>
+                                        <button class="btn btn-mc-success">Registrar Reporte</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!--<div class="container-fluid">
     <div class="row mb-2">
         <div class="col-12 titulo-pagina">
             <h2>Nuevo Reporte de Acto y Condición Subestándar</h2>
@@ -122,9 +359,9 @@
             <div class="col-sm-12 col-md-12 col-lg-2">
                 <span class="text-danger" asp-validation-for="NivelRiesgo"></span>
                 <select class="form-control" asp-for="NivelRiesgo">
-                    <option value="" style="background-color:white; color:black;">--SELECCIONE--</option>
+                    <option value="" style="background-color:white; color:black;">--SELECCIONE--</option>-->
                     <!--Agregar option por js-->
-                </select>
+                <!--</select>
             </div>
         </div>
         <div class="row mb-2">
@@ -219,7 +456,8 @@
 
         </div>
     </form>
-</div>
+</div>-->
+
 <!-- Modal Enviando Correo-->
 <div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
      aria-hidden="true" style="display: none;">
@@ -238,6 +476,7 @@
     </div>
 </div>
 @section Scripts{
+    <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
         $("#Evidencia_Obs").change(function () {
             $("#danger_evidencia").html("");

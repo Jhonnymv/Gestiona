@@ -27,9 +27,9 @@ $(document).ready(function () {
     $('div.modal .mc-modal-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //INSPECCIONES
-    let r1 = 20;
-    let g1 = 27;
-    let b1 = 89;
+    let r1 = 101;
+    let g1 = 102;
+    let b1 = 114;
     inspectionStyle(r1, g1, b1);
     $("#inspectionColorPicked").html('rgb ('+r1+', '+g1+', '+b1+')');
     let inspectionColor = rgbToHex(r1, g1, b1);
@@ -162,6 +162,9 @@ function racStyle(r, g, b) {
     $('.table-responsive.rac-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.rac-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.rac .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    $('.rac .mc-separator-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.rac .mc-separator-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
     $('.table-responsive.rac-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');

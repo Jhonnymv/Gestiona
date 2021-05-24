@@ -121,17 +121,18 @@ a:focus {
     margin: 5px 0px;
 }
 
-
-.custom-form input.form-control, .custom-form select.form-control {
-    border-radius: 7.5px;
-    border-width: 1.5px;
-    border-color: #2D649B;
-    outline: none;
+.custom-form input.form-control, .custom-form select.form-control, .custom-form textarea.form-control {
+        border-radius: 7.5px;
+        border-width: 1.5px;
+        border-color: #2D649B;
+        outline: none;
 }
 
 .btn {
     border-radius: 7.5px;
 }
+
+/*BUTTONS MARCOBRE*/
 
 .btn-mc {
     margin: 10px 10px;
@@ -146,12 +147,85 @@ a:focus {
     background-color: #FFBE0B;
 }
 
+.btn-mc-outline {
+    margin: 10px 10px;
+    padding: 7px 25px;
+    font-weight: bold;
+    color: #2D649B;
+    background-color: transparent;
+    border: 2px solid #2D649B;
+}
+
+    .btn-mc-outline:hover {
+        border-color: #FFBE0B;
+        color: #FFBE0B;
+    }
+
+.btn-mc-success {
+    margin: 10px 10px;
+    padding: 7px 25px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #27C767;
+    border: 2px solid #27C767;
+}
+
+.btn-mc-success:hover {
+    color: #ffffff;
+    background-color: #20A756;
+    border-color: #20A756;
+}
+
+.btn-mc-danger {
+    margin: 10px 10px;
+    padding: 7px 25px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #FF4D4D;
+    border: 2px solid #FF4D4D;
+}
+
+.btn-mc-danger:hover {
+    color: #ffffff;
+    background-color: #FF0000;
+    border-color: #FF0000;
+}
+
+.btn-mc-outline-success {
+    margin: 10px 10px;
+    padding: 7px 25px;
+    font-weight: bold;
+    color: #6cc070;
+    background-color: transparent;
+    border: 2px solid #6cc070;
+}
+
+.btn-mc-outline-success:hover {
+    color: #20A756;
+    border-color: #20A756;
+}
+
+.btn-mc-outline-danger {
+    margin: 10px 10px;
+    padding: 7px 25px;
+    font-weight: bold;
+    color: #FF4D4D;
+    background-color: transparent;
+    border: 2px solid #FF4D4D;
+}
+
+.btn-mc-outline-danger:hover {
+    color: #FF0000;
+    border-color: #FF0000;
+}
+
 .btn-selectpicker {
     max-height: 39px;
     color: #000;
     background-color: #ffffff;
     border: 1px solid #2D649B;
 }
+/*END BUTTONS MARCOBRE*/
 
 .filter-option-inner-inner {
     color: #000;
@@ -496,6 +570,14 @@ a:focus {
     color: #ffffff;
 }
 
+.text-mc {
+    color: #2D649B;
+}
+
+.bold {
+    font-weight: bold;
+}
+
 /*MODALES*/
 /*MODAL GENERAL MARCOBRE*/
 .mc-modal .modal-body {
@@ -564,6 +646,41 @@ a:focus {
     box-shadow: none;
 }
 
+/*END MODAL WITH HEADER*/
+
+.mc-separator-right {
+    height: 100%;
+    border-bottom: solid;
+}
+
+.mc-separator-left {
+    height: 100%;
+    border-top: solid;
+}
+
+input[type="file"] {
+    padding: 10px 15px;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+        background-color: #2D649B;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        height: 35px;
+}
+
+input[type="file"]:hover::-webkit-file-upload-button {
+    filter: none;
+    background-color: #2D649B;
+    color: #2D649B;
+}    
+
+.form-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 /* ---------------------------------------------------
     MEDIA QUERIES
@@ -623,6 +740,13 @@ a:focus {
         padding: 20px;
     }
 
+    .form-tabs-mc {
+        padding: 10px 25px;
+    }
+
+    .mc-container {
+        padding: 10px 25px;
+    }
     
 }
 
@@ -663,6 +787,25 @@ a:focus {
 
     .first-div-content-settings {
         margin-right: 10px;
+    }
+
+    .mc-separator-right {
+        border-bottom: none;
+        border-right: solid;
+    }
+
+    .mc-separator-left {
+        border-top: none;
+        border-left: solid;
+    }
+
+    .mc-separator-left, .mc-separator-right {
+        margin: 0;
+    }
+
+    .form-flex {
+        display: flex;
+        flex-direction: row;
     }
 }
 
