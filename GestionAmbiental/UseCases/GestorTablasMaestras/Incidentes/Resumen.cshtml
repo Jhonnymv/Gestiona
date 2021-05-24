@@ -4,73 +4,184 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="card text-center">
-    <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs" id="listItems">
-            <li class="nav-item">
-                <a class="nav-link active" id="Factor_Causa">Causas Básicas</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Lugar">Lugares de Disposición</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Componente">Componentes Ambientales</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="EstadoEquipo">Estado Equipo</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="TipoProducto">Tipo Producto</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Producto">Productos Derramados</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="NivelIncidente">Niveles de Incidente</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="TipoIncidente">Tipos de Incidente</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Unidades">Unidades Medida</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
-            </li>
-        </ul>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Tablas Maestras - Incidentes Ambientales</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" type="button" data-bs-toggle="pill" id="FactorCausa" href="#Factor_Causa" aria-selected="true">Causas Básicas</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Lugar" href="#Lugar" aria-selected="false">Lugares de Disposición</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Componente" href="#Componente" aria-selected="false">Componentes Ambientales</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="EstadoEquipo" href="#EstadoEquipo" aria-selected="false">Estado Equipo</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="TipoProducto" href="#TipoProducto" aria-selected="false">Tipo Producto</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Producto" href="#Producto" aria-selected="false">Productos Derramados</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="NivelIncidente" href="#NivelIncidente" aria-selected="false">Niveles de Incidente</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="TipoIncidente" href="#TipoIncidente" aria-selected="false">Tipos de Incidente</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Unidades" href="#Unidades" aria-selected="false">Unidades Medida</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Usuarios" href="#Usuarios" aria-selected="false">Usuarios a Notificar</a>
+                </li>
+
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container tablas-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Buscar</label>
+                                <input type="text" class="form-control" id="filtro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="row mb-2 justify-content-center">
-            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
-                <label>Buscar:</label>
-            </div>
-            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
-                <input type="text" class="form-control" id="filtro">
-            </div>
-            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
-                <button class="btn btn-primary" id="btn_enviar">Buscar</button>
-            </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
+
         </div>
-        <div class="row justify-content-start mt-2 mb-2">
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
-            </div>
-        </div>
-        <div class="row" id="tab_content">
-        </div>
-        <div class="row justify-content-center" id="paginado">
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
+
         </div>
     </div>
 </div>
+@*<div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="listItems">
+                <li class="nav-item">
+                    <a class="nav-link active" id="Factor_Causa">Causas Básicas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Lugar">Lugares de Disposición</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Componente">Componentes Ambientales</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="EstadoEquipo">Estado Equipo</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="TipoProducto">Tipo Producto</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Producto">Productos Derramados</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="NivelIncidente">Niveles de Incidente</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="TipoIncidente">Tipos de Incidente</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Unidades">Unidades Medida</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2 justify-content-center">
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                    <label>Buscar:</label>
+                </div>
+                <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                    <input type="text" class="form-control" id="filtro">
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                    <button class="btn btn-primary" id="btn_enviar">Buscar</button>
+                </div>
+            </div>
+            <div class="row justify-content-start mt-2 mb-2">
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+                </div>
+            </div>
+            <div class="row" id="tab_content">
+            </div>
+            <div class="row justify-content-center" id="paginado">
+            </div>
+        </div>
+    </div>*@
 @section Scripts{
     <script type="text/javascript">
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
         $(document).ready(function () {
-            FiltarFactorCausa(1);
-            $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarFactorCausa");
+            dataModulo();
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabIncidentes1');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('.nav-pills a[href="' + activeTab + '"]').click();
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FiltarFactorCausa(1);
+                $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarFactorCausa");
+            }
         });
-
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        //Guardar tab activo en local storage
+        $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabIncidentes1', $(e.target).attr('href'));
+        });
         $("#btn_enviar").on('click', function (e) {
-            if ($("#Factor_Causa").hasClass("active")) {
+            if ($("#FactorCausa").hasClass("active")) {
                 FiltarFactorCausa(1);
             }
             if ($("#Lugar").hasClass("active")) {
@@ -96,7 +207,7 @@
             }
         });
 
-        $("#Factor_Causa").on('click', function (e) {
+        $("#FactorCausa").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorIncidentes/AgregarFactorCausa");
             FiltarFactorCausa(1);
@@ -158,9 +269,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -175,9 +287,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -192,9 +305,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -209,9 +323,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -226,9 +341,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -243,9 +359,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -260,9 +377,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -277,9 +395,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -294,9 +413,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -311,9 +431,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }

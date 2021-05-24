@@ -3,7 +3,52 @@
     ViewData["Title"] = "Info_SGA";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-    <div class="row mb-2">
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Tablas Maestras - Información del sistema</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container tablas-color">
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Buscar</label>
+                            <input type="text" class="form-control" placeholder="Introducir Texto" id="filtro">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color">
+            <table class="table" id="tabla_info">
+                <thead class="">
+                    <tr>
+                        <th>Tipo de Información</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+        <div class="pagination-container tablas-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
         <div class="col-12 titulo-pagina">
             <h2>Información del Sistema</h2>
         </div>
@@ -38,19 +83,43 @@
     <div class="row mb-2 justify-content-center">
         <nav id="paginado" aria-label="pagination">
         </nav>
-    </div>
-    @section scripts{
-        <script>
+    </div>*@
+
+@section scripts{
+    <script>
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
         $(document).ready(function () {
+            dataModulo();
             filtrar(1);
         });
-    function filtrar(pag) {
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        function filtrar(pag) {
             $.ajax({
                 type: "POST",
                 url: "/GestorInfo_SGA/Info_SGA",
                 data: {
                     "pagina": pag,
-                    "rpp":10,
+                    "rpp": 10,
                     "filtro": $('#filtro').val()
                 },
                 traditional: true,
@@ -58,9 +127,9 @@
                     $('#tabla_info tbody').empty();
                     $('#tabla_info tbody').html(response.data);
                     $('#paginado').html(response.paginador);
-                    /*$('#nRegistros').html(response.nRegistros)*/
+                    tablasStyle(r, g, b);
                 }
             });
         }
-        </script>
-    }
+    </script>
+}

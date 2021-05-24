@@ -4,145 +4,235 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="card text-center">
-    <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs" id="listItems">
-            <li class="nav-item">
-                <a class="nav-link active" id="EO-RS">EO-RS</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Conductor">Conductores</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Vehiculo">Vehículos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
-            </li>
-        </ul>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Tablas Maestras - Manifiestos de Residuos Sólidos</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" type="button" id="EO-RS" href="#EO-RS" data-bs-toggle="pill" aria-selected="true">EO-RS</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Conductor" href="#Conductor" data-bs-toggle="pill" aria-selected="false">Conductores</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Vehiculo" href="#Vehiculo" aria-selected="false">Vehículos</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Usuarios" href="#Usuarios" aria-selected="false">Usuarios a Notificar</a>
+                </li>
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container tablas-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Buscar</label>
+                                <input type="text" class="form-control" id="filtro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="card-body">
-        <div class="row mb-2 justify-content-center">
-            <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
-                <label>Buscar:</label>
-            </div>
-            <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
-                <input type="text" class="form-control" id="filtro">
-            </div>
-            <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
-                <button class="btn btn-primary">Enviar</button>
-            </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
         </div>
-        <div class="row justify-content-start mt-2 mb-2">
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
-                <a class="btn btn-danger" id="btn_agregar">Agregar</a>
-            </div>
-        </div>
-        <div class="row" id="tab_content">
-        </div>
-        <div class="row justify-content-center" id="paginado">
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
         </div>
     </div>
 </div>
+@*<div class="card text-center">
+        <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs" id="listItems">
+                <li class="nav-item">
+                    <a class="nav-link active" id="EO-RS">EO-RS</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Conductor">Conductores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Vehiculo">Vehículos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="Usuarios">Usuarios a Notificar</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="row mb-2 justify-content-center">
+                <div class="col-4 col-sm-4 col-md-2 col-lg-2 mt-1">
+                    <label>Buscar:</label>
+                </div>
+                <div class="col-4 col-sm-4 col-md-3 col-lg-3 mt-1">
+                    <input type="text" class="form-control" id="filtro">
+                </div>
+                <div class="col-4 col-sm-4 col-md-2 col-lg-3 mt-1">
+                    <button class="btn btn-primary">Enviar</button>
+                </div>
+            </div>
+            <div class="row justify-content-start mt-2 mb-2">
+                <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                    <a class="btn btn-danger" id="btn_agregar">Agregar</a>
+                </div>
+            </div>
+            <div class="row" id="tab_content">
+            </div>
+            <div class="row justify-content-center" id="paginado">
+            </div>
+        </div>
+    </div>*@
 @section Scripts{
     <script type="text/javascript">
-    $(document).ready(function () {
-        FIltrarEO_RS(1);
-        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
-    });
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
+        $(document).ready(function () {
+            dataModulo();
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabManifiestosRS');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('.nav-pills a[href="' + activeTab + '"]').click();
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FIltrarEO_RS(1);
+                $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
+            }
+        });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        //Guardar tab activo en local storage
+        $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabManifiestosRS', $(e.target).attr('href'));
+        });
+        $("#EO-RS").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
+            FIltrarEO_RS(1);
+        });
+        $("#Conductor").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarConductor");
+            FiltrarConductor(1);
+        });
+        $("#Vehiculo").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarVehiculo");
+            FiltrarVehiculo(1);
+        });
+        $("#Usuarios").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarUsuario");
+            FiltrarUsuarios(1);
+        });
 
-    $("#EO-RS").on('click', function (e) {
-        $(this).tab('show');
-        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
-        FIltrarEO_RS(1);
-    });
-    $("#Conductor").on('click', function (e) {
-        $(this).tab('show');
-        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarConductor");
-        FiltrarConductor(1);
-    });
-    $("#Vehiculo").on('click', function (e) {
-        $(this).tab('show');
-        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarVehiculo");
-        FiltrarVehiculo(1);
-    });
-    $("#Usuarios").on('click', function (e) {
-        $(this).tab('show');
-        $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarUsuario");
-        FiltrarUsuarios(1);
-    });
-
-    function FIltrarEO_RS(pag) {
-        $.ajax({
-            type: "POST",
-            url: "/GestorManifiestoRS/FIltrarEO_RS",
-            data: {
-                "pagina": pag,
-                "rpp":10,
-                "filtro": $('#filtro').val(),
-            },
-            traditional: true,
-            success: (response) => {
-                $('#tab_content').empty()
-                $('#tab_content').html(response.tabla)
-                $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-            }
-        });
-    }
-    function FiltrarConductor(pag) {
-        $.ajax({
-            type: "POST",
-            url: "/GestorManifiestoRS/FiltrarConductor",
-            data: {
-                "pagina": pag,
-                "rpp":10,
-                "filtro": $('#filtro').val(),
-            },
-            traditional: true,
-            success: (response) => {
-                $('#tab_content').empty()
-                $('#tab_content').html(response.tabla)
-                $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-            }
-        });
-    }
-    function FiltrarUsuarios(pag) {
-        $.ajax({
-            type: "POST",
-            url: "/GestorManifiestoRS/FiltrarUsuario",
-            data: {
-                "pagina": pag,
-                "rpp":10,
-                "filtro": $('#filtro').val(),
-            },
-            traditional: true,
-            success: (response) => {
-                $('#tab_content').empty()
-                $('#tab_content').html(response.tabla)
-                $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-            }
-        });
-    }
-    function FiltrarVehiculo(pag) {
-        $.ajax({
-            type: "POST",
-            url: "/GestorManifiestoRS/FiltrarVehiculo",
-            data: {
-                "pagina": pag,
-                "rpp":10,
-                "filtro": $('#filtro').val(),
-            },
-            traditional: true,
-            success: (response) => {
-                $('#tab_content').empty()
-                $('#tab_content').html(response.tabla)
-                $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-            }
-        });
-    }
+        function FIltrarEO_RS(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorManifiestoRS/FIltrarEO_RS",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
+                }
+            });
+        }
+        function FiltrarConductor(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorManifiestoRS/FiltrarConductor",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
+                }
+            });
+        }
+        function FiltrarUsuarios(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorManifiestoRS/FiltrarUsuario",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
+                }
+            });
+        }
+        function FiltrarVehiculo(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorManifiestoRS/FiltrarVehiculo",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
+                }
+            });
+        }
     </script>
 }

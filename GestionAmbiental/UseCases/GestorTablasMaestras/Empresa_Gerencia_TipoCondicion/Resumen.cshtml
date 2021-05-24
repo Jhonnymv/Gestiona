@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-3 row-center-center">
-                        <button type="button" class="btn btn-mc" id="btn_enviar">Enviar</button>
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
                     </div>
                 </form>
             </div>
@@ -102,7 +102,12 @@
 
 @section scripts{
     <script>
-        $(document).ready(function () {            
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var img_url = "";
+        $(document).ready(function () {
+            dataModulo();
             //Buscar tab activo guardado en local storage
             var activeTab = localStorage.getItem('activeTabEmpresaGerenciaTipoCondicion');
             //Si existe el objeto en local storage mostrar
@@ -117,24 +122,27 @@
                 /*$("#Empresa").addClass("active");*/
             }
         });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
         //Guardar tab activo en local storage
         $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
             localStorage.setItem('activeTabEmpresaGerenciaTipoCondicion', $(e.target).attr('href'));
-            console.log($(e.target).attr('id'))
-            switch ($(e.target).attr('id')) {
-                case "Empresa":
-                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarEmpresa");
-                    FiltrarEmpresa(1);
-                    break;
-                case "Gerencia":
-                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarGerencia");
-                    FiltrarGerencia(1);
-                    break;
-                case "TipoCondicion":
-                    $("#btn_agregar").prop("href", "/GestorEGTC/AgregarGerencia");
-                    FiltrarGerencia(1);
-                    break;
-            }
         });
         $("#Empresa").on('click', function (e) {
             $(this).tab('show');
@@ -173,14 +181,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-                    let r8 = 196;
-                    let g8 = 34;
-                    let b8 = 151;
-                    tablasStyle(r8, g8, b8);
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -195,14 +199,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
-                    let r8 = 196;
-                    let g8 = 34;
-                    let b8 = 151;
-                    tablasStyle(r8, g8, b8);
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
@@ -217,13 +217,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
-                    let r8 = 196;
-                    let g8 = 34;
-                    let b8 = 151;
-                    tablasStyle(r8, g8, b8);
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    tablasStyle(r, g, b);
                 }
             });
         }
