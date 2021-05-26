@@ -119,6 +119,12 @@ function inspectionStyle (r, g, b){
     $('.action-container.inspection-color').css("border-color", 'rgb('+r+', '+g+', '+b+')');
     $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
+    //DIV SEPARATORS
+    $('.inspection .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.inspection .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.inspection .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.inspection .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
     //PROGRESS BAR
     $('.table-responsive.inspection-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.inspection-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -163,8 +169,11 @@ function racStyle(r, g, b) {
     $('.action-container.rac-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.rac .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
-    $('.rac .mc-separator-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.rac .mc-separator-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    //DIV SEPARATORS
+    $('.rac .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.rac .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.rac .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.rac .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
     $('.table-responsive.rac-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -195,6 +204,12 @@ function residuosStyle(r, g, b) {
     $('.action-container.residuos-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.residuos .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
+    //DIV SEPARATORS
+    $('.residuos .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.residuos .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.residuos .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.residuos .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
     //PROGRESS BAR
     $('.table-responsive.residuos-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.residuos-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -223,6 +238,12 @@ function incidentesStyle(r, g, b) {
     $('.table-responsive.incidentes-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.incidentes-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.incidentes .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    //DIV SEPARATORS
+    $('.incidentes .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.incidentes .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.incidentes .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.incidentes .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
     $('.table-responsive.incidentes-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -253,6 +274,12 @@ function faunaStyle(r, g, b) {
     $('.action-container.fauna-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.fauna .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
+    //DIV SEPARATORS
+    $('.fauna .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.fauna .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.fauna .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.fauna .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
     //PROGRESS BAR
     $('.table-responsive.fauna-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.fauna-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -281,6 +308,12 @@ function aguaStyle(r, g, b) {
     $('.table-responsive.agua-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.agua-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.agua .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    //DIV SEPARATORS
+    $('.agua .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.agua .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.agua .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.agua .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
     $('.table-responsive.agua-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -311,6 +344,12 @@ function sgaStyle(r, g, b) {
     $('.action-container.sga-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.sga .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
+    //DIV SEPARATORS
+    $('.sga .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.sga .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.sga .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.sga .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
     //PROGRESS BAR
     $('.table-responsive.sga-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.sga-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -339,6 +378,12 @@ function tablasStyle(r, g, b) {
     $('.table-responsive.tablas-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.tablas-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.tablas .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    //DIV SEPARATORS
+    $('.tablas .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.tablas .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.tablas .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.tablas .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
     $('.table-responsive.tablas-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
