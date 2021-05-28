@@ -291,6 +291,14 @@ function faunaStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.fauna-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.fauna-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.fauna-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.fauna-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');

@@ -247,28 +247,51 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             foreach (var tipoFauna in tiposFauna)
             {
                 var tfDescripcion = tipoFauna.Descripcion.Replace(" ", String.Empty);
-                catalogo += "<div class=\"card\">";
-                catalogo += "<div class=\"card-header\">";
-                catalogo += "<h5 class=\"mb-0 text-center\">";
-                catalogo += "<button class=\"btn btn-link collapsed text-dark font-weight-bold\" data-toggle=\"collapse\" data-target=\"#collapse" + tfDescripcion + "\" aria-expanded=\"true\" aria-controls=\"collapse" + tfDescripcion + "\">" + tipoFauna.Descripcion + "</button>";
-                catalogo += "</h5>";
+                catalogo += "<a class='catalog-item' data-bs-toggle='modal' data-bs-target='#faunaModal" + tfDescripcion + "'>";
+                catalogo += "<div class='catalog-item-img'>";
+                catalogo += "<img src='/img/fauna" + tipoFauna.IdTipoFauna + ".png'>";
                 catalogo += "</div>";
-                catalogo += "<div id=\"collapse" + tfDescripcion + "\" class=\"collapse\" aria-labelledby=\"heading" + tfDescripcion + "\" data-parent=\"#accordion\">";
-                catalogo += "<div class=\"card-body\">";
-                catalogo += "<div class=\"row text-center text-lg-left\">";
+                catalogo += "<div class='catalog-item-cover'>";
+                catalogo += "<span>" + tipoFauna.Descripcion + "</span>";
+                catalogo += "</div>";
+                catalogo += "</a>";
+
+
+                catalogo += "<div class='modal fade' id='faunaModal" + tfDescripcion + "' tabindex='-1' aria-labelledby='faunaModal" + tfDescripcion + "' aria-hidden='true'>";
+                catalogo += "<div class='modal-dialog modal-lg modal-dialog-centered'>";
+                catalogo += "<div class='modal-menu modal-fauna'>";
+                catalogo += "<div class='modal-content'>";
+                catalogo += "<div class='fauna'>";
+                catalogo += "<div class='image-header-container'>";
+                catalogo += "<div class='header-title fauna-opacity-color'>";
+                catalogo += "<h3>Catálogo de " + tipoFauna.Descripcion + "</h3>";
+                catalogo += "<img src='/img/logo-white.png' alt='Logo Marcobre'>";
+                catalogo += "</div>";
+                catalogo += "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>";
+                catalogo += "</div>";
+                catalogo += "</div>";
+                catalogo += "<div class='modal-body'>";
+                catalogo += "<div class='fauna'>";
+                catalogo += "<div class='catalog-items'>";
 
                 var especiesPorTipo = nombresComunes.Where(x => x.TipoFauna.IdTipoFauna.Equals(tipoFauna.IdTipoFauna)).ToList();
                 foreach (var nombreComun in especiesPorTipo)
                 {
-                    catalogo += "<div class=\"col-lg-3 col-md-4 col-6 mt-2\">";
-                    catalogo += "<div class=\"card\" style=\"width:100%;\">";
-                    catalogo += "<img src=\"" + nombreComun.Foto + "\" style=\"width:100%; height:18rem;\" class=\"card-img-top img-thumbnail\" alt=\"" + nombreComun.Foto + "\">";
-                    catalogo += "<div class=\"card-body\">";
-                    catalogo += "<p class=\"card-text text-center\">" + nombreComun.Descripcion + "</p>";
+                    catalogo += "<a class='catalog-item'>";
+                    catalogo += "<div class='catalog-item-img'>";
+                    catalogo += "<img src='" + nombreComun.Foto + "' alt='" + nombreComun.Foto + "'>";
                     catalogo += "</div>";
+                    catalogo += "<div class='catalog-item-detail-cover'>";
+                    catalogo += "<span>" + nombreComun.Descripcion + "</span>";
                     catalogo += "</div>";
-                    catalogo += "</div>";
+                    catalogo += "</a>";
                 }
+
+                catalogo += "</div>";
+                catalogo += "</div>";
+                catalogo += "</div>";
+                catalogo += "<div class='modal-footer'>";
+                catalogo += "<button class='btn btn-mc' data-bs-dismiss='modal' aria-label='Close'>Cerrar</button>";
                 catalogo += "</div>";
                 catalogo += "</div>";
                 catalogo += "</div>";

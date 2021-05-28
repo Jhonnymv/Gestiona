@@ -3,7 +3,66 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Catálogo de Fauna Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <div class="form-flex-reverse w-100">
+                <div class="mc-container mc-separator-top-right col-12 col-xl-8">
+                    <div class="catalog-items" id="catalogItems">
+                        @*<a data-bs-toggle="modal"
+                           data-bs-target="#faunaModal" class="catalog-item">
+                            <div class="catalog-item-img">
+                                <img src="~/img/fauna1.png" alt="">
+                            </div>
+                            <div class="catalog-item-cover">
+                                <span>Aves</span>
+                            </div>
+                        </a>
+                        <a href="#" class="catalog-item">
+                            <div class="catalog-item-img">
+                                <img src="~/img/fauna2.png" alt="">
+                            </div>
+                            <div class="catalog-item-cover">
+                                <span>Reptiles</span>
+                            </div>
+                        </a>
+                        <a href="#" class="catalog-item">
+                            <div class="catalog-item-img">
+                                <img src="~/img/fauna3.png" alt="">
+                            </div>
+                            <div class="catalog-item-cover">
+                                <span>Mamíferos</span>
+                            </div>
+                        </a>
+                        <a href="#" class="catalog-item">
+                            <div class="catalog-item-img">
+                                <img src="~/img/fauna4.png" alt="">
+                            </div>
+                            <div class="catalog-item-cover">
+                                <span>Arácnidos</span>
+                            </div>
+                        </a>*@
+                    </div>
+                </div>
+                <div class="mc-container col-12 col-xl-4">
+                    <div class="row-center-center">
+                        <button class="btn btn-special-action fauna-color" asp-action="NuevoRegistro" asp-controller="AvistamientoFauna">
+                            NUEVO REGISTRO
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Registro de Avistamiento de Fauna Silvestre</h2>
     </div>
@@ -23,7 +82,7 @@
         <div id="accordion">
         </div>
     </div>
-</div>
+</div>*@
 
 @section Scripts{
     <script type="text/javascript">
@@ -35,7 +94,11 @@
                 type: 'GET',
                 url: '/AvistamientoFauna/CargarCatalogo',
                 success: function (response) {
-                    $('#accordion').html(response.catalogo)
+                    $('#catalogItems').html(response.catalogo);
+                    let r5 = 8;
+                    let g5 = 99;
+                    let b5 = 61;
+                    faunaStyle(r5, g5, b5);
                 },
                 error: function () {
                     console.log("No se ha podido obtener la información");
