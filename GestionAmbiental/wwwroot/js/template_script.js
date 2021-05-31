@@ -136,6 +136,14 @@ function inspectionStyle (r, g, b){
 
 
     //MAIN BUTTON
+    $('.btn-special-action.inspection-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.inspection-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.inspection-color').css({"border-color": 'rgb('+r+', '+g+', '+b+')', "color":'rgb('+r+', '+g+', '+b+')'});
     $('.btn-special-action-outline.inspection-color').mouseenter(function (){
         $(this).attr('style', 'background-color: rgb('+r+', '+g+', '+b+') !important; color: #ffffff !important');
@@ -186,6 +194,14 @@ function racStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.rac-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.rac-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.rac-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.rac-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
@@ -221,6 +237,14 @@ function residuosStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.residuos-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.residuos-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.residuos-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.residuos-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
@@ -256,6 +280,14 @@ function incidentesStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.incidentes-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.incidentes-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.incidentes-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.incidentes-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
@@ -334,6 +366,14 @@ function aguaStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.agua-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.agua-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.agua-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.agua-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
@@ -369,6 +409,14 @@ function sgaStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.sga-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.sga-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.sga-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.sga-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
@@ -404,6 +452,14 @@ function tablasStyle(r, g, b) {
 
 
     //MAIN BUTTON
+    $('.btn-special-action.tablas-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.tablas-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
     $('.btn-special-action-outline.tablas-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
     $('.btn-special-action-outline.tablas-color').mouseenter(function () {
         $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
