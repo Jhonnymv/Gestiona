@@ -4,7 +4,132 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="residuos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title residuos-opacity-color">
+                <h3>Nuevo Control de Ingreso o Salida de Residuos Sólidos del ACR o CMRS</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" id="formIngresoSalida" asp-action="NuevoRegistro" asp-controller="IngresoSalidaRS" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="opcion" />
+                <div class="form-tabs-mc col-12 col-xl-8">
+                    <div class="d-flex justify-content-center mt-4 mb-4">
+                        <ul class="d-flex justify-content-center  nav nav-pills col-9 col-md-7 div-scroll-horizontal" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Paso 1</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Paso 2</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-step1" role="tabpanel" aria-labelledby="pills-step1-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="ACR_CMRS">ACR/CMRS</label>
+                                    <span class="text-danger" asp-validation-for="ACR_CMRS"></span>
+                                    <select class="form-control" asp-items="@ViewBag.ACR_CMRS" asp-for="ACR_CMRS"></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Ingreso_Salida">Ingreso o Salida de Residuos</label>
+                                    <span class="text-danger" asp-validation-for="Ingreso_Salida"></span>
+                                    <select class="form-control" asp-items="@ViewBag.IngresoSalida" asp-for="Ingreso_Salida"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Fecha">Fecha de Ingreso o Salida</label>
+                                    <span class="text-danger" asp-validation-for="Fecha"></span>
+                                    <input type="date" class="form-control" asp-for="Fecha">
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Motivo">Motivo de Ingreso o Salida de Residuos</label>
+                                    <span class="text-danger" asp-validation-for="Motivo"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Motivo" asp-for="Motivo"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Tipo_Residuo">Tipo de Residuo</label>
+                                    <span class="text-danger" asp-validation-for="Tipo_Residuo"></span>
+                                    <select class="form-control" asp-items="@ViewBag.TiposResiduo" asp-for="Tipo_Residuo"></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Residuo_Solido">Nombre del Residuo</label>
+                                    <span class="text-danger" asp-validation-for="Residuo_Solido"></span>
+                                    <select class="form-control Vacio" asp-for="Residuo_Solido">
+                                        <option class="Vacio" value="">--SELECCIONE--</option>
+                                    </select>
+                                    <select class="form-control Peligroso" asp-for="Residuo_Solido" asp-items="@ViewBag.ResiduosSolidosPelig" style="display:none"></select>
+                                    <select class="form-control No-Peligroso" asp-for="Residuo_Solido" asp-items="@ViewBag.ResiduosSolidosNoPelig" style="display:none"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Cantidad">Cantidad Ingresada o Retirada (kg)</label>
+                                    <span class="text-danger" asp-validation-for="Cantidad"></span>
+                                    <input type="number" class="form-control" asp-for="Cantidad" min="0" max="999999" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Empresa">Empresa que generó/retiró el residuo</label>
+                                    <span class="text-danger" asp-validation-for="Empresa"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Empresa" asp-for="Empresa"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-12 col-lg-12">
+                                    <label asp-for="Gerencia">Gerencia de Marcobre que entrega/retira el residuo</label>
+                                    <span class="text-danger" asp-validation-for="Gerencia"></span>
+                                    <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Gerencia"></select>
+                                </div>
+                                <div class="col-12 col-sm-12 col-lg-12">
+                                    <label asp-for="Responsable_ACR_CMRS">Responsable del ACR/CMRS que recibe/entrega el residuo</label>
+                                    <span class="text-danger" asp-validation-for="Responsable_ACR_CMRS"></span>
+                                    <select class="form-control" asp-items="@ViewBag.ResponsablesARC_CMRS" asp-for="Responsable_ACR_CMRS"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-12 col-lg-12">
+                                    <label asp-for="Comentario">Comentarios</label>
+                                    <span class="text-danger" asp-validation-for="Comentario"></span>
+                                    <textarea class="form-control" asp-for="Comentario" rows="1"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="button-container">
+                                    <div>
+                                        <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    </div>
+                                    <div>
+                                        <a type="button" class="btn btn-mc-outline-danger" asp-controller="IngresoSalidaRS" asp-action="Resumen">Cancelar</a>
+                                        <button class="btn btn-mc-outline-success" id="btnGuardarEstado" type="button">Guardar Estado</button>
+                                        <button class="btn btn-mc-success" id="btnRegistrar" type="button">Registrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Nuevo Control de Ingreso o Salida de Residuos Sólidos del ACR o CMRS</h2>
     </div>
@@ -109,8 +234,10 @@
             <button id="btnRegistrar" type="button" class="btn btn-primary">Registrar</button>
         </div>
     </div>
-</form>
+</form>*@
+
 @section Scripts{
+    <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
         $("#Tipo_Residuo").on('change', function () {
             var selectedValue = $("#Tipo_Residuo").val();
