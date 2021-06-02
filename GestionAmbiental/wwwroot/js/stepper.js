@@ -8,7 +8,7 @@ $('.next-btn').click( function (){
     let empty_inputs = 0;
 
     $('#' + actual_id_pill + ' input').each(function () {
-        if ($(this).is(':readonly') === false) {
+        if ($(this).attr('readonly') === undefined) {
             if ($(this).val() === '') {
                 empty_inputs++;
             }
@@ -24,7 +24,7 @@ $('.next-btn').click( function (){
     });
 
     $('#' + actual_id_pill + ' textarea').each(function () {
-        if ($(this).is(':readonly') === false) {
+        if ($(this).attr('readonly') === undefined) {
             if ($(this).val() === '') {
                 empty_inputs++;
             }

@@ -602,7 +602,7 @@ a:focus {
 /*MODALES*/
 /*MODAL GENERAL MARCOBRE*/
 .mc-modal .modal-body {
-    padding: 2.5em;
+    padding: 2.5em 25px;
 }
 
 .mc-modal .modal-content {
@@ -943,6 +943,10 @@ input[type="file"]:hover::-webkit-file-upload-button {
 @media (min-width: 768px) {
     #content {
         padding: 25px 50px;
+    }
+
+    .mc-modal .modal-body {
+        padding: 2.5em;
     }
 }
 
