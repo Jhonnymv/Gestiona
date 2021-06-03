@@ -4,7 +4,103 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="agua">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Nuevo Registro de Consumo de Agua de Mar</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" id="form_nuevo_consumo" asp-action="NuevoRegistro" asp-controller="ConsumoAguaMar" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="col-12 col-xl-8">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="IdResolucion">Actividad</label>
+                            <span class="text-danger" asp-validation-for="IdResolucion"></span>
+                            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Resolucion">Resolución</label>
+                            <span class="text-danger" asp-validation-for="Resolucion"></span>
+                            <input type="text" class="form-control" asp-for="Resolucion" readonly />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Fecha">Fecha</label>
+                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                            <input type="date" class="form-control" asp-for="Fecha" />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <div class="row">
+                                <div class="col-8 p-0 m-0">
+                                    <label asp-for="TiempoBombeo">Tiempo de Bombeo (Horas)</label>
+                                    <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
+                                    <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" />
+                                </div>
+                                <div class="col-4 p-0 m-0 d-flex align-items-end justify-content-end" data-toggle="tooltip" data-placement="top" title="Calcular Tiempo de Bombeo">
+                                    <button type="button" class="btn btn-mc m-0" onclick="AbrirCalculadora()">
+                                        <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16Z" fill="white" />
+                                            <path d="M3.25 4.72H8.25V6.22H3.25V4.72ZM10 12.75H15V14.25H10V12.75ZM10 10.25H15V11.75H10V10.25ZM5 15H6.5V13H8.5V11.5H6.5V9.5H5V11.5H3V13H5V15ZM11.09 7.95L12.5 6.54L13.91 7.95L14.97 6.89L13.56 5.47L14.97 4.06L13.91 3L12.5 4.41L11.09 3L10.03 4.06L11.44 5.47L10.03 6.89L11.09 7.95Z" fill="white" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="LecturaInicial">Lectura Inicial Flujómetro en el día (m3)</label>
+                            <span class="text-danger" asp-validation-for="LecturaInicial"></span>
+                            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="LecturaFinal">Lectura Final Flujómetro en el día (m3)</label>
+                            <span class="text-danger" asp-validation-for="LecturaFinal"></span>
+                            <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="VolumenAguaBombeado">Volumen de Agua Bombeado (consumo) m3</label>
+                            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
+                            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" step="0.01" readonly />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="CaudalPromedio">Caudal Promedio Consumido (m3/s)</label>
+                            <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
+                            <input type="number" class="form-control" asp-for="CaudalPromedio" step="0.01" readonly />
+                        </div>
+                    </div>
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="row justify-content-center">
+                            <div class="col-8">
+                                <div class="alert alert-danger" role="alert" style="text-align:center;">@ViewBag.Message</div>
+                            </div>
+                        </div>
+                    }
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="ConsumoAguaMar" asp-action="Resumen">Cancelar</a>
+                                <button class="btn btn-mc-success" id="btn_enviar" type="button">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Nuevo Registro de Consumo de Agua de Mar</h2>
     </div>
@@ -81,13 +177,63 @@
         </div>
     }
     <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaMar" asp-action="Resumen">Cancelar</a>
+        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaMar" asp-action="Resumen">Cancelar</a>-->
         @*<button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>*@
-        <button id="btn_enviar" type="button" class="btn btn-primary">Registrar</button>
+        <!--<button id="btn_enviar" type="button" class="btn btn-primary">Registrar</button>
     </div>
-</form>
+</form>-->
+
 <!-- Modal Calcular Tiempo Bombeo-->
-<div class="modal fade" id="modal_calculadora" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_calculadora"
+<div class="modal fade" id="modal_calculadora" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-agua">
+            <div class="modal-content">
+                <div class="agua">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="image-header-container">
+                        <div class="header-title agua-opacity-color">
+                            <h3>Calcular Tiempo de Bombeo</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="agua">
+                        <div class="container pt-4 pb-4">
+                            <div class="custom-form w-100">
+                                <div class="col-12 col-xl-8">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label>Tiempo en Minutos</label>
+                                            <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label>Tiempo en Horas</label>
+                                            <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-mc-outline-danger" data-bs-dismiss="modal" aria-label="Close">Cancelar</a>
+                                <button class="btn btn-mc-success" onclick="UtilizarTiempo()">Utilizar Tiempo</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="modal_calculadora" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_calculadora"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -123,7 +269,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 
 @section Scripts{
     <script type="text/javascript">
