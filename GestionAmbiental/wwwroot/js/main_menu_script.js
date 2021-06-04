@@ -10,3 +10,21 @@ $('.menu_item').mouseenter(function (){
         $(this).find('span').attr('style', 'color: #2D649B');
     });
 });
+
+$(document).ready(function () {
+    localStorage.removeItem('selectedolditem');
+    localStorage.removeItem('sublist');
+
+    $('.modal-menu-option').click(function () {
+        localStorage.removeItem('selectedolditem');
+        localStorage.removeItem('sublist');
+
+        let title = $(this).offsetParent().offsetParent().children().children().children("h3").children("span").text();
+        let subMenu = $(this).children(".text-modal-menu-option").children("span").text();
+        console.log(title);
+        console.log(subMenu);
+
+        localStorage.setItem("selectedolditem", title);
+        localStorage.setItem("sublist", subMenu);
+    });
+});

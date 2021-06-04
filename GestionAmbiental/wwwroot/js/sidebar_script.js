@@ -11,14 +11,19 @@ $(window).resize(function(){
 
 //COMP ACTIVE LIST
 $(document).ready(function () {
-    $("#sidebar .components .mainlist ul li a").click(function () {
-        $('.list-active').removeClass("list-active");
-        $(this).addClass("list-active");
-        var id = $(this).closest('.mainlist');
-        localStorage.setItem("selectedolditem", $(id).text());
-        localStorage.setItem("sublist", $(this).text());
-    });
+    compSidebarList()
+});
 
+$("#sidebar .components .mainlist ul li a").click(function () {
+    $('.list-active').removeClass("list-active");
+    $(this).addClass("list-active");
+    var id = $(this).closest('.mainlist');
+    localStorage.setItem("selectedolditem", $(id).text());
+    localStorage.setItem("sublist", $(this).text());
+    compSidebarList()
+});
+
+function compSidebarList() {
     var selectedolditem = localStorage.getItem('selectedolditem');
     if (selectedolditem !== null) {
         $(".components .mainlist:contains('" + selectedolditem + "')").addClass("actived");
@@ -32,7 +37,7 @@ $(document).ready(function () {
     if (oldsublsit !== null) {
         $(".components .mainlist:contains('" + selectedolditem + "') ul li a:contains('" + oldsublsit + "')").addClass("list-active");
     }
-});
+}
 
 
 //COMP WINDOW SIZE
