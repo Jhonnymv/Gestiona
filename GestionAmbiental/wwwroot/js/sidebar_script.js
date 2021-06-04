@@ -17,25 +17,38 @@ $(document).ready(function () {
 $("#sidebar .components .mainlist ul li a").click(function () {
     $('.list-active').removeClass("list-active");
     $(this).addClass("list-active");
-    var id = $(this).closest('.mainlist');
+    var id = $(this).closest('.mainlist').children('a').children('span');
     localStorage.setItem("selectedolditem", $(id).text());
     localStorage.setItem("sublist", $(this).text());
     compSidebarList()
 });
 
+$("#sidebar .components .mainlist").click(function () {
+    if ($(this).children('a').next().length === 0) {
+        $('.list-active').removeClass("list-active");
+        var id = $(this).children('a').children('span');
+        localStorage.setItem("selectedolditem", $(id).text());
+        compSidebarList()
+    }
+});
+
 function compSidebarList() {
     var selectedolditem = localStorage.getItem('selectedolditem');
     if (selectedolditem !== null) {
-        $(".components .mainlist:contains('" + selectedolditem + "')").addClass("actived");
-        $(".components .mainlist:contains('" + selectedolditem + "') a").removeClass("collapsed");
-        $(".components .mainlist:contains('" + selectedolditem + "') a").attr("aria-expanded", "true");
-        $(".components .mainlist:contains('" + selectedolditem + "') ul").addClass("show");
-    }
-
-    var oldsublsit = localStorage.getItem('sublist');
-    console.log(oldsublsit)
-    if (oldsublsit !== null) {
-        $(".components .mainlist:contains('" + selectedolditem + "') ul li a:contains('" + oldsublsit + "')").addClass("list-active");
+        var oldsublsit = localStorage.getItem('sublist');
+        if (oldsublsit !== null) {
+            let searchSublist = $(".components .mainlist a span:contains('" + selectedolditem + "')").closest(".mainlist a").next().children("li").children("a:contains('" + oldsublsit + "')");
+            if (searchSublist) {
+                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist').addClass("actived");
+                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').removeClass("collapsed");
+                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').attr("aria-expanded", "true");
+                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').next().addClass("show");
+                searchSublist.addClass("list-active");
+            }
+            else if (searchSublist === 0) {
+                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist').addClass("actived");
+            }
+        }
     }
 }
 
