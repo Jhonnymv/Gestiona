@@ -181,13 +181,8 @@
     </div>*@
     @section scripts{
         <script type="text/javascript">
-            var r = 0;
-            var g = 0;
-            var b = 0;
-            var img_url = "";
             $(document).ready(function () {
                 filtrar(1);
-                dataModulo();
             });
             function dataModulo() {
                 $.ajax({
@@ -197,10 +192,11 @@
                     success: (response) => {
                         if (response.success) {
                             let data = JSON.parse(response.data);
-                            r = data.r;
-                            g = data.g;
-                            b = data.b;
-                            img_url = data.img_url;
+                            let r = data.r;
+                            let g = data.g;
+                            let b = data.b;
+                            let img_url = data.img_url;
+                            residuosStyle(r, g, b);
                         } else {
                             console.log("Ocurrió un problema: " + response.msg);
                         }
@@ -227,7 +223,7 @@
                         $('#tabla_resumen_manifiestos tbody').empty();
                         $('#tabla_resumen_manifiestos tbody').html(response.data);
                         $('#paginado').html(response.paginador);
-                        residuosStyle(r, g, b);
+                        dataModulo();
                     }
                 });
             }

@@ -11,19 +11,26 @@ $(window).resize(function(){
 
 //COMP ACTIVE LIST
 $(document).ready(function () {
-    $("#sidebar .components .mainlist").click(function () {
-        var id = $(this);
-
-        // $(".actived").removeClass("actived");
-        // $(id).addClass("actived");
+    $("#sidebar .components .mainlist ul li a").click(function () {
+        $('.list-active').removeClass("list-active");
+        $(this).addClass("list-active");
+        var id = $(this).closest('.mainlist');
         localStorage.setItem("selectedolditem", $(id).text());
+        localStorage.setItem("sublist", $(this).text());
     });
 
     var selectedolditem = localStorage.getItem('selectedolditem');
-
     if (selectedolditem !== null) {
-
         $(".components .mainlist:contains('" + selectedolditem + "')").addClass("actived");
+        $(".components .mainlist:contains('" + selectedolditem + "') a").removeClass("collapsed");
+        $(".components .mainlist:contains('" + selectedolditem + "') a").attr("aria-expanded", "true");
+        $(".components .mainlist:contains('" + selectedolditem + "') ul").addClass("show");
+    }
+
+    var oldsublsit = localStorage.getItem('sublist');
+    console.log(oldsublsit)
+    if (oldsublsit !== null) {
+        $(".components .mainlist:contains('" + selectedolditem + "') ul li a:contains('" + oldsublsit + "')").addClass("list-active");
     }
 });
 

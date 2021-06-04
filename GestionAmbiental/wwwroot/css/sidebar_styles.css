@@ -281,6 +281,12 @@ ul ul a {
     width: 1.5em;
 }
 
+.list-active {
+    color: #ffffff !important;
+    background: #2D649B !important;
+    /*border-left: solid 7px #FFBE0B !important;*/
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */

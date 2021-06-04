@@ -528,12 +528,7 @@
         var categoria = 1;
         var tipos = [];
         var tiposFiltro = [];
-        var r = 0;
-        var g = 0;
-        var b = 0;
-        var img_url = "";
         $(document).ready(function () {
-            dataModulo();
             filtrar(1);
         });
         function dataModulo() {
@@ -544,10 +539,11 @@
                 success: (response) => {
                     if (response.success) {
                         let data = JSON.parse(response.data);
-                        r = data.r;
-                        g = data.g;
-                        b = data.b;
-                        img_url = data.img_url;
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        sgaStyle(r, g, b);
                     } else {
                         console.log("Ocurrió un problema: " + response.msg);
                     }
@@ -572,7 +568,7 @@
                     $('#tabla_documentos tbody').empty();
                     $('#tabla_documentos tbody').html(response.data);
                     $('#paginado').html(response.paginador);
-                    sgaStyle(r, g, b);
+                    dataModulo();
                 }
             });
         }
@@ -595,10 +591,7 @@
                     $('#tabla_documentos_tipo tbody').html(response.data)
                     $('#paginado_documentos_tipo').html(response.paginador)
                     $("#filtro_tipoDoc").val([]);
-                    let r7 = 129;
-                    let g7 = 110;
-                    let b7 = 12;
-                    sgaStyle(r7, g7, b7);
+                    dataModulo();
                 }
             });
         }
