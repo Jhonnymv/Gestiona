@@ -99,7 +99,38 @@
     </nav>
 </div>*@
 <!-- Modal Usuarios AD-->
-<div class="modal fade" id="Modal_Usuarios_AD" tabindex="-1" role="dialog"
+<div class="modal fade mc-modal" id="Modal_Usuarios_AD" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="modal_msg" class="text-white">Conectandose al servidor</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btn_modal_aceptar" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-outline-white" type="button" onclick="refresh()">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="Modal_Usuarios_AD" tabindex="-1" role="dialog"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -114,15 +145,11 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
+
 @section scripts{
     <script>
-        var r = 0;
-        var g = 0;
-        var b = 0;
-        var img_url = "";
         $(document).ready(function () {
-            dataModulo();
             filtrar(1);
         });
         function dataModulo() {
@@ -133,10 +160,11 @@
                 success: (response) => {
                     if (response.success) {
                         let data = JSON.parse(response.data);
-                        r = data.r;
-                        g = data.g;
-                        b = data.b;
-                        img_url = data.img_url;
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        tablasStyle(r, g, b);
                     } else {
                         console.log("Ocurrió un problema: " + response.msg);
                     }
@@ -181,7 +209,7 @@
                     $('#tabla_usuarios tbody').empty();
                     $('#tabla_usuarios tbody').html(response.data);
                     $('#paginado').html(response.paginador);
-                    tablasStyle(r, g, b);
+                    dataModulo();
                 }
             });
         }

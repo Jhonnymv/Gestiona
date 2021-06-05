@@ -4,7 +4,89 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Usuario</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formUsuario" autocomplete="off" asp-controller="GestorUsuarios" asp-action="EditarUsuario">
+                <input type="hidden" asp-for="IdUsuario">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Nombres">Nombres</label>
+                            <span class="text-danger" asp-validation-for="Nombres"></span>
+                            <input type="text" class="form-control" asp-for="Nombres" disabled>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Apellidos">Apellidos</label>
+                            <span class="text-danger" asp-validation-for="Apellidos"></span>
+                            <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="IdRol">Rol</label>
+                            <span class="text-danger" asp-validation-for="IdRol"></span>
+                            <select class="form-control" asp-items="@ViewBag.Roles" asp-for="IdRol" disabled>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="UsuarioRed">Usuario de Red</label>
+                            <span class="text-danger" asp-validation-for="UsuarioRed"></span>
+                            <input type="text" class="form-control" asp-for="UsuarioRed" disabled>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Email">Email</label>
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                            <input type="text" class="form-control" asp-for="Email" disabled>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="IdSuperior">Superior</label>
+                            <span class="text-danger" asp-validation-for="IdSuperior"></span>
+                            <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="IdSuperior" disabled>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Estado">Estado</label>
+                            <span class="text-danger" asp-validation-for="Estado"></span>
+                            <select class="form-control" asp-for="Estado" disabled>
+                                <option value="ACT">Activo</option>
+                                <option value="INA">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+
+                        <div id="bntsEditar" style="display:none">
+                            <button type="button" class="btn btn-mc-outline-danger" id="btnCancelar" disabled>Cancelar</button>
+                            <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                        </div>
+                        <div id="bntsDetalle">
+                            <a type="button" class="btn btn-mc-outline" asp-controller="GestorUsuarios" asp-action="Usuarios" id="btnVolver">Volver</a>
+                            <button class="btn btn-mc-success" id="btnEditar">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Información de Usuario</h2>
     </div>
@@ -91,7 +173,7 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 @section scripts{ 
 <script>
     $("#btnEditar").on('click',function(){

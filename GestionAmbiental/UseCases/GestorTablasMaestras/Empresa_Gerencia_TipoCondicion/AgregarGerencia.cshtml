@@ -3,7 +3,43 @@
     ViewData["Title"] = "AgregarGerencia";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Gerencia</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarGerencia">
+                <div class="col-12 col-xl-8">
+                    <div class="row input_container justify-content-center">
+                        <div class="col-12 col-sm-8 col-lg-8">
+                            <label asp-for="Descripcion">Gerencia</label>
+                            <span class="text-danger" asp-validation-for="Descripcion"></span>
+                            <input type="text" class="form-control" asp-for="Descripcion">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="GestorEGTC" asp-action="Resumen" id="btnCancelar">Cancelar</a>
+                                <button class="btn btn-mc-success" type="submit" id="btnGuardar">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Agregar Gerencia</h2>
     </div>
@@ -26,5 +62,5 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 

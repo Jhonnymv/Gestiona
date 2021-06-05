@@ -3,7 +3,90 @@
     ViewData["Title"] = "CargaDataExcel";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
+
+<div class="agua">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Cargar Datos de Excel</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" id="form_nuevo_avistamiento" asp-action="CargaDataExcel" asp-controller="GestorConsumoAgua" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="col-12 col-xl-8">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="ColumnaInicio">Número de la columna de fechas</label>
+                            <span class="text-danger" asp-validation-for="ColumnaInicio"></span>
+                            <input type="number" class="form-control" asp-for="ColumnaInicio" value="3" />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="FilaInicio">Número de la primera fila de los datos</label>
+                            <span class="text-danger" asp-validation-for="FilaInicio"></span>
+                            <input type="number" class="form-control" asp-for="FilaInicio" value="8" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Pagina">Nombre de la página en la que se encuentran los datos Excel</label>
+                            <span class="text-danger" asp-validation-for="Pagina"></span>
+                            <input type="text" class="form-control" asp-for="Pagina" />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="IdResolucion">Actividad a la cual pertenecen los datos</label>
+                            <span class="text-danger" asp-validation-for="IdResolucion"></span>
+                            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Resolucion">Resolución a la cual pertenecen los datos</label>
+                            <span class="text-danger" asp-validation-for="Resolucion"></span>
+                            <input type="text" class="form-control" asp-for="Resolucion" readonly />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Excel">Archivo Excel</label>
+                            <span class="text-danger field-validation-error" data-valmsg-for="Excel" data-valmsg-replace="true">
+                                <span id="danger_excel" class="" asp-validation-for="Excel"></span>
+                            </span>
+                            <input type="file" class="form-control" asp-for="Excel" accept=".xls, .xlsx">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            @if (ViewBag.Result != null)
+                            {
+                                @if (ViewBag.Result == "Success")
+                                {
+                                    <div class="alert alert-success" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Message)</div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Message.Replace("\n", "<br/>"))</div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <button class="btn btn-mc-success" type="submit">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Cargar Datos de Excel</h2>
     </div>
@@ -91,7 +174,7 @@
     <div class="row justify-content-center">
         <button type="submit" class="btn btn-primary">Registrar</button>
     </div>
-</form>
+</form>*@
 
 @section Scripts{
     <script type="text/javascript">

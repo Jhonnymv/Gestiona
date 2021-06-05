@@ -3,7 +3,43 @@
     ViewData["Title"] = "AgregarEmpresa";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Empresa</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarEmpresa">
+                <div class="col-12 col-xl-8">
+                    <div class="row input_container justify-content-center">
+                        <div class="col-12 col-sm-8 col-lg-8">
+                            <label asp-for="RazonSocial">Razón Social</label>
+                            <span class="text-danger" asp-validation-for="RazonSocial"></span>
+                            <input type="text" class="form-control" asp-for="RazonSocial">
+                        </div>
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="GestorEGTC" asp-action="Resumen" id="btnCancelar">Cancelar</a>
+                                <button class="btn btn-mc-success" type="submit" id="btnGuardar">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Agregar Empresa</h2>
     </div>
@@ -27,5 +63,5 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 
