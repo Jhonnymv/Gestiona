@@ -131,7 +131,7 @@ namespace GestionAmbiental.UseCases.Notificaciones
                 SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 MailMessage msg = new MailMessage();
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = false;
+                mail.EnableSsl = true;
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;

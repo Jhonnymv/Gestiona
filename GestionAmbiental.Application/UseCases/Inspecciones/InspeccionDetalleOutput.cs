@@ -42,8 +42,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             AsesorMASeguridad = detalle.Asesor.Nombres+ " " +detalle.Asesor.Apellidos;
             DescripcionCondicion = detalle.DescripcionCondicion;
             TipoCondicion = detalle.TipoCondicion.Descripcion;
+            IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
             IdAsesor = detalle.Asesor != null ? detalle.Asesor.IdUsuario : 0;
-
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             EvidenciaCondicion = new List<string>();
             foreach (var evidencia in evidencias)

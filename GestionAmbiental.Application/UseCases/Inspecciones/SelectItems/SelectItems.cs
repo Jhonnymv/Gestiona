@@ -27,10 +27,12 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var empresa_Contratistas = await _getItemsReadOnlyRepository.GetEmpresaContratistas();
             var gerencias = await _getItemsReadOnlyRepository.GetGerencias();
             var usuarios = await _getItemsReadOnlyRepository.GetUsuarios();
+            var tipos = await _getItemsReadOnlyRepository.GetTiposCondicion();
             var output = new ItemsSelectResumen();
             output.EmpContratMarcobre = empresa_Contratistas;
             output.GerenciaEjecutora = gerencias;
             output.Usuarios = usuarios;
+            output.TipoCondicion = tipos;
             return output;
         }
 
