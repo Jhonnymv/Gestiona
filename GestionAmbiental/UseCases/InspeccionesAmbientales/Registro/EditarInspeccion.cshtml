@@ -401,7 +401,6 @@
     <script src="~/js/stepper.js"></script>
     <script type="text/javascript">        
         var listObservaciones = [];
-        var r, g, b;
         var img_url = "";
         $(document).ready(function () {
             if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
@@ -517,7 +516,7 @@
                         $('#tabla_resumen tbody').empty();
                         $('#tabla_resumen tbody').html(response.html);
                         listObservaciones = JSON.parse(response.observaciones);
-                        inspectionStyle(r, g, b);
+                        dataModulo();
                     } else {
                         console.log(response.message);
                     }
