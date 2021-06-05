@@ -343,5 +343,5 @@ healthchecksdb
 #uploaded files
 GestionAmbiental/wwwroot/img/uploads
 
-#autofact
-GestionAmbiental/autofact.json
+#autofac
+GestionAmbiental/autofac.json
