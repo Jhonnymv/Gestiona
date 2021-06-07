@@ -759,6 +759,102 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             return Ok(response);
         }
+        public async Task<IActionResult> DetalleInspeccion(string IdCabecera)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
+
+                var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                gerenciasEjecutorasMC.RemoveAt(1);
+
+                var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
+                empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposActoSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresMA = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorMAP)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposInspeccion = new List<SelectListItem>();
+                tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
+                tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
+                tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
+                tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                var model = new NuevaInspeccionModel();
+                if (IdCabecera.Length != 0)
+                {
+                    int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
+                    var filaObservacion = "";
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado, userInfo.NombreUsuario);
+                    var cabecera = await _consultarCabecera.Execute(IdDesencriptado, userInfo.NombreUsuario);
+                    if (cabecera != null)
+                    {
+                        model.Id_Inspeccion_Cabecera = IdDesencriptado;
+                        model.EncryptedId = IdCabecera;
+                        model.Codigo = cabecera.Codigo;
+                        model.Responsable_Inspeccion = cabecera.ResponsableInspeccion;
+                        model.Tipo_Inspeccion = cabecera.TipoInspeccion;
+                        model.Id_Empresa_Contratista = cabecera.IdEmpresa;
+                        model.Id_Gerencia_Ejecutora = cabecera.IdGerencia;
+                        model.Lugar_Inspeccionado = cabecera.AreaInspeccionada;
+                        model.Id_Responsable_Lugar = cabecera.IdResponsableArea;
+                        model.Fecha_Inspeccion = cabecera.FechaInspeccion.Year + "-" + (cabecera.FechaInspeccion.Month.ToString().Length > 1 ? cabecera.FechaInspeccion.Month.ToString() : "0" + cabecera.FechaInspeccion.Month.ToString()) + "-" + (cabecera.FechaInspeccion.Day.ToString().Length > 1 ? cabecera.FechaInspeccion.Day.ToString() : "0" + cabecera.FechaInspeccion.Day.ToString());
+                        model.Hora_Inspeccion = (cabecera.FechaInspeccion.Hour.ToString().Length > 1 ? cabecera.FechaInspeccion.Hour.ToString() : "0" + cabecera.FechaInspeccion.Hour.ToString()) + ":" + (cabecera.FechaInspeccion.Minute.ToString().Length > 1 ? cabecera.FechaInspeccion.Minute.ToString() : "0" + cabecera.FechaInspeccion.Minute.ToString());
+                        model.Objetivo = cabecera.Objetivo;
+                        model.Inspectores = cabecera.Participantes;
+                        model.Estado = cabecera.Estado;
+                    }
+                    ViewBag.GerenciaMC = gerenciasEjecutorasMC;
+                    ViewBag.EmpresasMC = empresasMC;
+                    ViewBag.Responsables = responsables;
+                    ViewBag.Tipo_Inspeccion = tiposInspeccion;
+                    ViewBag.nObservacioness = observaciones.Count;
+                    ViewBag.Permiso = cabecera.Permiso;
+                    ViewBag.PermisoAdmin = cabecera.PermisoAdmin;
+
+                    ViewBag.TiposActoMA = tiposActoMA;
+                    ViewBag.TiposCondicionMA = tiposCondicionMA;
+                    ViewBag.TiposActoSEG = tiposActoSEG;
+                    ViewBag.TiposCondicionSEG = tiposCondicionSEG;
+
+                    ViewBag.Responsables = responsables;
+                    ViewBag.CabeceraEncriptada = IdCabecera;
+                    ViewBag.idCabecera = IdDesencriptado;
+
+                    ViewBag.AsesoresMA = asesoresMA;
+                    ViewBag.AsesoresSeguridad = asesoresSeguridad;
+
+                }
+                return View(model);
+            }
+        }
         [HttpPost]
         public async Task<IActionResult> EliminarObservacion(string IdObservacion, string IdCabecera)
         {

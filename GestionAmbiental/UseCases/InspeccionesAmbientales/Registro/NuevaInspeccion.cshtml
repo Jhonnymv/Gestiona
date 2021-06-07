@@ -1,10 +1,14 @@
-﻿@model GestionAmbiental.UseCases.InspeccionesAmbientales.Registro.NuevaInspeccionModel
+﻿@using  GestionAmbiental.UseCases.InspeccionesAmbientales.Registro;
+@model GestionAmbiental.UseCases.InspeccionesAmbientales.Registro.NuevaInspeccionModel
 
 @{
     ViewData["Title"] = "Nueva Inspeccion";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
+@{
+    Html.RenderPartial("_NuevaObservacion", new NuevaObservacionModel());
+    Html.RenderPartial("_EditarObservacion", new EditarObservacionModel());
+}
 <div class="inspection">
     <div class="primary-content col-12">
         <div class="image-header-container">
@@ -15,6 +19,10 @@
         </div>
         <div class="container pt-4 pb-4">
             <form class="custom-form w-100" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
+                <input type="hidden" asp-for="EncryptedId" />
+                <input type="hidden" asp-for="opcion" />
+                <input type="hidden" asp-for="Estado" />
                 <div class="form-tabs-mc col-12">
                     <div class="d-flex justify-content-center mt-4 mb-4">
                         <ul class="d-flex justify-content-center  nav nav-pills col-9 col-md-7 div-scroll-horizontal" id="pills-tab" role="tablist">
@@ -166,14 +174,14 @@
     </div>
 </div>
 
-    @*<div class="container-fluid">
+@*<div class="container-fluid">
         <div class="row mb-2">
             <div class="col-12 titulo-pagina">
                 <h2>Nueva Inspección</h2>
             </div>
         </div>
         <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-            
+
             <div class="row mb-2">
                 <div class="col-lg-2">
                     <label asp-for="Id_Gerencia_Ejecutora"></label>
@@ -274,11 +282,11 @@
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script>
-         $("#guardar_estado").click(function () {
+        $("#guardar_estado").click(function () {
             $("#opcion").val("GuardarEstado");
         });
         $("#nueva_obs").click(function () {
-            $("#opcion").val("Observacion");   
+            $("#opcion").val("Observacion");
         });
     </script>
 }
