@@ -1,8 +1,1176 @@
-﻿
+﻿@using  GestionAmbiental.UseCases.InspeccionesAmbientales.Registro;
+@model GestionAmbiental.UseCases.InspeccionesAmbientales.Registro.NuevaInspeccionModel
+
 @{
-    ViewData["Title"] = "DetalleInspeccion";
+    ViewData["Title"] = "Editar Inspeccion";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<h1>DetalleInspeccion</h1>
+@{
+    Html.RenderPartial("_NuevaObservacion", new NuevaObservacionModel());
+    Html.RenderPartial("_EditarObservacion", new EditarObservacionModel());
+}
+<div class="inspection">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title inspection-opacity-color">
+                <h3>Editar Inspección</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
+                <input type="hidden" asp-for="EncryptedId" />
+                <input type="hidden" asp-for="opcion" />
+                <input type="hidden" asp-for="Estado" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="message"></div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Id_Gerencia_Ejecutora">Área Ejecutora de la Inspección</label>
+                            <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
+                            <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora" disabled></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Id_Empresa_Contratista">Empresa Inspeccionada</label>
+                            <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
+                            <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista" disabled>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Lugar_Inspeccionado">Área Inspeccionada</label>
+                            <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
+                            <input type="text" class="form-control" asp-for="Lugar_Inspeccionado" readonly>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Tipo_Inspeccion">Tipo de Inspección</label>
+                            <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
+                            <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion" disabled></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Id_Responsable_Lugar">Responsable del Área Inspeccionada</label>
+                            <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
+                            <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar" disabled></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6 p-0">
+                            <div class="row mt-0 mb-0">
+                                <div class="col-5 mt-0 mb-0">
+                                    <label asp-for="Hora_Inspeccion">Hora (24h)</label>
+                                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
+                                    <input type="time" class="form-control" asp-for="Hora_Inspeccion" readonly>
+                                </div>
+                                <div class="col-7 mt-0 mb-0">
+                                    <label asp-for="Fecha_Inspeccion">Fecha</label>
+                                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
+                                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="message"></div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
+                            <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                            <input type="text" class="form-control" asp-for="Responsable_Inspeccion" readonly>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Inspectores">Participantes de la Inspección</label>
+                            <span class="text-danger" asp-validation-for="Inspectores"></span>
+                            <input type="text" class="form-control" asp-for="Inspectores" readonly>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-12">
+                            <label asp-for="Objetivo">Objetivo de la Inspección</label>
+                            <span class="text-danger" asp-validation-for="Objetivo"></span>
+                            <input type="text" class="form-control" asp-for="Objetivo" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row-center-center col-12">
+                        <div class="col-12 col-xl-4">
+                            <a class="btn btn-special-action inspection-color" id="nueva_obs" data-bs-toggle="modal" data-bs-target="#modalNuevaObservacion">
+                                Agregar Observación
+                            </a>
+                        </div>
+                    </div>
+                    <div class="inspection">
+                        <div class="tertiary-content col-12">
+                            <div class="table-responsive inspection-color">
+                                <table class="table" id="tabla_resumen">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de Observación</th>
+                                            <th>Asesor de MAP/SSO</th>
+                                            <th>Acto/Condición Subestándar Identificada</th>
+                                            <th>Tipo de Condición/Acto Subestándar</th>
+                                            <th>Evidencia</th>
+                                            <th>Nivel de Riesgo</th>
+                                            <th>Acción Preventiva / Correctiva Tomada</th>
+                                            <th>Responsable Marcobre</th>
+                                            <th>Responsable Contratista</th>
+                                            <th>Fecha Programada</th>
+                                            <th colspan="2"></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="100%">No hay observaciones</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                            <div class="pagination-container inspection-color" id="paginado">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+
+                            </div>
+                            <div>
+                                <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
+                                <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
+                                @if (ViewBag.nObservacioness > 0)
+                                {
+                                    <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc">Finalizar Registro</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*<div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Editar Inspección</h2>
+            </div>
+        </div>
+        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
+
+            <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
+            <input type="hidden" asp-for="EncryptedId" />
+
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Id_Gerencia_Ejecutora"></label>
+                </div>
+
+                <div class="col-lg-3">
+                    <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
+                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora" disabled></select>
+                </div>
+                <div class="col-lg-2">
+                    <label asp-for="Id_Empresa_Contratista"></label>
+                </div>
+                <div class="col-lg-5">
+                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
+                    <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista" disabled>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Lugar_Inspeccionado"></label>
+                </div>
+                <div class="col-lg-3">
+                    <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
+                    <input type="text" class="form-control" asp-for="Lugar_Inspeccionado" disabled>
+                </div>
+
+                <div class="col-lg-2">
+                    <label asp-for="Tipo_Inspeccion"></label>
+                </div>
+                <div class="col-lg-5">
+                    <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
+                    <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion" disabled></select>
+                </div>
+
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Id_Responsable_Lugar"></label>
+                </div>
+                <div class="col-lg-3">
+                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
+                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar" disabled></select>
+                </div>
+                <div class="col-lg-2">
+                    <label asp-for="Hora_Inspeccion"></label>
+                </div>
+                <div class="col-lg-2">
+                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
+                    <input type="time" class="form-control" asp-for="Hora_Inspeccion" disabled>
+                </div>
+                <div class="col-lg-1">
+                    <label asp-for="Fecha_Inspeccion"></label>
+                </div>
+                <div class="col-lg-2">
+                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
+                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Responsable_Inspeccion"></label>
+                </div>
+                <div class="col-lg-3">
+                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion" disabled>
+                </div>
+                <div class="col-lg-2">
+                    <label asp-for="Inspectores"></label>
+                </div>
+                <div class="col-lg-5">
+                    <span class="text-danger" asp-validation-for="Inspectores"></span>
+                    <input type="text" class="form-control" asp-for="Inspectores" disabled>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-lg-2">
+                    <label asp-for="Objetivo"></label>
+                </div>
+                <div class="col-lg-10">
+                    <span class="text-danger" asp-validation-for="Objetivo"></span>
+                    <input type="text" class="form-control" asp-for="Objetivo" disabled>
+                </div>
+            </div>
+            @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
+            {
+                <div class="row mb-2">
+                    <div class="col-lg-12">
+                        <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
+                    </div>
+                </div>
+            }
+
+            @if (ViewBag.nObservacioness > 0)
+            {
+                style="visibility:hidden;display:none"
+                <div class="row mb-2" id="div_tabla_observaciones">
+                    <div class="col-lg-12">
+                        <table class="table table-modal" id="tabla_observaciones">
+                            <thead class="thead-mcolor">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Tipo de Observación</th>
+                                    <th>Asesor de MAP/SSO</th>
+                                    <th>Acto/Condición Subestándar Identificada</th>
+                                    <th>Tipo de Condición/Acto Subestándar</th>
+                                    <th>Evidencia</th>
+                                    <th>Nivel de Riesgo</th>
+                                    <th>Acción Preventiva / Correctiva Tomada</th>
+                                    <th>Responsable Marcobre</th>
+                                    <th>Responsable Contratista</th>
+                                    <th>Fecha Programada</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @Html.Raw(ViewBag.ContenidoTabla)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+        <div class="buttons d-flex justify-content-end">
+            @if (Model.Estado.Equals("Registrado"))
+            {
+                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+                <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
+            }
+            @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
+            {
+                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
+                <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
+                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
+                @if (ViewBag.nObservacioness > 0)
+                {
+                    <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
+                }
+            }
+            else if (Model.Estado.Equals("Pendiente"))
+            {
+                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
+            }
+            @if (ViewBag.PermisoAdmin)
+            {
+            <button id="eliminar" type="button" class="btn btn-danger ml-2">Eliminar Inspección</button>
+            }
+        </div>
+            <input type="hidden" asp-for="opcion" />
+            <input type="hidden" asp-for="Estado" />
+        </form>
+    </div>
+     Modal Enviando Correo
+    <div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        <br />
+                        <label>Notificando a Responsables</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+     Modal Ampliar Fecha
+    <div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo_modal_ampliacion">
+                        Ampliar Fecha de Observación
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-4">
+                            <label>Nueva Fecha:</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="hidden" class="form-control" id="idObserv" />
+                            <input type="date" class="form-control" id="nuevaFecha" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+@section scripts{
+    <script src="~/js/stepper.js"></script>
+    <script type="text/javascript">
+
+        var listObservaciones = [];
+        var img_url = "";
+        $(document).ready(function () {
+            if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
+                //disable inputs
+                $('#Id_Gerencia_Ejecutora').prop('disabled', false);
+                $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Responsable_Lugar').prop('disabled', false);
+                $('#Id_Responsable_MA').prop('disabled', false);
+                $('#Lugar_Inspeccionado').prop('readonly', false);
+                $('#Inspectores').prop('readonly', false);
+                $('#Hora_Inspeccion').prop('readonly', false);
+                $('#Fecha_Inspeccion').prop('readonly', false);
+                $('#Responsable_Inspeccion').prop('readonly', false);
+                $('#Objetivo').prop('readonly', false);
+                $('#Tipo_Inspeccion').prop('disabled', false);
+            }
+            dataModulo();
+            ConsultarObservaciones();
+        });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/Inspecciones/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        img_url = data.img_url;
+                        inspectionStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        $("#guardar").click(function () {
+            $("#opcion").val("Guardar");
+        });
+        $("#guardar_estado").click(function () {
+            $("#opcion").val("GuardarEstado");
+        });
+        $("#nueva_obs").click(function () {
+            $("#opcion").val("Observacion");
+        });
+        $("#eliminar").click(function () {
+            if (window.confirm("¿Seguro que desea eliminar esta inspección?")) {
+                //disable inputs
+                $('#Id_Gerencia_Ejecutora').prop('disabled', false);
+                $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Responsable_Lugar').prop('disabled', false);
+                $('#Id_Responsable_MA').prop('disabled', false);
+                $('#Lugar_Inspeccionado').prop('disabled', false);
+                $('#Inspectores').prop('disabled', false);
+                $('#Hora_Inspeccion').prop('disabled', false);
+                $('#Fecha_Inspeccion').prop('disabled', false);
+                $('#Responsable_Inspeccion').prop('disabled', false);
+                $('#Objetivo').prop('disabled', false);
+               $('#Tipo_Inspeccion').prop('disabled', false);
+                $("#opcion").val("Eliminar");
+                $("#form_nuevaInspeccion").submit();
+            }
+        });
+        function EnviarNuevaFecha() {
+            var fecha = $("#nuevaFecha").val();
+            var idObservacion = $("#idObserv").val();
+            if (fecha != "") {
+                $.ajax({
+                    async: true,
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("AmpliarFechaObservacion", "Inspecciones"))",
+                    data: {
+                        "idCabecera": $("#EncryptedId").val(),
+                        "idObservacion": idObservacion,
+                        "fecha": fecha
+                    },
+                    success: function (data) {
+                        location.reload()
+                    }
+                });
+            } else {
+                alert("Debe seleccionar una fecha");
+            }
+        }
+        function ampliarInspeccion(idObservacion) {
+            $("#modal_ampliacion").modal("show");
+            $("#idObserv").val(idObservacion);
+        }
+        function FinalizarRegistro() {
+            $("#Modal_Enviando_Correo").modal('show')
+            $.ajax({
+                type: "POST",
+                data: $('#form_nuevaInspeccion').serialize(),
+                url: "/Inspecciones/EditarInspeccion",
+                contentType: "application/json"
+            }).success(function () {
+
+            });
+        }
+        function ConsultarObservaciones() {
+            $.ajax({
+                type: "POST",
+                url: "@(Url.Action("ConsultarObservaciones", "Inspecciones"))",
+                data: {
+                    "IdCabecera": $("#EncryptedId").val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        $('#tabla_resumen tbody').empty();
+                        $('#tabla_resumen tbody').html(response.html);
+                        listObservaciones = JSON.parse(response.observaciones);
+                        dataModulo();
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            });
+
+        }
+    </script>
+    @*Scripts partial Nueva Observación*@
+    <script>
+        $("#Evidencias").change(function () {
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Evidencias").data('max-size');
+            if ($("#Evidencias").get(0).files.length) {
+                var fileSize = $("#Evidencias").get(0).files[0].size; // in bytes
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 8MB<br/>");
+                }
+            }
+            //Validacion del tipo de archivo
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
+                case 'png':
+                case 'PNG':
+                case 'xls':
+                case 'xlsx':
+                case 'doc':
+                case 'docx':
+                case 'pdf':
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    break;
+                default:
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+                //$("#modal_archivo").modal('show');
+            }
+        });
+        $("#NiveRiesgo").on('change', function () {
+            switch ($("#NiveRiesgo").val()) {
+                case "Tolerable":
+                    $("#NiveRiesgo").css("background-color", "green");
+                    $("#NiveRiesgo").css("color", "white");
+                    break;
+                case "Alerta":
+                    $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black");
+                    break;
+                case "No Aceptable": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
+                case "Bajo": $("#NiveRiesgo").css("background-color", "green"); $("#NiveRiesgo").css("color", "white"); break;
+                case "Medio": $("#NiveRiesgo").css("background-color", "yellow"); $("#NiveRiesgo").css("color", "black"); break;
+                case "Alto": $("#NiveRiesgo").css("background-color", "red"); $("#NiveRiesgo").css("color", "white"); break;
+                default: $("#NiveRiesgo").css("background-color", "white"); $("#NiveRiesgo").css("color", "black"); break;
+            }
+            $("#NiveRiesgo option").css("color", "black")
+        });
+        $("#TipoInspeccion").on('change', function () {
+            if ($("#TipoInspeccion").val() == "MAP") {
+                $(".OpcSeguridad").hide();
+                $(".OpcSeguridad").prop('disabled', true);
+                $(".OpcMedioAmbiente").show();
+                $(".OpcMedioAmbiente").prop('disabled', false);
+                //$(".Vacio_NR").hide();
+                //$(".Vacio_NR").prop('disabled', true);
+                //Mostrar asesores
+                $(".AsesorMedioAmbiente").show();
+                $(".AsesorMedioAmbiente").prop('disabled', false);
+                $(".AsesorSeguridad").hide();
+                $(".AsesorSeguridad").prop('disabled', true);
+                //reiniciar condicion
+                $("#CondicionIdentificada").val("");
+                //Eliminar Niveles SSO
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Bajo']").remove();
+                $("#NiveRiesgo option[value='Medio']").remove();
+                $("#NiveRiesgo option[value='Alto']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NiveRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NiveRiesgo option[value='No Aplica']").css({ "background-color": "white", "color": "black" });
+                $('#NiveRiesgo').append(new Option("Tolerable", "Tolerable"));
+                $("#NiveRiesgo option[value='Tolerable']").css({ "background-color": "green", "color": "white" });
+                $('#NiveRiesgo').append(new Option("Alerta", "Alerta"));
+                $("#NiveRiesgo option[value='Alerta']").css({ "background-color": "yellow", "color": "black" });
+                $('#NiveRiesgo').append(new Option("No Aceptable", "No Aceptable"));
+                $("#NiveRiesgo option[value='No Aceptable']").css({ "background-color": "red", "color": "white" });
+            } else if ($("#TipoInspeccion").val() == "SSO") {
+                $(".OpcMedioAmbiente").hide();
+                $(".OpcMedioAmbiente").prop('disabled', true);
+                $(".OpcSeguridad").show();
+                $(".OpcSeguridad").prop('disabled', false);
+                //$(".Vacio_NR").hide();
+                //$(".Vacio_NR").prop('disabled', true);
+                //Mostrar asesores seguridad
+                $(".AsesorMedioAmbiente").hide();
+                $(".AsesorMedioAmbiente").prop('disabled', true);
+                $(".AsesorSeguridad").show();
+                $(".AsesorSeguridad").prop('disabled', false);
+                //reiniciar condicion
+                $("#CondicionIdentificada").val("");
+                //Eliminar Niveles MAP
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Tolerable']").remove();
+                $("#NiveRiesgo option[value='Alerta']").remove();
+                $("#NiveRiesgo option[value='No Aceptable']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#NiveRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#NiveRiesgo option[value='No Aplica']").css({ "background-color": "white", "color": "black" });
+                $('#NiveRiesgo').append(new Option("Bajo", "Bajo"));
+                $("#NiveRiesgo option[value='Bajo']").css({ "background-color": "green", "color": "white" });
+                $('#NiveRiesgo').append(new Option("Medio", "Medio"));
+                $("#NiveRiesgo option[value='Medio']").css({ "background-color": "yellow", "color": "black" });
+                $('#NiveRiesgo').append(new Option("Alto", "Alto"));
+                $("#NiveRiesgo option[value='Alto']").css({ "background-color": "red", "color": "white" });
+            } else {
+                $(".OpcMedioAmbiente").hide();
+                $(".OpcMedioAmbiente").prop('disabled', true);
+                $(".OpcSeguridad").hide();
+                $(".OpcSeguridad").prop('disabled', true);
+                $(".Vacio_NR").show();
+                $(".Vacio_NR").prop('disabled', false);
+                //Ocultar asesores
+                $(".AsesorVacio").show();
+                $(".AsesorVacio").prop('disabled', false);
+                $(".AsesorMedioAmbiente").hide();
+                $(".AsesorMedioAmbiente").prop('disabled', true);
+                $(".AsesorSeguridad").hide();
+                $(".AsesorSeguridad").prop('disabled', true);
+                //reiniciar condicion
+                $("#CondicionIdentificada").val("");
+                //Eliminar Niveles MAP
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Tolerable']").remove();
+                $("#NiveRiesgo option[value='Alerta']").remove();
+                $("#NiveRiesgo option[value='No Aceptable']").remove();
+                //Eliminar Niveles SSO
+                $("#NiveRiesgo option[value='No Aplica']").remove();
+                $("#NiveRiesgo option[value='Bajo']").remove();
+                $("#NiveRiesgo option[value='Medio']").remove();
+                $("#NiveRiesgo option[value='Alto']").remove();
+            }
+            //reiniciar tipo condicion
+            $(".Vacio").show();
+            $(".Vacio").prop('disabled', false);
+            $(".MA-Acto").hide();
+            $(".MA-Condicion").hide();
+            $(".MA-Acto").prop('disabled', true);
+            $(".MA-Condicion").prop('disabled', true);
+            $(".SEG-Acto").hide();
+            $(".SEG-Condicion").hide();
+            $(".SEG-Acto").prop('disabled', true);
+            $(".SEG-Condicion").prop('disabled', true);
+            $("#TiposActoMA").val("");
+            $("#TiposCondicionMA").val("");
+            //reiniciar estilo de nivel de riesgo
+            $("#NiveRiesgo").css({ "background-color": "white", "color": "black" });
+        });
+        $("#CondicionIdentificada").on('change', function () {
+            var selectedOption = $("#CondicionIdentificada option:selected").val();
+            if ($("#TipoInspeccion").val() == "MAP" && selectedOption == "Acto Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', true);
+                $(".MA-Acto").show();
+                $(".MA-Acto").prop('disabled', false);
+                $(".MA-Condicion").hide();
+                $(".MA-Condicion").prop('disabled', true);
+            } else if ($("#TipoInspeccion").val() == "MAP" && selectedOption == "Condición Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', true);
+                $(".MA-Acto").hide();
+                $(".MA-Acto").prop('disabled', true);
+                $(".MA-Condicion").show();
+                $(".MA-Condicion").prop('disabled', false);
+            } else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Acto Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', true);
+                $(".SEG-Acto").show();
+                $(".SEG-Acto").prop('disabled', false);
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', true);
+            } else if ($("#TipoInspeccion").val() == "SSO" && selectedOption == "Condición Subestándar") {
+                $(".Vacio").hide();
+                $(".Vacio").prop('disabled', true);
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', true);
+                $(".SEG-Condicion").show();
+                $(".SEG-Condicion").prop('disabled', false);
+            } else {
+                $(".Vacio").show();
+                $(".Vacio").prop('disabled', false);
+                $(".Vacio").val("");
+                $(".MA-Acto").hide();
+                $(".MA-Condicion").hide();
+                $(".MA-Acto").prop('disabled', true);
+                $(".MA-Condicion").prop('disabled', true);
+                $(".SEG-Acto").hide();
+                $(".SEG-Acto").prop('disabled', true);
+                $(".SEG-Condicion").hide();
+                $(".SEG-Condicion").prop('disabled', true);
+                $("#TiposActoMA").val("");
+                $("#TiposCondicionMA").val("");
+            }
+        });
+        function GuardarObservacion() {
+            var formData = new FormData();
+            var files = document.getElementById("Evidencias").files;
+            for (var i = 0; i != files.length; i++) {
+                formData.append("Evidencias", files[i]);
+            }
+            formData.append("idCabecera", $("#idCabecera").val());
+            formData.append("TipoInspeccion", $("#TipoInspeccion").val());
+            formData.append("Asesor_MA_Seguridad",$("#Asesor_MA_Seguridad:not(:disabled)").val());
+            formData.append("CondicionIdentificada", $("#CondicionIdentificada").val());
+            formData.append("TipoCondicion", $("#TipoCondicion:not(:disabled)").val());
+            formData.append("FechaProgramada", $("#FechaProgramada").val());
+            formData.append("NiveRiesgo", $("#NiveRiesgo").val());
+            formData.append("AccionTomada", $("#AccionTomada").val());
+            formData.append("ResponsableMarc", $("#ResponsableMarc").val());
+            formData.append("ResponsableCont", $("#ResponsableCont").val());
+            $.ajax({
+                url: "@Url.Action("NuevaObservacion", "Inspecciones")",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        $('#modalNuevaObservacion').modal('toggle');
+                        ConsultarObservaciones();
+                        ReiniciarModalObservacion();
+                    }
+                    else {
+                        alert("Ocurrió un error al agregar la observación")
+                    }
+                }
+            });
+        }
+        function ReiniciarModalObservacion() {
+            $("#TipoInspeccion").val('');
+            $(".AsesorMedioAmbiente").val('0');
+            $(".AsesorSeguridad").val('0');
+            $(".AsesorMedioAmbiente").hide();
+            $(".AsesorSeguridad").hide();
+            $("#CondicionIdentificada").val('');
+            $("#TipoCondicion").val('');
+            $(".Vacio").val('');
+            $(".Vacio").show();
+            $(".Vacio").prop('disabled',false);
+            $(".MA-Acto").val('0');
+            $(".MA-Acto").hide();
+            $(".MA-Acto").prop('disabled',true);
+            $(".MA-Condicion").val('0');
+            $(".MA-Condicion").hide();
+            $(".MA-Condicion").prop('disabled',true);
+            $(".SEG-Acto").val('0');
+            $(".SEG-Acto").hide();
+            $(".SEG-Acto").prop('disabled',true);
+            $(".SEG-Condicion").val('0');
+            $(".SEG-Condicion").hide();
+            $(".SEG-Condicion").prop('disabled', true);
+            $("#FechaProgramada").val('');
+            $("#NiveRiesgo").val('');
+            $("#NiveRiesgo").css("background-color", "white");
+            $("#NiveRiesgo").css("color", "black");
+            $("#AccionTomada").val('');
+            $("#ResponsableMarc").val('0');
+            $("#ResponsableCont").val('');
+            $("#Evidencias").val('');
+            $("#files_name").text('0 Archivos');
+        }
+    </script>
+    @*Scripts partial Editar Observación*@
+    <script type="text/javascript">
+
+        function EditarObservacion(IdObservacion) {
+            console.log(IdObservacion)
+            var data;
+            listObservaciones.forEach(function (obs) {
+                if (obs.IdObservacion == IdObservacion)
+                    data = obs;
+            });
+            console.log("data: ", data);
+            ReiniciarModalEditarObs();
+            if (data != null) {
+                $("#E_IdObservacion").val(data.IdObservacion);
+                $("#E_TipoInspeccion").val(data.TipoInspeccion);
+                $(".E_Vacio").hide();
+                $(".E_Vacio").prop('disabled', true);
+                if (data.TipoInspeccion == "MAP") {
+                    $(".E_AsesorMedioAmbiente").show();
+                    $("#E_AsesorSeguridad.E_AsesorMedioAmbiente").val(data.Asesor);
+                    $("#E_CondicionIdentificada").val(data.DescripcionCondicion);
+                    $("#E_TipoCondicion").val(data.DescripcionCondicion);
+                    if (data.DescripcionCondicion == "Acto Subestándar") {
+                        $(".E_MA-Acto").show();
+                        $(".E_MA-Acto").prop('disabled', false);
+                        $("#E_TipoCondicion.E_MA-Acto").val(data.TipoCondicion);
+                    } else {
+                        $(".E_MA-Condicion").show();
+                        $(".E_MA-Condicion").prop('disabled', false);
+                        $("#E_TipoCondicion.E_MA-Condicion").val(data.TipoCondicion);
+                    }
+                    //Agregar Niveles MA
+                    $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                    $("#E_NivelRiesgo option[value='No Aplica']").css({ "background-color": "white", "color": "black" });
+                    $('#E_NivelRiesgo').append(new Option("Tolerable", "Tolerable"));
+                    $("#E_NivelRiesgo option[value='Tolerable']").css({ "background-color": "green", "color": "white" });
+                    $('#E_NivelRiesgo').append(new Option("Alerta", "Alerta"));
+                    $("#E_NivelRiesgo option[value='Alerta']").css({ "background-color": "yellow", "color": "black" });
+                    $('#E_NivelRiesgo').append(new Option("No Aceptable", "No Aceptable"));
+                    $("#E_NivelRiesgo option[value='No Aceptable']").css({ "background-color": "red", "color": "white" });
+                    $("#E_NivelRiesgo").val(data.NivelRiesgo);
+                }
+                else {
+                    $(".E_AsesorSeguridad").show();
+                    $("#E_AsesorSeguridad.E_AsesorSeguridad").val(data.Asesor);
+                    $("#E_CondicionIdentificada").val(data.DescripcionCondicion);
+                    $("#E_TipoCondicion").val(data.DescripcionCondicion);
+                    if (data.DescripcionCondicion == "Acto Subestándar") {
+                        $(".E_SEG-Acto").show();
+                        $(".E_SEG-Acto").prop('disabled', false);
+                        $("#E_TipoCondicion.E_SEG-Acto").val(data.TipoCondicion);
+                    } else {
+                        $(".E_SEG-Condicion").show();
+                        $(".E_SEG-Condicion").prop('disabled', false);
+                        $("#E_TipoCondicion.E_SEG-Condicion").val(data.TipoCondicion);
+                    }
+                    //Agregar Niveles SSO
+                    $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                    $("#E_NivelRiesgo option[value='No Aplica']").css({ "background-color": "white", "color": "black" });
+                    $('#E_NivelRiesgo').append(new Option("Bajo", "Bajo"));
+                    $("#E_NivelRiesgo option[value='Bajo']").css({ "background-color": "green", "color": "white" });
+                    $('#E_NivelRiesgo').append(new Option("Medio", "Medio"));
+                    $("#E_NivelRiesgo option[value='Medio']").css({ "background-color": "yellow", "color": "black" });
+                    $('#E_NivelRiesgo').append(new Option("Alto", "Alto"));
+                    $("#E_NivelRiesgo option[value='Alto']").css({ "background-color": "red", "color": "white" });
+                    $("#E_NivelRiesgo").val(data.NivelRiesgo);
+                }
+                $("#E_FechaProgramada").val(data.FechaProgramada);
+                $("#E_AccionTomada").val(data.Accion);
+                $("#E_ResponsableMarc").val(data.ResponsableMarc);
+                $("#E_ResponsableCont").val(data.ResponsableCont);
+                $("#E_Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#E_EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#modalEditarObservacion").modal('show');
+            }
+        }
+        function EliminarObservacion(IdObservacion,IdCabecera) {
+            if (confirm("¿Está seguro que desea eliminar la observación?")) {
+                console.log("obs", IdObservacion)
+                console.log("cab", IdCabecera)
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("EliminarObservacion", "Inspecciones")",
+                    data: {
+                        "IdObservacion": IdObservacion,
+                        "IdCabecera": IdCabecera,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.success) {
+                            ConsultarObservaciones();
+                        }
+                        else {
+                            alert("Ocurrió un error al eliminar la observación")
+                        }
+                    }
+                });
+            }
+        }
+        $("#E_NivelRiesgo").on('change', function () {
+            ActualizarColorNivelRiesgo();
+        });
+        function ReiniciarModalEditarObs() {
+            $(".E_AsesorMedioAmbiente").hide();
+            $(".E_AsesorSeguridad").hide();
+            OcultarTiposCondicion();
+            OcultarNivelRiesgo();
+        }
+        function OcultarTiposCondicion() {
+            $(".E_Vacio").show();
+            $(".E_Vacio").prop('disabled', false);
+            $(".E_MA-Acto").hide();
+            $(".E_MA-Acto").prop('disabled', true);
+            $(".E_MA-Condicion").hide();
+            $(".E_MA-Condicion").prop('disabled', true);
+            $(".E_SEG-Acto").hide();
+            $(".E_SEG-Acto").prop('disabled', true);
+            $(".E_SEG-Condicion").hide();
+            $(".E_SEG-Condicion").prop('disabled', true);
+        }
+        function OcultarNivelRiesgo() {
+            $("#E_NivelRiesgo").find('option').remove();
+            $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+            $("#E_NivelRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
+        }
+        function ActualizarColorNivelRiesgo() {
+            switch ($("#E_NivelRiesgo").val()) {
+                case "Tolerable":
+                    $("#E_NivelRiesgo").css("background-color", "green");
+                    $("#E_NivelRiesgo").css("color", "white");
+                    break;
+                case "Alerta":
+                    $("#E_NivelRiesgo").css("background-color", "yellow"); $("#E_NivelRiesgo").css("color", "black");
+                    break;
+                case "No Aceptable": $("#E_NivelRiesgo").css("background-color", "red"); $("#E_NivelRiesgo").css("color", "white"); break;
+                case "Bajo": $("#E_NivelRiesgo").css("background-color", "green"); $("#E_NivelRiesgo").css("color", "white"); break;
+                case "Medio": $("#E_NivelRiesgo").css("background-color", "yellow"); $("#E_NivelRiesgo").css("color", "black"); break;
+                case "Alto": $("#E_NivelRiesgo").css("background-color", "red"); $("#E_NivelRiesgo").css("color", "white"); break;
+                default: $("#E_NivelRiesgo").css("background-color", "white"); $("#E_NivelRiesgo").css("color", "black"); break;
+            }
+            $("#E_NivelRiesgo option").css("color", "black");
+        }
+        $("#E_Nueva_Evidencia").change(function () {
+            $("#danger_evidencia").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#E_Nueva_Evidencia").data('max-size');
+            if ($("#E_Nueva_Evidencia").get(0).files.length) {
+                var fileSize = $("#E_Nueva_Evidencia").get(0).files[0].size; // in bytes
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_evidencia").html("El  archivo supera el límite permitido de 8MB<br/>");
+                }
+            }
+            //Validacion del tipo de archivo
+            var ext = this.value.match(/\.([^\.]+)$/)[1];
+            switch (ext) {
+                case 'jpg':
+                case 'JPG':
+                case 'jpeg':
+                case 'JPEG':
+                case 'png':
+                case 'PNG':
+                case 'xls':
+                case 'xlsx':
+                case 'doc':
+                case 'docx':
+                case 'pdf':
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    break;
+                default:
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#files_name").text(filesname);
+                    $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
+                    //$("#modal_archivo").modal('show');
+            }
+    });
+        $("#E_NivelRiesgo").on('change', function () {
+            switch ($("#E_NivelRiesgo").val()) {
+                case "Tolerable":
+                    $("#E_NivelRiesgo").css("background-color", "green");
+                    $("#E_NivelRiesgo").css("color", "white");
+                    break;
+                case "Alerta":
+                    $("#E_NivelRiesgo").css("background-color", "yellow"); $("#E_NivelRiesgo").css("color", "black");
+                    break;
+                case "No Aceptable": $("#E_NivelRiesgo").css("background-color", "red"); $("#E_NivelRiesgo").css("color", "white"); break;
+                case "Bajo": $("#E_NivelRiesgo").css("background-color", "green"); $("#E_NivelRiesgo").css("color", "white"); break;
+                case "Medio": $("#E_NivelRiesgo").css("background-color", "yellow"); $("#E_NivelRiesgo").css("color", "black"); break;
+                case "Alto": $("#E_NivelRiesgo").css("background-color", "red"); $("#E_NivelRiesgo").css("color", "white"); break;
+                default: $("#E_NivelRiesgo").css("background-color", "white"); $("#E_NivelRiesgo").css("color", "black"); break;
+            }
+            $("#E_NivelRiesgo option").css("color", "black")
+    });
+        $("#E_TipoInspeccion").on('change', function () {
+            if ($("#E_TipoInspeccion").val() == "MAP") {
+                $(".E_OpcSeguridad").hide();
+                $(".E_OpcSeguridad").prop('disabled', true);
+                $(".E_OpcMedioAmbiente").show();
+                $(".E_OpcMedioAmbiente").prop('disabled', false);
+                //Mostrar asesores
+                $(".E_AsesorMedioAmbiente").show();
+                $(".E_AsesorMedioAmbiente").prop('disabled', false);
+                $(".E_AsesorSeguridad").hide();
+                $(".E_AsesorSeguridad").prop('disabled', true);
+                //reiniciar condicion
+                $("#CondicionIdentificada").val("");
+                //Eliminar Niveles SSO
+                $("#E_NivelRiesgo").find('option').remove();
+                //Agregar opciones a nivel de riesgo
+                $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+                $("#E_NivelRiesgo option[value='']").css({"background-color": "white", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#E_NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("Tolerable", "Tolerable"));
+                $("#E_NivelRiesgo option[value='Tolerable']").css({"background-color": "green", "color": "white"});
+                $('#E_NivelRiesgo').append(new Option("Alerta", "Alerta"));
+                $("#E_NivelRiesgo option[value='Alerta']").css({"background-color": "yellow", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("No Aceptable", "No Aceptable"));
+                $("#E_NivelRiesgo option[value='No Aceptable']").css({"background-color": "red", "color": "white"});
+            }
+            else if ($("#E_TipoInspeccion").val() == "SSO") {
+                $(".E_OpcMedioAmbiente").hide();
+                $(".E_OpcMedioAmbiente").prop('disabled',  'disabled');
+                $(".E_OpcSeguridad").show();
+                $(".E_OpcSeguridad").prop('disabled',  false);
+                //$(".Vacio_NR").hide();
+                //$(".Vacio_NR").prop('disabled', true);
+                //Mostrar asesores seguridad
+                $(".E_AsesorMedioAmbiente").hide();
+                $(".E_AsesorMedioAmbiente").prop('disabled', true);
+                $(".E_AsesorSeguridad").show();
+                $(".E_AsesorSeguridad").prop('disabled', false);
+                //reiniciar condicion
+                $("#CondicionIdentificada").val("");
+                //Eliminar Niveles MAP
+                $("#E_NivelRiesgo").find('option').remove();
+                //$("#E_NivelRiesgo option[value='No Aplica']").remove();
+                //$("#E_NivelRiesgo option[value='Tolerable']").remove();
+                //$("#E_NivelRiesgo option[value='Alerta']").remove();
+                //$("#E_NivelRiesgo option[value='No Aceptable']").remove();
+                //Agregar opciones a nivel de riesgo
+                $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+                $("#E_NivelRiesgo option[value='']").css({"background-color": "white", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
+                $("#E_NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("Bajo", "Bajo"));
+                $("#E_NivelRiesgo option[value='Bajo']").css({"background-color": "green", "color": "white"});
+                $('#E_NivelRiesgo').append(new Option("Medio", "Medio"));
+                $("#E_NivelRiesgo option[value='Medio']").css({"background-color": "yellow", "color": "black"});
+                $('#E_NivelRiesgo').append(new Option("Alto", "Alto"));
+                $("#E_NivelRiesgo option[value='Alto']").css({"background-color": "red", "color": "white"});
+            }
+            else {
+                $(".E_OpcMedioAmbiente").hide();
+                $(".E_OpcMedioAmbiente").prop('disabled',  'disabled');
+                $(".E_OpcSeguridad").hide();
+                $(".E_OpcSeguridad").prop('disabled',  'disabled');
+                $(".E_Vacio_NR").show();
+                $(".E_Vacio_NR").prop('disabled',  false);
+                //Ocultar asesores
+                $(".E_AsesorVacio").show();
+                $(".E_AsesorVacio").prop('disabled', false);
+                $(".E_AsesorMedioAmbiente").hide();
+                $(".E_AsesorMedioAmbiente").prop('disabled', true);
+                $(".E_AsesorSeguridad").hide();
+                $(".E_AsesorSeguridad").prop('disabled', true);
+                //reiniciar condicion
+                $("#E_CondicionIdentificada").val("");
+                //Eliminar Niveles MAP
+                $("#E_NivelRiesgo option[value='No Aplica']").remove();
+                $("#E_NivelRiesgo option[value='Tolerable']").remove();
+                $("#E_NivelRiesgo option[value='Alerta']").remove();
+                $("#E_NivelRiesgo option[value='No Aceptable']").remove();
+                //Eliminar Niveles SSO
+                $("#E_NivelRiesgo option[value='No Aplica']").remove();
+                $("#E_NivelRiesgo option[value='Bajo']").remove();
+                $("#E_NivelRiesgo option[value='Medio']").remove();
+                $("#E_NivelRiesgo option[value='Alto']").remove();
+            }
+            //reiniciar tipo condicion
+            $(".E_Vacio").show();
+            $(".E_Vacio").prop('disabled', false);
+            $(".E_MA-Acto").hide();
+            $(".E_MA-Condicion").hide();
+            $(".E_MA-Acto").prop('disabled', true);
+            $(".E_MA-Condicion").prop('disabled', true);
+            $(".E_SEG-Acto").hide();
+            $(".E_SEG-Condicion").hide();
+            $(".E_SEG-Acto").prop('disabled', true);
+            $(".E_SEG-Condicion").prop('disabled', true);
+            $("#E_TipoCondicion:not(:disabled)").val('');
+            $("#E_CondicionIdentificada").val('');
+            //reiniciar estilo de nivel de riesgo
+            $("#E_NivelRiesgo").css({"background-color": "white", "color": "black"});
+        });
+        $("#E_CondicionIdentificada").on('change', function () {
+            var selectedOption = $("#E_CondicionIdentificada option:selected").val();
+            if ($("#E_TipoInspeccion").val() == "MAP" && selectedOption == "Acto Subestándar") {
+                $(".E_Vacio").hide();
+                $(".E_Vacio").prop('disabled', true);
+                $(".E_MA-Acto").show();
+                $(".E_MA-Acto").prop('disabled', false);
+                $(".E_MA-Condicion").hide();
+                $(".E_MA-Condicion").prop('disabled', true);
+            } else if ($("#E_TipoInspeccion").val() == "MAP" && selectedOption == "Condición Subestándar") {
+                $(".E_Vacio").hide();
+                $(".E_Vacio").prop('disabled', true);
+                $(".E_MA-Acto").hide();
+                $(".E_MA-Acto").prop('disabled', true);
+                $(".E_MA-Condicion").show();
+                $(".E_MA-Condicion").prop('disabled', false);
+            } else if ($("#E_TipoInspeccion").val() == "SSO" && selectedOption == "Acto Subestándar") {
+                $(".E_Vacio").hide();
+                $(".E_Vacio").prop('disabled', true);
+                $(".E_SEG-Acto").show();
+                $(".E_SEG-Acto").prop('disabled', false);
+                $(".E_SEG-Condicion").hide();
+                $(".E_SEG-Condicion").prop('disabled', true);
+            } else if ($("#E_TipoInspeccion").val() == "SSO" && selectedOption == "Condición Subestándar") {
+                $(".E_Vacio").hide();
+                $(".E_Vacio").prop('disabled', true);
+                $(".E_SEG-Acto").hide();
+                $(".E_SEG-Acto").prop('disabled', true);
+                $(".E_SEG-Condicion").show();
+                $(".E_SEG-Condicion").prop('disabled', false);
+            } else {
+                $(".E_Vacio").show();
+                $(".E_Vacio").prop('disabled', false);
+                $(".E_Vacio").val("");
+                $(".E_MA-Acto").hide();
+                $(".E_MA-Condicion").hide();
+                $(".E_MA-Acto").prop('disabled', true);
+                $(".E_MA-Condicion").prop('disabled', true);
+                $(".E_SEG-Acto").hide();
+                $(".E_SEG-Acto").prop('disabled', true);
+                $(".E_SEG-Condicion").hide();
+                $(".E_SEG-Condicion").prop('disabled', true);
+                $("#E_TiposActoMA").val("");
+                $("#E_TiposCondicionMA").val("");
+            }
+        });
+        //Validar cambios de tipo condicion
+        $(".E_SEG-Acto").on('change', function () {
+        $("#E_TipoCondicion").val(this.value);
+    });
+        $(".E_SEG-Condicion").on('change', function () {
+        $("#E_TipoCondicion").val(this.value);
+    });
+        $(".E_MA-Acto").on('change', function () {
+        $("#E_TipoCondicion").val(this.value);
+    });
+        $(".E_MA-Condicion").on('change', function () {
+        $("#E_TipoCondicion").val(this.value);
+    });
+        //Validar cambios de asesores
+        $(".E_AsesorMedioAmbiente").on('change', function () {
+        $("E_#AsesorSeguridad").val(this.value);
+    });
+        $(".E_AsesorSeguridad").on('change', function () {
+        $("#E_AsesorSeguridad").val(this.value);
+        });
+        function GuardarEObservacion() {
+            var formData = new FormData();
+            var files = document.getElementById("E_Nueva_Evidencia").files;
+            for (var i = 0; i != files.length; i++) {
+                formData.append("E_Nueva_Evidencia", files[i]);
+            }
+            formData.append("E_IdCabecera", $("#E_IdCabecera").val());
+            formData.append("E_IdObservacion", $("#E_IdObservacion").val());
+            formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
+            formData.append("E_AsesorSeguridad",$("#E_AsesorSeguridad:not(:disabled)").val());
+            formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
+            formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
+            formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());
+            formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
+            formData.append("E_AccionTomada", $("#E_AccionTomada").val());
+            formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
+            formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
+            formData.append("E_Evidencia", $("#E_Evidencia").val());
+            $.ajax({
+                url: "@Url.Action("EditarObservacion", "Inspecciones")",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        $('#modalEditarObservacion').modal('toggle');
+                        ConsultarObservaciones();
+                        ReiniciarModalEditarObs();
+                    }
+                    else {
+                        alert("Ocurrió un error al editar la observación")
+                    }
+                }
+            });
+        }
+    </script>
+}
+
 
