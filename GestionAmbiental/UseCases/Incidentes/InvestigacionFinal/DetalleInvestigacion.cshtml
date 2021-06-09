@@ -5,7 +5,803 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="container-fluid">
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Editar Investigación Final del Incidente Ambiental</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formEditarInvestigacion" asp-action="EditarInvestigacion" asp-controller="InvestigacionFinal" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+                <input type="hidden" asp-for="Id_Encriptado_Investigacion_Final" value="@Model.Id_Encriptado_Investigacion_Final" />
+                <input type="hidden" asp-for="Opcion" />
+                <input type="hidden" asp-for="NInvolucrados" />
+                <input type="hidden" asp-for="NProductos" />
+                <input type="hidden" asp-for="NAcciones" />
+                <input type="hidden" asp-for="NCausas" />
+                <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">DATOS DEL TITULAR MINERO</span>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label>Razón Social</label>
+                            <input type="text" class="form-control" value="Marcobre SAC" disabled />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label>RUC</label>
+                            <input type="text" class="form-control" value="20508972734" disabled />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label>Actividad</label>
+                            <input type="text" class="form-control" value="Mineria" disabled />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label>Domicilio Legal</label>
+                            <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" disabled />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Unidad Minera</label>
+                            <input type="text" class="form-control" value="Mina Justa" disabled />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Num_Trabajadores">N° Trabajadores en el Centro Laboral</label>
+                            <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
+                            <input type="number" class="form-control" asp-for="Num_Trabajadores" disabled />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA</span>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Contratista (Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Razon_Social_Contratista">Razón Social</label>
+                                <input type="text" class="form-control" asp-for="Razon_Social_Contratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg46">
+                                <label asp-for="RUC_Contratista">RUC</label>
+                                <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Actividad_Contratista">Actividad</label>
+                                <input type="text" class="form-control" asp-for="Actividad_Contratista" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-8 col-lg-8">
+                                <label asp-for="Domicilio_Contratista">Domicilio Legal</label>
+                                <input type="text" class="form-control" asp-for="Domicilio_Contratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Num_Trabajadores_Contratista">N° Trabajadores en el Centro Laboral</label>
+                                <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Subcontratista (Llenar esta sección en caso el incidente haya sido ocasionado por la subcontratista)</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Razon_Social_SubContratista">Razón Social</label>
+                                <input type="text" class="form-control" asp-for="Razon_Social_SubContratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg46">
+                                <label asp-for="RUC_SubContratista">RUC</label>
+                                <input type="text" class="form-control" asp-for="RUC_SubContratista" maxlength="11" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Actividad_SubContratista">Actividad</label>
+                                <input type="text" class="form-control" asp-for="Actividad_SubContratista" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-8 col-lg-8">
+                                <label asp-for="Domicilio_SubContratista">Domicilio Legal</label>
+                                <input type="text" class="form-control" asp-for="Domicilio_SubContratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Num_Trabajadores_SubContratista">N° Trabajadores en el Centro Laboral</label>
+                                <input type="number" class="form-control" asp-for="Num_Trabajadores_SubContratista" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">INFORMACIÓN DEL INCIDENTE AMBIENTAL</span>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Datos del incidente</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-8 col-lg-8">
+                                <label asp-for="Id_Tipo_Incidente">Tipo de incidente</label>
+                                <select class="form-control" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Id_Nivel_Incidente">Nivel de incidente</label>
+                                <select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente" disabled></select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Lugar_Incidente">Lugar donde ocurrió</label>
+                                <input type="text" class="form-control" asp-for="Lugar_Incidente" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <div class="row mt-0 mb-0">
+                                    <label class="text-center">Coordenadas UTM DATUM WGS84</label>
+                                    <div class="col-6 mt-0 mb-0">
+                                        <label asp-for="Coordenada_Este">Este</label>
+                                        <input type="text" class="form-control" maxlength="7" asp-for="Coordenada_Este" disabled>
+                                    </div>
+                                    <div class="col-6 mt-0 mb-0">
+                                        <label asp-for="Coordenada_Norte">Norte</label>
+                                        <input type="text" class="form-control" maxlength="7" asp-for="Coordenada_Norte" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Localidad">Localidad/Zona/Sector</label>
+                                <input type="text" class="form-control" asp-for="Localidad" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Distrito">Distrito</label>
+                                <input type="text" class="form-control" asp-for="Distrito" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Provincia">Provincia</label>
+                                <input type="text" class="form-control" asp-for="Provincia" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Departamento">Departamento</label>
+                                <input type="text" class="form-control" asp-for="Departamento" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Fecha_Incidente">Fecha del Incidente</label>
+                                <input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Hora_Incidente">Hora del Incidente</label>
+                                <input type="time" class="form-control" asp-for="Hora_Incidente" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Fecha_Inicio_Investigacion">Fecha de Incio de Investigación</label>
+                                <input type="date" class="form-control" asp-for="Fecha_Inicio_Investigacion" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Turno">Turno</label>
+                                <select class="form-control" asp-for="Turno" disabled>
+                                    <option value="">--SELECCIONE--</option>
+                                    <option value="Día">Día</option>
+                                    <option value="Noche">Noche</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12">
+                                <label asp-for="Descripcion_Incidente">Descripción detallada del incidente</label>
+                                <textarea class="form-control" asp-for="Descripcion_Incidente" maxlength="600" rows="3" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Datos de los involucrados</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12">
+                                <label asp-for="Id_Gerencia_Responsable">Gerencia Responsable (Titular Minero)</label>
+                                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable" disabled></select>
+                            </div>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_involucrados">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Nombres y Apellidos</th>
+                                                <th>DNI/Pasaporte</th>
+                                                <th>Edad</th>
+                                                <th>Puesto de Trabajo</th>
+                                                <th>Empresa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Datos del derrame o fuga (Llenar esta sección si el incidente ambiental corresponde a un derrame o fuga de un producto)</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_productos">
+                                        <thead>
+                                            <tr>
+                                                <th>Producto</th>
+                                                <th>Tipo de Producto</th>
+                                                <th>Estado del Producto</th>
+                                                <th>Cantidad derramada</th>
+                                                <th>Equipo(s) que originó u originaron el incidente</th>
+                                                <th>Estado del equipo después del incidente</th>
+                                                <th>Cantidad producto recuperado</th>
+                                                <th>Cantidad de producto no recuperado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Impactos Ambientales o daños derivados del incidente</span>
+                        </div>
+                        <!-- Suelo -->
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold">SUELO</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Tipo_Suelo">Tipo de suelo</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Suelo" asp-items="ViewBag.TiposSuelo" disabled>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-8 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Area_Suelo">Área afectada</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
+                                            </div>
+                                            <div class="col-4 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Area_Suelo" asp-items="ViewBag.Unidad_Area" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-8 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cantidad_Suelo">Cantidad de tierra impregnada</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
+                                            </div>
+                                            <div class="col-4 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_Suelo" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo">Lugar de disposición</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin Suelo -->
+                        <!-- Flora -->
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold">FLORA</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Especie_Flora">Especie</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Flora" asp-items="ViewBag.TiposFlora" disabled>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Unidad_Flora">Unidades de flora</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Flora" asp-items="ViewBag.Unidad_Cantidad" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora">Cantidad de residuos generados:</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Flora" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora">Lugar de disposición</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin Flora -->
+                        <!-- Fauna -->
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold">FAUNA</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Especie_Fauna">Especie</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Fauna" asp-items="ViewBag.TiposFauna" disabled>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Unidad_Fauna">Número de individuos afectados</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Fauna" asp-items="ViewBag.Unidad_Cantidad" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna">Cantidad de residuos generados:</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Fauna" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Unidad_Fauna">Lugar de disposición</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Fauna" asp-items="ViewBag.Unidad_Cantidad" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin Fauna -->
+                        <!-- Agua -->
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold">AGUA</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Tipo_Agua">Tipo de agua</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Agua" asp-items="ViewBag.TiposAgua" disabled>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Volumen_Agua">Volumen de agua alterada</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Agua" asp-items="ViewBag.Unidad_Area" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                        <div class="row mt-0 mb-0 d-flex align-items-end">
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua">Cantidad de residuos generados:</label>
+                                                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Agua" asp-items="ViewBag.Unidad_Peso" disabled>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua">Lugar de disposición</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua" asp-items="ViewBag.LugaresDisposicion" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Fin Agua -->
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold text-center">RESTOS ARQUEOLÓGICOS</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-4 col-lg-4">
+                                        <label asp-for="ImpactoAmbiental.Restos_Arq">¿Restos arqueológicos?</label>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Restos_Arq" disabled>
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="SI">SI</option>
+                                            <option value="NO">NO</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-sm-8 col-lg-8 p-0">
+                                        <div class="row mt-0 mb-0">
+                                            <label class="text-center">Coordenadas UTM DATUM WGS84</label>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cord_Este">Este</label>
+                                                <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Este" disabled />
+                                            </div>
+                                            <div class="col-6 mt-0 mb-0">
+                                                <label asp-for="ImpactoAmbiental.Cord_Norte">Norte</label>
+                                                <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Norte" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label asp-for="ImpactoAmbiental.Nombre_Resto_Arq">Nombre del resto arqueológico</label>
+                                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Nombre_Resto_Arq" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2 rounded-mc" style="border:solid 1px #2e6793">
+                            <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
+                                <label class="align-self-center font-weight-bold">PERSONAS</label>
+                            </div>
+                            <div class="col-sm-12 col-md-10 col-lg-10">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-8 col-lg-8">
+                                        <label asp-for="ImpactoAmbiental.Danio_Salud">Descripción del daño a la salud</label>
+                                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Danio_Salud" disabled />
+                                    </div>
+                                    <div class="col-12 col-sm-4 col-lg-4">
+                                        <label asp-for="ImpactoAmbiental.Personas_Afectadas">Número de personas afectadas</label>
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <label>Cantidad Total de Residuos Sólidos Generados</label>
+                                <div class="row mt-0 mb-0">
+                                    <div class="col-6 mt-0 mb-0">
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" disabled />
+                                    </div>
+                                    <div class="col-6 mt-0 mb-0">
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <label>Cantidad Total de Residuos Líquidos Generados</label>
+                                <div class="row mt-0 mb-0">
+                                    <div class="col-6 mt-0 mb-0">
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" disabled />
+                                    </div>
+                                    <div class="col-6 mt-0 mb-0">
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen" disabled>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12">
+                                <label asp-for="ImpactoAmbiental.EO_RS">EO-RS (recolección, transporte y disposición)</label>
+                                <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">CAUSALIDAD</span>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Causas inmediatas</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_causas_inmediatas">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de Causa del Incidente</th>
+                                                <th>Causa</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Causas básicas</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_causas_basicas">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo de Causa del Incidente</th>
+                                                <th>Causa</th>
+                                                <th>Descripción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">RESPUESTA AL INCIDENTE AMBIENTAL</span>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Acciones Inmediatas</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_acciones_inmediatas">
+                                        <thead>
+                                            <tr>
+                                                <th>Acción Tomada</th>
+                                                <th>Responsable Marcobre</th>
+                                                <th>Responsable Contratista</th>
+                                                <th>Fecha</th>
+                                                <th>Estatus</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Acciones Correctivas</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_acciones_correctivas">
+                                        <thead>
+                                            <tr>
+                                                <th>Acción Tomada</th>
+                                                <th>Responsable Marcobre</th>
+                                                <th>Responsable Contratista</th>
+                                                <th>Fecha</th>
+                                                <th>Estatus</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">SEGUIMIENTO Y VERIFICACIÓN</span>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
+                            <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                            <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
+                        </div>
+                    </div>
+                    <div class="p-0 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-danger">Progreso de Verificación de Acciones</span>
+                        </div>
+                        <div class="incidentes">
+                            <div class="progress progress-mc" style="width:100%; height:25px">
+                                <div id="progreso_vefirifacion" class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_acciones">
+                                        <thead>
+                                            <tr>
+                                                <th>Acción Tomada</th>
+                                                <th>Responsable Marcobre</th>
+                                                <th>Responsable Contratista</th>
+                                                <th>Fecha</th>
+                                                <th>Estatus</th>
+                                                <th></th>
+                                                <th width="170px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">EVIDENCIA DE LA INVESTIGACIÓN</span>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <label asp-for="Evidencias_Papel"></label>
+                        </div>
+                        <input type="hidden" asp-for="Evidencias_Completas_Papel" />
+                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Papel">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <label asp-for="Evidencias_Persona"></label>
+                        </div>
+                        <input type="hidden" asp-for="Evidencias_Completas_Persona" />
+                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Persona">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <label asp-for="Evidencias_Posicion"></label>
+                        </div>
+                        <input type="hidden" asp-for="Evidencias_Completas_Posicion" />
+                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Posicion">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-sm-12 col-md-2 col-lg-2">
+                            <label asp-for="Evidencias_Partes"></label>
+                        </div>
+                        <input type="hidden" asp-for="Evidencias_Completas_Partes" />
+                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Partes">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
+                            <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen" asp-controller="InvestigacionFinal">Volver</a>
+                            <a type="button" class="btn btn-mc-outline-success" asp-controller="DescargarInvestigacionFinal" asp-action="DescargarInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Final">Descargar Excel</a>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--<div class="container-fluid">
     <div class="row mb-2">
         <div class="col-12 titulo-pagina">
             <h2>Editar Investigación Final del Incidente Ambiental</h2>
@@ -19,9 +815,9 @@
         <input type="hidden" asp-for="NProductos" />
         <input type="hidden" asp-for="NAcciones" />
         <input type="hidden" asp-for="NCausas" />
-        <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+        <input type="hidden" asp-for="Estado" value="@Model.Estado" />-->
         <!-- DATOS DEL TITULAR MINERO -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">DATOS DEL TITULAR MINERO</h5>
             </div>
@@ -66,9 +862,9 @@
                 <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
                 <input type="number" class="form-control" asp-for="Num_Trabajadores" disabled />
             </div>
-        </div>
+        </div>-->
         <!-- DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero) -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA
@@ -156,9 +952,9 @@
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <input type="number" class="form-control" asp-for="Num_Trabajadores_SubContratista" disabled />
             </div>
-        </div>
+        </div>-->
         <!-- DATOS DEL INCIDENTE AMBIENTAL -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">INFORMACIÓN DEL INCIDENTE AMBIENTAL</h5>
             </div>
@@ -272,9 +1068,9 @@
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <textarea class="form-control" asp-for="Descripcion_Incidente" maxlength="600" rows="3" disabled></textarea>
             </div>
-        </div>
+        </div>-->
         <!-- DATOS DE LOS INVOLUCRADOS -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Datos de los involucrados
@@ -307,9 +1103,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
         <!-- DATOS DEL DERRAME -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Datos del derrame o fuga (Llenar esta sección si el incidente ambiental corresponde a un derrame o fuga de un producto)
@@ -336,17 +1132,17 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
         <!-- Impactos Ambientales -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Impactos Ambientales o daños derivados del incidente
                 </h5>
             </div>
-        </div>
+        </div>-->
         <!-- Suelo -->
-        <div class="row mb-2 rounded" style="border:solid 1px #2e6793">
+        <!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
             <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
                 <label class="align-self-center font-weight-bold">SUELO</label>
             </div>
@@ -391,10 +1187,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- Fin Suelo -->
         <!-- Flora -->
-        <div class="row mb-2 rounded" style="border:solid 1px #2e6793">
+        <!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
             <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
                 <label class="align-self-center font-weight-bold">FLORA</label>
             </div>
@@ -439,10 +1235,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- Fin Flora -->
         <!-- Fauna -->
-        <div class="row mb-2 rounded" style="border:solid 1px #2e6793">
+        <!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
             <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
                 <label class="align-self-center font-weight-bold">FAUNA</label>
             </div>
@@ -487,10 +1283,10 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- Fin Fauna -->
         <!-- Agua -->
-        <div class="row mb-2 rounded" style="border:solid 1px #2e6793">
+        <!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
             <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
                 <label class="align-self-center font-weight-bold">AGUA</label>
             </div>
@@ -535,9 +1331,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- Fin Agua -->
-        <div class="row mb-2 rounded" style="border:solid 1px #2e6793">
+        <!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
             <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
                 <label class="align-self-center font-weight-bold text-center">RESTOS ARQUEOLÓGICOS</label>
             </div>
@@ -600,6 +1396,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-2">
             <div class="col-sm-12 col-md-2 col-lg-2">
                 <label asp-for="ImpactoAmbiental.Cantidad_RS"></label>
@@ -629,15 +1426,15 @@
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" disabled />
             </div>
-        </div>
+        </div>-->
         <!-- CAUSAS -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">CAUSALIDAD</h5>
             </div>
-        </div>
+        </div>-->
         <!-- Causas inmediatas -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Causas inmediatas
@@ -658,9 +1455,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
         <!-- Causas básicas -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Causas básicas
@@ -681,16 +1478,16 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
 
         <!-- ACCIONES TOMADAS POST INCIDENTE -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">RESPUESTA AL INCIDENTE AMBIENTAL</h5>
             </div>
-        </div>
+        </div>-->
         <!-- Acciones Inmediatas -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Acciones Inmediatas
@@ -715,9 +1512,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
         <!-- Acciones Inmediatas -->
-        <div class="row mb-2" style="background-color:#e97f7f">
+        <!--<div class="row mb-2" style="background-color:#e97f7f">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">
                     Acciones Correctivas
@@ -742,9 +1539,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
         <!-- SEGUIMINETO Y VERIFICACION -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">SEGUIMIENTO Y VERIFICACIÓN</h5>
             </div>
@@ -757,9 +1554,9 @@
                 <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
                 <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
             </div>
-        </div>
+        </div>-->
         <!-- PROGRESO DE VERIFICACION -->
-        <div class="row mb-2 justify-content-center mb-2">
+        <!--<div class="row mb-2 justify-content-center mb-2">
             <div class="col-sm-12 col-md-10 col-lg-10" style="text-align:center;">
                 <h4>Progreso de Verificación de Acciones</h4>
                 <div class="progress" style="width:100%; height:25px">
@@ -769,9 +1566,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>-->
         <!-- TABLA DE ACCIONES -->
-        <div class="row mb-2 justify-content-center">
+        <!--<div class="row mb-2 justify-content-center">
             <div class="col-sm-12 col-md-10 col-lg-10">
                 <table class="table" id="tabla_acciones">
                     <thead class="thead-mcolor">
@@ -789,10 +1586,10 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div>-->
 
         <!-- EVIDENCIAS -->
-        <div class="row mb-2" style="background-color:#2e6793">
+        <!--<div class="row mb-2" style="background-color:#2e6793">
             <div class="col-12" style="text-align:center">
                 <h5 style="color:white;margin:4px;">EVIDENCIA DE LA INVESTIGACIÓN</h5>
             </div>
@@ -838,7 +1635,7 @@
         </div>
 
     </form>
-</div>
+</div>-->
 <!-- Modal Ampliar Fecha-->
 <div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
      aria-hidden="true" style="display: none;">
@@ -924,6 +1721,27 @@
                 $("#Evidencias_Completas_Partes").val(partes_valores);
             }
         });
+
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        incidentesStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+
         function GetInvolucrados() {
             $.ajax({
                 type: "POST",
@@ -935,6 +1753,7 @@
                     $('#tabla_involucrados tbody').empty()
                     $('#tabla_involucrados tbody').html(response.filas_involucrados)
                     $('#NInvolucrados').val(response.nInvolucrados);
+                    dataModulo();
                 }
             });
         }
@@ -949,6 +1768,7 @@
                     $('#tabla_productos tbody').empty()
                     $('#tabla_productos tbody').html(response.filas_productos)
                     $('#NInvolucrados').val(response.nProductos);
+                    dataModulo();
                 }
             });
         }
@@ -965,6 +1785,7 @@
                     $('#tabla_causas_basicas tbody').empty();
                     $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                     $('#NCausas').val(response.nCausas);
+                    dataModulo();
                 }
             });
         }
@@ -981,6 +1802,7 @@
                     $('#tabla_acciones_correctivas tbody').empty();
                     $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                     $('#NAcciones').val(response.nAcciones);
+                    dataModulo();
                 }
             });
         }
@@ -999,6 +1821,7 @@
                     var porcentaje = roundNumber((nVerificado * 100 / nAcciones).toString(),2) + "%";
                     $('#progreso_vefirifacion').width(porcentaje);
                     $('#progreso_vefirifacion').text(porcentaje);
+                    dataModulo();
                 }
             });
         }
