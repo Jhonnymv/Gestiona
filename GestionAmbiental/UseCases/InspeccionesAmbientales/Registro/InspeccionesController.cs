@@ -501,21 +501,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
-                        {
+                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
+                        else
+                            filaObservacion += "<td></td>";
+                         if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso)
                             filaObservacion += "<td><button class=\"btn btn-mc-danger\" type=\"button\" onclick=\"EliminarObservacion('" + IdObsEncriptado + "','" + observacion.IdInspeccionCabecera + "')\">" + "Eliminar" + "</button></td>";
                             //filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + observacion.IdInspeccionCabecera + "\">" + "Eliminar" + "</a></td>";
-                        }
                         else
-                        {
-                            filaObservacion += "<td></td>";
-                            filaObservacion += "<td></td>";
-                        }
-                        if ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin)
-                        {
-                            filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
-                        }
+                            filaObservacion += "<td></td>";                       
                         filaObservacion += "</tr>";
                     }
                 }
