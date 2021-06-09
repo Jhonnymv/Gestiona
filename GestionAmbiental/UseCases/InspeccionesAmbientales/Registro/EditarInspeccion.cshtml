@@ -169,11 +169,14 @@
                                     </div>
                                     <div>
                                         <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                        @if (ViewBag.Permiso)
+                                        {
                                         <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
                                         <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
-                                        @if (ViewBag.nObservacioness > 0)
-                                        {
+                                            if (ViewBag.nObservacioness > 0)
+                                            {
                                             <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc">Finalizar Registro</button>
+                                            }
                                         }
                                     </div>
                                 </div>
@@ -798,13 +801,11 @@
     @*Scripts partial Editar Observación*@
     <script type="text/javascript">        
         function EditarObservacion(IdObservacion) {
-            console.log(IdObservacion)
             var data;
             listObservaciones.forEach(function (obs) {
                 if (obs.IdObservacion == IdObservacion)
                     data = obs;
             });
-            console.log("data: ", data);    
             ReiniciarModalEditarObs(); 
             if (data != null) {
                 $("#E_IdObservacion").val(data.IdObservacion);
@@ -872,8 +873,6 @@
         }
         function EliminarObservacion(IdObservacion,IdCabecera) {
             if (confirm("¿Está seguro que desea eliminar la observación?")) {
-                console.log("obs", IdObservacion)
-                console.log("cab", IdCabecera)
                 $.ajax({
                     type: "POST",
                     url: "@Url.Action("EliminarObservacion", "Inspecciones")",
@@ -1158,6 +1157,10 @@
         $(".E_AsesorSeguridad").on('change', function () {
         $("#E_AsesorSeguridad").val(this.value);
         });
+        function DescargarEvidenciaObservacion() {
+            console.log($("#E_Evidencia").val());
+            window.open('/Inspecciones/Download?fileName='+$("#E_Evidencia").val(), '_blank');
+        }
         function GuardarEObservacion() {
             var formData = new FormData();
             var files = document.getElementById("E_Nueva_Evidencia").files;

@@ -97,7 +97,7 @@
                                             @*<input type="hidden" asp-for="E_Evidencia" value="@Model.E_Evidencia[0]" />*@
                                             @*<a asp-action="Download" asp-controller="Inspecciones" asp-route-fileName="@Model.E_Evidencia[0]">Evidencia</a>*@
                                             <input type="hidden" asp-for="E_Evidencia"/>
-                                            <a id="E_EvidenciaDescarga" asp-action="Download" asp-controller="Inspecciones">Evidencia</a>
+                                            <button type="button" class="btn btn-mc form-control" id="E_EvidenciaDescarga" onclick="DescargarEvidenciaObservacion()">Descargar</button>
                                         </div>
                                     </div>
                                     <div class="row input_container w-100">
@@ -348,8 +348,6 @@
             }
 
             ActualizarColorNivelRiesgo();
-
-            console.log('@Model.E_ResponsableMarc');
         });
 
         $("#E_NivelRiesgo").on('change', function () {

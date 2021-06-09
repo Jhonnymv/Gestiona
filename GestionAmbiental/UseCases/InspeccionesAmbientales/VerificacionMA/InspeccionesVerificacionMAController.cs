@@ -174,7 +174,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
-                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.Permisos)
+                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.PermisosAsesor)
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Verificar" + "</a></td>";
                         else
                             filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesVerificacionMA/VerificarInspeccion?IdCabecera=" + IdObsEncriptado + "\" disabled>" + "Verificar" + "</button></td>";

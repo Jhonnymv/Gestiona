@@ -185,12 +185,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         }
                         filaObservacion += "<tr>";
                         if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString())) &&
-                            observacion.Permisos)
+                            observacion.PermisosAsesor)
                         {
                             filaObservacion += "<td><a class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Implementar" + "</a></td>";
                         }
                         else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
-                           observacion.Permisos)
+                           observacion.PermisosAsesor)
                         {
                             filaObservacion += "<td><button class=\"btn btn-primary\" href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + IdCabecera + "\" disabled>" + "Implementar" + "</button></td>";
                         }
@@ -229,12 +229,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString())) &&
-                            observacion.Permisos)
+                            observacion.PermisosAsesor)
                         {
                             filaObservacion += "<td><span class=\"badge badge-secondary\">Pendiente</span></td>";
                         }
                         else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
-                            observacion.Permisos)
+                            observacion.PermisosAsesor)
                         {
                             filaObservacion += "<td><span class=\"badge badge-warning\">Vencido</span></td>";
                         }

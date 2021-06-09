@@ -31,7 +31,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public DateTime? FechaVerificacion { get; set; }
         public string ComentarioVerificacion { get; set; }
         public string Estado { get; set; }
-        public bool Permisos { get; set; }
+        public bool PermisosAsesor { get; set; }
+        public bool PermisosImplementar { get; set; }
         public bool PermisosAdmin { get; set; }
 
         public InspeccionDetalleOutput(InspeccionDetalle detalle,bool permisosImplentar)
@@ -73,7 +74,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             ComentarioVerificacion = detalle.ComentarioVerificacion ?? "";
 
             Estado = detalle.Estado;
-            Permisos = permisosImplentar;
+            PermisosImplementar = permisosImplentar;
+            PermisosAsesor = false;
         }
         public InspeccionDetalleOutput(InspeccionDetalle detalle)
         {

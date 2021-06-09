@@ -162,7 +162,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<tr>";
                     var obsAvance = fila.NObsAprobadas;
                     double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NObservaciones * 100, 1) : 0;
+                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    else
+                        filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
@@ -223,7 +226,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                var selectItemsResumen = await _selectItems.ItemVistaNuevaInspeccion();
+                var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -235,86 +238,112 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+
+                var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposActoSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionSEG = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionSEG.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresMA = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorMAP)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var tiposInspeccion = new List<SelectListItem>();
                 tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
                 tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
                 tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
                 tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var idCabecera = Convert.ToInt32(TempData["idCabecera"]);
-                if (idCabecera != 0)
-                {
-                    var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.Execute(idCabecera, userInfo.NombreUsuario);
-                    ViewBag.nObservacioness = observaciones.Count;
-
-                    foreach (var observacion in observaciones)
-                    {
-                        var evidencia = "";
-                        for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
-                        {
-                            if (i == 0)
-                                evidencia = "<a href=\"" + observacion.EvidenciaCondicion[i] + "\">Evidencia " + (i + 1) + "</a>";
-                            else
-                                evidencia += "<a href=\"" + observacion.EvidenciaCondicion[i] + "\">, Evidencia " + (i + 1) + "</a>";
-                        }
-                        filaObservacion += "<tr>";
-                        filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
-                        filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
-                        filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
-                        filaObservacion += "<td>" + evidencia + "</td>";
-                        filaObservacion += "<td>" + observacion.NivelRiesgo + "</td>";
-                        filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
-                        filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
-                        filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
-                        filaObservacion += "<td>" + observacion.FechaProgramada + "</td>";
-                        filaObservacion += "</tr>";
-
-                    }
-                    ViewBag.ContenidoTabla = filaObservacion;
-                }
+                                
+                //ViewBag.GerenciaMC = gerenciasEjecutorasMC;
+                //ViewBag.EmpresasMC = empresasMC;
+                //ViewBag.Responsables = responsables;
+                //ViewBag.Tipo_Inspeccion = tiposInspeccion;
 
                 ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                 ViewBag.EmpresasMC = empresasMC;
                 ViewBag.Responsables = responsables;
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
+
+                ViewBag.TiposActoMA = tiposActoMA;
+                ViewBag.TiposCondicionMA = tiposCondicionMA;
+                ViewBag.TiposActoSEG = tiposActoSEG;
+                ViewBag.TiposCondicionSEG = tiposCondicionSEG;
+
+                ViewBag.Responsables = responsables;
+                //ViewBag.CabeceraEncriptada = IdCabecera;
+                //ViewBag.idCabecera = IdDesencriptado;
+                //ViewBag.ContenidoTabla = filaObservacion;
+                //ViewBag.nObservacioness = observaciones.Count;
+                //ViewBag.Permiso = cabecera.Permiso;
+                //ViewBag.PermisoAdmin = cabecera.PermisoAdmin;
+
+                ViewBag.AsesoresMA = asesoresMA;
+                ViewBag.AsesoresSeguridad = asesoresSeguridad;
                 return View(new NuevaInspeccionModel());
             }
         }
         [HttpPost]
         public async Task<IActionResult> NuevaInspeccion(NuevaInspeccionModel model)
         {
+            dynamic response;
             if (ModelState.IsValid)
             {
                 if (HttpContext.Session.GetString("SessionUser") != null)
                 {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                int idCabecera = await _registrarInspeccionCabecera.Execute(
-                    model.Objetivo, 
-                    userInfo.NombreUsuario,
-                    model.Id_Gerencia_Ejecutora, 
-                    model.Id_Empresa_Contratista,
-                    model.Lugar_Inspeccionado, 
-                    model.Fecha_Inspeccion, 
-                    model.Hora_Inspeccion,
-                    model.Tipo_Inspeccion,
-                    model.Id_Responsable_Lugar, 
-                    model.Responsable_Inspeccion,
-                    model.Inspectores,
-                    model.opcion);
+                    int idCabecera = await _registrarInspeccionCabecera.Execute(
+                        model.Objetivo,
+                        userInfo.NombreUsuario,
+                        model.Id_Gerencia_Ejecutora,
+                        model.Id_Empresa_Contratista,
+                        model.Lugar_Inspeccionado,
+                        model.Fecha_Inspeccion,
+                        model.Hora_Inspeccion,
+                        model.Tipo_Inspeccion,
+                        model.Id_Responsable_Lugar,
+                        model.Responsable_Inspeccion,
+                        model.Inspectores,
+                        model.opcion);
+                    response = new
+                    {
+                        success = true,
+                        idEncriptado = _protector.Protect(idCabecera.ToString()),
+                        idCabecera = idCabecera
+                    };
                     //if (model.opcion.Equals("Observacion")||model.opcion.Equals("GuardarEstado"))
                     //{
-                        var IdEncriptado = _protector.Protect(idCabecera.ToString());
-                        return RedirectToAction("EditarInspeccion", new { IdCabecera = IdEncriptado });
+                    //var IdEncriptado = _protector.Protect(idCabecera.ToString());
+                    //return RedirectToAction("EditarInspeccion", new { IdCabecera = IdEncriptado });
                     //}
                 }
                 else
                 {
-                    RedirectToAction("Signin", "Autenticacion");
+                    response = new
+                    {
+                        success = false,
+                        message = "Usuario no inició sesión"
+                    };
                 }
             }
-            return RedirectToAction("Resumen");
+            else
+            {
+                response = new
+                {
+                    success = false,
+                    message = "Datos inompletos"
+                };
+            }
+            return Ok(response);
         }
         public async Task<IActionResult> NuevaObservacion(string IdCabecera)
         {
@@ -472,7 +501,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (observacion.Permisos && cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
+                        if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                         {
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
                             filaObservacion += "<td><button class=\"btn btn-mc-danger\" type=\"button\" onclick=\"EliminarObservacion('" + IdObsEncriptado + "','" + observacion.IdInspeccionCabecera + "')\">" + "Eliminar" + "</button></td>";
@@ -483,9 +512,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             filaObservacion += "<td></td>";
                             filaObservacion += "<td></td>";
                         }
-                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.Permisos || observacion.PermisosAdmin))
+                        if ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin)
                         {
-                            filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
+                            filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
                         }
                         filaObservacion += "</tr>";
                     }
@@ -510,7 +539,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ResponsableCont = x.ResponsableContratista,
                     FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
                     Estado = x.Estado,
-                    PermisoEditar = x.Permisos
+                    PermisoEditar = x.PermisosAsesor
                 }));
 
                 response = new
@@ -615,7 +644,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         }
                         filaObservacion += "<tr>";
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
-                        if (observacion.Permisos && cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
+                        if (observacion.PermisosAsesor && cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                         {
                             filaObservacion += "<td><a class=\"btn btn-mc\" href=\"/Inspecciones/EditarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Editar" + "</a></td>";
                             filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado+ "&IdCabecera="+IdCabecera+"\">" + "Eliminar" + "</a></td>";
@@ -644,7 +673,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.Permisos||observacion.PermisosAdmin))
+                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor||observacion.PermisosAdmin))
                         {
                             filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
                         }

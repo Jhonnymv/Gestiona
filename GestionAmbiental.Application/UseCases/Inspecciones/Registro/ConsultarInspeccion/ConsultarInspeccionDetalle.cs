@@ -32,10 +32,21 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
             foreach (var item in observaciones)
             {
-                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
-                    output.Add(new InspeccionDetalleOutput(item, true));
+                var outputItem = new InspeccionDetalleOutput(item);
+                if (usuario.IdUsuario.Equals(item.Asesor.IdUsuario))
+                    outputItem.PermisosAsesor = true;
                 else
-                    output.Add(new InspeccionDetalleOutput(item, false));
+                    outputItem.PermisosAsesor = false;
+
+                if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                    outputItem.PermisosAdmin = true;
+                else
+                    outputItem.PermisosAdmin = false;
+
+                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
+                    outputItem.PermisosImplementar = true;
+
+                output.Add(outputItem);
             }
             return output;
         }
@@ -46,10 +57,21 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
             foreach (var item in observaciones)
             {
+                var outputItem = new InspeccionDetalleOutput(item);
                 if (usuario.IdUsuario.Equals(item.Asesor.IdUsuario))
-                    output.Add(new InspeccionDetalleOutput(item, true));
+                    outputItem.PermisosAsesor = true;
                 else
-                    output.Add(new InspeccionDetalleOutput(item, false));
+                    outputItem.PermisosAsesor = false;
+
+                if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                    outputItem.PermisosAdmin = true;
+                else
+                    outputItem.PermisosAdmin = false;
+                
+                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
+                    outputItem.PermisosImplementar = true;
+
+                output.Add(outputItem);
             }
             return output;
         }
@@ -57,18 +79,22 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
         {
             var output = new List<InspeccionDetalleOutput>();
             var observaciones = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalles(idCabecera);
-            var cabecera = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(idCabecera);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             foreach (var item in observaciones)
-            {
-                var outputItem = new InspeccionDetalleOutput(item, usuario.IdUsuario.Equals(cabecera.IdRegistradoPor)? true:false);
+            {        
+                var outputItem = new InspeccionDetalleOutput(item);
+                if (usuario.IdUsuario.Equals(item.Asesor.IdUsuario))
+                    outputItem.PermisosAsesor = true;
+                else
+                    outputItem.PermisosAsesor = false;
 
                 if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
                     outputItem.PermisosAdmin = true;
-                else if (item.Asesor.IdUsuario.Equals(usuario.IdUsuario))
-                    outputItem.Permisos = true;
                 else
                     outputItem.PermisosAdmin = false;
+
+                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
+                    outputItem.PermisosImplementar = true;
 
                 output.Add(outputItem);
             }
