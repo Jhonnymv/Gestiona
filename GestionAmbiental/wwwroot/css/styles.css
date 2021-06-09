@@ -1037,6 +1037,20 @@ input[type="file"]:hover::-webkit-file-upload-button {
     border-radius: 15px;
 }
 
+.progress-mc {
+    padding: 0 .5em;
+    border-radius: 20px;
+}
+
+.progress-mc .progress-bar {
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.rounded-mc {
+    border-radius: 15px;
+}
+
 /* ---------------------------------------------------
     MEDIA QUERIES
 ----------------------------------------------------- */
