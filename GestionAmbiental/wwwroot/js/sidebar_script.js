@@ -35,19 +35,24 @@ $("#sidebar .components .mainlist").click(function () {
 function compSidebarList() {
     var selectedolditem = localStorage.getItem('selectedolditem');
     if (selectedolditem !== null) {
+        let selectedolditemcomp = $(".components .mainlist a span:contains(" + selectedolditem + ")");
+        selectedolditemcomp.each(function (index, element) {
+            if (element.textContent.length === selectedolditem.length) {
+                $(this).closest('.mainlist').addClass("actived");
+                $(this).closest('.mainlist a').removeClass("collapsed");
+                $(this).closest('.mainlist a').attr("aria-expanded", "true");
+                $(this).closest('.mainlist a').next().addClass("show");
+            }
+        });
+
         var oldsublsit = localStorage.getItem('sublist');
         if (oldsublsit !== null) {
-            let searchSublist = $(".components .mainlist a span:contains('" + selectedolditem + "')").closest(".mainlist a").next().children("li").children("a:contains('" + oldsublsit + "')");
-            if (searchSublist) {
-                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist').addClass("actived");
-                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').removeClass("collapsed");
-                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').attr("aria-expanded", "true");
-                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist a').next().addClass("show");
-                searchSublist.addClass("list-active");
-            }
-            else if (searchSublist === 0) {
-                $(".components .mainlist a span:contains('" + selectedolditem + "')").closest('.mainlist').addClass("actived");
-            }
+            let sublistoption = $(".components .mainlist a span:contains(" + selectedolditem + ")").closest(".mainlist a").next().children("li").children("a:contains('" + oldsublsit + "')");
+            sublistoption.each(function (index, element) {
+                if (element.textContent.length === oldsublsit.length) {
+                    $(this).addClass("list-active");
+                }
+            });
         }
     }
 }
