@@ -262,11 +262,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
                 tiposInspeccion.Insert(0, new SelectListItem("PLANEADA", "PLANEADA", false));
                 tiposInspeccion.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-                                
-                //ViewBag.GerenciaMC = gerenciasEjecutorasMC;
-                //ViewBag.EmpresasMC = empresasMC;
-                //ViewBag.Responsables = responsables;
-                //ViewBag.Tipo_Inspeccion = tiposInspeccion;
 
                 ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                 ViewBag.EmpresasMC = empresasMC;
@@ -279,13 +274,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.TiposCondicionSEG = tiposCondicionSEG;
 
                 ViewBag.Responsables = responsables;
-                //ViewBag.CabeceraEncriptada = IdCabecera;
-                //ViewBag.idCabecera = IdDesencriptado;
-                //ViewBag.ContenidoTabla = filaObservacion;
-                //ViewBag.nObservacioness = observaciones.Count;
-                //ViewBag.Permiso = cabecera.Permiso;
-                //ViewBag.PermisoAdmin = cabecera.PermisoAdmin;
-
                 ViewBag.AsesoresMA = asesoresMA;
                 ViewBag.AsesoresSeguridad = asesoresSeguridad;
                 return View(new NuevaInspeccionModel());
@@ -417,12 +405,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
-                            /*
                             var newfileName = CreateUniqueFileName(i + 1) + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                             evidencias.Add(filePath);
-                            */
-                            evidencias.Add("Evidencia_Test");
                         }
                     }
                 }
@@ -745,12 +730,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                         if (allowed_extensions.Contains(extension) && model.E_Nueva_Evidencia[i].Length < max_file_size)
                         {
-                            /*
                             var newfileName = CreateUniqueFileName(i + 1) + ".zip";
-                            var filePath = await UploadZipFileAsync(model.Nueva_Evidencia[i], newfileName);
+                            var filePath = await UploadZipFileAsync(model.E_Nueva_Evidencia[i], newfileName);
                             evidencias.Add(filePath);
-                            */
-                            evidencias.Add("Evidencia_Test2");
                         }
                     }
                 }

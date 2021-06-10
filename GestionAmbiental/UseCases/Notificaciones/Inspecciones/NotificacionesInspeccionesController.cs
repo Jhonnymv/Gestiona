@@ -162,5 +162,240 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var IdEncriptado = _protector.Protect(IdCabecera.ToString());
             return RedirectToAction("DetalleInspeccion", "Inspecciones", new { IdCabecera = IdEncriptado });
         }
+        public async Task<IActionResult> NotificarImplementacionObservacion(string IdObservacion)
+        {
+            var r = 45;
+            var g = 100;
+            var b = 150;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Inspection"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {                
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
+            var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
+            var info = await _getObservacionImplementada.Execute(IdObsDesencriptado);
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
+            StreamReader SourceReader = System.IO.File.OpenText(template);
+            var templateReaded = SourceReader.ReadToEnd();
+            /*
+                        Área Ejecutora{0}
+                        Empresa{1}
+                        Área Inspeccionada{2}
+                        Tipo Inspección{3}
+                        Fecha Inspección{4}
+                        Responsable Lugar Inspeccionado{5}
+                        Responsable de la inspección{6}
+                        Participantes {7}
+                        Objetivo de la Inspección{8}
+
+                        TipoInspeccion{9}
+                        Asesor SSO/MAP{10}
+                        Acto / Condición Subestándar Identificada{11}
+                        Tipo de Condición / Acto Subestándar{12}
+                        Nivel de Riesgo del Aspecto Ambiental{13}
+                        Acción Preventiva / Correctiva Tomada{14}
+                        Responsable Marcobre{15}
+                        Responsable Contratista{16}
+                        Fecha Programada{17}
+                        Comentario de la Implementación{18}
+                        Fecha Implementación {19}
+                        Codigo {20}
+                        Id_Cabecera{21}
+                        */
+            var msgBody = string.Format(templateReaded,
+                info.AreaEjecutora,
+                info.Empresa,
+                info.AreaInspeccionada,
+                info.TipoInspeccion,
+                info.FechaInspeccion,
+                info.ResponsableLugar,
+                info.ResponsableInspeccion,
+                info.Participantes,
+                info.Objetivo,
+                info.TipoObservacion,
+                info.Asesor,
+                info.DescripcionCondicion,
+                info.TipoCondicion,
+                info.NivelRiesgo,
+                info.DescripcionAccion,
+                info.ResponsableMarcobre,
+                info.ResponsableContratista,
+                info.FechaProgramada.ToShortDateString(),
+                info.Codigo,
+                _protector.Protect(info.IdInspeccionCabecera.ToString()),
+                r,
+                g,
+                b,
+                img_url,
+                info.ComentarioImplementacion,
+                info.FechaCierre
+                );
+
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
+            foreach (var item in credenciales.Info)
+            {
+                switch (item.Key)
+                {
+                    case "smtp": smtp = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
+                }
+            }
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
+            MailMessage msg = new MailMessage();
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.EmailAsesor));
+            msg.Subject = "Observación Implementada";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
+            var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
+            return RedirectToAction("ImplementarInspeccion", "InspeccionesImplementacion", new { IdCabecera = IdEncriptado });
+        }
+        public async Task<IActionResult> NotificarObservacionRechazada(string IdObservacion)
+        {
+            var r = 45;
+            var g = 100;
+            var b = 150;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Inspection"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
+            var IdObsDesencriptado = Convert.ToInt32(_protector.Unprotect(IdObservacion));
+            var info = await _getObservacionRechazada.Execute(IdObsDesencriptado);
+            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionRechazada.html");
+            StreamReader SourceReader = System.IO.File.OpenText(template);
+            var templateReaded = SourceReader.ReadToEnd();
+            /*
+                        Área Ejecutora{0}
+                        Empresa{1}
+                        Área Inspeccionada{2}
+                        Tipo Inspección{3}
+                        Fecha Inspección{4}
+                        Responsable Lugar Inspeccionado{5}
+                        Responsable de la inspección{6}
+                        Participantes {7}
+                        Objetivo de la Inspección{8}
+
+                        TipoInspeccion{9}
+                        Asesor SSO/MAP{10}
+                        Acto / Condición Subestándar Identificada{11}
+                        Tipo de Condición / Acto Subestándar{12}
+                        Nivel de Riesgo del Aspecto Ambiental{13}
+                        Acción Preventiva / Correctiva Tomada{14}
+                        Responsable Marcobre{15}
+                        Responsable Contratista{16}
+                        Fecha Programada{17}
+                        Comentario de la Implementación{18}
+                        Fecha Implementación {19}                        
+                        Comentario de la Verificación{20}
+                        Fecha Verificación {21}
+                        Codigo {22}
+                        Id_Cabecera{23}
+                        */
+            var msgBody = string.Format(templateReaded,
+               info.AreaEjecutora,
+               info.Empresa,
+               info.AreaInspeccionada,
+               info.TipoInspeccion,
+               info.FechaInspeccion,
+               info.ResponsableLugar,
+               info.ResponsableInspeccion,
+               info.Participantes,
+               info.Objetivo,
+               info.TipoObservacion,
+               info.Asesor,
+               info.DescripcionCondicion,
+               info.TipoCondicion,
+               info.NivelRiesgo,
+               info.DescripcionAccion,
+               info.ResponsableMarcobre,
+               info.ResponsableContratista,
+               info.FechaProgramada.ToShortDateString(),
+               info.Codigo,
+               _protector.Protect(info.IdInspeccionCabecera.ToString()),
+               r,
+               g,
+               b,
+               img_url,
+               info.ComentarioImplementacion,
+               info.FechaCierre,
+               info.ComentarioVerificacion,
+               info.FechaVerificacion
+               );
+            var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+            string smtp = "", port = "", user = "", pass = "", mailFrom = "";
+            foreach (var item in credenciales.Info)
+            {
+                switch (item.Key)
+                {
+                    case "smtp": smtp = item.Value; break;
+                    case "ntwkuser": user = item.Value; break;
+                    case "ntwkpassword": pass = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "mailfrom": mailFrom = item.Value; break;
+                }
+            }
+            SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
+            MailMessage msg = new MailMessage();
+            msg.Priority = MailPriority.Normal;
+            mail.EnableSsl = true;
+            mail.UseDefaultCredentials = false;
+            NetworkCredential credential = new NetworkCredential(user, pass);
+            mail.Credentials = credential;
+            msg.To.Add(new MailAddress(info.EmailResponsableMarcobre));
+            msg.Subject = "Observación Rechazada";
+            msg.SubjectEncoding = Encoding.UTF8;
+            msg.IsBodyHtml = true;
+            msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
+            msg.BodyEncoding = Encoding.UTF8;
+            msg.Body = msgBody;
+            await mail.SendMailAsync(msg);
+            msg.Attachments.Dispose();
+            var IdEncriptado = _protector.Protect(info.IdInspeccionCabecera.ToString());
+            return RedirectToAction("VerificarInspeccion", "InspeccionesVerificacionMA", new { IdCabecera = IdEncriptado });
+        }
     }
 }

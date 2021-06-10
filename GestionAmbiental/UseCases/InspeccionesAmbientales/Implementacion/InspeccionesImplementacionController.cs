@@ -161,6 +161,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
+
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 if (IdCabecera.Length != 0)
@@ -168,11 +170,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var cabecera = await _consultarCabecera.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
+                    ViewBag.idCabecera = cabecera.IdCabecera;
                     var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado, userInfo.NombreUsuario);
                     foreach (var observacion in observaciones)
                     {
-                        var IdObsEncriptado = _protector.Protect(observacion.IdInspeccionDetalle.ToString());
                         var evidencia = "";
                         var evidencia_implementacion = "";
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
@@ -189,7 +191,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                             observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) || 
                             observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString())) &&
                             observacion.PermisosImplementar)                        
-                            filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"ImplementarObservacion('" + IdObsEncriptado + "')\">" + "Implementar" + "</button></td>";
+                            filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"ImplementarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Implementar" + "</button></td>";
                         
                         else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
                                 observacion.PermisosImplementar)                        
@@ -202,7 +204,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
-                        filaObservacion += "<td><label style=\"width:250px\">" + observacion.TipoCondicion + "</label></td>";
+                        filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.NivelRiesgo)
                         {
@@ -214,7 +216,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                             case "Alto": filaObservacion += "<td><span class=\"badge bg-danger\">" + observacion.NivelRiesgo + "</span></td>"; break;
                             default: filaObservacion += "<td><span class=\"badge bg-secondary\">" + observacion.NivelRiesgo + "</span>"; break;
                         }
-                        filaObservacion += "<td><label style=\"width:200px\">" + observacion.DescripcionAccion + "</label></td>";
+                        filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
@@ -249,16 +251,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         IdObservacion = x.IdInspeccionDetalle,
                         EvidenciasCondicion = JsonConvert.SerializeObject(x.EvidenciaCondicion),
                         TipoInspeccion = x.TipoInspeccion,
-                        Asesor = x.IdAsesor,
+                        Asesor = x.AsesorMASeguridad,
                         DescripcionCondicion = x.DescripcionCondicion,
-                        TipoCondicion = x.IdTipoCondicion,
+                        TipoCondicion = x.TipoCondicion,
                         NivelRiesgo = x.NivelRiesgo,
                         Accion = x.DescripcionAccion,
-                        ResponsableMarc = x.IdResponsableMarcobre,
+                        ResponsableMarc = x.ResponsableMarcobre,
                         ResponsableCont = x.ResponsableContratista,
                         FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
                         Estado = x.Estado,
-                        PermisoEditar = x.PermisosAsesor
+                        PermisoImplementar = x.PermisosImplementar
                     }));
                     ViewBag.Observaciones = jsonObservaciones;
                     ViewBag.ContenidoTabla = filaObservacion;
@@ -320,14 +322,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         if ( allowed_extensions.Contains(extension) && model.EvidenciasInspeccion[i].Length < max_file_size)
                         {
                             var newfileName = CreateUniqueFileName(i + 1) + ".zip";
-                            var filePath = await UploadZipFileAsync(model.EvidenciasInspeccion[i], newfileName);
+                           var filePath = await UploadZipFileAsync(model.EvidenciasInspeccion[i], newfileName);
                             evidencias.Add(filePath);
                         }                        
                     }
                 }
 
                 await _implementarObservacion.Execute(model.idObservacion, evidencias, model.Comentario, userInfo.NombreUsuario);
-                return RedirectToAction("NotificarImplementacionObservacion", "Notificaciones", new { IdObservacion = model.EncryptedId });
+                return RedirectToAction("NotificarImplementacionObservacion", "NotificacionesInspecciones", new { IdObservacion = _protector.Protect(model.idObservacion.ToString())});
             }
             var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarInspeccion", new { IdCabecera = IdEncriptado });

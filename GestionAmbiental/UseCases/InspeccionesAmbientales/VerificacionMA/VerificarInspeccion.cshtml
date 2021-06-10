@@ -1,117 +1,277 @@
-﻿
+﻿@using  GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA;
 @{
     ViewData["Title"] = "VerificarInspeccion";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
-<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Verificar Inspección</h2>
-        </div>
-    </div>
-    <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-        
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <label>Área Ejecutora de la Inspección:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.Gerencia" readonly="readonly" />
-            </div>
-            <div class="col-md-2">
-                <label>Empresa Inspeccionada:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.Empresa" readonly="readonly" />
+@{
+    Html.RenderPartial("_VerificarObservacion", new VerificarObservacionMAModel());
+}
+<div class="inspection">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title inspection-opacity-color">
+                <h3>Verificar Inspección</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <label>Área Inspeccionada:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.AreaInspeccionada" readonly="readonly" />
-            </div>
-            <div class="col-md-2">
-                <label>Tipo de Inspección:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.TipoInspeccion" readonly="readonly" />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <label>Responsable del Área Inspeccionada:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@(ViewBag.Cabecera.ResponsableArea.Nombres+" "+ViewBag.Cabecera.ResponsableArea.Apellidos)" readonly="readonly">
-            </div>
-            <div class="col-md-2">
-                <label>Fecha de Inspección:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspeccion" readonly="readonly">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <label>Responsable de la Inspección:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" readonly="readonly">
-            </div>
-            <div class="col-md-2">
-                <label>Participantes de la Inspección:</label>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <label>Objetivo de Inspección:</label>
-            </div>
-            <div class="col-md-10">
-                <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
-            </div>
-        </div>
-        @if (ViewBag.NObservaciones != 0)
-        {
-            <div class="row mb-2" id="div_tabla_observaciones">
-                <div class="col-md-12">
-                    <table class="table table-modal" id="tabla_observaciones">
-                        <thead class="thead-mcolor">
-                            <tr>
-                                <th></th>
-                                <th>Tipo de Observación</th>
-                                <th>Asesor MAP/SSO</th>
-                                <th>Acto/Condición Subestándar Identificada</th>
-                                <th>Tipo de Condición/Acto Subestándar</th>
-                                <th>Evidencia</th>
-                                <th>Nivel de Riesgo</th>
-                                <th>Acción Preventiva / Correctiva Tomada</th>
-                                <th>Responsable Marcobre</th>
-                                <th>Responsable Contratista</th>
-                                <th>Fecha Programada</th>
-                                <th>Evidencia Implementación</th>
-                                <th>Comentario Implementación</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @Html.Raw(ViewBag.ContenidoTabla)
-                        </tbody>
-                    </table>
+        <div class="container pt-4 pb-4">
+            <div class="custom-form details-container w-100">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="message"></div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Área Ejecutora de la Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Gerencia" readonly="readonly" />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Empresa Inspeccionada</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Empresa" readonly="readonly" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Área Inspeccionada</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.AreaInspeccionada" readonly="readonly" />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Tipo de Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.TipoInspeccion" readonly="readonly" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Responsable del Área Inspeccionada</label>
+                            <input type="text" class="form-control" value="@(ViewBag.Cabecera.ResponsableArea.Nombres+" "+ViewBag.Cabecera.ResponsableArea.Apellidos)" readonly="readonly">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Fecha de Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspeccion" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Responsable de la Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" readonly="readonly">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Participantes de la Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Objetivo de Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center">Observaciones</span>
+                    </div>
+                    <div class="inspection">
+                        <div class="tertiary-content col-12">
+                            <div class="table-responsive inspection-color">
+                                <table class="table" id="tabla_resumen">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Tipo de Observación</th>
+                                            <th>Asesor de MAP/SSO</th>
+                                            <th>Acto/Condición Subestándar Identificada</th>
+                                            <th>Tipo de Condición/Acto Subestándar</th>
+                                            <th>Evidencia</th>
+                                            <th>Nivel de Riesgo</th>
+                                            <th>Acción Preventiva / Correctiva Tomada</th>
+                                            <th>Responsable Marcobre</th>
+                                            <th>Responsable Contratista</th>
+                                            <th>Fecha Programada</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (ViewBag.NObservaciones != 0)
+                                        {
+                                            @Html.Raw(ViewBag.ContenidoTabla)
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td colspan="100%">No hay observaciones</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row">
+                        <div class="button-container">
+                            <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Volver</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        }
+        </div>
+    </div>
+</div>
+@*<div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Verificar Inspección</h2>
+            </div>
+        </div>
+        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
 
-        <div class="buttons d-flex justify-content-end">
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label>Área Ejecutora de la Inspección:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Gerencia" readonly="readonly" />
+                </div>
+                <div class="col-md-2">
+                    <label>Empresa Inspeccionada:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Empresa" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label>Área Inspeccionada:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.AreaInspeccionada" readonly="readonly" />
+                </div>
+                <div class="col-md-2">
+                    <label>Tipo de Inspección:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.TipoInspeccion" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label>Responsable del Área Inspeccionada:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@(ViewBag.Cabecera.ResponsableArea.Nombres+" "+ViewBag.Cabecera.ResponsableArea.Apellidos)" readonly="readonly">
+                </div>
+                <div class="col-md-2">
+                    <label>Fecha de Inspección:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspeccion" readonly="readonly">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label>Responsable de la Inspección:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" readonly="readonly">
+                </div>
+                <div class="col-md-2">
+                    <label>Participantes de la Inspección:</label>
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-2">
+                    <label>Objetivo de Inspección:</label>
+                </div>
+                <div class="col-md-10">
+                    <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
+                </div>
+            </div>
             @if (ViewBag.NObservaciones != 0)
             {
-                <a id="descargar" type="button" class="btn btn-danger mr-2" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@ViewBag.Cabecera.IdCabecera">Descargar en Excel</a>
+                <div class="row mb-2" id="div_tabla_observaciones">
+                    <div class="col-md-12">
+                        <table class="table table-modal" id="tabla_observaciones">
+                            <thead class="thead-mcolor">
+                                <tr>
+                                    <th></th>
+                                    <th>Tipo de Observación</th>
+                                    <th>Asesor MAP/SSO</th>
+                                    <th>Acto/Condición Subestándar Identificada</th>
+                                    <th>Tipo de Condición/Acto Subestándar</th>
+                                    <th>Evidencia</th>
+                                    <th>Nivel de Riesgo</th>
+                                    <th>Acción Preventiva / Correctiva Tomada</th>
+                                    <th>Responsable Marcobre</th>
+                                    <th>Responsable Contratista</th>
+                                    <th>Fecha Programada</th>
+                                    <th>Evidencia Implementación</th>
+                                    <th>Comentario Implementación</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @Html.Raw(ViewBag.ContenidoTabla)
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             }
-            <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
-        </div>
-    </form>
-</div>
+
+            <div class="buttons d-flex justify-content-end">
+                @if (ViewBag.NObservaciones != 0)
+                {
+                    <a id="descargar" type="button" class="btn btn-danger mr-2" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@ViewBag.Cabecera.IdCabecera">Descargar en Excel</a>
+                }
+                <a id="volver" type="button" class="btn btn-secondary" style="color:white;" asp-action="Resumen">Volver</a>
+            </div>
+        </form>
+    </div>*@
+@section Scripts{
+    <script>
+        var img_url;
+        var listObservaciones = @Html.Raw(ViewBag.Observaciones);
+        function VerificarObservacion(IdObservacion) {
+            var data;
+            listObservaciones.forEach(function (obs) {
+                if (obs.IdObservacion == IdObservacion)
+                    data = obs;
+            });
+            if (data != null) {
+                $("#idObs").val(data.IdObservacion);
+                $("#TipoInspeccion").val(data.TipoInspeccion);
+                $("#AsesorSeguridad").val(data.Asesor);
+                $("#CondicionIdentificada").val(data.DescripcionCondicion);
+                $("#TipoCondicion").val(data.TipoCondicion);
+                $("#FechaProgramada").val(data.FechaProgramada);
+                $("#NivelRiesgo").val(data.NivelRiesgo);
+                $("#AccionTomada").val(data.Accion);
+                $("#ResponsableMarc").val(data.ResponsableMarc);
+                $("#ResponsableCont").val(data.ResponsableCont);
+                $("#ComentarioImplementacion").val(data.Comentario);
+                $("#Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#EvidenciasImplementacion").val(JSON.parse(data.EvidenciasImplementacion)[0]);
+                $("#EvidenciaImpDescarga").prop('href', '@Url.Action("Download", "InspeccionesImplementacion")' + '?fileName=' + JSON.parse(data.EvidenciasImplementacion)[0]);
+                $("#modalVerificarObservacion").modal('show');
+            }
+        }
+        $("#rechazar").click(function () {
+            $("#Accion").val("Rechazar");
+            $("#Modal_Enviando_Correo").modal('show');
+            $("#form_verificarObservacion").submit();
+        });
+        $("#aprobar").click(function () {
+            $("#Accion").val("Aprobar");
+            $("#form_verificarObservacion").submit();
+        });
+        function DescargarEvidenciaObservacion() {
+            console.log($("#Evidencia").val());
+            window.open('/Inspecciones/Download?fileName=' + $("#Evidencia").val(), '_blank');
+        }       
+        function DescargarEvidenciaImplementacion() {
+            console.log($("#EvidenciasImplementacion").val());
+            window.open('/InspeccionesImplementacion/Download?fileName=' + $("#EvidenciasImplementacion").val(), '_blank');
+        }       
+    </script>
+}

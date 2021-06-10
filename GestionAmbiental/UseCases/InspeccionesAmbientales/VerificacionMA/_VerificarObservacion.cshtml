@@ -1,0 +1,266 @@
+﻿@model GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA.VerificarObservacionMAModel
+
+<div class="modal fade" tabindex="-1" id="modalVerificarObservacion" aria-labelledby="modalVerificarObservacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-inspecciones">
+            <div class="modal-content">
+                <div class="inspection">
+                    <div class="image-header-container"
+                         style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+                        <div class="header-title inspection-opacity-color">
+                            <h3>Verificar Observacion</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <form id="form_verificarObservacion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <div class="container pt-4 pb-4">
+                            <div class="custom-form details-container w-100">
+                                <input type="hidden" asp-for="idObs" />
+                                <input type="hidden" asp-for="idCabecera" value="@ViewBag.IdCabecera"/>
+                                <div class="message"></div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="TipoInspeccion"></label>
+                                        <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
+                                        <input type="text" class="form-control" asp-for="TipoInspeccion" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="AsesorSeguridad">Asesor:</label>
+                                        <input type="text" class="form-control" asp-for="AsesorSeguridad" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="CondicionIdentificada"></label>
+                                        <input type="text" class="form-control" asp-for="CondicionIdentificada" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="TipoCondicion"></label>
+                                        <input type="text" class="form-control" asp-for="TipoCondicion" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="FechaProgramada"></label>
+                                        <input type="date" class="form-control" asp-for="FechaProgramada" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="NivelRiesgo"></label>
+                                        <input type="text" class="form-control" asp-for="NivelRiesgo" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="AccionTomada"></label>
+                                        <input type="text" class="form-control" asp-for="AccionTomada" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="ResponsableMarc"></label>
+                                        <input type="text" class="form-control" asp-for="ResponsableMarc" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="ResponsableCont"></label>
+                                        <input type="text" class="form-control" asp-for="ResponsableCont" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="Evidencia"></label>
+                                        <input type="hidden" asp-for="Evidencia" />
+                                        <button type="button" class="btn btn-mc form-control" id="EvidenciaDescarga" onclick="DescargarEvidenciaObservacion()">Descargar</button>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100  align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="EvidenciasImplementacion"></label>
+                                        <input type="hidden" asp-for="EvidenciasImplementacion" />
+                                        <button type="button" class="btn btn-mc form-control" id="EvidenciaImpDescarga" onclick="DescargarEvidenciaImplementacion()">Descargar</button>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="ComentarioImplementacion"></label><span class="text-danger" asp-validation-for="ComentarioImplementacion"></span>
+                                        <textarea class="form-control" asp-for="ComentarioImplementacion" rows="3" readonly></textarea>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12">
+                                        <label asp-for="ComentarioVerificacionMA"></label><span class="text-danger" asp-validation-for="ComentarioVerificacionMA"></span>
+                                        <textarea class="form-control" asp-for="ComentarioVerificacionMA" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="Accion" />
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="rechazar" type="submit" class="btn btn-secondary">Rechazar</button>
+                    <button id="aprobar" type="submit" class="btn btn-primary">Aprobar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="container-fluid">
+    <div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Verificar Observación</h2>
+        </div>
+    </div>
+    <form class="form-group" id="form_verificarObservacion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" asp-for="idObs"/>
+        <input type="hidden" asp-for="EncryptedId"/>
+        <input type="hidden" asp-for="idCabecera" />
+        <div class="modal-body">
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="TipoInspeccion"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="TipoInspeccion" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="Asesor_MA_Seguridad"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="Asesor_MA_Seguridad" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="CondicionIdentificada"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="CondicionIdentificada" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="TipoCondicion"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="TipoCondicion" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="Evidencias"></label>
+                </div>
+                <div class="col-md-8">
+                    @for (int i = 0; i < Model.Evidencias.Count; i++)
+                    {
+                        <a asp-controller="Inspecciones" asp-action="Download" asp-route-fileName="@Model.Evidencias[i]">Evidencia</a>
+                    }
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="NiveRiesgo"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="NiveRiesgo" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="AccionTomada"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="AccionTomada" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="ResponsableMarc"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="ResponsableMarc" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="ResponsableCont"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="ResponsableCont" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="FechaProgramada"></label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" class="form-control" asp-for="FechaProgramada" readonly="readonly" />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="EvidenciasInspeccion"></label>
+                </div>
+                <div class="col-md-8">
+                    @for (int i = 0; i < Model.EvidenciasInspeccion.Count; i++)
+                    {
+                        <a asp-controller="InspeccionesImplementacion" asp-action="Download" asp-route-fileName="@Model.EvidenciasInspeccion[i]">Evidencia </a>
+                    }
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="ComentarioImplementacion"></label>
+                </div>
+                <div class="col-md-8">
+                    <textarea class="form-control" asp-for="ComentarioImplementacion" rows="3" readonly="readonly"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-md-4">
+                    <label asp-for="ComentarioVerificacionMA"></label>
+                </div>
+                <div class="col-md-8">
+                    <textarea class="form-control" asp-for="ComentarioVerificacionMA" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="Accion" />
+        <div class="modal-footer">
+            <button id="rechazar" type="submit" class="btn btn-secondary">Rechazar</button>
+            <button id="aprobar" type="submit" class="btn btn-primary">Aprobar</button>
+        </div>
+    </form>
+</div>*@
+<!-- Modal Enviando Correo-->
+<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
+     aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-center">
+                    <div class="spinner-border text-info" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <br />
+                    <label>Notificando a Responsables</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#EvidenciasInspeccion").change(function () {
+            var filesname = this.files.length + " Archivos";
+            $("#files_name").text(filesname);
+        });
+        $("#rechazar").click(function () {
+            $("#Accion").val("Rechazar");          
+            $("#Modal_Enviando_Correo").modal('show');
+        });
+        $("#aprobar").click(function () {
+            $("#Accion").val("Aprobar");
+        });
+    </script>
+}

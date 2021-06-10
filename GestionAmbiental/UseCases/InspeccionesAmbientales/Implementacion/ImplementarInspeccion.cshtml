@@ -120,6 +120,8 @@
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script>
+        var img_url;
+        var listObservaciones = @Html.Raw(ViewBag.Observaciones);
         $("#EvidenciasInspeccion").change(function () {
             $("#danger_evidencia").html("");
             //Validacion del tamaño del archivo
@@ -157,15 +159,75 @@
                 //$("#modal_archivo").modal('show');
             }
         });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/Inspecciones/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        img_url = data.img_url;
+                        inspectionStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
         function guardar() {
             if ($("#EvidenciasInspeccion").get(0).files.length === 0) {
                 $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
                 return false;
             }
-            $("#form_implementaObservacion").submit();
+            $("#form_implementarObservacion").submit();
             $("#Modal_Enviando_Correo").modal('show');
             return true;
         }
+        function ImplementarObservacion(IdObservacion) {
+            var data;
+            listObservaciones.forEach(function (obs) {
+                if (obs.IdObservacion == IdObservacion)
+                    data = obs;
+            });
+            //ReiniciarModalImplementarObs();
+            if (data != null) {
+                $("#idObservacion").val(data.IdObservacion);
+                $("#TipoInspeccion").val(data.TipoInspeccion);
+                $("#AsesorSeguridad").val(data.Asesor);
+                $("#CondicionIdentificada").val(data.DescripcionCondicion);
+                $("#TipoCondicion").val(data.TipoCondicion);
+                $("#FechaProgramada").val(data.FechaProgramada);
+                $("#NivelRiesgo").val(data.NivelRiesgo);
+                $("#AccionTomada").val(data.Accion);
+                $("#ResponsableMarc").val(data.ResponsableMarc);
+                $("#ResponsableCont").val(data.ResponsableCont);
+                $("#Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
+                $("#modalImplementarObservacion").modal('show');
+            }
+        }
+        function ReiniciarModalImplementarObs() {
+            $("#idObservacion").val(0);
+            $("#TipoInspeccion").val('');
+            $("#AsesorSeguridad").val('');
+            $("#CondicionIdentificada").val('');
+            $("#TipoCondicion").val('');
+            $("#FechaProgramada").val('');
+            $("#NivelRiesgo").val('');
+            $("#AccionTomada").val('');
+            $("#ResponsableMarc").val('');
+            $("#ResponsableCont").val('');
+            $("#Evidencia").val('');
+            $("#EvidenciaDescarga").prop('href', '#');
+        }
+        function DescargarEvidenciaObservacion() {
+            console.log($("#Evidencia").val());
+            window.open('/Inspecciones/Download?fileName=' + $("#Evidencia").val(), '_blank');
+        }        
     </script>
 }
 @*<div class="container-fluid">

@@ -179,9 +179,6 @@
         </div>
     </div>
 </div>
-
-
-
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script>    
@@ -212,6 +209,7 @@
                     type: "POST",
                     url: "/Inspecciones/EditarInspeccion",
                     data: {
+                        "Id_Inspeccion_Cabecera": $("#idCabecera").val(),
                         "opcion": $("#opcion").val(),
                         "Id_Gerencia_Ejecutora": $("#Id_Gerencia_Ejecutora").val(),
                         "Id_Empresa_Contratista": $("#Id_Empresa_Contratista").val(),
@@ -597,6 +595,9 @@
             $("#ResponsableCont").val('');
             $("#Evidencias").val('');
             $("#files_name").text('0 Archivos');
+            $("#NiveRiesgo").find('option').remove();
+            $('#NiveRiesgo').append(new Option("-- SELECCIONE --", ""));
+            $("#NiveRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
         }
     </script>
     @*Scripts partial Editar Observación*@

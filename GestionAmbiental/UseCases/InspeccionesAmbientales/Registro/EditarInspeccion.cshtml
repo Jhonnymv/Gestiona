@@ -171,11 +171,11 @@
                                         <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
                                         @if (ViewBag.Permiso)
                                         {
-                                        <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
-                                        <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
+                                            <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
+                                            <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
                                             if (ViewBag.nObservacioness > 0)
                                             {
-                                            <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc">Finalizar Registro</button>
+                                                <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc">Finalizar Registro</button>
                                             }
                                         }
                                     </div>
@@ -402,7 +402,8 @@
     </div>*@
 @section scripts{
     <script src="~/js/stepper.js"></script>
-    <script type="text/javascript">        
+    <script type="text/javascript">
+
         var listObservaciones = [];
         var img_url = "";
         $(document).ready(function () {
@@ -525,7 +526,7 @@
                     }
                 }
             });
-            
+
         }
     </script>
     @*Scripts partial Nueva Observación*@
@@ -796,17 +797,20 @@
             $("#ResponsableCont").val('');
             $("#Evidencias").val('');
             $("#files_name").text('0 Archivos');
+            $("#NiveRiesgo").find('option').remove();
+            $('#NiveRiesgo').append(new Option("-- SELECCIONE --", ""));
+            $("#NiveRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
         }
     </script>
     @*Scripts partial Editar Observación*@
-    <script type="text/javascript">        
+    <script type="text/javascript">
         function EditarObservacion(IdObservacion) {
             var data;
             listObservaciones.forEach(function (obs) {
                 if (obs.IdObservacion == IdObservacion)
                     data = obs;
             });
-            ReiniciarModalEditarObs(); 
+            ReiniciarModalEditarObs();
             if (data != null) {
                 $("#E_IdObservacion").val(data.IdObservacion);
                 $("#E_TipoInspeccion").val(data.TipoInspeccion);
@@ -869,7 +873,7 @@
                 $("#E_Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
                 $("#E_EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
                 $("#modalEditarObservacion").modal('show');
-            }        
+            }
         }
         function EliminarObservacion(IdObservacion,IdCabecera) {
             if (confirm("¿Está seguro que desea eliminar la observación?")) {
@@ -915,7 +919,7 @@
         }
         function OcultarNivelRiesgo() {
             $("#E_NivelRiesgo").find('option').remove();
-            $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+            $('#E_NivelRiesgo').append(new Option("-- SELECCIONE --", ""));
             $("#E_NivelRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
         }
         function ActualizarColorNivelRiesgo() {
@@ -1005,7 +1009,7 @@
                 //Eliminar Niveles SSO
                 $("#E_NivelRiesgo").find('option').remove();
                 //Agregar opciones a nivel de riesgo
-                $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+                $('#E_NivelRiesgo').append(new Option("-- SELECCIONE --", ""));
                 $("#E_NivelRiesgo option[value='']").css({"background-color": "white", "color": "black"});
                 $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
                 $("#E_NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});
@@ -1037,7 +1041,7 @@
                 //$("#E_NivelRiesgo option[value='Alerta']").remove();
                 //$("#E_NivelRiesgo option[value='No Aceptable']").remove();
                 //Agregar opciones a nivel de riesgo
-                $('#E_NivelRiesgo').append(new Option("--SELECCIONE--", ""));
+                $('#E_NivelRiesgo').append(new Option("-- SELECCIONE --", ""));
                 $("#E_NivelRiesgo option[value='']").css({"background-color": "white", "color": "black"});
                 $('#E_NivelRiesgo').append(new Option("No Aplica", "No Aplica"));
                 $("#E_NivelRiesgo option[value='No Aplica']").css({"background-color": "white", "color": "black"});

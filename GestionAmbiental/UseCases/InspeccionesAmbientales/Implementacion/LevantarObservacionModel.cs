@@ -22,7 +22,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         public string CondicionIdentificada { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar:")]
         public string TipoCondicion { get; set; }
-        [DisplayName("Evidencia:")]
+        [DisplayName("Evidencia de Observación:")]
         public List<string> Evidencia { get; set; }
         [DisplayName("Nivel de Riesgo:")]
         public string NivelRiesgo { get; set; }
@@ -34,7 +34,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         public string ResponsableCont { get; set; }
         [DisplayName("Fecha Programada para levantar Obs.:")]
         public string FechaProgramada { get; set; }
-        [DisplayName("Evidencia:")]
+        [DisplayName("Evidencia de Implementación:")]
         public List<IFormFile> EvidenciasInspeccion { get; set; }
         [DisplayName("Comentario:")]
         [Required(ErrorMessage ="Debe ingresar un comentario")]
