@@ -17,15 +17,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         [DisplayName("Tipo de Observación:")]
         public string TipoInspeccion { get; set; }
         [DisplayName("Asesor MAP o SSO:")]
-        public string Asesor_MA_Seguridad { get; set; }
+        public string AsesorSeguridad { get; set; }
         [DisplayName("Acto/Condición Subestándar Identificada:")]
         public string CondicionIdentificada { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar:")]
         public string TipoCondicion { get; set; }
         [DisplayName("Evidencia:")]
-        public List<string> Evidencias { get; set; }
+        public List<string> Evidencia { get; set; }
         [DisplayName("Nivel de Riesgo:")]
-        public string NiveRiesgo { get; set; }
+        public string NivelRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada:")]
         public string AccionTomada { get; set; }
         [DisplayName("Responsable de Marcobre para levantar Obs.:")]

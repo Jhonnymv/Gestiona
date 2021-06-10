@@ -720,7 +720,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     if (model.opcion.Equals("Observacion"))
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
                     else if (model.opcion.Equals("Guardar"))
-                        return RedirectToAction("NotificarInspeccion","Notificaciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                        return RedirectToAction("NotificarInspeccion","NotificacionesInspecciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
                     else if(model.opcion.Equals("Eliminar"))
                         return RedirectToAction("Resumen");
             }

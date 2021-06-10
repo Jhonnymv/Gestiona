@@ -250,7 +250,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             model.img_url = rutaNuevoArchivo.Replace("\\", "/");
                             propiedad.img_url = model.img_url;
                             //Eliminar imagen anterior
-                            EliminarImagen(rutaImagenAnterior);
+                            //EliminarImagen(rutaImagenAnterior);
 
                             //Modificar imagen $('.modulo .image-header-container').css('background-image', 'url("nueva-url")') ej: $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
                             var imgTextToFind = "$(\'." + propiedad.modulo.ToLower() + " .image-header-container\').css('background-image', 'url(\"";
