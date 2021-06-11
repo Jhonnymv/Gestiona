@@ -216,7 +216,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                     else
                     {
                         await _rechazarObservacion.Execute(model.Id_RAC, model.Comentario_Verificacion, userInfo.NombreUsuario);
-                        return RedirectToAction("NotificarRACRechazado", "Notificaciones", new { IdRAC = model.Id_RAC });
+                        return RedirectToAction("NotificarRACRechazado", "NotificacionesRAC", new { IdRAC = model.Id_RAC });
                     }
                 }
             }

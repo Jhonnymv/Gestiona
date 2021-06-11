@@ -158,7 +158,6 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             };
             return Ok(response);
         }
-
         public async Task<IActionResult> ImplementarRAC(string IdRAC)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -231,13 +230,12 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                         }
                     }
                     await _levantarObservacionRAC.Execute(model.Id_RAC, filePath, model.Comentario_Cierre, userInfo.NombreUsuario);
-                    return RedirectToAction("NotificarImplementacionRAC", "Notificaciones", new { IdRAC = model.Id_RAC });
+                    return RedirectToAction("NotificarImplementacionRAC", "NotificacionesRAC", new { IdRAC = model.Id_RAC });
                 }
             }
             //var IdEncriptado = _protector.Protect(model.idCabecera.ToString());
             return RedirectToAction("ImplementarRAC", new { IdRAC = _protector.Protect(model.Id_RAC.ToString()) });
         }
-
         private string CreateUniqueFileName(int nFile)
         {
             var fileName = "Evidencia__Implementacion_RAC_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");

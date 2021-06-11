@@ -307,7 +307,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                         filePath,
                         userInfo.NombreUsuario);
                     //Notificar
-                    return RedirectToAction("NotificarNuevoRAC", "Notificaciones", new { IdRAC = Id_RAC });
+                    return RedirectToAction("NotificarNuevoRAC", "NotificacionesRAC", new { IdRAC = Id_RAC });
                 }
             }
             else

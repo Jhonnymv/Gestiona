@@ -1,6 +1,6 @@
 ﻿@model GestionAmbiental.UseCases.RAC.Registro.DetallerRACModel
 @{
-    ViewData["Title"] = "DetalleRAC";
+    ViewData["Title"] = "Detalle Reporte de Acto y Condición Subestándar";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
@@ -127,25 +127,23 @@
                             }
                         </div>
                     </div>
-                    <div class="row input_container">
+                    <div class="row input_container align-items-start">
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="Supervisor">Supervisor de SSO/MA (Marcobre) a notificar</label>
                             <input type="text" class="form-control" asp-for="Supervisor" disabled />
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Evidencia de la Observación</label>
-                            <a asp-action="Download" asp-controller="RegistroRAC" asp-route-fileName="@Model.Evidencia_Obs" class="btn btn-mc-success">Descargar Evidencia</a>
+                            <a asp-action="Download" asp-controller="RegistroRAC" asp-route-fileName="@Model.Evidencia_Obs" class="btn btn-mc-success form-control">Descargar Evidencia</a>
                         </div>
                     </div>
                     @if (Model.Estado.Equals("Implementado") || Model.Estado.Equals("Aprobado"))
                     {
-                        <div class="row input_container">
+                        <div class="row input_container align-items-start">
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label asp-for="Evidencia_Cierre"></label>
-                                <a asp-action="Download" asp-controller="ImplementacionRAC" asp-route-fileName="@Model.Evidencia_Cierre" class="btn btn-mc-success">Descargar Evidencia</a>
+                                <a asp-action="Download" asp-controller="ImplementacionRAC" asp-route-fileName="@Model.Evidencia_Cierre" class="btn btn-mc-success form-control">Descargar Evidencia</a>
                             </div>
-                        </div>
-                        <div class="row input_container">
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label asp-for="Comentario_Cierre"></label>
                                 <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250" disabled></textarea>
@@ -167,16 +165,16 @@
                     <div class="button-container">
                         <div></div>
                         <div>
+                            <a class="btn btn-mc-danger" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
                             @if (Model.Estado.Equals("Vencido") && (ViewBag.Rol.Equals("AsesorMAP") || ViewBag.Rol.Equals("AsesorSSO")))
                             {
-                                <a type="button" class="btn btn-primary" onclick="ampliarInspeccion()">Ampliar Fecha</a>
+                                <a class="btn btn-primary" onclick="ampliarInspeccion()">Ampliar Fecha</a>
                             }
                             @if (ViewBag.Permiso)
                             {
-                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
+                                <a class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
                             }
-                            <a type="button" class="btn btn-mc-outline-success" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
-                            <a type="button" class="btn btn-mc-danger" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
+                            <a class="btn btn-mc-outline-success" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
                         </div>
                     </div>
                 </div>

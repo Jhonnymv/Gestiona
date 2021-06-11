@@ -4,7 +4,192 @@
     ViewData["Title"] = "Implementar Reporte de Acto y Condición Subestándar";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="container-fluid">
+<div class="rac">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title rac-opacity-color">
+                <h3>Verificar Reporte de Acto y Condición Subestándar</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <form class="form-group" id="form_verificarRAC" asp-action="VerificarRAC" asp-controller="VerificacionRAC" method="post" enctype="multipart/form-data" autocomplete="off">
+            <div class="container pt-4 pb-4">
+                <div class="custom-form details-container w-100">
+                    <div class="detail-container col-12 col-xl-10 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center text-uppercase">Datos del Personal que Reporta</span>
+                        </div>
+                        <input type="hidden" asp-for="Id_RAC" />
+                        <input type="hidden" asp-for="IdEncriptado" />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Nombres_Apellidos">Nombres y Apellidos</label>
+                                <input type="text" class="form-control" asp-for="Nombres_Apellidos" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Gerencia">Área de Marcobre</label>
+                                <input type="text" class="form-control" asp-for="Gerencia" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Empresa">Empresa</label>
+                                <input type="text" class="form-control" asp-for="Empresa" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Otra_Empresa">Otra Empresa</label>
+                                <input type="text" class="form-control" asp-for="Otra_Empresa" disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-container col-12 col-xl-10 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center text-uppercase">Descripción de la Observación</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Empresa_Obs">Empresa observada</label>
+                                <input type="text" class="form-control" asp-for="Empresa_Obs" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Gerencia_Obs">Gerencia a la que pertenece (Marcobre)</label>
+                                <input type="text" class="form-control" asp-for="Gerencia_Obs" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Ubicacion">Ubicación de la observación</label>
+                                <input type="text" class="form-control" asp-for="Ubicacion" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <div class="row mt-0 mb-0">
+                                    <div class="col-7 mt-0 mb-0">
+                                        <label asp-for="Fecha">Fecha</label>
+                                        <input type="text" class="form-control" asp-for="Fecha" disabled />
+                                    </div>
+                                    <div class="col-5 mt-0 mb-0">
+                                        <label asp-for="Hora">Hora (24h)</label>
+                                        <input type="text" class="form-control" asp-for="Hora" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="SSO_MA">Observación SSO/MA</label>
+                                <input type="text" class="form-control" asp-for="SSO_MA" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Clasificacion">Clasificación</label>
+                                <input type="text" class="form-control" asp-for="Clasificacion" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="NivelRiesgo">Nivel de Riesgo</label>
+                                <input type="text" class="form-control" asp-for="NivelRiesgo" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Tipo_Condicion">Tipo</label>
+                                <input type="text" class="form-control" asp-for="Tipo_Condicion" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Descripcion_Acto_Cond">Descripción del acto o condición subestándar</label>
+                                <textarea class="form-control" asp-for="Descripcion_Acto_Cond" rows="3" maxlength="250" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Medida_Control">Medida(s) de control inmediata</label>
+                                <textarea class="form-control" asp-for="Medida_Control" rows="3" maxlength="250" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-12">
+                                <label asp-for="PAC">¿Se planteó una primera acción correctiva?</label>
+                                <input type="text" class="form-control" asp-for="PAC" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Responsable_Cierre">Responsable de Marcobre del cierre de la observación</label>
+                                <input type="text" class="form-control" asp-for="Responsable_Cierre" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Fecha_Cierre">Fecha de cierre programada</label>
+                                <input type="text" class="form-control" asp-for="Fecha_Cierre" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Supervisor">Supervisor de SSO/MA (Marcobre) a notificar</label>
+                                <input type="text" class="form-control" asp-for="Supervisor" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Evidencia_Obs"></label>
+                                <a asp-action="Download" asp-controller="RegistroRAC" asp-route-fileName="@Model.Evidencia_Obs" class="btn btn-mc-success form-control">Descargar Evidencia</a>
+                            </div>
+                        </div>
+                        <div class="row input_container align-items-start">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Evidencia_Cierre"></label>
+                                <a asp-action="Download" asp-controller="ImplementacionRAC" asp-route-fileName="@Model.Evidencia_Cierre" class="btn btn-mc-success form-control">Evidencia del levantamiento de la Observación</a>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Comentario_Cierre"></label>
+                                <textarea class="form-control" asp-for="Comentario_Cierre" rows="3" maxlength="250" disabled></textarea>
+                            </div>
+                        </div>
+                        <div class="row input_container align-items-start">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Comentario_Verificacion"></label>
+                                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()) && ViewBag.Permiso)
+                                {
+                                    <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250"></textarea>
+                                }
+                                else
+                                {
+                                    <textarea class="form-control" asp-for="Comentario_Verificacion" rows="3" maxlength="250" disabled></textarea>
+                                }
+                            </div>
+                        </div>
+                        <div class="row input_container align-items-start">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                @if (Model.Estado.Equals(EstadosRAC.Aprobado.ToString()))
+                                {
+                                    <div class="alert alert-success" role="alert" style="text-align:center;">Cerrado</div>
+                                }
+                                else if (Model.Estado.Equals(EstadosRAC.Rechazado.ToString()))
+                                {
+                                    <div class="alert alert-danger" role="alert" style="text-align:center;">Pendiente de Implementación</div>
+                                }
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="Opcion" />
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4">
+                        <div class="button-container">
+                            <div></div>
+                            <div>
+                                <a class="btn btn-mc-outline-danger" asp-controller="VerificacionRAC" asp-action="Resumen">Cancelar</a>
+                                <a class="btn btn-mc-outline-success" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">Descargar Excel</a>
+                                @if (Model.Estado.Equals(EstadosRAC.Implementado.ToString()) && ViewBag.Permiso)
+                                {
+                                    <button type="button" class="btn btn-mc-danger" onclick="rechazar()">Rechazar</button>
+                                    <button type="button" class="btn btn-mc" onclick="aprobar()">Aprobar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@*<div class="container-fluid">
     <div class="row mb-2">
         <div class="col-12 titulo-pagina">
             <h2>Verificar Reporte de Acto y Condición Subestándar</h2>
@@ -217,8 +402,7 @@
             <button type="button" class="btn btn-success" onclick="aprobar()">Aprobar</button>
         }
     </div>
-
-</div>
+</div>*@
 <!-- Modal Enviando Correo-->
 <div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
      aria-hidden="true" style="display: none;">
