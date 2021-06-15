@@ -1,4 +1,4 @@
-﻿
+﻿@model GestionAmbiental.UseCases.PropiedadModulos
 @{
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
@@ -12,57 +12,124 @@
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-
         <div class="tabs-mc">
             <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link active" type="button" id="Tarjetas" href="#Tarjetas" data-bs-toggle="pill" aria-selected="true">Tarjetas</a>
+                    <a class="nav-link active" type="button" id="Inspecciones" href="#Inspecciones" data-bs-toggle="pill" aria-selected="true">Inspecciones</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" type="button" id="Colores" href="#Colores" data-bs-toggle="pill" aria-selected="false">Colores</a>
+                    <a class="nav-link" type="button" id="RAC" href="#RAC" data-bs-toggle="pill" aria-selected="false">Reporte de Acto y Condición Subestándar</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" type="button" data-bs-toggle="pill" href="#Fuentes" id="Fuentes" aria-selected="false">Fuentes</a>
+                    <a class="nav-link" type="button" id="Residuos" href="#Residuos" data-bs-toggle="pill" aria-selected="false">Residuos Sólidos</a>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <a class="nav-link" type="button" data-bs-toggle="pill" href="#Propiedades" id="Propiedades" aria-selected="false">Propiedades</a>
+                    <a class="nav-link" type="button" id="Incidentes" href="#Incidentes" data-bs-toggle="pill" aria-selected="false">Incidentes Ambientales</a>
                 </li>
-
-            </ul>
-
-            <div class="content-header">
-                <div class="action-container tablas-color row-center-center">
-                    <div class="w-100 row-center-center">
-                        <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
-                    </div>
-                    <div class="w-100 row-center-center">
-                        <a class="btn btn-special-action-outline tablas-color" id="btn_actualizar" onclick="ActualizarTarjetas()">Actualizar Datos</a>
-                    </div>
-                </div>
-                <form autocomplete="off" class="custom-form">
-                    <div class="col-12 col-lg-9">
-                        <div class="row input_container">
-                            <div class="col-12 col-md-6 col-lg-6">
-                                <label for="filtro_nombre">Buscar</label>
-                                <input type="text" class="form-control" id="filtro">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-3 row-center-center">
-                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
-                    </div>
-                </form>
-            </div>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Fauna" href="#Fauna" data-bs-toggle="pill" aria-selected="false">Avistamiento de Fauna</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Agua" href="#Agua" data-bs-toggle="pill" aria-selected="false">Consumo de Agua</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="SGA" href="#SGA" data-bs-toggle="pill" aria-selected="false">SGA</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Tablas" href="#Tablas" data-bs-toggle="pill" aria-selected="false">Tablas</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="Dashboard" href="#Dashboard" data-bs-toggle="pill" aria-selected="false">Dashboard</a>
+                </li>
+            </ul>            
         </div>
     </div>
-
     <div class="secondary-content col-12">
-        <div class="table-responsive tablas-color" id="tab_content">
-
-        </div>
-        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
-
-        </div>
+        <form id="form_propiedades" autocomplete="off"  method="post" enctype="multipart/form-data">
+            <button type="button" onclick="GuardarColores()">Guardar Colores</button>
+            <button type="button" onclick="GuardarPropiedad()">Guardar Propiedad</button>
+            <div id="inspecciones-input">
+                <label>inspection</label>
+                <input type="color" id="inspection-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="inspection-r"/>
+                <input type="number" id="inspection-g"/>
+                <input type="number" id="inspection-b"/>
+                <img style="width:100px;height:auto;"id="inspection-img"/>
+                <input type="file" id="inspection-nueva-img" accept=".jpg,.jpeg,.png"/>
+            </div>
+            <div id="rac-input">
+                <label>rac</label>
+                <input type="color" id="rac-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="rac-r" />
+                <input type="number" id="rac-g" />
+                <input type="number" id="rac-b" />
+                <img style="width:100px;height:auto;" id="rac-img" />
+                <input type="file" id="rac-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="residuos-input">
+                <label>residuos</label>
+                <input type="color" id="residuos-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="residuos-r" />
+                <input type="number" id="residuos-g" />
+                <input type="number" id="residuos-b" />
+                <img style="width:100px;height:auto;" id="residuos-img" />
+                <input type="file" id="residuos-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="incidentes-input">
+                <label>incidentes</label>
+                <input type="color" id="incidentes-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="incidentes-r" />
+                <input type="number" id="incidentes-g" />
+                <input type="number" id="incidentes-b" />
+                <img style="width:100px;height:auto;" id="incidentes-img" />
+                <input type="file" id="incidentes-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="fauna-input">
+                <label>fauna</label>
+                <input type="color" id="fauna-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="fauna-r" />
+                <input type="number" id="fauna-g" />
+                <input type="number" id="fauna-b" />
+                <img style="width:100px;height:auto;" id="fauna-img" />
+                <input type="file" id="fauna-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="agua-input">
+                <label>agua</label>
+                <input type="color" id="agua-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="agua-r" />
+                <input type="number" id="agua-g" />
+                <input type="number" id="agua-b" />
+                <img style="width:100px;height:auto;" id="agua-img" />
+                <input type="file" id="agua-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="sga-input">
+                <label>sga</label>
+                <input type="color" id="sga-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="sga-r" />
+                <input type="number" id="sga-g" />
+                <input type="number" id="sga-b" />
+                <img style="width:100px;height:auto;" id="sga-img" />
+                <input type="file" id="sga-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="tablas-input">
+                <label>tablas</label>
+                <input type="color" id="tablas-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="tablas-r" />
+                <input type="number" id="tablas-g" />
+                <input type="number" id="tablas-b" />
+                <img style="width:100px;height:auto;" id="tablas-img" />
+                <input type="file" id="tablas-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+            <div id="dashboard-input">
+                <label>dashboard</label>
+                <input type="color" id="dashboard-colorPicker" class="mc_color_picker" style="width:100%">
+                <input type="number" id="dashboard-r" />
+                <input type="number" id="dashboard-g" />
+                <input type="number" id="dashboard-b" />
+                <img style="width:100px;height:auto;" id="dashboard-img" />
+                <input type="file" id="dashboard-nueva-img" accept=".jpg,.jpeg,.png" />
+            </div>
+        </form>
     </div>
 </div>
 @*<div class="card text-center">
@@ -110,8 +177,10 @@
 </div>*@
 @section Scripts{
     <script type="text/javascript">
+        var propiedades =@Html.Raw(ViewBag.ListaPropiedades);
+        var activo = "";
         $(document).ready(function () {
-            
+            CargarDatos();
             //Buscar tab activo guardado en local storage
             var activeTab = localStorage.getItem('activeTabGestorContenido');
             //Si existe el objeto en local storage mostrar
@@ -120,180 +189,423 @@
             }
             //Si no existe, mostrar primer tab
             else {
-                FiltrarTarjetas(1);
-                $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
+                console.log("Si existe")
+                //FiltrarTarjetas(1);
+                //$("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
             }
         });
-        function dataModulo() {
-            $.ajax({
-                type: "POST",
-                url: "/GestorContenido/PropiedadesModulo",
-                traditional: true,
-                success: (response) => {
-                    if (response.success) {
-                        let data = JSON.parse(response.data);
-                        let r = data.r;
-                        let g = data.g;
-                        let b = data.b;
-                        let img_url = data.img_url;
-                        tablasStyle(r, g, b);
-                    } else {
-                        console.log("Ocurrió un problema: " + response.msg);
-                    }
-                }
-            });
-        }
         //Guardar tab activo en local storage
         $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
             localStorage.setItem('activeTabGestorContenido', $(e.target).attr('href'));
         });
-        $("#btn_enviar").on('click', function (e) {
-            if ($("#Tarjetas").hasClass("active")) {
-                FiltrarTarjetas(1);
-            } if ($("#Colores").hasClass("active")) {
-                FiltrarColores(1);
-            } if ($("#Fuentes").hasClass("active")) {
-                FiltrarFuentes(1);
+        //Cargar datos
+        function CargarDatos() {
+            for (var i = 0; i < propiedades.length; i++) {
+                var rgb = "rgb(" + propiedades[i].r + "," + propiedades[i].g + "," + propiedades[i].b + ")";
+                console.log(propiedades[i].modulo.toLowerCase() + ": " + rgb);
+                $("#" + propiedades[i].modulo.toLowerCase() + "-colorPicker").val(parseColor(rgb).hex);
+                $("#" + propiedades[i].modulo.toLowerCase() + "-r").val(propiedades[i].r);
+                $("#" + propiedades[i].modulo.toLowerCase() + "-g").val(propiedades[i].g);
+                $("#" + propiedades[i].modulo.toLowerCase() + "-b").val(propiedades[i].b);
+                $("#" + propiedades[i].modulo.toLowerCase() + "-img").attr("src", propiedades[i].img_url);                
             }
-        });
-        $("#Tarjetas").on('click', function (e) {
-            $(this).tab('show');
-            $('#filtro').val("");
-            $("#btn_agregar").show();
-            $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
-            $("#btn_actualizar").attr("onclick", "ActualizarTarjetas()");
-            FiltrarTarjetas(1);
-        });
-        $("#Colores").on('click', function (e) {
-            $(this).tab('show');
-            $('#filtro').val("");
-            $("#btn_agregar").hide();
-            $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
-            FiltrarColores(1);
-        });
-        $("#Fuentes").on('click', function (e) {
-            $(this).tab('show');
-            $('#filtro').val("");
-            $("#btn_agregar").hide();
-            $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
-            FiltrarFuentes(1);
-        });
-        $("#Propiedades").on('click', function (e) {
-            $(this).tab('show');
-            $('#filtro').val("");
-            $("#btn_agregar").hide();
-            $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
-            FiltrarPropiedades(1);
-        });
-        function FiltrarTarjetas(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/GestorContenido/FiltrarTarjetas",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "filtro": $('#filtro').val(),
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tab_content').empty();
-                    $('#tab_content').html(response.tabla);
-                    $('#paginado').html(response.paginador);
-                    dataModulo();
-                }
-            });
         }
-        function FiltrarColores(pag) {
+        //Guardar json propiedades si no cambian imagenes
+        function GuardarColores() {
+            for (var i = 0; i < propiedades.length; i++) {
+                if (activo == propiedades[i].modulo.toLowerCase()) {
+                    propiedades[i].r = $("#" + propiedades[i].modulo.toLowerCase() + "-r").val();
+                    propiedades[i].g = $("#" + propiedades[i].modulo.toLowerCase() + "-g").val();
+                    propiedades[i].b = $("#" + propiedades[i].modulo.toLowerCase() + "-b").val();
+                }
+            };
             $.ajax({
                 type: "POST",
-                url: "/GestorContenido/FiltrarColores",
+                url: "/GestorContenido/GuardarColores",
                 data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "filtro": $('#filtro').val(),
+                    "json": JSON.stringify(propiedades)
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty();
-                    $('#tab_content').html(response.tabla);
-                    $('#paginado').html(response.paginador);
-                    dataModulo();
-                }
-            });
-        }        
-        function FiltrarFuentes(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/GestorContenido/FiltrarFuentes",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "filtro": $('#filtro').val(),
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tab_content').empty();
-                    $('#tab_content').html(response.tabla);
-                    $('#paginado').html(response.paginador);
-                    dataModulo();
-                }
-            });
-        }
-        function FiltrarPropiedades(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/GestorContenido/FiltrarPropiedades",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "filtro": $('#filtro').val(),
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tab_content').empty();
-                    $('#tab_content').html(response.tabla);
-                    $('#paginado').html(response.paginador);
-                    dataModulo();
-                }
-            });
-        }
-        function EliminarTarjeta(id) {
-            if (confirm('¿Esta seguro que desea eliminar la tarjeta?')) {
-                $.ajax({
-                    type: "POST",
-                    url: "/GestorContenido/EliminarTarjeta",
-                    data: {
-                        IdTarjeta: id
-                    },
-                    success: (response) => {
-                        if (response.result == "Ok") {
-                            FiltrarTarjetas(1);
-                        }
-                        else {
-                            console.log(response.message);
-                        }
+                    if (response.success) {
+                        propiedades = JSON.parse(response.propiedades);
+                        CargarDatos();
                     }
-                });
-            }
-        }
-        function ActualizarTarjetas() {
-            $.ajax({
-                type: "GET",
-                url: "/GestorContenido/ActualizarTarjetas",
-                success: (response) => {
-                    window.location.reload();
+                    else {
+                        alert("Ocurrió un error: " + response.message);
+                    }
                 }
-            })
+            });
         }
-        function ActualizarColoresFuentes() {
-            $.ajax({
-                type: "GET",
-                url: "/GestorContenido/ActualizarColoresFuentes",
-                success: (response) => {
-                    window.location.reload();
+        //Guardar formulario propiedades si cambian imagenes
+        function GuardarPropiedad() {
+            var formData = new FormData();
+            for (var i = 0; i < propiedades.length; i++) {
+                if (activo == propiedades[i].modulo.toLowerCase()) {
+                    formData.append("id", propiedades[i].id);
+                    formData.append("modulo", propiedades[i].modulo);
+                    formData.append("img_url", propiedades[i].img_url);
+                    formData.append("r", $("#" + propiedades[i].modulo.toLowerCase() + "-r").val());
+                    formData.append("g", $("#" + propiedades[i].modulo.toLowerCase() + "-g").val());
+                    formData.append("b", $("#" + propiedades[i].modulo.toLowerCase() + "-b").val());
+                    formData.append("nuevaImagen", document.getElementById(activo + "-nueva-img").files[0]);
                 }
-            })
+            };
+            $.ajax({
+                url: "/GestorContenido/EditarPropiedad",
+                method: "post",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.success) {
+                        propiedades = JSON.parse(response.propiedades);
+                        CargarDatos();
+                    }
+                    else {
+                        alert("Ocurrió un error: " + response.message);
+                    }
+                }
+            });
         }
+
+        $("#Inspecciones").on('click', function (e) {
+            activo = "inspection";
+            $(this).tab('show');
+            $("#inspecciones-input").show();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
+        });
+        $("#RAC").on('click', function (e) {
+            activo = "rac";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").show();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#Residuos").on('click', function (e) {
+            activo = "residuos";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").show();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#Incidentes").on('click', function (e) {
+            activo = "incidentes";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").show();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#Fauna").on('click', function (e) {
+            activo = "fauna";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").show();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#Agua").on('click', function (e) {
+            activo = "agua";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").show();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#SGA").on('click', function (e) {
+            activo = "sga";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").show();
+            $("#tablas-input").hide();
+            $("#dashboard-input").hide();
+        });
+        $("#Tablas").on('click', function (e) {
+            activo = "tablas";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").show();
+            $("#dashboard-input").hide();
+        });
+        $("#Dashboard").on('click', function (e) {
+            activo = "dashboard";
+            $(this).tab('show');
+            $("#inspecciones-input").hide();
+            $("#rac-input").hide();
+            $("#residuos-input").hide();
+            $("#incidentes-input").hide();
+            $("#fauna-input").hide();
+            $("#agua-input").hide();
+            $("#sga-input").hide();
+            $("#tablas-input").hide();
+            $("#dashboard-input").show();
+        });
+        
+        const hexToRgb = hex =>
+            hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
+                , (m, r, g, b) => '#' + r + r + g + g + b + b)
+                .substring(1).match(/.{2}/g)
+                .map(x => parseInt(x, 16));
+
+        function parseColor(color) {
+            var arr = []; color.replace(/[\d+\.]+/g, function (v) { arr.push(parseFloat(v)); });
+            return {
+                hex: "#" + arr.slice(0, 3).map(toHex).join(""),
+                opacity: arr.length == 4 ? arr[3] : 1
+            };
+        }
+        function toHex(int) {
+            var hex = int.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        //function CargarTabs() {
+        //    var htmlTabs = "";
+        //    for (var i = 0; i < propiedades.length; i++) {
+        //        htmlTabs += "<li class=\"nav-item\" role=\"presentation\">" +
+        //            "<a class=\"nav-link" + (i == 0 ? " active" : "") + "\" type=\"button\" id = \"" + propiedades[i].modulo + "\" href=\"#" + propiedades[i].modulo + "\" data-bs-toggle=\"pill\" aria-selected=\"true\">" + propiedades[i].modulo + "</a>" +
+        //            "</li>";
+        //    }
+        //    $("#listItems").html(htmlTabs);
+        //}
+
+
+
+        //$(document).ready(function () {
+        //    //Buscar tab activo guardado en local storage
+        //    var activeTab = localStorage.getItem('activeTabGestorContenido');
+        //    //Si existe el objeto en local storage mostrar
+        //    if (activeTab) {
+        //        $('.nav-pills a[href="' + activeTab + '"]').click();
+        //    }
+        //    //Si no existe, mostrar primer tab
+        //    else {
+        //        FiltrarTarjetas(1);
+        //        $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
+        //    }
+        //});
+        //function dataModulo() {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/GestorContenido/PropiedadesModulo",
+        //        traditional: true,
+        //        success: (response) => {
+        //            if (response.success) {
+        //                let data = JSON.parse(response.data);
+        //                let r = data.r;
+        //                let g = data.g;
+        //                let b = data.b;
+        //                let img_url = data.img_url;
+        //                tablasStyle(r, g, b);
+        //            } else {
+        //                console.log("Ocurrió un problema: " + response.msg);
+        //            }
+        //        }
+        //    });
+        //}
+        ////Guardar tab activo en local storage
+        //$('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+        //    localStorage.setItem('activeTabGestorContenido', $(e.target).attr('href'));
+        //});
+        //$("#btn_enviar").on('click', function (e) {
+        //    if ($("#Tarjetas").hasClass("active")) {
+        //        FiltrarTarjetas(1);
+        //    } if ($("#Colores").hasClass("active")) {
+        //        FiltrarColores(1);
+        //    } if ($("#Fuentes").hasClass("active")) {
+        //        FiltrarFuentes(1);
+        //    }
+        //});
+        //$("#Tarjetas").on('click', function (e) {
+        //    $(this).tab('show');
+        //    $('#filtro').val("");
+        //    $("#btn_agregar").show();
+        //    $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
+        //    $("#btn_actualizar").attr("onclick", "ActualizarTarjetas()");
+        //    FiltrarTarjetas(1);
+        //});
+        //$("#Colores").on('click', function (e) {
+        //    $(this).tab('show');
+        //    $('#filtro').val("");
+        //    $("#btn_agregar").hide();
+        //    $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
+        //    FiltrarColores(1);
+        //});
+        //$("#Fuentes").on('click', function (e) {
+        //    $(this).tab('show');
+        //    $('#filtro').val("");
+        //    $("#btn_agregar").hide();
+        //    $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
+        //    FiltrarFuentes(1);
+        //});
+        //$("#Propiedades").on('click', function (e) {
+        //    $(this).tab('show');
+        //    $('#filtro').val("");
+        //    $("#btn_agregar").hide();
+        //    $("#btn_actualizar").attr("onclick", "ActualizarColoresFuentes()");
+        //    FiltrarPropiedades(1);
+        //});
+        //function FiltrarTarjetas(pag) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/GestorContenido/FiltrarTarjetas",
+        //        data: {
+        //            "pagina": pag,
+        //            "rpp": 10,
+        //            "filtro": $('#filtro').val(),
+        //        },
+        //        traditional: true,
+        //        success: (response) => {
+        //            $('#tab_content').empty();
+        //            $('#tab_content').html(response.tabla);
+        //            $('#paginado').html(response.paginador);
+        //            dataModulo();
+        //        }
+        //    });
+        //}
+        //function FiltrarColores(pag) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/GestorContenido/FiltrarColores",
+        //        data: {
+        //            "pagina": pag,
+        //            "rpp": 10,
+        //            "filtro": $('#filtro').val(),
+        //        },
+        //        traditional: true,
+        //        success: (response) => {
+        //            $('#tab_content').empty();
+        //            $('#tab_content').html(response.tabla);
+        //            $('#paginado').html(response.paginador);
+        //            dataModulo();
+        //        }
+        //    });
+        //}
+        //function FiltrarFuentes(pag) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/GestorContenido/FiltrarFuentes",
+        //        data: {
+        //            "pagina": pag,
+        //            "rpp": 10,
+        //            "filtro": $('#filtro').val(),
+        //        },
+        //        traditional: true,
+        //        success: (response) => {
+        //            $('#tab_content').empty();
+        //            $('#tab_content').html(response.tabla);
+        //            $('#paginado').html(response.paginador);
+        //            dataModulo();
+        //        }
+        //    });
+        //}
+        //function FiltrarPropiedades(pag) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: "/GestorContenido/FiltrarPropiedades",
+        //        data: {
+        //            "pagina": pag,
+        //            "rpp": 10,
+        //            "filtro": $('#filtro').val(),
+        //        },
+        //        traditional: true,
+        //        success: (response) => {
+        //            $('#tab_content').empty();
+        //            $('#tab_content').html(response.tabla);
+        //            $('#paginado').html(response.paginador);
+        //            dataModulo();
+        //        }
+        //    });
+        //}
+        //function EliminarTarjeta(id) {
+        //    if (confirm('¿Esta seguro que desea eliminar la tarjeta?')) {
+        //        $.ajax({
+        //            type: "POST",
+        //            url: "/GestorContenido/EliminarTarjeta",
+        //            data: {
+        //                IdTarjeta: id
+        //            },
+        //            success: (response) => {
+        //                if (response.result == "Ok") {
+        //                    FiltrarTarjetas(1);
+        //                }
+        //                else {
+        //                    console.log(response.message);
+        //                }
+        //            }
+        //        });
+        //    }
+        //}
+        //function ActualizarTarjetas() {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/GestorContenido/ActualizarTarjetas",
+        //        success: (response) => {
+        //            window.location.reload();
+        //        }
+        //    })
+        //}
+        //function ActualizarColoresFuentes() {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: "/GestorContenido/ActualizarColoresFuentes",
+        //        success: (response) => {
+        //            window.location.reload();
+        //        }
+        //    })
+        //}
     </script>
 }
 

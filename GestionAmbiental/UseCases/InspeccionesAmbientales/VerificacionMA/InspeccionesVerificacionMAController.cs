@@ -158,6 +158,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var cabecera = await _consultarCabeceraVerificacion.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
+                    ViewBag.Codigo = cabecera.Codigo;
                     ViewBag.IdCabecera = cabecera.IdCabecera;
                     var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.ExecuteVerificacion(IdDesencriptado, userInfo.NombreUsuario);

@@ -170,6 +170,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var cabecera = await _consultarCabecera.Execute(IdDesencriptado);
                     ViewBag.Cabecera = cabecera;
+                    ViewBag.Codigo = cabecera.Codigo;
                     ViewBag.idCabecera = cabecera.IdCabecera;
                     var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.Execute(IdDesencriptado, userInfo.NombreUsuario);

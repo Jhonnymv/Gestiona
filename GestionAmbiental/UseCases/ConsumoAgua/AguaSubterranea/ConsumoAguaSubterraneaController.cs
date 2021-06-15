@@ -131,7 +131,6 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
             };
             return Ok(response);
         }
-
         public async Task<IActionResult> NuevoRegistro(string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

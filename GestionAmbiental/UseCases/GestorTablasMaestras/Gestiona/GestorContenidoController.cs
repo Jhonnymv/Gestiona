@@ -72,10 +72,73 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var propiedadesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propiedadesText = System.IO.File.ReadAllText(propiedadesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                ViewBag.ListaPropiedades = propiedadesText;
+
+
                 return View();
             }
         }
         //Propiedadaes módulos
+        [HttpPost]
+        public async Task<IActionResult> GuardarColores(string json)
+        {
+            dynamic response;
+            try
+            {
+                var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                //convertir a json y guardarlo en archivo json
+                var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(json);
+                string jsonToSave = JsonConvert.SerializeObject(propiedadesJson);
+                System.IO.File.WriteAllText(propiedadesJsonPath, jsonToSave, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                //listar propiedades
+                //Buscar archivo js con las propiedades
+                var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
+                var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                foreach (var propiedad in propiedadesJson)
+                {
+                    //Modificar JS     
+
+                    //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
+                    //primera letra + id.length + " = ".lenght
+                    var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
+                    //primera letra + id.length + " = ".lenght
+                    var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
+                    //primera letra + id.length + " = ".lenght
+                    var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
+                    //convertir a json y guardarlo en archivo json
+                    System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                }
+                response = new
+                {
+                    success = true,
+                    propiedades = jsonToSave
+                };
+            }
+            catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
         [HttpPost]
         public async Task<IActionResult> FiltrarPropiedades(string filtro, int pagina, int rpp)
         {
@@ -181,112 +244,117 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarPropiedades(PropiedadModulos model)
+        public async Task<IActionResult> EditarPropiedad(PropiedadModulos model)
         {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            dynamic response;
+            try
             {
-                return RedirectToAction("NoAutorizado", "Home");
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
-
-                if (ModelState.IsValid)
+                //MODIFICAR ARCHIVO JSON Y TEMPLATE JS
+                //Buscar archivo json con las propiedades
+                var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propiedadesJsonText = System.IO.File.ReadAllText(propiedadesJsonPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(propiedadesJsonText);
+                //Buscar archivo js con las propiedades
+                var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
+                var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                //Buscar la propiedad que se modificó
+                var propiedad = propiedadesJson.Find(x => x.modulo.Equals(model.modulo));
+                //Si la propiedad existe
+                if (propiedad != null)
                 {
-                    //MODIFICAR ARCHIVO JSON Y TEMPLATE JS
-                   
-                    //Buscar archivo json con las propiedades
-                    var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
-                    var propiedadesJsonText = System.IO.File.ReadAllText(propiedadesJsonPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                    var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(propiedadesJsonText);
+                    //Modifiar los datos de la propiedad por los traidos del modelo
+                    propiedad.id = model.id;
+                    propiedad.modulo = model.modulo;
+                    propiedad.r = model.r;
+                    propiedad.g = model.g;
+                    propiedad.b = model.b;
+                    //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
+                    //primera letra + id.length + " = ".lenght
+                    var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
 
-                    //Buscar archivo js con las propiedades
-                    var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
-                    var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    //primera letra + id.length + " = ".lenght
+                    var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
 
-                    //Buscar la propiedad que se modificó
-                    var propiedad = propiedadesJson.Find(x => x.modulo.Equals(model.modulo));
-                    //Si la propiedad existe
-                    if (propiedad != null)
+                    //primera letra + id.length + " = ".lenght
+                    var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+                    //index of (primer valor de la variable) + index of(;)
+                    var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
+                    //reemplazar valores
+                    newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
+                    //Si la imagen cambio
+                    if (model.nuevaImagen != null && model.nuevaImagen.Length > 0)
                     {
-                        //Modifiar los datos de la propiedad por los traidos del modelo
-                        propiedad.id = model.id;
-                        propiedad.modulo = model.modulo;
-                        propiedad.r = model.r;
-                        propiedad.g = model.g;
-                        propiedad.b = model.b;
-                        //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
-                        //primera letra + id.length + " = ".lenght
-                        var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                        //index of (primer valor de la variable) + index of(;)
-                        var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
-                        //reemplazar valores
-                        var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
+                        //Asignar nombre a la imagen y cargarla en wwwroot/img
+                        var rutaImagenAnterior = propiedad.img_url;
+                        var extension = Path.GetExtension(model.nuevaImagen.FileName);
+                        var rutaNuevoArchivo = CargarImagen(model.nuevaImagen, model.modulo, extension).Result;
 
-                        //primera letra + id.length + " = ".lenght
-                        var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                        //index of (primer valor de la variable) + index of(;)
-                        var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
-                        //reemplazar valores
-                        newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
+                        model.img_url = rutaNuevoArchivo.Replace("\\", "/");
+                        propiedad.img_url = model.img_url;
+                        //Eliminar imagen anterior
+                        //EliminarImagen(rutaImagenAnterior);
 
-                        //primera letra + id.length + " = ".lenght
-                        var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                        //index of (primer valor de la variable) + index of(;)
-                        var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
-                        //reemplazar valores
-                        newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
-                        //Si la imagen cambio
-                        if (model.nuevaImagen != null && model.nuevaImagen.Length > 0)
-                        {
-                            //Asignar nombre a la imagen y cargarla en wwwroot/img
-                            var rutaImagenAnterior = propiedad.img_url;
-                            var extension = Path.GetExtension(model.nuevaImagen.FileName);
-                            var rutaNuevoArchivo = CargarImagen(model.nuevaImagen, model.modulo, extension).Result;
+                        //Modificar imagen $('.modulo .image-header-container').css('background-image', 'url("nueva-url")') ej: $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+                        var imgTextToFind = "$(\'." + propiedad.modulo.ToLower() + " .image-header-container\').css('background-image', 'url(\"";
+                        var imgStartIndex = newJs.IndexOf(imgTextToFind) + imgTextToFind.Length;
+                        var imgLastIndex = imgStartIndex + newJs.Substring(imgStartIndex, 150).IndexOf('\"');
+                        newJs = newJs.Substring(0, imgStartIndex) + propiedad.img_url + newJs.Substring(imgLastIndex);
 
-                            model.img_url = rutaNuevoArchivo.Replace("\\", "/");
-                            propiedad.img_url = model.img_url;
-                            //Eliminar imagen anterior
-                            //EliminarImagen(rutaImagenAnterior);
-
-                            //Modificar imagen $('.modulo .image-header-container').css('background-image', 'url("nueva-url")') ej: $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-                            var imgTextToFind = "$(\'." + propiedad.modulo.ToLower() + " .image-header-container\').css('background-image', 'url(\"";
-                            var imgStartIndex = newJs.IndexOf(imgTextToFind) + imgTextToFind.Length;
-                            var imgLastIndex = imgStartIndex + newJs.Substring(imgStartIndex, 150).IndexOf('\"');
-                            newJs = newJs.Substring(0, imgStartIndex) + propiedad.img_url + newJs.Substring(imgLastIndex);
-
-                            //Modificar imagen $('.modal-menu-modulo .modal-content .modal-image-header-container').css('background-image', 'url("nueva-url")'); ej: $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-                            var img2TextToFind = "$(\'.modal-menu-" + propiedad.modulo.ToLower() + " .modal-content .modal-image-header-container').css('background-image', 'url(\"";
-                            var img2StartIndex = newJs.IndexOf(img2TextToFind) + img2TextToFind.Length;
-                            var img2LastIndex = img2StartIndex + newJs.Substring(img2StartIndex, 150).IndexOf('\"');
-                            newJs = newJs.Substring(0, img2StartIndex) + propiedad.img_url + newJs.Substring(img2LastIndex);
-                        }
-                        //Convertir las propiedades al formato que guarda el json
-                        var toJson = propiedadesJson.Select(x => new PropiedadModulo
-                        {
-                            id = x.id,
-                            modulo = x.modulo,
-                            r = x.r,
-                            g = x.g,
-                            b = x.b,
-                            img_url = x.img_url
-                        }).ToList();
-
-                        //convertir a json y guardarlo en archivo json
-                        string json = JsonConvert.SerializeObject(toJson);
-                        System.IO.File.WriteAllText(propiedadesJsonPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
-
-                        //convertir a json y guardarlo en archivo json
-                        System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        //Modificar imagen $('.modal-menu-modulo .modal-content .modal-image-header-container').css('background-image', 'url("nueva-url")'); ej: $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+                        var img2TextToFind = "$(\'.modal-menu-" + propiedad.modulo.ToLower() + " .modal-content .modal-image-header-container').css('background-image', 'url(\"";
+                        var img2StartIndex = newJs.IndexOf(img2TextToFind) + img2TextToFind.Length;
+                        var img2LastIndex = img2StartIndex + newJs.Substring(img2StartIndex, 150).IndexOf('\"');
+                        newJs = newJs.Substring(0, img2StartIndex) + propiedad.img_url + newJs.Substring(img2LastIndex);
                     }
+                    //Convertir las propiedades al formato que guarda el json
+                    var toJson = propiedadesJson.Select(x => new PropiedadModulo
+                    {
+                        id = x.id,
+                        modulo = x.modulo,
+                        r = x.r,
+                        g = x.g,
+                        b = x.b,
+                        img_url = x.img_url
+                    }).ToList();
 
-                    return RedirectToAction("DetallePropiedades", new { Modulo = model.modulo });
+                    //convertir a json y guardarlo en archivo json
+                    string json = JsonConvert.SerializeObject(toJson);
+                    System.IO.File.WriteAllText(propiedadesJsonPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                    //convertir a json y guardarlo en archivo json
+                    System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    response = new
+                    {
+                        success = true,
+                        propiedades = json
+                    };
                 }
-                return RedirectToAction("DetallePropiedades", new { Modulo = model.modulo });
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "No se encontró el módulo"
+                    };
+                }
             }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
         }
         //Tarjetas
         [HttpPost]
