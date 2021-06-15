@@ -301,6 +301,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Residuos").on('click', function (e) {
             activo = "residuos";
@@ -314,6 +321,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Incidentes").on('click', function (e) {
             activo = "incidentes";
@@ -327,6 +341,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Fauna").on('click', function (e) {
             activo = "fauna";
@@ -340,6 +361,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Agua").on('click', function (e) {
             activo = "agua";
@@ -353,6 +381,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#SGA").on('click', function (e) {
             activo = "sga";
@@ -366,6 +401,13 @@
             $("#sga-input").show();
             $("#tablas-input").hide();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Tablas").on('click', function (e) {
             activo = "tablas";
@@ -379,6 +421,13 @@
             $("#sga-input").hide();
             $("#tablas-input").show();
             $("#dashboard-input").hide();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         $("#Dashboard").on('click', function (e) {
             activo = "dashboard";
@@ -392,6 +441,13 @@
             $("#sga-input").hide();
             $("#tablas-input").hide();
             $("#dashboard-input").show();
+            $("#" + activo + "-colorPicker").on('change', function () {
+                var rgb = hexToRgb($("#" + activo + "-colorPicker").val());
+                console.log(rgb);
+                $("#" + activo + "-r").val(rgb[0]);
+                $("#" + activo + "-g").val(rgb[1]);
+                $("#" + activo + "-b").val(rgb[2]);
+            });
         });
         
         const hexToRgb = hex =>
