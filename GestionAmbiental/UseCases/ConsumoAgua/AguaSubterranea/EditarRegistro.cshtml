@@ -3,125 +3,272 @@
     ViewData["Title"] = "Editar Registro";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+<div class="agua">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Editar Registro de Consumo de Agua Subterranea</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form w-100" id="form_nuevo_consumo" asp-action="EditarRegistro" asp-controller="ConsumoAguaSubterranea" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="col-12 col-xl-8">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="IdResolucion"></label>
+                            <span class="text-danger" asp-validation-for="IdResolucion"></span>
+                            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades" value="@Model.IdResolucion" disabled></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Resolucion"></label>
+                            <span class="text-danger" asp-validation-for="Resolucion"></span>
+                            <input type="text" class="form-control" asp-for="Resolucion" readonly />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="Fecha"></label>
+                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                            <input type="date" class="form-control" asp-for="Fecha" readonly />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            @if (ViewBag.Rol.Equals("Admin"))
+                            {
+                                <div class="row">
+                                    <div class="col-8 p-0 m-0">
+                                        <label asp-for="TiempoBombeo"></label>
+                                        <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
+                                        <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" readonly/>
+                                    </div>
+                                    <div class="col-4 p-0 m-0 d-flex align-items-end justify-content-end" data-toggle="tooltip" data-placement="top" title="Calcular Tiempo de Bombeo">
+                                        <button type="button" class="btn btn-mc m-0" onclick="AbrirCalculadora()">
+                                            <svg width="24" height="24" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M16 0H2C0.9 0 0 0.9 0 2V16C0 17.1 0.9 18 2 18H16C17.1 18 18 17.1 18 16V2C18 0.9 17.1 0 16 0ZM16 16H2V2H16V16Z" fill="white" />
+                                                <path d="M3.25 4.72H8.25V6.22H3.25V4.72ZM10 12.75H15V14.25H10V12.75ZM10 10.25H15V11.75H10V10.25ZM5 15H6.5V13H8.5V11.5H6.5V9.5H5V11.5H3V13H5V15ZM11.09 7.95L12.5 6.54L13.91 7.95L14.97 6.89L13.56 5.47L14.97 4.06L13.91 3L12.5 4.41L11.09 3L10.03 4.06L11.44 5.47L10.03 6.89L11.09 7.95Z" fill="white" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <label asp-for="TiempoBombeo"></label>
+                                <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
+                                <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" readonly />
+                            }
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="LecturaInicial"></label>
+                            <span class="text-danger" asp-validation-for="LecturaInicial"></span>
+                            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="LecturaFinal"></label>
+                            <span class="text-danger" asp-validation-for="LecturaFinal"></span>
+                            <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" readonly />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="VolumenAguaBombeado"></label>
+                            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
+                            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" step="0.01" readonly />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="CaudalPromedio"></label>
+                            <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
+                            <input type="number" class="form-control" asp-for="CaudalPromedio" step="0.01" readonly />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Editar Consumo de Agua Subterranea</h2>
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="ConsumoAguaMar" asp-action="Resumen">Volver</a>
+                                @if (ViewBag.Rol.Equals("Admin"))
+                                {
+                                    <button class="btn btn-mc-success" id="btn_enviar" type="button">Guardar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="ConsumoAguaSubterranea" method="post" enctype="multipart/form-data" autocomplete="off">
-    <div class="row mb-2 align-items-center">
-        <input type="hidden" class="form-control" asp-for="Id" value="@Model.Id" />
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdResolucion"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="IdResolucion"></span>
-            <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades" value="@Model.IdResolucion" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Resolucion"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-6 mb-2">
-            <span class="text-danger" asp-validation-for="Resolucion"></span>
-            <input type="text" class="form-control" asp-for="Resolucion" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Fecha"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Fecha"></span>
-            <input type="date" class="form-control" asp-for="Fecha" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="TiempoBombeo"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
-            <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" readonly />
-        </div>
-        @if (ViewBag.Rol.Equals("Admin"))
-        {
-            <div class="col-sm-12 col-md-6 col-lg-4 mb-2 text-center">
-                <button type="button" class="btn btn-link" onclick="AbrirCalculadora()">Calcular Tiempo de Bombeo</button>
-            </div>
-        }
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="LecturaInicial"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="LecturaInicial"></span>
-            <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="LecturaFinal"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="LecturaFinal"></span>
-            <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="VolumenAguaBombeado"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
-            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="CaudalPromedio"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
-            <input type="number" class="form-control" asp-for="CaudalPromedio" readonly />
-        </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">Cancelar</a>
-        @if (ViewBag.Rol.Equals("Admin"))
-        {
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        }
-    </div>
-</form>
 <!-- Modal Calcular Tiempo Bombeo-->
-<div class="modal fade" id="modal_calculadora" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_calculadora"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_calculadora">
-                    Calcular Tiempo de Bombeo
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <label>Tiempo en Minutos:</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
+<div class="modal fade" id="modal_calculadora" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-agua">
+            <div class="modal-content">
+                <div class="agua">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="image-header-container">
+                        <div class="header-title agua-opacity-color">
+                            <h3>Calcular Tiempo de Bombeo</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <label>Tiempo en Horas:</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
+                <div class="modal-body">
+                    <div class="agua">
+                        <div class="container pt-4 pb-4">
+                            <div class="custom-form w-100">
+                                <div class="col-12 col-xl-8">
+                                    <div class="row input_container">
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label>Tiempo en Minutos</label>
+                                            <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
+                                        </div>
+                                        <div class="col-12 col-sm-6 col-lg-6">
+                                            <label>Tiempo en Horas</label>
+                                            <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" style="color:white" onclick="UtilizarTiempo()">Utilizar Tiempo</a>
+                <div class="modal-footer">
+                    <div class="button-container">
+                        <div>
+
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-mc-outline-danger" data-bs-dismiss="modal" aria-label="Close">Cancelar</a>
+                            <button class="btn btn-mc-success" onclick="UtilizarTiempo()">Utilizar Tiempo</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Editar Consumo de Agua Subterranea</h2>
+        </div>
+    </div>
+
+    <form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="ConsumoAguaSubterranea" method="post" enctype="multipart/form-data" autocomplete="off">
+        <div class="row mb-2 align-items-center">
+            <input type="hidden" class="form-control" asp-for="Id" value="@Model.Id" />
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="IdResolucion"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="IdResolucion"></span>
+                <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades" value="@Model.IdResolucion" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="Resolucion"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-6 mb-2">
+                <span class="text-danger" asp-validation-for="Resolucion"></span>
+                <input type="text" class="form-control" asp-for="Resolucion" readonly />
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="Fecha"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="Fecha"></span>
+                <input type="date" class="form-control" asp-for="Fecha" readonly />
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="TiempoBombeo"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
+                <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" readonly />
+            </div>
+            @if (ViewBag.Rol.Equals("Admin"))
+            {
+                <div class="col-sm-12 col-md-6 col-lg-4 mb-2 text-center">
+                    <button type="button" class="btn btn-link" onclick="AbrirCalculadora()">Calcular Tiempo de Bombeo</button>
+                </div>
+            }
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="LecturaInicial"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="LecturaInicial"></span>
+                <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="LecturaFinal"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="LecturaFinal"></span>
+                <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" readonly />
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="VolumenAguaBombeado"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
+                <input type="number" class="form-control" asp-for="VolumenAguaBombeado" readonly />
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="CaudalPromedio"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
+                <input type="number" class="form-control" asp-for="CaudalPromedio" readonly />
+            </div>
+        </div>
+        <div class="row mb-2 mr-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mr-2" style="color:white" asp-controller="ConsumoAguaSubterranea" asp-action="Resumen">Cancelar</a>
+            @if (ViewBag.Rol.Equals("Admin"))
+            {
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            }
+        </div>
+    </form>
+    <!-- Modal Calcular Tiempo Bombeo-->
+    <div class="modal fade" id="modal_calculadora" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_calculadora"
+         aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titulo_modal_calculadora">
+                        Calcular Tiempo de Bombeo
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-2">
+                        <div class="col-lg-4">
+                            <label>Tiempo en Minutos:</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="number" class="form-control" id="cal_tiempo_minutos" min="0" />
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-lg-4">
+                            <label>Tiempo en Horas:</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="number" class="form-control" id="cal_tiempo_horas" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <a class="btn btn-primary" style="color:white" onclick="UtilizarTiempo()">Utilizar Tiempo</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
 @section Scripts{
     <script type="text/javascript">
         var horas = 0;
@@ -142,7 +289,6 @@
                 $("#LecturaFinal").prop('readonly', false);
             }
         });
-
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
             for (var i = 0; i < resolucionesAct.length; i++) {
@@ -180,7 +326,7 @@
                 $("#LecturaFinal").val(lecturaInicial);
                 lecturaFinal = lecturaInicial;
                 if (tiempoAnterior == 24)
-                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))                
+                    alert(mensajesError.MensajesError[0].Mensaje.replace("ARG1", $("#Fecha").val()))
                     //alert("La suma del tiempo de bombeo de la fecha " + ($("#Fecha").val()) + " alcanzó las 24 horas");
                 else
                     alert(mensajesError.MensajesError[1].Mensaje.replace("ARG1",  (24 - tiempoAnterior)))
@@ -189,7 +335,6 @@
                 CalcularCaudalPromedio();
             }
         });
-        
         $("#TiempoBombeo, #LecturaInicial, #LecturaFinal").on('change', function () {
             tiempoAnterior = 0;
             horas = $("#TiempoBombeo").val() != "" ? parseFloat($("#TiempoBombeo").val()) : null;
@@ -239,7 +384,7 @@
                             $("#TiempoBombeo").val(0)
                             $("#LecturaFinal").val(lecturaInicial)
                             alert(mensajesError.MensajesError[4].Mensaje)
-                            //alert("Si la lectura inicial y final son iguales, el tiempo de bombeo debe igual a cero");   
+                            //alert("Si la lectura inicial y final son iguales, el tiempo de bombeo debe igual a cero");
                             CalcularVolumenAguaBombeado();
                             CalcularCaudalPromedio();
                         }
@@ -269,12 +414,10 @@
                 }
             }
         });
-
         function CalcularVolumenAguaBombeado() {
             var volumen = lecturaFinal - lecturaInicial;
             $("#VolumenAguaBombeado").val(volumen);
         }
-
         function CalcularCaudalPromedio() {
             var volumen = lecturaFinal - lecturaInicial;
             var segundos = horas * 3600;
@@ -295,6 +438,14 @@
             var min = $("#cal_tiempo_minutos").val();
             console.log(min)
             $("#cal_tiempo_horas").val(Math.round((min / 60) * 100) / 100);
+        });
+        $("#btn_enviar").click(function (e) {
+            if ($("#CaudalPromedio").val() != caudalPromedio) {
+                if (confirm("¡Alerta! Datos fuera del rango ¿Desea continuar?"))
+                    $("#form_nuevo_consumo").submit();
+            }
+            else
+                $("#form_nuevo_consumo").submit();
         });
     </script>
 }

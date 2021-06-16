@@ -17,26 +17,26 @@
                 <div class="col-12 col-xl-8">
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="IdResolucion">Actividad</label>
+                            <label asp-for="IdResolucion"></label>
                             <span class="text-danger" asp-validation-for="IdResolucion"></span>
                             <select asp-for="IdResolucion" class="form-control" asp-items="ViewBag.Actividades"></select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Resolucion">Resolución</label>
+                            <label asp-for="Resolucion"></label>
                             <span class="text-danger" asp-validation-for="Resolucion"></span>
                             <input type="text" class="form-control" asp-for="Resolucion" readonly />
                         </div>
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Fecha">Fecha</label>
+                            <label asp-for="Fecha"></label>
                             <span class="text-danger" asp-validation-for="Fecha"></span>
                             <input type="date" class="form-control" asp-for="Fecha" />
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
                             <div class="row">
                                 <div class="col-8 p-0 m-0">
-                                    <label asp-for="TiempoBombeo">Tiempo de Bombeo (Horas)</label>
+                                    <label asp-for="TiempoBombeo"></label>
                                     <span class="text-danger" asp-validation-for="TiempoBombeo"></span>
                                     <input type="number" class="form-control" asp-for="TiempoBombeo" step="0.01" />
                                 </div>
@@ -52,25 +52,25 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="LecturaInicial">Lectura Inicial Flujómetro en el día (m3)</label>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="LecturaInicial"></label>
                             <span class="text-danger" asp-validation-for="LecturaInicial"></span>
                             <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
                         </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="LecturaFinal">Lectura Final Flujómetro en el día (m3)</label>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="LecturaFinal"></label>
                             <span class="text-danger" asp-validation-for="LecturaFinal"></span>
                             <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="VolumenAguaBombeado">Volumen de Agua Bombeado (consumo) m3</label>
-                            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
-                            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" step="0.01" readonly />
                         </div>
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="CaudalPromedio">Caudal Promedio Consumido (m3/s)</label>
+                            <label asp-for="VolumenAguaBombeado"></label>
+                            <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
+                            <input type="number" class="form-control" asp-for="VolumenAguaBombeado" step="0.01" readonly />
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label asp-for="CaudalPromedio"></label>
                             <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
                             <input type="number" class="form-control" asp-for="CaudalPromedio" step="0.01" readonly />
                         </div>

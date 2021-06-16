@@ -52,23 +52,23 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="LecturaInicial">Lectura Inicial Flujómetro en el día (m3)</label>
                             <span class="text-danger" asp-validation-for="LecturaInicial"></span>
                             <input type="number" class="form-control" asp-for="LecturaInicial" step="0.01" readonly />
                         </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
+                        <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="LecturaFinal">Lectura Final Flujómetro en el día (m3)</label>
                             <span class="text-danger" asp-validation-for="LecturaFinal"></span>
                             <input type="number" class="form-control" asp-for="LecturaFinal" step="0.01" />
                         </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="VolumenAguaBombeado">Volumen de Agua Bombeado (consumo) m3</label>
                             <span class="text-danger" asp-validation-for="VolumenAguaBombeado"></span>
                             <input type="number" class="form-control" asp-for="VolumenAguaBombeado" step="0.01" readonly />
                         </div>
-                    </div>
-                    <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="CaudalPromedio">Caudal Promedio Consumido (m3/s)</label>
                             <span class="text-danger" asp-validation-for="CaudalPromedio"></span>
