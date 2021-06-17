@@ -475,6 +475,16 @@ a:focus {
     padding: 10px 0px;
 }
 
+.first-div-tab-content .tab-pane {
+    height: 100%;
+}
+
+.first-div-tab-content .tab-pane .align-items-center-mc{
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
 .first-div-content-settings{
     margin: 5px 0px;
 }
@@ -514,7 +524,7 @@ a:focus {
     width:7px;
 }
 
-.div-scroll-horizontal::-webkit-scrollbar-button:increment, #sidebar::-webkit-scrollbar-button {
+.div-scroll-horizontal::-webkit-scrollbar-button:increment, div-scroll-horizontal::-webkit-scrollbar-button {
     display: none;
 }
 
@@ -562,6 +572,37 @@ a:focus {
 
 .modal .table-responsive table tbody .progress .progress-bar {
     top: -13px;
+}
+
+.table-responsive::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.table-responsive::-webkit-scrollbar:vertical {
+    width:7px;
+}
+
+.table-responsive::-webkit-scrollbar-button:increment, table-responsive::-webkit-scrollbar-button {
+    display: none;
+}
+
+.table-responsive::-webkit-scrollbar:horizontal {
+    height: 7px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.0);
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.table-responsive:hover::-webkit-scrollbar-thumb {
+    border: 2px #ffffff solid;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    border-radius: 10px;
 }
 
 .filters-mc {

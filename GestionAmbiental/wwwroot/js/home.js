@@ -29,6 +29,7 @@ $(document).ready(function (){
         else {
             $("#error_message").css('display', 'none');
             $('.login-button button span').css('display', 'none');
+            $(this).html('');
             $(this).fadeIn('slow').append(`<div class="spinner">
                                           <div class="rect1"></div>
                                           <div class="rect2"></div>

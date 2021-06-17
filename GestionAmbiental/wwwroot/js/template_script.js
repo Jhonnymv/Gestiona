@@ -9,14 +9,14 @@ $(document).ready(function () {
     $('div.modal .login-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //MENU MODAL
-    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-residuos .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210617000115.png")');
+    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210617000322.png")');
+    $('.modal-menu-residuos .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210616235408.png")');
+    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210616235423.png")');
+    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210616235604.png")');
+    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210616235616.png")');
+    $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210616235703.png")');
+    $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210616235714.png")');
     $('.modal-menu-dashboard .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
     $('.modal-menu-settings .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
@@ -27,85 +27,85 @@ $(document).ready(function () {
     $('div.modal .mc-modal-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //INSPECCIONES
-    let r1 = 101;
-    let g1 = 102;
-    let b1 = 114;
+    let r1 = 99;
+    let g1 = 32;
+    let b1 = 223;
     inspectionStyle(r1, g1, b1);
     $("#inspectionColorPicked").html('rgb ('+r1+', '+g1+', '+b1+')');
     let inspectionColor = rgbToHex(r1, g1, b1);
-    $("#inspectionColorPicker").val(inspectionColor);
+    $("#inspection-colorPicker").val(inspectionColor);
 
     //RAC
-    let r2 = 152;
-    let g2 = 0;
-    let b2 = 0;
+    let r2 = 217;
+    let g2 = 69;
+    let b2 = 79;
     racStyle(r2, g2, b2);
     $("#racColorPicked").html('rgb (' + r2 + ', ' + g2 + ', ' + b2 + ')');
     let racColor = rgbToHex(r2, g2, b2);
-    $("#racColorPicker").val(racColor);
+    $("#rac-colorPicker").val(racColor);
 
     //RESIDUOS
-    let r3 = 110;
-    let g3 = 41;
-    let b3 = 141;
+    let r3 = 213;
+    let g3 = 178;
+    let b3 = 1;
     residuosStyle(r3, g3, b3);
     $("#residuosColorPicked").html('rgb (' + r3 + ', ' + g3 + ', ' + b3 + ')');
     let residuosColor = rgbToHex(r3, g3, b3);
-    $("#residuosColorPicker").val(residuosColor);
+    $("#residuos-colorPicker").val(residuosColor);
 
     //INCIDENTES
-    let r4 = 0;
-    let g4 = 188;
-    let b4 = 228;
+    let r4 = 76;
+    let g4 = 193;
+    let b4 = 220;
     incidentesStyle(r4, g4, b4);
     $("#incidentesColorPicked").html('rgb (' + r4 + ', ' + g4 + ', ' + b4 + ')');
     let incidentesColor = rgbToHex(r4, g4, b4);
-    $("#incidentesColorPicker").val(incidentesColor);
+    $("#incidentes-colorPicker").val(incidentesColor);
 
     //FAUNA
-    let r5 = 8;
-    let g5 = 99;
-    let b5 = 61;
+    let r5 = 60;
+    let g5 = 195;
+    let b5 = 87;
     faunaStyle(r5, g5, b5);
     $("#faunaColorPicked").html('rgb (' + r5 + ', ' + g5 + ', ' + b5 + ')');
     let faunaColor = rgbToHex(r5, g5, b5);
-    $("#faunaColorPicker").val(faunaColor);
+    $("#fauna-colorPicker").val(faunaColor);
 
     //AGUA
-    let r6 = 65;
-    let g6 = 182;
-    let b6 = 230;
+    let r6 = 3;
+    let g6 = 95;
+    let b6 = 165;
     aguaStyle(r6, g6, b6);
     $("#aguaColorPicked").html('rgb (' + r6 + ', ' + g6 + ', ' + b6 + ')');
     let aguaColor = rgbToHex(r6, g6, b6);
-    $("#aguaColorPicker").val(aguaColor);
+    $("#agua-colorPicker").val(aguaColor);
 
     //SGA
-    let r7 = 129;
-    let g7 = 110;
-    let b7 = 12;
+    let r7 = 201;
+    let g7 = 190;
+    let b7 = 135;
     sgaStyle(r7, g7, b7);
     $("#sgaColorPicked").html('rgb (' + r7 + ', ' + g7 + ', ' + b7 + ')');
     let sgaColor = rgbToHex(r7, g7, b7);
-    $("#sgaColorPicker").val(sgaColor);
+    $("#sga-colorPicker").val(sgaColor);
 
     //TABLAS
-    let r8 = 196;
-    let g8 = 34;
-    let b8 = 151;
+    let r8 = 251;
+    let g8 = 75;
+    let b8 = 201;
     tablasStyle(r8, g8, b8);
     $("#tablasColorPicked").html('rgb (' + r8 + ', ' + g8 + ', ' + b8 + ')');
     let tablasColor = rgbToHex(r8, g8, b8);
-    $("#tablasColorPicker").val(tablasColor);
+    $("#tablas-colorPicker").val(tablasColor);
 
     //DASHBOARD
     let r9 = 152;
     let g9 = 0;
     let b9 = 0;
     dashboardStyle(r9, g9, b9);
-    $("#dashboardColorPicked").html('rgb (' + r9 + ', ' + g9 + ', ' + b9 + ')');
+    $("#dashboard-ColorPicked").html('rgb (' + r9 + ', ' + g9 + ', ' + b9 + ')');
     let dashboardColor = rgbToHex(r9, g9, b9);
-    $("#dashboardColorPicker").val(dashboardColor);
+    $("#dashboard-colorPicker").val(dashboardColor);
 });
 
 const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
@@ -117,7 +117,7 @@ function inspectionStyle (r, g, b){
     $('.inspection-opacity-color').css('background-color', 'rgba('+r+', '+g+', '+b+', 0.7)');
     $('.table-responsive.inspection-color table tbody tr td').css({"color":'rgb('+r+', '+g+', '+b+')', "background-color":'rgba('+r+', '+g+', '+b+', 0.2)'});
     $('.action-container.inspection-color').css("border-color", 'rgb('+r+', '+g+', '+b+')');
-    $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.inspection .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210617000115.png")');
 
     //DIV SEPARATORS
     $('.inspection .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -157,26 +157,11 @@ function inspectionStyle (r, g, b){
     $('.modal-menu-inspection .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
 }
 
-$("#inspectionColorPicker").change(function() {
-    var hex = $(this).val();
-    const hexToRgb = hex =>
-        hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
-            ,(m, r, g, b) => '#' + r + r + g + g + b + b)
-            .substring(1).match(/.{2}/g)
-            .map(x => parseInt(x, 16));
-
-    let r = hexToRgb(hex)[0];
-    let g = hexToRgb(hex)[1];
-    let b = hexToRgb(hex)[2];
-    $("#inspectionColorPicked").html('rgb ('+r+', '+g+', '+b+')')
-    inspectionStyle(r, g, b);
-});
-
 function racStyle(r, g, b) {
     $('.rac-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.rac-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.rac-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.rac .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.rac .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210617000322.png")');
 
     //DIV SEPARATORS
     $('.rac .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -220,7 +205,7 @@ function residuosStyle(r, g, b) {
     $('.residuos-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.residuos-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.residuos-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.residuos .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.residuos .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210616235408.png")');
 
     //DIV SEPARATORS
     $('.residuos .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -264,7 +249,7 @@ function incidentesStyle(r, g, b) {
     $('.incidentes-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.incidentes-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.incidentes-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.incidentes .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.incidentes .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210616235423.png")');
 
     //DIV SEPARATORS
     $('.incidentes .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -308,7 +293,7 @@ function faunaStyle(r, g, b) {
     $('.fauna-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.fauna-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.fauna-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.fauna .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.fauna .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210616235604.png")');
 
     //DIV SEPARATORS
     $('.fauna .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -352,7 +337,7 @@ function aguaStyle(r, g, b) {
     $('.agua-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.agua-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.agua-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.agua .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.agua .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210616235616.png")');
 
     //DIV SEPARATORS
     $('.agua .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -396,7 +381,7 @@ function sgaStyle(r, g, b) {
     $('.sga-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.sga-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.sga-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.sga .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.sga .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210616235703.png")');
 
     //DIV SEPARATORS
     $('.sga .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -440,7 +425,7 @@ function tablasStyle(r, g, b) {
     $('.tablas-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.tablas-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.tablas-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.tablas .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.tablas .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210616235714.png")');
 
     //DIV SEPARATORS
     $('.tablas .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -484,3 +469,4 @@ function dashboardStyle(r, g, b) {
     //MENU MODAL
     $('.modal-menu-dashboard .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
 }
+
