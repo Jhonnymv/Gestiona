@@ -4,8 +4,140 @@
     ViewData["Title"] = "DetalleRegistro";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
-<div class="row mb-2">
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Detalle de Registro de Avistamiento de Fauna Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <div class="custom-form details-container w-100">
+                <form id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
+                    <input type="hidden" asp-for="FotosCargadas" />
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas">
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DEL AVISTAMIENTO</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Fecha_Avistamiento"></label>
+                                <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
+                                <input type="date" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento" readonly />
+                            </div>
+                            <div class="col-12 col-sm-3 col-lg-3">
+                                <label asp-for="Hora_Avistamiento"></label>
+                                <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
+                                <input type="time" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento" readonly />
+                            </div>
+                            <div class="col-12 col-sm-5 col-lg-5">
+                                <label asp-for="Ubicacion">Ubicación</label>
+                                <span class="text-danger" asp-validation-for="Ubicacion"></span>
+                                <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" readonly />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdNombreComun"></label>
+                                <span class="text-danger" asp-validation-for="IdNombreComun"></span>
+                                <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun" value="@Model.IdNombreComun" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Cantidad">Cantidad</label>
+                                <span class="text-danger" asp-validation-for="Cantidad"></span>
+                                <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" readonly />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdTipoAvistamiento"></label>
+                                <span class="text-danger" asp-validation-for="IdTipoAvistamiento"></span>
+                                <select asp-for="IdTipoAvistamiento" class="form-control" asp-items="ViewBag.TipoAvistamiento" value="@Model.IdTipoAvistamiento" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdEstadoFauna"></label>
+                                <span class="text-danger" asp-validation-for="IdEstadoFauna"></span>
+                                <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna" disabled></select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdLugarReferencia"></label>
+                                <span class="text-danger" asp-validation-for="IdLugarReferencia"></span>
+                                <select asp-for="IdLugarReferencia" class="form-control" asp-items="ViewBag.LugarReferencia" value="@Model.IdLugarReferencia" disabled></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DEL REPORTANTE</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdEmpresa"></label>
+                                <span class="text-danger" asp-validation-for="IdEmpresa"></span>
+                                <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Nombres_Apellidos"></label>
+                                <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos" readonly />
+                                <input type="hidden" asp-for="IdUsuario" value="@Model.IdUsuario" />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="IdAreaTrabajo"></label>
+                                <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
+                                <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="DNI"></label>
+                                <span class="text-danger" asp-validation-for="DNI"></span>
+                                <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI" readonly />
+                            </div>
+                        </div>
+                    </div>
+                    @if (Model.Descripcion_Accion != null && Model.Evidencia_Cargada != null)
+                    {
+                        <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                            <div class="d-flex justify-content-center">
+                                <span class="text-mc bold text-center">ACCIÓN LLEVADA A CABO EN CASO DE FAUNA SILVESTRE HERIDA O MUERTA (LLENADO POR MEDIO AMBIENTE)</span>
+                            </div>
+                            <div class="row input_container align-items-start">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Descripcion_Accion"></label>
+                                    <span class="text-danger" asp-validation-for="Descripcion_Accion"></span>
+                                    <textarea type="text" class="form-control" asp-for="Descripcion_Accion" rows="2" readonly></textarea>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Evidencia_Cargada"></label>
+                                    <input type="hidden" asp-for="Evidencia_Cargada" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12" id="Evidencias_Lista">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="row">
+                            <div class="button-container">
+                                <a class="btn btn-mc-success mr-2" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamiento" asp-route-IdAvistamiento="@Model.IdAvistamientoFauna">Descargar Excel</a>
+                                <a class="btn btn-mc-outline-danger mr-2" asp-controller="AvistamientoFauna" asp-action="Resumen">Volver</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Detalle de Registro de Avistamiento de Fauna Silvestre</h2>
     </div>
@@ -145,7 +277,7 @@
 <div class="row mb-2 mr-2 d-flex justify-content-end">
     <a class="btn btn-danger mr-2" style="color:white" asp-controller="DescargarAvistamientoFauna" asp-action="DescargarAvistamiento" asp-route-IdAvistamiento="@Model.IdAvistamientoFauna">Descargar Excel</a>
     <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Volver</a>
-</div>
+</div>*@
 @section Scripts{
     <script type="text/javascript">
     var estado;
@@ -198,7 +330,7 @@
                 console.log(evidencias_valores)
                 var html_evidencias = "";
                 for (var i = 0; i < evidencias_valores.length; i++)
-                    html_evidencias += "<p><a href=\"/AvistamientoFaunaMA/Download?fileName=" + evidencias_valores[i]+"\">Evidencia "+(i+1)+"</a></p>";
+                    html_evidencias += "<a class=\"btn btn-mc-outline m-2\" href=\"/AvistamientoFaunaMA/Download?fileName=" + evidencias_valores[i]+"\">Evidencia "+(i+1)+"</a>";
 
                 $("#Evidencias_Lista").html(html_evidencias);
                 $("#EvidenciaCargada").val(evidencias_valores);
