@@ -1,10 +1,193 @@
 ﻿@model GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.RegistrarManifiestoRS.ManifiestoRSModel
 @{
-    ViewData["Title"] = "NuevoManifiesto";
+    ViewData["Title"] = "Editar Manifiesto";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
-<div class="row mb-2">
+<div class="residuos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title residuos-opacity-color">
+                <h3>Editar Manifiesto de Residuos Sólidos Peligrosos</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <div class="custom-form details-container w-100">
+                <form id="formManifiestoRS" asp-action="EditarManifiesto" asp-controller="ManifiestoRS" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <input type="hidden" asp-for="Id_Manifiesto_RS" />
+                    <input type="hidden" asp-for="opcion" />
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DEL MANIFIESTO</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Serie_Manifiesto"></label>
+                                <span class="text-danger" asp-validation-for="Serie_Manifiesto"></span>
+                                <input class="form-control" type="number" asp-for="Serie_Manifiesto" min="1" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Manifiesto"></label>
+                                <span class="text-danger" asp-validation-for="Num_Manifiesto"></span>
+                                <input class="form-control" type="text" asp-for="Num_Manifiesto" maxlength="25" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Fecha_Emision_Manifiesto"></label>
+                                <span class="text-danger" asp-validation-for="Fecha_Emision_Manifiesto"></span>
+                                <input class="form-control" type="date" asp-for="Fecha_Emision_Manifiesto" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Observacion_Manifiesto"></label>
+                                <span class="text-danger" asp-validation-for="Observacion_Manifiesto"></span>
+                                <select class="form-control" asp-for="Observacion_Manifiesto" disabled>
+                                    <option value="">--SELECCIONE--</option>
+                                    <option value="Conforme">Conforme</option>
+                                    <option value="Anulado">Anulado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DEL RESIDUO PELIGROSO</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_Residuo_Solido"></label>
+                                <span class="text-danger" asp-validation-for="Id_Residuo_Solido"></span>
+                                <select class="form-control" asp-items="ViewBag.ResiduosSolidos" asp-for="Id_Residuo_Solido" disabled>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Cantidad_RS_Evacuado"></label>
+                                <span class="text-danger" asp-validation-for="Cantidad_RS_Evacuado"></span>
+                                <input class="form-control" type="number" asp-for="Cantidad_RS_Evacuado" min="0" max="999999" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DE LA EO-RS: RECOLECCIÓN Y TRANSPORTE</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_EO_RS_Salida"></label>
+                                <span class="text-danger" asp-validation-for="Id_EO_RS_Salida"></span>
+                                <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Salida" disabled>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Registro_EO_RS_Salida"></label>
+                                <span class="text-danger" asp-validation-for="Registro_EO_RS_Salida"></span>
+                                <input class="form-control" type="text" asp-for="Registro_EO_RS_Salida" maxlength="25" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Fecha_Vencimiento_Registro_Salida"></label>
+                                <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Salida"></span>
+                                <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Salida" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Autorizacion_Municipal_Salida"></label>
+                                <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Salida"></span>
+                                <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Salida" maxlength="25" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Autorizacion_Hoja_Ruta"></label>
+                                <span class="text-danger" asp-validation-for="Num_Autorizacion_Hoja_Ruta"></span>
+                                <input class="form-control" type="text" asp-for="Num_Autorizacion_Hoja_Ruta" maxlength="25" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_Conductor"></label>
+                                <span class="text-danger" asp-validation-for="Id_Conductor"></span>
+                                <select class="form-control" asp-items="ViewBag.Conductores" asp-for="Id_Conductor" disabled>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <label asp-for="Num_Licencia_Condutor"></label>
+                                <span class="text-danger" asp-validation-for="Num_Licencia_Condutor"></span>
+                                <input class="form-control" type="text" asp-for="Num_Licencia_Condutor" maxlength="10" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <label asp-for="Id_Vehiculo"></label>
+                                <span class="text-danger" asp-validation-for="Id_Vehiculo"></span>
+                                <select class="form-control" asp-items="ViewBag.Vehiculos" asp-for="Id_Vehiculo" disabled>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-4">
+                                <label asp-for="Capacidad_Vehiculo"></label>
+                                <span class="text-danger" asp-validation-for="Capacidad_Vehiculo"></span>
+                                <input class="form-control" type="number" asp-for="Capacidad_Vehiculo" min="0" max="999999" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center">DATOS DE LA EO-RS: DESTINO FINAL Y/O COMERCIALIZACIÓN</span>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_EO_RS_Llegada"></label>
+                                <span class="text-danger" asp-validation-for="Id_EO_RS_Llegada"></span>
+                                <select class="form-control" asp-items="ViewBag.EO_RS" asp-for="Id_EO_RS_Llegada" disabled>
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Registro_EO_RS_Llegada"></label>
+                                <span class="text-danger" asp-validation-for="Registro_EO_RS_Llegada"></span>
+                                <input class="form-control" type="text" asp-for="Registro_EO_RS_Llegada" maxlength="25" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Fecha_Vencimiento_Registro_Llegada"></label>
+                                <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro_Llegada"></span>
+                                <input class="form-control" type="date" asp-for="Fecha_Vencimiento_Registro_Llegada" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Autorizacion_Sanitaria_Llegada"></label>
+                                <span class="text-danger" asp-validation-for="Num_Autorizacion_Sanitaria_Llegada"></span>
+                                <input class="form-control" type="text" asp-for="Num_Autorizacion_Sanitaria_Llegada" maxlength="25" disabled />
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Autorizacion_Municipal_Llegada"></label>
+                                <span class="text-danger" asp-validation-for="Num_Autorizacion_Municipal_Llegada"></span>
+                                <input class="form-control" type="text" asp-for="Num_Autorizacion_Municipal_Llegada" maxlength="25" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="detail-container col-12 col-xl-10 mb-4 w-100">
+                        <div class="row">
+                            <div class="button-container">
+                                <a class="btn btn-mc-outline-danger" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+                                @if (Model.Estado.Equals("Pendiente") && Model.Permiso)
+                                {
+                                    <button id="btnGuardarEstado" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>
+                                    <button id="btnRegistrar" type="button" class="btn btn-mc-success">Registrar</button>
+                                    <button id="btnEliminar" type="button" class="btn btn-mc-danger">Eliminar</button>
+                                }
+                                else if (Model.Permiso)
+                                {
+                                    <button id="btnEliminar" type="button" class="btn btn-mc-danger">Eliminar</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Nuevo Manifiesto de Residuos Sólidos Peligrosos</h2>
     </div>
@@ -217,7 +400,7 @@
             </div>
         </div>
     </div>
-</form>
+</form>*@
 @section Scripts{ 
 <script type="text/javascript">
     $(document).ready(function () {

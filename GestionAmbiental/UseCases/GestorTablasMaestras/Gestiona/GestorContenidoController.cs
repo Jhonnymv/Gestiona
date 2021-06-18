@@ -12,6 +12,7 @@ using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.ObtenerConfiguracion;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.EditarConfiguracion;
+using GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.Models;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 {
@@ -244,7 +245,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarPropiedad(PropiedadModulos model)
+        public async Task<IActionResult> EditarPropiedad(ModelEditarPropiedades model)
         {
             dynamic response;
             try
@@ -252,99 +253,109 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 //MODIFICAR ARCHIVO JSON Y TEMPLATE JS
                 //Buscar archivo json con las propiedades
                 var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
-                var propiedadesJsonText = System.IO.File.ReadAllText(propiedadesJsonPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(propiedadesJsonText);
-                //Buscar archivo js con las propiedades
                 var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
-                var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                //Buscar la propiedad que se modificó
-                var propiedad = propiedadesJson.Find(x => x.modulo.Equals(model.modulo));
-                //Si la propiedad existe
-                if (propiedad != null)
+                var propiedadesJsonNuevo = JsonConvert.DeserializeObject<List<PropiedadModulo>>(model.Json);
+
+                for (int i = 0; i < propiedadesJsonNuevo.Count; i++)
                 {
-                    //Modifiar los datos de la propiedad por los traidos del modelo
-                    propiedad.id = model.id;
-                    propiedad.modulo = model.modulo;
-                    propiedad.r = model.r;
-                    propiedad.g = model.g;
-                    propiedad.b = model.b;
-                    //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
-                    //primera letra + id.length + " = ".lenght
-                    var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
-
-                    //primera letra + id.length + " = ".lenght
-                    var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
-
-                    //primera letra + id.length + " = ".lenght
-                    var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
-                    //Si la imagen cambio
-                    if (model.nuevaImagen != null && model.nuevaImagen.Length > 0)
+                    var propiedadesJsonText = System.IO.File.ReadAllText(propiedadesJsonPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(propiedadesJsonText);
+                    //Buscar archivo js con las propiedades
+                    var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                   
+                    if (propiedadesJson[i].id == propiedadesJsonNuevo[i].id)
                     {
-                        //Asignar nombre a la imagen y cargarla en wwwroot/img
-                        var rutaImagenAnterior = propiedad.img_url;
-                        var extension = Path.GetExtension(model.nuevaImagen.FileName);
-                        var rutaNuevoArchivo = CargarImagen(model.nuevaImagen, model.modulo, extension).Result;
+                        //Modifiar los datos de la propiedad por los traidos del modelo
+                        propiedadesJson[i].id = propiedadesJsonNuevo[i].id;
+                        propiedadesJson[i].modulo = propiedadesJsonNuevo[i].modulo;
+                        propiedadesJson[i].r = propiedadesJsonNuevo[i].r;
+                        propiedadesJson[i].g = propiedadesJsonNuevo[i].g;
+                        propiedadesJson[i].b = propiedadesJsonNuevo[i].b;
+                        //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
+                        //primera letra + id.length + " = ".lenght
+                        var rStartIndex = templateJsText.IndexOf("r" + propiedadesJson[i].id + " = ") + (propiedadesJson[i].id.ToString().Length + 3);
+                        //index of (primer valor de la variable) + index of(;)
+                        var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
+                        //reemplazar valores
+                        var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedadesJsonNuevo[i].r + templateJsText.Substring(rLastIndex);
 
-                        model.img_url = rutaNuevoArchivo.Replace("\\", "/");
-                        propiedad.img_url = model.img_url;
-                        //Eliminar imagen anterior
-                        //EliminarImagen(rutaImagenAnterior);
+                        //primera letra + id.length + " = ".lenght
+                        var gStartIndex = newJs.IndexOf("g" + propiedadesJson[i].id + " = ") + (propiedadesJson[i].id.ToString().Length + 3);
+                        //index of (primer valor de la variable) + index of(;)
+                        var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
+                        //reemplazar valores
+                        newJs = newJs.Substring(0, gStartIndex + 1) + propiedadesJsonNuevo[i].g + newJs.Substring(gLastIndex);
 
-                        //Modificar imagen $('.modulo .image-header-container').css('background-image', 'url("nueva-url")') ej: $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-                        var imgTextToFind = "$(\'." + propiedad.modulo.ToLower() + " .image-header-container\').css('background-image', 'url(\"";
-                        var imgStartIndex = newJs.IndexOf(imgTextToFind) + imgTextToFind.Length;
-                        var imgLastIndex = imgStartIndex + newJs.Substring(imgStartIndex, 150).IndexOf('\"');
-                        newJs = newJs.Substring(0, imgStartIndex) + propiedad.img_url + newJs.Substring(imgLastIndex);
+                        //primera letra + id.length + " = ".lenght
+                        var bStartIndex = newJs.IndexOf("b" + propiedadesJson[i].id + " = ") + (propiedadesJson[i].id.ToString().Length + 3);
+                        //index of (primer valor de la variable) + index of(;)
+                        var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
+                        //reemplazar valores
+                        newJs = newJs.Substring(0, bStartIndex + 1) + propiedadesJsonNuevo[i].b + newJs.Substring(bLastIndex);
 
-                        //Modificar imagen $('.modal-menu-modulo .modal-content .modal-image-header-container').css('background-image', 'url("nueva-url")'); ej: $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-                        var img2TextToFind = "$(\'.modal-menu-" + propiedad.modulo.ToLower() + " .modal-content .modal-image-header-container').css('background-image', 'url(\"";
-                        var img2StartIndex = newJs.IndexOf(img2TextToFind) + img2TextToFind.Length;
-                        var img2LastIndex = img2StartIndex + newJs.Substring(img2StartIndex, 150).IndexOf('\"');
-                        newJs = newJs.Substring(0, img2StartIndex) + propiedad.img_url + newJs.Substring(img2LastIndex);
+                        IFormFile nuevaImagen;
+                        switch (propiedadesJson[i].modulo)
+                        {
+                            case "Inspection": nuevaImagen = model.InspectionFile; break;
+                            case "RAC": nuevaImagen = model.RacFile; break;
+                            case "Residuos": nuevaImagen = model.ResiduosFile; break;
+                            case "Incidentes": nuevaImagen = model.IncidentesFile; break;
+                            case "Fauna": nuevaImagen = model.FaunaFile; break;
+                            case "Agua": nuevaImagen = model.AguaFile; break;
+                            case "SGA": nuevaImagen = model.SGAFile; break;
+                            case "Tablas": nuevaImagen = model.TablasFile; break;
+                            default: nuevaImagen = null; break;
+                        }
+                        //Si la imagen cambio
+                        if (nuevaImagen != null && nuevaImagen.Length > 0)
+                        {
+                            //Asignar nombre a la imagen y cargarla en wwwroot/img
+                            var rutaImagenAnterior = propiedadesJson[i].img_url;
+                            var extension = Path.GetExtension(nuevaImagen.FileName);
+                            var rutaNuevoArchivo = CargarImagen(nuevaImagen, propiedadesJson[i].modulo, extension).Result;
+
+                            propiedadesJsonNuevo[i].img_url = rutaNuevoArchivo.Replace("\\", "/");
+                            //propiedad.img_url = model.img_url;
+
+                            //Eliminar imagen anterior
+                            //EliminarImagen(rutaImagenAnterior);
+
+                            //Modificar imagen $('.modulo .image-header-container').css('background-image', 'url("nueva-url")') ej: $('.inspection .image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+                            var imgTextToFind = "$(\'." + propiedadesJson[i].modulo.ToLower() + " .image-header-container\').css('background-image', 'url(\"";
+                            var imgStartIndex = newJs.IndexOf(imgTextToFind) + imgTextToFind.Length;
+                            var imgLastIndex = imgStartIndex + newJs.Substring(imgStartIndex, 150).IndexOf('\"');
+                            newJs = newJs.Substring(0, imgStartIndex) + propiedadesJsonNuevo[i].img_url + newJs.Substring(imgLastIndex);
+
+                            //Modificar imagen $('.modal-menu-modulo .modal-content .modal-image-header-container').css('background-image', 'url("nueva-url")'); ej: $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+                            var img2TextToFind = "$(\'.modal-menu-" + propiedadesJsonNuevo[i].modulo.ToLower() + " .modal-content .modal-image-header-container').css('background-image', 'url(\"";
+                            var img2StartIndex = newJs.IndexOf(img2TextToFind) + img2TextToFind.Length;
+                            var img2LastIndex = img2StartIndex + newJs.Substring(img2StartIndex, 150).IndexOf('\"');
+                            newJs = newJs.Substring(0, img2StartIndex) + propiedadesJsonNuevo[i].img_url + newJs.Substring(img2LastIndex);
+                        }
+                        //Convertir las propiedades al formato que guarda el json
+                        var toJson = propiedadesJsonNuevo.Select(x => new PropiedadModulo
+                        {
+                            id = x.id,
+                            modulo = x.modulo,
+                            r = x.r,
+                            g = x.g,
+                            b = x.b,
+                            img_url = x.img_url
+                        }).ToList();
+
+                        //convertir a json y guardarlo en archivo json
+                        string json = JsonConvert.SerializeObject(toJson);
+                        System.IO.File.WriteAllText(propiedadesJsonPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                        //guardar nuevo js
+                        System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
                     }
-                    //Convertir las propiedades al formato que guarda el json
-                    var toJson = propiedadesJson.Select(x => new PropiedadModulo
-                    {
-                        id = x.id,
-                        modulo = x.modulo,
-                        r = x.r,
-                        g = x.g,
-                        b = x.b,
-                        img_url = x.img_url
-                    }).ToList();
-
-                    //convertir a json y guardarlo en archivo json
-                    string json = JsonConvert.SerializeObject(toJson);
-                    System.IO.File.WriteAllText(propiedadesJsonPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
-
-                    //convertir a json y guardarlo en archivo json
-                    System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                    response = new
-                    {
-                        success = true,
-                        propiedades = json
-                    };
                 }
-                else
+                response = new
                 {
-                    response = new
-                    {
-                        success = false,
-                        message = "No se encontró el módulo"
-                    };
-                }
+                    success = true,
+                    propiedades = JsonConvert.SerializeObject(propiedadesJsonNuevo)
+                };
             }
             catch (Exception e)
             {
