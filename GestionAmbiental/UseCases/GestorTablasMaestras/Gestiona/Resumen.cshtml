@@ -36,7 +36,7 @@
             <div class="d-flex justify-content-center">
                 @*<button type="button" onclick="GuardarColores()">Guardar Colores</button>*@
                 <div id="div-settings-button" style="display:none; width:auto">
-                    <button type="button" class="btn btn-mc mb-3" onclick="GuardarPropiedad()">Guardar Cambios</button>
+                    <button type="button" class="btn btn-mc mb-3" onclick="GuardarPropiedades()">Guardar Todos los Cambios</button>
                     <button type="button" class="btn btn-mc-outline mb-3" onclick="location.reload()">Cancelar</button>
                 </div>
             </div>
@@ -2051,21 +2051,27 @@
             });
         }
         //Guardar formulario propiedades si cambian imagenes
-        function GuardarPropiedad() {
+        function GuardarPropiedades() {
             $('#guardarCambiosConfig').modal('show');
             $('#mensajeModalConfig').text('Guardando Cambios');
             var formData = new FormData();
+            console.log("anterior propiedades: ", propiedades)
             for (var i = 0; i < propiedades.length; i++) {
-                if (activo == propiedades[i].modulo.toLowerCase()) {
-                    formData.append("id", propiedades[i].id);
-                    formData.append("modulo", propiedades[i].modulo);
-                    formData.append("img_url", propiedades[i].img_url);
-                    formData.append("r", $("#" + propiedades[i].modulo.toLowerCase() + "-r").val());
-                    formData.append("g", $("#" + propiedades[i].modulo.toLowerCase() + "-g").val());
-                    formData.append("b", $("#" + propiedades[i].modulo.toLowerCase() + "-b").val());
-                    formData.append("nuevaImagen", document.getElementById(activo + "-nueva-img").files[0]);
-                }
+                console.log("rgb: ", propiedades[i].modulo," , ", $("#" + propiedades[i].modulo.toLowerCase() + "-r").val(), ",", $("#" + propiedades[i].modulo.toLowerCase() + "-g").val(), ",", $("#" + propiedades[i].modulo.toLowerCase() + "-b").val())
+                propiedades[i].r = $("#" + propiedades[i].modulo.toLowerCase() + "-r").val();
+                propiedades[i].g = $("#" + propiedades[i].modulo.toLowerCase() + "-g").val();
+                propiedades[i].b = $("#" + propiedades[i].modulo.toLowerCase() + "-b").val();                
+                formData.append("InspectionFile", document.getElementById("inspection-nueva-img").files[0]);
+                formData.append("RacFile", document.getElementById("rac-nueva-img").files[0]);
+                formData.append("ResiduosFile", document.getElementById("residuos-nueva-img").files[0]);
+                formData.append("IncidentesFile", document.getElementById("incidentes-nueva-img").files[0]);
+                formData.append("FaunaFile", document.getElementById("fauna-nueva-img").files[0]);
+                formData.append("AguaFile", document.getElementById("agua-nueva-img").files[0]);
+                formData.append("SGAFile", document.getElementById("sga-nueva-img").files[0]);
+                formData.append("TablasFile", document.getElementById("tablas-nueva-img").files[0]);
             };
+            formData.append("Json", JSON.stringify(propiedades));
+            console.log("nuevo propiedades: ", propiedades)
             $.ajax({
                 url: "/GestorContenido/EditarPropiedad",
                 method: "post",
@@ -2089,7 +2095,6 @@
                 }
             });
         }
-
         $('input[type="color"]').change(function () {
             $('#div-settings-button').show();
         });
