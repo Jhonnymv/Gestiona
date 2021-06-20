@@ -547,6 +547,44 @@ a:focus {
     border-radius: 10px;
 }
 
+.wrap-scroll-horizontal{
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    flex-wrap: nowrap;
+}
+
+    .wrap-scroll-horizontal::-webkit-scrollbar {
+        -webkit-appearance: none;
+    }
+
+.wrap-scroll-horizontal::-webkit-scrollbar:vertical {
+    width:7px;
+}
+
+.wrap-scroll-horizontal::-webkit-scrollbar-button:increment, wrap-scroll-horizontal::-webkit-scrollbar-button {
+    display: none;
+}
+
+.wrap-scroll-horizontal::-webkit-scrollbar:horizontal {
+    height: 7px;
+}
+
+.wrap-scroll-horizontal::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.0);
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+.wrap-scroll-horizontal:hover::-webkit-scrollbar-thumb {
+    border: 2px #ffffff solid;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.wrap-scroll-horizontal::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
 
 .table-responsive table tbody .progress {
     display: block;
@@ -1091,6 +1129,81 @@ input[type="file"]:hover::-webkit-file-upload-button {
 
 .rounded-mc {
     border-radius: 15px;
+}
+
+/* ---------------------------------------------------
+   DASHBOARD
+----------------------------------------------------- */
+.dashboard-section {
+    margin-bottom: 2em;
+}
+
+    .dashboard-section .image-header-container {
+        border-radius: 15px;
+    }
+
+.dashboard-header {
+    border-bottom: 1px solid #C9C9C9;
+    margin-bottom: 1em;
+}
+
+    .dashboard-header h5 {
+        margin: 10px 1em;
+    }
+
+.dashboard-item {
+    padding: 0;
+    margin: 0 12px;
+    min-width: 250px;
+    max-width: 250px;
+    border-radius: 15px;
+}
+
+.dashboard-item .image-header-container, .dashboard-item .dashboard-item-title{
+    height: 100%;
+}
+
+.dashboard-item-title {
+    padding: 15px 30px;
+    border-radius: 15px;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+    .dashboard-item-title h3 {
+        text-align: center;
+        font-weight: bold;
+    }
+
+.secondary-dashboard-item {
+    padding: 0 1em;
+}
+
+    .secondary-dashboard-item .secondary-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+/* ---------------------------------------------------
+   END DASHBOARD
+----------------------------------------------------- */
+
+.check-mc:checked {
+    background-color: #2D649B;
+    border-color: #2D649B;
+}
+
+.check-mc:focus {
+    outline-color: #2D649B;
+}
+
+.check-white:checked {
+    background-color: #ffffff;
+    border-color: #ffffff;
 }
 
 /* ---------------------------------------------------

@@ -4,7 +4,212 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="rac mb-4">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title rac-opacity-color">
+                <h3>Dashboard de RAC</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <form class="custom-form w-100" autocomplete="off">
+                <div class="col-12 col-lg-8">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="IdGerencia"></label>
+                            <select class="form-control" asp-for="IdGerencia" asp-items="@ViewBag.ItemsGerencia"></select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="IdEmpresa"></label>
+                            <select class="form-control" asp-for="IdEmpresa" asp-items="@ViewBag.ItemsEmpresa"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="IdUsuario"></label>
+                            <select class="form-control" asp-for="IdUsuario" asp-items="@ViewBag.ItemsUsuario"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FInicio"></label>
+                            <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FFin"></label>
+                            <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="Filtrar()">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="dashboard-section">
+        <div class="dashboard-header">
+            <h5>Contadores</h5>
+        </div>
+        <div class="wrap-scroll-horizontal">
+            <div class="dashboard-item rac">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Cantidad de RAC hasta la fecha</h6>
+                        <h3 id="NTotalRAC"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Cantidad de RAC encontrados</h6>
+                        <h3 id="NFiltroRAC"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Registrado')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Pendientes de Implementación</h6>
+                        <h3 id="ObsRegistrado"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Implementado')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Pendientes de Verificación</h6>
+                        <h3 id="ObsImplementado"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Aprobado')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Aprobadas</h6>
+                        <h3 id="ObsAprobado"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Rechazado')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Rechazadas</h6>
+                        <h3 id="ObsRechazado"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Vencido')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Vencidas</h6>
+                        <h3 id="ObsVencido"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item rac" onclick="ReporteDetalleEstado('Ampliado')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title rac-opacity-color">
+                        <h6>Observaciones Ampliadas</h6>
+                        <h3 id="ObsAmpliado"></h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-section col-12">
+        <div class="dashboard-header">
+            <h5>Cantidad de Reportes de Acto y Condición Subestándar Registrados</h5>
+        </div>
+        <div class="row">
+            <div class="secondary-dashboard-item col-12">
+                <div class="secondary-content">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_rac_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-section col-12">
+        <div class="dashboard-header">
+            <h5>Reportes de Acto y Condición Subestándar MA</h5>
+        </div>
+        <div class="row">
+            <div class="secondary-dashboard-item col-12 col-lg-6" onclick="ActualizarDatosGraficoMA_NR_Tipo()" style="cursor:pointer">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center">
+                            #Reportes de Acto y Condición Subestándar MA por Nivel de Riesgo
+                        </h6>
+                    </div>
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_MA_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-dashboard-item col-12 col-lg-6">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center"># Reportes de Acto y Condición Subestándar</h6>
+                    </div>
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_MA_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-section col-12">
+        <div class="dashboard-header">
+            <h5>Reportes de Acto y Condición Subestándar SSO</h5>
+        </div>
+        <div class="row">
+            <div class="secondary-dashboard-item col-12 col-lg-6" onclick="ActualizarDatosGraficoSSO_NR_Tipo()" style="cursor:pointer">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center">
+                            #Reportes de Acto y Condición Subestándar SSO por Nivel de Riesgo
+                        </h6>
+                    </div>
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-dashboard-item col-12 col-lg-6">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center">#Reportes de Acto y Condición Subestándar</h6>
+                    </div>
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_MA_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Dashboard de Reportes de Acto y Condición Subestándar</h2>
     </div>
@@ -57,9 +262,9 @@
             </div>
         </div>
     </div>
-</form>
+</form>*@
 <!--Contador de reportes totales-->
-<div class="row mb-2 justify-content-center">
+@*<div class="row mb-2 justify-content-center">
     <div class="col-lg-4 col-md-6 col-sm-6">
         <div class="card border-left-contador shadow h-100">
             <div class="card-body">
@@ -84,17 +289,17 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!--Contador de reportes por estado-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
         <div class="card border-left-pendiente shadow h-100">
             <div class="card-body click-option" onclick="ReporteDetalleEstado('Registrado')">
                 <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes de Implementación</div>
+                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Pendientes de Implementación</div>-->
                         @*<div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.nObservaciones[0].Valor</div>*@
-                        <div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                        <!--<div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
                     </div>
                 </div>
             </div>
@@ -160,9 +365,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Contador de reportes por fecha-->
-<div class="row mb-2">
+@*<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -185,9 +390,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!--Gráficos MAP-->
-<div class="row mb-2">
+@*<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -214,9 +419,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!--Gráficos SSO-->
-<div class="row mb-2">
+@*<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -243,9 +448,77 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- Modal Detalles MAP-->
-<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
+<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-rac">
+            <div class="modal-content">
+                <div class="rac">
+                    <div class="image-header-container">
+                        <div class="header-title rac-opacity-color">
+                            <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Reportes MA según Nivel de Riesgo</h4>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-section">
+                        <div class="dashboard-header">
+                            <h5># Reportes por Tipos de Condición de Nivel de Riesgo Tolerable</h5>
+                        </div>
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_MAP_Nivel_Riesgo_Tolerable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-section">
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="dashboard-header">
+                                    <h5># Reportes por Tipos de Condición del Nivel del Riesgo Alerta</h5>
+                                </div>
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_MAP_Nivel_Riesgo_Alerta" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-section">
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="dashboard-header">
+                                    <h5># Reportes por Tipos de Condición de Nivel del Riesgo No Aceptable</h5>
+                                </div>
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_MAP_Nivel_Riesgo_No_Aceptable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -298,9 +571,78 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
+
 <!-- Modal Detalles SSO-->
-<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
+<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-rac">
+            <div class="modal-content">
+                <div class="rac">
+                    <div class="image-header-container">
+                        <div class="header-title rac-opacity-color">
+                            <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de observaciones SSO según Nivel de Riesgo</h4>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="dashboard-section">
+                        <div class="dashboard-header">
+                            <h5># Reportes por Tipo de Condición del Nivel de Riesgo Bajo</h5>
+                        </div>
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_SSO_Nivel_Riesgo_Bajo" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-section">
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="dashboard-header">
+                                    <h5># Reportes por Tipo de Condición del Nivel de Riesgo Medio</h5>
+                                </div>
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_SSO_Nivel_Riesgo_Medio" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dashboard-section">
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="dashboard-header">
+                                    <h5># Reportes por Tipo de Condición del Nivel de Riesgo Alto</h5>
+                                </div>
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_SSO_Nivel_Riesgo_Alto" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -353,7 +695,8 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
+
 @section Scripts{
     @*Script de la página*@
     <script type="text/javascript">
