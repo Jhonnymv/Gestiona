@@ -31,11 +31,11 @@
                                 <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Paso 1</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Paso 2</button>
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Observaciones</button>
                             </li>
-                            <li class="nav-item" role="presentation">
+                            @*<li class="nav-item" role="presentation">
                                 <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
-                            </li>
+                            </li>*@
                         </ul>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
@@ -87,13 +87,32 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
+                                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion" readonly>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Inspectores">Participantes de la Inspección</label>
+                                    <span class="text-danger" asp-validation-for="Inspectores"></span>
+                                    <input type="text" class="form-control" asp-for="Inspectores" readonly>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-12 col-lg-12">
+                                    <label asp-for="Objetivo">Objetivo de la Inspección</label>
+                                    <span class="text-danger" asp-validation-for="Objetivo"></span>
+                                    <input type="text" class="form-control" asp-for="Objetivo" readonly>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-mc next-btn">Siguiente</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                        @*<div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="message"></div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
@@ -120,8 +139,8 @@
                                     <button type="button" class="btn btn-mc next-btn">Siguiente</button>
                                 </div>
                             </div>
-                        </div>
-                        <div class="tab-pane fade" id="pills-step3" role="tabpanel" aria-labelledby="pills-step3-tab">
+                        </div>*@
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
                                     <a class="btn btn-special-action inspection-color" id="nueva_obs" data-bs-toggle="modal" data-bs-target="#modalNuevaObservacion">
@@ -168,7 +187,7 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                        @*<a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>*@
                                         @if (ViewBag.Permiso)
                                         {
                                             <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
@@ -185,6 +204,9 @@
                     </div>
                 </div>
             </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+            </div>
         </div>
     </div>
 </div>
