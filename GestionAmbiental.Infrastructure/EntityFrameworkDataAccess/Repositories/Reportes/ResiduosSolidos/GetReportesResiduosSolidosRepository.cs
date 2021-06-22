@@ -263,7 +263,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))
                 .Select(x => x.Id_Residuo_Solido)
                 .ToListAsync();
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) && 
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -275,7 +276,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x=>x.Id_ACR_CMRS)
-                .ToListAsync();
+                .ToList();
 
             output.Add(new Dimension("ACR", 0, 1));
             output.Add(new Dimension("CMRS", 0, 2));
@@ -293,7 +294,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))
                 .Select(x => x.Id_Residuo_Solido)
                 .ToListAsync();
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -305,7 +307,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x => x.Id_Ingreso_Salida)
-                .ToListAsync();
+                .ToList();
 
             output.Add(new Dimension("Ingreso", 0, 1));
             output.Add(new Dimension("Salida", 0, 2));
@@ -323,7 +325,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))
                 .Select(x => x.Id_Residuo_Solido)
                 .ToListAsync();
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -335,7 +338,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Ingreso_Salida >= FechaInicio &&
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .GroupBy(x => x.Id_Motivo)
-                .ToListAsync();
+                .ToList();
 
             var motivos = await _context.Motivos_Ingreso_Salida.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach(var item in motivos)
@@ -357,7 +360,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))
                 .ToListAsync();
             var rsAgrupados = residuosSolido.GroupBy(x => x.Id_Tipo_Residuo).ToList();
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -370,7 +374,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Ingreso_Salida <= FechaFin)
                 .Select(x => new { tipo = rsAgrupados.FirstOrDefault(y=>y.Select(z=>z.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido)).Key, Cantidad=x.Cantidad })
                 .GroupBy(x=>x.tipo)
-                .ToListAsync();
+                .ToList();
 
             output.Add(new Dimension("Peligroso", 0, 1));
             output.Add(new Dimension("No Peligroso", 0, 2));
@@ -390,15 +394,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Id_Tipo_Residuo.Equals(2))
                .ToListAsync();
 
-            if (tipo_residuo != 0)
-            {
-                residuosSolido = residuosSolido.Where(x => x.Id_Tipo_Residuo.Equals(tipo_residuo)).ToList();
-            }
+            if (tipo_residuo != 0)            
+                residuosSolido = residuosSolido.Where(x => x.Id_Tipo_Residuo.Equals(tipo_residuo)).ToList();            
 
             if (residuos.Length > 0)
                 residuosSolido = residuosSolido.Where(x => residuos.Contains(x.Id_Residuo_Solido)).ToList();
 
-                var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -410,7 +413,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Fecha_Ingreso_Salida >= FechaInicio &&
                x.Fecha_Ingreso_Salida <= FechaFin)
                .GroupBy(x => x.Id_Residuo_Solido)
-               .ToListAsync();
+               .ToList();
 
             foreach (var item in registros)
             {
@@ -429,15 +432,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Id_Tipo_Residuo.Equals(1))
                .ToListAsync();
 
-            if (tipo_residuo != 0)
-            {
+            if (tipo_residuo != 0)            
                 residuosSolido = residuosSolido.Where(x => x.Id_Tipo_Residuo.Equals(tipo_residuo)).ToList();
-            }
+            
 
             if (residuos.Length > 0)
                 residuosSolido = residuosSolido.Where(x => residuos.Contains(x.Id_Residuo_Solido)).ToList();
 
-            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+            var data = await _context.Ingresos_Salidas_RS.ToListAsync();
+            var registros = data.Where(x =>
             !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
@@ -449,7 +452,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                x.Fecha_Ingreso_Salida >= FechaInicio &&
                x.Fecha_Ingreso_Salida <= FechaFin)
                .GroupBy(x => x.Id_Residuo_Solido)
-               .ToListAsync();
+               .ToList();
 
             foreach (var item in registros)
             {

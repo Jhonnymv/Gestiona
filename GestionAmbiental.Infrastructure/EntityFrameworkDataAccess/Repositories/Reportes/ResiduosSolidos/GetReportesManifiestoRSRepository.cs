@@ -284,7 +284,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //Tipo_Residuo = Peligroso (1)
             var list_camiones = await _context.Vehiculos_RS.Where(x=>x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+            var data = await _context.Manifiesto_RSs.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Observacion_Manifiesto.Equals("Conforme") &&
@@ -295,7 +296,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
                 .GroupBy(x => x.Id_Vehiculo_RS)
-                .ToListAsync();
+                .ToList();
             foreach (var item in list_camiones)
             {
                 output.Add(new Dimension(item.Placa, 0, item.Id_Vehiculo_RS));
@@ -313,7 +314,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //Tipo_Residuo = Peligroso (1)
             var list_residuo_solido = await _context.Residuos_Solidos.Where(x=>x.Id_Tipo_Residuo.Equals(1)).ToListAsync();
 
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+            var data = await _context.Manifiesto_RSs.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Observacion_Manifiesto.Equals("Conforme") &&
@@ -323,16 +325,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
                 .GroupBy(x => x.Id_Residuo_Solido)
-                .ToListAsync();
-            /*
-            foreach(var item in list_residuo_solido)
-            {
-                output.Add(new Dimension(item.Descripcion, 0, item.Id_Residuo_Solido));
-            }
-            */
+                .ToList();
             foreach (var item in registros)
             {
-                //output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x=>x.Cantidad_RS_Evacuado);
                 var res_solid = list_residuo_solido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key));
                 output.Add(new Dimension(res_solid.Descripcion, item.Sum(x=>x.Cantidad_RS_Evacuado.Value), item.Key.Value));
             }
@@ -344,7 +339,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //Tipo_Residuo = Peligroso (1)
             var list_residuo_solido = await _context.Residuos_Solidos.Where(x => x.Id_Tipo_Residuo.Equals(1)).ToListAsync();
 
-            var registros = await _context.Manifiesto_RSs.Where(x =>
+            var data = await _context.Manifiesto_RSs.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()) &&
@@ -355,16 +351,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
                 .GroupBy(x => x.Id_Residuo_Solido)
-                .ToListAsync();
-
-            /*foreach (var item in list_residuo_solido)
-            {
-                output.Add(new Dimension(item.Descripcion, 0, item.Id_Residuo_Solido));
-            }*/
+                .ToList();
 
             foreach (var item in registros)
             {
-                //output.FirstOrDefault(x => x.Index.Equals(item.Key)).Valor = item.Sum(x => x.Cantidad_RS_Dispuesto);
                 var res_solid = list_residuo_solido.FirstOrDefault(x => x.Id_Residuo_Solido.Equals(item.Key)); 
                 output.Add(new Dimension(res_solid.Descripcion, item.Sum(x => x.Cantidad_RS_Dispuesto.Value), item.Key.Value));
             }
@@ -377,8 +367,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var list_residuo_solido = await _context.Residuos_Solidos.Where(x => x.Id_Tipo_Residuo.Equals(1)).ToListAsync();
             if (residuo_solido.Length > 0)
                 list_residuo_solido = list_residuo_solido.Where(x => residuo_solido.Contains(x.Id_Residuo_Solido)).ToList();
-                    
-             var registros = await _context.Manifiesto_RSs.Where(x =>
+
+            var datam = await _context.Manifiesto_RSs.ToListAsync();
+            var registros = datam.Where(x =>
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
                 x.Observacion_Manifiesto.Equals("Conforme") &&
@@ -386,7 +377,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_EO_RS_Llegada.Equals(eors_llegada != 0 ? eors_llegada : x.Id_EO_RS_Llegada) &&
                 x.Fecha_Emision_Manifiesto >= FechaInicio &&
                 x.Fecha_Emision_Manifiesto <= FechaFin)
-                .ToListAsync();
+                .ToList();
             registros = registros.Where(x =>
                 list_residuo_solido.Select(y => y.Id_Residuo_Solido).ToList().Contains(x.Id_Residuo_Solido.Value)).ToList();
 
