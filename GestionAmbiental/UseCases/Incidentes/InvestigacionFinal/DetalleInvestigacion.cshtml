@@ -9,7 +9,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title incidentes-opacity-color">
-                <h3>Editar Investigación Final del Incidente Ambiental</h3>
+                <h3>Detalle de Investigación Final del Incidente Ambiental</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -751,36 +751,36 @@
                     <div class="d-flex justify-content-center">
                         <span class="text-mc bold text-center text-uppercase">EVIDENCIA DE LA INVESTIGACIÓN</span>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-start">
                         <div class="col-sm-12 col-md-2 col-lg-2">
                             <label asp-for="Evidencias_Papel"></label>
                         </div>
                         <input type="hidden" asp-for="Evidencias_Completas_Papel" />
-                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Papel">
+                        <div class="col-sm-12 col-md-10 col-lg-10" id="Evidencias_Lista_Papel">
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-start">
                         <div class="col-sm-12 col-md-2 col-lg-2">
                             <label asp-for="Evidencias_Persona"></label>
                         </div>
                         <input type="hidden" asp-for="Evidencias_Completas_Persona" />
-                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Persona">
+                        <div class="col-sm-12 col-md-10 col-lg-10" id="Evidencias_Lista_Persona">
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-start">
                         <div class="col-sm-12 col-md-2 col-lg-2">
                             <label asp-for="Evidencias_Posicion"></label>
                         </div>
                         <input type="hidden" asp-for="Evidencias_Completas_Posicion" />
-                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Posicion">
+                        <div class="col-sm-12 col-md-10 col-lg-10" id="Evidencias_Lista_Posicion">
                         </div>
                     </div>
-                    <div class="row mb-2">
+                    <div class="row mb-2 align-items-start">
                         <div class="col-sm-12 col-md-2 col-lg-2">
                             <label asp-for="Evidencias_Partes"></label>
                         </div>
                         <input type="hidden" asp-for="Evidencias_Completas_Partes" />
-                        <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Partes">
+                        <div class="col-sm-12 col-md-10 col-lg-10" id="Evidencias_Lista_Partes">
                         </div>
                     </div>
 
@@ -1685,7 +1685,7 @@
                 var papeles_valores = JSON.parse(papeles.replace(/&quot;/g, '"'));
                 var html_papeles = "";
                 for (var i = 0; i < papeles_valores.length; i++)
-                    html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel</a></p>";
+                    html_papeles += "<a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel</a>";
 
                 $("#Evidencias_Lista_Papel").html(html_papeles);
                 $("#Evidencias_Completas_Papel").val(papeles_valores);
@@ -1695,7 +1695,7 @@
                 var personas_valores = JSON.parse(personas.replace(/&quot;/g, '"'));
                 var html_personas = "";
                 for (var i = 0; i < personas_valores.length; i++)
-                    html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona</a></p>";
+                    html_personas += "<a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona</a>";
 
                 $("#Evidencias_Lista_Persona").html(html_personas);
                 $("#Evidencias_Completas_Persona").val(personas_valores);
@@ -1705,7 +1705,7 @@
                 var posiciones_valores = JSON.parse(posiciones.replace(/&quot;/g, '"'));
                 var html_posiciones = "";
                 for (var i = 0; i < posiciones_valores.length; i++)
-                    html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
+                    html_posiciones += "<a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición</a>";
 
                 $("#Evidencias_Lista_Posicion").html(html_posiciones);
                 $("#Evidencias_Completas_Posicion").val(posiciones_valores);
@@ -1715,7 +1715,7 @@
                 var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
                 var html_partes = "";
                 for (var i = 0; i < partes_valores.length; i++)
-                    html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                    html_partes += "<a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte</a>";
 
                 $("#Evidencias_Lista_Partes").html(html_partes);
                 $("#Evidencias_Completas_Partes").val(partes_valores);

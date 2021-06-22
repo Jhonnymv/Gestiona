@@ -1108,9 +1108,9 @@
                 var evidencia_valores = JSON.parse(evidencia.replace(/&quot;/g, '"'));
                 for (var i = 0; i < evidencia_valores.length; i++) {
                     if ($("#Estado").val() == "Registrado")
-                        html_evidencia += "<p> <img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia_valores[i] + "')><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                        html_evidencia += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia_valores[i] + "')><a class=\"btn btn-mc-outline me-2\" href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia " +(i+1)+ "</a></p>";
                     else
-                        html_evidencia += "<p><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                        html_evidencia += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia " + (i + 1) + "</a></p>";
                 }
 
                 $("#Evidencias_Lista").html(html_evidencia);
@@ -1132,7 +1132,7 @@
                             var html_evidencia = "";
                             if (evidencia.length > 0) {
                                 for (var i = 0; i < evidencia.length; i++) {
-                                    html_evidencia += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "')><a href=\"/ReportePreliminar/Download?fileName=" + evidencia[i] + "\">Evidencia</a></p>";
+                                    html_evidencia += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "')><a class=\"btn btn-mc-outline me-2\" href=\"/ReportePreliminar/Download?fileName=" + evidencia[i] + "\">Evidencia " + (i + 1) + "</a></p>";
                                 }
 
                                 $("#Evidencias_Lista").html(html_evidencia);
