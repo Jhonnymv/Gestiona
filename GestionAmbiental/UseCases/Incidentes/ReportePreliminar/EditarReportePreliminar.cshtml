@@ -373,7 +373,7 @@
                         <div class="col-12 col-sm-12 col-lg-12">
                             <label asp-for="Evidencias_Completas">Evidencias</label>
                             <input type="hidden" asp-for="Evidencias_Completas" />
-                            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista">
+                            <div class="col-sm-12 col-md-12 col-lg-12" id="Evidencias_Lista">
                             </div>
                         </div>
                     </div>
@@ -1135,7 +1135,7 @@
             if (evidencia.length > 0) {
                 var evidencia_valores = JSON.parse(evidencia.replace(/&quot;/g, '"'));
                 for (var i = 0; i < evidencia_valores.length; i++)
-                    html_evidencia += "<p><a href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a></p>";
+                    html_evidencia += "<a class=\"btn btn-mc-outline me-2\" href=\"/ReportePreliminar/Download?fileName=" + evidencia_valores[i] + "\">Evidencia</a>";
 
                 $("#Evidencias_Lista").html(html_evidencia);
                 $("#Evidencias_Completas").val(evidencia_valores);

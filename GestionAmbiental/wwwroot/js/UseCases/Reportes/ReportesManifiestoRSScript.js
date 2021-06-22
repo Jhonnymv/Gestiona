@@ -301,17 +301,7 @@ function CrearGraficoCamion(labels, data) {
                 "datasets": [{
                     "label": "# Cantidad (TM)",
                     "data": data,
-                    "backgroundColor": [
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793'
-                    ],
+                    "backgroundColor": '#2e6793',
                     "lineTension": 0.1
                 }]
             },
@@ -402,17 +392,7 @@ function CrearGraficoTipoSalida(labels, data) {
                 "datasets": [{
                     "label": "# Cantidad (TM)",
                     "data": data,
-                    "backgroundColor": [
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793'
-                    ],
+                    "backgroundColor": '#2e6793',
                     "lineTension": 0.1
                 }]
             },
@@ -503,17 +483,7 @@ function CrearGraficoTipoLlegada(labels, data) {
                 "datasets": [{
                     "label": "# Cantidad (TM)",
                     "data": data,
-                    "backgroundColor": [
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793',
-                        '#2e6793'
-                    ],
+                    "backgroundColor": '#2e6793',
                     "lineTension": 0.1
                 }]
             },
