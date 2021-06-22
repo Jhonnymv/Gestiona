@@ -12,10 +12,10 @@
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-        <div class="container pt-4 pb-4">
+        <div class="container pt-4 pb-4 col-xl-8">
             <form class="custom-form w-100" id="formManifiestoRS" asp-action="NuevoManifiesto" asp-controller="ManifiestoRS" method="post" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" asp-for="opcion" />
-                <div class="form-tabs-mc col-12 col-xl-8">
+                <div class="form-tabs-mc col-12">
                     <div class="d-flex justify-content-center mt-4 mb-4">
                         <ul class="nav nav-pills col-12 div-scroll-horizontal" id="pills-tab" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -207,7 +207,7 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        <a type="button" class="btn btn-mc-outline-danger" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+                                        @*<a type="button" class="btn btn-mc-outline-danger" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>*@
                                         <button class="btn btn-mc-outline-success" id="btnGuardarEstado" type="button">Guardar Estado</button>
                                         <button class="btn btn-mc-success" id="btnRegistrar" type="button">Registrar</button>
                                     </div>
@@ -217,6 +217,9 @@
                     </div>
                 </div>
             </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger" asp-controller="ManifiestoRS" asp-action="Resumen">Cancelar</a>
+            </div>
         </div>
     </div>
 </div>

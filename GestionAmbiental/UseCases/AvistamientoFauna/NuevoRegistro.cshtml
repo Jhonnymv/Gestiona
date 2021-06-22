@@ -28,9 +28,9 @@
                         <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpeg,.png" data-max-size="8388608" multiple>
                     </div>
                     <div class="row input_container">
-                            <div class="col-12 text-center">
-                                <img id="previsualizacion" style="width:30rem;height:auto;max-width:50%;display:none" />
-                            </div>
+                        <div class="col-12 text-center">
+                            <img id="previsualizacion" style="width:30rem;height:auto;max-width:50%;display:none" />
+                        </div>
                     </div>
                     <div class="row">
                         <div class="d-flex justify-content-center">
@@ -59,12 +59,12 @@
                                 <div class="col-12 col-sm-4 col-lg-4">
                                     <label asp-for="Fecha_Avistamiento">Fecha</label>
                                     <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
-                                    <input type="date" class="form-control" asp-for="Fecha_Avistamiento"/>
+                                    <input type="date" class="form-control" asp-for="Fecha_Avistamiento" />
                                 </div>
                                 <div class="col-12 col-sm-3 col-lg-3">
                                     <label asp-for="Hora_Avistamiento">Hora</label>
                                     <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
-                                    <input type="time" class="form-control" asp-for="Hora_Avistamiento"/>
+                                    <input type="time" class="form-control" asp-for="Hora_Avistamiento" />
                                 </div>
                                 <div class="col-12 col-sm-5 col-lg-5">
                                     <div class="row d-flex align-items-end m-0">
@@ -156,7 +156,7 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        <a class="btn btn-mc-outline-danger" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
+                                        @*<a class="btn btn-mc-outline-danger" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>*@
                                         <button class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>
                                         <button class="btn btn-mc-success" onclick="Registrar()">Registrar</button>
                                     </div>
@@ -167,6 +167,9 @@
                     </div>
                 </div>
             </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
+            </div>
         </div>
     </div>
 </div>

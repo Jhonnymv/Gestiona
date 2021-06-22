@@ -8,7 +8,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title rac-opacity-color">
-                <h3>RAC - Nuevo Reporte</h3>
+                 <h3>RAC - Nuevo Reporte</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -30,7 +30,6 @@
                             <label asp-for="Id_Gerencia">Área de Marcobre</label>
                             <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
                             <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia">
-
                             </select>
                         </div>
                     </div>
@@ -223,16 +222,18 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        <button class="btn btn-mc-outline-danger">Cancelar</button>
+                                        @*<button class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</button>*@
                                         <button class="btn btn-mc-success" onclick="guardar()">Registrar Reporte</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
+            </div>
         </div>
     </div>
 </div>

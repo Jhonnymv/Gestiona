@@ -17,7 +17,7 @@
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-        <div class="container pt-4 pb-4">
+        <div class="container pt-4 pb-4 col-xl-8">
             <form class="custom-form w-100" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
                 <input type="hidden" asp-for="EncryptedId" />
@@ -30,11 +30,11 @@
                                 <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Paso 1</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Paso 2</button>
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Observaciones</button>
                             </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
-                            </li>
+                            @*<li class="nav-item" role="presentation">
+                            <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
+                        </li>*@
                         </ul>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
@@ -71,8 +71,8 @@
                                     <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                                     <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-6 p-0">
-                                    <div class="row mt-0 mb-0">
+                                <div class="col-12 col-sm-6 col-lg-6 p-0 d-flex align-items-end">
+                                    <div class="row mt-0 mb-0 col-12">
                                         <div class="col-5 mt-0 mb-0">
                                             <label asp-for="Hora_Inspeccion">Hora (24h)</label>
                                             <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
@@ -86,14 +86,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="d-flex justify-content-end">
-                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
-                            <div class="message"></div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
@@ -114,18 +106,50 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                <div class="d-flex justify-content-end">
                                     <button type="button" class="btn btn-mc next-btn">Siguiente</button>
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-step3" role="tabpanel" aria-labelledby="pills-step3-tab">
+                        @*<div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                        <div class="message"></div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
+                                <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                                <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Inspectores">Participantes de la Inspección</label>
+                                <span class="text-danger" asp-validation-for="Inspectores"></span>
+                                <input type="text" class="form-control" asp-for="Inspectores">
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Objetivo">Objetivo de la Inspección</label>
+                                <span class="text-danger" asp-validation-for="Objetivo"></span>
+                                <input type="text" class="form-control" asp-for="Objetivo">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="button-container mc-row-reverse col-12 col-lg-10">
+                                <div class="d-flex justify-content-between">
+                                    <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                                <div class="col-12 col-lg-2">
+                                    <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>*@
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
                                     <button class="btn btn-special-action inspection-color" id="nueva_obs" type="button" @*data-bs-toggle="modal" data-bs-target="#modalNuevaObservacion"*@>
                                         Agregar Observación
-                                    </button>                                    
+                                    </button>
                                 </div>
                             </div>
                             <div class="inspection">
@@ -167,7 +191,7 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                        @*<a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>*@
                                         <button class="btn btn-mc-outline-success" id="guardar_estado" type="button">Guardar Estado</button>
                                     </div>
                                 </div>
@@ -176,6 +200,9 @@
                     </div>
                 </div>
             </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+            </div>
         </div>
     </div>
 </div>
