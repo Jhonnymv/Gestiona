@@ -217,8 +217,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var output = new List<Dimension>();
             var list_tipos_incidente = await _context.Tipo_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
-
-            var registros = await _context.Reporte_Preliminar_Incidente.Where(x =>
+            var data = await _context.Reporte_Preliminar_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
@@ -228,7 +228,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Tipo_Incidente)
-                .ToListAsync();
+                .ToList();
             /*
             foreach (var item in list_tipos_incidente)
             {
@@ -248,7 +248,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var list_niveles_incidente = await _context.Nivel_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Reporte_Preliminar_Incidente.Where(x =>
+            var data = await _context.Reporte_Preliminar_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
@@ -258,7 +259,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Nivel_Incidente)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in list_niveles_incidente)
             {
@@ -278,7 +279,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var list_causas = await _context.Causa_Incidente_Reporte.Where(x => x.Estado.Equals("Registrado")).ToListAsync();
 
-            var registros = await _context.Reporte_Preliminar_Incidente.Where(x =>
+            var data = await _context.Reporte_Preliminar_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
@@ -288,7 +290,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .Select(x=>x.Id_Reporte_Preliminar)
-                .ToListAsync();
+                .ToList();
 
             var list_causas_filtro = list_causas.Where(x => registros.Contains(x.Id_Reporte_Preliminar)).GroupBy(x=>x.Id_Acto_Condicion).ToList();
 
@@ -305,7 +307,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var gerencias = await _context.Gerencias.ToListAsync();
 
-            var registros = await _context.Reporte_Preliminar_Incidente.Where(x =>
+            var data = await _context.Reporte_Preliminar_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
@@ -315,7 +318,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Gerencia_Responsable)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in registros)
             {

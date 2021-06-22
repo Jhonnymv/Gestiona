@@ -4,7 +4,317 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="incidentes mb-4">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Dashboard de Investigaciones Incidentes</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <form class="custom-form w-100" autocomplete="off">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="TipoIncidente"></label>
+                            <select class="form-control" asp-for="TipoIncidente" asp-items="@ViewBag.FiltroTiposIncidente"></select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="NivelIncidente"></label>
+                            <select class="form-control" asp-for="NivelIncidente" asp-items="@ViewBag.FiltroNiveles"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Gerencia"></label>
+                            <select class="form-control" asp-for="Gerencia" asp-items="@ViewBag.FiltroGerencias"></select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Supervisor"></label>
+                            <select class="form-control" asp-for="Supervisor" asp-items="@ViewBag.FiltroSupervisores"></select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FInicio"></label>
+                            <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FFin"></label>
+                            <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-1">
+                </div>
+                <div class="col-12 col-lg-2">
+                    <div class="w-100 row-center-center">
+                        <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Investigaciones Registradas por fecha-->
+<div class="container">
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Investigaciones Registradas</h5>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12 col-lg-6">
+                        <div class="col-12">
+                            <select id="frecuencia" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_inv_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Investigaciones por Tipo de Incidente-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Investigaciones por Tipo de Incidente</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_tipo_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Nivel de Incidente-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Nivel de Incidente</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_nivel_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Investigaciones por Gerencia Responsable-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Investigaciones por Gerencia Responsable</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12" style="cursor:pointer">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_gerencias" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Productos Derramados por Incidente-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Productos Derramados por Incidente</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_prod_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Incidentes por Causa Inmediatas-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Incidentes por Causa Inmediatas</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_causa_inmediata_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Incidentes por Causas Básicas-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Incidentes por Causas Básicas</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_causa_basicas_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Personas Afectadas por Tipo de Incidente-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Personas Afectadas por Tipo de Incidente</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_impacto_persona" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Cantidad de RS peligrosos-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Área Afectada por Tipo de Suelo</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_impacto_suelo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Cantidad de RS peligrosos-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Cantidad Tierra Impregnada</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_residuo_suelo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Cantidad de RS peligrosos-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Especie de Flora Afectada</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_impacto_flora" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Cantidad de RS peligrosos-->
+        <div class="dashboard-section col-12 col-lg-6">
+            <div class="dashboard-header">
+                <h5>Unidad de Fauna Afectada por Especie</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_impacto_fauna" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Cantidad de RS peligrosos-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <h5>Volumen de Agua Afectado por Tipo Agua</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_impacto_agua" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Dashboard de Investigaciones Incidentes</h2>
     </div>
@@ -63,7 +373,7 @@
     </div>
 </form>
 <!--Cantidad de Investigaciones por fecha-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -98,9 +408,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--NRegistros Tipo Incidente-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -120,27 +430,27 @@
     </div>
 </div>
 
-<div class="row mb-2">
-    <!-- Nivel Incidente -->
-    <div class="col-xl-6 col-lg-6">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Nivel de Incidente</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_nivel_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
+<div class="row mb-2">-->
+<!-- Nivel Incidente -->
+<!--<div class="col-xl-6 col-lg-6">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Nivel de Incidente</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chart_nivel_incidente" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--  Gerencia Incidente -->
-    <div class="col-xl-6 col-lg-6">
+</div>-->
+<!--  Gerencia Incidente -->
+<!--<div class="col-xl-6 col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Investigaciones por Gerencia Responsable</h6>
@@ -157,9 +467,9 @@
             </div>
         </div>
     </div>
-</div>
-<!--NRegistros Gerencia Incidente-->
-@*<div class="row mb-2">
+</div>-->
+<!--NRegistros Gerencia Incidente-->-->
+<!--@*<div class="row mb-2">
         <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -177,9 +487,9 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>*@-->
 <!--NRegistros Producto Derramado Incidente-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -197,9 +507,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--NRegistros Causas Inmediata Incidente-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -217,9 +527,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--NRegistros Causas Basicas Incidente-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -237,9 +547,9 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Impacto Persona-->
-<div class="row mb-2">
+<!--<div class="row mb-2">
     <div class="col-xl-12 col-lg-12">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
@@ -266,29 +576,29 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Suelo-->
-<div class="row mb-2">
-    <!--Impacto-->
-    <div class="col-xl-6 col-lg-6">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Área Afectada por Tipo de Suelo</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_impacto_suelo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
+<!--<div class="row mb-2">-->
+<!--Impacto-->
+<!--<div class="col-xl-6 col-lg-6">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Área Afectada por Tipo de Suelo</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chart_impacto_suelo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--Residuo-->
-    <div class="col-xl-6 col-lg-6">
+</div>-->
+<!--Residuo-->
+<!--<div class="col-xl-6 col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad Tierra Impregnada</h6>
@@ -305,30 +615,30 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Flora-->
-<div class="row mb-2">
-    <!--Impacto-->
-    <div class="col-xl-6 col-lg-6">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Especie de Flora Afectada</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_impacto_flora" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
+<!--<div class="row mb-2">-->
+<!--Impacto-->
+<!--<div class="col-xl-6 col-lg-6">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Especie de Flora Afectada</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="chart-area">
+                        <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                        <canvas id="chart_impacto_flora" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--Fauna-->
-    <!--Impacto-->
-    <div class="col-xl-6 col-lg-6">
+</div>-->
+<!--Fauna-->
+<!--Impacto-->
+<!--<div class="col-xl-6 col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Unidad de Fauna Afectada por Especie</h6>
@@ -345,11 +655,11 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 <!--Agua-->
-<div class="row mb-2">
-    <!--Impacto-->
-    <div class="col-xl-6 col-lg-6">
+<!--<div class="row mb-2">-->
+<!--Impacto-->
+<!--<div class="col-xl-6 col-lg-6">
         <div class="card shadow mb-4">
             <div class="card-header py-3">
                 <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Afectado por Tipo Agua</h6>
@@ -366,7 +676,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 @section Scripts{
 

@@ -216,7 +216,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var list_tipos_incidente = await _context.Tipo_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -225,7 +226,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Tipo_Incidente)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in registros)
             {
@@ -239,7 +240,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Dimension>();
             var list_niveles_incidente = await _context.Nivel_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -248,7 +250,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Nivel_Incidente)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in list_niveles_incidente)
             {
@@ -268,7 +270,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //Solo Causas Inmediatas (Id_Acto_Condicion != null)
             var list_causas = await _context.Causa_Incidente_Investigacion.Where(x => x.Estado.Equals("Registrado") && x.Id_Acto_Condicion != null).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -277,7 +280,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .Select(x => x.Id_Investigacion_Final)
-                .ToListAsync();
+                .ToList();
 
             var list_causas_filtro = list_causas.Where(x => registros.Contains(x.Id_Investigacion_Final.Value)).GroupBy(x => x.Id_Acto_Condicion).ToList();
 
@@ -296,7 +299,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             //Solo Causas Basicas (Id_Factor_Causa_Incidente != null)
             var list_causas = await _context.Causa_Incidente_Investigacion.Where(x => x.Estado.Equals("Registrado") && x.Id_Factor_Causa_Incidente != null).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -305,7 +309,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .Select(x => x.Id_Investigacion_Final)
-                .ToListAsync();
+                .ToList();
 
             var list_causas_filtro = list_causas.Where(x => registros.Contains(x.Id_Investigacion_Final.Value)).GroupBy(x=>x.Id_Factor_Causa_Incidente).ToList();
             
@@ -322,7 +326,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var gerencias = await _context.Gerencias.ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -331,7 +336,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Gerencia_Responsable)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in registros)
             {
@@ -352,7 +357,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var list_productos_derramado = await _context.Producto_Derramado_Incidente.Where(x=>x.Estado.Equals("Registrado")).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -361,7 +367,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .Select(x => x.Id_Investigacion_Final)
-                .ToListAsync();
+                .ToList();
 
             var list_productos_derramado_filtro = list_productos_derramado.Where(x => registros.Contains(x.Id_Investigacion_Final)).GroupBy(x=>x.Id_Producto_Incidente).ToList();
 
@@ -385,7 +391,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_suelo = await _context.Tipo_Suelo.Where(x=>x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_suelo = await _context.Impacto_Ambiental_Incidente.Where(x => x.Area_Suelo != null).GroupBy(x=>x.Id_Tipo_Suelo).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_suelo = data.Where(x => x.Area_Suelo != null).GroupBy(x=>x.Id_Tipo_Suelo).ToList();
 
             foreach (var item in impactos_suelo)
             {
@@ -400,7 +407,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_suelo = await _context.Tipo_Suelo.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_suelo = await _context.Impacto_Ambiental_Incidente.Where(x => x.Cantidad_Suelo != null).GroupBy(x => x.Id_Tipo_Suelo).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_suelo = data.Where(x => x.Cantidad_Suelo != null).GroupBy(x => x.Id_Tipo_Suelo).ToList();
 
             foreach (var item in impactos_suelo)
             {
@@ -415,7 +423,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_flora = await _context.Especie_Flora.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_flora = await _context.Impacto_Ambiental_Incidente.Where(x => x.Unidad_Flora != null).GroupBy(x => x.Id_Especie_Flora).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_flora = data.Where(x => x.Unidad_Flora != null).GroupBy(x => x.Id_Especie_Flora).ToList();
 
             foreach (var item in impactos_flora)
             {
@@ -430,7 +439,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_flora = await _context.Especie_Flora.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_flora = await _context.Impacto_Ambiental_Incidente.Where(x => x.Cantidad_Residuo_Flora != null).GroupBy(x => x.Id_Especie_Flora).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_flora = data.Where(x => x.Cantidad_Residuo_Flora != null).GroupBy(x => x.Id_Especie_Flora).ToList();
 
             foreach (var item in impactos_flora)
             {
@@ -445,7 +455,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_fauna = await _context.Especie_Fauna.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_fauna = await _context.Impacto_Ambiental_Incidente.Where(x => x.Unidad_Fauna != null).GroupBy(x => x.Id_Especie_Fauna).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_fauna = data.Where(x => x.Unidad_Fauna != null).GroupBy(x => x.Id_Especie_Fauna).ToList();
 
             foreach (var item in impactos_fauna)
             {
@@ -460,7 +471,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_fauna = await _context.Especie_Fauna.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_fauna = await _context.Impacto_Ambiental_Incidente.Where(x => x.Cantidad_Residuo_Fauna != null).GroupBy(x => x.Id_Especie_Fauna).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_fauna = data.Where(x => x.Cantidad_Residuo_Fauna != null).GroupBy(x => x.Id_Especie_Fauna).ToList();
 
             foreach (var item in impactos_fauna)
             {
@@ -475,7 +487,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_agua = await _context.Tipo_Agua.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_agua = await _context.Impacto_Ambiental_Incidente.Where(x => x.Volumen_Agua != null).GroupBy(x => x.Id_Tipo_Agua).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_agua = data.Where(x => x.Volumen_Agua != null).GroupBy(x => x.Id_Tipo_Agua).ToList();
 
             foreach (var item in impactos_agua)
             {
@@ -490,7 +503,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var tipos_agua = await _context.Tipo_Agua.Where(x => x.Estado.Equals("ACT")).ToListAsync();
 
-            var impactos_agua = await _context.Impacto_Ambiental_Incidente.Where(x => x.Cantidad_Residuo_Agua != null).GroupBy(x => x.Id_Tipo_Agua).ToListAsync();
+            var data = await _context.Impacto_Ambiental_Incidente.ToListAsync();
+            var impactos_agua = data.Where(x => x.Cantidad_Residuo_Agua != null).GroupBy(x => x.Id_Tipo_Agua).ToList();
 
             foreach (var item in impactos_agua)
             {
@@ -507,7 +521,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var impactos = await _context.Impacto_Ambiental_Incidente.Where(x => x.Personas_Afectadas!=null).ToListAsync();
 
-            var registros = await _context.Investigacion_Final_Incidente.Where(x =>
+            var data = await _context.Investigacion_Final_Incidente.ToListAsync();
+            var registros = data.Where(x =>
                 //!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
                 x.Id_Tipo_Incidente.Equals(tipoIncidente != 0 ? tipoIncidente : x.Id_Tipo_Incidente) &&
                 x.Id_Nivel_Incidente.Equals(nivelIncidente != 0 ? nivelIncidente : x.Id_Nivel_Incidente) &&
@@ -516,7 +531,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Incidente >= FechaInicio &&
                 x.Fecha_Incidente <= FechaFin)
                 .GroupBy(x => x.Id_Tipo_Incidente)
-                .ToListAsync();
+                .ToList();
 
             foreach (var item in registros)
             {
