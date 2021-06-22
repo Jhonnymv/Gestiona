@@ -4,7 +4,190 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="agua mb-4">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title agua-opacity-color">
+                <h3>Dashboard de Consumo de Agua de Mar</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <form  class="custom-form w-100" id="filtrosReporteConsumoAguaMar" autocomplete="off" asp-controller="DescargarConsumoAgua" asp-action="DescargarReporteConsumo">
+                <div class="col-12 col-lg-9">
+                    <div class="row">
+                        <h5 class="text-mc text-center">Filtros</h5>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Resolucion"></label>
+                            <select class="form-control" asp-for="Resolucion" asp-items="@ViewBag.Resoluciones"></select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="Anio"></label>
+                            <input type="number" class="form-control" asp-for="Anio" value="@DateTime.Now.Year" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FInicio"></label>
+                            <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label asp-for="FFin"></label>
+                            <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-1">
+                </div>
+                <div class="col-12 col-lg-2">
+                    <div class="w-100 row-center-center">
+                        <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                    </div>
+                    <div class="w-100 row-center-center">
+                        <button id="descargar" type="button" class="btn btn-mc-success w-100">Descargar Excel</button>
+                    </div>
+                    <div class="w-100 row-center-center">
+                        <button id="descargarPDF" type="button" class="btn btn-mc-danger w-100" onclick="printDiv('pdfprintarea')">Imprimir Dashboard</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Cantidad consumida por fecha-->
+<div class="container">
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <div class="row">
+                    <div class="col-sm-8 col-md-10 col-lg-11">
+                        <h5>Consumo de Agua</h5>
+                    </div>
+                    <div class="col-sm-4 col-md-2 col-lg-1 align-self-center">
+                        <input type="checkbox" id="check_volumen_fechas" name="check_volumen_fechas" class="form-check" checked="checked" style="margin: initial;">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12 col-lg-6">
+                        <div class="col-12">
+                            <select id="frecuencia_consumo" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_volumen_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <div class="row">
+                    <div class="col-sm-8 col-md-10 col-lg-11">
+                        <h5>Caudal Promedio</h5>
+                    </div>
+                    <div class="col-sm-4 col-md-2 col-lg-1 align-self-center">
+                        <input type="checkbox" id="check_caudal_fechas" name="check_caudal_fechas" class="form-check" checked="checked" style="margin: initial;">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12 col-lg-6">
+                        <div class="col-12">
+                            <select id="frecuencia_caudal" class="form-control">
+                                <option value="Diario" selected>Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12">
+                    <div class="secondary-content">
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_caudal_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!--Volumen restante-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <div class="row">
+                    <div class="col-sm-8 col-md-10 col-lg-11">
+                        <h5>Volumen de Agua Consumido vs Restante</h5>
+                    </div>
+                    <div class="col-sm-4 col-md-2 col-lg-1 align-self-center">
+                        <input type="checkbox" id="check_volumen_restante" name="check_volumen_restante" class="form-check" checked="checked" style="margin: initial;">
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="secondary-dashboard-item col-12">
+                        <div class="secondary-content">
+                            <div class="col-12">
+                                <div class="chart-area">
+                                    <canvas id="chart_volumen_restante" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <div class="row">
+        <!--Tiempo de Bombeo-->
+        <div class="dashboard-section col-12 col-lg-12">
+            <div class="dashboard-header">
+                <div class="row">
+                    <div class="col-sm-8 col-md-10 col-lg-11">
+                        <h5>Tiempo de Bombeo</h5>
+                    </div>
+                    <div class="col-sm-4 col-md-2 col-lg-1 align-self-center">
+                        <input type="checkbox" id="check_tiempo_bombeo" name="check_tiempo_bombeo" class="form-check" checked="checked" style="margin: initial;">
+                    </div>
+                </div>
+                </div>
+                <div class="row">
+                    <div class="secondary-dashboard-item col-12">
+                        <div class="secondary-content">
+                            <div class="col-12">
+                                <div class="chart-area">
+                                    <canvas id="chart_tiempo_bombeo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<!--<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Dashboard de Consumo de Agua de Mar</h2>
     </div>
@@ -49,10 +232,9 @@
             </div>
         </div>
     </div>
-</form>
-
+</form>-->
 <!--Cantidad consumida por fecha-->
-<div id="pdfContainer">
+<!--<div id="pdfContainer">
     <div class="row mb-2">
         <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-4">
@@ -128,36 +310,36 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!--Volumen restante-->
-    <div class="row mb-2">
-        <div class="col-xl-12 col-lg-12">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <div class="row">
-                        <div class="col-2">
-                            <input type="checkbox" id="check_volumen_restante" name="check_volumen_restante" class="form-check" checked="checked" style="margin: initial;">
-                        </div>
-                        <div class="col-8" style="align-self: center;">
-                            <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Restante</h6>
-                        </div>
+    </div>-->
+<!--Volumen restante-->
+<!--<div class="row mb-2">
+    <div class="col-xl-12 col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <div class="row">
+                    <div class="col-2">
+                        <input type="checkbox" id="check_volumen_restante" name="check_volumen_restante" class="form-check" checked="checked" style="margin: initial;">
+                    </div>
+                    <div class="col-8" style="align-self: center;">
+                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Volumen de Agua Consumido vs Restante</h6>
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="chart-area">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_volumen_restante" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+                            <canvas id="chart_volumen_restante" style="display: block; height: 500px; width: 100%;" class="chartjs-render-monitor"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <!--Tiempo de Bombeo-->
-    <div class="row mb-2">
+</div>-->
+<!--Tiempo de Bombeo-->
+<!--<div class="row mb-2">
         <div class="col-xl-12 col-lg-12">
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -183,9 +365,8 @@
             </div>
         </div>
     </div>
-</div>
-
-<!--Area de impresion-->
+</div>-->
+@*Area de impresion*@
 <div id="pdfprintarea" style="display:none;">
     <div class="row mb-2" id="div_volumen_fechas">
         <div class="col-12">
@@ -256,7 +437,6 @@
                 alert("La fecha de fin debe ser mayor a la fecha de inicio y debe seleccionar la resolución");
             }
         });
-
         function preparePrintArea() {
             $("#pdfprintarea").show();
 
