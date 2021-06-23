@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewData["Title"] = "ResumenTarjetas";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Gestor de Contenido</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header">
+            <div class="action-container tablas-color row-center-center">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9 row-center-center">
+                    <div class="row input_container">
+                        <label for="filtro_nombre">Filtrar por Nombre o Contenido</label>
+                        <input type="text" class="form-control" id="filtro">
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
+
+        </div>
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltrarTarjetas(1);
+            $("#btn_agregar").prop("href", "/GestorContenido/AgregarTarjeta");
+        });
+        $("#btn_enviar").on('click', function (e) {
+            FiltrarTarjetas(1);
+        });
+        function FiltrarTarjetas(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/FiltrarTarjetas",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty()
+                    $('#tab_content').html(response.tabla)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function EliminarTarjeta(id) {
+            if (confirm('¿Esta seguro que desea eliminar la tarjeta?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/GestorContenido/EliminarTarjeta",
+                    data: {
+                        IdTarjeta: id
+                    },
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            FiltrarTarjetas(1);
+                        }
+                        else {
+                            console.log(response.message);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}
+

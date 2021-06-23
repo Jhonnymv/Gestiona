@@ -37,17 +37,13 @@ namespace GestionAmbiental.Controllers
             var model = new HomeModel();
             try
             {
-                var configPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "configuraciones.json");
                 var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
 
-                var configText = System.IO.File.ReadAllText(configPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
                 var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
-                var config = JsonConvert.DeserializeObject<ConfiguracionesTarjeta>(configText);
                 var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
 
-                model.Configuraciones = config;
-                model.Tarjetas = cards.OrderBy(x=>x.Orden).ToList();
+                model.Tarjetas = cards.OrderBy(x=>x.Fecha).ToList();
             }
             catch(Exception e)
             {

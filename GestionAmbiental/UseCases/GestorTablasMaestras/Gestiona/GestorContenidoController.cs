@@ -81,6 +81,21 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                 return View();
             }
+        } public async Task<IActionResult> ResumenTarjetas()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home");
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
         }
         //Propiedadaes módulos
         [HttpPost]
@@ -373,18 +388,16 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
             var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-            var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
+            var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
                         
             var tabla = "<table class=\"table\">";
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
-            tabla += "<th>Orden</th>";
             tabla += "<th>Título</th>";
-            tabla += "<th>Descripción</th>";
+            tabla += "<th>Contenido</th>";
             tabla += "<th>Imagen</th>";
-            tabla += "<th>Tipo</th>";
-            tabla += "<th>Ubicación de Imagen</th>";
-            tabla += "<th>Ancho de Imagen</th>";
+            tabla += "<th>Fecha</th>";
+            tabla += "<th>Publicador</th>";
             tabla += "<th></th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -396,20 +409,18 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             if (cards.Count > 0)
             {
                 if(filtro!=null)
-                    cards = cards.Where(x=>x.Titulo.ToLower().Contains(filtro.ToLower()) || x.Descripcion.ToLower().Contains(filtro.ToLower())).ToList();
+                    cards = cards.Where(x=>x.Titulo.ToLower().Contains(filtro.ToLower()) || x.Contenido.ToLower().Contains(filtro.ToLower())).ToList();
 
-                cards = cards.OrderBy(x => x.Orden).ToList();
+                cards = cards.OrderBy(x => x.Fecha).ToList();
                 foreach (var fila in cards)
                 {
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Orden + "</td>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Titulo + "</td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\">" + (fila.Descripcion.Length > 250 ? fila.Descripcion.Substring(0, 250) + "..." : fila.Descripcion) + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + (fila.Contenido.Length > 250 ? fila.Contenido.Substring(0, 250) + "..." : fila.Contenido) + "</td>";
                     filasTabla += "<td style=\"width:150px;\"><img src=\"" + Path.Combine(_hostingEnvironment.WebRootPath, fila.Imagen) + "\" style =\"width:100%;height:auto\"/></td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Tipo + "</td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.LugarImg + "</td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.AnchoImg + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Fecha + "</td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Publicador + "</td>";
                     filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleTarjeta?IdTarjeta=" + fila.Id + "\">Detalle</a></td>";
                     filasTabla += "<td style=\"vertical-align:middle;\"><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarTarjeta("+fila.Id+")\">Eliminar</button></td>";
                     filasTabla += "</tr>";
@@ -466,38 +477,23 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
-                var configPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "configuraciones.json");
-                var configText = System.IO.File.ReadAllText(configPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                var config = JsonConvert.DeserializeObject<ConfiguracionesTarjeta>(configText);
-
-                var tiposTarjeta = config.TiposTarjeta.Select(g => new SelectListItem() { Value = g.Nombre, Text = g.Nombre }).ToList();
-                tiposTarjeta.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var posicionesImagen = config.PosicionesImagen.Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-                posicionesImagen.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var anchosImagen = config.AnchosImagen.Select(g => new SelectListItem() { Value = g.Ancho.ToString(), Text = g.Porcentaje.ToString() }).ToList();
-                anchosImagen.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                ViewBag.Tipos = tiposTarjeta;
-                ViewBag.Posiciones = posicionesImagen;
-                ViewBag.Anchos = anchosImagen;
-
                 var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
                 var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
                 var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
 
                 var data = cards.Find(x => x.Id.Equals(IdTarjeta));
                 var model = new GestorTablasMaestras.Gestiona.TarjetaModel();
-                //var model = data;
+                
                 model.Id = data.Id;
-                model.Orden = data.Orden;
                 model.Titulo = data.Titulo;
-                model.Descripcion = data.Descripcion;
-                model.Tipo = data.Tipo;
+                model.Contenido = data.Contenido;
                 model.Imagen = data.Imagen;
-                model.LugarImg = data.LugarImg;
-                model.AnchoImg = data.AnchoImg;
+                model.Publicador = data.Publicador;
+                model.Fecha = data.Fecha;
+                model.Tipo = data.Tipo;
+                model.Tamanio = data.Tamanio;
+                model.PosicionE = data.PosicionE;
+                model.PosicionM = data.PosicionM;
 
                 return View(model);
             }
@@ -537,12 +533,14 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             EliminarImagen(rutaImagenAnterior);
                         }
                         card.Id = model.Id;
-                        card.Orden = model.Orden;
                         card.Titulo = model.Titulo;
-                        card.Descripcion = model.Descripcion;
+                        card.Contenido = model.Contenido;
+                        card.Fecha = model.Fecha;
+                        card.Publicador = model.Publicador;
                         card.Tipo = model.Tipo;
-                        card.LugarImg = model.LugarImg;
-                        card.AnchoImg = model.AnchoImg;
+                        card.Tamanio = model.Tamanio;
+                        card.PosicionE = model.PosicionE;
+                        card.PosicionM = model.PosicionM;
                     }
                     string json = JsonConvert.SerializeObject(cards);
                     System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -567,23 +565,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-
-                var configPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "configuraciones.json");
-                var configText = System.IO.File.ReadAllText(configPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                var config = JsonConvert.DeserializeObject<ConfiguracionesTarjeta>(configText);
-
-                var tiposTarjeta = config.TiposTarjeta.Select(g => new SelectListItem() { Value = g.Nombre, Text = g.Nombre }).ToList();
-                tiposTarjeta.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var posicionesImagen = config.PosicionesImagen.Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-                posicionesImagen.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var anchosImagen = config.AnchosImagen.Select(g => new SelectListItem() { Value = g.Ancho.ToString(), Text = g.Porcentaje.ToString() }).ToList();
-                anchosImagen.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                ViewBag.Tipos = tiposTarjeta;
-                ViewBag.Posiciones = posicionesImagen;
-                ViewBag.Anchos = anchosImagen;
 
                 return View();
             }
@@ -619,13 +600,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                             var card = new Home.TarjetaModel();
                             card.Id = nuevoId;
-                            card.Orden = model.Orden;
                             card.Titulo = model.Titulo;
-                            card.Descripcion = model.Descripcion;
+                            card.Contenido = model.Contenido;
                             card.Imagen = rutaNuevoArchivo;
                             card.Tipo = model.Tipo;
-                            card.LugarImg = model.LugarImg;
-                            card.AnchoImg = model.AnchoImg;
+                            card.Fecha = model.Fecha;
+                            card.Publicador = model.Publicador;
+                            card.Tamanio = model.Tamanio;
+                            card.PosicionE = model.PosicionE;
+                            card.PosicionM = model.PosicionM;
 
                             cards.Add(card);
 

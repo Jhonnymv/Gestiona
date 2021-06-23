@@ -15,43 +15,77 @@
         <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
             <input type="hidden" asp-for="Id" value="@Model.Id" />
             <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Orden"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Orden"></span>
-                    <input type="text" class="form-control" asp-for="Orden" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Tipo"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Tipo"></span>
-                    <select class="form-control" asp-for="Tipo" asp-items="@ViewBag.Tipos" disabled></select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
+                <div class="col-12 col-lg-6">
                     <label asp-for="Titulo"></label>
-                </div>
-                <div class="col-lg-8">
                     <span class="text-danger" asp-validation-for="Titulo"></span>
-                    <input type="text" class="form-control" asp-for="Titulo" disabled>
+                    <input type="text" class="form-control" asp-for="Titulo" readonly/>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <label asp-for="ImagenNueva"></label>
+                    <span class="text-danger field-validation-error" data-valmsg-for="ImagenNueva" data-valmsg-replace="true">
+                        <span id="danger_evidencia" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="ImagenNueva">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" />
                 </div>
             </div>
             <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
+                <div class="col-12 col-lg-6">
+                    <label asp-for="Publicador"></label>
+                    <span class="text-danger" asp-validation-for="Publicador"></span>
+                    <input type="text" class="form-control" asp-for="Publicador" readonly/>
                 </div>
-                <div class="col-lg-8" style="height: 400px;">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="hidden" class="form-control" asp-for="Descripcion" value="@Model.Descripcion">
+                <div class="col-12 col-lg-6">
+                    <label asp-for="Fecha"></label>
+                    <span class="text-danger" asp-validation-for="Fecha"></span>
+                    <input class="form-control" type="date" asp-for="Fecha" readonly/>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12">
+                    <label asp-for="Contenido"></label>
+                </div>
+                <div class="col-lg-12" style="height: 400px;">
+                    <span class="text-danger" asp-validation-for="Contenido"></span>
+                    <input type="hidden" class="form-control" asp-for="Contenido">
                     <div id="editor" style="max-height:350px;">
                     </div>
                 </div>
-            </div><div class="row mb-2">
+            </div>
+            <input type="hidden" class="form-control" asp-for="Tipo">
+            <div class="row mb-2">
+                <div class="col-12 col-lg-6">
+                    <label asp-for="PosicionE"></label>
+                    <span class="text-danger" asp-validation-for="PosicionE"></span>
+                    <select class="form-control" asp-for="PosicionE" disabled>
+                        <option value="0">Seleccionar</option>
+                        <option value="1">Escritorio: Derecha</option>
+                        <option value="2">Escritorio: Izquierda</option>
+                    </select>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <label asp-for="Tamanio"></label>
+                    <span class="text-danger" asp-validation-for="Tamanio"></span>
+                    <select class="form-control" asp-for="Tamanio"disabled>
+                        <option value="0">Seleccionar</option>
+                        <option value="1">Pequeña</option>
+                        <option value="2">Mediana</option>
+                        <option value="3">Grande</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-12 col-lg-6">
+                    <label asp-for="PosicionM"></label>
+                    <span class="text-danger" asp-validation-for="PosicionM"></span>
+                    <select class="form-control" asp-for="PosicionM" disabled>
+                        <option value="0">Seleccionar</option>
+                        <option value="1">Móvil: Arriba</option>
+                        <option value="2">Móvil: Abajo</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-2">
                 <div class="col-lg-4">
                     <label asp-for="Imagen"></label>
                 </div>
@@ -60,50 +94,12 @@
                     <img src="@Model.Imagen" style="width:auto;height:auto; max-height:300px" />
                 </div>
             </div>
-            <div id="seccion_nueva_imagen" style="display:none;">
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <label asp-for="ImagenNueva"></label>
-                    </div>
-                    <div class="col-lg-8">
-                        <span class="text-danger field-validation-error" data-valmsg-for="ImagenNueva" data-valmsg-replace="true">
-                            <span id="danger_imagen_nueva" class=""></span>
-                        </span>
-                        <label class="btn btn-primary" for="ImagenNueva">Seleccione</label>
-                        <input type="file" style="visibility:hidden; display:none" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-lg-4"></div>
-                    <div class="col-lg-8">
-                        <img id="output_image" style="width:auto;height:auto; max-height:300px" />
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="LugarImg"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="LugarImg"></span>
-                    <select class="form-control" asp-for="LugarImg" asp-items="@ViewBag.Posiciones" disabled></select>
-                </div>
-            </div>
-            <div id="seccion_ancho_imagen" class="row mb-2" style="display:none">
-                <div class="col-lg-4">
-                    <label asp-for="AnchoImg"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="AnchoImg"></span>
-                    <select class="form-control" asp-for="AnchoImg" asp-items="@ViewBag.Anchos" disabled></select>
-                </div>
-            </div>
             <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
                 <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
                 <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
             </div>
             <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorContenido" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                <a asp-controller="GestorContenido" asp-action="ResumenTarjetas" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
                 <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
             </div>
         </form>
@@ -114,10 +110,12 @@
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
+        var size_class = '';
+        var position_class = '';
         var quill = new Quill('#editor', {
             theme: 'snow'
         });
-        var descripcion = $("#Descripcion").val();       
+        var contenido = $("#Contenido").val();       
         $(document).ready(function () {
             var lugarImagen = $("#LugarImg").val();
             if (lugarImagen == "izquierda" || lugarImagen == "derecha") {
@@ -129,7 +127,7 @@
             }
             $(".ql-editor").css("background-color", "#e4e7ea");
             $(".ql-toolbar").css("background-color", "#e4e7ea");
-            $(".ql-editor").html(descripcion)
+            $(".ql-editor").html(contenido)
             quill.disable();
         });
         $("#LugarImg").on("change", function () {
@@ -152,13 +150,15 @@
             quill.enable();
             $(".ql-editor").css("background-color", "#ffffff");
             $(".ql-toolbar").css("background-color", "#ffffff");
-            $("#Orden").prop('disabled', false);
+            $("#Titulo").prop('readonly', false);
+            $("#Contenido").prop('disabled', false);
             $("#Tipo").prop('disabled', false);
-            $("#Titulo").prop('disabled', false);
-            $("#Descripcion").prop('disabled', false);
+            $("#Publicador").prop('readonly', false);
+            $("#Fecha").prop('readonly', false);
+            $("#PosicionE").prop('disabled', false);
+            $("#PosicionM").prop('disabled', false);
+            $("#Tamanio").prop('disabled', false);
             $("#seccion_nueva_imagen").show();
-            $("#LugarImg").prop('disabled', false);
-            $("#AnchoImg").prop('disabled', false);
         });
 
         $("#btnCancelar").on('click', function () {
@@ -172,13 +172,15 @@
             quill.disable();
             $(".ql-editor").css("background-color", "#e4e7ea");
             $(".ql-toolbar").css("background-color", "#e4e7ea");
-            $("#Orden").prop('disabled', true);
+            $("#Titulo").prop('readonly', true);
+            $("#Contenido").prop('disabled', true);
             $("#Tipo").prop('disabled', true);
-            $("#Titulo").prop('disabled', true);
-            $("#Descripcion").prop('disabled', true);
+            $("#Publicador").prop('readonly', false);
+            $("#Fecha").prop('readonly', true);
+            $("#PosicionE").prop('disabled', true);
+            $("#PosicionM").prop('disabled', true);
+            $("#Tamanio").prop('disabled', true);
             $("#seccion_nueva_imagen").show();
-            $("#LugarImg").prop('disabled', true);
-            $("#AnchoImg").prop('disabled', true);
         });
         function preview_image(event) {
             var reader = new FileReader();
@@ -191,8 +193,55 @@
         $("#form_editar_tarjeta").submit(function () {
             var htmlText = $("#editor .ql-editor").html();
             quill.disable();
-            $("#Descripcion").val(htmlText);
+            $("#Contenido").val(htmlText);
+            $("#Tipo").val(size_class + position_class);
         });
+        $("#PosicionE, #PosicionM, #Tamanio").on("change", function () {
+            compSize();
+            compPosition();
+        });
+        function compSize() {
+            size_class = '';
+            if ($("#Tamanio").val() === '1') {
+                size_class += ' small-article';
+            } else if ($("#Tamanio").val() === '2') {
+                size_class += ' medium-article';
+            } else if ($("#Tamanio").val() === '3') {
+                size_class += ' large-article';
+            } else {
+                size_class += ' medium-article';
+            }
+        }
+        function compPosition() {
+            position_class = '';
+            if ($("#PosicionE").val() === '1') {
+                if ($("#PosicionM").val() === '1') {
+                    position_class += ' article-right-top';
+                } else if ($("#PosicionM").val() === '2') {
+                    position_class += ' article-right-bottom';
+                } else {
+                    position_class += ' article-right-top'
+                }
+            } else if ($("#PosicionE").val() === '2') {
+                if ($("#PosicionM").val() === '1') {
+                    position_class += ' article-left-top';
+                } else if ($("#PosicionM").val() === '2') {
+                    position_class += ' article-left-bottom';
+                } else {
+                    position_class += ' article-left-top'
+                }
+            } else if ($("#PosicionE").val() === '') {
+                if ($("#PosicionM").val() === '1') {
+                    position_class += ' article-left-top';
+                } else if ($("#PosicionM").val() === '2') {
+                    position_class += ' article-left-bottom';
+                } else {
+                    position_class += ' article-left-top'
+                }
+            } else {
+                position_class += ' article-left-top'
+            }
+        }
     </script>
 }
 
