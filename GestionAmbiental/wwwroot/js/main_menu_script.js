@@ -13,6 +13,7 @@ $('.menu_item').mouseenter(function (){
 
 $(document).ready(function () {
     compIndicator();
+    compScroll();
     localStorage.removeItem('selectedolditem');
     localStorage.removeItem('sublist');
 
@@ -32,6 +33,11 @@ $(document).ready(function () {
 
 $(window).resize(function () {
     compIndicator();
+    compScroll();
+});
+
+$(window).scroll(function () {
+    compScroll();
 });
 
 function compIndicator() {
@@ -42,3 +48,16 @@ function compIndicator() {
         $('#indicator').hide();
     }
 }
+
+function compScroll() {
+    if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+        $('#indicator').hide();
+    }
+    else {
+        $('#indicator').show();
+    }
+}
+
+$('#indicator').click(function () {
+    $(document).scrollTop($(document).height());
+});

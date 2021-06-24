@@ -280,6 +280,7 @@ body::-webkit-scrollbar-track {
     position: fixed;
     bottom: 25px;
     right: 5px;
+    cursor: pointer;
 }
 
     .indicator svg {
