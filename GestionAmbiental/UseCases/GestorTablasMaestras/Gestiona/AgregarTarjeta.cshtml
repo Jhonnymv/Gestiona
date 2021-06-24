@@ -10,35 +10,36 @@
 }
 
 <div class="mc_container">
-    <div class="menu_settings container first-div-tab-content mb-4">
-        <span class="text-mc">Contenido</span>
-        <div class="div-separator"></div>
-        <form class="col-12 w-100 custom-form flex-column" id="form_agregar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
+    <form class="col-12 w-100 custom-form flex-column" id="form_agregar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
+        <div class="menu_settings container first-div-tab-content mb-4">
+            <span class="text-mc">Contenido</span>
+            <div class="div-separator"></div>
+
             <div>
                 <div class="row input_container">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Titulo">Título del Artículo</label>
-                        <input type="text" class="form-control" asp-for="Titulo" id="input-title-article"/>
+                        <input type="text" class="form-control" asp-for="Titulo" />
                     </div>
                     <div class="col-12 col-lg-6">
                         <label for="">Imagen del Artículo</label>
-                        <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" id="input-image-article" class="form-control"/>
+                        <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" class="form-control" />
                     </div>
                 </div>
                 <div class="row input_container">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Publicador">Publicador del Artículo</label>
-                        <input type="text" class="form-control" asp-for="Publicador" id="input-publisher-article" value="Marcobre"/>
+                        <input type="text" class="form-control" asp-for="Publicador" value="Marcobre" />
                     </div>
                     <div class="col-12 col-lg-6">
                         <label asp-for="Fecha">Fecha</label>
-                        <input class="form-control" type="date" asp-for="Fecha" id="input-date-article"/>
+                        <input class="form-control" type="date" asp-for="Fecha" />
                     </div>
                 </div>
                 <div class="input_container">
                     <div class="col-12">
                         <label for="">Contenido del Artículo</label>
-                        <input type="hidden" id="input-content-article" class="form-control" asp-for="Contenido">
+                        <input type="hidden" class="form-control" asp-for="Contenido">
                         <div id="editor" style="height:200px; max-height:350px;">
                         </div>
                     </div>
@@ -52,117 +53,117 @@
                     <button type="submit" class="btn btn-mc" id="btnAgregar">Agregar</button>
                 </div>
             </div>
-        </form>
-    </div>
-    <div class="menu_settings container first-div-tab-content">
-        <span class="text-mc">Previsualización</span>
-        <div class="div-separator"></div>
-        <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="pills-inspections-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-inspections" type="button" role="tab"
-                        aria-controls="pills-inspections" aria-selected="true">
-                    Escritorio
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac"
-                        type="button" role="tab" aria-controls="pills-rac" aria-selected="false">
-                    Móvil
-                </button>
-            </li>
-        </ul>
-        <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-inspections" role="tabpanel"
-                 aria-labelledby="pills-inspections-tab">
-                <div class="first-div-tab-content mb-4">
-                    <div class="col-12 custom-form">
-                        <div class="row input_container col-12">
-                            <div class="col-12 col-lg-6">
-                                <label for="">Posición del Contenido</label>
-                                <select name="" id="position" class="form-control">
-                                    <option value="">Seleccionar</option>
-                                    <option value="1">Escritorio: Derecha</option>
-                                    <option value="2">Escritorio: Izquierda</option>
-                                </select>
+        </div>
+        <div class="menu_settings container first-div-tab-content">
+            <span class="text-mc">Previsualización</span>
+            <div class="div-separator"></div>
+            <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-inspections-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-inspections" type="button" role="tab"
+                            aria-controls="pills-inspections" aria-selected="true">
+                        Escritorio
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac"
+                            type="button" role="tab" aria-controls="pills-rac" aria-selected="false">
+                        Móvil
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-inspections" role="tabpanel"
+                     aria-labelledby="pills-inspections-tab">
+                    <div class="first-div-tab-content mb-4">
+                        <div class="col-12 custom-form">
+                            <div class="row input_container col-12">
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="PosicionE">Posición del Contenido</label>
+                                    <select class="form-control" asp-for="PosicionE">
+                                        <option value="0">Seleccionar</option>
+                                        <option value="1">Escritorio: Derecha</option>
+                                        <option value="2">Escritorio: Izquierda</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="Tamanio">Tamaño de la Tarjeta (Escritorio)</label>
+                                    <select class="form-control" asp-for="Tamanio">
+                                        <option value="0">Seleccionar</option>
+                                        <option value="1">Pequeña</option>
+                                        <option value="2">Mediana</option>
+                                        <option value="3">Grande</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="col-12 col-lg-6">
-                                <label for="">Tamaño de la Tarjeta (Escritorio)</label>
-                                <select name="" id="size" class="form-control">
-                                    <option value="">Seleccionar</option>
-                                    <option value="1">Pequeña</option>
-                                    <option value="2">Mediana</option>
-                                    <option value="3">Grande</option>
-                                </select>
+                        </div>
+                    </div>
+                    <div class="articles">
+                        <div class="article-card medium-article" id="article-desktop">
+                            <div class="article-content">
+                                <div class="article-title">
+                                    <h3 class="text-title-article">Título de Artículo</h3>
+                                    <span>Fecha: <span class="text-date-article">01/01/2021</span></span>
+                                </div>
+                                <div class="article-body text-content-article">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
+                                        veniam, voluptatibus?
+                                    </p>
+                                </div>
+                                <div class="article-footer">
+                                    <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
+                                </div>
+                            </div>
+                            <div class="article-image">
+                                <img class="prev-image-article" src="~/img/article-image2.png" alt="">
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="articles">
-                    <div class="article-card medium-article" id="article-desktop">
-                        <div class="article-content">
-                            <div class="article-title">
-                                <h3 class="text-title-article">Título de Artículo</h3>
-                                <span>Fecha: <span class="text-date-article">01/01/2021</span></span>
-                            </div>
-                            <div class="article-body text-content-article">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
-                                    veniam, voluptatibus?
-                                </p>
-                            </div>
-                            <div class="article-footer">
-                                <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
-                            </div>
-                        </div>
-                        <div class="article-image">
-                            <img class="prev-image-article" src="~/img/article-image2.png" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-rac" role="tabpanel" aria-labelledby="pills-rac-tab">
-                <div class="first-div-tab-content mb-4">
-                    <div class="col-12 custom-form">
-                        <div class="row input_container col-12">
-                            <div class="col-12 col-lg-6">
-                                <label for="">Posición del Contenido</label>
-                                <select name="" id="position-mobile" class="form-control">
-                                    <option value="">Seleccionar</option>
-                                    <option value="1">Móvil: Arriba</option>
-                                    <option value="2">Móvil: Abajo</option>
-                                </select>
+                <div class="tab-pane fade" id="pills-rac" role="tabpanel" aria-labelledby="pills-rac-tab">
+                    <div class="first-div-tab-content mb-4">
+                        <div class="col-12 custom-form">
+                            <div class="row input_container col-12">
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="PosicionM">Posición del Contenido</label>
+                                    <select class="form-control" asp-for="PosicionM">
+                                        <option value="">Seleccionar</option>
+                                        <option value="1">Móvil: Arriba</option>
+                                        <option value="2">Móvil: Abajo</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="articles articles-mobile d-flex justify-content-center">
-                    <div class="article-card medium-article" id="article-mobile">
-                        <div class="article-content">
-                            <div class="article-title">
-                                <h3 class="text-title-article">Título de Artículo</h3>
-                                <span>Fecha: <span class="text-date-article">30/03/2021</span></span>
+                    <div class="articles articles-mobile d-flex justify-content-center">
+                        <div class="article-card medium-article" id="article-mobile">
+                            <div class="article-content">
+                                <div class="article-title">
+                                    <h3 class="text-title-article">Título de Artículo</h3>
+                                    <span>Fecha: <span class="text-date-article">30/03/2021</span></span>
+                                </div>
+                                <div class="article-body text-content-article">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
+                                        veniam, voluptatibus?
+                                    </p>
+                                </div>
+                                <div class="article-footer">
+                                    <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
+                                </div>
                             </div>
-                            <div class="article-body text-content-article">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur
-                                    adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
-                                    veniam, voluptatibus?
-                                </p>
+                            <div class="article-image">
+                                <img class="prev-image-article" src="~/img/article-image2.png" alt="">
                             </div>
-                            <div class="article-footer">
-                                <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
-                            </div>
-                        </div>
-                        <div class="article-image">
-                            <img class="prev-image-article" src="~/img/article-image2.png" alt="">
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>
 
 
@@ -295,7 +296,7 @@
         //    compPosition();
         //});
 
-        $('#size').change(function () {
+        $('#Tamanio').change(function () {
             $('#article-desktop').removeClass();
             compSize();
             compPosition();
@@ -304,7 +305,7 @@
             article_class = 'article-card' + position_class + size_class;
         });
 
-        $('#position').change(function () {
+        $('#PosicionE').change(function () {
             $('#article-desktop').removeClass();
             compSize();
             compPosition();
@@ -313,15 +314,15 @@
             article_class = 'article-card' + position_class + size_class;
         });
 
-        $('#position-mobile').change(function () {
+        $('#PosicionM').change(function () {
             $('#article-desktop').removeClass();
             compSize();
             compPosition();
             $('#article-mobile').removeClass();
-            if ($('#position-mobile').val() === '1') {
+            if ($('#PosicionM').val() === '1') {
                 $('#article-mobile').addClass('article-card');
                 $('#article-mobile').addClass('article-content-top' + size_class);
-            } else if ($('#position-mobile').val() === '2') {
+            } else if ($('#PosicionM').val() === '2') {
                 $('#article-mobile').addClass('article-card');
                 $('#article-mobile').addClass('article-content-bottom' + size_class);
             } else {
@@ -335,11 +336,11 @@
 
         function compSize() {
             size_class = '';
-            if ($('#size').val() === '1') {
+            if ($('#Tamanio').val() === '1') {
                 size_class += ' small-article';
-            } else if ($('#size').val() === '2') {
+            } else if ($('#Tamanio').val() === '2') {
                 size_class += ' medium-article';
-            } else if ($('#size').val() === '3') {
+            } else if ($('#Tamanio').val() === '3') {
                 size_class += ' large-article';
             } else {
                 size_class += ' medium-article';
@@ -348,27 +349,27 @@
 
         function compPosition() {
             position_class = '';
-            if ($('#position').val() === '1') {
-                if ($('#position-mobile').val() === '1') {
+            if ($('#PosicionE').val() === '1') {
+                if ($('#PosicionM').val() === '1') {
                     position_class += ' article-right-top';
-                } else if ($('#position-mobile').val() === '2') {
+                } else if ($('#PosicionM').val() === '2') {
                     position_class += ' article-right-bottom';
                 } else {
                     position_class += ' article-right-top';
                 }
-            } else if ($('#position').val() === '2') {
-                if ($('#position-mobile').val() === '1') {
+            } else if ($('#PosicionE').val() === '2') {
+                if ($('#PosicionM').val() === '1') {
                     position_class += ' article-left-top';
-                } else if ($('#position-mobile').val() === '2') {
+                } else if ($('#PosicionM').val() === '2') {
                     position_class += ' article-left-bottom';
                 } else {
                     position_class += ' article-left-top';
                 }
             }
-            else if ($('#position').val() === '') {
-                if ($('#position-mobile').val() === '1') {
+            else if ($('#PosicionE').val() === '') {
+                if ($('#PosicionM').val() === '1') {
                     position_class += ' article-left-top';
-                } else if ($('#position-mobile').val() === '2') {
+                } else if ($('#PosicionM').val() === '2') {
                     position_class += ' article-left-bottom';
                 } else {
                     position_class += ' article-left-top';
@@ -379,7 +380,7 @@
             }
         }
 
-        $('#input-title-article').keyup(function () {
+        $('#Titulo').keyup(function () {
             if ($(this).val() !== '') {
                 $('.text-title-article').html($(this).val());
             } else {
@@ -387,7 +388,7 @@
             }
         });
 
-        $('#input-date-article').change(function () {
+        $('#Fecha').change(function () {
             if ($(this).val() !== '') {
                 $('.text-date-article').html($(this).val());
             } else {
@@ -395,7 +396,7 @@
             }
         });
 
-        $('#input-publisher-article').keyup(function () {
+        $('#Publicador').keyup(function () {
             if ($(this).val() !== '') {
                 $('.text-publisher-article').html($(this).val());
             } else {
@@ -420,12 +421,12 @@
             }
         }
 
-        $('#input-image-article').change(function () {
+        $('#ImagenNueva').change(function () {
             if ($(this).val() === "") {
                 $('.prev-image-article').attr('src', '');
                 $(this).css('border', '2px solid #FF4D4D');
             }
-            else if ($('#input-image-article').val() !== "") {
+            else if ($('#ImagenNueva').val() !== "") {
                 readURL('.prev-image-article', this);
                 $(this).css('border', '2px solid #27C767');
             }

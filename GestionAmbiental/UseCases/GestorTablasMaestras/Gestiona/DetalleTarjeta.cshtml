@@ -5,7 +5,175 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
+<div class="mc_container">
+    <form class="col-12 w-100 custom-form flex-column" id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <div class="menu_settings container first-div-tab-content mb-4">
+            <span class="text-mc">Contenido</span>
+            <div class="div-separator"></div>
+
+            <div>
+                <div class="row input_container">
+                    <div class="col-12 col-lg-6">
+                        <label asp-for="Titulo">Título del Artículo</label>
+                        <input type="text" class="form-control" asp-for="Titulo" readonly />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label for="">Imagen del Artículo</label>
+                        <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" class="form-control" readonly/>
+                    </div>
+                </div>
+                <div class="row input_container">
+                    <div class="col-12 col-lg-6">
+                        <label asp-for="Publicador">Publicador del Artículo</label>
+                        <input type="text" class="form-control" asp-for="Publicador" readonly />
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <label asp-for="Fecha">Fecha</label>
+                        <input class="form-control" type="date" asp-for="Fecha" readonly />
+                    </div>
+                </div>
+                <div class="input_container">
+                    <div class="col-12">
+                        <label for="">Contenido del Artículo</label>
+                        <input type="hidden" class="form-control" asp-for="Contenido">
+                        <div id="editor" style="height:200px; max-height:350px;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row-center-center col-12">
+                <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                    <div style="margin-right: 1em; width:auto">
+                        <button type="button" class="btn btn btn-mc-outline" id="btnCancelar" disabled>Cancelar</button>
+                    </div>
+                    <div style="width:auto">
+                        <button type="submit" class="btn btn-mc" id="btnGuardar" disabled>Guardar</button>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <div style="margin-right: 1em; width:auto">
+                        <a asp-controller="GestorContenido" asp-action="ResumenTarjetas" class="btn btn-mc-outline" id="btnVolver">Volver</a>
+                    </div>
+                    <div style="width:auto">
+                        <button type="button" class="btn btn-mc" id="btnEditar">Editar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu_settings container first-div-tab-content">
+            <span class="text-mc">Previsualización</span>
+            <div class="div-separator"></div>
+            <ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-inspections-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-inspections" type="button" role="tab"
+                            aria-controls="pills-inspections" aria-selected="true">
+                        Escritorio
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac"
+                            type="button" role="tab" aria-controls="pills-rac" aria-selected="false">
+                        Móvil
+                    </button>
+                </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-inspections" role="tabpanel"
+                     aria-labelledby="pills-inspections-tab">
+                    <div class="first-div-tab-content mb-4">
+                        <div class="col-12 custom-form">
+                            <div class="row input_container col-12">
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="PosicionE">Posición del Contenido</label>
+                                    <select class="form-control" asp-for="PosicionE" disabled>
+                                        <option value="0">Seleccionar</option>
+                                        <option value="1">Escritorio: Derecha</option>
+                                        <option value="2">Escritorio: Izquierda</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="Tamanio">Tamaño de la Tarjeta (Escritorio)</label>
+                                    <select class="form-control" asp-for="Tamanio" disabled>
+                                        <option value="0">Seleccionar</option>
+                                        <option value="1">Pequeña</option>
+                                        <option value="2">Mediana</option>
+                                        <option value="3">Grande</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="articles">
+                        <div class="article-card medium-article" id="article-desktop">
+                            <div class="article-content">
+                                <div class="article-title">
+                                    <h3 class="text-title-article">Título de Artículo</h3>
+                                    <span>Fecha: <span class="text-date-article">01/01/2021</span></span>
+                                </div>
+                                <div class="article-body text-content-article">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
+                                        veniam, voluptatibus?
+                                    </p>
+                                </div>
+                                <div class="article-footer">
+                                    <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
+                                </div>
+                            </div>
+                            <div class="article-image">
+                                <img class="prev-image-article" src="@Model.Imagen" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-rac" role="tabpanel" aria-labelledby="pills-rac-tab">
+                    <div class="first-div-tab-content mb-4">
+                        <div class="col-12 custom-form">
+                            <div class="row input_container col-12">
+                                <div class="col-12 col-lg-6">
+                                    <label asp-for="PosicionM">Posición del Contenido</label>
+                                    <select class="form-control" asp-for="PosicionM" disabled >
+                                        <option value="">Seleccionar</option>
+                                        <option value="1">Móvil: Arriba</option>
+                                        <option value="2">Móvil: Abajo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="articles articles-mobile d-flex justify-content-center">
+                        <div class="article-card medium-article" id="article-mobile">
+                            <div class="article-content">
+                                <div class="article-title">
+                                    <h3 class="text-title-article">Título de Artículo</h3>
+                                    <span>Fecha: <span class="text-date-article">30/03/2021</span></span>
+                                </div>
+                                <div class="article-body text-content-article">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur
+                                        adipisicing elit. Aspernatur atque, officia pariatur quae quia rerum tempore
+                                        veniam, voluptatibus?
+                                    </p>
+                                </div>
+                                <div class="article-footer">
+                                    <span>Escrito por <span class="text-publisher-article">Marcobre</span></span>
+                                </div>
+                            </div>
+                            <div class="article-image">
+                                <img class="prev-image-article" src="@Model.Imagen" alt="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Detalle de Tarjeta</h2>
     </div>
@@ -104,14 +272,15 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 @section scripts{
     <!-- Include the Quill library -->
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script>
-        var size_class = '';
-        var position_class = '';
+        var size_class;
+        var position_class;
+        var article_class;
         var quill = new Quill('#editor', {
             theme: 'snow'
         });
