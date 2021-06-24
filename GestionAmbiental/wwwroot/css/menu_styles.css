@@ -276,6 +276,40 @@ body::-webkit-scrollbar-track {
     padding-right:0 !important;
 }
 
+.indicator {
+    position: fixed;
+    bottom: 25px;
+    right: 5px;
+}
+
+    .indicator svg {
+        width: 20px;
+    }
+
+        .indicator svg path {
+            fill: #ffffff;
+        }
+
+.floating {
+    animation-name: floating;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+@keyframes floating {
+    0% {
+        transform: translate(0, 0px);
+    }
+
+    50% {
+        transform: translate(0, 15px);
+    }
+
+    100% {
+        transform: translate(0, -0px);
+    }
+}
 
 /* ---------------------------------------------------
     MEDIAQUERIES
@@ -293,6 +327,10 @@ body::-webkit-scrollbar-track {
 
     .modal-menu .modal-content {
         padding: 0px 30px;
+    }
+
+    .indicator svg {
+        width: 30px;
     }
 }
 
@@ -328,6 +366,10 @@ body::-webkit-scrollbar-track {
 }
 
 @media (min-width: 900px) {
+    .navbar {
+        margin-bottom: 0;
+    }
+
     .menu_items {
         padding: 10px 25px;
     }
@@ -355,6 +397,16 @@ body::-webkit-scrollbar-track {
 
     .menu_item svg{
         margin: 0;
+    }
+
+    .indicator {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+    }
+
+    .indicator svg {
+        width: 50px;
     }
 }
 

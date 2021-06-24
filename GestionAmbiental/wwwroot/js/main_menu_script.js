@@ -12,6 +12,7 @@ $('.menu_item').mouseenter(function (){
 });
 
 $(document).ready(function () {
+    compIndicator();
     localStorage.removeItem('selectedolditem');
     localStorage.removeItem('sublist');
 
@@ -28,3 +29,16 @@ $(document).ready(function () {
         localStorage.setItem("sublist", subMenu);
     });
 });
+
+$(window).resize(function () {
+    compIndicator();
+});
+
+function compIndicator() {
+    if ($(document).height() > $(window).height() + 70) {
+        $('#indicator').show();
+    }
+    else {
+        $('#indicator').hide();
+    }
+}
