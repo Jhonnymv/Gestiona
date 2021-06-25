@@ -133,60 +133,6 @@ body::-webkit-scrollbar-track {
 /* ---------------------------------------------------
     CONTENT
 ----------------------------------------------------- */
-/* ---------------------------------------------------
-    ARTICLE CARDS
------------------------------------------------------ */
-.article-card {
-    margin: 25px 10px;
-    border: solid 1px #C2C2C2;
-    display: flex;
-    flex-direction: column;
-    border-radius: 15px;
-    box-shadow: 0px 4px 4px rgba(0 ,0 ,0, 0.25);
-}
-
-.article-card .article-content{
-    padding: 15px 20px;
-}
-
-.article-card .article-content .article-title{
-    margin: 10px 0px;
-}
-
-.article-card .article-content .article-title h3{
-    margin: 0;
-    font-weight: bold;
-    font-size: 20px;
-}
-
-.article-card .article-content .article-title span{
-    font-size: 12px;
-    color: #a9a9a9;
-}
-
-.article-card .article-content .article-body{
-    margin: 20px 0px;
-}
-
-.article-card .article-content .article-body p{
-    font-size: 16px;
-    text-align: justify;
-}
-
-.article-card .article-content .article-footer{
-    margin: 10px 0px;
-}
-
-.article-card .article-content .article-footer span{
-    font-size: 13px;
-    font-weight: bold;
-}
-
-.article-card .article-image img{
-    width: 100%;
-    border-radius: 15px;
-    object-fit: scale-down;
-}
 
 /* ---------------------------------------------------
     MODAL LOGIN
@@ -413,23 +359,6 @@ body::-webkit-scrollbar-track {
     MEDIAQUERIES
 ----------------------------------------------------- */
 @media (min-width: 640px) {
-    .article-card {
-        flex-direction: row;
-    }
-
-    .article-card .article-content{
-
-        width: 70%;
-    }
-
-    .article-card .article-image{
-        width: 30%;
-    }
-
-    .article-card .article-image img{
-        height: 100%;
-        object-fit: cover;
-    }
 
     .modal-body {
         padding: 5em 5em;
@@ -463,41 +392,10 @@ body::-webkit-scrollbar-track {
         color: #ffffff;
         margin: 0px 10px;
     }
+}
 
-    .articles{
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-    }
-
-    .article-card.small-article {
-        width: 35%;
-    }
-
-    .article-card.large-article {
-        width: 60%;
-    }
-
-    .article-card.large-article .article-content, .article-card.small-article .article-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    .article-card .article-content .article-title{
-        margin: 10px 0px;
-    }
-    .article-card .article-content .article-body{
-        margin: 0px 0px;
-    }
-    .article-card .article-content .article-footer{
-        margin: 0px 0px;
-    }
-
-    @media (min-width: 992px) {
-        .navbar .navbar-brand.login-btn {
-            display: block;
-        }
+@media (min-width: 992px) {
+    .navbar .navbar-brand.login-btn {
+        display: block;
     }
 }

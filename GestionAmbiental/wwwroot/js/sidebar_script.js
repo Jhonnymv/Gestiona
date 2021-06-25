@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 $(window).resize(function(){
-    compSizeScreen()
+    compSizeScreen();
 });
 
 //COMP ACTIVE LIST

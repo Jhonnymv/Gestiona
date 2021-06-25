@@ -1,0 +1,305 @@
+/* ---------------------------------------------------
+    ARTICLE CARDS
+----------------------------------------------------- */
+.article-card {
+    margin: 25px 10px;
+    border: solid 1px #C2C2C2;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0 ,0 ,0, 0.25);
+}
+
+.article-left-top, .article-right-top {
+    flex-direction: column;
+}
+
+.article-left-bottom, .article-right-bottom {
+    flex-direction: column-reverse;
+}
+
+.articles-mobile .article-card {
+    flex-direction: row;
+}
+
+.article-card .article-content{
+    padding: 15px 20px;
+}
+
+.article-card .article-content .article-title{
+    margin: 10px 0px;
+}
+
+.article-card .article-content .article-title h3{
+    margin: 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.article-card .article-content .article-title span{
+    font-size: 12px;
+    color: #a9a9a9;
+}
+
+.article-card .article-content .article-body{
+    margin: 20px 0px;
+}
+
+.article-card .article-content .article-body p{
+    font-size: 1em;
+    text-align: justify;
+}
+
+.article-card .article-content .article-footer{
+    margin: 10px 0px;
+}
+
+.article-card .article-content .article-footer span{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.article-card .article-image img{
+    width: 100%;
+    border-radius: 15px;
+    object-fit: scale-down;
+}
+/* ---------------------------------------------------
+    END ARTICLE CARDS
+----------------------------------------------------- */
+
+
+/* ---------------------------------------------------
+    ARTICLES MOBILE
+----------------------------------------------------- */
+.articles-mobile .article-card {
+    margin: 25px 10px;
+    border: solid 1px #C2C2C2;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+    box-shadow: 0px 4px 4px rgba(0 ,0 ,0, 0.25);
+}
+
+.articles-mobile .article-card.article-content-top {
+    flex-direction: column;
+}
+
+.articles-mobile .article-card.article-content-bottom {
+    flex-direction: column-reverse;
+}
+
+.articles-mobile .article-card.small-article {
+    max-width: 300px;
+}
+
+.articles-mobile .article-card.medium-article {
+    max-width: 300px;
+}
+
+.articles-mobile .article-card.large-article {
+    max-width: 300px;
+}
+
+.articles-mobile .small-article .article-content{
+
+    width: 100%;
+}
+
+.articles-mobile .small-article .article-image{
+    width: 100%;
+}
+
+.articles-mobile .medium-article .article-content{
+
+    width: 100%;
+}
+
+.articles-mobile .medium-article .article-image{
+    width: 100%;
+}
+
+.articles-mobile .large-article .article-content{
+
+    width: 100%;
+}
+
+.articles-mobile .large-article .article-image{
+    width: 100%;
+}
+
+.articles-mobile .article-card .article-content{
+    padding: 15px 20px;
+}
+
+.articles-mobile .article-card .article-content .article-title{
+    margin: 10px 0px;
+}
+
+.articles-mobile .article-card .article-content .article-title h3{
+    margin: 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.articles-mobile .article-card .article-content .article-title span{
+    font-size: 12px;
+    color: #a9a9a9;
+}
+
+.articles-mobile .article-card .article-content .article-body{
+    margin: 20px 0px;
+}
+
+.articles-mobile .article-card .article-content .article-body p{
+    font-size: 1em;
+    text-align: justify;
+}
+
+.articles-mobile .article-card .article-content .article-footer{
+    margin: 10px 0px;
+}
+
+.articles-mobile .article-card .article-content .article-footer span{
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.articles-mobile .article-card .article-image img{
+    width: 100%;
+    border-radius: 15px;
+    object-fit: cover;
+}
+
+/* ---------------------------------------------------
+    END ARTICLES MOBILE
+----------------------------------------------------- */
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (min-width: 640px) {
+
+
+    /*.article-card {*/
+    /*    flex-direction: row;*/
+    /*}*/
+
+    .small-article, .large-article, .medium-article {
+        flex-direction: row;
+    }
+
+    .article-right-bottom, .article-right-top {
+        flex-direction: row-reverse;
+    }
+
+    .article-left-bottom, .article-left-top {
+        flex-direction: row;
+    }
+
+    /*.articles-mobile .article-card {*/
+    /*    flex-direction: row;*/
+    /*}*/
+
+    .small-article .article-content{
+        width: 60%;
+    }
+
+    .small-article .article-image{
+        width: 40%;
+    }
+
+    .medium-article .article-content{
+
+        width: 60%;
+    }
+
+    .medium-article .article-image{
+        width: 40%;
+    }
+
+    .large-article .article-content{
+
+        width: 70%;
+    }
+
+    .large-article .article-image{
+        width: 30%;
+    }
+
+    /*.article-card .article-content{*/
+
+    /*    width: 70%;*/
+    /*}*/
+
+    /*.article-card .article-image{*/
+    /*    width: 30%;*/
+    /*}*/
+
+    .article-card .article-image img{
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+
+@media (min-width: 768px) {
+    .articles-mobile .article-card {
+        flex-direction: column;
+    }
+}
+
+@media (min-width: 900px) {
+    .article-card .article-content .article-body p{
+        font-size: .95em;
+    }
+
+    .articles{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .article-card.small-article {
+        width: 35%;
+    }
+
+    .article-card.medium-article {
+        width: 60%;
+    }
+
+    .article-card.large-article {
+        width: 90%;
+    }
+
+    /*ARTICLES MOBILE 900px*/
+
+    /*ARTICLES MOBILE 900px*/
+
+    .article-card.large-article .article-content, .article-card.small-article .article-content, .article-card.medium-article .article-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .article-card .article-content .article-title{
+        margin: 10px 0px;
+    }
+    .article-card .article-content .article-body{
+        margin: 0px 0px;
+    }
+    .article-card .article-content .article-footer{
+        margin: 0px 0px;
+    }
+}
+
+@media (min-width: 992px) {
+}
+
+/*@media (min-width: 1366px) {*/
+/*    .article-card .article-content .article-body p{*/
+/*        font-size: 1em;*/
+/*    }*/
+/*}*/

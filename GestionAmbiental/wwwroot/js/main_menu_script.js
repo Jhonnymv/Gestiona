@@ -12,6 +12,8 @@ $('.menu_item').mouseenter(function (){
 });
 
 $(document).ready(function () {
+    compIndicator();
+    compScroll();
     localStorage.removeItem('selectedolditem');
     localStorage.removeItem('sublist');
 
@@ -27,4 +29,35 @@ $(document).ready(function () {
         localStorage.setItem("selectedolditem", title);
         localStorage.setItem("sublist", subMenu);
     });
+});
+
+$(window).resize(function () {
+    compIndicator();
+    compScroll();
+});
+
+$(window).scroll(function () {
+    compScroll();
+});
+
+function compIndicator() {
+    if ($(document).height() > $(window).height() + 70) {
+        $('#indicator').show();
+    }
+    else {
+        $('#indicator').hide();
+    }
+}
+
+function compScroll() {
+    if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+        $('#indicator').hide();
+    }
+    else {
+        $('#indicator').show();
+    }
+}
+
+$('#indicator').click(function () {
+    $(document).scrollTop($(document).height());
 });
