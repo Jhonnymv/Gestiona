@@ -19,6 +19,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 using Renci.SshNet;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administración
 {
@@ -127,6 +128,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administració
         */
         public async Task<IActionResult> NotificarNuevoDocumento(string IdDocumento)
         {
+            var r = 45;
+            var g = 100;
+            var b = 150;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("SGA"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
             var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
@@ -149,20 +173,23 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administració
                 }
             }
             var msgBody = string.Format(templateReaded,
-                IdDocumento,
-                documento.IdSGACategoriaDocumento,
+                img_url,
+                r,
+                g,
+                b,
                 documento.DocCodigo,
                 documento.DocNombre,
                 documento.DocVersion,
                 documento.SGACategoriaDocumento,
                 documento.SGATipoDocumento,
                 documento.Usuario,
-                documento.FechaAprobacion.HasValue ? documento.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "No Aplica"
+                documento.FechaAprobacion.HasValue ? documento.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "No Aplica",
+                IdDocumento
                 );
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
 
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);

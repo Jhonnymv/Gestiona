@@ -41,7 +41,7 @@
                                 </div>
                             </a>
 
-                            <a class="modal-menu-option" asp-controller="SGADocumentos" asp-action="Resumen">
+                            @*<a class="modal-menu-option" asp-controller="SGADocumentos" asp-action="Resumen">
                                 <div class="icon-modal-menu-green">
 
                                 </div>
@@ -56,6 +56,35 @@
                                 </div>
                                 <div class="text-modal-menu-option">
                                     <span>Auditoría</span>
+                                </div>
+                            </a>*@
+                        }else if(ViewBag.Rol == "AsesorMAP")
+                        {
+                            <a class="modal-menu-option" asp-controller="SGADocumentacion" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Documentación</span>
+                                </div>
+                            </a>
+
+                            <a class="modal-menu-option" asp-controller="SGAAdministracion" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Administración</span>
+                                </div>
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="modal-menu-option" asp-controller="SGADocumentacion" asp-action="Resumen">
+                                <div class="icon-modal-menu-green">
+                                </div>
+                                <div class="text-modal-menu-option">
+                                    <span>Documentación</span>
                                 </div>
                             </a>
                         }

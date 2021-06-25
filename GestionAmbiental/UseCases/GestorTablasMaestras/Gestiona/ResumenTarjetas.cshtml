@@ -51,6 +51,25 @@
         $("#btn_enviar").on('click', function (e) {
             FiltrarTarjetas(1);
         });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        tablasStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
         function FiltrarTarjetas(pag) {
             $.ajax({
                 type: "POST",
@@ -62,9 +81,10 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tab_content').empty()
-                    $('#tab_content').html(response.tabla)
-                    $('#paginado').html(response.paginador)
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
                 }
             });
         }
