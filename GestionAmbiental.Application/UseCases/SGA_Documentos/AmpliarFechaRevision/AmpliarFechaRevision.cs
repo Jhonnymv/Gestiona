@@ -16,14 +16,15 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.AmpliarFechaRevis
             _editarDocumentosReadOnlyRepository = editarDocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarDocumentosReadOnlyRepository));
         }
 
-        public async Task Execute(int IdRevision, string nuevaFecha)
+        public Task Execute(int IdRevision, string nuevaFecha)
         {
-            var input = new RevisionDocumento
-            {
-                IdSGARevisionDocumento = IdRevision,
-                FechaLimite = Convert.ToDateTime(nuevaFecha)
-            };
-            await _editarDocumentosReadOnlyRepository.AmpliarFechaRevision(input);
+            return null;
+            //var input = new RevisionDocumento
+            //{
+            //    IdSGARevisionDocumento = IdRevision,
+            //    FechaLimite = Convert.ToDateTime(nuevaFecha)
+            //};
+            //await _editarDocumentosReadOnlyRepository.AmpliarFechaRevision(input);
         }
     }
 }

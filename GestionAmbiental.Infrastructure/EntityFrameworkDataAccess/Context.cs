@@ -96,7 +96,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Revision_Documento> SGA_Revisiones_Documento { get; set; }
         public DbSet<Documento> SGA_Documentos { get; set; }
         public DbSet<Documentos_Relacionados> SGA_Documentos_Relacionados { get; set; }
-        
+        public DbSet<Usuario_Notificar_SGA> Usuarios_Notificar_SGA { get; set; }
+
         public DbSet<Archivo_Configuracion> Archivos_Configuracion { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -255,6 +256,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                .ToTable("Tb_SGA_Documento");
             modelBuilder.Entity<Documentos_Relacionados>()
                .ToTable("Tb_SGA_Documentos_Relacionados");
+            modelBuilder.Entity<Usuario_Notificar_SGA>()
+                .ToTable("Tb_Usuarios_Notificar_SGA");
 
             modelBuilder.Entity<Archivo_Configuracion>()
                .ToTable("Tb_Archivo_Configuracion");

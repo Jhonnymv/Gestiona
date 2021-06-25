@@ -37,7 +37,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
             _hostingEnvironment = hostingEnvironment;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
-
+        /*
         public async Task<IActionResult> NotificarRevisionAprobada(int IdSGADocumento, string UsuarioNombre, string Comentario)
         {
             var documento = await _consultarDocumento.Execute(IdSGADocumento);
@@ -274,5 +274,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
 
             return RedirectToAction("VerDocumento", "SGADocumentacion", new { IdDocumento = _protector.Protect(documento.IdSGADocumento.ToString()) });
         }
+        */        
     }
 }

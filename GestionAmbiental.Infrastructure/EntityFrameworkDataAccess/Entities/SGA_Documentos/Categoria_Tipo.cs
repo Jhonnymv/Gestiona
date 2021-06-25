@@ -15,8 +15,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public int Id_SGA_Categoria_Documento { get; set; }
         [Column(TypeName = "int")]
         public int Id_SGA_Tipo_Documento { get; set; }
-        [Column(TypeName = "bit")]
-        public bool Visible { get; set; }
         [Column(TypeName = "varchar(3)")]
         public string Estado { get; set; }
     }

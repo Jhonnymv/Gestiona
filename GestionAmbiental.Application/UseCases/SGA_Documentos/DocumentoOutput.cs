@@ -25,7 +25,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public string Condicion { get; set; }
         public string Comentario { get; set; }
         public DateTime? FechaTentativa { get; set; }
-        public string DocRuta { get; set; }
+        public string PdfRuta { get; set; }
+        public string EditableRuta { get; set; }
         public int IdUsuario { get; set; }
         public string Usuario { get; set; }
         public string UsuarioEmail { get; set; }
@@ -52,6 +53,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
                 DocPredecesorNombre = documento.DocPredecesor.DocNombre;
                 DocPredecesorCodigo = documento.DocPredecesor.DocCodigo;
             }
+            PdfRuta = documento.PdfRuta;
+            EditableRuta = documento.EditableRuta;
             Principal = documento.Principal;
             FechaAprobacion = documento.FechaAprobacion;
             IdCondicion = documento.Condicion.IdSGACondicion;
@@ -62,7 +65,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
             Estado = documento.Estado;
             Revisores = documento.Revisiones;
             Aprobadores = documento.Aprobaciones;
-            DocRuta = documento.DocRuta;
             IdUsuario = documento.Usuario.IdUsuario;
             Usuario = documento.Usuario.Nombres + " " + documento.Usuario.Apellidos;
             UsuarioEmail = documento.Usuario.Email;

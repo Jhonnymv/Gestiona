@@ -3,62 +3,209 @@
     ViewData["Title"] = "Actualizar Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
+<div class="sga">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title sga-opacity-color">
+                <h3>Actualizar Documento @ViewBag.CategoriaDoc</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="form_registrar_documento" asp-controller="SGAAdministracion" asp-action="CargarDocumentoSRevision" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center text-uppercase">Datos del Documento</span>
+                    </div>
+                    <input asp-for="DocPrincipal" type="hidden" value="@ViewBag.DocPrincipal" />
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="IdSGATipoDocumento"></label>
+                            <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
+                            <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocVersion"></label>
+                            <span class="text-danger" asp-validation-for="DocVersion"></span>
+                            <input type="number" asp-for="DocVersion" class="form-control" value="1">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocNombre"></label>
+                            <span class="text-danger" asp-validation-for="DocNombre"></span>
+                            <input type="hidden" asp-for="DocNombre" class="form-control">
+                            <select asp-for="DocPredecesor" class="form-control"></select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocCodigo"></label>
+                            <span class="text-danger" asp-validation-for="DocCodigo"></span>
+                            <input type="text" asp-for="DocCodigo" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row input_container align-items-start">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="Comentario"></label>
+                            <span class="text-danger" asp-validation-for="Comentario"></span>
+                            <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
+                            <div class="text-right">
+                                <span id="contadorComentario">0</span>
+                                <span>/ 500</span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="FechaAprobacion"></label>
+                            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+                            <input type="date" asp-for="FechaAprobacion" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="FechaTentativa"></label>
+                            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                            <input type="date" asp-for="FechaTentativa" class="form-control">
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label>Documento Editable Versión Anterior:</label>
+                            <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocumentoPdf"></label>
+                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
+                                <span id="danger_documento_pdf" class=""></span>
+                            </span>
+                            <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocumentoEditable"></label>
+                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                <span id="danger_documento_editable" class=""></span>
+                            </span>
+                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                        </div>
+                    </div>
+                </div>
+                @if (ViewBag.Error != null)
+                {
+                    <div class="row input_container justify-content-center">
+                        <div class="col-8">
+                            <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+                        </div>
+                    </div>
+                }
+                <input type="hidden" asp-for="Opcion" />
+                <div class="row">
+                    <div class="button-container">
+                        <div class="me-2">
+                            <a class="btn btn-mc-outline-danger w-100" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
+                        </div>
+                        <div class="me-2">
+                            <button type="button" class="btn btn-mc w-100" id="btn_guardar_estado">Guardar Estado</button>
+                        </div>
+                        <div class="me-2">
+                            <button type="button" class="btn btn-mc-success w-100" id="btn_registrar">Registrar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--<div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Cargar Documento @ViewBag.CategoriaDoc</h2>
+        <h2>Actualizar Documento @ViewBag.CategoriaDoc</h2>
     </div>
 </div>
 <form class="form-group" id="form_registrar_documento" asp-action="CargarDocumentoSRevision" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
     <div class="row mb-2 align-items-center">
-        <input asp-for="Doc_Principal" type="hidden" value="@ViewBag.DocPrincipal" />
+        <input asp-for="DocPrincipal" type="hidden" value="@ViewBag.DocPrincipal" />
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Id_SGA_Tipo_Documento"></label>
+            <label asp-for="IdSGATipoDocumento"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Id_SGA_Tipo_Documento"></span>
-            <select asp-for="Id_SGA_Tipo_Documento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+            <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
+            <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Version"></label>
+            <label asp-for="DocVersion"></label>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Version"></span>
-            <input type="number" asp-for="Doc_Version" class="form-control" step=".01">
+            <span class="text-danger" asp-validation-for="DocVersion"></span>
+            <input type="number" asp-for="DocVersion" class="form-control" value="1">
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Nombre"></label>
+            <label asp-for="DocNombre"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Nombre"></span>
-            <input type="hidden" asp-for="Doc_Nombre" class="form-control">
-            <select asp-for="Doc_Predecesor" class="form-control"></select>
+            <span class="text-danger" asp-validation-for="DocNombre"></span>
+            <input type="hidden" asp-for="DocNombre" class="form-control">
+            <select asp-for="DocPredecesor" class="form-control"></select>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Doc_Codigo"></label>
+            <label asp-for="DocCodigo"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Doc_Codigo"></span>
-            <input type="text" asp-for="Doc_Codigo" class="form-control" readonly>
+            <span class="text-danger" asp-validation-for="DocCodigo"></span>
+            <input type="text" asp-for="DocCodigo" class="form-control" readonly>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
             <label asp-for="Comentario"></label>
         </div>
         <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
             <span class="text-danger" asp-validation-for="Comentario"></span>
-            <textarea asp-for="Comentario" class="form-control"></textarea>
+            <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
+            <div class="text-right">
+                <span id="contadorComentario">0</span>
+                <span>/ 500</span>
+            </div>
         </div>
         <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Documento"></label>
+            <label asp-for="FechaAprobacion"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+            <input type="date" asp-for="FechaAprobacion" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="FechaTentativa"></label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+            <input type="date" asp-for="FechaTentativa" class="form-control">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label>Documento Editable Versión Anterior:</label>
+        </div>
+        <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="DocumentoPdf"></label>
         </div>
         <div class="col-sm-12 col-md-2 col-lg-1 mb-2">
-            <span class="text-danger field-validation-error" data-valmsg-for="Documento" data-valmsg-replace="true">
-                <span id="danger_documento" class=""></span>
+            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
+                <span id="danger_documento_pdf" class=""></span>
             </span>
-            <label class="btn btn-primary" for="Documento">Seleccione</label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Documento" accept=".pdf,.doc,.docx" data-max-size="8971520">
+            <label class="btn btn-primary" for="DocumentoPdf">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoPdf" accept=".pdf" data-max-size="8971520">
         </div>
         <div class="col-sm-12 col-md-7 col-lg-3">
-            <label id="files_name">0 Archivos</label>
+            <label id="files_name_pdf">0 Archivos</label>
+        </div>
+        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+            <label asp-for="DocumentoEditable"></label>
+        </div>
+        <div class="col-sm-12 col-md-2 col-lg-1 mb-2">
+            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                <span id="danger_documento_editable" class=""></span>
+            </span>
+            <label class="btn btn-primary" for="DocumentoEditable">Seleccione</label>
+            <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoEditable" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+        </div>
+        <div class="col-sm-12 col-md-7 col-lg-3">
+            <label id="files_name_editable">0 Archivos</label>
         </div>
     </div>
     @if (ViewBag.Error != null)
@@ -69,10 +216,10 @@
             </div>
         </div>
     }
-    <input type="hidden" asp-for="Opcion" />
-    <input type="hidden" asp-for="Revisores" />
-    <input type="hidden" asp-for="Aprobadores" />
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
+    <input type="hidden" asp-for="Opcion" />-->
+@*<input type="hidden" asp-for="Revisores" />
+    <input type="hidden" asp-for="Aprobadores" />*@
+<!--<div class="row mb-2 mr-2 d-flex justify-content-end">
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
         @if (ViewBag.DocPrincipal == null)
         {
@@ -80,49 +227,71 @@
         }
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
-</form>
+</form>-->
 @section Scripts{
     <script type="text/javascript">
         var listDocumentosP = [];
+            listSecundariosEditable = @Html.Raw(ViewBag.PublicadosEditable);
         $(document).ready(function () {
             listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
         });
-        $("#Id_SGA_Tipo_Documento").change(function () {
+        function DescargarEditable(ruta) {
+            ruta = ruta.replace('-', '/');
+            window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+        }
+        $("#IdSGATipoDocumento").change(function () {
             //Limpiar opciones de predecesores (nombre)
-            $('#Doc_Predecesor').empty();
+            $('#DocPredecesor').empty();
             //Contador para que se asigne el nombre, codigo y version una sola vez (la primera opcion agregada)
             var count = 0;
-            var categoriaTipo = $("#Id_SGA_Tipo_Documento").val();
+            var categoriaTipo = $("#IdSGATipoDocumento").val();
             for (var i = 0; i < listDocumentosP.length; i++) {
                 if (categoriaTipo == listDocumentosP[i].IdSGACategoriaTipo) {
                     //Actualizar a las opciones de predecesores (nombre)
-                    $('#Doc_Predecesor').append(new Option(listDocumentosP[i].DocNombre, listDocumentosP[i].IdSGADocumento));
+                    $('#DocPredecesor').append(new Option(listDocumentosP[i].DocNombre, listDocumentosP[i].IdSGADocumento));
                     //Si es la primera opcion agregada actualiza nombre, codigo y version
                     if (count == 0) {
-                        $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
-                        $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
-                        $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                        $('#DocNombre').val(listDocumentosP[i].DocNombre);
+                        $('#DocCodigo').val(listDocumentosP[i].DocCodigo);
+                        $('#DocVersion').val((listDocumentosP[i].DocVersion + 1));
                         count++;
                     }
                 }
             }
+            var IdDoc = $("#DocPredecesor").val();
+            //Limpiar boton descargar editable
+            $("#btnDescargarEditable").empty();
+            if (IdDoc != null)
+                for (var i = 0; i < listSecundariosEditable.length; i++)
+                    if (listSecundariosEditable[i].Id == IdDoc) {
+                        $("#btnDescargarEditable").html(listSecundariosEditable[i].Button);
+                        break;
+                    }
         });
-        $("#Doc_Predecesor").change(function () {
-            var IdDoc = $("#Doc_Predecesor").val();
+        $("#DocPredecesor").change(function () {
+            var IdDoc = $("#DocPredecesor").val();
+            //Limpiar boton descargar editable
+            $("#btnDescargarEditable").empty();
+            if (IdDoc != null)
+                for (var i = 0; i < listSecundariosEditable.length; i++)
+                    if (listSecundariosEditable[i].Id == IdDoc) {
+                        $("#btnDescargarEditable").html(listSecundariosEditable[i].Button);
+                        break;
+                    }
             for (var i = 0; i < listDocumentosP.length; i++) {
                 if (IdDoc == listDocumentosP[i].IdSGADocumento) {
-                    $('#Doc_Nombre').val(listDocumentosP[i].DocNombre);
-                    $('#Doc_Codigo').val(listDocumentosP[i].DocCodigo);
-                    $('#Doc_Version').val((listDocumentosP[i].DocVersion + 0.01).toFixed(2));
+                    $('#DocNombre').val(listDocumentosP[i].DocNombre);
+                    $('#DocCodigo').val(listDocumentosP[i].DocCodigo);
+                    $('#DocVersion').val((listDocumentosP[i].DocVersion + 1));
                     return;
                 }
             }
         });
-        $("#Documento").change(function () {
-            $("#danger_documento").html("");
+        $("#DocumentoPdf").change(function () {
+            $("#danger_documento_pdf").html("");
             //Validacion del tamaño del archivo
-            var maxSize = $("#Documento").data('max-size');
-            var archivos = $("#Documento").get(0).files;
+            var maxSize = $("#DocumentoPdf").data('max-size');
+            var archivos = $("#DocumentoPdf").get(0).files;
 
             if (archivos.length > 0) {
                 var fileSize = 0
@@ -132,34 +301,63 @@
                 if (fileSize > maxSize) {
                     this.value = '';
                     var filesname = this.files.length + " Archivos";
-                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    $("#danger_documento_pdf").html("El  archivo supera el límite permitido de 8MB<br/>");
                     return;
                 }
                 var filesName = "";
                 for (var i = 0; i < archivos.length; i++) {
                     switch (this.value.match(/\.([^\.]+)$/)[1]) {
-                        case 'jpg':
-                        case 'JPG':
-                        case 'jpeg':
-                        case 'JPEG':
-                        case 'png':
-                        case 'PNG':
-                        case 'xls':
-                        case 'xlsx':
-                        case 'doc':
-                        case 'docx':
                         case 'pdf':
                             filesName += archivos[i].name + "<br/>";
                             break;
                         default:
                             this.value = '';
                             var filesname = this.files.length + " Archivos";
-                            $("#files_name").text(filesname);
-                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            $("#files_name_pdf").text(filesname);
+                            $("#danger_documento_pdf").html("No se admiten este tipo de archivos<br/>");
                             return;
                     }
                 }
-                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+                filesName.length > 0 ? $("#files_name_pdf").html(filesName) : null;
+            }
+        });
+        $("#DocumentoEditable").change(function () {
+            $("#danger_documento_editable").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#DocumentoEditable").data('max-size');
+            var archivos = $("#DocumentoEditable").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento_editable").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'ppt':
+                        case 'pptx':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name_editable").text(filesname);
+                            $("#danger_documento_editable").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name_editable").html(filesName) : null;
             }
         });
         $("#btn_guardar_estado").on("click", function () {
@@ -170,7 +368,11 @@
             $("#Opcion").val("Registrar");
             $("#form_registrar_documento").submit()
         });
-        
+
+        $('#Comentario').keyup(function () {
+            var characterCount = $(this).val().length;
+            $('#contadorComentario').text(characterCount);
+        });
     </script>
 
 }

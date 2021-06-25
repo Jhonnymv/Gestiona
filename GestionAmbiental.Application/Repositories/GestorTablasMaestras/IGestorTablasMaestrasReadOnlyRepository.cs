@@ -239,6 +239,12 @@ namespace GestionAmbiental.Application.Repositories.GestorTablasMaestras
         Task<CategoriaTipo> GetCategoriaTipo(int id_categoria_tipo);
         Task<int> AddCategoriaTipo(CategoriaTipo CategoriaTipo);
         Task UpdateCategoriaTipo(CategoriaTipo CategoriaTipo);
+        //Tb_Usuario_Notificar_SGA
+        Task<List<Usuarios_Notificar_SGA>> GetUsuario_Notificar_SGA(string filtro);
+        Task<Usuarios_Notificar_SGA> GetUsuario_Notificar_SGA(int id_usuario_notificar);
+        Task UpdateUsuario_Notificar_SGA(Usuarios_Notificar_SGA usuario_notifcar);
+        Task QuitarUsuario_Notificar_SGA(int id_usuario_notificar);
+        Task<int> AddUsuario_Notificar_SGA(int Id_Usuario_AD);
         //Tb_Archivo_Configuracion
         Task<ArchivoConfiguracion> GetArchivoConfiguracion(string nombre);
         Task UpdateArchivoConfiguracion(ArchivoConfiguracion configuracion);

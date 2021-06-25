@@ -65,7 +65,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
-
+        /*
         public async Task<IActionResult> Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -115,9 +115,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     filasTabla += "</tr>";
                 }
 
-                paginador += "<ul class=\"pagination pagination-sm\">";
+                paginador += "<ul class=\"pagination\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -130,7 +130,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
 
             }
@@ -209,15 +209,15 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
 
                 var model = new SGADocumentoModel
                 {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Version = documento.DocVersion,
+                    IdEncriptado = IdDocumento,
+                    IdSGADocumento = documento.IdSGADocumento,
+                    IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    DocNombre = documento.DocNombre,
+                    DocPredecesor = documento.IdDocPredecesor,
+                    DocVersion = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
+                    DocPdfRuta = documento.DocRuta,
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores)
                 };
@@ -316,29 +316,29 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.Id_SGA_Tipo_Documento));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.0}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
-                var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
+                var tipoDoc = items.ItemsTipoDocumento.Find(x => x.IdSGATipoDocumento.Equals(model.IdSGATipoDocumento));
+                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.0}", model.DocVersion) + Path.GetExtension(model.Documento.FileName);
+                //var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
+                //var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
                 var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.Descripcion);
+                var cargaDocumento = await CargarDocumento(model.DocPdfRuta, nombreDoc, tipoDoc.Descripcion);
 
                 if (!cargaDocumento.Equals("Error"))
                 {                  
                     var idDocumento = await _registrarDocumento.Execute(
-                        model.Id_SGA_Tipo_Documento,
-                        model.Doc_Codigo,
-                        model.Doc_Principal,
-                        model.Doc_Nombre,
-                        model.Doc_Version,
-                        model.Doc_Predecesor,
+                        model.IdSGATipoDocumento,
+                        model.DocCodigo,
+                        model.DocPrincipal,
+                        model.DocNombre,
+                        model.DocVersion,
+                        model.DocPredecesor,
                         model.Comentario,
                         cargaDocumento,
-                        model.Fecha_Tentativa,
+                        model.FechaTentativa,
                         userInfo.NombreUsuario,
                         model.Opcion,
-                        revisores,
-                        aprobadores,
+                        //revisores,
+                        //aprobadores,
                         secundarios);
                     return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
                 }
@@ -382,18 +382,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 else
                 {
                     //Validar si se puede enviar la variable "documentoRevision" a la notificacion, incluir comentario
-                    /*
-                    if (Opcion.Equals("Rechazado"))
-                    {
-                        //Notificar
-                        //Editar
-                    }
-                    else
-                    {
-                        //Editar
-                        //Notificar
-                    }
-                    */
+                 
                     await _editarRevisionDocumento.Execute(IdDocumentoInt, IdDocumentoRevisionInt, Comentario, Opcion);
 
                     response = new
@@ -405,7 +394,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 }
             }
         }
-
+        */
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();
@@ -430,7 +419,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -533,7 +522,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -572,7 +561,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 }
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

@@ -20,7 +20,7 @@
                     <button class="nav-link active" id="pills-docsga-tab" data-bs-toggle="pill" data-bs-target="#pills-docsga" type="button" role="tab" aria-controls="pills-docsga" aria-selected="true">Documentos SGA</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docsgi-tab" data-bs-toggle="pill" data-bs-target="#pills-docsgi" type="button" role="tab" aria-controls="pills-docsgi" aria-selected="false">Documentos SIG</button>
+                    <button class="nav-link" id="pills-docsig-tab" data-bs-toggle="pill" data-bs-target="#pills-docsig" type="button" role="tab" aria-controls="pills-docsig" aria-selected="false">Documentos SIG</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">Documentos Externos</button>
@@ -169,7 +169,7 @@
     <div class="col-sm-12 col-md-3 col-lg-2 text-center">
         <div class="d-flex flex-column" style="width:100%;">
             <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
-            <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
+            <div class="p-2" id="btn_sig"><button class="btn btn-primary" style="width:100%;">Documentos sig</button></div>
             <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
         </div>
     </div>
@@ -263,48 +263,49 @@
     </nav>
 </div>-->
 <!--Modal Docs Condicion-->
-<div class="modal fade" id="modal_docs_condicion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_condicion"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_docs_condicion">
-                    Documentos Filtrados
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-12">
-                            <input type="hidden" id="condicionDocModal" />
-                            <table class="table table-modal" id="tabla_documentos_tipo">
-                                <thead class="thead-mcolor">
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Documento</th>
-                                        <th>Versión / Revisión</th>
-                                        <th>Fecha de Aprobación</th>
-                                        <th>Condición</th>
-                                        <th>Comentarios</th>
-                                        <th>Fecha Tentativa de la Nueva Versión</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                            </table>
+<div class="modal fade" id="modal_docs_condicion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_condicion" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3>Documentos Filtrados</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer justify-content-center">
-                    <div class="row mb-2 justify-content-center">
-                        <nav id="paginado_documentos_tipo" aria-label="pagination">
-                        </nav>
+                <form>
+                    <div class="modal-body">
+                        <div class="sga">
+                            <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
+                                <div class="table-responsive sga-color">
+                                    <input type="hidden" id="condicionDocModal" />
+                                    <table class="table" id="tabla_documentos_tipo">
+                                        <thead class="">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Documento</th>
+                                                <th>Versión / Revisión</th>
+                                                <th>Fecha de Aprobación</th>
+                                                <th>Condición</th>
+                                                <th>Comentarios</th>
+                                                <th>Fecha Tentativa de la Nueva Versión</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination-container sga-color" id="paginado_documentos_tipo" aria-label="pagination">
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -314,14 +315,21 @@
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script type="text/javascript">
         var categoria = 1;
-        var r = 0;
-        var g = 0;
-        var b = 0;
-        var img_url = "";
         $(document).ready(function () {
-            dataModulo();
-            filtrar(1);
             $("#filtro_tipoDoc").val([]);
+            //Buscar activo guardado en local storage
+            var activeCartegoria = localStorage.getItem('activeDocSGACategoria');
+            if (activeCartegoria != null) {
+                switch (activeCartegoria) {
+                    case "1": $("#pills-docsga-tab").click(); break;
+                    case "2": $("#pills-docsig-tab").click(); break;
+                    case "3": $("#pills-docext-tab").click(); break;
+                };
+            }
+            //Si no existe, mostrar primer SGA
+            else {
+                filtrar(1);
+            }
         });
         function dataModulo() {
             $.ajax({
@@ -331,40 +339,44 @@
                 success: (response) => {
                     if (response.success) {
                         let data = JSON.parse(response.data);
-                        r = data.r;
-                        g = data.g;
-                        b = data.b;
-                        img_url = data.img_url;
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        sgaStyle(r, g, b);
                     } else {
                         console.log("Ocurrió un problema: " + response.msg);
                     }
                 }
             });
         }
-        $("#btn_sga").on('click', function () {
+        $("#pills-docsga-tab").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos SGA");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
             $("#btn_permisos").show();
             $("#btn_certificaciones").show();
+            localStorage.setItem('activeDocSGACategoria', "1")
             categoria = 1;
             filtrar(1);
         });
-        $("#btn_sgi").on('click', function () {
-            $("#titulo_pagina").text("Administracion de Documentos SGI");
+        $("#pills-docsig-tab").on('click', function () {
+            $("#titulo_pagina").text("Administracion de Documentos SIG");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
             $("#btn_permisos").hide();
             $("#btn_certificaciones").hide();
+            localStorage.setItem('activeDocSGACategoria', "2")
             categoria = 2;
             filtrar(1);
         });
-        $("#btn_externos").on('click', function () {
+        $("#pills-docext-tab").on('click', function () {
             $("#titulo_pagina").text("Administracion de Documentos Externos");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
             $("#btn_permisos").hide();
             $("#btn_certificaciones").hide();
+            localStorage.setItem('activeDocSGACategoria', "3")
             categoria = 3;
             filtrar(1);
         });
@@ -386,7 +398,7 @@
                     $('#tabla_documentos tbody').empty();
                     $('#tabla_documentos tbody').html(response.data);
                     $('#paginado').html(response.paginador);
-                    sgaStyle(r, g, b);
+                    dataModulo();
                 }
             });
         }
@@ -396,7 +408,7 @@
                 url: "/SGAAdministracion/GetTablaModalResumenFiltrada",
                 data: {
                     "pagina": pag,
-                    "rpp": 10,
+                    "rpp": 5,
                     "nombre": $('#filtro_nombre').val(),
                     "categoria": categoria,
                     "tipos": $("#filtro_tipoDoc").val(),
@@ -409,7 +421,7 @@
                     $('#tabla_documentos_tipo tbody').empty();
                     $('#tabla_documentos_tipo tbody').html(response.data);
                     $('#paginado_documentos_tipo').html(response.paginador);
-                    sgaStyle(r, g, b);
+                    dataModulo();
                 }
             });
         }

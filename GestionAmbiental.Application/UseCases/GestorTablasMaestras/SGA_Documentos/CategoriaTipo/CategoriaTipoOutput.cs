@@ -11,7 +11,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
         public string SGACategoriaDocumento { get; set; }
         public int IdSGATipoDocumento { get; set; }
         public string SGATipoDocumento { get; set; }
-        public bool Visible { get; set; }
         public string Estado { get; set; }
         public CategoriaTipoOutput() { }
         public CategoriaTipoOutput(Domain.SGA_Documentos.CategoriaTipo categoriaTipo) {
@@ -20,7 +19,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.SGA_Documen
             SGACategoriaDocumento = categoriaTipo.CategoriaDocumento.Descripcion;
             IdSGATipoDocumento = categoriaTipo.TipoDocumento.IdSGATipoDocumento;
             SGATipoDocumento = categoriaTipo.TipoDocumento.Descripcion;
-            Visible = categoriaTipo.Visible;
             Estado = categoriaTipo.Estado;
         }
     }
