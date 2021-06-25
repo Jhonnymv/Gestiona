@@ -10,13 +10,13 @@
 }
 
 <div class="mc_container">
-    <form class="col-12 w-100 custom-form flex-column" id="form_agregar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
+    <form id="form_agregar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="AgregarTarjeta" method="post" enctype="multipart/form-data">
         <div class="menu_settings container first-div-tab-content mb-4">
             <span class="text-mc">Contenido</span>
             <div class="div-separator"></div>
 
-            <div>
-                <div class="row input_container">
+            <div class="w-100 custom-form flex-column">
+                <div class="row input_container col-12">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Titulo">Título del Artículo</label>
                         <input type="text" class="form-control" asp-for="Titulo" />
@@ -26,7 +26,7 @@
                         <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" class="form-control" />
                     </div>
                 </div>
-                <div class="row input_container">
+                <div class="row input_container col-12">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Publicador">Publicador del Artículo</label>
                         <input type="text" class="form-control" asp-for="Publicador" value="Marcobre" />
@@ -36,7 +36,7 @@
                         <input class="form-control" type="date" asp-for="Fecha" />
                     </div>
                 </div>
-                <div class="input_container">
+                <div class="input_container col-12">
                     <div class="col-12">
                         <label for="">Contenido del Artículo</label>
                         <input type="hidden" class="form-control" asp-for="Contenido">

@@ -10,24 +10,23 @@
 }
 
 <div class="mc_container">
-    <form class="col-12 w-100 custom-form flex-column" id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
+    <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" value="@Model.Id" />
         <div class="menu_settings container first-div-tab-content mb-4">
             <span class="text-mc">Contenido</span>
             <div class="div-separator"></div>
-
-            <div>
-                <div class="row input_container">
+            <div class="custom-form w-100 flex-column">
+                <div class="row input_container col-12">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Titulo">Título del Artículo</label>
                         <input type="text" class="form-control" asp-for="Titulo" readonly />
                     </div>
                     <div class="col-12 col-lg-6">
                         <label for="">Imagen del Artículo</label>
-                        <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" class="form-control" readonly />
+                        <input type="file" asp-for="ImagenNueva" accept=".jpg,.jpeg,.png" class="form-control" disabled />
                     </div>
                 </div>
-                <div class="row input_container">
+                <div class="row input_container col-12">
                     <div class="col-12 col-lg-6">
                         <label asp-for="Publicador">Publicador del Artículo</label>
                         <input type="text" class="form-control" asp-for="Publicador" readonly />
@@ -37,7 +36,7 @@
                         <input class="form-control" type="date" asp-for="Fecha" readonly />
                     </div>
                 </div>
-                <div class="input_container">
+                <div class="input_container col-12">
                     <div class="col-12">
                         <label for="">Contenido del Artículo</label>
                         <input type="hidden" class="form-control" asp-for="Contenido">
@@ -304,8 +303,6 @@
             article_class = 'article-card' + position_class + size_class;
             $('#article-desktop').addClass(article_class);
 
-            
-
             var lugarImagen = $("#LugarImg").val();
             if (lugarImagen == "izquierda" || lugarImagen == "derecha") {
                 $("#seccion_ancho_imagen").show();
@@ -314,11 +311,13 @@
                 $("#seccion_ancho_imagen").hide();
                 $("#AnchoImg").val(0);
             }
+
             $(".ql-editor").css("background-color", "#e4e7ea");
             $(".ql-toolbar").css("background-color", "#e4e7ea");
             $(".ql-editor").html(contenido)
             quill.disable();
         });
+
         $("#LugarImg").on("change", function () {
             var lugarImagen = $("#LugarImg").val();
             if (lugarImagen == "izquierda" || lugarImagen == "derecha") {
@@ -328,6 +327,7 @@
                 $("#AnchoImg").val(0);
             }
         });
+
         $("#btnEditar").on('click', function () {
             $("#bntsEditar").show();
             $("#bntsDetalle").hide();
@@ -347,6 +347,7 @@
             $("#PosicionE").prop('disabled', false);
             $("#PosicionM").prop('disabled', false);
             $("#Tamanio").prop('disabled', false);
+            $("#ImagenNueva").prop('disabled', false);
             $("#seccion_nueva_imagen").show();
         });
 
@@ -369,17 +370,18 @@
             $("#PosicionE").prop('disabled', true);
             $("#PosicionM").prop('disabled', true);
             $("#Tamanio").prop('disabled', true);
+            $("#ImagenNueva").prop('disabled', true);
             $("#seccion_nueva_imagen").show();
         });
 
-        function preview_image(event) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                var output = document.getElementById('output_image');
-                output.src = reader.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
+        //function preview_image(event) {
+        //    var reader = new FileReader();
+        //    reader.onload = function () {
+        //        var output = document.getElementById('output_image');
+        //        output.src = reader.result;
+        //    }
+        //    reader.readAsDataURL(event.target.files[0]);
+        //}
 
         $("#form_editar_tarjeta").submit(function () {
             var htmlText = $("#editor .ql-editor").html();
