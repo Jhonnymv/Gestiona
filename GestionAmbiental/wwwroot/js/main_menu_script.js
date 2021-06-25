@@ -13,7 +13,6 @@ $('.menu_item').mouseenter(function (){
 
 $(document).ready(function () {
     compIndicator();
-    compScroll();
     localStorage.removeItem('selectedolditem');
     localStorage.removeItem('sublist');
 
@@ -23,8 +22,7 @@ $(document).ready(function () {
 
         let title = $(this).offsetParent().offsetParent().children().children().children("h3").children("span").text();
         let subMenu = $(this).children(".text-modal-menu-option").children("span").text();
-        console.log(title);
-        console.log(subMenu);
+
 
         localStorage.setItem("selectedolditem", title);
         localStorage.setItem("sublist", subMenu);
@@ -33,28 +31,28 @@ $(document).ready(function () {
 
 $(window).resize(function () {
     compIndicator();
-    compScroll();
 });
 
 $(window).scroll(function () {
-    compScroll();
+    compIndicator();
 });
 
 function compIndicator() {
     if ($(document).height() > $(window).height() + 70) {
-        $('#indicator').show();
+        if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+            $('#indicator').hide();
+        }
+        else {
+            $('#indicator').show();
+        }
     }
     else {
-        $('#indicator').hide();
-    }
-}
-
-function compScroll() {
-    if ($(window).scrollTop() + $(window).height() > $(document).height()) {
-        $('#indicator').hide();
-    }
-    else {
-        $('#indicator').show();
+        if ($(window).scrollTop() + $(window).height() > $(document).height()) {
+            $('#indicator').hide();
+        }
+        else {
+            $('#indicator').show();
+        }
     }
 }
 
