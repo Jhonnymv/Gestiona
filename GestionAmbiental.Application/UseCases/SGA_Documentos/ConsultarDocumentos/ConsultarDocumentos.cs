@@ -20,10 +20,11 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         public async Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion,int pagina, int rpp)
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, categoria, tipos, codigo, condicion);
-            
+            //var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
             data = data
                 .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
                 !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))
+                //&&!predecesores.Contains(x.IdSGADocumento))
                 .OrderByDescending(x => x.FechaCreacion)
                 .ToList();
 
@@ -49,13 +50,24 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             var output = new List<DocumentoOutput>();
 
             //Buscar los Ids de documentos predecesores
-            var predecesores = data.Where(x=>x.DocPredecesor != null).Select(x=>x.DocPredecesor.IdSGADocumento).ToList();
-            //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado
-            var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && (x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())|| x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))).ToList();
-
-            foreach (var item in ultimasVersiones)
+            var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
+            //var predecesores = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Publicado.ToString())).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
+            if (predecesores.Count > 0)
             {
-                output.Add(new DocumentoOutput(item));
+                //Si no esta en la lista de predecesores, es la última versión y su estado es Publicado           
+                var ultimasVersiones = data.Where(x => !predecesores.Contains(x.IdSGADocumento) && x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())).ToList();
+                foreach (var item in ultimasVersiones)
+                {
+                    output.Add(new DocumentoOutput(item));
+                }
+            }
+            else
+            {
+                var ultimasVersiones = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())).ToList();
+                foreach (var item in ultimasVersiones)
+                {
+                    output.Add(new DocumentoOutput(item));
+                }
             }
             return output;
         }

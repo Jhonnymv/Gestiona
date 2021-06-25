@@ -18,12 +18,12 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public Condicion Condicion { get; set; }
         public string Comentario { get; set; }
         public DateTime? FechaTentativa { get; set; }
-        public string DocRuta { get; set; }
+        public string PdfRuta { get; set; }
+        public string EditableRuta { get; set; }
         public Usuario Usuario { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
         public string Estado { get; set; }
-
         public List<RevisionDocumento> Revisiones { get; set; }
         public List<RevisionDocumento> Aprobaciones { get; set; }
         public List<Documento> Formatos { get; set; }

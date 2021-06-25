@@ -57,14 +57,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Usuarios.Where(x => x.Estado.Equals("ACT") && (x.Nombres.Length >0 || x.Apellidos.Length > 0)).OrderBy(x=>x.Nombres).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Usuario();
-                outputItem.IdUsuario = item.Id_Usuario;
-                outputItem.Nombres = item.Nombres.ToUpper();
-                outputItem.Apellidos = item.Apellidos.ToUpper();
-                outputItem.Email = item.Email;
-                outputItem.IdRol = item.Id_Rol;
-                outputItem.UsuarioRed = item.usuario_red;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Usuario
+                {
+                    IdUsuario = item.Id_Usuario,
+                    Nombres = item.Nombres.ToUpper(),
+                    Apellidos = item.Apellidos.ToUpper(),
+                    Email = item.Email,
+                    IdRol = item.Id_Rol,
+                    UsuarioRed = item.usuario_red,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -130,7 +132,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         Formato = tipo.Formato,
                         Estado = tipo.Estado
                     },
-                    Visible = item.Visible,
                     Estado = item.Estado
                 };
                 output.Add(outputItem);

@@ -20,9 +20,9 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int categoriaTipo, string nombreDoc, double versionDoc, string comentario, string rutaDoc, string usuarioRed)
+        public async Task<int> Execute(int categoriaTipo, string nombreDoc, double versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf,string rutaEditable, int idElaborador)
         {
-            var usuario = await _getUsuario.Execute(usuarioRed);
+            //var usuario = await _getUsuario.Execute(usuarioRed);
 
             var model = new Documento();
             model.SGACategoriaTipo = new CategoriaTipo
@@ -33,12 +33,20 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
             model.DocNombre = nombreDoc;
             model.DocVersion = versionDoc;
             model.Comentario = comentario;
-            model.DocRuta = rutaDoc;
+            model.PdfRuta = rutaPdf;
+            model.EditableRuta = rutaEditable;
             model.Usuario = new Domain.ValueObjects.Usuario
             {
-                IdUsuario = usuario.IdUsuario
+                IdUsuario = idElaborador
             };
-
+            if (fechaTentativa != null)
+            {
+                model.FechaTentativa = Convert.ToDateTime(fechaTentativa);
+            }
+            if (fechaAprobacion != null)
+            {
+                model.FechaAprobacion = Convert.ToDateTime(fechaAprobacion);
+            }
             model.Condicion = new Condicion
             {
                 IdSGACondicion = 1

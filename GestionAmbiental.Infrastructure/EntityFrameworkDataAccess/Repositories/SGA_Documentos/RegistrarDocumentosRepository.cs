@@ -34,9 +34,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Condicion = documento.Condicion.IdSGACondicion;
             entidad.Comentario = documento.Comentario;
             entidad.Fecha_Tentativa = documento.FechaTentativa;
-            entidad.Doc_Ruta = documento.DocRuta;
+            entidad.Pdf_Ruta = documento.PdfRuta;
+            entidad.Editable_Ruta = documento.EditableRuta;
             entidad.Id_Usuario = documento.Usuario.IdUsuario;
-            entidad.Fecha_Creacion = DateTime.Today;
+            entidad.Fecha_Creacion = DateTime.Now;
             entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
             entidad.Estado = documento.Estado;           
 
@@ -54,7 +55,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             else
                 return null;
         }
-
+        public async Task RegistrarFormatos(List<int> idsFormato, int idDocumento)
+        {
+            var entidades = new List<Entities.SGA_Documentos.Documentos_Relacionados>();
+            foreach (var id in idsFormato)
+            {
+                entidades.Add(new Entities.SGA_Documentos.Documentos_Relacionados
+                {
+                    Id_Documento_Principal = idDocumento,
+                    Id_Documento_Secundario = id,
+                    Fecha_Relacion = DateTime.Now,
+                    Estado = "ACT"
+                });
+            }
+            await _context.SGA_Documentos_Relacionados.AddRangeAsync(entidades);
+            await _context.SaveChangesAsync();
+        }
+        //No se utiliza
         public async Task<int> RegistrarRevisiones(List<RevisionDocumento> revisiones)
         {
             var data = new List<Entities.SGA_Documentos.Revision_Documento>();
@@ -65,7 +82,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Id_Usuario = item.Usuario.IdUsuario,
                     Id_SGA_Tipo_Revision = item.SGATipoRevision.IdTipoRevision,
                     Id_SGA_Documento = item.IdSGADocumento,
-                    Fecha_Limite = item.FechaLimite,
+                    Fecha_Revision = item.FechaRevision,
                     Orden = item.Orden,
                     Comentario = item.Comentario,
                     Estado = item.Estado
@@ -92,23 +109,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id_SGA_Revision_Documento;
-        }
-
-        public async Task RegistrarFormatos(List<int> idsFormato, int idDocumento)
-        {
-            var entidades = new List<Entities.SGA_Documentos.Documentos_Relacionados>();
-            foreach(var id in idsFormato)
-            {
-                entidades.Add(new Entities.SGA_Documentos.Documentos_Relacionados
-                {
-                    Id_Documento_Principal = idDocumento,
-                    Id_Documento_Secundario = id,
-                    Fecha_Relacion = DateTime.Now,
-                    Estado = "ACT"
-                });
-            }
-            await _context.SGA_Documentos_Relacionados.AddRangeAsync(entidades);
-            await _context.SaveChangesAsync();
         }
     }
 }

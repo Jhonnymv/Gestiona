@@ -1,100 +1,142 @@
-﻿<div class="modal fade" id="modal_formato" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_formato"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_formato">
-                    Cargar Formato
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form class="form-group" id="form_cargar_formato" enctype="multipart/form-data" autocomplete="off">
-                <div class="modal-body">
-                    <div class="row mb-2 align-items-center">
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Tipo de Documento:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-                            @*<span class="text-danger" asp-validation-for="Id_Tipo_Documento_Formato"></span>*@
-                            <select id="Id_Tipo_Documento_Formato" class="form-control" asp-items="ViewBag.TiposDoc"></select>
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Versión:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-                            @*<span class="text-danger" asp-validation-for="Doc_Version_Formato"></span>*@
-                            <input type="number" id="Doc_Version_Formato" class="form-control" step=".01" value="1.0">
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Nombre:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                            @*<span class="text-danger" asp-validation-for="Doc_Nombre_Formato"></span>*@
-                            <input type="text" id="Doc_Nombre_Formato" class="form-control">
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Comentario:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                            @*<span class="text-danger" asp-validation-for="Comentario_Formato"></span>*@
-                            <textarea id="Comentario_Formato" class="form-control"></textarea>
-                        </div>
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Documento:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
-                            <span class="text-danger field-validation-error" data-valmsg-for="Documento_Formato" data-valmsg-replace="true">
-                                <span id="danger_documento_formato" class=""></span>
-                            </span>
-                            <label class="btn btn-primary" for="Documento_Formato">Seleccione</label>
-                            <input type="file" style="visibility:hidden; display:none" id="Documento_Formato" accept=".pdf,.doc,.docx" data-max-size="8971520">
-                        </div>
-                        <div class="col-sm-12 col-md-5 col-lg-2">
-                            <label id="files_name_formato">0 Archivos</label>
-                        </div>
-                        <div class="col-sm-12 col-md-2 col-lg-6 text-sm-center text-md-right text-lg-right text-xl-right mb-2">
-                            <a class="btn btn-outline-primary" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
+﻿<div class="modal fade" id="modal_formato" tabindex="-1" aria-labelledby="titulo_modal_formato" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3 id="titulo_modal_revision">Cargar Formato</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="GuardarFormato()" id="btn_confirmar_formato">Agregar</button>
-                </div>
-            </form>
+                <form class="form-group" id="form_cargar_formato" enctype="multipart/form-data" autocomplete="off">
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Tipo de Documento:</label>
+                                        <span class="text-danger" id="Id_Tipo_Documento_Formato_Msg"></span>
+                                        <select id="Id_Tipo_Documento_Formato" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Elaborado Por:</label>
+                                        <span class="text-danger" id="Id_Elaborado_Por_Msg"></span>
+                                        <select id="Id_Elaborado_Por" class="form-control" asp-items="ViewBag.Usuarios"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Versión:</label>
+                                        <span class="text-danger" id="Doc_Version_Formato_Msg"></span>
+                                        <input type="number" id="Doc_Version_Formato" class="form-control" value="1">
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Nombre:</label>
+                                        <span class="text-danger" id="Doc_Nombre_Formato_Msg"></span>
+                                        <input type="text" id="Doc_Nombre_Formato" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Fecha de Aprobación:</label>
+                                        <span class="text-danger" id="Fecha_Aprobacion_Formato_Msg"></span>
+                                        <input type="date" id="Fecha_Aprobacion_Formato" class="form-control">
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Fecha Tentativa de la Nueva Versión:</label>
+                                        <span class="text-danger" id="Fecha_Tentativa_Formato_Msg"></span>
+                                        <input type="date" id="Fecha_Tentativa_Formato" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="row input_container align-items-start">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Comentario:</label>
+                                        <span class="text-danger" id="Comentario_Formato_Msg"></span>
+                                        <textarea id="Comentario_Formato" class="form-control" maxlength="500"></textarea>
+                                        <div class="text-right">
+                                            <span id="contadorComentarioFormato">0</span>
+                                            <span>/ 500</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Documento Pdf:</label>
+                                        <span class="text-danger field-validation-error" data-valmsg-for="Documento_Formato_Pdf" data-valmsg-replace="true">
+                                            <span id="danger_documento_formato_pdf" class="text-danger"></span>
+                                        </span>
+                                        <input type="file" id="Documento_Formato_Pdf" class="form-control" accept=".pdf" data-max-size="8971520">
+                                    </div>
+                                </div>
+                                <div class="row input_container align-items-start">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Documento Editable:</label>
+                                        <span class="text-danger field-validation-error" data-valmsg-for="Documento_Formato_Editable" data-valmsg-replace="true">
+                                            <span id="danger_documento_formato_editable" class="text-danger"></span>
+                                        </span>
+                                        <input type="file" id="Documento_Formato_Editable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                                    </div>
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <a class="btn btn-mc-outline" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <div class="me-2">
+                                            <button type="button"class="btn btn-mc-outline-danger w-100" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                        <div class="me-2">
+                                            <button type="button" class="btn btn-mc-success w-100" onclick="GuardarFormato()" id="btn_confirmar_formato">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal_agregar_formato" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_agregar_formato"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_agregar_formato">
-                    Agregar Formato Existente
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form class="form-group" id="form_agregar_formato" enctype="multipart/form-data" autocomplete="off">
-                <div class="modal-body">
-                    <div class="row mb-2 align-items-center">
-                        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                            <label>Documentos:</label>
-                        </div>
-                        <div class="col-sm-12 col-md-9 col-lg-10 mb-2">
-                            <select id="Id_Formato_Publicado" class="form-control" asp-items="ViewBag.Publicados"></select>
+<div class="modal fade" id="modal_agregar_formato" tabindex="-1" aria-labelledby="titulo_modal_agregar_formato" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3 id="titulo_modal_revision">Agregar Formato Existente</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="AgregarFormato()">Agregar</button>
-                </div>
-            </form>
+                <form class="form-group" id="form_agregar_formato" enctype="multipart/form-data" autocomplete="off">
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Documentos:</label>
+                                        <select id="Id_Formato_Publicado" class="form-control" asp-items="ViewBag.Publicados"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <div class="me-2">
+                                            <button type="button" class="btn btn-mc-outline-danger w-100" data-dismiss="modal">Cancelar</button>
+                                        </div>
+                                        <div class="me-2">
+                                            <button type="button" class="btn btn-mc-success w-100" onclick="AgregarFormato()">Agregar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

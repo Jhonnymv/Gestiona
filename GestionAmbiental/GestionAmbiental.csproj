@@ -52,6 +52,7 @@
     <Folder Include="wwwroot\img\uploads\AvistamientoFauna\Arácnidos\" />
     <Folder Include="wwwroot\Temp\DownloadedDocs\" />
     <Folder Include="wwwroot\Temp\DownloadedDocs\kevin\" />
+    <Folder Include="wwwroot\Temp\DownloadedDocs\" />
   </ItemGroup>
 
   <ItemGroup>

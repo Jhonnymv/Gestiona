@@ -6,10 +6,12 @@ namespace GestionAmbiental.Domain.Enum
 {
     public enum EstadosRevisionDocSGA
     {
-        Inactivo = 1,
-        Activo = 2,
-        Aprobado = 3,
-        Rechazado = 4,
-        Vencido = 5
+        //Inactivo = 1,
+        //Activo = 2,
+        //Aprobado = 3,
+        //Rechazado = 4,
+        //Vencido = 5
+        Registrado = 1,
+        Eliminado = 2
     }
 }

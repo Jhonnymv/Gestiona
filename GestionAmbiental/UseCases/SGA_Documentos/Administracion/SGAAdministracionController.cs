@@ -46,7 +46,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public SGAAdministracionController(
-                    ISelectItems selectItems, 
+                    ISelectItems selectItems,
                     IRegistrarFormatoDocumento registrarFormatoDocumento,
                     IConsultarDocumentos consultarDocumentos,
                     IConsultarDocumento consultarDocumento,
@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     IGetUsuario getUsuario,
                     IEditarDocumento editarDocumento,
                     IGetInfo_SGA info_SGA,
-                    IRegistrarDocumento registrarDocumento, 
+                    IRegistrarDocumento registrarDocumento,
                     IAmpliarFechaRevision ampliarFechaRevision,
                     IFirmarDocumento firmarDocumento,
                     IHostingEnvironment hostingEnvironment,
@@ -94,7 +94,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
-              
+
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento);
@@ -114,83 +114,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 foreach (var fila in datosTabla.Documentos)
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
-                    try
-                    {
-                        filasTabla += "<tr>";
-                        if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) && !fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
-                            filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
-                        else if (fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
-                            filasTabla += "<td><a href=\"/SGAAdministracion/FirmarDocumento?IdDocumento=" + id_encriptado + "&IdCategoria=" + fila.IdSGACategoriaDocumento + "\">" + fila.DocCodigo + "</a></td>";
-                        else
-                        {
-                            if (!fila.Principal && !fila.IdSGACategoriaDocumento.Equals(1))
-                                filasTabla += "<td><a href=\"/SGAAdministracion/EditarDocumentoSRevision?IdDocumento=" + id_encriptado + "&IdCategoria=" + fila.IdSGACategoriaDocumento + "\">" + fila.DocCodigo + "</a></td>";
-                            else
-                                filasTabla += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + id_encriptado + "&IdCategoria=" + fila.IdSGACategoriaDocumento + "\">" + fila.DocCodigo + "</a></td>";
-                        }
-                        filasTabla += "<td>" + fila.DocNombre + "</td>";
-                        filasTabla += "<td>" + fila.DocVersion + "</td>";
-                        filasTabla += "<td>";
-                        filasTabla += fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "";
-                        filasTabla += "</td>";
-                        filasTabla += "<td>" + fila.Condicion + "</td>";
-                        filasTabla += "<td>" + fila.Comentario + "</td>";
-                        filasTabla += "<td>";
-                        filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
-                        filasTabla += "</td>";
-                        filasTabla += "</tr>";
-                    }catch(Exception e) { }
-                }
-
-                paginador += "<ul class=\"pagination pagination-sm\">";
-                if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
-
-                for (int i = pagina - 2; i <= pagina + 2; i++)
-                {
-                    if (i > 0 && i <= nPaginas)
-                    {
-                        if (i == pagina)
-                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                        else
-                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
-                    }
-                }
-                if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
-                paginador += "</ul>";
-
-            }
-            else
-            {
-                var nCol = 7;
-                filasTabla += "<tr>";
-                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
-                filasTabla += "</tr>";
-            }
-            dynamic response = new
-            {
-                Data = filasTabla,
-                Paginador = paginador
-            };
-            return Ok(response);
-        }
-        public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int[] condiciones, int pagina, int rpp)
-        {
-            var datosTabla = await _consultarDocumentos.Execute("",categoria, tipos, "", condiciones, pagina, rpp);
-            var filasTabla = "";
-            var paginador = "";
-            int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
-            if (datosTabla.NRegistros > 0)
-            {
-                foreach (var fila in datosTabla.Documentos)
-                {
-                    var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) && !fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
+                    if (!fila.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()))
                         filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
-                    else if (fila.Estado.Equals(EstadosDocumentosSGA.Firmas.ToString()))
-                        filasTabla += "<td><a href=\"/SGAAdministracion/FirmarDocumento?IdDocumento=" + id_encriptado + "&IdCategoria=" + fila.IdSGACategoriaDocumento + "\">" + fila.DocCodigo + "</a></td>";
                     else
                     {
                         if (!fila.Principal && !fila.IdSGACategoriaDocumento.Equals(1))
@@ -208,8 +134,66 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     filasTabla += "<td>";
                     filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
                     filasTabla += "</td>";
+                    filasTabla += "</tr>";
                 }
+                paginador += "<ul class=\"pagination pagination-sm\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
 
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
+                paginador += "</ul>";
+            }
+            else
+            {
+                filasTabla = "<tr><td colspan=\"100%\">Sin datos</td></tr>";
+            }
+            dynamic response = new
+            {
+                Data = filasTabla,
+                Paginador = paginador
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int[] condiciones, int pagina, int rpp)
+        {
+            var datosTabla = await _consultarDocumentos.Execute("", categoria, tipos, "", condiciones, pagina, rpp);
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
+            if (datosTabla.NRegistros > 0)
+            {
+                foreach (var fila in datosTabla.Documentos)
+                {
+                    var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
+                    filasTabla += "<tr>";
+                    filasTabla += "<td>" + fila.DocCodigo + "</td>";
+                    filasTabla += "<td>" + fila.DocNombre + "</td>";
+                    filasTabla += "<td>" + fila.DocVersion + "</td>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
+                    filasTabla += "<td>" + fila.Condicion + "</td>";
+                    filasTabla += "<td>" + fila.Comentario + "</td>";
+                    filasTabla += "<td>";
+                    filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
+                    filasTabla += "</td>";
+                    if (fila.PdfRuta != null)
+                        filasTabla += "<td><button type =\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + fila.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>";
+                    else
+                        filasTabla += "<td></td>";
+
+                }
                 paginador += "<ul class=\"pagination pagination-sm\">";
                 if (pagina >= 4 && nPaginas > 5)
                     paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrarModal(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
@@ -231,7 +215,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
             else
             {
-                filasTabla = "Sin datos";
+                filasTabla = "<tr><td colspan=\"100%\">Sin datos</td></tr>";
             }
             dynamic response = new
             {
@@ -252,10 +236,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario; 
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
-                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);               
+                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
 
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
@@ -264,7 +248,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : "",
                     Estado = x.Estado,
                     //El creador del documento es el usuario conectado?
                     Permiso = documento.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
@@ -276,7 +260,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : "",
                     Estado = x.Estado,
                     //El creador del documento es el usuario conectado?
                     Permiso = documento.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
@@ -299,33 +283,41 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Nombre = x.DocNombre,
                     Version = x.DocVersion,
                     Condicion = x.Condicion,
-                    Ruta = x.DocRuta
+                    PdfRuta = x.PdfRuta,
+                    EditableRuta = x.EditableRuta
                 }).ToList();
 
+                var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Usuarios = usuarios;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriasTipos;
+                ViewBag.CategoriaDoc = documento.SGACategoriaDocumento;
 
                 var model = new SGADocumentoModel
                 {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Codigo = documento.DocCodigo,
-                    Doc_Version = documento.DocVersion,
+                    IdEncriptado = IdDocumento,
+                    IdSGADocumento = documento.IdSGADocumento,
+                    IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    IdElaboradoPor = documento.IdUsuario,
+                    DocNombre = documento.DocNombre,
+                    DocPredecesor = documento.IdDocPredecesor,
+                    DocCodigo = documento.DocCodigo,
+                    DocVersion = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
-                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("dd/MM/yyyy") : "",
+                    DocPdfRuta = documento.PdfRuta,
+                    DocEditableRuta = documento.EditableRuta,
+                    FechaTentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("dd/MM/yyyy") : "",
+                    FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
                     Secundarios = JsonConvert.SerializeObject(secundarios)
                 };
-
                 return View(model);
             }
-        }         
+        }
         //Solo Documentos SGA
         public async Task<IActionResult> CargarDocumento(string Error, int IdCategoria)
         {
@@ -344,7 +336,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 switch (IdCategoria)
                 {
                     case 1: tituloCategoria = "SGA"; break;
-                    case 2: tituloCategoria = "SGI"; break;
+                    case 2: tituloCategoria = "SIG"; break;
                     case 3: tituloCategoria = "Externo"; break;
                 }
                 ViewBag.CategoriaDoc = tituloCategoria;
@@ -356,37 +348,41 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var categoriastipo = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria)).ToList();
                 var categoriastipos = categoriastipo.Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriastipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                                
+
                 var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
                 tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var aprobadosData = await _consultarDocumentos.ExecutePublicados();
-                var aprobados = aprobadosData.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new {
+                var publicadosData = await _consultarDocumentos.ExecutePublicados();
+                var publicadosCodigo = publicadosData.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => x.DocCodigo).ToList();
+                var publicadoss = publicadosData.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new {
                     Id = x.IdSGADocumento,
                     Text = "(" + x.DocCodigo + ") " + x.DocNombre + " v." + x.DocVersion.ToString(),
-                    Html = "<tr iddoc=\""+x.IdSGADocumento+ "\"><td><a href=\"/SGAAdministracion/" + (x.Condicion == EstadosDocumentosSGA.Pendiente.ToString() ? "EditarDocumento" : "VerDocumento") + "?IdDocumento=" + _protector.Protect(x.IdSGADocumento.ToString()) +"&IdCategoria=" + IdCategoria + "\">" + x.DocCodigo + "</a></td>" +
+                    Html = "<tr iddoc=\"" + x.IdSGADocumento + "\"><td><a href=\"/SGAAdministracion/" + (x.Condicion == EstadosDocumentosSGA.Pendiente.ToString() ? "EditarDocumento" : "VerDocumento") + "?IdDocumento=" + _protector.Protect(x.IdSGADocumento.ToString()) + "&IdCategoria=" + IdCategoria + "\">" + x.DocCodigo + "</a></td>" +
                     "<td>" + x.SGATipoDocumento + "</td>" +
                     "<td>" + x.DocNombre + "</td>" +
                     "<td>" + x.DocVersion + "</td>" +
                     "<td>" + x.Condicion + "</td>" +
-                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + x.DocRuta.Replace("\\", "\\\\") + "\')\">Visualizar</button></td>" +
-                    "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento+ ")\">Eliminar</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + x.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
                     "</tr>"
                 });
-                var listAprobados = aprobados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
-                listAprobados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var listPublicados = publicadoss.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
+                listPublicados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(aprobados);
-                ViewBag.Publicados = listAprobados;
+                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(publicadoss);
+                ViewBag.PublicadosCodigo = JsonConvert.SerializeObject(publicadosCodigo);
+                ViewBag.Publicados = listPublicados;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriastipos;
-                ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x=>new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato!=null?1:0 }));
+                ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x => new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato != null ? 1 : 0 }));
                 ViewBag.Usuarios = usuarios;
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
-                                
+
                 ViewBag.Error = Error;
 
                 return View();
@@ -400,37 +396,42 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
+                var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoPdf.FileName);
+                var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
                 var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
                 var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
                 var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
+                var docPdfRuta = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                var docEditableRuta = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
 
-                if (!cargaDocumento.Equals("Error"))
+                if (!docPdfRuta.Equals("Error") && !docEditableRuta.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
-                        model.Id_SGA_Tipo_Documento,
-                        model.Doc_Codigo,
-                        model.Doc_Principal,
-                        model.Doc_Nombre,
-                        model.Doc_Version,
-                        model.Doc_Predecesor,
+                        model.IdSGATipoDocumento,
+                        model.DocCodigo,
+                        model.DocPrincipal,
+                        tipoDoc.TipoDocumento.Codigo,
+                        model.DocNombre,
+                        model.DocVersion,
+                        model.DocPredecesor,
                         model.Comentario,
-                        cargaDocumento,
-                        model.Fecha_Tentativa,
-                        userInfo.NombreUsuario,
+                        docPdfRuta,
+                        docEditableRuta,
+                        model.FechaTentativa,
+                        model.FechaAprobacion,
+                        model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
                         aprobadores,
                         secundarios);
-                    if(model.Opcion.Equals("GuardarEstado"))
+                    if (model.Opcion.Equals("GuardarEstado"))
                         //Falta IdCategoria
-                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
+                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
                         //Registrar
-                        return RedirectToAction("NotificarRevisionActiva", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
-                        //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
                 }
                 else
                 {
@@ -439,7 +440,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
             return View(model);
         }
-        //Documentos SGI y externos. Documentos secundarios (Formatos)
+        //Documentos SIG y externos. Documentos secundarios (Formatos)
         public async Task<IActionResult> CargarDocumentoSRevision(string Error, int IdCategoria)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -465,7 +466,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 switch (IdCategoria)
                 {
                     case 1: tituloCategoria = "SGA"; break;
-                    case 2: tituloCategoria = "SGI"; break;
+                    case 2: tituloCategoria = "SIG"; break;
                     case 3: tituloCategoria = "Externo"; break;
                 }
                 ViewBag.CategoriaDoc = tituloCategoria;
@@ -474,19 +475,21 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                ViewBag.IdCategoria = IdCategoria;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriastipos;
                 ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x => new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato != null ? 1 : 0 }));
                 ViewBag.Usuarios = usuarios;
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
-                                
+
                 ViewBag.Error = Error;
 
                 return View();
             }
-        }        
+        }
         [HttpPost]
         public async Task<IActionResult> CargarDocumentoSRevision(SGADocumentoModel model)
         {
@@ -495,32 +498,41 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
-                var aprobadores = model.Aprobadores!=null?JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores):new List<RevisionAprobacionInputOutput>();
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
                 var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
+                var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoPdf.FileName);
+                var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+                var cargaDocumentoPdf = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                var cargaDocumentoEditable = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
+                var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
 
-                if (!cargaDocumento.Equals("Error"))
+                if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
-                        model.Id_SGA_Tipo_Documento,
-                        model.Doc_Codigo,
-                        model.Doc_Principal,
-                        model.Doc_Nombre,
-                        model.Doc_Version,
-                        model.Doc_Predecesor,
+                        model.IdSGATipoDocumento,
+                        model.DocCodigo,
+                        model.DocPrincipal,
+                        tipoDoc.TipoDocumento.Codigo,
+                        model.DocNombre,
+                        model.DocVersion,
+                        model.DocPredecesor,
                         model.Comentario,
-                        cargaDocumento,
-                        model.Fecha_Tentativa,
-                        userInfo.NombreUsuario,
+                        cargaDocumentoPdf,
+                        cargaDocumentoEditable,
+                        model.FechaTentativa,
+                        model.FechaAprobacion,
+                        model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
                         aprobadores,
                         secundarios
                         );
-                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                    if (model.Opcion.Equals("GuardarEstado"))
+                        return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = model.IdCategoria });
+                    else
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
                 }
                 else
                 {
@@ -528,54 +540,48 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 }
             }
             return View(model);
-        } 
+        }
         [HttpPost]
         //public async Task<IActionResult> CargarFormato(int Id_Tipo_Documento_Formato, int Id_Categoria_Formato, string Doc_Nombre_Formato, double Doc_Version_Formato, string Comentario_Formato, IList<IFormFile> Documento_Formato)
         public async Task<IActionResult> CargarFormato(FormatoDocumentoModel model)
         {
             if (ModelState.IsValid)
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser")); 
-                
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 var items = await _selectItems.Execute();
                 var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_Tipo_Documento_Formato));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre_Formato + "_v." + String.Format("{0:0.00}", model.Doc_Version_Formato) + Path.GetExtension(model.Documento_Formato[0].FileName);
-                var cargaDocumento = await CargarDocumento(model.Documento_Formato[0], nombreDoc, tipoDoc.TipoDocumento.Descripcion);
-               
+                var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre_Formato + "_v." + String.Format("{0:0.00}", model.Doc_Version_Formato) + Path.GetExtension(model.Documento_Formato_Pdf[0].FileName);
+                var cargaDocumentoPdf = await CargarDocumento(model.Documento_Formato_Pdf[0], nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre_Formato + "_v." + String.Format("{0:0.00}", model.Doc_Version_Formato) + Path.GetExtension(model.Documento_Formato_Editable[0].FileName);
+                var cargaDocumentoEditable = await CargarDocumento(model.Documento_Formato_Editable[0], nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+
                 dynamic response;
-                if (!cargaDocumento.Equals("Error"))
+                if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
                 {
                     var idDocumento = await _registrarFormatoDocumento.Execute(
                       model.Id_Tipo_Documento_Formato,
                       model.Doc_Nombre_Formato,
                       model.Doc_Version_Formato,
                       model.Comentario_Formato,
-                      cargaDocumento,
-                      userInfo.NombreUsuario
+                      model.Fecha_Tentativa,
+                      model.Fecha_Aprobacion,
+                      cargaDocumentoPdf,
+                      cargaDocumentoEditable,
+                      model.Id_Elaborado_Por
                       );
-
                     var nuevoDoc = await _consultarDocumento.Execute(idDocumento);
-                                       
-                    var id_encriptado = _protector.Protect(nuevoDoc.IdSGADocumento.ToString());                   
-                    
+                    var id_encriptado = _protector.Protect(nuevoDoc.IdSGADocumento.ToString());
                     var html = "<tr>";
                     html += "<tr iddoc=\"" + nuevoDoc.IdSGADocumento + "\"><td><a href=\"/SGAAdministracion/" + (nuevoDoc.Condicion == EstadosDocumentosSGA.Pendiente.ToString() ? "EditarDocumento" : "VerDocumento") + "?IdDocumento=" + _protector.Protect(nuevoDoc.IdSGADocumento.ToString()) + "&IdCategoria=" + tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento + "\">" + nuevoDoc.DocCodigo + "</a></td>";
-                    //if (nuevoDoc.Condicion == "Pendiente")
-                    //{
-                    //    html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + id_encriptado + "&IdCategoria="+tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento+ "\">" + nuevoDoc.DocCodigo + "</a></td>";
-                    //}
-                    //else
-                    //{
-                    //    html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + nuevoDoc.DocCodigo + "</a></td>";
-                    //}
                     html += "<td>" + nuevoDoc.SGATipoDocumento + "</td>" +
                         "<td>" + nuevoDoc.DocNombre + "</td>" +
                         "<td>" + nuevoDoc.DocVersion + "</td >" +
                         "<td>" + nuevoDoc.Condicion + "</td >" +
-                        "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + nuevoDoc.DocRuta.Replace("\\", "\\\\") + "\')\">Visualizar</button></td >" +
-                        "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + nuevoDoc.IdSGADocumento + ")\">Eliminar</button></td>" +
+                        "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + nuevoDoc.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar</button></td >" +
+                        "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + nuevoDoc.EditableRuta.Replace('\\', '-') + "\')\">Descargar Editable</button></td >" +
+                        "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + nuevoDoc.IdSGADocumento + ")\">Eliminar</button></td>" +
                         "</tr>";
-
                     response = new
                     {
                         success = true,
@@ -621,7 +627,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var categoriastipos = categoriastipo.Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriastipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var categoriasTiposExistentes = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria) && tiposDocExistentes.Contains(x.IdSGACategoriaTipo)).OrderBy(y => y.TipoDocumento.Descripcion).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
+                var categoriasTiposExistentes = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria) && tiposDocExistentes.Contains(x.IdSGACategoriaTipo)).OrderBy(x => x.IdSGACategoriaTipo)/*.OrderBy(y => y.TipoDocumento.Descripcion)*/.Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriasTiposExistentes.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
@@ -633,7 +639,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 switch (IdCategoria)
                 {
                     case 1: tituloCategoria = "SGA"; break;
-                    case 2: tituloCategoria = "SGI"; break;
+                    case 2: tituloCategoria = "SIG"; break;
                     case 3: tituloCategoria = "Externo"; break;
                 }
 
@@ -642,28 +648,31 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Error = Error;
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-               
-                var aprobados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new {
+
+                var publicados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new {
                     Id = x.IdSGADocumento,
                     Text = "(" + x.DocCodigo + ") " + x.DocNombre + " v." + x.DocVersion.ToString(),
+                    Editable = "<button type=\"button\" class=\"btn btn-primary\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button>",
                     Html = "<tr iddoc=\"" + x.IdSGADocumento + "\"><td><a href=\"/SGAAdministracion/" + (x.Condicion == EstadosDocumentosSGA.Pendiente.ToString() ? "EditarDocumento" : "VerDocumento") + "?IdDocumento=" + _protector.Protect(x.IdSGADocumento.ToString()) + "&IdCategoria=" + IdCategoria + "\">" + x.DocCodigo + "</a></td>" +
                     "<td>" + x.SGATipoDocumento + "</td>" +
                     "<td>" + x.DocNombre + "</td>" +
                     "<td>" + x.DocVersion + "</td>" +
                     "<td>" + x.Condicion + "</td>" +
-                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + x.DocRuta.Replace("\\", "\\\\") + "\')\">Visualizar</button></td>" +
-                    "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + x.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
                     "</tr>"
                 });
-                var listAprobados = aprobados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
-                listAprobados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var listPublicados = publicados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
+                listPublicados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.DocumentosPublicados = documentosPublicados;
-                ViewBag.Publicados = listAprobados;
-                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(aprobados);
+                ViewBag.Publicados = listPublicados;
+                ViewBag.PublicadosEditable = JsonConvert.SerializeObject(publicados.Select(g => new { Id = g.Id.ToString(), Button = g.Editable }).ToList());
+                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(publicados);
                 ViewBag.CategoriaDoc = tituloCategoria;
                 ViewBag.Error = Error;
-                ViewBag.TiposDocExistentes = categoriasTiposExistentes; 
+                ViewBag.TiposDocExistentes = categoriasTiposExistentes;
                 ViewBag.TiposDoc = categoriastipos;
                 ViewBag.Usuarios = usuarios;
                 ViewBag.TiposRevision = tiposRevision;
@@ -680,26 +689,30 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
+                var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoPdf.FileName);
+                var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
                 var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
                 var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
                 var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
-
-                if (!cargaDocumento.Equals("Error"))
+                var docPdfRuta = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                var docEditableRuta = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                if (!docPdfRuta.Equals("Error") && !docEditableRuta.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
-                        model.Id_SGA_Tipo_Documento,
-                        model.Doc_Codigo,
-                        model.Doc_Principal,
-                        model.Doc_Nombre,
-                        model.Doc_Version,
-                        model.Doc_Predecesor,
+                        model.IdSGATipoDocumento,
+                        model.DocCodigo,
+                        model.DocPrincipal,
+                        tipoDoc.TipoDocumento.Codigo,
+                        model.DocNombre,
+                        model.DocVersion,
+                        model.DocPredecesor,
                         model.Comentario,
-                        cargaDocumento,
-                        model.Fecha_Tentativa,
-                        userInfo.NombreUsuario,
+                        docPdfRuta,
+                        docEditableRuta,
+                        model.FechaTentativa,
+                        model.FechaAprobacion,
+                        model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
                         aprobadores,
@@ -709,7 +722,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
                         //Registrar
-                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                    //return RedirectToAction("NotificarRevisionActiva", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
                 else
                 {
@@ -718,7 +733,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
             return View(model);
         }
-        //Documentos SGI y externos.
+        //Documentos SIG y externos.
         public async Task<IActionResult> ActualizarDocumentoSRevision(string Error, int IdCategoria, int IdDocPrincipal)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -746,17 +761,23 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var documentosPublicados = JsonConvert.SerializeObject(documentos);
 
+                var publicados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new {
+                    Id = x.IdSGADocumento,
+                    Editable = "<button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button>"
+                });
+
                 var tituloCategoria = "";
                 switch (IdCategoria)
                 {
                     case 1: tituloCategoria = "SGA"; break;
-                    case 2: tituloCategoria = "SGI"; break;
+                    case 2: tituloCategoria = "SIG"; break;
                     case 3: tituloCategoria = "Externo"; break;
-                }                  
+                }
 
+                ViewBag.PublicadosEditable = JsonConvert.SerializeObject(publicados.Select(g => new { Id = g.Id.ToString(), Button = g.Editable }).ToList());
                 ViewBag.DocumentosPublicados = documentosPublicados;
                 ViewBag.CategoriaDoc = tituloCategoria;
-                ViewBag.Error = Error; 
+                ViewBag.Error = Error;
                 ViewBag.TiposDoc = categoriasTipos;
 
                 return View();
@@ -776,6 +797,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var tituloCategoria = "";
+                switch (IdCategoria)
+                {
+                    case 1: tituloCategoria = "SGA"; break;
+                    case 2: tituloCategoria = "SIG"; break;
+                    case 3: tituloCategoria = "Externo"; break;
+                }
+                ViewBag.CategoriaDoc = tituloCategoria;
                 var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
 
                 var items = await _selectItems.Execute();
@@ -789,8 +818,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                
-                
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 ViewBag.Usuarios = usuarios;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
@@ -809,13 +838,15 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Nombre = x.DocNombre,
                     Version = x.DocVersion,
                     Condicion = x.Condicion,
-                    Ruta = x.DocRuta
+                    RutaPdf = x.PdfRuta,
+                    RutaEditable = x.EditableRuta
                 }).ToList();
-                var aprobadosData = await _consultarDocumentos.ExecutePublicados();
-                var aprobados = aprobadosData.Where(x =>
+                var publicadosData = await _consultarDocumentos.ExecutePublicados();
+                var publicadosCodigo = publicadosData.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => x.DocCodigo).ToList();
+                var publicados = publicadosData.Where(x =>
                 x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) &&
                  x.IdSGACategoriaDocumento.Equals(IdCategoria) &&
-                !secundarios.Select(y=>y.Id).Contains(x.IdSGADocumento))
+                !secundarios.Select(y => y.Id).Contains(x.IdSGADocumento))
                 .Select(x => new {
                     Id = x.IdSGADocumento,
                     Text = "(" + x.DocCodigo + ") " + x.DocNombre + " v." + x.DocVersion.ToString(),
@@ -824,51 +855,55 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     "<td>" + x.DocNombre + "</td>" +
                     "<td>" + x.DocVersion + "</td>" +
                     "<td>" + x.Condicion + "</td>" +
-                    "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + x.DocRuta.Replace("\\", "\\\\") + "\')\">Visualizar</button></td>" +
-                    "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + x.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
                     "</tr>"
                 });
-                var listAprobados = aprobados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
-                listAprobados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var listPublicados = publicados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
+                listPublicados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                ViewBag.Publicados = listAprobados;
-                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(aprobados);
+                ViewBag.PublicadosCodigo = JsonConvert.SerializeObject(publicadosCodigo);
+                ViewBag.Publicados = listPublicados;
+                ViewBag.PublicadosHtml = JsonConvert.SerializeObject(publicados);
                 ViewBag.SecundariosData = JsonConvert.SerializeObject(secundarios);
-
-                var revisores = documento.Revisores.Select(x => new RevisoresAprobadoresInput{
+                var revisores = documento.Revisores.Select(x => new RevisoresAprobadoresInput
+                {
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")
-                })
-                    .ToList();
-
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : ""
+                }).OrderBy(x => x.Orden)
+                        .ToList();
                 var aprobadores = documento.Aprobadores.Select(x => new RevisoresAprobadoresInput
                 {
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
-                })
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : "",
+                }).OrderBy(x => x.Orden)
                     .ToList();
 
                 var model = new SGADocumentoModel
                 {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_Categoria = IdCategoria,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Codigo = documento.DocCodigo,
-                    Doc_Version = documento.DocVersion,
+                    IdEncriptado = IdDocumento,
+                    IdSGADocumento = documento.IdSGADocumento,
+                    IdCategoria = IdCategoria,
+                    IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    IdElaboradoPor = documento.IdUsuario,
+                    DocNombre = documento.DocNombre,
+                    DocPredecesor = documento.IdDocPredecesor,
+                    DocCodigo = documento.DocCodigo,
+                    DocVersion = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
-                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
+                    DocPdfRuta = documento.PdfRuta,
+                    DocEditableRuta = documento.EditableRuta,
+                    FechaTentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
+                    FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("yyyy-MM-dd") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
-                    Secundarios = JsonConvert.SerializeObject(secundarios.Select(x=>x.Id).ToList())
+                    Secundarios = JsonConvert.SerializeObject(secundarios.Select(x => x.Id).ToList())
                 };
 
                 ViewBag.Error = Error;
@@ -882,76 +917,126 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
+                var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
+                var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
-                var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
                 var secundarios = JsonConvert.DeserializeObject<List<int>>("[]");
-
-                if (model.Revisores != null)
-                    revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
-                if (model.Aprobadores != null)
-                    aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
                 if (model.Secundarios != null)
                     secundarios = JsonConvert.DeserializeObject<List<int>>(model.Secundarios);
-
-                if (model.Documento != null)
+                if (model.DocumentoPdf != null || model.DocumentoEditable != null)
                 {
-                    var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
-                    if (!cargaDocumento.Equals("Error"))
+                    if (model.DocumentoPdf != null)
                     {
-                        await DeleteFTPFileAsync(model.DocumentoRuta);
-                        await _editarDocumento.Execute(
-                            model.Id_SGA_Documento,
-                            tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
-                            model.Id_SGA_Tipo_Documento,
-                            model.Doc_Codigo,
-                            tipoDoc.TipoDocumento.Codigo,
-                            model.Doc_Nombre,
-                            model.Doc_Version,
-                            model.Doc_Predecesor,
-                            model.Comentario,
-                            cargaDocumento,
-                            model.Fecha_Tentativa,
-                            userInfo.NombreUsuario,
-                            model.Opcion,
-                            revisores,
-                            aprobadores,
-                            secundarios);
-                        if (model.Opcion.Equals("Registrar"))
-                            return RedirectToAction("NotificarRevisionActiva", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });                        
+                        var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoPdf.FileName);
+                        var cargaDocumentoPdf = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                        if (model.DocumentoEditable != null)
+                        {
+                            var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+                            var cargaDocumentoEditable = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                            await _editarDocumento.Execute(
+                               model.IdSGADocumento,
+                               tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                               model.IdSGATipoDocumento,
+                               model.DocCodigo,
+                               tipoDoc.TipoDocumento.Codigo,
+                               model.DocNombre,
+                               model.DocVersion,
+                               model.DocPredecesor,
+                               model.Comentario,
+                               cargaDocumentoPdf,
+                               cargaDocumentoEditable,
+                               model.FechaTentativa,
+                               model.FechaAprobacion,
+                               model.IdElaboradoPor,
+                               model.Opcion,
+                               revisores,
+                               aprobadores,
+                               secundarios);
+                            await DeleteFTPFileAsync(model.DocEditableRuta);
+                        }
                         else
-                            return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
+                        {
+                            await _editarDocumento.Execute(
+                                   model.IdSGADocumento,
+                                   tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                                   model.IdSGATipoDocumento,
+                                   model.DocCodigo,
+                                   tipoDoc.TipoDocumento.Codigo,
+                                   model.DocNombre,
+                                   model.DocVersion,
+                                   model.DocPredecesor,
+                                   model.Comentario,
+                                   cargaDocumentoPdf,
+                                   model.DocEditableRuta,
+                                   model.FechaTentativa,
+                                   model.FechaAprobacion,
+                                   model.IdElaboradoPor,
+                                   model.Opcion,
+                                   revisores,
+                                   aprobadores,
+                                   secundarios);
+                        }
+                        await DeleteFTPFileAsync(model.DocPdfRuta);
                     }
-                    return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento, Error = "Ocurrió un error al cargar el archivo" });
+                    else
+                    {
+                        var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+                        var cargaDocumentoEditable = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                        await _editarDocumento.Execute(
+                               model.IdSGADocumento,
+                               tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                               model.IdSGATipoDocumento,
+                               model.DocCodigo,
+                               tipoDoc.TipoDocumento.Codigo,
+                               model.DocNombre,
+                               model.DocVersion,
+                               model.DocPredecesor,
+                               model.Comentario,
+                               model.DocPdfRuta,
+                               cargaDocumentoEditable,
+                               model.FechaTentativa,
+                               model.FechaAprobacion,
+                               model.IdElaboradoPor,
+                               model.Opcion,
+                               revisores,
+                               aprobadores,
+                               secundarios);
+                        await DeleteFTPFileAsync(model.DocEditableRuta);
+                    }
+                    if (model.Opcion.Equals("Registrar"))
+                        //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                    else
+                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
                 else
                 {
                     await _editarDocumento.Execute(
-                            model.Id_SGA_Documento,
+                            model.IdSGADocumento,
                             tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
-                            model.Id_SGA_Tipo_Documento,
-                            model.Doc_Codigo,
+                            model.IdSGATipoDocumento,
+                            model.DocCodigo,
                             tipoDoc.TipoDocumento.Codigo,
-                            model.Doc_Nombre,
-                            model.Doc_Version,
-                            model.Doc_Predecesor,
+                            model.DocNombre,
+                            model.DocVersion,
+                            model.DocPredecesor,
                             model.Comentario,
-                            model.DocumentoRuta,
-                            model.Fecha_Tentativa,
-                            userInfo.NombreUsuario,
+                            model.DocPdfRuta,
+                            model.DocEditableRuta,
+                            model.FechaTentativa,
+                            model.FechaAprobacion,
+                            model.IdElaboradoPor,
                             model.Opcion,
                             revisores,
                             aprobadores,
                             secundarios);
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("NotificarRevisionActiva", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
-                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
+                        return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
-
             }
             return View(model);
         }
@@ -969,6 +1054,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var tituloCategoria = "";
+                switch (IdCategoria)
+                {
+                    case 1: tituloCategoria = "SGA"; break;
+                    case 2: tituloCategoria = "SIG"; break;
+                    case 3: tituloCategoria = "Externo"; break;
+                }
+                ViewBag.CategoriaDoc = tituloCategoria;
                 var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
 
                 var items = await _selectItems.Execute();
@@ -1015,11 +1108,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Nombre = x.DocNombre,
                     Version = x.DocVersion,
                     Condicion = x.Condicion,
-                    Ruta = x.DocRuta
+                    PdfRuta = x.PdfRuta,
+                    EditableRuta = x.EditableRuta
                 }).ToList();
 
                 ViewBag.Secundarios = secundarios;
-
+                /*
                 var revisores = documento.Revisores.Select(x => new {
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
@@ -1035,23 +1129,26 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
                 })
                     .ToList();
-
+                */
                 var model = new SGADocumentoModel
                 {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Doc_Codigo = documento.DocCodigo,
-                    Id_Categoria = IdCategoria,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Version = documento.DocVersion,
+                    IdEncriptado = IdDocumento,
+                    IdSGADocumento = documento.IdSGADocumento,
+                    IdElaboradoPor = documento.IdUsuario,
+                    DocCodigo = documento.DocCodigo,
+                    IdCategoria = IdCategoria,
+                    IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    DocNombre = documento.DocNombre,
+                    DocPredecesor = documento.IdDocPredecesor,
+                    DocVersion = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
-                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
-                    Revisores = JsonConvert.SerializeObject(revisores),
-                    Aprobadores = JsonConvert.SerializeObject(aprobadores),
+                    DocPdfRuta = documento.PdfRuta,
+                    DocEditableRuta = documento.EditableRuta,
+                    FechaTentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
+                    FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("yyyy-MM-dd") : "",
+                    //Revisores = JsonConvert.SerializeObject(revisores),
+                    //Aprobadores = JsonConvert.SerializeObject(aprobadores),
                     Secundarios = JsonConvert.SerializeObject(secundarios)
                 };
 
@@ -1066,189 +1163,128 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
+                var revisores = model.Revisores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores) : new List<RevisionAprobacionInputOutput>();
+                var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
                 var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
-                var aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>("[]");
+                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
                 var secundarios = JsonConvert.DeserializeObject<List<int>>("[]");
-
-                if (model.Revisores != null)
-                    revisores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Revisores);
-                if (model.Aprobadores != null)
-                    aprobadores = JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores);
                 if (model.Secundarios != null)
                     secundarios = JsonConvert.DeserializeObject<List<int>>(model.Secundarios);
 
-                if (model.Documento != null)
+                if (model.DocumentoPdf != null || model.DocumentoEditable != null)
                 {
-                    var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                    var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
-                    if (!cargaDocumento.Equals("Error"))
+                    if (model.DocumentoPdf != null)
                     {
-                        await DeleteFTPFileAsync(model.DocumentoRuta);
-                        await _editarDocumento.Execute(
-                            model.Id_SGA_Documento,
-                            tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
-                            model.Id_SGA_Tipo_Documento,
-                            model.Doc_Codigo,
-                            tipoDoc.TipoDocumento.Codigo,
-                            model.Doc_Nombre,
-                            model.Doc_Version,
-                            model.Doc_Predecesor,
-                            model.Comentario,
-                            cargaDocumento,
-                            model.Fecha_Tentativa,
-                            userInfo.NombreUsuario,
-                            model.Opcion,
-                            revisores,
-                            aprobadores,
-                            secundarios);
-                        if (model.Opcion.Equals("Registrar") && !model.Opcion.Equals("AgregarFormato"))
-                            return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
+                        var nombreDocPdf = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoPdf.FileName);
+                        var cargaDocumentoPdf = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
+                        if (model.DocumentoEditable != null)
+                        {
+                            var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+                            var cargaDocumentoEditable = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                            await _editarDocumento.Execute(
+                               model.IdSGADocumento,
+                               tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                               model.IdSGATipoDocumento,
+                               model.DocCodigo,
+                               tipoDoc.TipoDocumento.Codigo,
+                               model.DocNombre,
+                               model.DocVersion,
+                               model.DocPredecesor,
+                               model.Comentario,
+                               cargaDocumentoPdf,
+                               cargaDocumentoEditable,
+                               model.FechaTentativa,
+                               model.FechaAprobacion,
+                               model.IdElaboradoPor,
+                               model.Opcion,
+                               revisores,
+                               aprobadores,
+                               secundarios);
+                            await DeleteFTPFileAsync(model.DocEditableRuta);
+                        }
                         else
-                            return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
+                        {
+                            await _editarDocumento.Execute(
+                                   model.IdSGADocumento,
+                                   tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                                   model.IdSGATipoDocumento,
+                                   model.DocCodigo,
+                                   tipoDoc.TipoDocumento.Codigo,
+                                   model.DocNombre,
+                                   model.DocVersion,
+                                   model.DocPredecesor,
+                                   model.Comentario,
+                                   cargaDocumentoPdf,
+                                   model.DocEditableRuta,
+                                   model.FechaTentativa,
+                                   model.FechaAprobacion,
+                                   model.IdElaboradoPor,
+                                   model.Opcion,
+                                   revisores,
+                                   aprobadores,
+                                   secundarios);
+                        }
+                        await DeleteFTPFileAsync(model.DocPdfRuta);
                     }
+                    else
+                    {
+                        var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+                        var cargaDocumentoEditable = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                        await _editarDocumento.Execute(
+                               model.IdSGADocumento,
+                               tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
+                               model.IdSGATipoDocumento,
+                               model.DocCodigo,
+                               tipoDoc.TipoDocumento.Codigo,
+                               model.DocNombre,
+                               model.DocVersion,
+                               model.DocPredecesor,
+                               model.Comentario,
+                               model.DocPdfRuta,
+                               cargaDocumentoEditable,
+                               model.FechaTentativa,
+                               model.FechaAprobacion,
+                               model.IdElaboradoPor,
+                               model.Opcion,
+                               revisores,
+                               aprobadores,
+                               secundarios);
+                        await DeleteFTPFileAsync(model.DocEditableRuta);
+                    }
+                    if (model.Opcion.Equals("Registrar"))
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                    else
+                        return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
                     return RedirectToAction("EditarDocumentoSRevision", new { Error = "Ocurrió un error al cargar el archivo" });
                 }
                 else
                 {
                     await _editarDocumento.Execute(
-                            model.Id_SGA_Documento,
+                            model.IdSGADocumento,
                             tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento,
-                            model.Id_SGA_Tipo_Documento,
-                            model.Doc_Codigo,
+                            model.IdSGATipoDocumento,
+                            model.DocCodigo,
                             tipoDoc.TipoDocumento.Codigo,
-                            model.Doc_Nombre,
-                            model.Doc_Version,
-                            model.Doc_Predecesor,
+                            model.DocNombre,
+                            model.DocVersion,
+                            model.DocPredecesor,
                             model.Comentario,
-                            model.DocumentoRuta,
-                            model.Fecha_Tentativa,
-                            userInfo.NombreUsuario,
+                            model.DocPdfRuta,
+                            model.DocEditableRuta,
+                            model.FechaTentativa,
+                            model.FechaAprobacion,
+                            model.IdElaboradoPor,
                             model.Opcion,
                             revisores,
                             aprobadores,
                             secundarios);
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
+                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
-                        return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()), IdCategoria = model.Id_Categoria });
+                        return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
                 }
-
-            }
-            return View(model);
-        }
-        public async Task<IActionResult> FirmarDocumento(string IdDocumento, int IdCategoria, string Error)
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-            {
-                return RedirectToAction("NoAutorizado", "Home");
-            }
-            else
-            {
-                var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
-
-                var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
-
-                var items = await _selectItems.Execute();
-                var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
-                condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var tipos = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
-                tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
-                tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
-                var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-
-                ViewBag.Usuarios = usuarios;
-                ViewBag.Condiciones = condiciones;
-                ViewBag.TiposDoc = tipos;
-                ViewBag.TiposRevision = tiposRevision;
-                ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
-
-                var documento = await _consultarDocumento.Execute(IdDesencriptado);
-                //Obtener documentos que tienen como documento principal el actual
-                var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
-                var secundarios = documentosSecundarios.Select(x => new
-                {
-                    IdEncriptado = _protector.Protect(x.IdSGADocumento.ToString()),
-                    Codigo = x.DocCodigo,
-                    TipoDocumento = x.SGATipoDocumento,
-                    Nombre = x.DocNombre,
-                    Version = x.DocVersion,
-                    Condicion = x.Condicion,
-                    Ruta = x.DocRuta
-                }).ToList();
-
-                var revisores = documento.Revisores.Select(x => new {
-                    Orden = x.Orden,
-                    Usuario = x.Usuario.IdUsuario,
-                    UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")
-                })
-                    .ToList();
-
-                var aprobadores = documento.Aprobadores.Select(x => new {
-                    Orden = x.Orden,
-                    Usuario = x.Usuario.IdUsuario,
-                    UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
-                })
-                    .ToList();
-
-                var model = new SGADocumentoModel
-                {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_Categoria = IdCategoria,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Codigo = documento.DocCodigo,
-                    Doc_Version = documento.DocVersion,
-                    Comentario = documento.Comentario,
-                    Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
-                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
-                    Revisores = JsonConvert.SerializeObject(revisores),
-                    Aprobadores = JsonConvert.SerializeObject(aprobadores),
-                    Secundarios = JsonConvert.SerializeObject(secundarios)
-                };
-
-                ViewBag.Error = Error;
-
-                return View(model);
-            }
-        }
-        [HttpPost]
-        public async Task<IActionResult> FirmarDocumento(SGADocumentoModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                var items = await _selectItems.Execute();
-                var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.Id_SGA_Tipo_Documento));
-                var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre + "_v." + String.Format("{0:0.00}", model.Doc_Version) + Path.GetExtension(model.Documento.FileName);
-                var cargaDocumento = await CargarDocumento(model.Documento, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
-                if (!cargaDocumento.Equals("Error"))
-                {
-                        await _firmarDocumento.Execute(
-                            model.Id_SGA_Documento,
-                            cargaDocumento,
-                            tipoDoc.TipoDocumento.Codigo,
-                            model.Doc_Codigo,
-                            tipoDoc.IdSGACategoriaTipo);
-                    return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.Id_SGA_Documento.ToString()) });
-                }
-                return RedirectToAction("FirmarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
             }
             return View(model);
         }
@@ -1264,19 +1300,19 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado+"\">" + fila.DocCodigo + "</a></td>";
+                    filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
-                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>" + (fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "") + "</td>";
                     filasTabla += "<td>" + fila.Condicion + "</td>";
                     filasTabla += "<td>" + fila.Comentario + "</td>";
-                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
+                    filasTabla += "<td>" + (fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "") + "</td>";
                     filasTabla += "</tr>";
                 }
             }
             else
             {
-                filasTabla = "Sin datos";
+                filasTabla = "<tr><td colspan=\"100%\">Sin datos</td></tr>";
             }
             dynamic response = new
             {
@@ -1294,15 +1330,18 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             return new Dictionary<string, string>
             {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".ppt", "application/vnd.ms-powerpoint"},
+                {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
                 {".png", "image/png"},
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
-                {".gif", "image/gif"},
-                {".pdf", "application/pdf"},
-                {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
-                {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
+                {".csv", "text/csv"}
             };
         }
         private async Task<string> CargarDocumento(IFormFile file, string newFileName, string tipo)
@@ -1312,7 +1351,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1399,7 +1438,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionSGADocumentos);
             string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in  serverInfo.Info)
+            foreach (var item in serverInfo.Info)
             {
                 switch (item.Key)
                 {
@@ -1421,11 +1460,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                     sftp.Dispose();
                 }
-            }catch(Exception e) { }
+            }
+            catch (Exception e) { }
         }
         public async Task<IActionResult> DescargarPlantilla(int IdCategoriaTipo)
         {
-           
+
             var items = await _selectItems.Execute();
             var categoriaTipo = items.ItemsCategoriaTipo.First(x => x.IdSGACategoriaTipo.Equals(IdCategoriaTipo));
             var nombreDoc = Path.GetFileName(categoriaTipo.TipoDocumento.Formato);
@@ -1444,7 +1484,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     success = true
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 response = new
                 {
@@ -1455,5 +1495,120 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
             return Ok(response);
         }
+        //public async Task<IActionResult> FirmarDocumento(string IdDocumento, int IdCategoria, string Error)
+        //{
+        //    if (!(HttpContext.Session.GetString("SessionUser") != null))
+        //    {
+        //        return RedirectToAction("NoAutorizado", "Home");
+        //    }
+        //    else
+        //    {
+        //        var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdDocumento));
+        //        var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+        //        ViewBag.Rol = userInfo.Rol.ToString();
+        //        ViewBag.Usuario = userInfo.NombreUsuario;
+
+        //        var usuarioActual = await _getUsuario.Execute(userInfo.NombreUsuario);
+
+        //        var items = await _selectItems.Execute();
+        //        var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
+        //        condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+        //        var tipos = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(IdCategoria)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
+        //        tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+        //        var tiposRevision = items.ItemsTipoRevision.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdTipoRevision.ToString(), Text = g.Descripcion }).ToList();
+        //        tiposRevision.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+        //        var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+        //        ViewBag.Usuarios = usuarios;
+        //        ViewBag.Condiciones = condiciones;
+        //        ViewBag.TiposDoc = tipos;
+        //        ViewBag.TiposRevision = tiposRevision;
+        //        ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
+
+        //        var documento = await _consultarDocumento.Execute(IdDesencriptado);
+        //        //Obtener documentos que tienen como documento principal el actual
+        //        var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
+        //        var secundarios = documentosSecundarios.Select(x => new
+        //        {
+        //            IdEncriptado = _protector.Protect(x.IdSGADocumento.ToString()),
+        //            Codigo = x.DocCodigo,
+        //            TipoDocumento = x.SGATipoDocumento,
+        //            Nombre = x.DocNombre,
+        //            Version = x.DocVersion,
+        //            Condicion = x.Condicion,
+        //            PdfRuta = x.PdfRuta,
+        //            EditableRuta = x.EditableRuta
+        //        }).ToList();
+        //        /*
+        //        var revisores = documento.Revisores.Select(x => new {
+        //            Orden = x.Orden,
+        //            Usuario = x.Usuario.IdUsuario,
+        //            UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
+        //            Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd")
+        //        })
+        //            .ToList();
+
+        //        var aprobadores = documento.Aprobadores.Select(x => new {
+        //            Orden = x.Orden,
+        //            Usuario = x.Usuario.IdUsuario,
+        //            UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
+        //            Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
+        //        })
+        //            .ToList();
+        //        */
+        //        var model = new SGADocumentoModel
+        //        {
+        //            IdEncriptado = IdDocumento,
+        //            IdSGADocumento = documento.IdSGADocumento,
+        //            IdCategoria = IdCategoria,
+        //            IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+        //            DocNombre = documento.DocNombre,
+        //            DocPredecesor = documento.IdDocPredecesor,
+        //            DocCodigo = documento.DocCodigo,
+        //            DocVersion = documento.DocVersion,
+        //            Comentario = documento.Comentario,
+        //            Condicion = documento.IdCondicion,
+        //            DocPdfRuta = documento.PdfRuta,
+        //            DocEditableRuta = documento.EditableRuta,
+        //            FechaTentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("yyyy-MM-dd") : "",
+        //            //Revisores = JsonConvert.SerializeObject(revisores),
+        //            //Aprobadores = JsonConvert.SerializeObject(aprobadores),
+        //            Secundarios = JsonConvert.SerializeObject(secundarios)
+        //        };
+
+        //        ViewBag.Error = Error;
+
+        //        return View(model);
+        //    }
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> FirmarDocumento(SGADocumentoModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+        //        var items = await _selectItems.Execute();
+        //        var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
+        //        var nombreDoc = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.DocNombre + "_v." + String.Format("{0:0.00}", model.DocVersion) + Path.GetExtension(model.DocumentoEditable.FileName);
+        //        var cargaDocumento = await CargarDocumento(model.DocumentoEditable, nombreDoc, tipoDoc.TipoDocumento.Descripcion);
+        //        if (!cargaDocumento.Equals("Error"))
+        //        {
+        //                await _firmarDocumento.Execute(
+        //                    model.IdSGADocumento,
+        //                    cargaDocumento,
+        //                    tipoDoc.TipoDocumento.Codigo,
+        //                    model.DocCodigo,
+        //                    tipoDoc.IdSGACategoriaTipo);
+        //            return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+        //        }
+        //        return RedirectToAction("FirmarDocumento", new { Error = "Ocurrió un error al cargar el archivo" });
+        //    }
+        //    return View(model);
+        //}
     }
 }

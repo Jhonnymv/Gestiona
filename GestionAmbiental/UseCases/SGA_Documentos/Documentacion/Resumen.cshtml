@@ -5,7 +5,6 @@
 
 @section styles {
     <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
-    @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">*@
 }
 
 <div class="sga">
@@ -23,12 +22,11 @@
                     <button class="nav-link active" id="pills-docsga-tab" data-bs-toggle="pill" data-bs-target="#pills-docsga" type="button" role="tab" aria-controls="pills-docsga" aria-selected="true">Documentos SGA</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docsgi-tab" data-bs-toggle="pill" data-bs-target="#pills-docsgi" type="button" role="tab" aria-controls="pills-docsgi" aria-selected="false">Documentos SIG</button>
+                    <button class="nav-link" id="pills-docsig-tab" data-bs-toggle="pill" data-bs-target="#pills-docsig" type="button" role="tab" aria-controls="pills-docsig" aria-selected="false">Documentos SIG</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">Documentos Externos</button>
                 </li>
-
             </ul>
 
             <div class="content-header">
@@ -158,7 +156,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="pills-docsgi" role="tabpanel" aria-labelledby="pills-docsgi-tab">
+            <div class="tab-pane fade" id="pills-docsig" role="tabpanel" aria-labelledby="pills-docsig-tab">
                 <div class="filter-mc-content d-flex justify-content-center">
                     <div class="div-scroll-horizontal">
                         <a class="filter-mc-item" onclick="FiltrarTipo([1])">
@@ -322,15 +320,18 @@
     </div>
 </div>
 
+<!--Modal Docs Tipo-->
 <div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-menu modal-sga">
             <div class="modal-content">
                 <div class="sga">
                     <div class="image-header-container">
                         <div class="header-title sga-opacity-color">
-                            <h3>Documentos</h3>
+                            <h3>Documentos Filtrados</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
@@ -344,18 +345,17 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Documento</th>
-                                            <th>Versión / Revisión</th>
+                                            <th>Versión</th>
                                             <th>Fecha de Aprobación</th>
                                             <th>Condición</th>
                                             <th>Comentarios</th>
                                             <th>Fecha Tentativa de la Nueva Versión</th>
+                                            <th>Previsualización</th>
                                         </tr>
                                     </thead>
-
                                     <tbody>
                                     </tbody>
                                 </table>
-
                             </div>
                             <div class="pagination-container sga-color" id="paginado_documentos_tipo" aria-label="pagination">
 
@@ -367,169 +367,55 @@
         </div>
     </div>
 </div>
-@*<div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2 id="titulo_pagina">Documentos SGA</h2>
-        </div>
-    </div>
-    <div class="row mb-2">*@
-@*<div class="col-sm-12 col-md-3 col-lg-2 text-center">
-        <div class="d-flex flex-column" style="width:100%;">
-            <div class="p-2" id="btn_sga"><button class="btn btn-danger" style="width:100%;">Documentos SGA</button></div>
-            <div class="p-2" id="btn_sgi"><button class="btn btn-primary" style="width:100%;">Documentos SGI</button></div>
-            <div class="p-2" id="btn_externos"><button class="btn btn-warning" style="width:100%;">Documentos Externos</button></div>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sga">
-        <div class="card-deck text-center justify-content-center">
-            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Matrices Base</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-            <div><p>Manuales, Planes y Programas</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-            <div><p>Instructivos y Protocolos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
-            <div><p>Formatos</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
-        </div>
-    </div>*@
-@*<div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_sgi" style="display:none">
-        <div class="card-deck text-center justify-content-center">
-            <div><p>Política</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([1])"><p class="texto-tipoDoc">P</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-            <div><p>Manuales y Directrices</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([13,21])"><p class="texto-tipoDoc">M</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-            <div><p>Reglamentos y Estándar de Gestión</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([2,12,11])"><p class="texto-tipoDoc">MP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-            <div><p>Procedimientos y Planes</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([7,12])"><p class="texto-tipoDoc">PR</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-            <div><p>Programas e Instructivos</p><div class="tipoDoc" style="--my-color-var: rgb(0,200,50);" onclick="FiltrarTipo([9,10])"><p class="texto-tipoDoc">IP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,200,50);"></div></div>
-            <div><p>Formatos y Plantillas</p><div class="tipoDoc" style="--my-color-var: rgb(0,250,0);" onclick="FiltrarTipo([14,22])"><p class="texto-tipoDoc">F</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,250,0);"></div></div>
-        </div>
-    </div>*@
-@*<div class="col-sm-12 col-md-9 col-lg-10 text-center" id="opciones_externo" style="display:none">
-            <div class="card-deck text-center justify-content-center">
-                <div><p>Legislación Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,0,250);" onclick="FiltrarTipo([23])"><p class="texto-tipoDoc">LP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,0,250);"></div></div>
-                <div><p>Norma Técnica Peruana</p><div class="tipoDoc" style="--my-color-var: rgb(0,50,200);" onclick="FiltrarTipo([24])"><p class="texto-tipoDoc">NTP</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,50,200);"></div></div>
-                <div><p>Estándares Corporativos</p><div class="tipoDoc" style="--my-color-var: rgb(0,100,150);" onclick="FiltrarTipo([25])"><p class="texto-tipoDoc">EC</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,100,150);"></div></div>
-                <div><p>Estándares Internacionales</p><div class="tipoDoc" style="--my-color-var: rgb(0,150,100);" onclick="FiltrarTipo([26])"><p class="texto-tipoDoc">EI</p></div><div class="tipoDocUnion" style="--my-color-var: rgb(0,150,100);"></div></div>
-            </div>
-        </div>
-    </div>*@
-@*<form autocomplete="off">
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Nombre de Documento:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="text" class="form-control" id="filtro_nombre">
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Código:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <input type="text" class="form-control" id="filtro_codigo">
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-2 mt-1">
-            <label>Tipo de Documento:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple></select>
-        </div>
-        <div class="col-lg-2 mt-1">
-            <label>Estado:</label>
-        </div>
-        <div class="col-lg-3 mt-1">
-            <select class="form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones"></select>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-        </div>
-    </div>*@
-@*<div class="row mb-2 justify-content-end">
-        <div class="col-sm-12 col-md-6 col-lg-2 mt-1">
-            <button id="btn_certificaciones" type="button" class="btn btn-warning float-right" onclick="FiltrarTipo([20])">Certificaciones Ambientales</button>
-        </div>
-    </div>*@
-@*</form>*@
-@*<div class="row mb-2 justify-content-center">
-        <div class="col-md">
-            <table class="table" id="tabla_documentos">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Código</th>
-                        <th>Documento</th>
-                        <th>Versión / Revisión</th>
-                        <th>Fecha de Aprobación</th>
-                        <th>Estado</th>
-                        <th>Comentarios</th>
-                        <th>Fecha Tentativa de la Nueva Versión</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <nav id="paginado" aria-label="pagination">
-        </nav>
-    </div>*@
-
-<!--Modal Docs Tipo-->
-@*<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_docs_tipo"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+<!--Modal Preview PDF-->
+<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-sga">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_docs_tipo">
-                        Documentos Filtrados
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3>Previsualización</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
                 </div>
-                <form>
-                    <div class="modal-body">
-                        <div class="row mb-2 justify-content-center">
-                            <div class="col-md">
-                                <input type="hidden" id="tipoDocModal" />
-                                <table class="table table-modal" id="tabla_documentos_tipo">
-                                    <thead class="thead-mcolor">
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Documento</th>
-                                            <th>Versión / Revisión</th>
-                                            <th>Fecha de Aprobación</th>
-                                            <th>Condición</th>
-                                            <th>Comentarios</th>
-                                            <th>Fecha Tentativa de la Nueva Versión</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                <div class="modal-body">
+                    <div id="viewPDF">
                     </div>
-                    <div class="modal-footer justify-content-center">
-                        <div class="row mb-2 justify-content-center">
-                            <nav id="paginado_documentos_tipo" aria-label="pagination">
-                            </nav>
-                        </div>
-                    </div>
-                </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+                </div>
             </div>
         </div>
-    </div>*@
+    </div>
+</div>
 
 @section scripts{
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
-
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var categoria = 1;
         var tipos = [];
         var tiposFiltro = [];
         $(document).ready(function () {
-            filtrar(1);
+            //Buscar activo guardado en local storage
+            var activeCartegoria = localStorage.getItem('activeDocSGACategoria');
+            if (activeCartegoria != null) {
+                switch (activeCartegoria) {
+                    case "1": $("#pills-docsga-tab").click(); break;
+                    case "2": $("#pills-docsig-tab").click(); break;
+                    case "3": $("#pills-docext-tab").click(); break;
+                };
+            }
+            //Si no existe, mostrar primer SGA
+            else {
+                filtrar(1);
+            }
         });
         function dataModulo() {
             $.ajax({
@@ -565,9 +451,9 @@
                 },
                 traditional: true,
                 success: (response) => {
-                    $('#tabla_documentos tbody').empty();
-                    $('#tabla_documentos tbody').html(response.data);
-                    $('#paginado').html(response.paginador);
+                    $('#tabla_documentos tbody').empty()
+                    $('#tabla_documentos tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
                     dataModulo();
                 }
             });
@@ -578,7 +464,7 @@
                 url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
                 data: {
                     "pagina": pag,
-                    "rpp": 10,
+                    "rpp": 5,
                     "nombre": $('#filtro_nombre').val(),
                     "categoria": categoria,
                     "tipos": $("#filtro_tipoDoc").val(),
@@ -597,35 +483,38 @@
         }
         $("#pills-docsga-tab").on('click', function () {
             $("#opciones_sga").show();
-            $("#opciones_sgi").hide();
+            $("#opciones_sig").hide();
             $("#opciones_externo").hide();
             //Botones adicionales
             $("#btn_certificaciones").show();
 
             $("#titulo_pagina").text("Documentos SGA");
+            localStorage.setItem('activeDocSGACategoria',"1")
             categoria = 1;
             filtrar(1);
         });
-        $("#pills-docsgi-tab").on('click', function () {
-            $("#opciones_sgi").show();
+        $("#pills-docsig-tab").on('click', function () {
+            $("#opciones_sig").show();
             $("#opciones_sga").hide();
             $("#opciones_externo").hide();
 
             //Botones adicionales
             $("#btn_certificaciones").hide();
 
-            $("#titulo_pagina").text("Documentos SGI");
+            $("#titulo_pagina").text("Documentos SIG");
+            localStorage.setItem('activeDocSGACategoria', "2")
             categoria = 2;
             filtrar(1);
         });
         $("#pills-docext-tab").on('click', function () {
             $("#opciones_externo").show();
             $("#opciones_sga").hide();
-            $("#opciones_sgi").hide();
+            $("#opciones_sig").hide();
             //Botones adicionales
             $("#btn_certificaciones").hide();
 
             $("#titulo_pagina").text("Documentos Externos");
+            localStorage.setItem('activeDocSGACategoria', "3")
             categoria = 3;
             filtrar(1);
         });
@@ -635,6 +524,36 @@
             $('#modal_docs_tipo').modal('show');
             $("#tipoDocModal").val(tipos)
             filtrarModal(1);
+        }
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo: " + response.message);
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
         }
     </script>
 }

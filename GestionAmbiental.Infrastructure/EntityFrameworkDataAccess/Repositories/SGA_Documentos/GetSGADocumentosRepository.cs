@@ -21,13 +21,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<Documento> GetDocumento(int Id)
         {
-            var data = await _context.SGA_Documentos.FindAsync(Id);         
+            var data = await _context.SGA_Documentos.FindAsync(Id);
 
             var revisiones = await _context.SGA_Revisiones_Documento.Where(x => x.Id_SGA_Documento.Equals(Id)).ToListAsync();
             var usuarios = await _context.Usuarios.Where(x => revisiones.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
 
             var categoriaTipoDoc = await _context.SGA_Categoria_Tipo.FindAsync(data.Id_SGA_Categoria_Tipo);
             var tipoDoc = await _context.SGA_Tipos_Documento.FindAsync(categoriaTipoDoc.Id_SGA_Tipo_Documento);
+            var categoriaDoc = await _context.SGA_Categoria_Documento.FindAsync(categoriaTipoDoc.Id_SGA_Categoria_Documento);
 
             var docPredecesor = new Entities.SGA_Documentos.Documento();
             var predecesor = new Documento();
@@ -45,7 +46,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     DocNombre = docPredecesor.Doc_Nombre,
                     DocVersion = docPredecesor.Doc_Version,
                     Principal = docPredecesor.Principal,
-                    DocRuta = docPredecesor.Doc_Ruta,
+                    PdfRuta = docPredecesor.Pdf_Ruta,
+                    EditableRuta = docPredecesor.Editable_Ruta,
                     FechaCreacion = docPredecesor.Fecha_Creacion,
                     FechaActualizacion = docPredecesor.Fecha_Actualizacion,
                     Estado = docPredecesor.Estado
@@ -53,15 +55,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
 
             var listRevisores = new List<RevisionDocumento>();
-            foreach(var item in revisiones.Where(x => x.Id_SGA_Tipo_Revision.Equals(1)))
+            foreach (var item in revisiones.Where(x => x.Id_SGA_Tipo_Revision.Equals(1)))
             {
-                var usuarioItem = usuarios.Find(x=>x.Id_Usuario.Equals(item.Id_Usuario));
+                var usuarioItem = usuarios.Find(x => x.Id_Usuario.Equals(item.Id_Usuario));
                 listRevisores.Add(new RevisionDocumento
                 {
                     IdSGADocumento = item.Id_SGA_Documento,
-                    SGATipoRevision = new TipoRevision { IdTipoRevision = item.Id_SGA_Tipo_Revision},
+                    SGATipoRevision = new TipoRevision { IdTipoRevision = item.Id_SGA_Tipo_Revision },
                     IdSGARevisionDocumento = item.Id_SGA_Revision_Documento,
-                    Usuario = new Domain.ValueObjects.Usuario { 
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
                         IdUsuario = usuarioItem.Id_Usuario,
                         Nombres = usuarioItem.Nombres.Replace('\'', ' '),
                         Apellidos = usuarioItem.Apellidos.Replace('\'', ' '),
@@ -69,7 +72,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Orden = item.Orden,
                     FechaLimite = item.Fecha_Limite,
-                    FechaRevision  =item.Fecha_Revision,
+                    FechaRevision = item.Fecha_Revision,
                     Estado = item.Estado
                 });
             }
@@ -105,17 +108,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     IdSGACategoriaTipo = categoriaTipoDoc.Id_SGA_Categoria_Tipo,
                     CategoriaDocumento = new CategoriaDocumento
                     {
-                        Id_SGA_Categoria_Documento = categoriaTipoDoc.Id_SGA_Categoria_Documento
+                        Id_SGA_Categoria_Documento = categoriaDoc.Id_SGA_Categoria_Documento,
+                        Descripcion = categoriaDoc.Descripcion,
+                        Estado = categoriaTipoDoc.Estado
                     },
-                    TipoDocumento = new TipoDocumento 
-                    { 
+                    TipoDocumento = new TipoDocumento
+                    {
                         IdSGATipoDocumento = tipoDoc.Id_SGA_Tipo_Documento,
                         Descripcion = tipoDoc.Descripcion,
                         Estado = tipoDoc.Estado,
                         Codigo = tipoDoc.Codigo,
                         Formato = tipoDoc.Formato
                     },
-                    Visible = categoriaTipoDoc.Visible,
                     Estado = categoriaTipoDoc.Estado
                 },
                 DocCodigo = data.Doc_Codigo,
@@ -132,7 +136,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 },
                 Comentario = data.Comentario,
                 FechaTentativa = data.Fecha_Tentativa,
-                DocRuta = data.Doc_Ruta,
+                PdfRuta = data.Pdf_Ruta,
+                EditableRuta = data.Editable_Ruta,
                 Usuario = new Domain.ValueObjects.Usuario
                 {
                     IdUsuario = usuario.Id_Usuario,
@@ -159,10 +164,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var data = await _context.SGA_Documentos.ToListAsync();
             data = data.Where(x =>
-            x.Doc_Nombre.Contains(nombre !=null ? nombre : x.Doc_Nombre) &&
-            x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo) &&
+            x.Doc_Nombre.ToLower().Contains(nombre != null ? nombre.ToLower() : x.Doc_Nombre.ToLower()) &&
+            x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower()) &&
             x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)).ToList();
-                      
+
             var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
             var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();
             var tiposData = await _context.SGA_Tipos_Documento.ToListAsync();
@@ -179,7 +184,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var usuarios = await _context.Usuarios.Where(x => data.Select(y => y.Id_Usuario).Contains(x.Id_Usuario)).ToListAsync();
 
-            foreach(var item in data)
+            foreach (var item in data)
             {
                 var tipoCategoria = tiposCategoria.First(x => x.Id_SGA_Categoria_Tipo.Equals(item.Id_SGA_Categoria_Tipo));
                 var tipoItem = tiposData.First(x => x.Id_SGA_Tipo_Documento.Equals(tipoCategoria.Id_SGA_Tipo_Documento));
@@ -207,13 +212,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Descripcion = categoriaItem.Descripcion,
                             Estado = categoriaItem.Estado
                         },
-                        Visible = tipoCategoria.Visible,
                         Estado = tipoCategoria.Estado
                     },
                     DocCodigo = item.Doc_Codigo,
                     DocNombre = item.Doc_Nombre,
                     Principal = item.Principal,
-                    DocVersion = item.Doc_Version,                    
+                    DocVersion = item.Doc_Version,
                     FechaAprobacion = item.Fecha_Aprobacion,
                     Condicion = new Condicion
                     {
@@ -223,7 +227,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Comentario = item.Comentario,
                     FechaTentativa = item.Fecha_Tentativa,
-                    DocRuta = item.Doc_Ruta,
+                    PdfRuta = item.Pdf_Ruta,
+                    EditableRuta = item.Editable_Ruta,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
@@ -244,7 +249,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         IdSGADocumento = item.Doc_Predecesor.Value
                     };
                 }
-                output.Add(outputItem);                    
+                output.Add(outputItem);
             }
             return output;
         }
@@ -254,8 +259,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var data = await _context.SGA_Documentos.ToListAsync();
             data = data.Where(x =>
-            x.Doc_Nombre.Contains(nombre != null ? nombre : x.Doc_Nombre) &&
-            x.Doc_Codigo.Contains(codigo != null ? codigo : x.Doc_Codigo)).ToList();
+            x.Doc_Nombre.ToLower().Contains(nombre != null ? nombre.ToLower() : x.Doc_Nombre.ToLower()) &&
+            x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower())).ToList();
 
             var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
             var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();
@@ -268,7 +273,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             data = data.Where(x => tiposCategoria.Select(y => y.Id_SGA_Categoria_Tipo).Contains(x.Id_SGA_Categoria_Tipo)).ToList();
 
             var condicionesEntities = await _context.SGA_Condiciones.ToListAsync();
-            if(condiciones.Length > 0)
+            if (condiciones.Length > 0)
             {
                 condicionesEntities = condicionesEntities.Where(x => condiciones.Contains(x.Id_SGA_Condicion)).ToList();
             }
@@ -304,7 +309,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Descripcion = categoriaItem.Descripcion,
                             Estado = categoriaItem.Estado
                         },
-                        Visible = tipoCategoria.Visible,
                         Estado = tipoCategoria.Estado
                     },
                     DocCodigo = item.Doc_Codigo,
@@ -320,7 +324,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Comentario = item.Comentario,
                     FechaTentativa = item.Fecha_Tentativa,
-                    DocRuta = item.Doc_Ruta,
+                    PdfRuta = item.Pdf_Ruta,
+                    EditableRuta = item.Editable_Ruta,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
@@ -387,7 +392,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Descripcion = categoriaItem.Descripcion,
                             Estado = categoriaItem.Estado
                         },
-                        Visible = tipoCategoria.Visible,
                         Estado = tipoCategoria.Estado
                     },
                     DocCodigo = item.Doc_Codigo,
@@ -403,7 +407,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Comentario = item.Comentario,
                     FechaTentativa = item.Fecha_Tentativa,
-                    DocRuta = item.Doc_Ruta,
+                    PdfRuta = item.Pdf_Ruta,
+                    EditableRuta = item.Editable_Ruta,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
@@ -437,7 +442,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var dataIdPred = data.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) || x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString())).Select(x => new { Id = x.Id_SGA_Documento, IdPred = x.Doc_Predecesor }).ToList();
             //Definir el documento de Origen
             var origen = data.First(x => x.Id_SGA_Documento.Equals(Id));
-            
+
             //Si el origen tiene predecesor iniciar busqueda
             if (origen.Doc_Predecesor.HasValue)
             {
@@ -455,7 +460,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     //Cambiar el valor de la variable temporal al Id del predecesor del documento encontrado
                     Idtemp = nuevoPred.IdPred;
                 }
-                
+
                 var predecesores = new List<Entities.SGA_Documentos.Documento>();
                 //Agregar los documentos a la lista de predecesores en funcion a la lista de Ids de predecesores
                 predecesores.AddRange(data.Where(x => idsDocsPredecesores.Contains(x.Id_SGA_Documento)));
@@ -494,7 +499,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                                 Descripcion = categoriaItem.Descripcion,
                                 Estado = categoriaItem.Estado
                             },
-                            Visible = tipoCategoria.Visible,
                             Estado = tipoCategoria.Estado
                         },
                         DocCodigo = item.Doc_Codigo,
@@ -510,7 +514,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         },
                         Comentario = item.Comentario,
                         FechaTentativa = item.Fecha_Tentativa,
-                        DocRuta = item.Doc_Ruta,
+                        PdfRuta = item.Pdf_Ruta,
+                        EditableRuta = item.Editable_Ruta,
                         Usuario = new Domain.ValueObjects.Usuario
                         {
                             IdUsuario = usuario.Id_Usuario,
@@ -534,10 +539,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var output = new List<Documento>();
 
-            var relacionSecundarios = await _context.SGA_Documentos_Relacionados.Where(x => x.Id_Documento_Principal.Equals(Id) && x.Estado.Equals("ACT")).Select(x=>x.Id_Documento_Secundario).ToListAsync();
+            var relacionSecundarios = await _context.SGA_Documentos_Relacionados.Where(x => x.Id_Documento_Principal.Equals(Id) && x.Estado.Equals("ACT")).Select(x => x.Id_Documento_Secundario).ToListAsync();
 
-            var data = await _context.SGA_Documentos.Where(x=> relacionSecundarios.Contains(x.Id_SGA_Documento)).ToListAsync();
-            
+            var data = await _context.SGA_Documentos.Where(x => relacionSecundarios.Contains(x.Id_SGA_Documento)).ToListAsync();
+
             var tiposCategoria = await _context.SGA_Categoria_Tipo.ToListAsync();
             var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();
             var tiposData = await _context.SGA_Tipos_Documento.ToListAsync();
@@ -572,7 +577,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             Descripcion = categoriaItem.Descripcion,
                             Estado = categoriaItem.Estado
                         },
-                        Visible = tipoCategoria.Visible,
                         Estado = tipoCategoria.Estado
                     },
                     DocCodigo = item.Doc_Codigo,
@@ -588,7 +592,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Comentario = item.Comentario,
                     FechaTentativa = item.Fecha_Tentativa,
-                    DocRuta = item.Doc_Ruta,
+                    PdfRuta = item.Pdf_Ruta,
+                    EditableRuta = item.Editable_Ruta,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
@@ -607,6 +612,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        //No se utiliza
         public async Task<RevisionDocumento> GetRevisionDocumento(int Id)
         {            
             var data = await _context.SGA_Revisiones_Documento.FirstAsync(x=>x.Id_SGA_Revision_Documento.Equals(Id));

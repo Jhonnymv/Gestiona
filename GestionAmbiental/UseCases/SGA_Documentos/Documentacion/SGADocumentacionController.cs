@@ -42,7 +42,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             IConsultarDocumentos consultarDocumentos,
             IConsultarDocumento consultarDocumento,
             IConsultarPredecesores consultarPredecesores,
-            IConsultarRevisionDocumento consultarRevisionDocumento, 
+            IConsultarRevisionDocumento consultarRevisionDocumento,
             IEditarRevisionDocumento editarRevisionDocumento,
             IGetUsuario getUsuario,
             IDataProtectionProvider dataProtectionProvider,
@@ -112,7 +112,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
-                //tipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var categorias = items.ItemsCategoriaDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.Id_SGA_Categoria_Documento.ToString(), Text = g.Descripcion }).ToList();
 
@@ -120,17 +119,17 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
 
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
-                ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento); 
+                ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento);
 
                 return View();
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre,int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string nombre, int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute(nombre,categoria, tipos, codigo, condicion, pagina, rpp);
-            
-            datosTabla.NRegistros = datosTabla.Documentos.Count();
+            var datosTabla = await _consultarDocumentos.Execute(nombre, categoria, tipos, codigo, condicion, pagina, rpp);
+
+            //datosTabla.NRegistros = datosTabla.Documentos.Count();
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -153,9 +152,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     filasTabla += "</td>";
                 }
 
-                paginador += "<ul class=\"pagination pagination-sm\">";
+                paginador += "<ul class=\"pagination\">";
                 if (pagina >= 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Previous\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Previous</span></a></li>";
 
                 for (int i = pagina - 2; i <= pagina + 2; i++)
                 {
@@ -168,16 +167,13 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     }
                 }
                 if (pagina <= nPaginas - 4 && nPaginas > 5)
-                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
+                    paginador += "<li class=\"page - item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Next\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Next</span></a></li>";
                 paginador += "</ul>";
 
             }
             else
             {
-                var nCol = 7;
-                filasTabla += "<tr>";
-                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
-                filasTabla += "</tr>";
+                filasTabla = "<tr><td colspan=\"100%\">Sin datos</td></tr>";
             }
             dynamic response = new
             {
@@ -188,7 +184,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         }
         public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int pagina, int rpp)
         {
-            var datosTabla = await _consultarDocumentos.Execute("",categoria, tipos, "", 0, pagina, rpp);
+            var datosTabla = await _consultarDocumentos.Execute("", categoria, tipos, "", 0, pagina, rpp);
             datosTabla.Documentos = datosTabla.Documentos
                 .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
                 !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))
@@ -204,7 +200,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/SGADocumentacion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
+                    filasTabla += "<td>" + fila.DocCodigo + "</td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
                     filasTabla += "<td>";
@@ -215,6 +211,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     filasTabla += "<td>";
                     filasTabla += fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "";
                     filasTabla += "</td>";
+                    if (fila.PdfRuta != null)
+                        filasTabla += "<td><button type =\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + fila.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>";
+                    else
+                        filasTabla += "<td></td>";
                 }
 
                 paginador += "<ul class=\"pagination pagination-sm\">";
@@ -238,7 +238,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             }
             else
             {
-                filasTabla = "Sin datos";
+                filasTabla = "<tr><td colspan=\"100%\">Sin datos</td></tr>";
             }
             dynamic response = new
             {
@@ -265,27 +265,29 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
 
                 var documento = await _consultarDocumento.Execute(IdDesencriptado);
 
-                var revisores = documento.Revisores.Select(x => new {
-                    Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()),
+                var revisores = documento.Revisores.Select(x => new
+                {
+                    //Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()),
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
-                    Estado = x.Estado,
-                    //El responsable es el usuario conectado?
-                    Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : ""
+                    //Estado = x.Estado,
+                    ////El responsable es el usuario conectado?
+                    //Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
                 })
                     .ToList();
 
-                var aprobadores = documento.Aprobadores.Select(x => new {
-                    Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()),
+                var aprobadores = documento.Aprobadores.Select(x => new
+                {
+                    //Id = _protector.Protect(x.IdSGARevisionDocumento.ToString()),
                     Orden = x.Orden,
                     Usuario = x.Usuario.IdUsuario,
                     UsuarioNombre = x.Usuario.Nombres + " " + x.Usuario.Apellidos,
-                    Fecha = x.FechaLimite.Value.ToString("yyyy-MM-dd"),
-                    Estado = x.Estado,
-                    //El responsable es el usuario conectado?
-                    Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
+                    Fecha = x.FechaRevision.HasValue ? x.FechaRevision.Value.ToString("yyyy-MM-dd") : ""
+                    //Estado = x.Estado,
+                    ////El responsable es el usuario conectado?
+                    //Permiso = x.Usuario.IdUsuario.Equals(usuarioActual.IdUsuario) ? true : false
                 })
                     .ToList();
 
@@ -293,10 +295,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
                 condiciones.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var categoriasTipos = items.ItemsCategoriaTipo.Where(x =>x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(documento.IdSGACategoriaDocumento)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
+                var categoriasTipos = items.ItemsCategoriaTipo.Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(documento.IdSGACategoriaDocumento)).Select(g => new SelectListItem() { Value = g.IdSGACategoriaTipo.ToString(), Text = g.TipoDocumento.Descripcion }).ToList();
                 categoriasTipos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 //Obtener documentos que tienen como documento principal el actual
                 var documentosSecundarios = await _consultarDocumentos.ExecuteSecundarios(IdDesencriptado);
+
+                var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var secundarios = documentosSecundarios.Select(x => new
                 {
                     IdEncriptado = _protector.Protect(x.IdSGADocumento.ToString()),
@@ -305,30 +311,35 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     Nombre = x.DocNombre,
                     Version = x.DocVersion,
                     Condicion = x.Condicion,
-                    Ruta = x.DocRuta
+                    PdfRuta = x.PdfRuta,
+                    EditableRuta = x.EditableRuta,
                 }).ToList();
 
+                ViewBag.Usuarios = usuarios;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriasTipos;
+                ViewBag.CategoriaDoc = documento.SGACategoriaDocumento;
 
                 var model = new SGADocumentoModel
                 {
-                    Id_Encriptado = IdDocumento,
-                    Id_SGA_Documento = documento.IdSGADocumento,
-                    Id_SGA_Tipo_Documento = documento.IdSGACategoriaTipo,
-                    Doc_Nombre = documento.DocNombre,
-                    Doc_Predecesor = documento.IdDocPredecesor,
-                    Doc_Codigo = documento.DocCodigo,
-                    Doc_Version = documento.DocVersion,
+                    IdEncriptado = IdDocumento,
+                    IdSGADocumento = documento.IdSGADocumento,
+                    IdElaboradoPor = documento.IdUsuario,
+                    IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    DocNombre = documento.DocNombre,
+                    DocPredecesor = documento.IdDocPredecesor,
+                    DocCodigo = documento.DocCodigo,
+                    DocVersion = documento.DocVersion,
                     Comentario = documento.Comentario,
                     Condicion = documento.IdCondicion,
-                    DocumentoRuta = documento.DocRuta,
-                    Fecha_Tentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("dd/MM/yyyy") : "",
+                    DocPdfRuta = documento.PdfRuta,
+                    DocEditableRuta = documento.EditableRuta,
+                    FechaTentativa = documento.FechaTentativa != null ? documento.FechaTentativa.Value.ToString("dd/MM/yyyy") : "",
+                    FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
                     Secundarios = JsonConvert.SerializeObject(secundarios)
                 };
-
                 return View(model);
             }
         }
@@ -344,19 +355,19 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/SGADocumentacion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
+                    filasTabla += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
-                    filasTabla += "<td>" + fila.FechaAprobacion + "</td>";
+                    filasTabla += "<td>" + (fila.FechaAprobacion.HasValue ? fila.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "") + "</td>";
                     filasTabla += "<td>" + fila.Condicion + "</td>";
                     filasTabla += "<td>" + fila.Comentario + "</td>";
-                    filasTabla += "<td>" + fila.FechaTentativa + "</td>";
+                    filasTabla += "<td>" + (fila.FechaTentativa.HasValue ? fila.FechaTentativa.Value.ToString("dd/MM/yyyy") : "") + "</td>";
                     filasTabla += "</tr>";
                 }
             }
             else
             {
-                filasTabla = "Sin datos";
+                filasTabla = "<tr><td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td></tr>";
             }
             dynamic response = new
             {
@@ -364,6 +375,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             };
             return Ok(response);
         }
+        /*
         [HttpGet]
         public async Task<IActionResult> RevisarDocumento(string IdDocumentoRevision, string Comentario, string IdDocumento, string Opcion)
         {
@@ -423,6 +435,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 }
             }
         }
+        */
         private string GetContentType(string path)
         {
             var types = GetMimeTypes();
@@ -433,11 +446,18 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         {
             return new Dictionary<string, string>
             {
+                {".txt", "text/plain"},
                 {".pdf", "application/pdf"},
                 {".doc", "application/vnd.ms-word"},
-                {".docx", "application/vnd.ms-word"},
+                {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
                 {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".ppt", "application/vnd.ms-powerpoint"},
+                {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".csv", "text/csv"}
             };
         }
         public async Task<IActionResult> Download(string fileName)
@@ -460,7 +480,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -494,18 +514,18 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 {
                     var tipoDoc = fileName.Split('\\', 2)[0];
                     var nombreDoc = fileName.Split('\\', 2)[1];
-                                 
+
                     var downloadedFile = await DownloadFTPFileAsync(fileName, tipoDoc, nombreDoc);
 
-                    var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);
                     var docsDownloadedPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Temp\DownloadedDocs");
                     if (Directory.Exists(docsDownloadedPath))
                     {
-                        Directory.Delete(docsDownloadedPath, true); 
-                        Directory.CreateDirectory(Path.Combine(docsDownloadedPath,userInfo.NombreUsuario));
+                        Directory.Delete(docsDownloadedPath, true);
+                        Directory.CreateDirectory(Path.Combine(docsDownloadedPath, userInfo.NombreUsuario));
                     }
+                    var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);
                     var docPath = Path.Combine(docsDownloadedPath, userInfo.NombreUsuario, nombreDoc);
-                    
+
                     using (var fileStream = new FileStream(docPath, FileMode.Create))
                     {
                         await fileStreamDownloaded.CopyToAsync(fileStream);
@@ -533,7 +553,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         }
         public async Task<IActionResult> DownloadPreviewFile(string path)
         {
-            var completePath = _hostingEnvironment.WebRootPath+"/"+ path;
+            var completePath = _hostingEnvironment.WebRootPath + "/" + path;
             FileStream stream = new FileStream(completePath, FileMode.Open);
             return File(stream, GetContentType(path), Path.GetFileName(path));
         }
@@ -558,7 +578,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 }
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

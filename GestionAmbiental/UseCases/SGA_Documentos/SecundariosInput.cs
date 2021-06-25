@@ -14,6 +14,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string Nombre { get; set; }
         public double Version { get; set; }
         public string Condicion { get; set; }
-        public string Ruta { get; set; }
+        public string RutaPdf { get; set; }
+        public string RutaEditable { get; set; }
     }
 }

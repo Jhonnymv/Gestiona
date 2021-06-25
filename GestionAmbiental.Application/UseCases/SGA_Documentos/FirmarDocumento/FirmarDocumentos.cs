@@ -24,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.FirmarDocumento
         {
             var input = new Documento { 
                 IdSGADocumento = IdDocumento,
-                DocRuta = DocFirmado,                
+                PdfRuta = DocFirmado,                
                 Condicion = new Condicion
                 {
                     IdSGACondicion = 6

@@ -31,7 +31,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Tentativa { get; set; }
         [Column(TypeName = "text")]
-        public string Doc_Ruta { get; set; }
+        public string Pdf_Ruta { get; set; }
+        [Column(TypeName = "text")]
+        public string Editable_Ruta { get; set; }
         [Column(TypeName = "int")]
         public int Id_Usuario { get; set; }
         [Column(TypeName = "datetime")]

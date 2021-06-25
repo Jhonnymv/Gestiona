@@ -2044,8 +2044,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var tiposDoc = await _context.SGA_Tipos_Documento.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).ToListAsync();
             var categorias = await _context.SGA_Categoria_Documento.ToListAsync();
-            var entities = await _context.SGA_Categoria_Tipo.Where(x=>tiposDoc.Select(y=>y.Id_SGA_Tipo_Documento).Contains(x.Id_SGA_Tipo_Documento)).ToListAsync();
-            
+            var entities = await _context.SGA_Categoria_Tipo.Where(x => tiposDoc.Select(y => y.Id_SGA_Tipo_Documento).Contains(x.Id_SGA_Tipo_Documento)).ToListAsync();
+
             var output = new List<CategoriaTipo>();
             foreach (var item in entities)
             {
@@ -2055,7 +2055,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new CategoriaTipo
                 {
                     IdSGACategoriaTipo = item.Id_SGA_Categoria_Tipo,
-                    CategoriaDocumento = new CategoriaDocumento { 
+                    CategoriaDocumento = new CategoriaDocumento
+                    {
                         Id_SGA_Categoria_Documento = categoria.Id_SGA_Categoria_Documento,
                         Descripcion = categoria.Descripcion,
                         Estado = categoria.Estado
@@ -2068,7 +2069,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         Formato = tipoDoc.Formato,
                         Estado = tipoDoc.Estado
                     },
-                    Visible = item.Visible,
                     Estado = item.Estado
                 });
             }
@@ -2107,7 +2107,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 Id_SGA_Categoria_Documento = CategoriaTipo.CategoriaDocumento.Id_SGA_Categoria_Documento,
                 Id_SGA_Tipo_Documento = CategoriaTipo.TipoDocumento.IdSGATipoDocumento,
-                Visible = true,
                 Estado = "ACT"
             };
             _context.SGA_Categoria_Tipo.Add(entity);
@@ -2119,13 +2118,76 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = await _context.SGA_Categoria_Tipo.FirstOrDefaultAsync(x => x.Id_SGA_Categoria_Tipo.Equals(CategoriaTipo.IdSGACategoriaTipo));
             entity.Id_SGA_Categoria_Documento = CategoriaTipo.CategoriaDocumento.Id_SGA_Categoria_Documento;
             entity.Id_SGA_Tipo_Documento = CategoriaTipo.TipoDocumento.IdSGATipoDocumento;
-            entity.Visible = true;
             entity.Estado = CategoriaTipo.Estado;
 
             _context.SGA_Categoria_Tipo.Update(entity);
             await _context.SaveChangesAsync();
         }
-        //Tb_Archivo_Configuracion
+
+        //Tb_Usuario_Notificar_SGA
+        public async Task<List<Usuarios_Notificar_SGA>> GetUsuario_Notificar_SGA(string filtro)
+        {
+            var usuarios = await _context.Usuarios_Notificar_SGA.Where(x =>
+            x.Nombres.Contains(filtro == null ? x.Nombres : filtro) ||
+            x.Apellidos.Contains(filtro == null ? x.Apellidos : filtro)
+            ).OrderBy(x => x.Nombres)
+            .ToListAsync();
+
+            var output = new List<Usuarios_Notificar_SGA>();
+            foreach (var item in usuarios)
+                output.Add(new Usuarios_Notificar_SGA(item.Id_Usuarios_Notificar_SGA, item.Id_Rol, item.Nombres, item.Apellidos, item.usuario_red, item.Email, item.Estado));
+            return output;
+        }
+        public async Task<Usuarios_Notificar_SGA> GetUsuario_Notificar_SGA(int id_usuario_notificar)
+        {
+            var usuario = await _context.Usuarios_Notificar_SGA.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_SGA.Equals(id_usuario_notificar));
+            var output = new Usuarios_Notificar_SGA
+            {
+                Id_Usuarios_Notificar_SGA = usuario.Id_Usuarios_Notificar_SGA,
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                Id_Rol = usuario.Id_Rol,
+                Usuario_Red = usuario.usuario_red,
+                Estado = usuario.Estado
+            };
+            return output;
+        }
+        public async Task UpdateUsuario_Notificar_SGA(Usuarios_Notificar_SGA usuario_notifcar)
+        {
+            var usuarioEntity = await _context.Usuarios_Notificar_SGA.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_SGA.Equals(usuario_notifcar.Id_Usuarios_Notificar_SGA));
+            usuarioEntity.Nombres = usuario_notifcar.Nombres;
+            usuarioEntity.Apellidos = usuario_notifcar.Apellidos;
+            usuarioEntity.Email = usuario_notifcar.Email;
+            usuarioEntity.Id_Rol = usuario_notifcar.Id_Rol;
+            usuarioEntity.usuario_red = usuario_notifcar.Usuario_Red;
+            usuarioEntity.Estado = usuario_notifcar.Estado;
+
+            _context.Usuarios_Notificar_SGA.Update(usuarioEntity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task QuitarUsuario_Notificar_SGA(int id_usuario_notificar)
+        {
+            var entity = await _context.Usuarios_Notificar_SGA.FirstOrDefaultAsync(x => x.Id_Usuarios_Notificar_SGA.Equals(id_usuario_notificar));
+            _context.Usuarios_Notificar_SGA.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<int> AddUsuario_Notificar_SGA(int Id_Usuario_AD)
+        {
+            var temp_entity = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(Id_Usuario_AD));
+            var entity = new Entities.SGA_Documentos.Usuario_Notificar_SGA
+            {
+                Nombres = temp_entity.Nombres,
+                Apellidos = temp_entity.Apellidos,
+                Email = temp_entity.Email,
+                Estado = "ACT",
+                Id_Rol = temp_entity.Id_Rol,
+                usuario_red = temp_entity.usuario_red
+            };
+            _context.Usuarios_Notificar_SGA.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.Id_Usuarios_Notificar_SGA;
+        }
         //Tb_Archivo_Configuracion
         public async Task<ArchivoConfiguracion> GetArchivoConfiguracion(string nombre) {
             var entity = await _context.Archivos_Configuracion.FirstOrDefaultAsync(x => x.Nombre.Equals(nombre));
