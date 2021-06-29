@@ -10,15 +10,15 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
     public class ReporteParte2Model
     {
         public int Id_Reporte_Preliminar { get; set; }
-        [DisplayName("Otra Causa Inmediata:")]
+        [DisplayName("Otra Causa Inmediata")]
         public string Otra_Causa { get; set; }
-        [DisplayName("Gerencia Responsable (Titular Minero):")]
+        [DisplayName("Gerencia Responsable (Titular Minero)")]
         public int Id_Gerencia_Responsable { get; set; }
-        [DisplayName("Comentario:")]
+        [DisplayName("Comentario")]
         public string Comentario_Accion { get; set; }
-        [DisplayName("Supervisor de Medio Ambiente encargado del seguimiento:")]
+        [DisplayName("Supervisor de Medio Ambiente encargado del seguimiento")]
         public int Id_Supervisor { get; set; }        
-        [DisplayName("Evidencias:")]
+        [DisplayName("Evidencias")]
         public List<IFormFile> Evidencias { get; set; }
         public int NCausas { get; set; }
         public int NInvolucrados { get; set; }

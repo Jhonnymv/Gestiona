@@ -2452,9 +2452,9 @@
                                     var html_papeles = "";
                                     for (var i = 0; i < evidencias.length; i++) {
                                         if ($("#Estado").val() == "PendienteInvestigacion")
-                                            html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "','Papel')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel</a></p>";
+                                            html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencia[i] + "','Papel')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel " + (i + 1) +"</a></p>";
                                         else
-                                            html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel</a></p>"
+                                            html_papeles += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=papel\">Evidencia Papel " + (i + 1) +"</a></p>"
                                     }
                                     $("#Evidencias_Lista_Papel").html(html_papeles);
                                     $("#Evidencias_Completas_Papel").val(evidencia);
@@ -2463,9 +2463,9 @@
                                     var html_personas = "";
                                     for (var i = 0; i < evidencias.length; i++)
                                         if ($("#Estado").val() == "PendienteInvestigacion")
-                                            html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Persona')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona</a> </p>";
+                                            html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Persona')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona " + (i + 1) +"</a> </p>";
                                         else
-                                            html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona</a></p>";
+                                            html_personas += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=persona\">Evidencia Persona " + (i + 1) +"</a></p>";
 
                                     $("#Evidencias_Lista_Persona").html(html_personas);
                                     $("#Evidencias_Completas_Persona").val(evidencias);
@@ -2474,9 +2474,9 @@
                                     var html_posiciones = "";
                                     for (var i = 0; i < evidencias.length; i++)
                                         if ($("#Estado").val() == "PendienteInvestigacion")
-                                            html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Posicion')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición</a> </p>";
+                                            html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Posicion')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición " + (i + 1) +"</a> </p>";
                                         else
-                                            html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición</a></p>";
+                                            html_posiciones += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=posicion\">Evidencia Posición " + (i + 1) +"</a></p>";
 
                                     $("#Evidencias_Lista_Posicion").html(html_posiciones);
                                     $("#Evidencias_Completas_Posicion").val(evidencias);
@@ -2485,9 +2485,9 @@
                                     var html_partes = "";
                                     for (var i = 0; i < evidencias.length; i++)
                                         if ($("#Estado").val() == "PendienteInvestigacion")
-                                            html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Parte')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                                            html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + evidencias[i] + "','Parte')><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte " + (i + 1) +"</a></p>";
                                         else
-                                            html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte</a></p>";
+                                            html_partes += "<p><a href=\"/InvestigacionFinal/Download?fileName=" + evidencias[i] + "&tipo=parte\">Evidencia Parte " + (i + 1) +"</a></p>";
 
                                     $("#Evidencias_Lista_Partes").html(html_partes);
                                     $("#Evidencias_Completas_Partes").val(evidencias);
