@@ -23,7 +23,6 @@ $(document).ready(function () {
         let title = $(this).offsetParent().offsetParent().children().children().children("h3").children("span").text();
         let subMenu = $(this).children(".text-modal-menu-option").children("span").text();
 
-
         localStorage.setItem("selectedolditem", title);
         localStorage.setItem("sublist", subMenu);
     });
