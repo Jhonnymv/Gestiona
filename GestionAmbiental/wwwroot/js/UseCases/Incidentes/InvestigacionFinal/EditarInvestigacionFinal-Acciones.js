@@ -64,6 +64,7 @@ function EliminarAccion(idAccion) {
                 $('#tabla_acciones_correctivas tbody').empty();
                 $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     }
@@ -91,6 +92,7 @@ $("#btn_guardar_accion").on("click", function () {
                 $('#tabla_acciones_correctivas tbody').empty();
                 $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     else
@@ -120,6 +122,7 @@ $("#btn_editar_accion").on("click", function () {
                 $('#tabla_acciones_correctivas tbody').empty();
                 $('#tabla_acciones_correctivas tbody').html(response.filas_acciones_correctivas);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     else

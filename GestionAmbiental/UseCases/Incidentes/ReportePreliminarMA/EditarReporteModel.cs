@@ -12,55 +12,55 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
     {
         public string Id_Encriptado_Reporte_Preliminar { get; set; }
         public int Id_Reporte_Preliminar { get; set; }
-        [DisplayName("Código:")]
+        [DisplayName("Código")]
         public string Codigo { get; set; }
-        [DisplayName("N° Trabajadores en el Centro Laboral:")]
+        [DisplayName("N° Trabajadores en el Centro Laboral")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public int Num_Trabajadores { get; set; }
-        [DisplayName("Razón Social:")]
+        [DisplayName("Razón Social")]
         public string Razon_Social_Contratista { get; set; }
-        [DisplayName("RUC:")]
+        [DisplayName("RUC")]
         public string RUC_Contratista { get; set; }
-        [DisplayName("Actividad:")]
+        [DisplayName("Actividad")]
         public string Actividad_Contratista { get; set; }
-        [DisplayName("Domicilio Legal:")]
+        [DisplayName("Domicilio Legal")]
         public string Domicilio_Contratista { get; set; }
-        [DisplayName("N° Trabajadores en el Centro Laboral:")]
+        [DisplayName("N° Trabajadores en el Centro Laboral")]
         public int? Num_Trabajadores_Contratista { get; set; }
-        [DisplayName("Tipo de incidente:")]
+        [DisplayName("Tipo de incidente")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Tipo_Incidente { get; set; }
-        [DisplayName("Nivel de incidente:")]
+        [DisplayName("Nivel de incidente")]
         public int Id_Nivel_Incidente { get; set; }
-        [DisplayName("Fecha:")]
+        [DisplayName("Fecha")]
         public string Fecha_Incidente { get; set; }
-        [DisplayName("Hora:")]
+        [DisplayName("Hora")]
         public string Hora_Incidente { get; set; }
-        [DisplayName("Producto Derramado:")]
+        [DisplayName("Producto Derramado")]
         public string Producto_Derramado { get; set; }
-        [DisplayName("Cantidad aprox. derramada:")]
+        [DisplayName("Cantidad aprox. derramada")]
         public double? Cantidad_Derramado { get; set; }
         public int Id_Unidad_Cantidad_Derramado { get; set; }
-        [DisplayName("Área afectada:")]
+        [DisplayName("Área afectada")]
         public double? Area_Afectada { get; set; }
         public int Id_Unidad_Area_Afectada { get; set; }
-        [DisplayName("Lugar donde ocurrió:")]
+        [DisplayName("Lugar donde ocurrió")]
         public string Lugar_Incidente { get; set; }
-        [DisplayName("Equipo/instalación involucrado:")]
+        [DisplayName("Equipo/instalación involucrado")]
         public string Equipo_Involucrado { get; set; }
-        [DisplayName("Componente Ambiental afectado:")]
+        [DisplayName("Componente Ambiental afectado")]
         public int Id_Componente_Ambiental { get; set; }
-        [DisplayName("Descripción preliminar del incidente:")]
+        [DisplayName("Descripción preliminar del incidente")]
         public string Descripcion_Incidente { get; set; }
-        [DisplayName("Escribir otra causa inmediata:")]
+        [DisplayName("Escribir otra causa inmediata")]
         public string Otra_Causa_Incidente { get; set; }
-        [DisplayName("Gerencia Responsable (Titular Minero):")]
+        [DisplayName("Gerencia Responsable (Titular Minero)")]
         public int Id_Gerencia_Responsable { get; set; }
-        [DisplayName("Comentario:")]
+        [DisplayName("Comentario")]
         public string Comentario_Accion { get; set; }
-        [DisplayName("Supervisor de Medio Ambiente encargado del seguimiento:")]
+        [DisplayName("Supervisor de Medio Ambiente encargado del seguimiento")]
         public int Id_Supervisor { get; set; }
-        [DisplayName("Evidencias:")]
+        [DisplayName("Evidencias")]
         public List<IFormFile> Evidencias { get; set; }
         public string Evidencias_Completas { get; set; }
         [DisplayName("Iniciar Investigación  ")]

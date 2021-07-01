@@ -103,10 +103,10 @@
                             <a class="btn btn-mc-outline-danger w-100" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc w-100" id="btn_guardar_estado">Guardar Estado</button>
+                            <button type="button" class="btn btn-mc-outline-success w-100" id="btn_guardar_estado">Guardar Estado</button>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc-success w-100" id="btn_registrar">Registrar</button>
+                            <button type="button" class="btn btn-mc w-100" id="btn_registrar">Registrar</button>
                         </div>
                     </div>
                 </div>
@@ -228,10 +228,40 @@
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
 </form>-->
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" aria-labelledby="titulo_modal_preview_pdf" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3>Previsualización</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div id="viewPDF">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-mc-outline-danger me-2" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-mc" id="btn_descargar">Descargar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var listDocumentosP = [];
-            listSecundariosEditable = @Html.Raw(ViewBag.PublicadosEditable);
+        var listSecundariosEditable = @Html.Raw(ViewBag.PublicadosEditable);
         $(document).ready(function () {
             listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
         });
@@ -268,6 +298,36 @@
                         break;
                     }
         });
+        function PreviewPDF(ruta) {
+            if (PDFObject.supportsPDFs) {
+                $.ajax({
+                    type: "POST",
+                    url: "/SGADocumentacion/PreviewFile",
+                    data: {
+                        "fileName": ruta,
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        if (response.result == "Ok") {
+                            PDFObject.embed(response.path, "#viewPDF");
+                            rutaArchivo = response.path
+                            $("#modal_preview_pdf").modal("show");
+                            if (response.extension == ".pdf")
+                                $("#viewPDF").css("height", "800px");
+                            else {
+                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                            }
+
+                        } else {
+                            alert("No se pudo visualizar el archivo: " + response.message);
+                            $("#modal_preview_pdf").modal("show");
+                        }
+                    }
+                });
+            } else {
+                alert("El navegador no es compatible con la previsualización del documento")
+            }
+        }
         $("#DocPredecesor").change(function () {
             var IdDoc = $("#DocPredecesor").val();
             //Limpiar boton descargar editable

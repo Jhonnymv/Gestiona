@@ -79,6 +79,7 @@ function EliminarProducto(idProducto) {
                 $('#tabla_productos tbody').empty()
                 $('#tabla_productos tbody').html(response.filas_productos)
                 $('#NProductos').val(response.nProductos);
+                dataModulo();
             }
         });
     }
@@ -108,6 +109,7 @@ $("#btn_guardar_producto").on("click", function () {
                 $('#tabla_productos tbody').empty()
                 $('#tabla_productos tbody').html(response.filas_productos)
                 $('#NProductos').val(response.nProductos);
+                dataModulo();
             }
         });
     else
@@ -138,6 +140,7 @@ $("#btn_editar_producto").on("click", function () {
                 $('#tabla_productos tbody').empty()
                 $('#tabla_productos tbody').html(response.filas_productos)
                 $('#NProductos').val(response.nProductos);
+                dataModulo();
             }
         });
     else

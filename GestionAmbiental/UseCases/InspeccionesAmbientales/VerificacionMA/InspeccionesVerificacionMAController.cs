@@ -170,13 +170,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         for (int i = 0; i < observacion.EvidenciaCondicion.Count; i++)
                             evidencia = "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "&tipo=condicion\">Evidencia</a>";
                         evidencia += "</label>";
+                        if(observacion.EvidenciaImplementacion!=null)
                         for (int i = 0; i < observacion.EvidenciaImplementacion.Count; i++)
                         {
                             evidencia_implementacion = "<a href=\"/InspeccionesImplementacion/Download?fileName=" + observacion.EvidenciaImplementacion[i] + "&tipo=implementacion\">Evidencia</a>";
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
-                        if (observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.PermisosAsesor)
+                        if (observacion.EvidenciaImplementacion != null && observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.PermisosAsesor)
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"VerificarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Verificar" + "</button></td>";
                         else
                             filaObservacion += "<td></td>";

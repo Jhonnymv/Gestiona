@@ -179,13 +179,10 @@
             });
         }
         function guardar() {
-            if ($("#EvidenciasInspeccion").get(0).files.length === 0) {
-                $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
-                return false;
+            if (ValidarImplementarObservacion()) {
+                $("#form_implementarObservacion").submit();
+                $("#Modal_Enviando_Correo").modal('show');
             }
-            $("#form_implementarObservacion").submit();
-            $("#Modal_Enviando_Correo").modal('show');
-            return true;
         }
         function ImplementarObservacion(IdObservacion) {
             var data;
@@ -227,7 +224,18 @@
         function DescargarEvidenciaObservacion() {
             console.log($("#Evidencia").val());
             window.open('/Inspecciones/Download?fileName=' + $("#Evidencia").val(), '_blank');
-        }        
+        }    
+        function ReiniciarMsgsValidacion() {
+            $('danger_evidencia').text("");
+            $('span[data-valmsg-for="Comentario"]').text("");
+        }
+        function ValidarImplementarObservacion() {
+            var result = true;
+            ReiniciarMsgsValidacion();
+            if ($("#Comentario").val() == "") { result = false; $('span[data-valmsg-for="Comentario"]').text("Debe completar este campo"); }
+            if (document.getElementById("EvidenciasInspeccion").files.length == 0) { result = false; $("#danger_evidencia").text("Debe seleccionar un archivo"); }
+            return result;
+        }
     </script>
 }
 @*<div class="container-fluid">

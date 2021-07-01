@@ -202,10 +202,10 @@
                             <a class="btn btn-mc-outline-danger w-100" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc w-100" id="btn_guardar_estado">Guardar Estado</button>
+                            <button type="button" class="btn btn-mc-outline-success w-100" id="btn_guardar_estado">Guardar Estado</button>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc-success w-100" id="btn_registrar">Registrar</button>
+                            <button type="button" class="btn btn-mc w-100" id="btn_registrar">Registrar</button>
                         </div>
                     </div>
                 </div>
@@ -214,207 +214,6 @@
     </div>
 </div>
 
-
-@*<div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Actualizar Documento @ViewBag.CategoriaDoc</h2>
-        </div>
-    </div>
-    <form class="form-group" id="form_registrar_documento" asp-action="ActualizarDocumento" asp-controller="SGAAdministracion" method="post" enctype="multipart/form-data" autocomplete="off">
-        <div class="row mb-2 align-items-center">
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="IdSGATipoDocumento"></label>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
-                <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDocExistentes"></select>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="DocVersion"></label>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="DocVersion"></span>
-                <input type="number" asp-for="DocVersion" class="form-control" value="1">
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="DocNombre"></label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="DocNombre"></span>
-                <input type="hidden" asp-for="DocNombre" class="form-control">
-                <select asp-for="DocPredecesor" class="form-control"></select>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="DocCodigo"></label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="DocCodigo"></span>
-                <input type="text" asp-for="DocCodigo" class="form-control" readonly>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="Comentario"></label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="Comentario"></span>
-                <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
-                <div class="text-right">
-                    <span id="contadorComentario">0</span>
-                    <span>/ 500</span>
-                </div>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="FechaAprobacion"></label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
-                <input type="date" asp-for="FechaAprobacion" class="form-control">
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="FechaTentativa"></label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-                <input type="date" asp-for="FechaTentativa" class="form-control">
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label>Documento Editable Versión Anterior:</label>
-            </div>
-            <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="DocumentoPdf"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
-                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
-                    <span id="danger_documento_pdf" class=""></span>
-                </span>
-                <label class="btn btn-primary" for="DocumentoPdf">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoPdf" accept=".pdf" data-max-size="8971520">
-            </div>
-            <div class="col-sm-12 col-md-7 col-lg-2">
-                <label id="files_name_pdf">0 Archivos</label>
-            </div>
-            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-                <label asp-for="DocumentoEditable"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2 mb-2">
-                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                    <span id="danger_documento_editable" class=""></span>
-                </span>
-                <label class="btn btn-primary" for="DocumentoEditable">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoEditable" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
-            </div>
-            <div class="col-sm-12 col-md-7 col-lg-2">
-                <label id="files_name_editable">0 Archivos</label>
-            </div>
-        </div>
-        @if (ViewBag.Error != null)
-        {
-            <div class="row mb-2 d-flex justify-content-center">
-                <div class="col-8">
-                    <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
-                </div>
-            </div>
-        }
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Formatos</h2>
-            </div>
-        </div>
-        <div class="row mb-2 d-flex justify-content-center">
-            <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
-                <button type="button" class="btn btn-primary mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
-            </div>
-            <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
-                <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <span class="text-danger" id="danger_formatos"></span>
-            </div>
-        </div>
-        <div class="row mb-2 d-flex justify-content-center">
-            <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
-                <input type="hidden" asp-for="Secundarios" />
-                <table class="table" id="tabla_secundarios">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Código</th>
-                            <th>Tipo de Documento</th>
-                            <th>Nombre</th>
-                            <th>Versión / Revisión</th>
-                            <th>Condición</th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Revisores y Aprobadores</h2>
-            </div>
-        </div>
-        <div class="row mb-2 d-flex justify-content-center">
-            <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <span class="text-danger" id="danger_revisores"></span>
-            </div>
-        </div>
-        <div class="row mb-2 d-flex justify-content-center">
-            <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
-                <input type="hidden" asp-for="Revisores" />
-                <table class="table" id="tabla_revisores">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Fecha Revisión</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <span class="text-danger" id="danger_aprobadores"></span>
-            </div>
-        </div>
-        <div class="row mb-2 d-flex justify-content-center">
-            <div class="col-sm-12 col-md-9 col-lg-6 mb-2">
-                <input type="hidden" asp-for="Aprobadores" />
-                <table class="table" id="tabla_aprobadores">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Fecha Aprobación</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <input type="hidden" asp-for="Opcion" />
-        <div class="row mb-2 mr-2 d-flex justify-content-end">
-            <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
-            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
-            <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
-        </div>
-    </form>*@
 <!--Modal Revisión-->
 <div class="modal fade" id="modal_revision" tabindex="-1" aria-labelledby="titulo_modal_revision" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -481,30 +280,33 @@
         </div>
     </div>
 </div>
-<!--Modal Preview PDF-->
-<div class="modal fade" id="modal_preview_pdf" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_preview_pdf"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_preview_pdf">
-                    Previsualización
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div id="viewPDF">
 
+<!--Modal Preview PDF-->
+<div class="modal fade" id="modal_preview_pdf" tabindex="-1" aria-labelledby="titulo_modal_preview_pdf" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-menu modal-sga">
+            <div class="modal-content">
+                <div class="sga">
+                    <div class="image-header-container">
+                        <div class="header-title sga-opacity-color">
+                            <h3>Previsualización</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
-                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
-                </div>
-            </form>
+                <form>
+                    <div class="modal-body">
+                        <div id="viewPDF">
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-mc-outline-danger me-2" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-mc" id="btn_descargar">Descargar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -525,11 +327,27 @@
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
-            listDocumentosP = @Html.Raw(ViewBag.DocumentosPublicados);
-            listSecundariosHtml = @Html.Raw(ViewBag.PublicadosHtml);
-            listSecundariosEditable = @Html.Raw(ViewBag.PublicadosEditable);
+            ConsultarPublicados();
         });
-
+        function ConsultarPublicados() {
+            $.ajax({
+                type: "POST",
+                url: "/SGAAdministracion/ConsultarPublicados",
+                data: {
+                    "IdCategoria": $("#IdCategoria").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        listSecundariosHtml = JSON.parse(response.publicadosHtml);
+                        listDocumentosP = JSON.parse(response.listDocumentosP);
+                        listSecundariosEditable = JSON.parse(response.publicadosEditable);
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            });
+        }
         function DescargarEditable(ruta) {
             ruta = ruta.replace('-', '/');
             window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);

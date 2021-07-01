@@ -24,11 +24,11 @@
                                         <div class="col-12 col-sm-6 col-lg-6">
                                             <label asp-for="TipoInspeccion"></label>
                                             <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
-                                            <input type="text" class="form-control" asp-for="TipoInspeccion" readonly/>
+                                            <input type="text" class="form-control" asp-for="TipoInspeccion" readonly />
                                         </div>
                                         <div class="col-12 col-sm-6 col-lg-6">
                                             <label asp-for="AsesorSeguridad">Asesor:</label>
-                                            <input type="text" class="form-control" asp-for="AsesorSeguridad" readonly/>
+                                            <input type="text" class="form-control" asp-for="AsesorSeguridad" readonly />
                                         </div>
                                     </div>
                                     <div class="row input_container w-100">
@@ -44,7 +44,7 @@
                                     <div class="row input_container w-100">
                                         <div class="col-12 col-sm-6 col-lg-6">
                                             <label asp-for="FechaProgramada"></label>
-                                            <input type="date" class="form-control" asp-for="FechaProgramada" readonly/>
+                                            <input type="date" class="form-control" asp-for="FechaProgramada" readonly />
                                         </div>
                                         <div class="col-12 col-sm-6 col-lg-6 ">
                                             <label asp-for="NivelRiesgo"></label>
@@ -87,13 +87,18 @@
                                             <textarea class="form-control" asp-for="Comentario" rows="3"></textarea>
                                         </div>
                                     </div>
+                                    <div class="row input_container w-100">
+                                        <div class="button-container">
+                                            <div></div>
+                                            <div>
+                                                <button class="btn btn-mc m-2" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+                                                <button type="button" class="btn btn-mc" onclick="guardar()">Implementar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-mc m-2" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
-                        <button type="button" class="btn btn-mc" onclick="guardar()">Implementar</button>
                     </div>
                 </div>
             </div>

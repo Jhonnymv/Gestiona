@@ -229,8 +229,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                gerenciasEjecutorasMC.RemoveAt(1);
+                gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));                
 
                 var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -328,7 +327,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 response = new
                 {
                     success = false,
-                    message = "Datos inompletos"
+                    message = "Datos incompletos"
                 };
             }
             return Ok(response);
@@ -554,7 +553,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                gerenciasEjecutorasMC.RemoveAt(1);
 
                 var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));
@@ -696,9 +694,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.Id_Gerencia_Ejecutora,
                     model.Id_Empresa_Contratista,
                     model.Lugar_Inspeccionado,
-                    model.Fecha_Inspeccion,
-                    model.Hora_Inspeccion,
+                    model.Tipo_Inspeccion,
                     model.Id_Responsable_Lugar,
+                    model.Hora_Inspeccion,
+                    model.Fecha_Inspeccion,
+                    model.Responsable_Inspeccion,
                     model.Inspectores,
                     model.opcion,
                     userInfo.NombreUsuario);
@@ -780,7 +780,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                gerenciasEjecutorasMC.RemoveAt(1);
 
                 var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresasMC.Insert(0, new SelectListItem("No Aplica", "1"));

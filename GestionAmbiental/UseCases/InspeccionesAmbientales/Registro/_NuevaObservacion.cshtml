@@ -99,16 +99,18 @@
                                             <input type="file" asp-for="Evidencias" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
                                         </div>
                                     </div>
+                                    <div class="row input_container w-100">
+                                        <div class="button-container">
+                                            <div></div>
+                                            <div>
+                                                <button class="btn btn-mc-outline-danger m-2" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+                                                <button type="button" class="btn btn-mc" onclick="GuardarObservacion()">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-mc m-2" data-bs-dismiss="modal"
-                                aria-label="Close">
-                            Cerrar
-                        </button>
-                        <button type="button" class="btn btn-mc" onclick="GuardarObservacion()">Agregar</button>
                     </div>
                 </div>                
             </div>

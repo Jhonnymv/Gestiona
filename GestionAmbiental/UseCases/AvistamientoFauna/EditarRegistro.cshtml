@@ -578,18 +578,20 @@
             element.parentNode.removeChild(element);
         }
         function eliminarRegistro() {
-            $.ajax({
-                type: 'GET',
-                url: '/AvistamientoFauna/EliminarRegistro',
-                data:
-                {
-                    IdAvistamiento: $("#IdAvistamientoFauna").val(),
-                    imagenes: $("#FotosCargadas").val()
-                },
-                success: function () {
-                    window.location.replace('@Url.Action("Resumen","AvistamientoFauna")');
-                }
-            });
+            if (confirm('¿Está seguro que desea eliminar el registro?')) {
+                $.ajax({
+                    type: 'GET',
+                    url: '/AvistamientoFauna/EliminarRegistro',
+                    data:
+                    {
+                        IdAvistamiento: $("#IdAvistamientoFauna").val(),
+                        imagenes: $("#FotosCargadas").val()
+                    },
+                    success: function () {
+                        window.location.replace('@Url.Action("Resumen","AvistamientoFauna")');
+                    }
+                });
+            }
         }
         function GuardarEstado() {
             if ($("#FotosCargadas").val() != "" || $("#Fotos").val() != "") {
@@ -618,19 +620,66 @@
                 alert("Existen campos vacios")
             }
         }
+        function ReiniciarTextosValidacion() {
+            $("[data-valmsg-for='Fecha_Avistamiento']").html("");
+            $("[data-valmsg-for='FotosCargadas']").html("");
+            $("[data-valmsg-for='Hora_Avistamiento']").html("");
+            $("[data-valmsg-for='Ubicacion']").html("");
+            $("[data-valmsg-for='Cantidad']").html("");
+            $("[data-valmsg-for='IdNombreComun']").html("");
+            $("[data-valmsg-for='IdTipoFauna']").html("");
+            $("[data-valmsg-for='IdTipoAvistamiento']").html("");
+            $("[data-valmsg-for='IdEstadoFauna']").html("");
+            $("[data-valmsg-for='IdLugarReferencia']").html("");
+            $("[data-valmsg-for='Nombres_Apellidos']").html("");
+        }
         function ValidarCampos() {
+            ReiniciarTextosValidacion();
             var resultado = true;
-            if ($("#Fecha_Avistamiento").val() == "") resultado = false;
-            if ($("#FotosCargadas").val() == "" && $("#Fotos").val() == "") resultado = false;
-            if ($("#Hora_Avistamiento").val() == "") resultado = false;
-            if ($("#Ubicacion").val() == "") { MostrarModalUbicacion(); resultado = false; }
-            if ($("#Cantidad").val() == "") resultado = false;
-            if ($("#IdNombreComun").val() == "0") resultado = false;
-            if ($("#IdTipoFauna").val() == "0") resultado = false;
-            if ($("#IdTipoAvistamiento").val() == "0") resultado = false;
-            if ($("#IdEstadoFauna").val() == "0") resultado = false;
-            if ($("#IdLugarReferencia").val() == "0") resultado = false;
-            if ($("#Nombres_Apellidos").val() == "") resultado = false;
+            if ($("#Fecha_Avistamiento").val() == "") {
+                resultado = false;
+                $("[data-valmsg-for='Fecha_Incidente']").html("Debe completar este campo");
+            }
+            if ($("#FotosCargadas").val() == "" && $("#Fotos").val() == "") {
+                resultado = false;
+                $("#alerta_fotos").text("Debe cargar por lo menos una fotografía");
+            }
+            if ($("#Hora_Avistamiento").val() == "") {
+                resultado = false;
+                $("[data-valmsg-for='Hora_Avistamiento']").html("Debe completar este campo");
+            }
+            if ($("#Ubicacion").val() == "") {
+                MostrarModalUbicacion(); { resultado = false; }
+                $("[data-valmsg-for='Ubicacion']").html("Debe completar este campo");
+            }
+            if ($("#Cantidad").val() == "") {
+                resultado = false;
+                $("[data-valmsg-for='Cantidad']").html("Debe completar este campo");
+            }
+            if ($("#IdNombreComun").val() == "0") {
+                resultado = false;
+                $("[data-valmsg-for='IdNombreComun']").html("Debe seleccionar una opción");
+            }
+            if ($("#IdTipoFauna").val() == "0") {
+                resultado = false;
+                $("[data-valmsg-for='IdTipoFauna']").html("Debe seleccionar una opción");
+            }
+            if ($("#IdTipoAvistamiento").val() == "0") {
+                resultado = false;
+                $("[data-valmsg-for='IdTipoAvistamiento']").html("Debe seleccionar una opción");
+            }
+            if ($("#IdEstadoFauna").val() == "0") {
+                resultado = false;
+                $("[data-valmsg-for='IdEstadoFauna']").html("Debe seleccionar una opción");
+            }
+            if ($("#IdLugarReferencia").val() == "0") {
+                resultado = false;
+                $("[data-valmsg-for='IdLugarReferencia']").html("Debe seleccionar una opción");
+            }
+            if ($("#Nombres_Apellidos").val() == "") {
+                resultado = false;
+                $("[data-valmsg-for='Nombres_Apellidos']").html("Debe completar este campo");
+            }
             return resultado;
         }
     </script>

@@ -194,11 +194,7 @@
                     $('#tabla_resumen tbody').empty()
                     $('#tabla_resumen tbody').html(response.data)
                     $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
-                    let r5 = 8;
-                    let g5 = 99;
-                    let b5 = 61;
-                    faunaStyle(r5, g5, b5);
+                    faunaStyle(r, g, b);
                 }
             });
         }

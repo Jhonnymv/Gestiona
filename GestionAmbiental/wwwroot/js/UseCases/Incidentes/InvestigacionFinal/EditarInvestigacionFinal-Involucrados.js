@@ -146,6 +146,7 @@ function EliminarInvolucrado(idInvolucrado) {
                 $('#tabla_involucrados tbody').empty()
                 $('#tabla_involucrados tbody').html(response.filas_involucrados)
                 $('#NInvolucrados').val(response.nInvolucrados);
+                dataModulo();
             }
         });
     }
@@ -218,6 +219,7 @@ $("#btn_guardar_involucrado").on("click", function () {
                 $('#tabla_involucrados tbody').empty()
                 $('#tabla_involucrados tbody').html(response.filas_involucrados)
                 $('#NInvolucrados').val(response.nInvolucrados);
+                dataModulo();
             }
         });
     else
@@ -257,6 +259,7 @@ $("#btn_editar_involucrado").on("click", function () {
                 $('#tabla_involucrados tbody').empty()
                 $('#tabla_involucrados tbody').html(response.filas_involucrados)
                 $('#NInvolucrados').val(response.nInvolucrados);
+                dataModulo();
             }
         });
     else

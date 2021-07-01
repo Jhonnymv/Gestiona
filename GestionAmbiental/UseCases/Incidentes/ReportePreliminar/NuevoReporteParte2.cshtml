@@ -86,7 +86,7 @@
                     <div class="incidentes">
                         <div class="tertiary-content col-12">
                             <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_incolucrados">
+                                <table class="table" id="tabla_involucrados">
                                     <thead>
                                         <tr>
                                             <th>Tipo</th>
@@ -749,13 +749,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row input_container">
+                                <div class="row input_container" id="actos_subestandar" style="display:none">
                                     <div class="col-12">
                                         <label>Acto Subestándar</label>
                                         <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
                                     </div>
                                 </div>
-                                <div class="row input_container">
+                                <div class="row input_container" id="condiciones_subestandar" style="display:none">
                                     <div class="col-12">
                                         <label>Condición Subestándar</label>
                                         <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
@@ -870,4 +870,26 @@
 </div>
 @section Scripts{
     <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/NuevoReporteParte2.js"></script>
+    <script type="text/javascript">
+
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        incidentesStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+    </script>
 }

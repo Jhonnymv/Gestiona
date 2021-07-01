@@ -319,6 +319,46 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
             }
         }
         //Solo Documentos SGA
+        public async Task<IActionResult> ConsultarPublicados(int IdCategoria)
+        {
+            dynamic response;
+            try
+            {
+                var publicadosData = await _consultarDocumentos.ExecutePublicados();
+                var documentos = publicadosData.Where(x => x.IdSGACategoriaDocumento.Equals(IdCategoria)).ToList();
+                var publicados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString())).Select(x => new
+                {
+                    Id = x.IdSGADocumento,
+                    Text = "(" + x.DocCodigo + ") " + x.DocNombre + " v." + x.DocVersion.ToString(),
+                    Editable = "<button type=\"button\" class=\"btn btn-primary\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button>",
+                    Html = "<tr iddoc=\"" + x.IdSGADocumento + "\"><td><a href=\"/SGAAdministracion/" + (x.Condicion == EstadosDocumentosSGA.Pendiente.ToString() ? "EditarDocumento" : "VerDocumento") + "?IdDocumento=" + _protector.Protect(x.IdSGADocumento.ToString()) + "&IdCategoria=" + IdCategoria + "\">" + x.DocCodigo + "</a></td>" +
+                    "<td>" + x.SGATipoDocumento + "</td>" +
+                    "<td>" + x.DocNombre + "</td>" +
+                    "<td>" + x.DocVersion + "</td>" +
+                    "<td>" + x.Condicion + "</td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"this.disabled=true;PreviewPDF(\'" + x.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Visualizar Pdf</button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + x.EditableRuta.Replace("\\", "-") + "\')\">Descargar Editable </button></td>" +
+                    "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + x.IdSGADocumento + ")\">Eliminar</button></td>" +
+                    "</tr>"
+                });
+                response = new
+                {
+                    success = true,
+                    publicadosHtml = JsonConvert.SerializeObject(publicados),
+                    listDocumentosP = JsonConvert.SerializeObject(documentos),
+                    publicadosEditable = JsonConvert.SerializeObject(JsonConvert.SerializeObject(publicados.Select(g => new { Id = g.Id.ToString(), Button = g.Editable }).ToList()))
+                };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
         public async Task<IActionResult> CargarDocumento(string Error, int IdCategoria)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -372,7 +412,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 });
                 var listPublicados = publicadoss.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
                 listPublicados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
+                ViewBag.IdCategoria = IdCategoria;
                 ViewBag.PublicadosHtml = JsonConvert.SerializeObject(publicadoss);
                 ViewBag.PublicadosCodigo = JsonConvert.SerializeObject(publicadosCodigo);
                 ViewBag.Publicados = listPublicados;
@@ -643,7 +683,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     case 3: tituloCategoria = "Externo"; break;
                 }
 
-                ViewBag.DocumentosPublicados = documentosPublicados;
                 ViewBag.CategoriaDoc = tituloCategoria;
                 ViewBag.Error = Error;
 
@@ -666,6 +705,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var listPublicados = publicados.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Text }).ToList();
                 listPublicados.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                ViewBag.IdCategoria = IdCategoria;
                 ViewBag.DocumentosPublicados = documentosPublicados;
                 ViewBag.Publicados = listPublicados;
                 ViewBag.PublicadosEditable = JsonConvert.SerializeObject(publicados.Select(g => new { Id = g.Id.ToString(), Button = g.Editable }).ToList());

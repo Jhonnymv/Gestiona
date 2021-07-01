@@ -673,7 +673,7 @@
         });
         $("#Id_Empresa").on('change', function () {
             //Empresa != OTROS
-            if ($("#Id_Empresa").val() != "33")
+            if (!$("#Id_Empresa option:selected").text().toLowerCase().includes("otro"))
                 $("#Otra_Empresa").prop('disabled', true);
             else
                 $("#Otra_Empresa").prop('disabled', false);
@@ -683,13 +683,13 @@
                 $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
                 return false;
             }
-            if ($("#Id_Empresa").val() == "33" && $("#Otra_Empresa").val().length === 0) {
+            if (!$("#Id_Empresa option:selected").text().toLowerCase().includes("otro") && $("#Otra_Empresa").val().length === 0) {
                 $("#danger_empresa").html("Debe completar este campo<br/>");
                 return false;
             } else {
                 $("#danger_empresa").html("");
             }
-            if ($("#Id_Empresa").val() == "33")
+            if (!$("#Id_Empresa option:selected").text().toLowerCase().includes("otro"))
                 $("#Otra_Empresa").prop('disabled', false);
             $("#Nombres_Apellidos").prop('disabled', false);
             $("#Modal_Enviando_Correo").modal('show')

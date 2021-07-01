@@ -9,10 +9,10 @@ namespace GestionAmbiental.UseCases.Autenticacion
 {
     public class SigninModel
     {
-        [Required(ErrorMessage ="Debe ingresar su nombre de usuario")]
+        [Required(ErrorMessage ="Ambos campos son requeridos")]
         [DisplayName("Usuario")]
         public string User { get; set; }
-        [Required(ErrorMessage = "Debe ingresar su contraseña")]
+        [Required(ErrorMessage = "Ambos campos son requeridos")]
         [DisplayName("Contraseña")]
         public string Password { get; set; }
         public string MensajeAut { get; set; }

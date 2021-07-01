@@ -200,7 +200,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
                 motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var empresa = items.ItemsEmpresa.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
                 tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -261,8 +261,14 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 ingreso_salida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var motivo = items.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
                 motivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var empresa = items.ItemsEmpresa.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+
+                var grupoEmpresasAct = new SelectListGroup() { Name = "Empresas Activas", Disabled = false };
+                var grupoEmpresasIna = new SelectListGroup() { Name = "Empresas Inactivas", Disabled = false };
+
+                var empresa = items.ItemsEmpresa.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial, Group = grupoEmpresasAct }).ToList();
+                empresa.AddRange(items.ItemsEmpresa.Where(x => x.Estado.Equals("INA")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial, Group = grupoEmpresasIna }).ToList());
                 empresa.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
                 var tipos_residuos = items.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
                 tipos_residuos.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var residuos_solidos_p = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals((int)TipoResiduoSolido.Peligroso)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
