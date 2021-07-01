@@ -12,6 +12,7 @@
 <div class="mc_container">
     <form id="form_editar_tarjeta" autocomplete="off" asp-controller="GestorContenido" asp-action="EditarTarjeta" method="post" enctype="multipart/form-data">
         <input type="hidden" asp-for="Id" value="@Model.Id" />
+        <input type="hidden" class="form-control" asp-for="Tipo">
         <div class="menu_settings container first-div-tab-content mb-4">
             <span class="text-mc">Contenido</span>
             <div class="div-separator"></div>

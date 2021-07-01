@@ -79,7 +79,48 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 mensaje = "Error en login"
             };
             if (ModelState.IsValid)
-            {                
+            {
+                //// Get LDAP connection data
+                //var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
+                //string ldap_path = "", ldap_domain = "";
+                //foreach (var item in info.Info)
+                //{
+                //    switch (item.Key)
+                //    {
+                //        case "ldap_path": ldap_path = item.Value; break;
+                //        case "ldap_domain": ldap_domain = item.Value; break;
+                //    }
+                //}
+                //// Validate credentials
+                //using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+                //{
+                //    if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
+                //    {
+                //        var rol = await _getRolUsuario.Execute(model.User);
+                //        if (!rol.HasValue)
+                //            result = new
+                //            {
+                //                success = false,
+                //                mensaje = "No Autorizado"
+                //            };
+                //        else
+                //        {
+                //            var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                //            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                //            result = new
+                //            {
+                //                success = true
+                //            };
+                //        }
+                //    }
+                //    else
+                //        result = new
+                //        {
+                //            success = false,
+                //            mensaje = "El usuario o la contraseña son incorrectas"
+                //        };
+                //}
+
                 var rol = await _getRolUsuario.Execute(model.User);
                 if (!rol.HasValue)
                 {
@@ -89,7 +130,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
                         success = false,
                         mensaje = "El usuario o la contraseña son incorrectas"
                     };
-                    
+
                 }
                 else
                 {
@@ -100,7 +141,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
                         success = true
                     };
                 }
-                
+
             }
             return Ok(result);
         }
