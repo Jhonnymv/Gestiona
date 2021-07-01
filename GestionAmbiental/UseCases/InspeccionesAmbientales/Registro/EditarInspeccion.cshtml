@@ -33,9 +33,6 @@
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Observaciones</button>
                             </li>
-                            @*<li class="nav-item" role="presentation">
-                                <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
-                            </li>*@
                         </ul>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
@@ -112,34 +109,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
-                            <div class="message"></div>
-                            <div class="row input_container">
-                                <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
-                                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion" readonly>
-                                </div>
-                                <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Inspectores">Participantes de la Inspección</label>
-                                    <span class="text-danger" asp-validation-for="Inspectores"></span>
-                                    <input type="text" class="form-control" asp-for="Inspectores" readonly>
-                                </div>
-                            </div>
-                            <div class="row input_container">
-                                <div class="col-12 col-sm-12 col-lg-12">
-                                    <label asp-for="Objetivo">Objetivo de la Inspección</label>
-                                    <span class="text-danger" asp-validation-for="Objetivo"></span>
-                                    <input type="text" class="form-control" asp-for="Objetivo" readonly>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
-                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
-                                </div>
-                            </div>
-                        </div>*@
                         <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -187,12 +156,11 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        @*<a id="cancelar" type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>*@
                                         @if (ViewBag.Permiso)
                                         {
                                             <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
-                                            <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>                                            
-                                            <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc" disabled>Finalizar Registro</button>
+                                            <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
+                                            <button id="guardar" type="button" onclick="FinalizarRegistro()" class="btn btn-mc" disabled>Finalizar Registro</button>
                                         }
                                     </div>
                                 </div>
@@ -207,218 +175,45 @@
         </div>
     </div>
 </div>
-@*<div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-12 titulo-pagina">
-                <h2>Editar Inspección</h2>
-            </div>
-        </div>
-        <form class="form-group" id="form_nuevaInspeccion" asp-action="EditarInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-
-            <input type="hidden" asp-for="Id_Inspeccion_Cabecera" />
-            <input type="hidden" asp-for="EncryptedId" />
-
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Id_Gerencia_Ejecutora"></label>
-                </div>
-
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
-                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora" disabled></select>
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Id_Empresa_Contratista"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
-                    <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista" disabled>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Lugar_Inspeccionado"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
-                    <input type="text" class="form-control" asp-for="Lugar_Inspeccionado" disabled>
-                </div>
-
-                <div class="col-lg-2">
-                    <label asp-for="Tipo_Inspeccion"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
-                    <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion" disabled></select>
-                </div>
-
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Id_Responsable_Lugar"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar" disabled></select>
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Hora_Inspeccion"></label>
-                </div>
-                <div class="col-lg-2">
-                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
-                    <input type="time" class="form-control" asp-for="Hora_Inspeccion" disabled>
-                </div>
-                <div class="col-lg-1">
-                    <label asp-for="Fecha_Inspeccion"></label>
-                </div>
-                <div class="col-lg-2">
-                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
-                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Responsable_Inspeccion"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion" disabled>
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Inspectores"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Inspectores"></span>
-                    <input type="text" class="form-control" asp-for="Inspectores" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Objetivo"></label>
-                </div>
-                <div class="col-lg-10">
-                    <span class="text-danger" asp-validation-for="Objetivo"></span>
-                    <input type="text" class="form-control" asp-for="Objetivo" disabled>
-                </div>
-            </div>
-            @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
-            {
-                <div class="row mb-2">
-                    <div class="col-lg-12">
-                        <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
-                    </div>
-                </div>
-            }
-
-            @if (ViewBag.nObservacioness > 0)
-            {
-                style="visibility:hidden;display:none"
-                <div class="row mb-2" id="div_tabla_observaciones">
-                    <div class="col-lg-12">
-                        <table class="table table-modal" id="tabla_observaciones">
-                            <thead class="thead-mcolor">
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th>Tipo de Observación</th>
-                                    <th>Asesor de MAP/SSO</th>
-                                    <th>Acto/Condición Subestándar Identificada</th>
-                                    <th>Tipo de Condición/Acto Subestándar</th>
-                                    <th>Evidencia</th>
-                                    <th>Nivel de Riesgo</th>
-                                    <th>Acción Preventiva / Correctiva Tomada</th>
-                                    <th>Responsable Marcobre</th>
-                                    <th>Responsable Contratista</th>
-                                    <th>Fecha Programada</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @Html.Raw(ViewBag.ContenidoTabla)
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
-
-        <div class="buttons d-flex justify-content-end">
-            @if (Model.Estado.Equals("Registrado"))
-            {
-                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
-                <a id="descargar" type="button" class="btn btn-danger" style="color:white;" asp-controller="DescargaInspeccion" asp-action="DescargaInspeccion" asp-route-IdCabecera="@Model.Id_Inspeccion_Cabecera">Descargar en Excel</a>
-            }
-            @if (Model.Estado.Equals("Pendiente") && ViewBag.Permiso)
-            {
-                <a id="cancelar" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-                <button id="eliminar" type="button" class="btn btn-danger mr-2">Eliminar Inspección</button>
-                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-                @if (ViewBag.nObservacioness > 0)
-                {
-                    <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-primary ml-2">Finalizar Registro</button>
-                }
-            }
-            else if (Model.Estado.Equals("Pendiente"))
-            {
-                <a id="volver" type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Volver</a>
-            }
-            @if (ViewBag.PermisoAdmin)
-            {
-            <button id="eliminar" type="button" class="btn btn-danger ml-2">Eliminar Inspección</button>
-            }
-        </div>
-            <input type="hidden" asp-for="opcion" />
-            <input type="hidden" asp-for="Estado" />
-        </form>
-    </div>
-     Modal Enviando Correo
-    <div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+<!-- Modal Enviando Correo-->
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
             <div class="modal-content">
                 <div class="modal-body">
-                    <div class="d-flex justify-content-center">
-                        <div class="spinner-border text-info" role="status">
-                            <span class="sr-only">Loading...</span>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
                         </div>
-                        <br />
-                        <label>Notificando a Responsables</label>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Notificando a Responsables</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-     Modal Ampliar Fecha
-    <div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_ampliacion">
-                        Ampliar Fecha de Observación
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <div class="col-lg-4">
-                            <label>Nueva Fecha:</label>
-                        </div>
-                        <div class="col-8">
-                            <input type="hidden" class="form-control" id="idObserv" />
-                            <input type="date" class="form-control" id="nuevaFecha" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
-                </div>
-            </div>
-        </div>
-    </div>*@
+</div>
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
@@ -462,9 +257,6 @@
                 }
             });
         }
-        $("#guardar").click(function () {
-            $("#opcion").val("Guardar");
-        });
         $("#guardar_estado").click(function () {
             $("#opcion").val("GuardarEstado");
         });
@@ -517,16 +309,9 @@
         }
         function FinalizarRegistro() {
             if (listObservaciones.length > 0) {
+                $("#opcion").val("Guardar");
                 $("#Modal_Enviando_Correo").modal('show')
-                $.ajax({
-                    type: "POST",
-                    data: $('#form_nuevaInspeccion').serialize(),
-                    url: "/Inspecciones/EditarInspeccion",
-                    contentType: "application/json",
-                    success: (response) => {
-                        window.location.href = "/Inspecciones/Resumen";
-                    }
-                });
+                $("#form_nuevaInspeccion").submit();                
             }
         }
         function ConsultarObservaciones() {

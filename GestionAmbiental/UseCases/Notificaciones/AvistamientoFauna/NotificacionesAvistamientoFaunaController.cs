@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NPOI.OpenXmlFormats.Dml.Chart;
 using Renci.SshNet;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
 {
@@ -53,6 +54,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
 
         public async Task<IActionResult> NotificarNuevoAvistamiento(string IdAvistamiento)
         {
+            var r = 60;
+            var g = 195;
+            var b = 87;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Fauna"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdAvistamiento));
             var avistamiento = await _getAvistamientoFauna.Execute(IdDesencriptado);
 
@@ -75,7 +99,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 }
             }
             var msgBody = string.Format(templateReaded,
-                IdAvistamiento,
+                img_url,
+                r,
+                g,
+                b,
                 avistamiento.Codigo,
                 avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
                 avistamiento.FechaAvistamiento.ToString("HH:mm"),
@@ -88,7 +115,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 avistamiento.Empresa,
                 avistamiento.Usuario,
                 avistamiento.AreaTrabajo,
-                avistamiento.DNI
+                avistamiento.DNI,
+                IdAvistamiento
                 );
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
@@ -139,6 +167,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
         }
         public async Task<IActionResult> NotificarAccionAvistamiento(string IdAvistamiento)
         {
+            var r = 60;
+            var g = 195;
+            var b = 87;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Fauna"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var IdDesencriptado = Int32.Parse(_protector.Unprotect(IdAvistamiento));
             var avistamiento = await _getAvistamientoFauna.Execute(IdDesencriptado);
 
@@ -161,22 +212,25 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 }
             }
             var msgBody = string.Format(templateReaded,
-                IdAvistamiento,
-                avistamiento.Codigo,
-                avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
-                avistamiento.FechaAvistamiento.ToString("HH:mm"),
-                avistamiento.Ubicacion,
-                avistamiento.NombreComun,
-                avistamiento.Cantidad,
-                avistamiento.TipoAvistamiento,
-                avistamiento.EstadoFauna,
-                avistamiento.LugarReferencia,
-                avistamiento.Empresa,
-                avistamiento.Usuario,
-                avistamiento.AreaTrabajo,
-                avistamiento.DNI,
-                avistamiento.DescripcionAccion
-                );
+               img_url,
+               r,
+               g,
+               b,
+               avistamiento.Codigo,
+               avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
+               avistamiento.FechaAvistamiento.ToString("HH:mm"),
+               avistamiento.Ubicacion,
+               avistamiento.NombreComun,
+               avistamiento.Cantidad,
+               avistamiento.TipoAvistamiento,
+               avistamiento.EstadoFauna,
+               avistamiento.LugarReferencia,
+               avistamiento.Empresa,
+               avistamiento.Usuario,
+               avistamiento.AreaTrabajo,
+               avistamiento.DNI,
+               IdAvistamiento
+               );
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;

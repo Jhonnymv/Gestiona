@@ -9,14 +9,14 @@ $(document).ready(function () {
     $('div.modal .login-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //MENU MODAL
-    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210624231859.jpg")');
-    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210617000322.png")');
-    $('.modal-menu-residuos .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210616235408.png")');
-    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210616235423.png")');
-    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210624232046.jpg")');
-    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210616235616.png")');
-    $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210624174806.jpg")');
-    $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210616235714.png")');
+    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210701220918.jpg")');
+    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210701220918.jpg")');
+    $('.modal-menu-residuos .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210701220918.jpg")');
+    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210701221052.png")');
+    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210701221052.jpg")');
+    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210701221654.jpg")');
+    $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210701221932.jpg")');
+    $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210701221654.jpg")');
     $('.modal-menu-dashboard .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
     $('.modal-menu-settings .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
 
@@ -54,9 +54,9 @@ $(document).ready(function () {
     $("#residuos-colorPicker").val(residuosColor);
 
     //INCIDENTES
-    let r4 = 76;
-    let g4 = 193;
-    let b4 = 220;
+    let r4 = 254;
+    let g4 = 144;
+    let b4 = 42;
     incidentesStyle(r4, g4, b4);
     $("#incidentesColorPicked").html('rgb (' + r4 + ', ' + g4 + ', ' + b4 + ')');
     let incidentesColor = rgbToHex(r4, g4, b4);
@@ -81,18 +81,18 @@ $(document).ready(function () {
     $("#agua-colorPicker").val(aguaColor);
 
     //SGA
-    let r7 = 201;
-    let g7 = 190;
-    let b7 = 135;
+    let r7 = 55;
+    let g7 = 1;
+    let b7 = 91;
     sgaStyle(r7, g7, b7);
     $("#sgaColorPicked").html('rgb (' + r7 + ', ' + g7 + ', ' + b7 + ')');
     let sgaColor = rgbToHex(r7, g7, b7);
     $("#sga-colorPicker").val(sgaColor);
 
     //TABLAS
-    let r8 = 251;
-    let g8 = 75;
-    let b8 = 201;
+    let r8 = 117;
+    let g8 = 0;
+    let b8 = 12;
     tablasStyle(r8, g8, b8);
     $("#tablasColorPicked").html('rgb (' + r8 + ', ' + g8 + ', ' + b8 + ')');
     let tablasColor = rgbToHex(r8, g8, b8);
@@ -117,7 +117,7 @@ function inspectionStyle (r, g, b){
     $('.inspection-opacity-color').css('background-color', 'rgba('+r+', '+g+', '+b+', 0.7)');
     $('.table-responsive.inspection-color table tbody tr td').css({"color":'rgb('+r+', '+g+', '+b+')', "background-color":'rgba('+r+', '+g+', '+b+', 0.2)'});
     $('.action-container.inspection-color').css("border-color", 'rgb('+r+', '+g+', '+b+')');
-    $('.inspection .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210624231859.jpg")');
+    $('.inspection .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210701220918.jpg")');
 
     //DIV SEPARATORS
     $('.inspection .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -161,7 +161,7 @@ function racStyle(r, g, b) {
     $('.rac-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.rac-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.rac-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.rac .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210617000322.png")');
+    $('.rac .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210701220918.jpg")');
 
     //DIV SEPARATORS
     $('.rac .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -205,7 +205,7 @@ function residuosStyle(r, g, b) {
     $('.residuos-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.residuos-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.residuos-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.residuos .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210616235408.png")');
+    $('.residuos .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210701220918.jpg")');
 
     //DIV SEPARATORS
     $('.residuos .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -249,7 +249,7 @@ function incidentesStyle(r, g, b) {
     $('.incidentes-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.incidentes-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.incidentes-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.incidentes .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210616235423.png")');
+    $('.incidentes .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210701221052.png")');
 
     //DIV SEPARATORS
     $('.incidentes .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -293,7 +293,7 @@ function faunaStyle(r, g, b) {
     $('.fauna-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.fauna-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.fauna-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.fauna .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210624232046.jpg")');
+    $('.fauna .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210701221052.jpg")');
 
     //DIV SEPARATORS
     $('.fauna .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -337,7 +337,7 @@ function aguaStyle(r, g, b) {
     $('.agua-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.agua-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.agua-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.agua .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210616235616.png")');
+    $('.agua .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210701221654.jpg")');
 
     //DIV SEPARATORS
     $('.agua .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -381,7 +381,7 @@ function sgaStyle(r, g, b) {
     $('.sga-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.sga-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.sga-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.sga .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210624174806.jpg")');
+    $('.sga .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210701221932.jpg")');
 
     //DIV SEPARATORS
     $('.sga .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -425,7 +425,7 @@ function tablasStyle(r, g, b) {
     $('.tablas-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.tablas-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.tablas-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.tablas .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210616235714.png")');
+    $('.tablas .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210701221654.jpg")');
 
     //DIV SEPARATORS
     $('.tablas .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');

@@ -1054,15 +1054,15 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
                         }
                         if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                            filas_acciones += "<td><a href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
                         else if (fila.Permiso_Implementacion && !fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                            filas_acciones += "<td><a href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
                         else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
-                            filas_acciones += "<td><a href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
                         else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
                             filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
                         else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
-                            filas_acciones += "<td><a href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"text-decoration: none;color:white\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
                         else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
                             filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar</button></td>";
                         else
@@ -1463,7 +1463,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -1541,7 +1541,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1613,7 +1613,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

@@ -16,6 +16,8 @@ using GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
 {
@@ -54,6 +56,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         }
         public async Task NotificarAccionInvestigacion(int IdInvestigacion)
         {
+            var r = 76;
+            var g = 193;
+            var b = 220;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Incidentes"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var info = await _getInvestigacionFinal.Execute(IdInvestigacion);
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
             acciones = acciones.Where(x => !(x.Estatus.Equals("Cerrado") && x.Tipo_Accion.Equals("Acción Inmediata"))).ToList();
@@ -80,7 +105,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             {
                 var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
                 var msgBody = string.Format(templateReaded,
-                    IdEncriptado,
+                    img_url,
+                    r,
+                    g,
+                    b,
                     info.Codigo,
                     info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                     info.Tipo_Incidente,
@@ -91,7 +119,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                     accion.Accion_Inmediata,
                     accion.Responsable_Marcobre,
                     accion.Responsable_Contratista,
-                    accion.Fecha.Value.ToString("dd/MM/yyyy")
+                    accion.Fecha.Value.ToString("dd/MM/yyyy"),
+                    IdEncriptado
                     );
 
                 SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
@@ -120,6 +149,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         }
         public async Task<IActionResult> DifundirInvestigacion(int IdInvestigacion)
         {
+            var r = 76;
+            var g = 193;
+            var b = 220;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Incidentes"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var info = await _getInvestigacionFinal.Execute(IdInvestigacion);
             var usuarios = await _getUsuariosNotificarIncidente.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Investigacion_Final.ToString());
@@ -128,13 +180,17 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                IdEncriptado,
+                img_url,
+                r,
+                g,
+                b,
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,
                 info.Nivel_Incidente,
                 info.Gerencia_Responsable,
-                info.Supervisor_MA
+                info.Supervisor_MA,
+                IdEncriptado
                 );
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
@@ -200,6 +256,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
 
         public async Task<IActionResult> NotificarAccionImplementada(int IdAccion)
         {
+            var r = 76;
+            var g = 193;
+            var b = 220;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Incidentes"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var accion = await _getAccioIncidenteInvestigacion.Execute(IdAccion);
 
             var info = await _getInvestigacionFinal.Execute(accion.Id_Investigacion_Final.Value);
@@ -225,20 +304,24 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
 
             var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
             var msgBody = string.Format(templateReaded,
-                    IdEncriptado,
-                    info.Codigo,
-                    info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
-                    info.Tipo_Incidente,
-                    info.Nivel_Incidente,
-                    info.Gerencia_Responsable,
-                    info.Supervisor_MA,
-                    accion.Tipo_Accion,
-                    accion.Accion_Inmediata,
-                    accion.Responsable_Marcobre,
-                    accion.Responsable_Contratista,
-                    accion.Fecha.Value.ToString("dd/MM/yyyy"),
-                    accion.Comentarios_Implementacion
-                    );
+                img_url,
+                r,
+                g,
+                b,
+                info.Codigo,
+                info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
+                info.Tipo_Incidente,
+                info.Nivel_Incidente,
+                info.Gerencia_Responsable,
+                info.Supervisor_MA,
+                accion.Tipo_Accion,
+                accion.Accion_Inmediata,
+                accion.Responsable_Marcobre,
+                accion.Responsable_Contratista,
+                accion.Fecha.Value.ToString("dd/MM/yyyy"),
+                accion.Comentarios_Implementacion,
+                IdEncriptado
+            );
 
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
@@ -268,6 +351,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         }
         public async Task<IActionResult> NotificarAccionRechazada(int IdAccion)
         {
+            var r = 76;
+            var g = 193;
+            var b = 220;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Incidentes"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var accion = await _getAccioIncidenteInvestigacion.Execute(IdAccion);
             var info = await _getInvestigacionFinal.Execute(accion.Id_Investigacion_Final.Value);
 
@@ -291,7 +397,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             }
             var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
             var msgBody = string.Format(templateReaded,
-                IdEncriptado,
+                img_url,
+                r,
+                g,
+                b,
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,
@@ -304,7 +413,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                 accion.Responsable_Contratista,
                 accion.Fecha.Value.ToString("dd/MM/yyyy"),
                 accion.Comentarios_Implementacion,
-                accion.Comentarios_Verificacion
+                accion.Comentarios_Verificacion,
+                IdEncriptado
                 );
 
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));

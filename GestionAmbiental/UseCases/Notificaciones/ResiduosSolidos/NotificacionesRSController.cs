@@ -14,6 +14,8 @@ using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
 {
@@ -40,6 +42,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
         }
         public async Task<IActionResult> NotificarRegistroRS(int Id_Manifiesto)
         {
+            var r = 45;
+            var g = 100;
+            var b = 150;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Inspection"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var info = await _consultarManifiestoRSCierre.Execute(Id_Manifiesto);
             var usuarios = await _getUsuariosNotificar.Execute();
             var IdEncriptado = _protector.Protect(info.Id_Manifiesto_RS.ToString());
@@ -48,7 +73,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                IdEncriptado,
+                img_url,
+                r,
+                g,
+                b,
                 info.Item,
                 info.Serie_Manifiesto,
                 info.Num_Manifiesto,
@@ -69,7 +97,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
                 info.Registro_EO_RS_Llegada,
                 info.Fecha_Vencimiento_Registro_Llegada,
                 info.Num_Autorizacion_Sanitaria_Llegada,
-                info.Num_Autorizacion_Municipal_Llegada
+                info.Num_Autorizacion_Municipal_Llegada,
+                IdEncriptado
                 );
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);

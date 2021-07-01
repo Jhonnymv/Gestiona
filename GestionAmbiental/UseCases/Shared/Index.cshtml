@@ -33,29 +33,7 @@
 @Html.Partial("_Login.cshtml", new GestionAmbiental.UseCases.Autenticacion.SigninModel())
 
 @section Scripts{
-    <script type="text/javascript">
-        $(document).ready(function () {
-            filtrar(1);
-        });
-        function dataModulo() {
-            $.ajax({
-                type: "POST",
-                url: "/RegistroRAC/PropiedadesModulo",
-                traditional: true,
-                success: (response) => {
-                    if (response.success) {
-                        let data = JSON.parse(response.data);
-                        let r = data.r;
-                        let g = data.g;
-                        let b = data.b;
-                        let img_url = data.img_url;
-                        racStyle(r, g, b);
-                    } else {
-                        console.log("Ocurrió un problema: " + response.msg);
-                    }
-                }
-            });
-        }
+    <script type="text/javascript">       
         $("#btnIniciarSesion").click(function () {
             $('#error_message').text("");
             var user = $("#User").val();

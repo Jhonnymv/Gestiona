@@ -14,6 +14,8 @@ using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
 {
@@ -42,6 +44,29 @@ namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
         }
         public async Task<IActionResult> NotificarLimiteConsumoAguaMarMensual(int IdConsumo, double? limiteMensual, double volumenActual)
         {
+            var r = 3;
+            var g = 95;
+            var b = 165;
+            var img_url = "/img/back-inspection.png";
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Agua"));
+                if (dataModulo != null)
+                {
+                    r = dataModulo.r;
+                    g = dataModulo.g;
+                    b = dataModulo.b;
+                    img_url = dataModulo.img_url;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "ConsumoAgua", "ConsumoAguaMarMensualExedido.html");
             
             StreamReader SourceReader = System.IO.File.OpenText(template);
@@ -65,6 +90,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
             var idEncriptado = _protector.Protect(IdConsumo.ToString());
             
             var msgBody = string.Format(templateReaded,
+                img_url,
+                r,
+                g,
+                b,
                 limiteMensual,
                 volumenActual,
                 consumo.ResolucionConsumoAgua,
