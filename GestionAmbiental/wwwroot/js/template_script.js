@@ -126,7 +126,7 @@ function inspectionStyle (r, g, b){
     $('.inspection .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.inspection .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.inspection .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.inspection-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.inspection-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -170,7 +170,7 @@ function racStyle(r, g, b) {
     $('.rac .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.rac .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.rac .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.rac-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.rac-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -214,7 +214,7 @@ function residuosStyle(r, g, b) {
     $('.residuos .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.residuos .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.residuos .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.residuos-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.residuos-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -258,7 +258,7 @@ function incidentesStyle(r, g, b) {
     $('.incidentes .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.incidentes .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.incidentes .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.incidentes-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.incidentes-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -302,7 +302,7 @@ function faunaStyle(r, g, b) {
     $('.fauna .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.fauna .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.fauna .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.fauna-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.fauna-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -346,7 +346,7 @@ function aguaStyle(r, g, b) {
     $('.agua .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.agua .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.agua .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.agua-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.agua-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -390,7 +390,7 @@ function sgaStyle(r, g, b) {
     $('.sga .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.sga .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.sga .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.sga-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.sga-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
@@ -434,7 +434,7 @@ function tablasStyle(r, g, b) {
     $('.tablas .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
     //PROGRESS BAR
-    $('.tablas .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.tablas .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.tablas-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
     $('.table-responsive.tablas-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
 
