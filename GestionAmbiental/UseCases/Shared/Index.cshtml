@@ -35,7 +35,8 @@
 @section Scripts{
     <script type="text/javascript">       
         $("#btnIniciarSesion").click(function () {
-            $('#error_message').text("");
+            $("#error_message").css('display', 'none');
+            $("#error_message").text("");
             var user = $("#User").val();
             var password = $("#Password").val();
             if (user != "" && password != "") {
@@ -47,18 +48,22 @@
                         Password: password
                     },
                     success: function (result) {
+                        console.log(result);
                         if (result.success) {
                             window.location = '@Url.Action("Modulos", "Home")';
                         } else {
+                            $("#error_message").css('display', 'block');
                             $('#error_message').text(result.mensaje);
                         }
                     }
                 });
             } else {
                 if (user == "") {
+                    $("#error_message").css('display', 'block');
                     $('#error_message').text("Debe ingresar su nombre de usuario");
                 }
                 if (password == "") {
+                    $("#error_message").css('display', 'block');
                     $('#error_message').text("Debe ingresar su contraseña");
                 }
             }

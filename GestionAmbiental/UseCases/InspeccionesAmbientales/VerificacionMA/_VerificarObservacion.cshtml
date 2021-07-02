@@ -123,148 +123,40 @@
         </div>
     </div>
 </div>
-@*<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Verificar Observación</h2>
-        </div>
-    </div>
-    <form class="form-group" id="form_verificarObservacion" asp-action="VerificarObservacion" asp-controller="InspeccionesVerificacionMA" method="post" enctype="multipart/form-data" autocomplete="off">
-        <input type="hidden" asp-for="idObs"/>
-        <input type="hidden" asp-for="EncryptedId"/>
-        <input type="hidden" asp-for="idCabecera" />
-        <div class="modal-body">
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="TipoInspeccion"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="TipoInspeccion" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="Asesor_MA_Seguridad"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="Asesor_MA_Seguridad" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="CondicionIdentificada"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="CondicionIdentificada" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="TipoCondicion"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="TipoCondicion" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="Evidencias"></label>
-                </div>
-                <div class="col-md-8">
-                    @for (int i = 0; i < Model.Evidencias.Count; i++)
-                    {
-                        <a asp-controller="Inspecciones" asp-action="Download" asp-route-fileName="@Model.Evidencias[i]">Evidencia</a>
-                    }
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="NiveRiesgo"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="NiveRiesgo" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="AccionTomada"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="AccionTomada" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="ResponsableMarc"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="ResponsableMarc" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="ResponsableCont"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="ResponsableCont" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="FechaProgramada"></label>
-                </div>
-                <div class="col-md-8">
-                    <input type="text" class="form-control" asp-for="FechaProgramada" readonly="readonly" />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="EvidenciasInspeccion"></label>
-                </div>
-                <div class="col-md-8">
-                    @for (int i = 0; i < Model.EvidenciasInspeccion.Count; i++)
-                    {
-                        <a asp-controller="InspeccionesImplementacion" asp-action="Download" asp-route-fileName="@Model.EvidenciasInspeccion[i]">Evidencia </a>
-                    }
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="ComentarioImplementacion"></label>
-                </div>
-                <div class="col-md-8">
-                    <textarea class="form-control" asp-for="ComentarioImplementacion" rows="3" readonly="readonly"></textarea>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-4">
-                    <label asp-for="ComentarioVerificacionMA"></label>
-                </div>
-                <div class="col-md-8">
-                    <textarea class="form-control" asp-for="ComentarioVerificacionMA" rows="3"></textarea>
-                </div>
-            </div>
-        </div>
-
-        <input type="hidden" asp-for="Accion" />
-        <div class="modal-footer">
-            <button id="rechazar" type="submit" class="btn btn-secondary">Rechazar</button>
-            <button id="aprobar" type="submit" class="btn btn-primary">Aprobar</button>
-        </div>
-    </form>
-</div>*@
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
                     </div>
-                    <br />
-                    <label>Notificando a Responsables</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Notificando a Responsables</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -277,7 +169,7 @@
             $("#files_name").text(filesname);
         });
         $("#rechazar").click(function () {
-            $("#Accion").val("Rechazar");          
+            $("#Accion").val("Rechazar");
             $("#Modal_Enviando_Correo").modal('show');
         });
         $("#aprobar").click(function () {

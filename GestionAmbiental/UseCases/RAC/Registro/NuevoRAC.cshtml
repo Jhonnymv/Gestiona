@@ -8,7 +8,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title rac-opacity-color">
-                 <h3>RAC - Nuevo Reporte</h3>
+                <h3>RAC - Nuevo Reporte</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -237,240 +237,40 @@
         </div>
     </div>
 </div>
-
-
-
-
-<!--<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Nuevo Reporte de Acto y Condición Subestándar</h2>
-        </div>
-    </div>
-    <form class="form-group" id="form_nuevoRAC" asp-action="NuevoRAC" asp-controller="RegistroRAC" method="post" enctype="multipart/form-data" autocomplete="off">
-        <div class="row mb-2" style="background-color:#2e6793">
-            <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">DATOS DEL PERSONAL QUE REPORTA</h5>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Nombres_Apellidos"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="Nombres_Apellidos"></span>
-                <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.NombreUsuario" disabled />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Id_Gerencia"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
-                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia"></select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Id_Empresa"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Empresa"></span>
-                <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa"></select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Otra_Empresa"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger field-validation-error" data-valmsg-for="Otra_Empresa" data-valmsg-replace="true">
-                    <span id="danger_empresa" class=""></span>
-                </span>
-                <input type="text" class="form-control" asp-for="Otra_Empresa" disabled />
-            </div>
-        </div>
-        <div class="row mb-2" style="background-color:#2e6793">
-            <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">DESCRIPCIÓN DE LA OBSERVACIÓN</h5>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Id_Empresa_Obs"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Empresa_Obs"></span>
-                <select class="form-control" asp-items="@ViewBag.Empresas" asp-for="Id_Empresa_Obs"></select>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Id_Gerencia_Obs"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Gerencia_Obs"></span>
-                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Obs"></select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Ubicacion"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-4">
-                <span class="text-danger" asp-validation-for="Ubicacion"></span>
-                <input type="text" class="form-control" asp-for="Ubicacion" />
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-1">
-                <label asp-for="Fecha"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <span class="text-danger" asp-validation-for="Fecha"></span>
-                <input type="date" class="form-control" asp-for="Fecha">
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-1">
-                <label asp-for="Hora"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <span class="text-danger" asp-validation-for="Hora"></span>
-                <input type="time" class="form-control" asp-for="Hora">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="SSO_MA"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <span class="text-danger" asp-validation-for="SSO_MA"></span>
-                <select class="form-control" asp-for="SSO_MA">
-                    <option value="">--SELECCIONE--</option>
-                    <option value="SSO">SSO</option>
-                    <option value="MA">MA</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Clasificacion"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <span class="text-danger" asp-validation-for="Clasificacion"></span>
-                <select class="form-control" asp-for="Clasificacion">
-                    <option value="">-- SELECCIONE --</option>
-                    <option value="Acto Subestándar">Acto Subestándar</option>
-                    <option value="Condición Subestándar">Condición Subestándar</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="NivelRiesgo"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <span class="text-danger" asp-validation-for="NivelRiesgo"></span>
-                <select class="form-control" asp-for="NivelRiesgo">
-                    <option value="" style="background-color:white; color:black;">--SELECCIONE--</option>-->
-                    <!--Agregar option por js-->
-                <!--</select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Id_Tipo_Condicion"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-10">
-                <span class="text-danger" asp-validation-for="Id_Tipo_Condicion"></span>
-                <select class="form-control Vacio" asp-for="Id_Tipo_Condicion">
-                    <option class="Vacio" value="">--SELECCIONE--</option>
-                </select>
-                <select class="form-control MA-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoMA" style="display:none"></select>
-                <select class="form-control MA-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionMA" style="display:none"></select>
-                <select class="form-control SEG-Acto" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.ActoSSO" style="display:none"></select>
-                <select class="form-control SEG-Condicion" asp-for="Id_Tipo_Condicion" asp-items="@ViewBag.CondicionSSO" style="display:none"></select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Descripcion_Acto_Cond"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-10">
-                <span class="text-danger" asp-validation-for="Descripcion_Acto_Cond"></span>
-                <textarea class="form-control" asp-for="Descripcion_Acto_Cond" rows="3" maxlength="250"></textarea>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-12 col-lg-2">
-                <label asp-for="Medida_Control"></label>
-            </div>
-            <div class="col-sm-12 col-md-12 col-lg-10">
-                <span class="text-danger" asp-validation-for="Medida_Control"></span>
-                <textarea class="form-control" asp-for="Medida_Control" rows="3" maxlength="250"></textarea>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-6 col-lg-2">
-                <label asp-for="PAC"></label>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <span class="text-danger" asp-validation-for="PAC"></span>
-                <select class="form-control" asp-for="PAC">
-                    <option value="No">No</option>
-                    <option value="Si">Si</option>
-                </select>
-            </div>
-            <hr class="mb-4 mt-4" />
-            <div class="col-sm-12 col-md-6 col-lg-2">
-                <label asp-for="Id_Responsable_Cierre"></label>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Responsable_Cierre"></span>
-                <select class="form-control" asp-items="@ViewBag.Usuarios" asp-for="Id_Responsable_Cierre">
-                </select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-6 col-lg-2">
-                <label asp-for="Fecha_Cierre"></label>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <span class="text-danger" asp-validation-for="Fecha_Cierre"></span>
-                <input type="date" class="form-control" asp-for="Fecha_Cierre">
-            </div>
-            <hr class="mb-4 mt-4" />
-            <div class="col-sm-12 col-md-6 col-lg-2">
-                <label asp-for="Id_Supervisor"></label>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-4">
-                <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
-                <select class="form-control AsesorTemporal" asp-for="Id_Supervisor"><option value="0">--SELECCIONE--</option></select>
-                <select class="form-control AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMA" asp-for="Id_Supervisor" style="display:none" disabled></select>
-                <select class="form-control AsesorSeguridad" asp-items="@ViewBag.AsesoresSSO" asp-for="Id_Supervisor" style="display:none" disabled></select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-6 col-md-6 col-lg-2">
-                <label asp-for="Evidencia_Obs"></label>
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-10">
-                <span class="text-danger field-validation-error" data-valmsg-for="Evidencia_Obs" data-valmsg-replace="true">
-                    <span id="danger_evidencia" class=""></span>
-                </span>
-                <label class="btn btn-primary" for="Evidencia_Obs">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencia_Obs" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520">
-                <label id="files_name">0 Archivos</label>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <a class="btn btn-secondary" style="color:white" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
-            <button type="button" class="btn btn-primary" onclick="guardar()">Registrar</button>
-
-        </div>
-    </form>
-</div>-->
-
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only"></span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
                     </div>
-                    <br />
-                    <label>Notificando a Responsables</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Notificando a Responsable</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -683,8 +483,8 @@
                 $("#danger_evidencia").html("Debe ingresar un archivo como evidencia<br/>");
                 return false;
             }
-            if (!$("#Id_Empresa option:selected").text().toLowerCase().includes("otro") && $("#Otra_Empresa").val().length === 0) {
-                $("#danger_empresa").html("Debe completar este campo<br/>");
+            if ($("#Id_Empresa option:selected").text().toLowerCase().includes("otro") && !$("#Otra_Empresa").val().length === 0) {
+                $("#danger_empresa").html("Debe completar este campo");
                 return false;
             } else {
                 $("#danger_empresa").html("");

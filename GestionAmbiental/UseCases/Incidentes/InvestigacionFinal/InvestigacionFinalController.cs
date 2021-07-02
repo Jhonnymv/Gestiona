@@ -916,50 +916,53 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_causas_inmediatas = "";
             var filas_causas_basicas = "";
-            if (causas.Count > 0)
+            if (causas.Where(x => x.Tipo_Acto_Condicion.Equals("Acto Subestándar") || x.Tipo_Acto_Condicion.Equals("Condición Subestándar")).Count() == 0)
             {
-                foreach (var fila in causas)
-                {
-                    if (fila.Tipo_Acto_Condicion.Equals("Acto Subestándar") || fila.Tipo_Acto_Condicion.Equals("Condición Subestándar"))
-                    {
-                        filas_causas_inmediatas += "<tr>";
-                        filas_causas_inmediatas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
-                        filas_causas_inmediatas += "<td>" + fila.Acto_Condicion + "</td>";
-                        if (fila.Descripcion != null)
-                            filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
-                        else
-                            filas_causas_inmediatas += "<td>_</td>";
-                        if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
-                        {
-                            filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
-                            filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
-                        }
-
-                        filas_causas_inmediatas += "</tr>";
-                    }
-                    else if (fila.Tipo_Acto_Condicion.Equals("Factor Personal") || fila.Tipo_Acto_Condicion.Equals("Factor Laboral"))
-                    {
-                        filas_causas_basicas += "<tr>";
-                        filas_causas_basicas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
-                        filas_causas_basicas += "<td>" + fila.Factor_Causa_Incidente + "</td>";
-                        if (fila.Descripcion != null)
-                            filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
-                        else
-                            filas_causas_basicas += "<td>_</td>";
-                        if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
-                        {
-                            filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
-                            filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
-                        }
-                    }
-
-                }
+                filas_causas_inmediatas += "<tr>";
+                filas_causas_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_causas_inmediatas += "</tr>";
             }
-            else
+            if (causas.Where(x => x.Tipo_Acto_Condicion.Equals("Factor Personal") || x.Tipo_Acto_Condicion.Equals("Factor Laboral")).Count() == 0)
             {
                 filas_causas_basicas += "<tr>";
                 filas_causas_basicas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filas_causas_basicas += "</tr>";
+            }
+            foreach (var fila in causas)
+            {
+                if (fila.Tipo_Acto_Condicion.Equals("Acto Subestándar") || fila.Tipo_Acto_Condicion.Equals("Condición Subestándar"))
+                {
+                    filas_causas_inmediatas += "<tr>";
+                    filas_causas_inmediatas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+                    filas_causas_inmediatas += "<td>" + fila.Acto_Condicion + "</td>";
+                    if (fila.Descripcion != null)
+                        filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
+                    else
+                        filas_causas_inmediatas += "<td>_</td>";
+                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    {
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                    }
+
+                    filas_causas_inmediatas += "</tr>";
+                }
+                else if (fila.Tipo_Acto_Condicion.Equals("Factor Personal") || fila.Tipo_Acto_Condicion.Equals("Factor Laboral"))
+                {
+                    filas_causas_basicas += "<tr>";
+                    filas_causas_basicas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
+                    filas_causas_basicas += "<td>" + fila.Factor_Causa_Incidente + "</td>";
+                    if (fila.Descripcion != null)
+                        filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
+                    else
+                        filas_causas_basicas += "<td>_</td>";
+                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    {
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                    }
+                }
+
             }
             dynamic response = new
             {

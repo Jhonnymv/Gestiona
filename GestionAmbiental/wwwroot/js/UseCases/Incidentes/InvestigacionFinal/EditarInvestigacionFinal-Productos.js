@@ -49,9 +49,7 @@ function EditarProducto(idProducto) {
             $("#btn_editar_producto").show();
             $("#btn_guardar_producto").hide();
             $("#Id_Producto").val(response.idProducto);
-
-            console.log(response)
-             
+                         
             $("#select_producto").val(response.producto);
             $("#select_tipo_producto").val(response.tipo);
             $("#select_estado_producto").val(response.estado_producto);

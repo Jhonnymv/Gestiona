@@ -530,7 +530,7 @@
                                     <div class="col-12 col-sm-4 col-lg-4">
                                         <label asp-for="ImpactoAmbiental.Restos_Arq">¿Restos arqueológicos?</label>
                                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Restos_Arq"></span>
-                                        <select class="form-control" asp-for="ImpactoAmbiental.Restos_Arq" disabled>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Restos_Arq">
                                             <option value="">--SELECCIONE--</option>
                                             <option value="SI">SI</option>
                                             <option value="NO">NO</option>
@@ -572,12 +572,12 @@
                                     <div class="col-12 col-sm-8 col-lg-8">
                                         <label asp-for="ImpactoAmbiental.Danio_Salud">Descripción del daño a la salud</label>
                                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Danio_Salud"></span>
-                                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Danio_Salud" disabled />
+                                        <input type="text" class="form-control" asp-for="ImpactoAmbiental.Danio_Salud" />
                                     </div>
                                     <div class="col-12 col-sm-4 col-lg-4">
                                         <label asp-for="ImpactoAmbiental.Personas_Afectadas">Número de personas afectadas</label>
                                         <span class="text-danger" asp-validation-for="ImpactoAmbiental.Personas_Afectadas"></span>
-                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" disabled />
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" />
                                     </div>
                                 </div>
                             </div>
@@ -589,10 +589,10 @@
                                 <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_RS"></span>
                                 <div class="row mt-0 mb-0">
                                     <div class="col-6 mt-0 mb-0">
-                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" disabled />
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" />
                                     </div>
                                     <div class="col-6 mt-0 mb-0">
-                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso" disabled>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso">
                                         </select>
                                     </div>
                                 </div>
@@ -602,10 +602,10 @@
                                 <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Volumen_RS"></span>
                                 <div class="row mt-0 mb-0">
                                     <div class="col-6 mt-0 mb-0">
-                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" disabled />
+                                        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" />
                                     </div>
                                     <div class="col-6 mt-0 mb-0">
-                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen" disabled>
+                                        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen">
                                         </select>
                                     </div>
                                 </div>
@@ -615,7 +615,7 @@
                             <div class="col-12">
                                 <label asp-for="ImpactoAmbiental.EO_RS">EO-RS (recolección, transporte y disposición)</label>
                                 <span class="text-danger" asp-validation-for="ImpactoAmbiental.EO_RS"></span>
-                                <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" disabled />
+                                <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" />
                             </div>
                         </div>
                     </div>
@@ -782,42 +782,6 @@
                             <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
                         </div>
                     </div>
-                    @*<div class="p-0 mb-4">
-                            <div class="d-flex justify-content-center">
-                                <span class="text-danger">Progreso de Verificación de Acciones</span>
-                            </div>
-                            <div class="incidentes">
-                                <div class="progress progress-mc" style="width:100%; height:25px">
-                                    <div id="progreso_vefirifacion" class="progress-bar" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                    </div>
-                                </div>
-                                <div class="tertiary-content col-12">
-                                    <div class="table-responsive incidentes-color">
-                                        <table class="table" id="tabla_acciones">
-                                            <thead>
-                                                <tr>
-                                                    <th>Acción Tomada</th>
-                                                    <th>Responsable Marcobre</th>
-                                                    <th>Responsable Contratista</th>
-                                                    <th>Fecha</th>
-                                                    <th>Estatus</th>
-                                                    <th></th>
-                                                    <th width="170px"></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td colspan="100%">No hay registros</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                    <div class="pagination-container incidentes-color" id="paginado">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>*@
                 </div>
                 <!-- EVIDENCIAS -->
                 <div class="detail-container col-12 col-xl-10 mb-4">
@@ -906,984 +870,6 @@
 </div>
 
 
-<!--<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Editar Investigación Final del Incidente Ambiental</h2>
-        </div>
-    </div>
-    <form class="form-group" id="formEditarInvestigacion" asp-action="EditarInvestigacion" asp-controller="InvestigacionFinal" method="post" enctype="multipart/form-data" autocomplete="off">
-        <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
-        <input type="hidden" asp-for="Opcion" />
-        <input type="hidden" asp-for="NInvolucrados" />
-        <input type="hidden" asp-for="NProductos" />
-        <input type="hidden" asp-for="NAcciones" />
-        <input type="hidden" asp-for="NCausas" />
-        <input type="hidden" asp-for="Estado" value="@Model.Estado" />-->
-<!-- DATOS DEL TITULAR MINERO -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">DATOS DEL TITULAR MINERO</h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>Razón Social</label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <input type="text" class="form-control" value="Marcobre SAC" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>RUC</label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <input type="text" class="form-control" value="20508972734" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>Actividad</label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <input type="text" class="form-control" value="Mineria" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>Domicilio Legal</label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>Unidad Minera</label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <input type="text" class="form-control" value="Mina Justa" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Num_Trabajadores"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
-        <input type="number" class="form-control" asp-for="Num_Trabajadores" />
-    </div>
-</div>-->
-<!-- DATOS DE LA EMPRESA CONTRATISTA (Llenar esta sección en caso el incidente NO haya sido ocasionado por el titular minero) -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            DATOS DE LA EMPRESA CONTRATISTA O SUBCONTRATISTA
-        </h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-12" style="text-align:center; background-color:#e97f7f;">
-        <h5 style="color:white;margin:4px;">
-            Contratista (Llenar esta sección en caso el incidente haya sido ocasionado por un subcontratista)
-        </h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Razon_Social_Contratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Razon_Social_Contratista"></span>
-        <input type="text" class="form-control" asp-for="Razon_Social_Contratista" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="RUC_Contratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="RUC_Contratista"></span>
-        <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Actividad_Contratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Actividad_Contratista"></span>
-        <input type="text" class="form-control" asp-for="Actividad_Contratista" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Domicilio_Contratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-6">
-        <span class="text-danger" asp-validation-for="Domicilio_Contratista"></span>
-        <input type="text" class="form-control" asp-for="Domicilio_Contratista" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Num_Trabajadores_Contratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Num_Trabajadores_Contratista"></span>
-        <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" />
-    </div>
-</div>
-<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Subcontratista (Llenar esta sección en caso el incidente haya sido ocasionado por la subcontratista)
-        </h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Razon_Social_SubContratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Razon_Social_SubContratista"></span>
-        <input type="text" class="form-control" asp-for="Razon_Social_SubContratista" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="RUC_SubContratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="RUC_SubContratista"></span>
-        <input type="text" class="form-control" asp-for="RUC_SubContratista" maxlength="11" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Actividad_SubContratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Actividad_SubContratista"></span>
-        <input type="text" class="form-control" asp-for="Actividad_SubContratista" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Domicilio_SubContratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-6 col-lg-6">
-        <span class="text-danger" asp-validation-for="Domicilio_SubContratista"></span>
-        <input type="text" class="form-control" asp-for="Domicilio_SubContratista" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Num_Trabajadores_SubContratista"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Num_Trabajadores_SubContratista"></span>
-        <input type="number" class="form-control" asp-for="Num_Trabajadores_SubContratista" />
-    </div>
-</div>-->
-<!-- DATOS DEL INCIDENTE AMBIENTAL -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">INFORMACIÓN DEL INCIDENTE AMBIENTAL</h5>
-    </div>
-</div>
-<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Datos del incidente
-        </h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Tipo_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-4 col-lg-4">
-        <span class="text-danger" asp-validation-for="Id_Tipo_Incidente"></span>
-        <select class="form-control" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente"></select>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Nivel_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-4 col-lg-4">
-        <span class="text-danger" asp-validation-for="Id_Nivel_Incidente"></span>
-        <select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente"></select>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Lugar_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-4 col-lg-4">
-        <span class="text-danger" asp-validation-for="Lugar_Incidente"></span>
-        <input type="text" class="form-control" asp-for="Lugar_Incidente" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label>Coordenadas UTM DATUM WGS84</label>
-    </div>
-    <div class="col-sm-12 col-md-1 col-lg-1">
-        <label asp-for="Coordenada_Este"></label>
-    </div>
-    <div class="col-sm-12 col-md-1 col-lg-1">
-        <span class="text-danger" asp-validation-for="Coordenada_Este"></span>
-        <input type="text" class="form-control" maxlength="7" asp-for="Coordenada_Este">
-    </div>
-    <div class="col-sm-12 col-md-1 col-lg-1">
-        <label asp-for="Coordenada_Norte"></label>
-    </div>
-    <div class="col-sm-12 col-md-1 col-lg-1">
-        <span class="text-danger" asp-validation-for="Coordenada_Norte"></span>
-        <input type="text" class="form-control" maxlength="7" asp-for="Coordenada_Norte" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Localidad"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Localidad"></span>
-        <input type="text" class="form-control" asp-for="Localidad" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Distrito"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Distrito"></span>
-        <input type="text" class="form-control" asp-for="Distrito" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Provincia"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Provincia"></span>
-        <input type="text" class="form-control" asp-for="Provincia" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Departamento"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Departamento"></span>
-        <input type="text" class="form-control" asp-for="Departamento" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Fecha_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
-        <input type="date" class="form-control" asp-for="Fecha_Incidente" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Hora_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Hora_Incidente"></span>
-        <input type="time" class="form-control" asp-for="Hora_Incidente" />
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Fecha_Inicio_Investigacion"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Fecha_Inicio_Investigacion"></span>
-        <input type="date" class="form-control" asp-for="Fecha_Inicio_Investigacion" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Turno"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="Turno"></span>
-        <select class="form-control" asp-for="Turno">
-            <option value="">--SELECCIONE--</option>
-            <option value="Día">Día</option>
-            <option value="Noche">Noche</option>
-        </select>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Descripcion_Incidente"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Descripcion_Incidente"></span>
-        <textarea class="form-control" asp-for="Descripcion_Incidente" maxlength="600" rows="3"></textarea>
-    </div>
-</div>-->
-<!-- DATOS DE LOS INVOLUCRADOS -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Datos de los involucrados
-        </h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Gerencia_Responsable"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
-        <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
-    </div>
-</div>
-@if (Model.Estado == "PendienteInvestigacion")
-{
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-10 col-lg-10">
-
-            <button id="btn_nuevo_involucrado" type="button" class="btn btn-mc-danger">Agregar Involucrado</button>
-
-        </div>
-    </div>
-}
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_involucrados">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Tipo</th>
-                    <th>Nombres y Apellidos</th>
-                    <th>DNI/Pasaporte</th>
-                    <th>Edad</th>
-                    <th>Puesto de Trabajo</th>
-                    <th>Empresa</th>
-                    @if (Model.Estado == "PendienteInvestigacion")
-                    {
-                        <th></th>
-                        <th></th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- DATOS DEL DERRAME -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Datos del derrame o fuga (Llenar esta sección si el incidente ambiental corresponde a un derrame o fuga de un producto)
-        </h5>
-    </div>
-</div>
-@if (Model.Estado == "PendienteInvestigacion")
-{
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-10 col-lg-10">
-            <button id="btn_nueva_producto" type="button" class="btn btn-mc-danger">Agregar Producto</button>
-        </div>
-    </div>
-}
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_productos">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Producto</th>
-                    <th>Tipo de Producto</th>
-                    <th>Estado del Producto</th>
-                    <th>Cantidad derramada</th>
-                    <th>Equipo(s) que originó u originaron el incidente</th>
-                    <th>Estado del equipo después del incidente</th>
-                    <th>Cantidad producto recuperado</th>
-                    <th>Cantidad de producto no recuperado</th>
-                    @if (Model.Estado == "PendienteInvestigacion")
-                    {
-                        <th></th>
-                        <th></th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- Impactos Ambientales -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Impactos Ambientales o daños derivados del incidente
-        </h5>
-    </div>
-</div>-->
-<!-- Suelo -->
-<!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <div class="form-check align-self-center">
-            <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_suelo">
-            <label class="form-check-label font-weight-bold">SUELO</label>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Tipo_Suelo"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Tipo_Suelo"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Suelo" asp-items="ViewBag.TiposSuelo" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Area_Suelo"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Area_Suelo"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Area_Suelo" disabled />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Area_Suelo"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Area_Suelo" asp-items="ViewBag.Unidad_Area" disabled>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Cantidad_Suelo"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Suelo"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Suelo" disabled />
-            </div>
-
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Cantidad_Suelo"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_Suelo" asp-items="ViewBag.Unidad_Peso" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Suelo" asp-items="ViewBag.LugaresDisposicion" disabled>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!-- Fin Suelo -->
-<!-- Flora -->
-<!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <div class="form-check align-self-center">
-            <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_flora">
-            <label class="form-check-label font-weight-bold">FLORA</label>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Especie_Flora"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Especie_Flora"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Flora" asp-items="ViewBag.TiposFlora" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Unidad_Flora"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Flora"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Flora" disabled />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Flora"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Flora" asp-items="ViewBag.Unidad_Cantidad" disabled>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Flora"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Flora" disabled />
-            </div>
-
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Residuo_Flora"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Flora" asp-items="ViewBag.Unidad_Peso" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Flora" asp-items="ViewBag.LugaresDisposicion" disabled>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!-- Fin Flora -->
-<!-- Fauna -->
-<!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <div class="form-check align-self-center">
-            <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_fauna">
-            <label class="form-check-label font-weight-bold">FAUNA</label>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Especie_Fauna"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Especie_Fauna"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Especie_Fauna" asp-items="ViewBag.TiposFauna" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Unidad_Fauna"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Unidad_Fauna"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Unidad_Fauna" disabled />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Fauna"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Fauna" asp-items="ViewBag.Unidad_Cantidad" disabled>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Fauna"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Fauna" disabled />
-            </div>
-
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Residuo_Fauna"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Fauna" asp-items="ViewBag.Unidad_Peso" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Fauna"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Lugar_Disposicion_Fauna"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Fauna" asp-items="ViewBag.LugaresDisposicion" disabled>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!-- Fin Fauna -->
-<!-- Agua -->
-<!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <div class="form-check align-self-center">
-            <input class="form-check-input position-static mr-1" type="checkbox" id="checkbox_agua">
-            <label class="form-check-label font-weight-bold">AGUA</label>
-        </div>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Tipo_Agua"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Tipo_Agua"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Tipo_Agua" asp-items="ViewBag.TiposAgua" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Volumen_Agua"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Volumen_Agua"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Agua" disabled />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Agua"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Agua" asp-items="ViewBag.Unidad_Volumen" disabled>
-                </select>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_Residuo_Agua"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_Residuo_Agua" disabled />
-            </div>
-
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Residuo_Agua"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Residuo_Agua" asp-items="ViewBag.Unidad_Peso" disabled>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Id_Lugar_Disposicion_Agua" asp-items="ViewBag.LugaresDisposicion" disabled>
-                </select>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!-- Fin Agua -->
-<!--<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <label class="align-self-center font-weight-bold text-center">RESTOS ARQUEOLÓGICOS</label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Restos_Arq"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Restos_Arq"></span>
-                <select class="form-control" asp-for="ImpactoAmbiental.Restos_Arq">
-                    <option value="">--SELECCIONE--</option>
-                    <option value="SI">SI</option>
-                    <option value="NO">NO</option>
-                </select>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label>Coordenadas UTM DATUM WGS84</label>
-            </div>
-            <div class="col-sm-12 col-md-1 col-lg-1">
-                <label asp-for="ImpactoAmbiental.Cord_Este"></label>
-            </div>
-            <div class="col-sm-12 col-md-1 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cord_Este"></span>
-                <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Este" disabled />
-            </div>
-            <div class="col-sm-12 col-md-1 col-lg-1">
-                <label asp-for="ImpactoAmbiental.Cord_Norte"></label>
-            </div>
-            <div class="col-sm-12 col-md-1 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cord_Norte"></span>
-                <input type="text" class="form-control" maxlength="7" asp-for="ImpactoAmbiental.Cord_Norte" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Nombre_Resto_Arq"></label>
-            </div>
-            <div class="col-sm-12 col-md-10 col-lg-10">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Nombre_Resto_Arq"></span>
-                <input type="text" class="form-control" asp-for="ImpactoAmbiental.Nombre_Resto_Arq" disabled />
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mb-2 rounded" style="border:solid 1px #2e6793">
-    <div class="col-sm-12 col-md-2 col-lg-2 d-flex justify-content-center" style="border-right: solid 1px #2e6793;">
-        <label class="align-self-center font-weight-bold">PERSONAS</label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <div class="row mb-2 mt-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Danio_Salud"></label>
-            </div>
-            <div class="col-sm-12 col-md-6 col-lg-6">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Danio_Salud"></span>
-                <input type="text" class="form-control" asp-for="ImpactoAmbiental.Danio_Salud" />
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="ImpactoAmbiental.Personas_Afectadas"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger" asp-validation-for="ImpactoAmbiental.Personas_Afectadas"></span>
-                <input type="number" class="form-control" asp-for="ImpactoAmbiental.Personas_Afectadas" min="0" />
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="ImpactoAmbiental.Cantidad_RS"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="ImpactoAmbiental.Cantidad_RS"></span>
-        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Cantidad_RS" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS"></span>
-        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Cantidad_RS" asp-items="ViewBag.Unidad_Peso">
-        </select>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="ImpactoAmbiental.Volumen_Rs"></label>
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="ImpactoAmbiental.Volumen_Rs"></span>
-        <input type="number" class="form-control" asp-for="ImpactoAmbiental.Volumen_Rs" />
-    </div>
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <span class="text-danger" asp-validation-for="ImpactoAmbiental.Id_Unidad_Volumen_RS"></span>
-        <select class="form-control" asp-for="ImpactoAmbiental.Id_Unidad_Volumen_RS" asp-items="ViewBag.Unidad_Volumen">
-        </select>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="ImpactoAmbiental.EO_RS"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="ImpactoAmbiental.EO_RS"></span>
-        <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" />
-    </div>
-</div>-->
-<!-- CAUSAS -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">CAUSALIDAD</h5>
-    </div>
-</div>
-
-@if (Model.Estado == "PendienteInvestigacion")
-{
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-10 col-lg-10">
-            <button id="btn_nueva_causa" type="button" class="btn btn-mc-danger">Agregar Causa</button>
-        </div>
-    </div>
-}-->
-<!-- Causas inmediatas -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Causas inmediatas
-        </h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_causas_inmediatas">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Tipo de Causa del Incidente</th>
-                    <th>Causa</th>
-                    <th>Descripción</th>
-                    @if (Model.Estado == "PendienteInvestigacion")
-                    {
-                        <th></th>
-                        <th></th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- Causas básicas -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Causas básicas
-        </h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_causas_basicas">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Tipo de Causa del Incidente</th>
-                    <th>Causa</th>
-                    <th>Descripción</th>
-                    @if (Model.Estado == "PendienteInvestigacion")
-                    {
-                        <th></th>
-                        <th></th>
-                    }
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- ACCIONES TOMADAS POST INCIDENTE -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">RESPUESTA AL INCIDENTE AMBIENTAL</h5>
-    </div>
-</div>
-@if (Model.Estado == "PendienteInvestigacion")
-{
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-10 col-lg-10">
-            <button id="btn_nueva_accion" type="button" class="btn btn-mc-danger">Agregar Acción</button>
-        </div>
-    </div>
-}-->
-<!-- Acciones Inmediatas -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Acciones Inmediatas
-        </h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_acciones_inmediatas">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Acción Tomada</th>
-                    <th>Responsable Marcobre</th>
-                    <th>Responsable Contratista</th>
-                    <th>Fecha</th>
-                    <th>Estatus</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- Acciones Inmediatas -->
-<!--<div class="row mb-2" style="background-color:#e97f7f">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">
-            Acciones Correctivas
-        </h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_acciones_correctivas">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Acción Tomada</th>
-                    <th>Responsable Marcobre</th>
-                    <th>Responsable Contratista</th>
-                    <th>Fecha</th>
-                    <th>Estatus</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- SEGUIMINETO Y VERIFICACION -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">SEGUIMIENTO Y VERIFICACIÓN</h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Supervisor"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
-        <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
-    </div>
-</div>-->
-<!-- EVIDENCIAS -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-            <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">EVIDENCIA DE LA INVESTIGACIÓN</h5>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Evidencias_Papel"></label>
-            </div>
-            @if (Model.Estado == "PendienteInvestigacion")
-            {
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Papel" data-valmsg-replace="true">
-                        <span id="danger_evidencia_papel" class=""></span>
-                    </span>
-                    <label class="btn btn-mc" for="Evidencias_Papel">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias_Papel" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label id="files_name_papel">0 Archivos</label>
-                </div>
-            }
-            <input type="hidden" asp-for="Evidencias_Completas_Papel" />
-            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Papel">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Evidencias_Persona"></label>
-            </div>
-            @if (Model.Estado == "PendienteInvestigacion")
-            {
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Persona" data-valmsg-replace="true">
-                        <span id="danger_evidencia_persona" class=""></span>
-                    </span>
-                    <label class="btn btn-mc" for="Evidencias_Persona">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias_Persona" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label id="files_name_persona">0 Archivos</label>
-                </div>
-            }
-            <input type="hidden" asp-for="Evidencias_Completas_Persona" />
-            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Persona">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Evidencias_Posicion"></label>
-            </div>
-            @if (Model.Estado == "PendienteInvestigacion")
-            {
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Posicion" data-valmsg-replace="true">
-                        <span id="danger_evidencia_posicion" class=""></span>
-                    </span>
-                    <label class="btn btn-mc" for="Evidencias_Posicion">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias_Posicion" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label id="files_name_posicion">0 Archivos</label>
-                </div>
-            }
-            <input type="hidden" asp-for="Evidencias_Completas_Posicion" />
-            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Posicion">
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Evidencias_Partes"></label>
-            </div>
-            @if (Model.Estado == "PendienteInvestigacion")
-            {
-                <div class="col-sm-12 col-md-2 col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias_Partes" data-valmsg-replace="true">
-                        <span id="danger_evidencia_partes" class=""></span>
-                    </span>
-                    <label class="btn btn-mc" for="Evidencias_Partes">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias_Partes" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-                </div>
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label id="files_name_partes">0 Archivos</label>
-                </div>
-            }
-            <input type="hidden" asp-for="Evidencias_Completas_Partes" />
-            <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista_Partes">
-            </div>
-        </div>
-        @if (Model.Estado == "PendienteInvestigacion")
-        {
-            <div class="row mb-2 justify-content-end">
-                <div class="col-sm-12 col-md-6 col-lg-4">
-                    <a asp-action="Resumen" asp-controller="InvestigacionFinal" class="btn btn-mc">Volver</a>
-                    <button id="boton_guardar_estado" type="button" class="btn btn-mc">Guardar Estado</button>
-                    <button id="boton_completar" type="button" class="btn btn-mc">Completar y Difundir</button>
-                </div>
-            </div>
-        }
-    </form>
-</div>-->
 <!-- Modal Nuevo Involucrado-->
 <div class="modal fade" id="modal_involucrado" tabindex="-1" aria-labelledby="titulo_modal_involucrado" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -1967,91 +953,6 @@
         </div>
     </div>
 </div>
-<!-- Modal Nuevo Involucrado-->
-<!--<div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_involucrado">
-                    Agregar involucrado
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <input type="hidden" id="Id_Involucrado" />
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <span class="text-danger" id="danger_involucrado"></span>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Tipo de Involucrado:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_tipo_involucrado">
-                            <option value="">--SELECCIONE--</option>
-                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
-                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
-                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
-                            <option value="Otro Involucrado">Otro Involucrado</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
-                        <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
-                        <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_doc_identidad" style="display:none">DNI/Pasaporte:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_doc_identidad" style="display:none" maxlength="12" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_edad" style="display:none">Edad:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="number" class="form-control" id="input_edad" min="0" max="99" style="display:none" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_puesto" style="display:none" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label id="label_empresa" style="display:none">Empresa:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_empresa" style="display:none" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-mc" id="btn_guardar_involucrado">Guardar</button>
-                <button type="button" class="btn btn-mc" id="btn_editar_involucrado" style="display:none">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>-->
 <!-- Modal Nuevo Producto-->
 <div class="modal fade" id="modal_producto" tabindex="-1" aria-labelledby="titulo_modal_producto" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -2168,119 +1069,6 @@
         </div>
     </div>
 </div>
-<!-- Modal Nuevo Producto-->
-<!--<div class="modal fade" id="modal_producto" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_producto"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_producto">
-                    Agregar Producto
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <input type="hidden" id="Id_Producto" />
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <span class="text-danger" id="danger_productos"></span>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Producto:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_producto" asp-items="@ViewBag.Productos">
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Tipo de Producto:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_tipo_producto" asp-items="@ViewBag.TiposProductos">
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Estado del producto:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_estado_producto">
-                            <option value="">--SELECCIONE--</option>
-                            <option value="Sólido">Sólido</option>
-                            <option value="Líquido">Líquido</option>
-                            <option value="Gaseoso">Gaseoso</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Cantidad derramada:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-5">
-                        <input type="number" class="form-control" id="input_cantidad_derramada" />
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-4">
-                        <select class="form-control" id="select_cantidad_derramada" asp-items="@ViewBag.Unidad_Derramado">
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Equipo(s) que originó u originaron el incidente:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_equipo" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Estado del equipo después del incidente:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_estado_equipo" asp-items="@ViewBag.EstadosEquipo">
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Cantidad producto recuperado:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-5">
-                        <input type="number" class="form-control" id="input_cantidad_recuperado" />
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-4">
-                        <select class="form-control" id="select_cantidad_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Cantidad de producto no recuperado:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-5">
-                        <input type="number" class="form-control" id="input_cantidad_no_recuperado" disabled />
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-4">
-                        <select class="form-control" id="select_cantidad_no_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-mc" id="btn_guardar_producto">Guardar</button>
-                <button type="button" class="btn btn-mc" id="btn_editar_producto" style="display:none">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>-->
 <!-- Modal Nuevo Acciones Post Incidente-->
 <div class="modal fade" id="modal_accion" tabindex="-1" aria-labelledby="titulo_modal_accion" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -2364,91 +1152,6 @@
         </div>
     </div>
 </div>
-<!-- Modal Nuevo Acciones Post Incidente-->
-<!--<div class="modal fade" id="modal_accion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_accion"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_accion">
-                    Agregar Acción Inmediata
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-12 col-lg-12">
-                    <span class="text-danger" id="danger_accion"></span>
-                </div>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="Id_Accion" />
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Tipo de Acción:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_tipo_accion">
-                            <option value="">--SELECCIONE--</option>
-                            <option value="Acción Inmediata">Acción Inmediata</option>
-                            <option value="Acción Correctiva">Acción Correctiva</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Descripción:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <textarea class="form-control" rows="2" id="input_descripcion_accion"></textarea>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Responsable Marcobre:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Responsable Contratista:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Fecha:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <input type="date" class="form-control" id="input_fecha_accion" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Estatus:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_estatus">
-                            <option value="">--SELECCIONE--</option>
-                            <option value="En Proceso">En Proceso</option>
-                            <option value="Cerrado">Cerrado</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-mc" id="btn_guardar_accion">Guardar</button>
-                <button type="button" class="btn btn-mc" id="btn_editar_accion">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>-->
 <!-- Modal Nueva Causas-->
 <div class="modal fade" id="modal_causa" tabindex="-1" aria-labelledby="titulo_modal_causa" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -2534,124 +1237,53 @@
         </div>
     </div>
 </div>
-<!-- Modal Nueva Causas-->
-<!--<div class="modal fade" id="modal_causa" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_causa"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_causa">
-                    Agregar Causa del Incidente
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="Id_Causa" />
-                <div class="row mb-2">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <span class="text-danger" id="danger_causa"></span>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Tipo de Causa del Incidente:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" id="select_acto_condicion">
-                            <option value="">--SELECCIONE--</option>
-                            <optgroup label="Causas Inmediatas">
-                                <option value="Acto">Acto Subestándar</option>
-                                <option value="Condicion">Condición Subestándar</option>
-                            </optgroup>
-                            <optgroup label="Causas Básicas">
-                                <option value="FactorP">Factor Personal</option>
-                                <option value="FactorL">Factor Laboral</option>
-                            </optgroup>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2" id="actos_subestandar" style="display:none">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Acto Subestándar:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
-                    </div>
-                </div>
-                <div class="row mb-2" id="condiciones_subestandar" style="display:none">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Condición Subestándar:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
-                    </div>
-                </div>
-                <div class="row mb-2" id="factores_personales" style="display:none">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Factor Personal:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.FactoresPersonales" id="select_factores_personales"></select>
-                    </div>
-                </div>
-                <div class="row mb-2" id="factores_laborales" style="display:none">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Factor Laboral:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <select class="form-control" asp-items="@ViewBag.FactoresLaborales" id="select_factores_laboral"></select>
-                    </div>
-                </div>
-                <div class="row mb-2" id="descripcion_causa" style="display:none">
-                    <div class="col-sm-6 col-md-4 col-lg-3">
-                        <label>Descripción:</label>
-                    </div>
-                    <div class="col-sm-6 col-md-8 col-lg-9">
-                        <textarea type="text" class="form-control" id="input_descripcion_causa" maxlength="300" rows="3"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-mc" id="btn_guardar_causa">Guardar</button>
-                <button type="button" class="btn btn-mc" id="btn_editar_causa" style="display:none">Aceptar</button>
-            </div>
-        </div>
-    </div>
-</div>-->
-
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>Difundiendo la Investigación</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Difundiendo la Investigación</label>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Modal Guardando Estado-->
-<div class="modal fade" id="Modal_Guardando_Estado" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Guardando_Estado" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>Guardando Estado</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Guardando Estado</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2682,9 +1314,21 @@
                 var html_papeles = "";
                 for (var i = 0; i < papeles_valores.length; i++) {
                     if ($("#Estado").val() == "PendienteInvestigacion")
-                        html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + papeles_valores[i] + "','Papel')><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel " + (i + 1) + "</a> </p>";
+                        html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + papeles_valores[i] + "','Papel')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Papel " + (i + 1) + "</span></a></p>";
                     else
-                        html_papeles += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\">Evidencia Papel " + (i + 1) + "</a></p>"
+                        html_papeles += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Papel " + (i + 1) + "</span></a></p>"
                 }
                 $("#Evidencias_Lista_Papel").html(html_papeles);
                 $("#Evidencias_Completas_Papel").val(papeles_valores);
@@ -2695,9 +1339,21 @@
                 var html_personas = "";
                 for (var i = 0; i < personas_valores.length; i++)
                     if ($("#Estado").val() == "PendienteInvestigacion")
-                        html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + personas_valores[i] + "','Persona')><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona " + (i + 1) + "</a></p>";
+                        html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + personas_valores[i] + "','Persona')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Persona " + (i + 1) + "</span></a></p>";
                     else
-                        html_personas += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\">Evidencia Persona " + (i + 1) + "</a></p>";
+                        html_personas += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Persona " + (i + 1) + "</span></a></p>";
 
                 $("#Evidencias_Lista_Persona").html(html_personas);
                 $("#Evidencias_Completas_Persona").val(personas_valores);
@@ -2708,9 +1364,21 @@
                 var html_posiciones = "";
                 for (var i = 0; i < posiciones_valores.length; i++)
                     if ($("#Estado").val() == "PendienteInvestigacion")
-                        html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + posiciones_valores[i] + "','Posicion')><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición " + (i + 1) + "</a></p>";
+                        html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + posiciones_valores[i] + "','Posicion')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Posición " + (i + 1) + "</span></a></p>";
                     else
-                        html_posiciones += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\">Evidencia Posición " + (i + 1) + "</a></p>";
+                        html_posiciones += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Posición " + (i + 1) + "</span></a></p>";
 
                 $("#Evidencias_Lista_Posicion").html(html_posiciones);
                 $("#Evidencias_Completas_Posicion").val(posiciones_valores);
@@ -2721,9 +1389,21 @@
                 var html_partes = "";
                 for (var i = 0; i < partes_valores.length; i++)
                     if ($("#Estado").val() == "PendienteInvestigacion")
-                        html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + partes_valores[i] + "','Parte')><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte " + (i + 1) + "</a></p>";
+                        html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + partes_valores[i] + "','Parte')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Parte " + (i + 1) + "</span></a></p>";
                     else
-                        html_partes += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\">Evidencia Parte " + (i + 1) + "</a></p>";
+                        html_partes += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
+                            "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
+                            "</svg >" +
+                            "<span>Descargar Evidencia Parte " + (i + 1) + "</span></a></p>";
 
                 $("#Evidencias_Lista_Partes").html(html_partes);
                 $("#Evidencias_Completas_Partes").val(partes_valores);
