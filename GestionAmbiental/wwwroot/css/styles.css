@@ -1168,6 +1168,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
 }
 
 .progress-mc {
+    height: unset;
     padding: 0 .5em;
     border-radius: 20px;
 }
