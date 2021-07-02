@@ -1,248 +1,121 @@
 ﻿@model GestionAmbiental.UseCases.InspeccionesAmbientales.Registro.NuevaObservacionModel
-    <div class="modal fade" tabindex="-1" id="modalNuevaObservacion" aria-labelledby="modalNuevaObservacionLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-menu modal-inspecciones">
-                <div class="modal-content">
-                    <div class="inspection">
-                        <div class="image-header-container"
-                             style="background-image: url(&quot;/img/back-inspection.png&quot;);">
-                            <div class="header-title inspection-opacity-color">
-                                <h3>Nueva Observacion</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
-                            </div><button type="button" class="btn-close" data-bs-dismiss="modal"
-                                          aria-label="Close"></button>
-                        </div>
+<div class="modal fade" tabindex="-1" id="modalNuevaObservacion" aria-labelledby="modalNuevaObservacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-inspecciones">
+            <div class="modal-content">
+                <div class="inspection">
+                    <div class="image-header-container"
+                         style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+                        <div class="header-title inspection-opacity-color">
+                            <h3>Nueva Observacion</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
-                        <form id="form_nuevaObservacion" method="post" enctype="multipart/form-data" autocomplete="off">
-                            <div class="container pt-4 pb-4">
-                                <div class="custom-form details-container w-100">
-                                    <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
-                                    <div class="message"></div>
-                                    <div class="row input_container w-100">
-                                        <div class="col-12 col-sm-6 col-lg-6">
-                                            <label asp-for="TipoInspeccion"></label>
-                                            <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
-                                            <select class="form-control" asp-for="TipoInspeccion">
-                                                <option value="">-- SELECCIONE --</option>
-                                                <option value="MAP">MAP</option>
-                                                <option value="SSO">SSO</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-lg-6">
-                                            <label class="AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
-                                            <label class="AsesorSeguridad" style="display:none">Asesor SSO:</label>
-                                            <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
-                                            <select class="form-control AsesorMedioAmbiente" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
-                                            <select class="form-control AsesorSeguridad" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
-                                        </div>
+                </div>
+                <div class="modal-body">
+                    <form id="form_nuevaObservacion" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <div class="container pt-4 pb-4">
+                            <div class="custom-form details-container w-100">
+                                <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
+                                <div class="message"></div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="TipoInspeccion"></label>
+                                        <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
+                                        <select class="form-control" asp-for="TipoInspeccion">
+                                            <option value="">-- SELECCIONE --</option>
+                                            <option value="MAP">MAP</option>
+                                            <option value="SSO">SSO</option>
+                                        </select>
                                     </div>
-                                    <div class="row input_container w-100">
-                                        <div class="col-12 col-sm-6 col-lg-6">
-                                            <label asp-for="CondicionIdentificada"></label>
-                                            <span class="text-danger" asp-validation-for="CondicionIdentificada"></span>
-                                            <select class="form-control" asp-for="CondicionIdentificada">
-                                                <option value="">-- SELECCIONE --</option>
-                                                <option value="Acto Subestándar">Acto Subestándar</option>
-                                                <option value="Condición Subestándar">Condición Subestándar</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-lg-6">
-                                            <label asp-for="TipoCondicion"></label>
-                                            <span class="text-danger" asp-validation-for="TipoCondicion"></span>
-                                            <select class="form-control Vacio" asp-for="TipoCondicion">
-                                                <option value="">-- SELECCIONE --</option>
-                                            </select>
-                                            <select class="form-control MA-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoMA" style="display:none"></select>
-                                            <select class="form-control MA-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionMA" style="display:none"></select>
-                                            <select class="form-control SEG-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoSEG" style="display:none"></select>
-                                            <select class="form-control SEG-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionSEG" style="display:none"></select>
-                                        </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label class="AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
+                                        <label class="AsesorSeguridad" style="display:none">Asesor SSO:</label>
+                                        <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
+                                        <select class="form-control AsesorMedioAmbiente" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
+                                        <select class="form-control AsesorSeguridad" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
                                     </div>
-                                    <div class="row input_container w-100">
-                                        <div class="col-12 col-sm-6 col-lg-6">
-                                            <label asp-for="FechaProgramada"></label>
-                                            <span class="text-danger" asp-validation-for="FechaProgramada"></span>
-                                            <input type="date" class="form-control" asp-for="FechaProgramada" />
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-lg-6 ">
-                                            <label asp-for="NiveRiesgo"></label>
-                                            <span class="text-danger" asp-validation-for="NiveRiesgo"></span>
-                                            <select class="form-control Vacio_NR" asp-for="NiveRiesgo">
-                                                <option value="" style="background-color:white;color:black;">-- SELECCIONE --</option>
-                                            </select>
-                                        </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="CondicionIdentificada"></label>
+                                        <span class="text-danger" asp-validation-for="CondicionIdentificada"></span>
+                                        <select class="form-control" asp-for="CondicionIdentificada">
+                                            <option value="">-- SELECCIONE --</option>
+                                            <option value="Acto Subestándar">Acto Subestándar</option>
+                                            <option value="Condición Subestándar">Condición Subestándar</option>
+                                        </select>
                                     </div>
-                                    <div class="row input_container w-100">
-                                        <div class="col-12 col-sm-6 col-lg-6 ">
-                                            <label asp-for="AccionTomada"></label>
-                                            <span class="text-danger" asp-validation-for="AccionTomada"></span>
-                                            <input type="text" class="form-control" asp-for="AccionTomada" maxlength="250" />
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-lg-6 ">
-                                            <label asp-for="ResponsableMarc"></label>
-                                            <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
-                                            <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>
-                                        </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="TipoCondicion"></label>
+                                        <span class="text-danger" asp-validation-for="TipoCondicion"></span>
+                                        <select class="form-control Vacio" asp-for="TipoCondicion">
+                                            <option value="">-- SELECCIONE --</option>
+                                        </select>
+                                        <select class="form-control MA-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoMA" style="display:none"></select>
+                                        <select class="form-control MA-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionMA" style="display:none"></select>
+                                        <select class="form-control SEG-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoSEG" style="display:none"></select>
+                                        <select class="form-control SEG-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionSEG" style="display:none"></select>
                                     </div>
-                                    <div class="row input_container w-100 align-items-start">
-                                        <div class="col-12 col-sm-6 col-lg-6 ">
-                                            <label asp-for="ResponsableCont"></label>
-                                            <span class="text-danger" asp-validation-for="ResponsableCont"></span>
-                                            <input type="text" class="form-control" asp-for="ResponsableCont" />
-                                            <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
-                                        </div>
-                                        <div class="col-12 col-sm-6 col-lg-6 ">
-                                            <label asp-for="Evidencias"></label>
-                                            <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                                                <span id="danger_evidencia" class=""></span>
-                                            </span>
-                                            <input type="file" asp-for="Evidencias" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="FechaProgramada"></label>
+                                        <span class="text-danger" asp-validation-for="FechaProgramada"></span>
+                                        <input type="date" class="form-control" asp-for="FechaProgramada" />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="NiveRiesgo"></label>
+                                        <span class="text-danger" asp-validation-for="NiveRiesgo"></span>
+                                        <select class="form-control Vacio_NR" asp-for="NiveRiesgo">
+                                            <option value="" style="background-color:white;color:black;">-- SELECCIONE --</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="AccionTomada"></label>
+                                        <span class="text-danger" asp-validation-for="AccionTomada"></span>
+                                        <input type="text" class="form-control" asp-for="AccionTomada" maxlength="250" />
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="ResponsableMarc"></label>
+                                        <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
+                                        <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="ResponsableCont"></label>
+                                        <span class="text-danger" asp-validation-for="ResponsableCont"></span>
+                                        <input type="text" class="form-control" asp-for="ResponsableCont" />
+                                        <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="Evidencias"></label>
+                                        <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                                            <span id="danger_evidencia" class=""></span>
+                                        </span>
+                                        <input type="file" asp-for="Evidencias" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100">
+                                    <div class="button-container">
+                                        <div></div>
+                                        <div>
+                                            <button class="btn btn-mc-outline-danger m-2" data-bs-dismiss="modal" aria-label="Close">Cerrar</button>
+                                            <button type="button" class="btn btn-mc" onclick="GuardarObservacion()">Agregar</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-mc m-2" data-bs-dismiss="modal"
-                                aria-label="Close">
-                            Cerrar
-                        </button>
-                        <button type="button" class="btn btn-mc" onclick="GuardarObservacion()">Agregar</button>
-                    </div>
-                </div>                
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-@*<div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-12 titulo-pagina">
-                <h2>Nueva Observación</h2>
-            </div>
-        </div>
-        <form class="form-group" id="form_nuevaObservacion" asp-action="NuevaObservacion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" asp-for="idCabecera" value="@ViewBag.idCabecera" />
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="TipoInspeccion"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="TipoInspeccion"></span>
-                        <select class="form-control" asp-for="TipoInspeccion">
-                            <option value="">-- SELECCIONE --</option>
-                            <option value="MAP">MAP</option>
-                            <option value="SSO">SSO</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label class="AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
-                        <label class="AsesorSeguridad" style="display:none">Asesor SSO:</label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="Asesor_MA_Seguridad"></span>
-                        <select class="form-control AsesorMedioAmbiente" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
-                        <select class="form-control AsesorSeguridad" asp-for="Asesor_MA_Seguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="CondicionIdentificada"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="CondicionIdentificada"></span>
-                        <select class="form-control" asp-for="CondicionIdentificada">
-                            <option value="">-- SELECCIONE --</option>
-                            <option value="Acto Subestándar">Acto Subestándar</option>
-                            <option value="Condición Subestándar">Condición Subestándar</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="TipoCondicion"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="TipoCondicion"></span>
-                        <select class="form-control Vacio" asp-for="TipoCondicion">
-                            <option value="">-- SELECCIONE --</option>
-                        </select>
-                        <select class="form-control MA-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoMA" style="display:none"></select>
-                        <select class="form-control MA-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionMA" style="display:none"></select>
-                        <select class="form-control SEG-Acto" asp-for="TipoCondicion" asp-items="@ViewBag.TiposActoSEG" style="display:none"></select>
-                        <select class="form-control SEG-Condicion" asp-for="TipoCondicion" asp-items="@ViewBag.TiposCondicionSEG" style="display:none"></select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="Evidencias"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                            <span id="danger_evidencia" class=""></span>
-                        </span>
-                        <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                        <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520">
-                        <label id="files_name">0 Archivos</label>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="NiveRiesgo"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="NiveRiesgo"></span>
-                        <select class="form-control Vacio_NR" asp-for="NiveRiesgo">
-                            <option value="" style="background-color:white;color:black;">-- SELECCIONE --</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="AccionTomada"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="AccionTomada"></span>
-                        <input type="text" class="form-control" asp-for="AccionTomada" maxlength="250" />
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="ResponsableMarc"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
-                        <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="ResponsableCont"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="ResponsableCont"></span>
-                        <input type="text" class="form-control" asp-for="ResponsableCont" />
-                        <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label asp-for="FechaProgramada"></label>
-                    </div>
-                    <div class="col-md-8">
-                        <span class="text-danger" asp-validation-for="FechaProgramada"></span>
-                        <input type="date" class="form-control" asp-for="FechaProgramada" />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="EditarInspeccion" asp-route-IdCabecera="@ViewBag.CabeceraEncriptada">Cancelar</a>
-                <button type="button" class="btn btn-primary" onclick="guardar()">Agregar</button>
-            </div>
-        </form>
-    </div>*@
+</div>
 @section scripts{
     <script>
         $("#Evidencias").change(function () {

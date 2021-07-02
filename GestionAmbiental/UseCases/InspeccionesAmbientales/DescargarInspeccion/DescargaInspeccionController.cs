@@ -237,7 +237,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 //1. Vaciar carpeta temporal del usuario 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2\\";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

@@ -33,8 +33,8 @@
                                 <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Observaciones</button>
                             </li>
                             @*<li class="nav-item" role="presentation">
-                            <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
-                        </li>*@
+                                    <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Observaciones</button>
+                                </li>*@
                         </ul>
                     </div>
                     <div class="tab-content" id="pills-tabContent">
@@ -112,38 +112,38 @@
                             </div>
                         </div>
                         @*<div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
-                        <div class="message"></div>
-                        <div class="row input_container">
-                            <div class="col-12 col-sm-6 col-lg-6">
-                                <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
-                                <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                                <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
-                            </div>
-                            <div class="col-12 col-sm-6 col-lg-6">
-                                <label asp-for="Inspectores">Participantes de la Inspección</label>
-                                <span class="text-danger" asp-validation-for="Inspectores"></span>
-                                <input type="text" class="form-control" asp-for="Inspectores">
-                            </div>
-                        </div>
-                        <div class="row input_container">
-                            <div class="col-12 col-sm-12 col-lg-12">
-                                <label asp-for="Objetivo">Objetivo de la Inspección</label>
-                                <span class="text-danger" asp-validation-for="Objetivo"></span>
-                                <input type="text" class="form-control" asp-for="Objetivo">
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="button-container mc-row-reverse col-12 col-lg-10">
-                                <div class="d-flex justify-content-between">
-                                    <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
-                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                <div class="message"></div>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
+                                        <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                                        <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="Inspectores">Participantes de la Inspección</label>
+                                        <span class="text-danger" asp-validation-for="Inspectores"></span>
+                                        <input type="text" class="form-control" asp-for="Inspectores">
+                                    </div>
                                 </div>
-                                <div class="col-12 col-lg-2">
-                                    <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                <div class="row input_container">
+                                    <div class="col-12 col-sm-12 col-lg-12">
+                                        <label asp-for="Objetivo">Objetivo de la Inspección</label>
+                                        <span class="text-danger" asp-validation-for="Objetivo"></span>
+                                        <input type="text" class="form-control" asp-for="Objetivo">
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>*@
+                                <div class="row">
+                                    <div class="button-container mc-row-reverse col-12 col-lg-10">
+                                        <div class="d-flex justify-content-between">
+                                            <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                            <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                        </div>
+                                        <div class="col-12 col-lg-2">
+                                            <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                         <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -194,6 +194,9 @@
                                         @*<a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>*@
                                         <button class="btn btn-mc-outline-success" id="guardar_estado" type="button">Guardar Estado</button>
                                     </div>
+                                    <div>
+                                        <button id="guardar" onclick="FinalizarRegistro()" class="btn btn-mc" disabled>Finalizar Registro</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -206,9 +209,50 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Enviando Correo-->
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Notificando a Responsables</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section scripts{
     <script src="~/js/stepper.js"></script>
-    <script>    
+    <script>
+
         var listObservaciones = [];
         function dataModulo() {
             $.ajax({
@@ -322,16 +366,18 @@
             }
         });
         function FinalizarRegistro() {
-            $("#Modal_Enviando_Correo").modal('show')
-            $.ajax({
-                type: "POST",
-                data: $('#form_nuevaInspeccion').serialize(),
-                url: "/Inspecciones/EditarInspeccion",
-                contentType: "application/json"
-            })
-                .success(function () {
-
+            if (listObservaciones.length > 0) {
+                $("#Modal_Enviando_Correo").modal('show')
+                $.ajax({
+                    type: "POST",
+                    data: $('#form_nuevaInspeccion').serialize(),
+                    url: "/Inspecciones/EditarInspeccion",
+                    contentType: "application/json",
+                    success: (response) =>{
+                        window.location.href = "/Inspecciones/Resumen";
+                    }
                 });
+            }
         }
         function ConsultarObservaciones() {
             $.ajax({
@@ -346,12 +392,17 @@
                         $('#tabla_resumen tbody').empty();
                         $('#tabla_resumen tbody').html(response.html);
                         listObservaciones = JSON.parse(response.observaciones);
+                        if (listObservaciones.length > 0) {
+                            $("#guardar").prop('disabled', false);
+                        } else {
+                            $("#guardar").prop('disabled', true);
+                        }
                         dataModulo();
                     } else {
                         console.log(response.message);
                     }
                 }
-            });            
+            });
         }
     </script>
     @*Scripts partial Nueva Observación*@
@@ -557,38 +608,40 @@
             }
         });
         function GuardarObservacion() {
-            var formData = new FormData();
-            var files = document.getElementById("Evidencias").files;
-            for (var i = 0; i != files.length; i++) {
-                formData.append("Evidencias", files[i]);
-            }
-            formData.append("idCabecera", $("#idCabecera").val());
-            formData.append("TipoInspeccion", $("#TipoInspeccion").val());
-            formData.append("Asesor_MA_Seguridad",$("#Asesor_MA_Seguridad:not(:disabled)").val());
-            formData.append("CondicionIdentificada", $("#CondicionIdentificada").val());
-            formData.append("TipoCondicion", $("#TipoCondicion:not(:disabled)").val());
-            formData.append("FechaProgramada", $("#FechaProgramada").val());
-            formData.append("NiveRiesgo", $("#NiveRiesgo").val());
-            formData.append("AccionTomada", $("#AccionTomada").val());
-            formData.append("ResponsableMarc", $("#ResponsableMarc").val());
-            formData.append("ResponsableCont", $("#ResponsableCont").val());
-            $.ajax({
-                url: "@Url.Action("NuevaObservacion", "Inspecciones")",
-                method: "post",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.success) {
-                        $('#modalNuevaObservacion').modal('toggle');
-                        ConsultarObservaciones();
-                        ReiniciarModalObservacion();
-                    }
-                    else {
-                        alert("Ocurrió un error al agregar la observación")
-                    }
+            if (ValidarNuevaObservacion()) {
+                var formData = new FormData();
+                var files = document.getElementById("Evidencias").files;
+                for (var i = 0; i != files.length; i++) {
+                    formData.append("Evidencias", files[i]);
                 }
-            });
+                formData.append("idCabecera", $("#idCabecera").val());
+                formData.append("TipoInspeccion", $("#TipoInspeccion").val());
+                formData.append("Asesor_MA_Seguridad", $("#Asesor_MA_Seguridad:not(:disabled)").val());
+                formData.append("CondicionIdentificada", $("#CondicionIdentificada").val());
+                formData.append("TipoCondicion", $("#TipoCondicion:not(:disabled)").val());
+                formData.append("FechaProgramada", $("#FechaProgramada").val());
+                formData.append("NiveRiesgo", $("#NiveRiesgo").val());
+                formData.append("AccionTomada", $("#AccionTomada").val());
+                formData.append("ResponsableMarc", $("#ResponsableMarc").val());
+                formData.append("ResponsableCont", $("#ResponsableCont").val());
+                $.ajax({
+                    url: "@Url.Action("NuevaObservacion", "Inspecciones")",
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#modalNuevaObservacion').modal('toggle');
+                            ConsultarObservaciones();
+                            ReiniciarModalObservacion();
+                        }
+                        else {
+                            alert("Ocurrió un error al agregar la observación")
+                        }
+                    }
+                });
+            }
         }
         function ReiniciarModalObservacion() {
             $("#TipoInspeccion").val('');
@@ -625,6 +678,35 @@
             $("#NiveRiesgo").find('option').remove();
             $('#NiveRiesgo').append(new Option("-- SELECCIONE --", ""));
             $("#NiveRiesgo option[value='']").css({ "background-color": "white", "color": "black" });
+        }
+        function ReiniciarMsgsValidacion() {
+            $('span[data-valmsg-for="TipoInspeccion"]').text("");
+            $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("");
+            $('span[data-valmsg-for="CondicionIdentificada"]').text("");
+            $('span[data-valmsg-for="TipoCondicion"]').text("");
+            $('span[data-valmsg-for="FechaProgramada"]').text("");
+            $('span[data-valmsg-for="NiveRiesgo"]').text("");
+            $('span[data-valmsg-for="AccionTomada"]').text("");
+            $('span[data-valmsg-for="ResponsableMarc"]').text("");
+            $('span[data-valmsg-for="ResponsableCont"]').text("");
+        }
+        function ValidarNuevaObservacion() {
+            var result = true;
+            ReiniciarMsgsValidacion();
+            if ($("#idCabecera").val() == "") result = false;
+            if ($("#TipoInspeccion").val() == "") { result = false; $('span[data-valmsg-for="TipoInspeccion"]').text("Debe seleccionar una opción"); }
+            if ($("#Asesor_MA_Seguridad:not(:disabled)").is(":visible") && $("#Asesor_MA_Seguridad:not(:disabled)").val() == "0") {
+                result = false; $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("Debe seleccionar una opción");
+            }
+            if ($("#CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="TipoCondicion"]').text("Debe seleccionar una opción"); }
+            if ($("#FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="FechaProgramada"]').text("Debe ingresar una fecha"); }
+            if ($("#NiveRiesgo").val() == "") { result = false; $('span[data-valmsg-for="NiveRiesgo"]').text("Debe seleccionar una opción"); }
+            if ($("#AccionTomada").val() == "") { result = false; $('span[data-valmsg-for="AccionTomada"]').text("Debe completar este campo"); }
+            if ($("#ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="ResponsableMarc"]').text("Debe seleccionar una opción"); }
+            if ($("#ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="ResponsableCont"]').text("Debe completar este campo"); }
+            if (document.getElementById("Evidencias").files.length == 0) { result = false; $("#danger_evidencia").text("Debe seleccionar un archivo"); }
+            return result;
         }
     </script>
     @*Scripts partial Editar Observación*@
@@ -987,40 +1069,69 @@
         $("#E_AsesorSeguridad").val(this.value);
         });
         function GuardarEObservacion() {
-            var formData = new FormData();
-            var files = document.getElementById("E_Nueva_Evidencia").files;
-            for (var i = 0; i != files.length; i++) {
-                formData.append("E_Nueva_Evidencia", files[i]);
-            }
-            formData.append("E_IdCabecera", $("#E_IdCabecera").val());
-            formData.append("E_IdObservacion", $("#E_IdObservacion").val());
-            formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
-            formData.append("E_AsesorSeguridad",$("#E_AsesorSeguridad:not(:disabled)").val());
-            formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
-            formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
-            formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());
-            formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
-            formData.append("E_AccionTomada", $("#E_AccionTomada").val());
-            formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
-            formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
-            formData.append("E_Evidencia", $("#E_Evidencia").val());
-            $.ajax({
-                url: "@Url.Action("EditarObservacion", "Inspecciones")",
-                method: "post",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (response) {
-                    if (response.success) {
-                        $('#modalEditarObservacion').modal('toggle');
-                        ConsultarObservaciones();
-                        ReiniciarModalEditarObs();
-                    }
-                    else {
-                        alert("Ocurrió un error al editar la observación")
-                    }
+            if (ValidarEditarObservacion()) {
+                var formData = new FormData();
+                var files = document.getElementById("E_Nueva_Evidencia").files;
+                for (var i = 0; i != files.length; i++) {
+                    formData.append("E_Nueva_Evidencia", files[i]);
                 }
-            });
+                formData.append("E_IdCabecera", $("#E_IdCabecera").val());
+                formData.append("E_IdObservacion", $("#E_IdObservacion").val());
+                formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
+                formData.append("E_AsesorSeguridad", $("#E_AsesorSeguridad:not(:disabled)").val());
+                formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
+                formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
+                formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());
+                formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
+                formData.append("E_AccionTomada", $("#E_AccionTomada").val());
+                formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
+                formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
+                formData.append("E_Evidencia", $("#E_Evidencia").val());
+                $.ajax({
+                    url: "@Url.Action("EditarObservacion", "Inspecciones")",
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            $('#modalEditarObservacion').modal('toggle');
+                            ConsultarObservaciones();
+                            ReiniciarModalEditarObs();
+                        }
+                        else {
+                            alert("Ocurrió un error al editar la observación")
+                        }
+                    }
+                });
+            }
+        }
+        function ReiniciarMsgsValidacionEditar() {
+            $('span[data-valmsg-for="E_TipoInspeccion"]').text("");
+            $('span[data-valmsg-for="E_AsesorSeguridad"]').text("");
+            $('span[data-valmsg-for="E_CondicionIdentificada"]').text("");
+            $('span[data-valmsg-for="E_TipoCondicion"]').text("");
+            $('span[data-valmsg-for="E_FechaProgramada"]').text("");
+            $('span[data-valmsg-for="E_NivelRiesgo"]').text("");
+            $('span[data-valmsg-for="E_AccionTomada"]').text("");
+            $('span[data-valmsg-for="E_ResponsableMarc"]').text("");
+            $('span[data-valmsg-for="E_ResponsableCont"]').text("");
+        }
+        function ValidarEditarObservacion() {
+            var result = true;
+            ReiniciarMsgsValidacionEditar();
+            if ($("#E_TipoInspeccion").val() == "") { result = false; $('span[data-valmsg-for="E_TipoInspeccion"]').text("Debe seleccionar una opción"); }
+            if ($("#E_AsesorSeguridad:not(:disabled)").is(":visible") && $("#E_AsesorSeguridad:not(:disabled)").val() == "0") {
+                result = false; $('span[data-valmsg-for="E_AsesorSeguridad"]').text("Debe seleccionar una opción");
+            }
+            if ($("#E_CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="E_CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#E_TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="E_TipoCondicion"]').text("Debe seleccionar una opción"); }
+            if ($("#E_FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="E_FechaProgramada"]').text("Debe ingresar una fecha"); }
+            if ($("#E_NivelRiesgo").val() == "") { result = false; $('span[data-valmsg-for="E_NivelRiesgo"]').text("Debe seleccionar una opción"); }
+            if ($("#E_AccionTomada").val() == "") { result = false; $('span[data-valmsg-for="E_AccionTomada"]').text("Debe completar este campo"); }
+            if ($("#E_ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="E_ResponsableMarc"]').text("Debe seleccionar una opción"); }
+            if ($("#E_ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="E_ResponsableCont"]').text("Debe completar este campo"); }
+            return result;
         }
     </script>
 }

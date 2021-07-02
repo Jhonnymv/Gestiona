@@ -40,13 +40,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Lugar_Incidente = reporte.Lugar_Incidente;
             entity.Equipo_Involucrado = reporte.Equipo_Involucrado;
             entity.Id_Componente_Ambiental = reporte.Componente_Ambiental.Id_Componente_Ambiental;
-            entity.Descripcion_Incidente = reporte.Descripcion_Incidente;            
+            entity.Descripcion_Incidente = reporte.Descripcion_Incidente;
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
 
             entity.Estado = EstadosIncidentes.Pendiente.ToString();
 
-            _context.Reporte_Preliminar_Incidente.Add(entity);            
-            await _context.SaveChangesAsync();            
+            _context.Reporte_Preliminar_Incidente.Add(entity);
+            await _context.SaveChangesAsync();
 
             return entity.Id_Reporte_Preliminar;
         }
@@ -65,7 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Estado = EstadosIncidentes.Registrado.ToString();
 
             _context.Involucrado_Incidente_Reporte.Add(entity);
-            
+
             await _context.SaveChangesAsync();
 
             return entity.Id_Involucrado_Incidente_Reporte;
@@ -83,7 +83,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             _context.Accion_Incidente_Reporte.Add(entity);
 
-            await _context.SaveChangesAsync();            
+            await _context.SaveChangesAsync();
 
             return entity.Id_Accion_Incidente_Reporte;
         }
@@ -94,7 +94,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             entity.Evidencia = reporte.Evidencia;
             entity.Comentario_Accion = reporte.Comentario_Accion;
-            entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
+            entity.Id_Supervisor_MA = reporte.Supervisor_MA?.IdUsuario;
             entity.Estado = reporte.Estado;
 
             _context.Reporte_Preliminar_Incidente.Update(entity);

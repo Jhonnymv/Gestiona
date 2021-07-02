@@ -47,29 +47,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
 
         public async Task<IActionResult> NotificarInspeccion(int IdCabecera)
         {
-            /*
-            Área Ejecutora{0}
-            Empresa{1}
-            Área Inspeccionada{2}
-            Tipo Inspección{3}
-            Fecha Inspección{4}
-            Responsable Lugar Inspeccionado{5}
-            Responsable de la inspección{6}
-            Participantes {7}
-            Objetivo de la Inspección{8}
-
-            TipoInspeccion{9}
-            Asesor SSO/MAP{10}
-            Acto / Condición Subestándar Identificada{11}
-            Tipo de Condición / Acto Subestándar{12}
-            Nivel de Riesgo del Aspecto Ambiental{13}
-            Acción Preventiva / Correctiva Tomada{14}
-            Responsable Marcobre{15}
-            Responsable Contratista{16}
-            Fecha Programada{17}
-            Codigo {18}
-            Id_Cabecera{19}
-            */
             //Obtener colores e imagen de fondo
             var r = 45;
             var g = 100;

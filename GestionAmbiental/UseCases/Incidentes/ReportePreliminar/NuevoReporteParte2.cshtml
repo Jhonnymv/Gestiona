@@ -86,7 +86,7 @@
                     <div class="incidentes">
                         <div class="tertiary-content col-12">
                             <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_incolucrados">
+                                <table class="table" id="tabla_involucrados">
                                     <thead>
                                         <tr>
                                             <th>Tipo</th>
@@ -200,193 +200,6 @@
         </div>
     </div>
 </div>
-<!--<div class="container-fluid">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Nuevo Reporte Preliminar - Involucrados</h2>
-        </div>
-    </div>
-    <form class="form-group" id="form_nuevoReporteParte2" asp-action="NuevoReporteParte2" asp-controller="ReportePreliminar" method="post" enctype="multipart/form-data" autocomplete="off">
-        <input type="hidden" asp-for="Id_Reporte_Preliminar" value="@Model.Id_Reporte_Preliminar" />
-        <input type="hidden" asp-for="Opcion" />
-        <input type="hidden" asp-for="NCausas" />
-        <input type="hidden" asp-for="NInvolucrados" />
-        <input type="hidden" asp-for="NAcciones" />-->
-<!-- CAUSAS -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">CAUSAS INMEDIATAS DEL INCIDENTE</h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <button id="btn_nueva_causa" type="button" class="btn btn-danger">Agregar Causa</button>
-    </div>
-</div>
-<div class="row mb-1 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" id="alert_causas"></span>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_causas" style="display: none;">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Acto/Condición Subestándar</th>
-                    <th>Descripción</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Otra_Causa"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Otra_Causa"></span>
-        <textarea class="form-control" asp-for="Otra_Causa" maxlength="300" rows="3"></textarea>
-    </div>
-</div>-->
-<!-- DATOS DE LOS INVOLUCRADOS -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">DATOS DE LOS INVOLUCRADOS</h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Gerencia_Responsable"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-8">
-        <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
-        <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
-    </div>
-</div>
-<div class="row mb-1 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" id="alert_involucrados"></span>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <button id="btn_nuevo_involucrado" type="button" class="btn btn-danger">Agregar Involucrado</button>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_involucrados" style="display: none;">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Tipo</th>
-                    <th>Nombres y Apellidos</th>
-                    <th>Correo Electrónico</th>
-                    <th>Celular</th>
-                    <th>Puesto de Trabajo</th>
-                    <th>Turno</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>-->
-<!-- ACCIONES TOMADAS POST INCIDENTE -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">ACCIONES INMEDIATAS</h5>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <button id="btn_nueva_accion" type="button" class="btn btn-danger">Agregar Acción</button>
-    </div>
-</div>
-<div class="row mb-1 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" id="alert_acciones"></span>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <table class="table" id="tabla_acciones" style="display: none;">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th>Acción Inmediata</th>
-                    <th>Responsable Marcobre</th>
-                    <th>Responsable Contratista</th>
-                    <th>Fecha</th>
-                    <th>Estatus</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Comentario_Accion"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
-        <input type="text" class="form-control" asp-for="Comentario_Accion" />
-    </div>
-</div>-->
-<!-- SEGUIMIENTO -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-    <div class="col-12" style="text-align:center">
-        <h5 style="color:white;margin:4px;">SEGUIMIENTO</h5>
-    </div>
-</div>
-<div class="row mb-2">
-    <div class="col-sm-12 col-md-2 col-lg-2">
-        <label asp-for="Id_Supervisor"></label>
-    </div>
-    <div class="col-sm-12 col-md-10 col-lg-10">
-        <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
-        <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor"></select>
-    </div>
-</div>-->
-<!-- EVIDENCIAS -->
-<!--<div class="row mb-2" style="background-color:#2e6793">
-            <div class="col-12" style="text-align:center">
-                <h5 style="color:white;margin:4px;">Evidencias: Fotografías, planos, diagramas, entre otros que aporten información sobre el incidente (deben contemplar fecha, hora y georeferencia en UTM DATUM WGS84)</h5>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label asp-for="Evidencias"></label>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                    <span id="danger_evidencia" class=""></span>
-                </span>
-                <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
-            </div>
-            <div class="col-sm-12 col-md-2 col-lg-2">
-                <label id="files_name">0 Archivos</label>
-            </div>
-        </div>
-        <div class="row mb-2 justify-content-end">
-            <div class="col-sm-12 col-md-5 col-lg-3">
-                <a asp-action="Resumen" asp-controller="ReportePreliminar" class="btn btn-primary">Volver</a>
-                <button id="boton_guardar_estado" type="button" class="btn btn-primary">Guardar Estado</button>
-                <button id="boton_completar" type="button" class="btn btn-primary">Completar</button>
-            </div>
-        </div>
-    </form>
-</div>-->
 <!-- Modal Nuevo Involucrado-->
 <div class="modal fade" id="modal_involucrado" tabindex="-1" aria-labelledby="titulo_modal_involucrado" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -474,95 +287,6 @@
         </div>
     </div>
 </div>
-@*<div class="modal fade" id="modal_involucrado" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_involucrado"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_involucrado">
-                        Agregar involucrado
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="row mb-2">
-                        <input type="hidden" id="Id_Involucrado" />
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <span class="text-danger" id="danger_involucrado"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Tipo de Involucrado:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_tipo_involucrado">
-                                <option value="">--SELECCIONE--</option>
-                                <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
-                                <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
-                                <option value="Supervisor Marcobre">Supervisor Marcobre</option>
-                                <option value="Otro Involucrado">Otro Involucrado</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
-                            <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
-                            <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label id="label_correo" style="display:none">Correo Electrónico:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="email" class="form-control" id="input_correo" style="display:none" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label id="label_puesto" style="display:none">Puesto de Trabajo:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" id="input_puesto" style="display:none" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label id="label_turno" style="display:none">Turno:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_turno" style="display:none">
-                                <option value="">--SELECCIONE--</option>
-                                <option value="Dia">Día</option>
-                                <option value="Noche">Noche</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label id="label_celular" style="display:none">Celular:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" id="input_celular" maxlength="9" style="display:none" />
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn_guardar_involucrado">Guardar</button>
-                    <button type="button" class="btn btn-primary" id="btn_editar_involucrado" style="display:none">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 <!-- Modal Nuevo Acciones Post Incidente-->
 <div class="modal fade" id="modal_accion" tabindex="-1" aria-labelledby="titulo_modal_accion" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -642,79 +366,6 @@
         </div>
     </div>
 </div>
-@*<div class="modal fade" id="modal_accion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_accion"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_accion">
-                        Agregar Acción Inmediata
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-sm-12 col-md-12 col-lg-12">
-                        <span class="text-danger" id="danger_accion"></span>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="Id_Accion" />
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Descripción:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <textarea class="form-control" rows="2" id="input_descripcion_accion"></textarea>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Responsable Marcobre:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Responsable Contratista:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Fecha:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <input type="date" class="form-control" id="input_fecha_accion" />
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Estatus:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_estatus">
-                                <option value="">--SELECCIONE--</option>
-                                <option value="En Proceso">En Proceso</option>
-                                <option value="Cerrado">Cerrado</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn_guardar_accion">Guardar</button>
-                    <button type="button" class="btn btn-primary" id="btn_editar_accion">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 <!-- Modal Nueva Causas-->
 <div class="modal fade" id="modal_causa" tabindex="-1" aria-labelledby="titulo_modal_causa" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -749,13 +400,13 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row input_container">
+                                <div class="row input_container" id="actos_subestandar" style="display:none">
                                     <div class="col-12">
                                         <label>Acto Subestándar</label>
                                         <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
                                     </div>
                                 </div>
-                                <div class="row input_container">
+                                <div class="row input_container" id="condiciones_subestandar" style="display:none">
                                     <div class="col-12">
                                         <label>Condición Subestándar</label>
                                         <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
@@ -776,93 +427,53 @@
         </div>
     </div>
 </div>
-@*<div class="modal fade" id="modal_causa" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_causa"
-         aria-hidden="true" style="display: none;">
-        <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titulo_modal_causa">
-                        Agregar Causa del Incidente
-                    </h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" id="Id_Causa" />
-                    <div class="row mb-2">
-                        <div class="col-sm-12 col-md-12 col-lg-12">
-                            <span class="text-danger" id="danger_causa"></span>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Tipo de Causa del Incidente:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" id="select_acto_condicion">
-                                <option value="">--SELECCIONE--</option>
-                                <option value="Acto">Acto Subestándar</option>
-                                <option value="Condicion">Condición Subestándar</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-2" id="actos_subestandar" style="display:none">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Acto Subestándar:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
-                        </div>
-                    </div>
-                    <div class="row mb-2" id="condiciones_subestandar" style="display:none">
-                        <div class="col-sm-6 col-md-4 col-lg-3">
-                            <label>Condición Subestándar:</label>
-                        </div>
-                        <div class="col-sm-6 col-md-8 col-lg-9">
-                            <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btn_guardar_causa">Guardar</button>
-                    <button type="button" class="btn btn-primary" id="btn_editar_causa" style="display:none">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>*@
-
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>Notificando al Supervisor de Medio Ambiente</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Notificando al Supervisor de Medio Ambiente</label>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Modal Guardando Estado-->
-<div class="modal fade" id="Modal_Guardando_Estado" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Guardando_Estado" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>Guardando Estado</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Guardando Estado</label>
+                    </div>
                 </div>
             </div>
         </div>
@@ -870,4 +481,26 @@
 </div>
 @section Scripts{
     <script type="text/javascript" src="~/js/UseCases/Incidentes/ReportePreliminar/NuevoReporteParte2.js"></script>
+    <script type="text/javascript">
+
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/ReportePreliminar/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        incidentesStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+    </script>
 }

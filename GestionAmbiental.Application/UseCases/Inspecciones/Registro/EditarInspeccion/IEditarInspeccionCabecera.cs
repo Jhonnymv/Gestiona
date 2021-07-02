@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
 {
     public interface IEditarInspeccionCabecera
     {
-        Task Execute(int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc, string lugar, string fechaInspeccion, string hora, int responsableLugar, string inspectores, string opcion, string usuario_red);
+        Task Execute(int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc, string lugar,string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion,string responsableInpseccion, string inspectores, string opcion, string usuario_red);
     }
 }

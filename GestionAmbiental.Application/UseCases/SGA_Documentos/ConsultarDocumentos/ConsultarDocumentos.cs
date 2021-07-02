@@ -109,6 +109,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
         public async Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int[] condicion, int pagina, int rpp)
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, categoria, tipos, codigo, condicion);
+            data = data.OrderByDescending(x => x.FechaCreacion).ToList();
             /*
             //var dataNoTBD = data.Where(x => !x.DocCodigo.Equals("TBD")).OrderByDescending(x => Int32.Parse(x.DocCodigo.Remove(0, 2))).ToList();
             var dataNoTBD = data.Where(x => !x.DocCodigo.Equals("TBD")).ToList();

@@ -18,12 +18,12 @@ $(document).ready(function (){
     $('.login-button button').click(function () {
         if ($("#User").val() === "") {
             $("#error_message").css('display' , 'block');
-            $("#error_message").html('Ingrese un Usuario');
+            $("#error_message").text('Ingrese un Usuario');
         }
 
         else if ($("#Password").val() === "") {
             $("#error_message").css('display', 'block');
-            $("#error_message").html('Ingrese su Contraseña');
+            $("#error_message").text('Ingrese su Contraseña');
         }
 
         else {

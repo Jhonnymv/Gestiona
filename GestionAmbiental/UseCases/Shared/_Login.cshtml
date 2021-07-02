@@ -16,24 +16,24 @@
                                 </div>
                                 <div class="input-login-mc">
                                     <input  asp-for="User" class="form-control input-login" type="text" placeholder="">
-                                    <label asp-for="User" for="">Usuario</label>
+                                    <label asp-for="User">Usuario</label>
                                     <span class="focus-border"></span>
                                 </div>
                                 <div class="input-login-mc">
                                     <input asp-for="Password" class="form-control input-login" type="password" placeholder="">
-                                    <label asp-for="Password" for="">Contraseña</label>
+                                    <label asp-for="Password">Contraseña</label>
                                     <span class="focus-border"></span>
                                 </div>
                             </div>
-                            <div class="loginRemember">
+                            @*<div class="loginRemember">
                                 <input id="check_remember" class="checkbox form-check-input" type="checkbox">
                                 <label for="check_remember" class="form-check-label">Recordar Cuenta</label>
-                            </div>
+                            </div>*@
                             <div class="login-button">
                                 <button id="btnIniciarSesion" type="button" class="btn btn-outline" style="width: 150px; height: 35px"><span>Iniciar Sesión</span></button>
                             </div>
                             <div class="login-forgot">
-                                <a href=""><span>¿Olvidaste tu Contraseña?</span></a>
+                                <a href="#"><span>¿Olvidaste tu Contraseña?</span></a>
                             </div>
                         </div>
                     </form>

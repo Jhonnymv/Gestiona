@@ -80,6 +80,7 @@ function EliminarCausa(idCausa) {
                 $('#tabla_causas_basicas tbody').empty();
                 $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     }
@@ -148,6 +149,7 @@ $("#btn_guardar_causa").on("click", function () {
                 $('#tabla_causas_basicas tbody').empty();
                 $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     else
@@ -190,6 +192,7 @@ $("#btn_editar_causa").on("click", function () {
                 $('#tabla_causas_basicas tbody').empty();
                 $('#tabla_causas_basicas tbody').html(response.filas_causas_basicas);
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     else

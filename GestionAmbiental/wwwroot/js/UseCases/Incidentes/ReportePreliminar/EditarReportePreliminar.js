@@ -238,6 +238,7 @@ $("#btn_guardar_involucrado").on("click", function () {
                 turno: $("#select_turno").val()
             },
             success: (response) => {
+                console.log(response);
                 $("#tabla_involucrados").show();
                 HideInputsInvolucrado();
                 ResetInputsInvolucrado();
@@ -245,6 +246,7 @@ $("#btn_guardar_involucrado").on("click", function () {
                 $('#tabla_involucrados tbody').empty()
                 $('#tabla_involucrados tbody').html(response.filas_involucrados)
                 $('#NInvolucrados').val(response.nInvolucrados);
+                dataModulo();
             }
         });
     else
@@ -284,6 +286,7 @@ $("#btn_editar_involucrado").on("click", function () {
                 $('#tabla_involucrados tbody').empty()
                 $('#tabla_involucrados tbody').html(response.filas_involucrados)
                 $('#NInvolucrados').val(response.nInvolucrados);
+                dataModulo();
             }
         });
     else
@@ -374,6 +377,7 @@ $("#btn_guardar_accion").on("click", function () {
                 $('#tabla_acciones tbody').empty();
                 $('#tabla_acciones tbody').html(response.filas_acciones);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     else
@@ -400,6 +404,7 @@ $("#btn_editar_accion").on("click", function () {
                 $('#tabla_acciones tbody').empty();
                 $('#tabla_acciones tbody').html(response.filas_acciones);
                 $('#NAcciones').val(response.nAcciones);
+                dataModulo();
             }
         });
     else
@@ -517,6 +522,7 @@ $("#btn_guardar_causa").on("click", function () {
                 $('#tabla_causas tbody').empty()
                 $('#tabla_causas tbody').html(response.filas_causas)
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     else
@@ -550,6 +556,7 @@ $("#btn_editar_causa").on("click", function () {
                 $('#tabla_causas tbody').empty()
                 $('#tabla_causas tbody').html(response.filas_causas)
                 $('#NCausas').val(response.nCausas);
+                dataModulo();
             }
         });
     else

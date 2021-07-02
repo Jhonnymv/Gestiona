@@ -1105,7 +1105,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
             return true;
         }
-
         public async Task ActualizarColoresFuentes()
         {
             var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
@@ -1121,7 +1120,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             var json = cards.Texto;
             System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
         }
-
         public class PropiedadModulo
         {
             public int id { get; set; }

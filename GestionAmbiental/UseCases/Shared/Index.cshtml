@@ -6,99 +6,67 @@
     Layout = "~/UseCases/Shared/_HomeLayout.cshtml";
 }
 <div class="articles">
-    <div class="article-card small-article">
-        <div class="article-content">
-            <div class="article-title">
-                <h3>Título de Artículo</h3>
-                <span>Fecha: 30/03/2021</span>
+    @foreach (var article in Model.Tarjetas)
+    {
+        <div class="@article.Tipo">
+            <div class="article-content">
+                <div class="article-title">
+                    <h3>@article.Titulo</h3>
+                    <span>Fecha: @article.Fecha</span>
+                </div>
+                <div class="article-body">
+                    <p>
+                        @Html.Raw(article.Contenido)
+                    </p>
+                </div>
+                <div class="article-footer">
+                    <span>Escrito por @article.Publicador</span>
+                </div>
             </div>
-            <div class="article-body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
-                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
-                    rerum tempore veniam, voluptatibus?
-                </p>
-            </div>
-            <div class="article-footer">
-                <span>Escrito por Jhonny Moncada</span>
-            </div>
-        </div>
-        <div class="article-image">
-            <img src="~/img/landing-page-img.png" alt="">
-        </div>
-    </div>
-
-    <div class="article-card medium-article">
-        <div class="article-content">
-            <div class="article-title">
-                <h3>Título de Artículo</h3>
-                <span>Fecha: 30/03/2021</span>
-            </div>
-            <div class="article-body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
-                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
-                    rerum tempore veniam, voluptatibus?
-                </p>
-            </div>
-            <div class="article-footer">
-                <span>Escrito por Jhonny Moncada</span>
+            <div class="article-image">
+                <img src="@article.Imagen" alt="">
             </div>
         </div>
-        <div class="article-image">
-            <img src="~/img/article-image2.png" alt="">
-        </div>
-    </div>
-
-    <div class="article-card small-article">
-        <div class="article-content col-12">
-            <div class="article-title">
-                <h3>Título de Artículo</h3>
-                <span>Fecha: 30/03/2021</span>
-            </div>
-            <div class="article-body">
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur assumenda eius minima quas
-                    sed! Accusamus atque, commodi ea illum incidunt molestiae obcaecati, officia pariatur quae quia
-                    rerum tempore veniam, voluptatibus?
-                </p>
-            </div>
-            <div class="article-footer">
-                <span>Escrito por Jhonny Moncada</span>
-            </div>
-        </div>
-        <div class="article-image">
-            <img src="~/img/article-image1.png" alt="">
-        </div>
-    </div>
+    }
 </div>
 
 @Html.Partial("_Login.cshtml", new GestionAmbiental.UseCases.Autenticacion.SigninModel())
 
 @section Scripts{
-    <script type="text/javascript">
-        var count = 1;
+    <script type="text/javascript">       
         $("#btnIniciarSesion").click(function () {
+            $("#error_message").css('display', 'none');
+            $("#error_message").text("");
             var user = $("#User").val();
             var password = $("#Password").val();
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("IniciarSesion", "Autenticacion")",
-            data: {
-                User: user,
-                Password:password
-            },
-            success: function (result) {
-                if (result.success) {
-                    //window.location.reload();
-                    console.log('Hola Mundo');
-                    window.location = '@Url.Action("Modulos", "Home")';
-                } else {
-                    $('#mensaje_row').show();
-                    $('#mensaje_row .text-danger').text(result.mensaje);
+            if (user != "" && password != "") {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("IniciarSesion", "Autenticacion")",
+                    data: {
+                        User: user,
+                        Password: password
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        if (result.success) {
+                            window.location = '@Url.Action("Modulos", "Home")';
+                        } else {
+                            $("#error_message").css('display', 'block');
+                            $('#error_message').text(result.mensaje);
+                        }
+                    }
+                });
+            } else {
+                if (user == "") {
+                    $("#error_message").css('display', 'block');
+                    $('#error_message').text("Debe ingresar su nombre de usuario");
+                }
+                if (password == "") {
+                    $("#error_message").css('display', 'block');
+                    $('#error_message').text("Debe ingresar su contraseña");
                 }
             }
-        });
     });
     </script>
 }

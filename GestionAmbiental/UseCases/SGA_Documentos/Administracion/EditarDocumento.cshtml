@@ -243,10 +243,10 @@
                             <a class="btn btn-mc-outline-danger w-100" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc w-100" id="btn_guardar_estado">Guardar Estado</button>
+                            <button type="button" class="btn btn-mc-outline-success w-100" id="btn_guardar_estado">Guardar Estado</button>
                         </div>
                         <div class="me-2">
-                            <button type="button" class="btn btn-mc-success w-100" id="btn_registrar">Registrar</button>
+                            <button type="button" class="btn btn-mc w-100" id="btn_registrar">Registrar</button>
                         </div>
                     </div>
                 </div>
@@ -337,7 +337,7 @@
                 <label asp-for="DocumentoPdf"></label>
             </div>
             <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <button class="btn btn-primary" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\","\\\\")');this.disabled=false;">Visualizar PDF</button>
+                <button class="btn btn-mc" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\","\\\\")');this.disabled=false;">Visualizar PDF</button>
             </div>
             <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
                 <label>Reemplazar Documento Pdf:</label>
@@ -346,7 +346,7 @@
                 <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
                     <span id="danger_documento_pdf" class=""></span>
                 </span>
-                <label class="btn btn-primary" for="DocumentoPdf">Seleccione</label>
+                <label class="btn btn-mc" for="DocumentoPdf">Seleccione</label>
                 <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoPdf" accept=".pdf" data-max-size="8971520">
             </div>
             <div class="col-sm-12 col-md-7 col-lg-2">
@@ -356,7 +356,7 @@
                 <label asp-for="DocumentoEditable"></label>
             </div>
             <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-                <button class="btn btn-primary" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+                <button class="btn btn-mc" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
             </div>
             <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
                 <label>Reemplazar Documento Editable:</label>
@@ -365,7 +365,7 @@
                 <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
                     <span id="danger_documento_editable" class=""></span>
                 </span>
-                <label class="btn btn-primary" for="DocumentoEditable">Seleccione</label>
+                <label class="btn btn-mc" for="DocumentoEditable">Seleccione</label>
                 <input type="file" style="visibility:hidden; display:none" asp-for="DocumentoEditable" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
             </div>
             <div class="col-sm-12 col-md-7 col-lg-2">
@@ -385,10 +385,10 @@
 
         <div class="row mb-2 d-flex justify-content-center">
             <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
-                <button type="button" class="btn btn-primary mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
+                <button type="button" class="btn btn-mc mr-2" id="btn_cargar_formato">Cargar Formato (Opcional)</button>
             </div>
             <div class="col-sm-6 col-md-4 col-lg-4 text-center mb-2">
-                <button type="button" class="btn btn-primary mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
+                <button type="button" class="btn btn-mc mr-2" id="btn_agregar_formato">Agregar Formato Existente (Opcional)</button>
             </div>
         </div>
         @if (Model.Secundarios.Length > 2 || Model.IdCategoria.Equals(1))
@@ -428,7 +428,7 @@
                 </div>
             </div>
             <div class="row mb-2 mr-2 d-flex justify-content-center">
-                <button type="button" class="btn btn-primary mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
+                <button type="button" class="btn btn-mc mr-2" id="btn_agregar_revision">Agregar Revisor/ Aprobador</button>
             </div>
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
@@ -502,8 +502,8 @@
         <input type="hidden" asp-for="Opcion" />
         <div class="row mb-2 mr-2 d-flex justify-content-end">
             <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
-            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
-            <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
+            <button type="button" class="btn btn-mc mr-2" id="btn_guardar_estado">Guardar Estado</button>
+            <button type="button" class="btn btn-mc mr-2" id="btn_registrar">Registrar</button>
         </div>
     </form>*@
 <!--Modal Revisión-->
@@ -564,7 +564,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -572,6 +572,7 @@
         </div>
     </div>
 </div>
+
 <!--Modal Preview PDF-->
 <div class="modal fade" id="modal_preview_pdf" tabindex="-1" aria-labelledby="titulo_modal_preview_pdf" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -635,10 +636,26 @@
             ObtenerPredecesores();
             CargarRevisores();
             CargarAprobadores();
-
-            listSecundariosHtml = @Html.Raw(ViewBag.PublicadosHtml);
+            ConsultarPublicados();
             IdPrimerUsuario = $("#select_usuario").val();
         });
+        function ConsultarPublicados() {
+            $.ajax({
+                type: "POST",
+                url: "/SGAAdministracion/ConsultarPublicados",
+                data: {
+                    "IdCategoria": $("#IdCategoria").val()
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        listSecundariosHtml = JSON.parse(response.publicadosHtml);
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            });
+        }
         function dataModulo() {
             $.ajax({
                 type: "POST",
@@ -787,9 +804,9 @@
                         "<td>" + htmlData[i].Nombre + "</td>" +
                         "<td>" + htmlData[i].Version + "</td >" +
                         "<td>" + htmlData[i].Condicion + "</td >" +
-                        "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"PreviewPDF(\'" + htmlData[i].RutaPdf.replace('\\', '\\\\') + "\')\">Visualizar Pdf</button></td >" +
-                        "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"DescargarEditable(\'" + htmlData[i].RutaEditable.replace('\\', '-') + "\')\">Descargar Editable</button></td >" +
-                        "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarSecundario(" + htmlData[i].Id + ")\">Eliminar</button></td>" +
+                        "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"PreviewPDF(\'" + htmlData[i].RutaPdf.replace('\\', '\\\\') + "\')\">Visualizar Pdf</button></td >" +
+                        "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + htmlData[i].RutaEditable.replace('\\', '-') + "\')\">Descargar Editable</button></td >" +
+                        "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSecundario(" + htmlData[i].Id + ")\">Eliminar</button></td>" +
                         "</tr>";
                 }
             } else {
@@ -850,6 +867,8 @@
             var fechaAprobacion = $("#FechaAprobacion").val();
             var fechaTentativa = $("#FechaTentativa").val();
             var comentario = $("#Comentario").val();
+            var documentoPdfRuta = $("#DocPdfRuta").val();
+            var documentoEditableRuta = $("#DocEditableRuta").val();
             var documentoPdf = $("#DocumentoPdf").val();
             var documentoEditable = $("#DocumentoEditable").val();
 
@@ -864,7 +883,7 @@
             $('span[data-valmsg-for="DocumentoPdf"]').text("");
             $('span[data-valmsg-for="DocumentoEditable"]').text("");
 
-            if (tipo != '0' && elaborador != '0' && version != "" && nombre != "" && documentoPdf != "" && fechaAprobacion != "" && fechaTentativa != "" && comentario != "" && documentoEditable != "" && codigo != "" && !listCodigos.includes(codigo))
+            if (tipo != '0' && elaborador != '0' && version != "" && nombre != "" && (documentoPdf != "" || documentoPdfRuta != "") && fechaAprobacion != "" && fechaTentativa != "" && comentario != "" && (documentoEditable != "" || documentoEditableRuta!="") && codigo != "" && !listCodigos.includes(codigo))
                 return true;
             else {
                 if (tipo == '0')
@@ -885,9 +904,9 @@
                     $('span[data-valmsg-for="Comentario"]').text("Este campo es requerido");
                 if (listCodigos.includes(codigo))
                     $('span[data-valmsg-for="DocCodigo"]').text("El código ingresado ya fue utilizado");
-                if (documentoPdf == "")
+                if (documentoPdf == "" && documentoPdfRuta=="")
                     $('span[data-valmsg-for="DocumentoPdf"]').text("Debe cargar un archivo");
-                if (documentoEditable == "")
+                if (documentoEditable == "" && documentoEditableRuta =="")
                     $('span[data-valmsg-for="DocumentoEditable"]').text("Debe cargar un archivo");
                 return false;
             }
@@ -1300,7 +1319,7 @@
                     @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
                         "<td style = \"width: 50%\" ><input class=\"form-control text-center\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                         "<td style=\"width: 20%\"><input class=\"form-control text-center\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
-                        "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
+                        "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
                         "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn\" onclick=\"EliminarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/cross.png\"/></button></td >" +
                         "</tr>";
                 }

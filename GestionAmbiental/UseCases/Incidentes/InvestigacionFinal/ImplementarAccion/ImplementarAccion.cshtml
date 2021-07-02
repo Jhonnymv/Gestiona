@@ -3,104 +3,177 @@
     ViewData["Title"] = "ImplementarAccion";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="container">
-    <div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Implementar Acción</h2>
+
+<div class="incidentes">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title incidentes-opacity-color">
+                <h3>Implementar Acción</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" id="formImplementarAccion" asp-action="ImplementarAccion" asp-controller="ImplementarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+                <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+                <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
+                <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
+                <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Tipo_Accion"></label>
+                        <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
+                        <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Accion_Inmediata"></label>
+                        <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
+                        <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Marcobre"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Responsable_Contratista"></label>
+                        <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
+                        <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Fecha"></label>
+                        <span class="text-danger" asp-validation-for="Fecha"></span>
+                        <input type="date" class="form-control" asp-for="Fecha" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estatus"></label>
+                        <span class="text-danger" asp-validation-for="Estatus"></span>
+                        <input type="text" class="form-control" asp-for="Estatus" disabled />
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Evidencias"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                            <span id="danger_evidencias" class=""></span>
+                        </span>
+                        <input class="form-control" type="file" asp-for="Evidencias" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Comentarios_Implementacion"></label>
+                        <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
+                        <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="button-container">
+                        <div></div>
+                        <div>
+                            <a id="boton_cancelar" class="btn btn-mc-outline-danger" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
+                            <button id="boton_implementar" type="button" class="btn btn-mc" onclick="Implementar()">Implementar</button>                            
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <form class="form-group" id="formImplementarAccion" asp-action="ImplementarAccion" asp-controller="ImplementarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
-        <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
-        <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
-        <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
-        <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
-        <input type="hidden" asp-for="Estado" value="@Model.Estado" />
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Tipo_Accion"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
-                <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Accion_Inmediata"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
-                <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Responsable_Marcobre"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
-                <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Responsable_Contratista"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
-                <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Fecha"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Fecha"></span>
-                <input type="date" class="form-control" asp-for="Fecha" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Estatus"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Estatus"></span>
-                <input type="text" class="form-control" asp-for="Estatus" disabled />
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Evidencias"></label>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                    <span id="danger_evidencias" class=""></span>
-                </span>
-                <label class="btn btn-primary" for="Evidencias">Seleccione</label>
-                <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
-            </div>
-            <div class="col-sm-12 col-md-4 col-lg-4 align-self-center">
-                <label id="files_name" style="margin-bottom:0px">0 Archivos</label>
-            </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-sm-12 col-md-4 col-lg-4">
-                <label asp-for="Comentarios_Implementacion"></label>
-            </div>
-            <div class="col-sm-12 col-md-8 col-lg-8">
-                <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
-                <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="row mb-2 justify-content-end">
-            <div class="col-sm-12 col-md-4 col-lg-3" style="text-align:end">
-                <a id="boton_cancelar" class="btn btn-secondary" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
-                <button id="boton_implementar" type="button" class="btn btn-primary" onclick="Implementar()">Implementar</button>
-            </div>
-        </div>
-    </form>
 </div>
+@*<div class="container">
+        <div class="row mb-2">
+            <div class="col-12 titulo-pagina">
+                <h2>Implementar Acción</h2>
+            </div>
+        </div>
+        <form class="form-group" id="formImplementarAccion" asp-action="ImplementarAccion" asp-controller="ImplementarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
+            <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
+            <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
+            <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
+            <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
+            <input type="hidden" asp-for="Estado" value="@Model.Estado" />
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Tipo_Accion"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
+                    <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Accion_Inmediata"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
+                    <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Responsable_Marcobre"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
+                    <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Responsable_Contratista"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
+                    <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Fecha"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Fecha"></span>
+                    <input type="date" class="form-control" asp-for="Fecha" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Estatus"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Estatus"></span>
+                    <input type="text" class="form-control" asp-for="Estatus" disabled />
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Evidencias"></label>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                        <span id="danger_evidencias" class=""></span>
+                    </span>
+                    <label class="btn btn-primary" for="Evidencias">Seleccione</label>
+                    <input type="file" style="visibility:hidden; display:none" asp-for="Evidencias" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-4 align-self-center">
+                    <label id="files_name" style="margin-bottom:0px">0 Archivos</label>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-4 col-lg-4">
+                    <label asp-for="Comentarios_Implementacion"></label>
+                </div>
+                <div class="col-sm-12 col-md-8 col-lg-8">
+                    <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
+                    <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="row mb-2 justify-content-end">
+                <div class="col-sm-12 col-md-4 col-lg-3" style="text-align:end">
+                    <a id="boton_cancelar" class="btn btn-secondary" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
+                    <button id="boton_implementar" type="button" class="btn btn-primary" onclick="Implementar()">Implementar</button>
+                </div>
+            </div>
+        </form>
+    </div>*@
 
 
 <!-- Modal Enviando Correo-->

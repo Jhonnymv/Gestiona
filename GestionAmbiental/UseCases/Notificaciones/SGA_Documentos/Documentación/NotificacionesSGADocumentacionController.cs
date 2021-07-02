@@ -82,7 +82,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
                 SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 MailMessage msg = new MailMessage();
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = false;
+                mail.EnableSsl = true;
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
@@ -140,7 +140,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
                 mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 msg = new MailMessage();
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = false;
+                mail.EnableSsl = true;
                 mail.UseDefaultCredentials = false;
                 credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
@@ -195,7 +195,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
                 SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 MailMessage msg = new MailMessage();
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = false;
+                mail.EnableSsl = true;
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
@@ -255,7 +255,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;

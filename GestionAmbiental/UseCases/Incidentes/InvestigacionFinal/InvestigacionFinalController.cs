@@ -734,32 +734,41 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var involucrados = await _getInvolucradosIncidente.Execute(IdInvestigacion);
             var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_involucrados = "";
-            foreach (var fila in involucrados)
+            if (involucrados.Count > 0)
+            {
+                foreach (var fila in involucrados)
+                {
+                    filas_involucrados += "<tr>";
+                    filas_involucrados += "<td>" + fila.Tipo_Involucrado + "</td>";
+                    filas_involucrados += "<td>" + fila.Nombres + " " + fila.Apellidos + "</td>";
+                    if (fila.DocIdentidad != null)
+                        filas_involucrados += "<td>" + fila.DocIdentidad + "</td>";
+                    else
+                        filas_involucrados += "<td>_</td>";
+                    if (fila.Edad != null)
+                        filas_involucrados += "<td>" + fila.Edad + "</td>";
+                    else
+                        filas_involucrados += "<td>_</td>";
+                    if (fila.Puesto_Trabajo != null)
+                        filas_involucrados += "<td>" + fila.Puesto_Trabajo + "</td>";
+                    else
+                        filas_involucrados += "<td>_</td>";
+                    if (fila.Empresa != null)
+                        filas_involucrados += "<td>" + fila.Empresa + "</td>";
+                    else
+                        filas_involucrados += "<td>_</td>";
+                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    {
+                        filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
+                        filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
+                    }
+                    filas_involucrados += "</tr>";
+                }
+            }
+            else
             {
                 filas_involucrados += "<tr>";
-                filas_involucrados += "<td>" + fila.Tipo_Involucrado + "</td>";
-                filas_involucrados += "<td>" + fila.Nombres + " " + fila.Apellidos + "</td>";
-                if (fila.DocIdentidad != null)
-                    filas_involucrados += "<td>" + fila.DocIdentidad + "</td>";
-                else
-                    filas_involucrados += "<td>_</td>";
-                if (fila.Edad != null)
-                    filas_involucrados += "<td>" + fila.Edad + "</td>";
-                else
-                    filas_involucrados += "<td>_</td>";
-                if (fila.Puesto_Trabajo != null)
-                    filas_involucrados += "<td>" + fila.Puesto_Trabajo + "</td>";
-                else
-                    filas_involucrados += "<td>_</td>";
-                if (fila.Empresa != null)
-                    filas_involucrados += "<td>" + fila.Empresa + "</td>";
-                else
-                    filas_involucrados += "<td>_</td>";
-                if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
-                {
-                    filas_involucrados += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
-                    filas_involucrados += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
-                }
+                filas_involucrados += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filas_involucrados += "</tr>";
             }
             dynamic response = new
@@ -817,24 +826,33 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var productos = await _getProductosDerramados.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_productos = "";
-            foreach (var fila in productos)
+            if (productos.Count > 0)
             {
-                filas_productos += "<tr>";
-                filas_productos += "<td>" + fila.Producto_Incidente + "</td>";
-                filas_productos += "<td>" + fila.Tipo_Producto+"</td>";
-                filas_productos += "<td>" + fila.Estado_Producto+"</td>";
-                filas_productos += "<td>" + fila.Cantidad_Derramada + " " + fila.Unidad + "</td>";
-                filas_productos += "<td>" + fila.Equipo_Responsable+"</td>";
-                filas_productos += "<td>" + fila.Estado_Equipo_Responsable+"</td>";
-                filas_productos += "<td>" + fila.Cantidad_Recuperado + " " +fila.Unidad+ "</td>";
-                filas_productos += "<td>" + fila.Cantidad_No_Recuperado + " " +fila.Unidad+ "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                foreach (var fila in productos)
                 {
-                    filas_productos += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Editar</button></td>";
-                    filas_productos += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Eliminar</button></td>";
+                    filas_productos += "<tr>";
+                    filas_productos += "<td>" + fila.Producto_Incidente + "</td>";
+                    filas_productos += "<td>" + fila.Tipo_Producto + "</td>";
+                    filas_productos += "<td>" + fila.Estado_Producto + "</td>";
+                    filas_productos += "<td>" + fila.Cantidad_Derramada + " " + fila.Unidad + "</td>";
+                    filas_productos += "<td>" + fila.Equipo_Responsable + "</td>";
+                    filas_productos += "<td>" + fila.Estado_Equipo_Responsable + "</td>";
+                    filas_productos += "<td>" + fila.Cantidad_Recuperado + " " + fila.Unidad + "</td>";
+                    filas_productos += "<td>" + fila.Cantidad_No_Recuperado + " " + fila.Unidad + "</td>";
+                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    {
+                        filas_productos += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Editar</button></td>";
+                        filas_productos += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Eliminar</button></td>";
+                    }
                 }
             }
-            dynamic response = new
+            else
+            {
+                filas_productos += "<tr>";
+                filas_productos += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_productos += "</tr>";
+            }
+    dynamic response = new
             {
                 filas_productos = filas_productos,
                 nProductos = productos.Count
@@ -898,9 +916,21 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_causas_inmediatas = "";
             var filas_causas_basicas = "";
+            if (causas.Where(x => x.Tipo_Acto_Condicion.Equals("Acto Subestándar") || x.Tipo_Acto_Condicion.Equals("Condición Subestándar")).Count() == 0)
+            {
+                filas_causas_inmediatas += "<tr>";
+                filas_causas_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_causas_inmediatas += "</tr>";
+            }
+            if (causas.Where(x => x.Tipo_Acto_Condicion.Equals("Factor Personal") || x.Tipo_Acto_Condicion.Equals("Factor Laboral")).Count() == 0)
+            {
+                filas_causas_basicas += "<tr>";
+                filas_causas_basicas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_causas_basicas += "</tr>";
+            }
             foreach (var fila in causas)
             {
-                if(fila.Tipo_Acto_Condicion.Equals("Acto Subestándar") || fila.Tipo_Acto_Condicion.Equals("Condición Subestándar"))
+                if (fila.Tipo_Acto_Condicion.Equals("Acto Subestándar") || fila.Tipo_Acto_Condicion.Equals("Condición Subestándar"))
                 {
                     filas_causas_inmediatas += "<tr>";
                     filas_causas_inmediatas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
@@ -911,12 +941,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_inmediatas += "<td>_</td>";
                     if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                     {
-                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
-                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
                     }
 
                     filas_causas_inmediatas += "</tr>";
-                }else if(fila.Tipo_Acto_Condicion.Equals("Factor Personal") || fila.Tipo_Acto_Condicion.Equals("Factor Laboral"))
+                }
+                else if (fila.Tipo_Acto_Condicion.Equals("Factor Personal") || fila.Tipo_Acto_Condicion.Equals("Factor Laboral"))
                 {
                     filas_causas_basicas += "<tr>";
                     filas_causas_basicas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
@@ -927,11 +958,11 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_basicas += "<td>_</td>";
                     if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
                     {
-                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
-                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
+                        filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
                     }
                 }
-                
+
             }
             dynamic response = new
             {
@@ -994,53 +1025,61 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
 
                 var filas_acciones = "";
-
-                foreach (var fila in acciones)
+                if (acciones.Count > 0)
                 {
-                    var IdEncriptado = _protector.Protect(fila.Id_Accion_Correctiva_Incidente.ToString());
-
-                    filas_acciones += "<tr>";
-                    if (fila.Accion_Inmediata != null)
-                        filas_acciones += "<td>" + fila.Accion_Inmediata + "</td>";
-                    else
-                        filas_acciones += "<td>_</td>";
-                    if (fila.Responsable_Marcobre != null)
-                        filas_acciones += "<td>" + fila.Responsable_Marcobre + "</td>";
-                    else
-                        filas_acciones += "<td>_</td>";
-                    if (fila.Responsable_Contratista != null)
-                        filas_acciones += "<td>" + fila.Responsable_Contratista + "</td>";
-                    else
-                        filas_acciones += "<td>_</td>";
-                    filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
-                    filas_acciones += "<td>" + fila.Estatus + "</td>";
-                    //Estado
-                    switch (fila.Estado)
+                    foreach (var fila in acciones)
                     {
-                        case "Registrado": filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span></td>"; break;
-                        case "Aprobado": filas_acciones += "<td><span class=\"badge bg-success\">" + fila.Estado + "</span></td>"; break;
-                        case "Rechazado": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
-                        case "Vencido": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
-                        case "Ampliado": filas_acciones += "<td><span class=\"badge bg-warning\">" + fila.Estado + "</span></td>"; break;
-                        default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
+                        var IdEncriptado = _protector.Protect(fila.Id_Accion_Correctiva_Incidente.ToString());
+
+                        filas_acciones += "<tr>";
+                        if (fila.Accion_Inmediata != null)
+                            filas_acciones += "<td>" + fila.Accion_Inmediata + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Marcobre != null)
+                            filas_acciones += "<td>" + fila.Responsable_Marcobre + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Contratista != null)
+                            filas_acciones += "<td>" + fila.Responsable_Contratista + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
+                        filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
+                        filas_acciones += "<td>" + fila.Estatus + "</td>";
+                        //Estado
+                        switch (fila.Estado)
+                        {
+                            case "Registrado": filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span></td>"; break;
+                            case "Aprobado": filas_acciones += "<td><span class=\"badge bg-success\">" + fila.Estado + "</span></td>"; break;
+                            case "Rechazado": filas_acciones += "<td><span class=\"badge bg-mc-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Vencido": filas_acciones += "<td><span class=\"badge bg-mc-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Ampliado": filas_acciones += "<td><span class=\"badge bg-warning\">" + fila.Estado + "</span></td>"; break;
+                            default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
+                        }
+                        if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
+                        else if (fila.Permiso_Implementacion && !fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
+                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"text-decoration: none;color:white\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
+                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
+                        else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
+                            filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"text-decoration: none;color:white\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
+                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar</button></td>";
+                        else
+                            filas_acciones += "<td></td>";
+                        filas_acciones += "</tr>";
                     }
-                    if (fila.Permiso_Verificacion && fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                        filas_acciones += "<td><a href=\"/ImplementarAccionMAInvestigacion/ImplementarAccionMA?IdAccion=" + IdEncriptado + "\">Cargar Evidencia" + "</a></td>";
-                    else if(fila.Permiso_Implementacion && !fila.Estatus.Equals("Cerrado") && (fila.Estado.Equals(EstadosIncidentes.Registrado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Rechazado.ToString()) || fila.Estado.Equals(EstadosIncidentes.Ampliado.ToString())))
-                        filas_acciones += "<td><a href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";                     
-                    else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
-                        filas_acciones += "<td><a href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";                 
-                    else if(fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
-                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
-                    else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
-                        filas_acciones += "<td><a href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
-                    else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
-                        filas_acciones += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar</button></td>";
-                    else
-                        filas_acciones += "<td></td>";
+                }
+                else
+                {
+                    filas_acciones += "<tr>";
+                    filas_acciones += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                     filas_acciones += "</tr>";
                 }
-                dynamic response = new
+            dynamic response = new
                 {
                     filas_acciones = filas_acciones,
                     nAcciones = acciones.Count,
@@ -1054,15 +1093,25 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             var rolUsuario = "";
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            
+
             rolUsuario = userInfo.Rol.ToString();
-            
 
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_acciones_inmediatas = "";
             var filas_acciones_correctivas = "";
-            
+            if(acciones.Where(x=>x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
+            {
+                filas_acciones_inmediatas += "<tr>";
+                filas_acciones_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_acciones_inmediatas += "</tr>";
+            }
+            if(acciones.Where(x=>x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
+            {
+                filas_acciones_correctivas += "<tr>";
+                filas_acciones_correctivas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filas_acciones_correctivas += "</tr>";
+            }
             foreach (var fila in acciones)
             {
                 if (fila.Tipo_Accion.Equals("Acción Inmediata"))
@@ -1084,8 +1133,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
                     if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(InspeccionRol.Admin.ToString()))
                     {
-                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
-                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
+                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
+                        filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                     }
                     else
                         filas_acciones_inmediatas += "<td></td><td></td>";
@@ -1110,14 +1159,15 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
                     if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(RSRoles.Admin.ToString()))
                     {
-                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
-                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
+                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
+                        filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                     }
                     else
                         filas_acciones_correctivas += "<td></td><td></td>";
                     filas_acciones_correctivas += "</tr>";
                 }
             }
+
             dynamic response = new
             {
                 filas_acciones_inmediatas = filas_acciones_inmediatas,
@@ -1416,7 +1466,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -1494,7 +1544,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1566,7 +1616,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
