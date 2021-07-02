@@ -50,12 +50,12 @@
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <label asp-for="Fecha_Avistamiento"></label>
                                 <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
-                                <input type="date" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento"/>
+                                <input type="date" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento" />
                             </div>
                             <div class="col-12 col-sm-3 col-lg-3">
                                 <label asp-for="Hora_Avistamiento"></label>
                                 <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
-                                <input type="time" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento"/>
+                                <input type="time" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento" />
                             </div>
                             <div class="col-12 col-sm-5 col-lg-5">
                                 <div class="row d-flex align-items-end m-0">
@@ -162,222 +162,71 @@
         </div>
     </div>
 </div>
-@*<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Editar Registro de Avistamiento de Fauna Silvestre</h2>
-    </div>
-</div>
-
-<form class="form-group" id="form_nuevo_avistamiento" asp-action="EditarRegistro" asp-controller="AvistamientoFauna" method="post" enctype="multipart/form-data" autocomplete="off">
-    <input type="hidden" asp-for="IdAvistamientoFauna" value="@Model.IdAvistamientoFauna" />
-    <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
-    <input type="hidden" asp-for="Codigo" value="@Model.Codigo" />
-    <input type="hidden" asp-for="Estado" value="@Model.Estado" />
-    <input type="hidden" asp-for="Opcion" />
-    <div class="row mb-2" style="background-color:#2e6793">
-        <div class="col-12" style="text-align:center">
-            <h5 style="color:white;margin:4px;">Registro Fotográfico</h5>
-            <input type="hidden" asp-for="FotosCargadas" />
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-12 text-center">
-            <span class="text-danger field-validation-error" data-valmsg-for="Fotos" data-valmsg-replace="true">
-                <span id="alerta_fotos" class=""></span>
-            </span>
-            <label class="btn btn-primary" for="Fotos"><img src="~/img/icons/camara.png" /></label>
-            <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpeg,.png" data-max-size="8388608" multiple>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-lg-12 text-center">
-            <img id="previsualizacion" style="width:30rem;height:auto;max-width:100%;display:none;" />
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <button id="botonCargarFoto" type="button" class="btn btn-primary" onclick="CargarFotos()" style="display:none;">Subir</button>
-    </div>
-    <div class="row mb-2 justify-content-center align-items-center" id="imagenes_cargadas">
-    </div>
-    <div class="row mb-2" style="background-color:#2e6793">
-        <div class="col-12" style="text-align:center">
-            <h5 style="color:white;margin:4px;">Datos del Avistamiento</h5>
-        </div>
-    </div>
-    <div class="row mb-2 align-items-center">
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Fecha_Avistamiento"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Fecha_Avistamiento"></span>
-            <input type="date" class="form-control" asp-for="Fecha_Avistamiento" value="@Model.Fecha_Avistamiento" readonly />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Hora_Avistamiento"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Hora_Avistamiento"></span>
-            <input type="time" class="form-control" asp-for="Hora_Avistamiento" value="@Model.Hora_Avistamiento" readonly />
-        </div>
-        <div class="col-sm-10 col-md-2 col-lg-1 col-10 mb-2">
-            <label asp-for="Ubicacion"></label>
-        </div>
-        <div class="col-sm-2 col-md-1 col-lg-1 col-2 mb-2">
-            <div class="d-flex justify-content-center">
-                <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Ubicacion"></span>
-            <input type="text" class="form-control" asp-for="Ubicacion" value="@Model.Ubicacion" />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdNombreComun"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="IdNombreComun"></span>
-            <select asp-for="IdNombreComun" class="form-control" asp-items="ViewBag.NombreComun" value="@Model.IdNombreComun"></select>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4 mb-2 d-flex justify-content-start">
-            <div id="card_img_referencia" class="card" style="width:auto;display: none;">
-                <img id="img_referencia" style="width:auto;height:10rem;max-width:100%" alt="imagen referencia" />
-                <div class="card-body">
-                    <p class="card-text text-center">Imagen de Referencia</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Cantidad"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="Cantidad"></span>
-            <input type="number" class="form-control" asp-for="Cantidad" value="@Model.Cantidad" />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdTipoAvistamiento"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="IdTipoAvistamiento"></span>
-            <select asp-for="IdTipoAvistamiento" class="form-control" asp-items="ViewBag.TipoAvistamiento" value="@Model.IdTipoAvistamiento"></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdEstadoFauna"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="IdEstadoFauna"></span>
-            <select asp-for="IdEstadoFauna" class="form-control" asp-items="ViewBag.EstadoFauna" value="@Model.IdEstadoFauna"></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdLugarReferencia"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <span class="text-danger" asp-validation-for="IdLugarReferencia"></span>
-            <select asp-for="IdLugarReferencia" class="form-control" asp-items="ViewBag.LugarReferencia" value="@Model.IdLugarReferencia"></select>
-        </div>
-    </div>
-    <div class="row mb-2" style="background-color:#2e6793">
-        <div class="col-12" style="text-align:center">
-            <h5 style="color:white;margin:4px;">Datos del Reportante</h5>
-        </div>
-    </div>
-    <div class="row mb-2">
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <label asp-for="IdEmpresa"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <span class="text-danger" asp-validation-for="IdEmpresa"></span>
-            <select asp-for="IdEmpresa" class="form-control" asp-items="ViewBag.Empresa" value="@Model.IdEmpresa" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <label asp-for="Nombres_Apellidos"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@Model.Nombres_Apellidos" readonly />
-            <input type="hidden" asp-for="IdUsuario" value="@Model.IdUsuario" />
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <label asp-for="IdAreaTrabajo"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <span class="text-danger" asp-validation-for="IdAreaTrabajo"></span>
-            <select asp-for="IdAreaTrabajo" class="form-control" asp-items="ViewBag.AreaTrabajo" value="@Model.IdAreaTrabajo" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <label asp-for="DNI"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mb-2">
-            <span class="text-danger" asp-validation-for="DNI"></span>
-            <input type="text" class="form-control" asp-for="DNI" value="@Model.DNI" readonly/>
-        </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>
-        @if (ViewBag.Rol == "Admin")
-        {
-            <button type="button" class="btn btn-primary mr-2" onclick="EditarAdmin()">Guardar</button>
-            <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
-        }
-        else
-        {
-            <button type="button" class="btn btn-danger mr-2" onclick="eliminarRegistro()">Eliminar</button>
-            <button type="button" class="btn btn-primary mr-2" onclick="GuardarEstado()">Guardar Estado</button>
-            <button type="button" class="btn btn-primary" onclick="Registrar()">Registrar</button>
-        }
-    </div>
-</form>*@
-
 
 <!-- Modal Ubicación-->
-<div class="modal fade" id="modal_ubicacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ubicacion"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
+<div class="modal fade mc-modal" id="modal_ubicacion" tabindex="-1" aria-labelledby="titulo_modal_ubicacion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="mc-modal-image-background">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <div class="col-12 titulo-pagina">
-                        <h3>El permiso para obtener ubicación está bloqueado</h3>
+                        <h3 class="text-white text-center mb-4">No se tiene permiso para obtener la ubicación</h3>
                     </div>
                     <div class="col-12">
-                        <h4>Para habilitarlos siga los siguientes pasos:</h4>
+                        <h4 class="text-white">Para habilitarlos siga los siguientes pasos:</h4>
                         <br>
-                        <h5>1. Acceder a las opciones del navegador (<img src="~/img/icons/options.png" />)</h5>
-                        <h5>2. Ingresar a la "Configuración"</h5>
-                        <h5>3. Buscar e ingresar a "Ubicación"</h5>
-                        <h5>4. Buscar los sitios bloqueados y quitar a Gestiona</h5>
-                        <h5>5. Actualizar esta página</h5>
-                        <h5>6. Conceder los permisos de ubicación cuando se le solicite</h5>
+                        <h5 class="text-white">1. Acceder a las opciones del navegador (<img style="margin: unset; width: unset; filter: invert(1)" src="~/img/icons/options.png" />)</h5>
+                        <h5 class="text-white">2. Ingresar a la "Configuración"</h5>
+                        <h5 class="text-white">3. Buscar e ingresar a "Ubicación"</h5>
+                        <h5 class="text-white">4. Buscar los sitios bloqueados y quitar a Gestiona</h5>
+                        <h5 class="text-white">5. Actualizar esta página</h5>
+                        <h5 class="text-white">6. Conceder los permisos de ubicación cuando se le solicite</h5>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
 <!-- Modal Guardando-->
-<div class="modal fade" id="Modal_Guardando" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Guardando" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
                     </div>
-                    <br />
-                    <label>     Guardando Registro</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Guardando Registro</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @section Scripts{
     <script type="text/javascript">
         var temp;
