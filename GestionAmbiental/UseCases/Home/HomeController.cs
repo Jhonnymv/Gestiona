@@ -77,8 +77,12 @@ namespace GestionAmbiental.Controllers
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
             }
-            return View();
+            else
+            {
+                return RedirectToAction("NoAutorizado");
+            }
         }
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         //public IActionResult Error()
