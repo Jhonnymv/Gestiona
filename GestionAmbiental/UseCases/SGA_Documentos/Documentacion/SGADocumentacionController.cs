@@ -98,7 +98,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -251,7 +251,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdDocumento=" + IdDocumento });
             }
             else
             {
@@ -464,7 +464,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName });
             }
             else
             {
@@ -502,7 +502,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName });
             }
             else
             {

@@ -80,8 +80,8 @@ namespace GestionAmbiental.Controllers
                 return View();
             }
             else
-            {
-                return RedirectToAction("NoAutorizado");
+            { 
+                return RedirectToAction("NoAutorizado", new { returnUrl = "/"+ControllerContext.ActionDescriptor.ControllerName+"/"+ ControllerContext.ActionDescriptor.ActionName });
             }
         }
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -91,8 +91,9 @@ namespace GestionAmbiental.Controllers
         //}
 
 
-        public IActionResult NoAutorizado()
+        public IActionResult NoAutorizado(string returnUrl)
         {
+            TempData["returnUrl"] = returnUrl;
             return View();
         }
     }

@@ -113,7 +113,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -224,7 +224,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -308,7 +308,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -420,7 +420,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento });
             }
             else
             {
@@ -468,7 +468,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.TipoAvistamiento = tipoAvistamiento;
                 ViewBag.Empresa = empresas;
                 ViewBag.AreaTrabajo = areas;
-                ViewBag.LugarReferencia = lugares;                              
+                ViewBag.LugarReferencia = lugares;
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
@@ -569,7 +569,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento });
             }
             else
             {
@@ -728,7 +728,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento + "&imagenes="+imagenes });
             }
             else
             {
@@ -894,7 +894,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName });
             }
             else
             {

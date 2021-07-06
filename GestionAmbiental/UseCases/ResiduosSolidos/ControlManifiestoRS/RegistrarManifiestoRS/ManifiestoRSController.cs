@@ -46,7 +46,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -130,7 +130,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -208,7 +208,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdManifiesto=" + IdManifiesto});
             }
             else
             {

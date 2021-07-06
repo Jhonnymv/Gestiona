@@ -81,7 +81,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -228,7 +228,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdDocumento=" + IdDocumento });
             }
             else
             {
@@ -363,7 +363,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error+ "&IdCategoria=" + IdCategoria });
             }
             else
             {
@@ -485,7 +485,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error + "&IdCategoria=" + IdCategoria });
             }
             else
             {
@@ -646,7 +646,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error + "&IdCategoria=" + IdCategoria });
             }
             else
             {
@@ -778,7 +778,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error + "&IdCategoria=" + IdCategoria+ "&IdDocPrincipal="+ IdDocPrincipal });
             }
             else
             {
@@ -827,7 +827,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error + "&IdCategoria=" + IdCategoria + "&IdDocumento=" + IdDocumento });
             }
             else
             {
@@ -1084,7 +1084,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Error=" + Error + "&IdCategoria=" + IdCategoria + "&IdDocumento=" + IdDocumento });
             }
             else
             {

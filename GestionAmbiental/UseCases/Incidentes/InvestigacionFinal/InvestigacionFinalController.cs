@@ -174,7 +174,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -284,7 +284,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName+ "?IdInvestigacion="+ IdInvestigacion });
             }
             else
             {
@@ -510,7 +510,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdInvestigacion=" + IdInvestigacion });
             }
             else
             {
@@ -1453,7 +1453,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName+"&tipo="+tipo });
             }
             else
             {

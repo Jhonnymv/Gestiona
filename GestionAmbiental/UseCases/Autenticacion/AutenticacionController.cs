@@ -80,7 +80,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
             };
             if (ModelState.IsValid)
             {
-
+                string returnUrl = TempData["returnUrl"] as string;
                 //// Get LDAP connection data
                 //var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
                 //string ldap_path = "", ldap_domain = "";
@@ -110,7 +110,8 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 //            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                 //            result = new
                 //            {
-                //                success = true
+                //                success = true,
+                //                returnUrl = returnUrl
                 //            };
                 //        }
                 //    }
@@ -138,7 +139,8 @@ namespace GestionAmbiental.UseCases.Autenticacion
                     HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                     result = new
                     {
-                        success = true
+                        success = true,
+                        returnUrl = returnUrl
                     };
                 }
             }

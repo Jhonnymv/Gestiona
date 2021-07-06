@@ -50,7 +50,10 @@
                     success: function (result) {
                         console.log(result);
                         if (result.success) {
-                            window.location = '@Url.Action("Modulos", "Home")';
+                            if (result.returnUrl != null)
+                                window.location = result.returnUrl;
+                            else
+                                window.location = '@Url.Action("Modulos", "Home")';
                         } else {
                             $("#error_message").css('display', 'block');
                             $('#error_message').text(result.mensaje);
