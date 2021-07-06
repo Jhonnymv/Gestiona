@@ -46,7 +46,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -121,12 +121,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         public async Task<IActionResult> DetalleUsuario(int IdUsuario)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdUsuario=" + IdUsuario });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdUsuario=" + IdUsuario });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();

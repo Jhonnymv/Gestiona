@@ -17,31 +17,27 @@
                 <input type="hidden" asp-for="IdTipoCondicion">
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Descripcion">Tipo Acto/Condición Subestándar</label>
-                            <span class="text-danger" asp-validation-for="Descripcion"></span>
-                            <input type="text" class="form-control" asp-for="Descripcion" disabled>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Grupo">Clasificación</label>
-                            <span class="text-danger" asp-validation-for="Grupo"></span>
-                            <select class="form-control" asp-items="@ViewBag.Grupos" asp-for="Grupo" disabled>
-                            </select>
-                        </div>
+                        <label asp-for="Descripcion">Tipo Acto/Condición Subestándar</label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion" disabled>
                     </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="button-container">
-                        <div></div>
-
-                        <div id="bntsEditar" style="display:none">
-                            <button type="button" class="btn btn-mc-outline-danger" id="btnCancelar" disabled>Cancelar</button>
-                            <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
-                        </div>
-                        <div id="bntsDetalle">
-                            <a type="button" class="btn btn-mc-outline" asp-controller="GestorEGTC" asp-action="Resumen" id="btnVolver">Volver</a>
-                            <button class="btn btn-mc-success" id="btnEditar">Editar</button>
+                    <div class="row input_container">
+                        <label asp-for="Grupo">Clasificación</label>
+                        <span class="text-danger" asp-validation-for="Grupo"></span>
+                        <select class="form-control" asp-items="@ViewBag.Grupos" asp-for="Grupo" disabled>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a type="button" class="btn btn-mc-outline" asp-controller="GestorEGTC" asp-action="Resumen" id="btnVolver">Volver</a>
+                                <button class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

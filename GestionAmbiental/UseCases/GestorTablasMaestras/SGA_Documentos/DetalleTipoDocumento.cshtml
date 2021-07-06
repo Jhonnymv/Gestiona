@@ -4,85 +4,148 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Detalle Tipo de Documento</h2>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="EditarTipoDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" class="form-control" asp-for="IdSGATipoDocumento">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Codigo"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Codigo"></span>
-                    <input type="text" class="form-control" asp-for="Codigo" disabled>
-                </div>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Detalle Tipo de Documento</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="text" class="form-control" asp-for="Descripcion" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="RutaFormato"></label>
-                </div>
-                @if (Model.RutaFormato != null)
-                {
-                    <div class="col-lg-8">
-                        <input type="hidden" class="form-control" asp-for="RutaFormato" value="@Model.RutaFormato">
-                        <button type="button" class="btn btn-link" onclick="DescargarFormato()">Descargar</button>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="EditarTipoDocumento" method="post" enctype="multipart/form-data">
+                <input type="hidden" class="form-control" asp-for="IdSGATipoDocumento">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Codigo"></label>
+                        <span class="text-danger" asp-validation-for="Codigo"></span>
+                        <input type="text" class="form-control" asp-for="Codigo" disabled>
                     </div>
-                }
-            </div>
-            <div class="row mb-2" id="nuevoFormato" style="display:none">
-                <div class="col-lg-4">
-                    <label asp-for="Formato"></label>
+                    <div class="row input_container">
+                        <label asp-for="Descripcion"></label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="RutaFormato"></label>
+                        @if (Model.RutaFormato != null)
+                        {
+                            <input type="hidden" class="form-control" asp-for="RutaFormato" value="@Model.RutaFormato">
+                            <button type="button" class="btn btn-mc-outline-success" onclick="DescargarFormato()">Descargar</button>
+                        }
+                    </div>
+                    <div class="row input_container" id="nuevoFormato" style="display:none">
+                        <label asp-for="Formato"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <input type="file" class="form-control" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado"></label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">Activo</option>
+                            <option value="INA">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger mr-2" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="button" class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
-                        <span id="danger_evidencia" class=""></span>
-                    </span>
-                    <label class="btn btn-primary" for="Formato">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
-                </div>
-                <div class="col-lg-4">
-                    <label id="files_name">0 Archivos</label>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Estado"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Estado"></span>
-                    <select class="form-control" asp-for="Estado" disabled>
-                        <option value="">--SELECCIONE--</option>
-                        <option value="ACT">ACT</option>
-                        <option value="INA">INA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
-                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
-                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Detalle Tipo de Documento</h2>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="EditarTipoDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" class="form-control" asp-for="IdSGATipoDocumento">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Codigo"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Codigo"></span>
+                        <input type="text" class="form-control" asp-for="Codigo" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Descripcion"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="RutaFormato"></label>
+                    </div>
+                    @if (Model.RutaFormato != null)
+                    {
+                        <div class="col-lg-8">
+                            <input type="hidden" class="form-control" asp-for="RutaFormato" value="@Model.RutaFormato">
+                            <button type="button" class="btn btn-link" onclick="DescargarFormato()">Descargar</button>
+                        </div>
+                    }
+                </div>
+                <div class="row mb-2" id="nuevoFormato" style="display:none">
+                    <div class="col-lg-4">
+                        <label asp-for="Formato"></label>
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <label class="btn btn-primary" for="Formato">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
+                    </div>
+                    <div class="col-lg-4">
+                        <label id="files_name">0 Archivos</label>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Estado"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                    <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@
 @section Scripts {
     <script type="text/javascript">
         $("#btnEditar").on('click', function () {

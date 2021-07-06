@@ -24,7 +24,6 @@
                             <span id="alerta_fotos" class=""></span>
                         </span>
                         <label class="btn fauna-color btn btn-special-action" for="Fotos"><img src="~/img/icons/camara.png" /></label>
-                        @*<label class="btn btn-primary" for="Foto">Seleccione</label>*@
                         <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpeg,.png" data-max-size="8388608" multiple>
                     </div>
                     <div class="row input_container">
@@ -156,7 +155,6 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        @*<a class="btn btn-mc-outline-danger" asp-controller="AvistamientoFauna" asp-action="Resumen">Cancelar</a>*@
                                         <button class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>
                                         <button class="btn btn-mc-success" onclick="Registrar()">Registrar</button>
                                     </div>
@@ -244,12 +242,6 @@
         var ubicacion = $("#Ubicacion");
         var imagenesReferencia = [];
         $(document).ready(function () {
-            @*var contactos = JSON.parse('@Html.Raw(ViewBag.Contactos)');
-            var telefonos = "";
-            for (var i = 0; i < contactos.length; i++) {
-                telefonos += "<a class=\"text-white\" href=\"tel:" + contactos[i] + "\">" + contactos[i] +"</a><br>";
-            }
-            $("#telefonos").html(telefonos)*@
             CargarDatos();
         });
         function preview_image(event) {
@@ -299,15 +291,6 @@
 
             return [hour, minute].join(':');
         }
-        /*
-        function ObtenerUbicacion() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
-            } else {
-                ubicacion.val("");
-            }
-        }
-        */
         function MostrarUbicacion(position) {
             ubicacion.val(position.coords.latitude + " , " + position.coords.longitude);
         }

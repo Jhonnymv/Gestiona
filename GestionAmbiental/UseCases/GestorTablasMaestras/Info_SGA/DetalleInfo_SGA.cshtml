@@ -4,44 +4,84 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Información de Sistema</h2>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Sistema</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorInfo_SGA" asp-action="EditarInfo_SGA">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <input type="hidden" asp-for="IdInfo">
+                    <div class="row input_container">
+                        <label asp-for="Tipo"></label>
+                        <span class="text-danger" asp-validation-for="Tipo"></span>
+                        <input type="text" class="form-control" asp-for="Tipo" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Info"></label>
+                        <span class="text-danger" asp-validation-for="Info"></span>
+                        <textarea rows="4" cols="50" class="form-control" asp-for="Info" disabled></textarea>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger mr-2" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorInfo_SGA" asp-action="Info_SGA" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="button" class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorInfo_SGA" asp-action="EditarInfo_SGA">
-            <input type="hidden" asp-for="IdInfo">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Tipo"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Tipo"></span>
-                    <input type="text" class="form-control" asp-for="Tipo" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Info"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Info"></span>
-                    <textarea  rows="4" cols="50" class="form-control" asp-for="Info" disabled></textarea>
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
-                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
-                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorInfo_SGA" asp-action="Info_SGA" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
-            </div>
-        </form>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Información de Sistema</h2>
+        </div>
     </div>
-</div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorInfo_SGA" asp-action="EditarInfo_SGA">
+                <input type="hidden" asp-for="IdInfo">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Tipo"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Tipo"></span>
+                        <input type="text" class="form-control" asp-for="Tipo" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Info"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Info"></span>
+                        <textarea  rows="4" cols="50" class="form-control" asp-for="Info" disabled></textarea>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                    <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorInfo_SGA" asp-action="Info_SGA" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@
 @section scripts{
     <script>
         $("#btnEditar").on('click', function () {
@@ -67,7 +107,7 @@
             $("#Tipo").prop('disabled', true);
             $("#Info").prop('disabled', true);
         });
-        $("#btnGuardar").on('click', function () {            
+        $("#btnGuardar").on('click', function () {
             $("#Tipo").prop('disabled', false);
         });
     </script>

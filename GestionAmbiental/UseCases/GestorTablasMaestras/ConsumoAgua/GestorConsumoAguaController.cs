@@ -126,7 +126,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -142,7 +142,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?message=" + message+ "&result="+result });
             }
             else
             {
@@ -345,7 +345,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdOrigenAgua=" + IdOrigenAgua });
             }
             else
             {
@@ -384,7 +384,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -487,7 +487,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdFuenteAgua=" + IdFuenteAgua });
             }
             else
             {
@@ -534,7 +534,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -654,7 +654,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdResolucionConsumoAgua=" + IdResolucionConsumoAgua });
             }
             else
             {
@@ -709,7 +709,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -817,7 +817,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdUsuario=" + IdUsuario });
             }
             else
             {
@@ -867,7 +867,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -899,7 +899,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id_Usuario=" + Id_Usuario });
             }
             else
             {
@@ -966,7 +966,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Tipo=" + Tipo });
             }
             else
             {

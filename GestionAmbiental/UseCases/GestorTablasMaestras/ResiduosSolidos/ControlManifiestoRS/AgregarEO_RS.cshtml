@@ -3,48 +3,89 @@
     ViewData["Title"] = "AgregarEO_RS";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Agregar EO-RS</h2>
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Conductor</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorManifiestoRS" asp-action="AgregarEO_RS">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Razon_Social"></label>
+                        <span class="text-danger" asp-validation-for="Razon_Social"></span>
+                        <input type="text" class="form-control" asp-for="Razon_Social" maxlength="100">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Registro"></label>
+                        <span class="text-danger" asp-validation-for="Registro"></span>
+                        <input type="text" class="form-control" asp-for="Registro" maxlength="25">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Fecha_Vencimiento_Registro"></label>
+                        <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro"></span>
+                        <input type="date" class="form-control" asp-for="Fecha_Vencimiento_Registro">
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorManifiestoRS" asp-action="AgregarEO_RS">
-
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Razon_Social"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Razon_Social"></span>
-                    <input type="text" class="form-control" asp-for="Razon_Social" maxlength="100">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Registro"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Registro"></span>
-                    <input type="text" class="form-control" asp-for="Registro" maxlength="25">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Fecha_Vencimiento_Registro"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro"></span>
-                    <input type="date" class="form-control" asp-for="Fecha_Vencimiento_Registro">
-                </div>
-                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Agregar EO-RS</h2>
+        </div>
     </div>
-</div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorManifiestoRS" asp-action="AgregarEO_RS">
 
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Razon_Social"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Razon_Social"></span>
+                        <input type="text" class="form-control" asp-for="Razon_Social" maxlength="100">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Registro"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Registro"></span>
+                        <input type="text" class="form-control" asp-for="Registro" maxlength="25">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Fecha_Vencimiento_Registro"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Fecha_Vencimiento_Registro"></span>
+                        <input type="date" class="form-control" asp-for="Fecha_Vencimiento_Registro">
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorManifiestoRS" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@

@@ -3,8 +3,68 @@
     ViewData["Title"] = "DetalleUsuario";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
-<div class="row mb-2">
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Usuarios a Notificar</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarUsuario">
+                <input type="hidden" asp-for="Id_Usuario_Notificar" value="@Model.Id_Usuario_Notificar">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Nombres"></label>
+                        <span class="text-danger" asp-validation-for="Nombres"></span>
+                        <input type="text" class="form-control" asp-for="Nombres" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Apellidos"></label>
+                        <span class="text-danger" asp-validation-for="Apellidos"></span>
+                        <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="usuario_red"></label>
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                        <input type="text" class="form-control" asp-for="Email" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Email"></label>
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                        <input type="text" class="form-control" asp-for="Email" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Id_Rol"></label>
+                        <span class="text-danger" asp-validation-for="Id_Rol"></span>
+                        <select class="form-control" asp-for="Id_Rol" asp-items="ViewBag.Roles" disabled>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado"></label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <a asp-controller="GestorAvistamientoFauna" asp-action="QuitarUsuario" asp-route-Id_Usuario="@Model.Id_Usuario_Notificar" class="btn btn-mc-danger mr-2">Quitar de la Lista</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
         <h2>Información de Usuarios a Notificar</h2>
     </div>
@@ -78,6 +138,6 @@
             </div>
         </form>
     </div>
-</div>
+</div>*@
 
 

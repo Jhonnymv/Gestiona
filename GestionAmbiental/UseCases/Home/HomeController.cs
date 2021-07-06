@@ -93,6 +93,12 @@ namespace GestionAmbiental.Controllers
 
         public IActionResult NoAutorizado(string returnUrl)
         {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+            }
             TempData["returnUrl"] = returnUrl;
             return View();
         }

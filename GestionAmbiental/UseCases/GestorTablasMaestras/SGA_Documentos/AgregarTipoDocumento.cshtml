@@ -4,103 +4,146 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Tipo de Documento</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="AgregarTipoDocumento" method="post" enctype="multipart/form-data" >
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Codigo"></label>
+                        <span class="text-danger" asp-validation-for="Codigo"></span>
+                        <input type="text" class="form-control" asp-for="Codigo">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Descripcion"></label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Formato"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <input type="file" class="form-control" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Agregar Tipo de Documento</h2>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Agregar Tipo de Documento</h2>
+        </div>
     </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="AgregarTipoDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Codigo"></label>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorSGADocumentos" asp-action="AgregarTipoDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Codigo"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Codigo"></span>
+                        <input type="text" class="form-control" asp-for="Codigo">
+                    </div>
                 </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Codigo"></span>
-                    <input type="text" class="form-control" asp-for="Codigo">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Descripcion"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion">
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Formato"></label>
+                    </div>
+                    <div class="col-lg-2">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <label class="btn btn-primary" for="Formato">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
+                    </div>
+                    <div class="col-lg-4">
+                        <label id="files_name">0 Archivos</label>
+                    </div>
                 </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="text" class="form-control" asp-for="Descripcion">
+                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Formato"></label>
-                </div>
-                <div class="col-lg-2">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Formato" data-valmsg-replace="true">
-                        <span id="danger_evidencia" class=""></span>
-                    </span>
-                    <label class="btn btn-primary" for="Formato">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Formato" accept=".jpg,.jpeg,.png,.docx,.doc,.pdf,.xls,.xlsx">
-                </div>
-                <div class="col-lg-4">
-                    <label id="files_name">0 Archivos</label>
-                </div>
-            </div>
-            <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorSGADocumentos" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
-    </div>
-</div>
+            </form>
+        </div>
+    </div>*@
 @section Scripts {
-<script type="text/javascript">
-    $("#Formato").change(function () {
-        $("#danger_documento").html("");
-        //Validacion del tamaño del archivo
-        var maxSize = $("#Formato").data('max-size');
-        var archivos = $("#Formato").get(0).files;
+    <script type="text/javascript">
+        $("#Formato").change(function () {
+            $("#danger_documento").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Formato").data('max-size');
+            var archivos = $("#Formato").get(0).files;
 
-        if (archivos.length > 0) {
-            var fileSize = 0
-            for (var i = 0; i < archivos.length; i++) {
-                fileSize += archivos[i].size;
-            }
-            if (fileSize > maxSize) {
-                this.value = '';
-                var filesname = this.files.length + " Archivos";
-                $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
-                return;
-            }
-            var filesName = "";
-            for (var i = 0; i < archivos.length; i++) {
-                switch (this.value.match(/\.([^\.]+)$/)[1]) {
-                    case 'jpg':
-                    case 'JPG':
-                    case 'jpeg':
-                    case 'JPEG':
-                    case 'png':
-                    case 'PNG':
-                    case 'xls':
-                    case 'xlsx':
-                    case 'doc':
-                    case 'docx':
-                    case 'pdf':
-                        filesName += archivos[i].name + "<br/>";
-                        break;
-                    default:
-                        this.value = '';
-                        var filesname = this.files.length + " Archivos";
-                        $("#files_name").text(filesname);
-                        $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
-                        return;
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
                 }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#danger_documento").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                        case 'xls':
+                        case 'xlsx':
+                        case 'doc':
+                        case 'docx':
+                        case 'pdf':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#danger_documento").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
             }
-            filesName.length > 0 ? $("#files_name").html(filesName) : null;
-        }
-    });
-</script>
+        });
+    </script>
 }
 
 

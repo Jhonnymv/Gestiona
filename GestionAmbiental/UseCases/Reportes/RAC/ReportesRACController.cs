@@ -65,7 +65,7 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -174,7 +174,7 @@ namespace GestionAmbiental.UseCases.Reportes.RAC
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdGerencia=" + IdGerencia + "&IdEmpresa=" + IdEmpresa + "&IdUsuario=" + IdUsuario + "&FechaInicio=" + FechaInicio + "&FechaFin=" + FechaFin + "&estado=" + estado });
             }
             else
             {

@@ -4,73 +4,223 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Información de Lugar de Referencia</h2>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Lugar de Referencia</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarLugarReferencia">
+                <input type="hidden" asp-for="IdLugarReferencia" value="@Model.IdLugarReferencia">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Descripcion"></label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
+                    <div class="row input_container justify-content-center" id="bntCalcular">
+                        <div class="col-lg-8 text-center">
+                            <button id="convertir" type="button" class="btn btn-mc-outline-success">Convertir UTM a Latitud y Longitud</button>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Latitud"></label>
+                        <span class="text-danger" asp-validation-for="Latitud"></span>
+                        <input type="text" class="form-control" asp-for="Latitud" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Longitud"></label>
+                        <span class="text-danger" asp-validation-for="Longitud"></span>
+                        <input type="text" class="form-control" asp-for="Longitud" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado"></label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger mr-2" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="button" class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarLugarReferencia">
-            <input type="hidden" asp-for="IdLugarReferencia" value="@Model.IdLugarReferencia">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Información de Lugar de Referencia</h2>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarLugarReferencia">
+                <input type="hidden" asp-for="IdLugarReferencia" value="@Model.IdLugarReferencia">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Descripcion"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
                 </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                <div id="bntCalcular" class="row mb-2" hidden>
+                    <div class="col-lg-12 text-center">
+                        <button id="convertir" type="button" class="btn btn-link">Convertir UTM a Latitud y Longitud</button>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Latitud"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Latitud"></span>
+                        <input type="text" class="form-control" asp-for="Latitud" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Longitud"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Longitud"></span>
+                        <input type="text" class="form-control" asp-for="Longitud" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Estado"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
+                    <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@
+
+<!-- Modal Convertir Ubicación-->
+<div class="modal fade" tabindex="-1" id="modal_ubicacion" aria-labelledby="titulo_modal_ubicacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-tablas">
+            <div class="modal-content">
+                <div class="tablas">
+                    <div class="image-header-container"
+                         style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+                        <div class="header-title tablas-opacity-color">
+                            <h3>Convertir UTM a Latitud y Longitud</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form details-container w-100">
+                            <div class="message"></div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Hemisferio</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <select class="form-control" id="hemisferio">
+                                        <option value="S" selected>Sur</option>
+                                        <option value="N">Norte</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Zona</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input id="zona" type="number" class="form-control" value="18">
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Este</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input id="este" type="number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Norte</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input id="norte" type="number" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-12 titulo-pagina">
+                                    <h2>Resultado</h2>
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Latitud</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input id="lat" type="number" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="col-lg-4">
+                                    <label>Longitud</label>
+                                </div>
+                                <div class="col-lg-8">
+                                    <input id="long" type="number" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="row input_container w-100">
+                                <div class="button-container">
+                                    <div></div>
+                                    <div id="bntsDetalle">
+                                        <button type="button" class="btn btn-mc-outline-danger" data-dismiss="modal">Cerrar</button>
+                                        <button id="bntUtilizarVal" type="button" class="btn btn-mc-success">Utilizar Valores</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="bntCalcular" class="row mb-2" hidden>
-                <div class="col-lg-12 text-center">
-                    <button id="convertir" type="button" class="btn btn-link">Convertir UTM a Latitud y Longitud</button>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Latitud"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Latitud"></span>
-                    <input type="text" class="form-control" asp-for="Latitud" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Longitud"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Longitud"></span>
-                    <input type="text" class="form-control" asp-for="Longitud" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Estado"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Estado"></span>
-                    <select class="form-control" asp-for="Estado" disabled>
-                        <option value="">--SELECCIONE--</option>
-                        <option value="ACT">ACT</option>
-                        <option value="INA">INA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsEditar" style="display:none">
-                <button type="button" class="btn btn-secondary mr-2" id="btnCancelar" disabled>Cancelar</button>
-                <button type="submit" class="btn btn-primary" id="btnGuardar" disabled>Guardar</button>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="button" class="btn btn-primary" id="btnEditar">Editar</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 <!-- Modal Convertir Ubicación-->
-<div class="modal fade" id="modal_ubicacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ubicacion"
+@*<div class="modal fade" id="modal_ubicacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ubicacion"
      aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -150,7 +300,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 @section scripts{
     <script>
         $("#btnEditar").on('click', function () {
