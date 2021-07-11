@@ -4,58 +4,107 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Información de Nombres Comunes de Fauna</h2>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Nombres Comunes de Fauna</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="AgregarNombreComun" method="post" enctype="multipart/form-data">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Descripcion"></label>
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="IdTipoFauna"></label>
+                        <span class="text-danger" asp-validation-for="IdTipoFauna"></span>
+                        <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna">
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Foto"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <input type="file" class="form-control" asp-for="Foto" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-lg-8">
+                            <img id="output_image" style="width:100%;height:auto" />
+                        </div>
+                    </div>
+                    <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success" id="btnAgregar">Agregar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="AgregarNombreComun" method="post" enctype="multipart/form-data">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="text" class="form-control" asp-for="Descripcion">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="IdTipoFauna"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="IdTipoFauna"></span>
-                    <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Foto"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
-                        <span id="danger_evidencia" class=""></span>
-                    </span>
-                    <label class="btn btn-primary" for="Foto">Seleccione</label>
-                    <input type="file" style="visibility:hidden; display:none" asp-for="Foto" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4"></div>
-                <div class="col-lg-8">
-                    <img id="output_image" style="width:100%;height:auto"/>
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="submit" class="btn btn-primary" id="btnAgregar">Agregar</button>
-            </div>
-        </form>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Información de Nombres Comunes de Fauna</h2>
+        </div>
     </div>
-</div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="AgregarNombreComun" method="post" enctype="multipart/form-data">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Descripcion"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Descripcion"></span>
+                        <input type="text" class="form-control" asp-for="Descripcion">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="IdTipoFauna"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="IdTipoFauna"></span>
+                        <select class="form-control" asp-for="IdTipoFauna" asp-items="ViewBag.TiposFauna">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Foto"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <label class="btn btn-primary" for="Foto">Seleccione</label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Foto" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-8">
+                        <img id="output_image" style="width:100%;height:auto"/>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorAvistamientoFauna" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="submit" class="btn btn-primary" id="btnAgregar">Agregar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@
 <script type="text/javascript">
     function preview_image(event) {
         var reader = new FileReader();

@@ -65,6 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdEmpresa = item.Id_Empresa,
                     RazonSocial = item.Razon_Social,
+                    Estado = item.Estado
                 };
                 output.Add(outputItem);
             }

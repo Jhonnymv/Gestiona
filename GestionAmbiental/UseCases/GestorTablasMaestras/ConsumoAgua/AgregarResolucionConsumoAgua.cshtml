@@ -4,131 +4,222 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Agregar Resolución de Consumo de Agua</h2>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="AgregarResolucionConsumoAgua">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Resolucion"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Resolucion"></span>
-                    <input type="text" class="form-control" asp-for="Resolucion">
-                </div>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Agregar Origen de Agua</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Anio"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Anio"></span>
-                    <input type="text" class="form-control" asp-for="Anio">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="FechaVencimiento"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="FechaVencimiento"></span>
-                    <input type="date" class="form-control" asp-for="FechaVencimiento">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Caudal"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Caudal"></span>
-                    <input type="number" class="form-control" asp-for="Caudal" step="0.01">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="TipoUso"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="TipoUso"></span>
-                    <input type="text" class="form-control" asp-for="TipoUso">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="ClaseDerecho"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="ClaseDerecho"></span>
-                    <input type="text" class="form-control" asp-for="ClaseDerecho">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="IdFuenteAgua"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="IdFuenteAgua"></span>
-                    <select class="form-control" asp-for="IdFuenteAgua" asp-items="ViewBag.FuentesAgua">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="VolumenOtorgado"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="VolumenOtorgado"></span>
-                    <input type="number" class="form-control" asp-for="VolumenOtorgado" step="0.01">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Actividad"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Actividad"></span>
-                    <input type="text" class="form-control" asp-for="Actividad">
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="AgregarResolucionConsumoAgua">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Resolucion"></label>
+                        <span class="text-danger" asp-validation-for="Resolucion"></span>
+                        <input type="text" class="form-control" asp-for="Resolucion">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Anio"></label>
+                        <span class="text-danger" asp-validation-for="Anio"></span>
+                        <input type="text" class="form-control" asp-for="Anio">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="FechaVencimiento"></label>
+                        <span class="text-danger" asp-validation-for="FechaVencimiento"></span>
+                        <input type="date" class="form-control" asp-for="FechaVencimiento">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Caudal"></label>
+                        <span class="text-danger" asp-validation-for="Caudal"></span>
+                        <input type="number" class="form-control" asp-for="Caudal" step="0.01">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="TipoUso"></label>
+                        <span class="text-danger" asp-validation-for="TipoUso"></span>
+                        <input type="text" class="form-control" asp-for="TipoUso">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="ClaseDerecho"></label>
+                        <span class="text-danger" asp-validation-for="ClaseDerecho"></span>
+                        <input type="text" class="form-control" asp-for="ClaseDerecho">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="IdFuenteAgua"></label>
+                        <span class="text-danger" asp-validation-for="IdFuenteAgua"></span>
+                        <select class="form-control" asp-for="IdFuenteAgua" asp-items="ViewBag.FuentesAgua">
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="VolumenOtorgado"></label>
+                        <span class="text-danger" asp-validation-for="VolumenOtorgado"></span>
+                        <input type="number" class="form-control" asp-for="VolumenOtorgado" step="0.01">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Actividad"></label>
+                        <span class="text-danger" asp-validation-for="Actividad"></span>
+                        <input type="text" class="form-control" asp-for="Actividad">
+                        <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Actividad"></label>
+                        <span class="text-danger" asp-validation-for="Actividad"></span>
+                        <input type="text" class="form-control" asp-for="Actividad">
+                        <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="LimiteDiario"></label>
+                        <span class="text-danger" asp-validation-for="LimiteDiario"></span>
+                        <input type="number" class="form-control" asp-for="LimiteDiario" step="0.01">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="LimiteSemanal"></label>
+                        <span class="text-danger" asp-validation-for="LimiteSemanal"></span>
+                        <input type="number" class="form-control" asp-for="LimiteSemanal" step="0.01">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="LimiteMensual"></label>
+                        <span class="text-danger" asp-validation-for="LimiteMensual"></span>
+                        <input type="number" class="form-control" asp-for="LimiteMensual" step="0.01">
+                    </div>
                     <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="LimiteDiario"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="LimiteDiario"></span>
-                    <input type="number" class="form-control" asp-for="LimiteDiario" step="0.01">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="LimiteSemanal"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="LimiteSemanal"></span>
-                    <input type="number" class="form-control" asp-for="LimiteSemanal" step="0.01">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="LimiteMensual"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="LimiteMensual"></span>
-                    <input type="number" class="form-control" asp-for="LimiteMensual" step="0.01">
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <button type="submit" class="btn btn-primary">Guardar</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
-
-
-
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Agregar Resolución de Consumo de Agua</h2>
+        </div>
+    </div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorConsumoAgua" asp-action="AgregarResolucionConsumoAgua">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Resolucion"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Resolucion"></span>
+                        <input type="text" class="form-control" asp-for="Resolucion">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Anio"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Anio"></span>
+                        <input type="text" class="form-control" asp-for="Anio">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="FechaVencimiento"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="FechaVencimiento"></span>
+                        <input type="date" class="form-control" asp-for="FechaVencimiento">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Caudal"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Caudal"></span>
+                        <input type="number" class="form-control" asp-for="Caudal" step="0.01">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="TipoUso"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="TipoUso"></span>
+                        <input type="text" class="form-control" asp-for="TipoUso">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="ClaseDerecho"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="ClaseDerecho"></span>
+                        <input type="text" class="form-control" asp-for="ClaseDerecho">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="IdFuenteAgua"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="IdFuenteAgua"></span>
+                        <select class="form-control" asp-for="IdFuenteAgua" asp-items="ViewBag.FuentesAgua">
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="VolumenOtorgado"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="VolumenOtorgado"></span>
+                        <input type="number" class="form-control" asp-for="VolumenOtorgado" step="0.01">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Actividad"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Actividad"></span>
+                        <input type="text" class="form-control" asp-for="Actividad">
+                        <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="LimiteDiario"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="LimiteDiario"></span>
+                        <input type="number" class="form-control" asp-for="LimiteDiario" step="0.01">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="LimiteSemanal"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="LimiteSemanal"></span>
+                        <input type="number" class="form-control" asp-for="LimiteSemanal" step="0.01">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="LimiteMensual"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="LimiteMensual"></span>
+                        <input type="number" class="form-control" asp-for="LimiteMensual" step="0.01">
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorConsumoAgua" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>*@

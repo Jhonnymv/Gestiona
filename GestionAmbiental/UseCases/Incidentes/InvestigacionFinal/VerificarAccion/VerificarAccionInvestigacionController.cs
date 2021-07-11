@@ -33,7 +33,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAccion=" + IdAccion });
             }
             else
             {
@@ -88,7 +88,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAccion=" + IdAccion });
             }
             else
             {

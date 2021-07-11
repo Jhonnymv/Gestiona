@@ -68,7 +68,7 @@
                         <div></div>
                         <div>
                             <a id="boton_cancelar" class="btn btn-mc-outline-danger" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
-                            <button id="boton_implementar" type="button" class="btn btn-mc" onclick="Implementar()">Implementar</button>                            
+                            <button id="boton_implementar" type="button" class="btn btn-mc" onclick="Implementar()">Implementar</button>
                         </div>
                     </div>
                 </div>
@@ -177,17 +177,26 @@
 
 
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>  Notificando al Asesor de Medio Ambiente</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Notificando al Asesor de Medio Ambiente</label>
+                    </div>
                 </div>
             </div>
         </div>

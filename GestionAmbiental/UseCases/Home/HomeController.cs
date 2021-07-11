@@ -77,8 +77,12 @@ namespace GestionAmbiental.Controllers
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+                return View();
             }
-            return View();
+            else
+            { 
+                return RedirectToAction("NoAutorizado", new { returnUrl = "/"+ControllerContext.ActionDescriptor.ControllerName+"/"+ ControllerContext.ActionDescriptor.ActionName });
+            }
         }
         //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         //public IActionResult Error()
@@ -87,8 +91,15 @@ namespace GestionAmbiental.Controllers
         //}
 
 
-        public IActionResult NoAutorizado()
+        public IActionResult NoAutorizado(string returnUrl)
         {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+            }
+            TempData["returnUrl"] = returnUrl;
             return View();
         }
     }

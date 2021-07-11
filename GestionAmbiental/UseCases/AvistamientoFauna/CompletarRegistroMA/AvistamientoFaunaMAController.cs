@@ -58,7 +58,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -165,7 +165,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento });
             }
             else
             {
@@ -186,10 +186,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
 
                 var tipoAvistamiento = items.TiposAvistamiento.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoAvistamiento.ToString(), Text = g.Descripcion }).ToList();
 
-                var empresas = items.Empresas.Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var empresas = items.Empresas.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var areas = items.AreasTrabajo.Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
+                var areas = items.AreasTrabajo.Where(x=>x.Estado.Equals("ACT")).OrderBy(x=>x.Descripcion).Select(g => new SelectListItem() { Value = g.IdAreaTrabajo.ToString(), Text = g.Descripcion }).ToList();
                 areas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var lugares = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
@@ -333,7 +333,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName});
             }
             else
             {

@@ -64,7 +64,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -81,11 +81,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                 return View();
             }
-        } public async Task<IActionResult> ResumenTarjetas()
+        } 
+        public async Task<IActionResult> ResumenTarjetas()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -233,7 +234,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Modulo=" + Modulo });
             }
             else
             {
@@ -468,7 +469,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdTarjeta=" + IdTarjeta });
             }
             else
             {
@@ -557,7 +558,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
             }
             else
             {
@@ -805,7 +806,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id+ "&Msg="+ Msg });
             }
             else
             {
@@ -987,7 +988,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id + "&Msg=" + Msg });
             }
             else
             {

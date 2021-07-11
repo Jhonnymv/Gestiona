@@ -17,34 +17,32 @@
                 <input type="hidden" asp-for="IdEmpresa">
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="RazonSocial">Razón Social</label>
-                            <span class="text-danger" asp-validation-for="RazonSocial"></span>
-                            <input type="text" class="form-control" asp-for="RazonSocial" disabled>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Estado">Estado</label>
-                            <span class="text-danger" asp-validation-for="Estado"></span>
-                            <select class="form-control" asp-for="Estado" disabled>
-                                <option value="">--SELECCIONE--</option>
-                                <option value="ACT">ACT</option>
-                                <option value="INA">INA</option>
-                            </select>
-                        </div>
+                        <label asp-for="RazonSocial">Razón Social</label>
+                        <span class="text-danger" asp-validation-for="RazonSocial"></span>
+                        <input type="text" class="form-control" asp-for="RazonSocial" disabled>
+
                     </div>
-                </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado">Estado</label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
 
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="button-container">
-                        <div></div>
-
-                        <div id="bntsEditar" style="display:none">
-                            <button type="button" class="btn btn-mc-outline-danger" id="btnCancelar" disabled>Cancelar</button>
-                            <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
-                        </div>
-                        <div id="bntsDetalle">
-                            <a type="button" class="btn btn-mc-outline" asp-controller="GestorEGTC" asp-action="Resumen" id="btnVolver">Volver</a>
-                            <button class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a type="button" class="btn btn-mc-outline" asp-controller="GestorEGTC" asp-action="Resumen" id="btnVolver">Volver</a>
+                                <button class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
                         </div>
                     </div>
                 </div>

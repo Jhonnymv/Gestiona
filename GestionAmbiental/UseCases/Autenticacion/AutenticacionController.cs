@@ -28,47 +28,47 @@ namespace GestionAmbiental.UseCases.Autenticacion
             _getRolUsuario = getRolUsuario;
         }
 
-        public IActionResult Signin()
-        {
-            return View(new SigninModel());
-        }
-        [HttpPost]
-        public async Task<IActionResult> Signin(SigninModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                // Get LDAP connection data
-                var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-                string ldap_path = "", ldap_domain = "";
-                foreach (var item in info.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "ldap_path": ldap_path = item.Value; break;
-                        case "ldap_domain": ldap_domain = item.Value; break;
-                    }
-                }
-                // Validate credentials
-                using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
-                {
-                    if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
-                    {
-                        var rol = await _getRolUsuario.Execute(model.User);
-                        if (!rol.HasValue)
-                            return RedirectToAction("NoAutorizado", "Home");
-                        else
-                        {
-                            var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                            return RedirectToAction("Index", "Home");
-                        }
-                    }
-                    else
-                        return View(new SigninModel { MensajeAut = "El usuario o la contraseña son incorrectas" });
-                }
-            }
-            return View(new SigninModel());
-        }
+        //public IActionResult Signin()
+        //{
+        //    return View(new SigninModel());
+        //}
+        //[HttpPost]
+        //public async Task<IActionResult> Signin(SigninModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Get LDAP connection data
+        //        var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
+        //        string ldap_path = "", ldap_domain = "";
+        //        foreach (var item in info.Info)
+        //        {
+        //            switch (item.Key)
+        //            {
+        //                case "ldap_path": ldap_path = item.Value; break;
+        //                case "ldap_domain": ldap_domain = item.Value; break;
+        //            }
+        //        }
+        //        // Validate credentials
+        //        using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+        //        {
+        //            if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
+        //            {
+        //                var rol = await _getRolUsuario.Execute(model.User);
+        //                if (!rol.HasValue)
+        //                    return RedirectToAction("NoAutorizado", "Home");
+        //                else
+        //                {
+        //                    var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+        //                    HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+        //                    return RedirectToAction("Index", "Home");
+        //                }
+        //            }
+        //            else
+        //                return View(new SigninModel { MensajeAut = "El usuario o la contraseña son incorrectas" });
+        //        }
+        //    }
+        //    return View(new SigninModel());
+        //}
         [HttpPost]
         public async Task<IActionResult> IniciarSesion(SigninModel model)
         {
@@ -80,7 +80,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
             };
             if (ModelState.IsValid)
             {
-
+                string returnUrl = TempData["returnUrl"] as string;
                 //// Get LDAP connection data
                 //var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
                 //string ldap_path = "", ldap_domain = "";
@@ -110,7 +110,8 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 //            HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                 //            result = new
                 //            {
-                //                success = true
+                //                success = true,
+                //                returnUrl = returnUrl
                 //            };
                 //        }
                 //    }
@@ -138,10 +139,10 @@ namespace GestionAmbiental.UseCases.Autenticacion
                     HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
                     result = new
                     {
-                        success = true
+                        success = true,
+                        returnUrl = returnUrl
                     };
                 }
-
             }
             return Ok(result);
         }

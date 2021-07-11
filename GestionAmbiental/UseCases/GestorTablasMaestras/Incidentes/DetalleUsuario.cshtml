@@ -4,79 +4,140 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Información de Usuarios a Notificar</h2>
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Usuarios a Notificar</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorIncidentes" asp-action="EditarUsuario">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <input type="hidden" asp-for="Id_Usuario_Notificar">
+                    <div class="row input_container">
+                        <label asp-for="Nombres"></label>
+                        <span class="text-danger" asp-validation-for="Nombres"></span>
+                        <input type="text" class="form-control" asp-for="Nombres" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Apellidos"></label>
+                        <span class="text-danger" asp-validation-for="Apellidos"></span>
+                        <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="usuario_red"></label>
+                        <span class="text-danger" asp-validation-for="usuario_red"></span>
+                        <input type="text" class="form-control" asp-for="usuario_red" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Email"></label>
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                        <input type="text" class="form-control" asp-for="Email" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Id_Rol"></label>
+                        <span class="text-danger" asp-validation-for="Id_Rol"></span>
+                        <select class="form-control" asp-for="Id_Rol" asp-items="ViewBag.Roles" disabled>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado"></label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">Activo</option>
+                            <option value="INA">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorIncidentes" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <a asp-controller="GestorIncidentes" asp-action="QuitarUsuario" asp-route-Id_Usuario="@Model.Id_Usuario_Notificar" class="btn btn-mc-danger mr-2">Quitar de la Lista</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorIncidentes" asp-action="EditarUsuario">
-            <input type="hidden" asp-for="Id_Usuario_Notificar">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Nombres"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Nombres"></span>
-                    <input type="text" class="form-control" asp-for="Nombres" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Apellidos"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Apellidos"></span>
-                    <input type="text" class="form-control" asp-for="Apellidos" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="usuario_red"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="usuario_red"></span>
-                    <input type="text" class="form-control" asp-for="usuario_red" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Email"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Email"></span>
-                    <input type="text" class="form-control" asp-for="Email" disabled>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Id_Rol"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Id_Rol"></span>
-                    <select class="form-control" asp-for="Id_Rol" asp-items="ViewBag.Roles" disabled>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Estado"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Estado"></span>
-                    <select class="form-control" asp-for="Estado" disabled>
-                        <option value="">--SELECCIONE--</option>
-                        <option value="ACT">Activo</option>
-                        <option value="INA">Inactivo</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center" id="bntsDetalle">
-                <a asp-controller="GestorIncidentes" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
-                <a asp-controller="GestorIncidentes" asp-action="QuitarUsuario" asp-route-Id_Usuario="@Model.Id_Usuario_Notificar" class="btn btn-danger mr-2">Quitar de la Lista</a>
-            </div>
-        </form>
+@*<div class="row mb-2">
+        <div class="col-12 titulo-pagina">
+            <h2>Información de Usuarios a Notificar</h2>
+        </div>
     </div>
-</div>
+    <div class="row mb-2 justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <form autocomplete="off" asp-controller="GestorIncidentes" asp-action="EditarUsuario">
+                <input type="hidden" asp-for="Id_Usuario_Notificar">
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Nombres"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Nombres"></span>
+                        <input type="text" class="form-control" asp-for="Nombres" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Apellidos"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Apellidos"></span>
+                        <input type="text" class="form-control" asp-for="Apellidos" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="usuario_red"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="usuario_red"></span>
+                        <input type="text" class="form-control" asp-for="usuario_red" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Email"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Email"></span>
+                        <input type="text" class="form-control" asp-for="Email" disabled>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Id_Rol"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Id_Rol"></span>
+                        <select class="form-control" asp-for="Id_Rol" asp-items="ViewBag.Roles" disabled>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-4">
+                        <label asp-for="Estado"></label>
+                    </div>
+                    <div class="col-lg-8">
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">Activo</option>
+                            <option value="INA">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2 justify-content-center" id="bntsDetalle">
+                    <a asp-controller="GestorIncidentes" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnVolver">Volver</a>
+                    <a asp-controller="GestorIncidentes" asp-action="QuitarUsuario" asp-route-Id_Usuario="@Model.Id_Usuario_Notificar" class="btn btn-danger mr-2">Quitar de la Lista</a>
+                </div>
+            </form>
+        </div>
+    </div>*@
 

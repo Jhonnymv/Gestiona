@@ -60,12 +60,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public IActionResult Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -146,12 +146,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public async Task<IActionResult> DetalleEmpresa(int IdEmpresa)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdEmpresa=" + IdEmpresa });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdEmpresa=" + IdEmpresa });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -188,12 +188,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public IActionResult AgregarEmpresa()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -292,12 +292,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public async Task<IActionResult> DetalleGerencia(int IdGerencia)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdGerencia=" + IdGerencia });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdGerencia=" + IdGerencia });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -332,12 +332,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public IActionResult AgregarGerencia()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -437,12 +437,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public async Task<IActionResult> DetalleTipoCondicion(int IdTipoCondicion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdTipoCondicion=" + IdTipoCondicion });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdTipoCondicion=" + IdTipoCondicion });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();
@@ -487,12 +487,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         public IActionResult AgregarTipoCondicion()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName  });
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
+                    return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
                 else
                 {
                     ViewBag.Rol = userInfo.Rol.ToString();

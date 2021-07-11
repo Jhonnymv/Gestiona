@@ -13,9 +13,6 @@
         </div>
         <div class="content-header">
             <div class="action-container fauna-color">
-                @*<div class="w-100 row-center-center">
-                    <a class="btn btn-special-action-outline fauna-color">NUEVO REGISTRO</a>
-                </div>*@
                 <div class="w-100 row-center-center">
                     <a class="btn btn-special-action-outline fauna-color" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna">CATÁLOGO</a>
                 </div>
@@ -80,76 +77,6 @@
         </div>
     </div>
 </div>
-@*<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Avistamiento de Fauna - Resumen</h2>
-    </div>
-</div>
-<form autocomplete="off">
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <label>Fecha:</label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <input type="date" class="form-control" id="filtro_fecha">
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <label>Tipo de Fauna:</label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <select class="form-control" id="filtro_tipo_fauna" asp-items="ViewBag.TipoFauna"></select>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <label>Estado de Fauna:</label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-            <select class="form-control" id="filtro_estado_fauna" asp-items="ViewBag.EstadoFauna"></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-3 mt-1">
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-sm-12 col-md-1 col-lg-1 mt-1">
-            <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-        </div>
-    </div>
-</form>
-
-<div class="row mb-2 justify-content-start d-flex align-items-center">
-    <div class="col-sm-12 col-md-12 col-lg-12 mt-1">
-        <a class="btn btn-danger float-left" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna"><img src="~/img/icons/edit-icon.png" style="vertical-align:sub"> Nuevo Registro</a>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <div class="col-md">
-        <table class="table" id="tabla_resumen">
-            <thead class="thead-mcolor">
-                <tr>
-                    <th></th>
-                    <th>Item</th>
-                    <th>Fecha</th>
-                    <th>Hora</th>
-                    <th>Ubicación</th>
-                    <th>Cantidad</th>
-                    <th>Tipo de Fauna</th>
-                    <th>Nombre Común</th>
-                    <th>Estado de la Fauna</th>
-                    <th>Tipo de Avistamiento</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
-<div class="row mb-2 justify-content-center">
-    <nav id="paginado" aria-label="pagination">
-    </nav>
-</div>*@
 @section scripts{
     <script type="text/javascript">
         var r = 0;

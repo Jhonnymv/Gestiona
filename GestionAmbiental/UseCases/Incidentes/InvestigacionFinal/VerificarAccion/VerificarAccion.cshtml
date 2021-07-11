@@ -55,7 +55,7 @@
                             <option value="Cerrado">Cerrado</option>
                         </select>
                     </div>
-                    <div class="row input_container">
+                    <div class="row input_container align-items-start">
                         <div class="col-sm-12 col-md-4 col-lg-3">
                             <label asp-for="Evidencias"></label>
                             <input type="hidden" asp-for="Evidencias" />
@@ -80,7 +80,7 @@
                         <div>
                             <a id="boton_cancelar" class="btn btn-mc-outline-danger" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
                             <button id="boton_rechazar" type="button" class="btn btn-mc-danger" onclick="Rechazar()">Rechazar</button>
-                            <button id="boton_aprobar" type="button" class="btn btn-mc-success" onclick="Aprobar()">Aprobar</button>                            
+                            <button id="boton_aprobar" type="button" class="btn btn-mc-success" onclick="Aprobar()">Aprobar</button>
                         </div>
                     </div>
                 </div>
@@ -195,26 +195,32 @@
             </div>
         </form>
     </div>*@
-
-
 <!-- Modal Enviando Correo-->
-<div class="modal fade" id="Modal_Enviando_Correo" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
                     </div>
-                    <br />
-                    <label>  Notificando al Responsable</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Notificando al Responsable</label>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             var evidencias = '@Model.Evidencias';
@@ -223,7 +229,7 @@
                 var evidencias_valores = JSON.parse(evidencias.replace(/&quot;/g, '"'));
                 var html_evidencias = "";
                 for (var i = 0; i < evidencias_valores.length; i++)
-                    html_evidencias += "<p><a href=\"/ImplementarAccionInvestigacion/Download?fileName=" + evidencias_valores[i] + "\">Evidencia</a></p>";
+                    html_evidencias += "<p><a class=\"btn btn-mc-outline me-2\" href=\"/ImplementarAccionInvestigacion/Download?fileName=" + evidencias_valores[i] + "\">Evidencia</a></p>";
 
                 $("#Evidencias_Lista").html(html_evidencias);
                 $("#Evidencias").val(evidencias_valores);
