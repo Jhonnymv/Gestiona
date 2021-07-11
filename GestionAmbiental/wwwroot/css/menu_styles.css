@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');
 body::-webkit-scrollbar{
     -webkit-appearance: none;
     transition: 0.3s;
@@ -43,12 +44,12 @@ body::-webkit-scrollbar-track {
     box-shadow: 0px 4px 4px rgba(0 ,0 ,0, 0.25);
 }
 
-.navbar .img-logo {
-    width: 50%;
-}
+/*.navbar .img-logo {
+    width: 1.5em;
+}*/
 
 .navbar .img-logo img {
-    width: 10rem;
+    width: 1.5em;
 }
 
 .navbar-light .navbar-toggler{
@@ -201,6 +202,10 @@ body::-webkit-scrollbar-track {
     box-shadow: 0px 2px 2px rgba(0 ,0 ,0, 0.25);
 }
 
+.modal-menu-marcobre .modal-content .modal-image-header-container .modal-header {
+    background-color: rgba(45,100,155,0.9);
+}
+
 .icon-modal-menu-red {
     width: 43.5px;
     height: 40px;
@@ -310,6 +315,15 @@ body::-webkit-scrollbar-track {
     100% {
         transform: translate(0, -0px);
     }
+}
+
+.project-name {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 0 10px;
+    color: #2D649B;
+    font-family: 'Lexend Tera', 'HelveticaNeueLT Std', sans-serif;
 }
 
 /* ---------------------------------------------------

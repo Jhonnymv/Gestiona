@@ -1,4 +1,5 @@
-$(document).ready(function (){
+$(document).ready(function () {
+
     $(".input-login-mc input").val("");
 
 
@@ -51,4 +52,43 @@ $(document).ready(function (){
             $('.login-button button').click();
         }
     });
+
+
+    /*TRAER DATOS*/
+    let data = [
+        { 'titulo': 'Primer Slide', 'contenido': 'Contenido Primer Slide', 'imagen': '/img/landing-page-img.png' },
+        { 'titulo': 'Segundo Slide', 'contenido': 'Contenido Segundo Slide', 'imagen': '/img/menu-bg.png' },
+        { 'titulo': 'Tercer Slide', 'contenido': 'Contenido Tercer Slide', 'imagen': '/img/back-inspection.png' },
+        { 'titulo': 'Cuarto Slide', 'contenido': 'Contenido Cuarto Slide', 'imagen': '/img/back-inspection.png' }
+    ];
+
+    /*CREAR SLIDERS*/
+    let indicators = '';
+    let inner_carousel = '';
+    for (let i = 0; i < data.length; i++) {
+        indicators += `<button type="button" data-bs-target="#mc-home-carousel" data-bs-slide-to="${i}" aria-label="Slide ${i}"></button>`;
+        inner_carousel += `
+            <div class="carousel-item">
+                <div>
+                    <img src="${data[i].imagen}" class="d-block w-100" alt="...">
+                </div>
+                <div class="carousel-caption d-none d-md-block">
+                    <h3>${data[i].titulo}</h3>
+                    <p>${data[i].contenido}</p>
+                </div>
+                <div class="landing-accesories">
+                    <div class="cover-div">
+    
+                    </div>
+                    <div class="bottom-bar">
+    
+                    </div>
+                </div>
+            </div>`;
+    }
+    $('#mc-home-carousel .carousel-indicators').append(indicators);
+    $('#mc-home-carousel .carousel-inner').append(inner_carousel);
+    $('.carousel-indicators button').first().addClass('active');
+    $('.carousel-item').first().addClass('active');
+    $('.carousel-indicators').first().attr('aria-current', 'true');
 });

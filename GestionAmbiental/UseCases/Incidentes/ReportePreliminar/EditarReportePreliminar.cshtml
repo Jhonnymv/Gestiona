@@ -23,363 +23,379 @@
                 <input type="hidden" asp-for="NCausas" />
                 <input type="hidden" asp-for="Estado" value="@Model.Estado" />
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
+                    <div class="detail-header">
                         <span class="text-mc bold text-center">DATOS DEL TITULAR MINERO</span>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label>Razón Social</label>
-                            <input type="text" class="form-control" value="Marcobre SAC" disabled />
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Razón Social</label>
+                                <input type="text" class="form-control" value="Marcobre SAC" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>RUC</label>
+                                <input type="text" class="form-control" value="20508972734" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Actividad</label>
+                                <input type="text" class="form-control" value="Mineria" disabled />
+                            </div>
                         </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label>RUC</label>
-                            <input type="text" class="form-control" value="20508972734" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label>Actividad</label>
-                            <input type="text" class="form-control" value="Mineria" disabled />
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label>Domicilio Legal</label>
-                            <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label>Unidad Minera</label>
-                            <input type="text" class="form-control" value="Mina Justa" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Num_Trabajadores">N° Trabajadores en el Centro Laboral</label>
-                            <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
-                            <input type="number" class="form-control" asp-for="Num_Trabajadores" disabled />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Domicilio Legal</label>
+                                <input type="text" class="form-control" value="Jr. Lorenzo Bernini 149, Oficina 301, San Borja - Lima" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label>Unidad Minera</label>
+                                <input type="text" class="form-control" value="Mina Justa" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Num_Trabajadores">N° Trabajadores en el Centro Laboral</label>
+                                <span class="text-danger" asp-validation-for="Num_Trabajadores"></span>
+                                <input type="number" class="form-control" asp-for="Num_Trabajadores" disabled />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
+                    <div class="detail-header">
                         <span class="text-mc bold text-center">DATOS DE LA EMPRESA CONTRATISTA <span class="text-danger">(Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</span> </span>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Razon_Social_Contratista">Razón Social</label>
-                            <span class="text-danger" asp-validation-for="Razon_Social_Contratista"></span>
-                            <input type="text" class="form-control" asp-for="Razon_Social_Contratista" disabled />
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Razon_Social_Contratista">Razón Social</label>
+                                <span class="text-danger" asp-validation-for="Razon_Social_Contratista"></span>
+                                <input type="text" class="form-control" asp-for="Razon_Social_Contratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="RUC_Contratista">RUC</label>
+                                <span class="text-danger" asp-validation-for="RUC_Contratista"></span>
+                                <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Actividad_Contratista">Actividad</label>
+                                <span class="text-danger" asp-validation-for="Actividad_Contratista"></span>
+                                <input type="text" class="form-control" asp-for="Actividad_Contratista" disabled />
+                            </div>
                         </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="RUC_Contratista">RUC</label>
-                            <span class="text-danger" asp-validation-for="RUC_Contratista"></span>
-                            <input type="text" class="form-control" asp-for="RUC_Contratista" maxlength="11" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Actividad_Contratista">Actividad</label>
-                            <span class="text-danger" asp-validation-for="Actividad_Contratista"></span>
-                            <input type="text" class="form-control" asp-for="Actividad_Contratista" disabled />
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Domicilio_Contratista">Domicilio Legal</label>
-                            <span class="text-danger" asp-validation-for="Domicilio_Contratista"></span>
-                            <input type="text" class="form-control" asp-for="Domicilio_Contratista" disabled />
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Num_Trabajadores_Contratista">N° Trabajadores en el Centro Laboral</label>
-                            <span class="text-danger" asp-validation-for="Num_Trabajadores_Contratista"></span>
-                            <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" disabled />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Domicilio_Contratista">Domicilio Legal</label>
+                                <span class="text-danger" asp-validation-for="Domicilio_Contratista"></span>
+                                <input type="text" class="form-control" asp-for="Domicilio_Contratista" disabled />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Num_Trabajadores_Contratista">N° Trabajadores en el Centro Laboral</label>
+                                <span class="text-danger" asp-validation-for="Num_Trabajadores_Contratista"></span>
+                                <input type="number" class="form-control" asp-for="Num_Trabajadores_Contratista" disabled />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
+                    <div class="detail-header">
                         <span class="text-mc bold text-center">DATOS DEL INCIDENTE AMBIENTAL</span>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Id_Tipo_Incidente">Tipo de incidente</label>
-                            <span class="text-danger" asp-validation-for="Id_Tipo_Incidente"></span>
-                            <select class="form-control" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente" disabled></select>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Id_Nivel_Incidente">Nivel de incidente</label>
-                            <span class="text-danger" asp-validation-for="Id_Nivel_Incidente"></span>
-                            <select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente" disabled></select>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6 p-0">
-                            <div class="row mt-0 mb-0">
-                                <div class="col-7 mt-0 mb-0">
-                                    <label asp-for="Fecha_Incidente">Fecha</label>
-                                    <span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
-                                    <input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
-                                </div>
-                                <div class="col-5 mt-0 mb-0">
-                                    <label asp-for="Hora_Incidente">Hora (24h)</label>
-                                    <span class="text-danger" asp-validation-for="Hora_Incidente"></span>
-                                    <input type="time" class="form-control" asp-for="Hora_Incidente" disabled />
-                                </div>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_Tipo_Incidente">Tipo de incidente</label>
+                                <span class="text-danger" asp-validation-for="Id_Tipo_Incidente"></span>
+                                <select class="form-control" asp-items="@ViewBag.Tipo_Incidente" asp-for="Id_Tipo_Incidente" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Id_Nivel_Incidente">Nivel de incidente</label>
+                                <span class="text-danger" asp-validation-for="Id_Nivel_Incidente"></span>
+                                <select class="form-control" asp-items="@ViewBag.Nivel_Incidente" asp-for="Id_Nivel_Incidente" disabled></select>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label asp-for="Producto_Derramado">Producto Derramado</label>
-                            <span class="text-danger" asp-validation-for="Producto_Derramado"></span>
-                            <input type="text" class="form-control" asp-for="Producto_Derramado" disabled />
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6 p-0">
-                            <div class="row mt-0 mb-0 d-flex align-items-end">
-                                <label asp-for="Cantidad_Derramado">Cantidad aprox. derramada</label>
-                                <div class="col-7 mt-0 mb-0">
-                                    <span class="text-danger" asp-validation-for="Cantidad_Derramado"></span>
-                                    <input type="number" class="form-control" asp-for="Cantidad_Derramado" disabled />
-                                </div>
-                                <div class="col-5 mt-0 mb-0">
-                                    <span class="text-danger" asp-validation-for="Id_Unidad_Cantidad_Derramado"></span>
-                                    <select class="form-control" asp-items="@ViewBag.Unidad_Derramado" asp-for="Id_Unidad_Cantidad_Derramado" disabled></select>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <div class="row mt-0 mb-0">
+                                    <div class="col-7 mt-0 mb-0">
+                                        <label asp-for="Fecha_Incidente">Fecha</label>
+                                        <span class="text-danger" asp-validation-for="Fecha_Incidente"></span>
+                                        <input type="date" class="form-control" asp-for="Fecha_Incidente" disabled />
+                                    </div>
+                                    <div class="col-5 mt-0 mb-0">
+                                        <label asp-for="Hora_Incidente">Hora (24h)</label>
+                                        <span class="text-danger" asp-validation-for="Hora_Incidente"></span>
+                                        <input type="time" class="form-control" asp-for="Hora_Incidente" disabled />
+                                    </div>
                                 </div>
                             </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label asp-for="Producto_Derramado">Producto Derramado</label>
+                                <span class="text-danger" asp-validation-for="Producto_Derramado"></span>
+                                <input type="text" class="form-control" asp-for="Producto_Derramado" disabled />
+                            </div>
                         </div>
-                        <div class="col-12 col-sm-6 col-lg-6 p-0">
-                            <div class="row mt-0 mb-0">
-                                <label asp-for="Area_Afectada">Área afectada</label>
-                                <div class="col-7 mt-0 mb-0 align-items-end">
-                                    <span class="text-danger" asp-validation-for="Area_Afectada"></span>
-                                    <input type="number" class="form-control" asp-for="Area_Afectada" disabled />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <div class="row mt-0 mb-0 d-flex align-items-end">
+                                    <label asp-for="Cantidad_Derramado">Cantidad aprox. derramada</label>
+                                    <div class="col-7 mt-0 mb-0">
+                                        <span class="text-danger" asp-validation-for="Cantidad_Derramado"></span>
+                                        <input type="number" class="form-control" asp-for="Cantidad_Derramado" disabled />
+                                    </div>
+                                    <div class="col-5 mt-0 mb-0">
+                                        <span class="text-danger" asp-validation-for="Id_Unidad_Cantidad_Derramado"></span>
+                                        <select class="form-control" asp-items="@ViewBag.Unidad_Derramado" asp-for="Id_Unidad_Cantidad_Derramado" disabled></select>
+                                    </div>
                                 </div>
-                                <div class="col-5 mt-0 mb-0">
-                                    <span class="text-danger" asp-validation-for="Id_Unidad_Area_Afectada"></span>
-                                    <select class="form-control" asp-items="@ViewBag.Unidad_Area" asp-for="Id_Unidad_Area_Afectada" disabled></select>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6 p-0">
+                                <div class="row mt-0 mb-0">
+                                    <label asp-for="Area_Afectada">Área afectada</label>
+                                    <div class="col-7 mt-0 mb-0 align-items-end">
+                                        <span class="text-danger" asp-validation-for="Area_Afectada"></span>
+                                        <input type="number" class="form-control" asp-for="Area_Afectada" disabled />
+                                    </div>
+                                    <div class="col-5 mt-0 mb-0">
+                                        <span class="text-danger" asp-validation-for="Id_Unidad_Area_Afectada"></span>
+                                        <select class="form-control" asp-items="@ViewBag.Unidad_Area" asp-for="Id_Unidad_Area_Afectada" disabled></select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Lugar_Incidente">Lugar donde ocurrió</label>
-                            <span class="text-danger" asp-validation-for="Lugar_Incidente"></span>
-                            <input type="text" class="form-control" asp-for="Lugar_Incidente" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Equipo_Involucrado">Equipo/instalación involucrado</label>
-                            <span class="text-danger" asp-validation-for="Equipo_Involucrado"></span>
-                            <input type="text" class="form-control" asp-for="Equipo_Involucrado" disabled />
-                        </div>
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label asp-for="Id_Componente_Ambiental">Componente Ambiental afectado</label>
-                            <span class="text-danger" asp-validation-for="Id_Componente_Ambiental"></span>
-                            <select class="form-control" asp-items="@ViewBag.Componente_Ambiental" asp-for="Id_Componente_Ambiental" disabled></select>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Descripcion_Incidente">Descripción preliminar del incidente</label>
-                            <span class="text-danger" asp-validation-for="Descripcion_Incidente"></span>
-                            <textarea class="form-control" asp-for="Descripcion_Incidente" rows="3" disabled></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">CAUSAS INMEDIATAS DEL INCIDENTE</span>
-                    </div>
-                    @if (Model.Estado == "Pendiente")
-                    {
-                        <div class="row-center-center col-12">
-                            <div class="col-12 col-xl-4">
-                                <a class="btn btn-special-action incidentes-color" id="btn_nueva_causa" data-bs-toggle="modal" data-bs-target="">
-                                    Agregar Causa
-                                </a>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Lugar_Incidente">Lugar donde ocurrió</label>
+                                <span class="text-danger" asp-validation-for="Lugar_Incidente"></span>
+                                <input type="text" class="form-control" asp-for="Lugar_Incidente" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Equipo_Involucrado">Equipo/instalación involucrado</label>
+                                <span class="text-danger" asp-validation-for="Equipo_Involucrado"></span>
+                                <input type="text" class="form-control" asp-for="Equipo_Involucrado" disabled />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <label asp-for="Id_Componente_Ambiental">Componente Ambiental afectado</label>
+                                <span class="text-danger" asp-validation-for="Id_Componente_Ambiental"></span>
+                                <select class="form-control" asp-items="@ViewBag.Componente_Ambiental" asp-for="Id_Componente_Ambiental" disabled></select>
                             </div>
                         </div>
-                    }
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_causas">
-                                    <thead>
-                                        <tr>
-                                            <th>Acto/Condición Subestándar</th>
-                                            <th>Descripción</th>
-                                            @if (Model.Estado == "Pendiente")
-                                            {
-                                                <th></th>
-                                                <th></th>
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">No hay registros</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <div class="pagination-container incidentes-color" id="paginado">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Otra_Causa_Incidente">Otra causa inmediata</label>
-                            <span class="text-danger" asp-validation-for="Otra_Causa_Incidente"></span>
-                            <textarea class="form-control" asp-for="Otra_Causa_Incidente" maxlength="300" rows="3" disabled></textarea>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">DATOS DE LOS INVOLUCRADOS</span>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Id_Gerencia_Responsable">Gerencia Responsable (Titular Minero)</label>
-                            <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
-                            <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable" disabled></select>
-                        </div>
-                    </div>
-                    @if (Model.Estado == "Pendiente")
-                    {
-                        <div class="row-center-center col-12">
-                            <div class="col-12 col-xl-4">
-                                <a class="btn btn-special-action incidentes-color" id="btn_nuevo_involucrado" data-bs-toggle="modal" data-bs-target="">
-                                    Agregar Involucrado
-                                </a>
-                            </div>
-                        </div>
-                    }
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_involucrados">
-                                    <thead>
-                                        <tr>
-                                            <th>Tipo</th>
-                                            <th>Nombres y Apellidos</th>
-                                            <th>Correo Electrónico</th>
-                                            <th>Celular</th>
-                                            <th>Puesto de Trabajo</th>
-                                            <th>Turno</th>
-                                            @if (Model.Estado == "Pendiente")
-                                            {
-                                                <th></th>
-                                                <th></th>
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">No hay registros</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <div class="pagination-container incidentes-color" id="paginado">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">ACCIONES INMEDIATAS</span>
-                    </div>
-                    @if (Model.Estado == "Pendiente")
-                    {
-                        <div class="row-center-center col-12">
-                            <div class="col-12 col-xl-4">
-                                <a class="btn btn-special-action incidentes-color" id="btn_nueva_accion" data-bs-toggle="modal" data-bs-target="">
-                                    Agregar Acción
-                                </a>
-                            </div>
-                        </div>
-                    }
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_acciones">
-                                    <thead>
-                                        <tr>
-                                            <th>Acción Inmediata</th>
-                                            <th>Responsable Marcobre</th>
-                                            <th>Responsable Contratista</th>
-                                            <th>Fecha</th>
-                                            <th>Estatus</th>
-                                            @if (Model.Estado == "Pendiente")
-                                            {
-                                                <th></th>
-                                                <th></th>
-                                            }
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">Sin Datos</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-                            <div class="pagination-container incidentes-color" id="paginado">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Comentario_Accion">Comentario</label>
-                            <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
-                            <input type="text" class="form-control" asp-for="Comentario_Accion" disabled />
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">SEGUIMIENTO</span>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
-                            <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
-                            <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor" disabled></select>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
-                    </div>
-                    @if (Model.Estado == "Pendiente")
-                    {
                         <div class="row input_container">
                             <div class="col-12 col-sm-12 col-lg-12">
-                                <label asp-for="Evidencias">Seleccionar Evidencias</label>
-                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                                    <span id="danger_evidencia" class=""></span>
-                                </span>
-                                <input type="file" class="form-control" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
-                            </div>
-                        </div>
-                    }
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Evidencias_Completas">Evidencias</label>
-                            <input type="hidden" asp-for="Evidencias_Completas" />
-                            <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="Evidencias_Lista">
+                                <label asp-for="Descripcion_Incidente">Descripción preliminar del incidente</label>
+                                <span class="text-danger" asp-validation-for="Descripcion_Incidente"></span>
+                                <textarea class="form-control" asp-for="Descripcion_Incidente" rows="3" disabled></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-mc bold text-center">CAUSAS INMEDIATAS DEL INCIDENTE</span>
+                    </div>
+                    <div class="details-content">
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <div class="row-center-center col-12">
+                                <div class="col-12 col-xl-4">
+                                    <a class="btn btn-special-action incidentes-color" id="btn_nueva_causa" data-bs-toggle="modal" data-bs-target="">
+                                        Agregar Causa
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_causas">
+                                        <thead>
+                                            <tr>
+                                                <th>Acto/Condición Subestándar</th>
+                                                <th>Descripción</th>
+                                                @if (Model.Estado == "Pendiente")
+                                                {
+                                                    <th></th>
+                                                    <th></th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Otra_Causa_Incidente">Otra causa inmediata</label>
+                                <span class="text-danger" asp-validation-for="Otra_Causa_Incidente"></span>
+                                <textarea class="form-control" asp-for="Otra_Causa_Incidente" maxlength="300" rows="3" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-mc bold text-center">DATOS DE LOS INVOLUCRADOS</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Id_Gerencia_Responsable">Gerencia Responsable (Titular Minero)</label>
+                                <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
+                                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable" disabled></select>
+                            </div>
+                        </div>
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <div class="row-center-center col-12">
+                                <div class="col-12 col-xl-4">
+                                    <a class="btn btn-special-action incidentes-color" id="btn_nuevo_involucrado" data-bs-toggle="modal" data-bs-target="">
+                                        Agregar Involucrado
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_involucrados">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Nombres y Apellidos</th>
+                                                <th>Correo Electrónico</th>
+                                                <th>Celular</th>
+                                                <th>Puesto de Trabajo</th>
+                                                <th>Turno</th>
+                                                @if (Model.Estado == "Pendiente")
+                                                {
+                                                    <th></th>
+                                                    <th></th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-mc bold text-center">ACCIONES INMEDIATAS</span>
+                    </div>
+                    <div class="details-content">
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <div class="row-center-center col-12">
+                                <div class="col-12 col-xl-4">
+                                    <a class="btn btn-special-action incidentes-color" id="btn_nueva_accion" data-bs-toggle="modal" data-bs-target="">
+                                        Agregar Acción
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_acciones">
+                                        <thead>
+                                            <tr>
+                                                <th>Acción Inmediata</th>
+                                                <th>Responsable Marcobre</th>
+                                                <th>Responsable Contratista</th>
+                                                <th>Fecha</th>
+                                                <th>Estatus</th>
+                                                @if (Model.Estado == "Pendiente")
+                                                {
+                                                    <th></th>
+                                                    <th></th>
+                                                }
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">Sin Datos</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <div class="pagination-container incidentes-color" id="paginado">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Comentario_Accion">Comentario</label>
+                                <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
+                                <input type="text" class="form-control" asp-for="Comentario_Accion" disabled />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-mc bold text-center">SEGUIMIENTO</span>
+                    </div>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
+                                <span class="text-danger" asp-validation-for="Id_Supervisor"></span>
+                                <select class="form-control" asp-items="@ViewBag.Supervisor" asp-for="Id_Supervisor" disabled></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-mc bold text-center">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
+                    </div>
+                    <div class="details-content">
+                        @if (Model.Estado == "Pendiente")
+                        {
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-12 col-lg-12">
+                                    <label asp-for="Evidencias">Seleccionar Evidencias</label>
+                                    <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                                        <span id="danger_evidencia" class=""></span>
+                                    </span>
+                                    <input type="file" class="form-control" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
+                                </div>
+                            </div>
+                        }
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Evidencias_Completas">Evidencias</label>
+                                <input type="hidden" asp-for="Evidencias_Completas" />
+                                <div class="col-sm-12 col-md-12 col-lg-12 text-center" id="Evidencias_Lista">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-button-container col-12 col-xl-10 mb-4">
                     <div class="button-container">
                         <div></div>
                         <div>

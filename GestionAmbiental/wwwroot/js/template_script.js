@@ -1,24 +1,22 @@
 $(document).ready(function () {
-    //LANDING PAGE
-    $('div.landing-page').css('background-image', 'url("/img/landing-page-img.png")');
+    //IMG MODAL LOGIN
+    $('div.modal .login-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //MENU PAGE
     $('.menu_img_bg').css('background-image', 'url("/img/menu-bg.png")');
 
-    //MODAL LOGIN
-    $('div.modal .login-image-background').css('background-image', 'url("/img/landing-page-img.png")');
-
-    //MENU MODAL
-    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210701220918.jpg")');
-    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210701220918.jpg")');
+    //MENU MODALS
+    $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210705170906.png")');
+    $('.modal-menu-rac .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210705170804.png")');
     $('.modal-menu-residuos .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Residuos20210701220918.jpg")');
-    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210701221052.png")');
-    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210701221052.jpg")');
-    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210701221654.jpg")');
+    $('.modal-menu-incidentes .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210705170906.png")');
+    $('.modal-menu-fauna .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210705174501.png")');
+    $('.modal-menu-agua .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210705174834.png")');
     $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210701221932.jpg")');
     $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210701221654.jpg")');
     $('.modal-menu-dashboard .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
-    $('.modal-menu-settings .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+
+    $('.modal-menu-marcobre .modal-content .modal-image-header-container').css('background-image', 'url("/img/landing-page-img.png")');
 
     //MAIN MODALS
     $('.modal-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
@@ -117,7 +115,7 @@ function inspectionStyle (r, g, b){
     $('.inspection-opacity-color').css('background-color', 'rgba('+r+', '+g+', '+b+', 0.7)');
     $('.table-responsive.inspection-color table tbody tr td').css({"color":'rgb('+r+', '+g+', '+b+')', "background-color":'rgba('+r+', '+g+', '+b+', 0.2)'});
     $('.action-container.inspection-color').css("border-color", 'rgb('+r+', '+g+', '+b+')');
-    $('.inspection .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210701220918.jpg")');
+    $('.inspection .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210705170906.png")');
 
     //DIV SEPARATORS
     $('.inspection .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -161,7 +159,7 @@ function racStyle(r, g, b) {
     $('.rac-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.rac-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.rac-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.rac .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210701220918.jpg")');
+    $('.rac .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_RAC20210705170804.png")');
 
     //DIV SEPARATORS
     $('.rac .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -249,7 +247,7 @@ function incidentesStyle(r, g, b) {
     $('.incidentes-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.incidentes-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.incidentes-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.incidentes .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210701221052.png")');
+    $('.incidentes .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Incidentes20210705170906.png")');
 
     //DIV SEPARATORS
     $('.incidentes .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -293,7 +291,7 @@ function faunaStyle(r, g, b) {
     $('.fauna-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.fauna-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.fauna-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.fauna .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210701221052.jpg")');
+    $('.fauna .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Fauna20210705174501.png")');
 
     //DIV SEPARATORS
     $('.fauna .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
@@ -337,7 +335,7 @@ function aguaStyle(r, g, b) {
     $('.agua-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
     $('.table-responsive.agua-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
     $('.action-container.agua-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
-    $('.agua .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210701221654.jpg")');
+    $('.agua .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Agua20210705174834.png")');
 
     //DIV SEPARATORS
     $('.agua .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
