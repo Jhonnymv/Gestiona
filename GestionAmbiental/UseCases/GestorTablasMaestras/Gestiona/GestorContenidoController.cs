@@ -47,7 +47,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     response = new
                     {
                         success = false,
-                        msg = "No se encontraron las propiedades del módulo"
+                        message = "No se encontraron las propiedades del módulo"
                     };
             }
             catch (Exception e)
@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 response = new
                 {
                     success = false,
-                    msg = e.Message
+                    message = e.Message
                 };
             }
             return Ok(response);
@@ -502,57 +502,78 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         [HttpPost]
         public async Task<IActionResult> EditarTarjeta(TarjetaModel model)
         {
+            dynamic result;
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home");
+                result = new
+                {
+                    success = false,
+                    message = "No Autorizado"
+                };
             }
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
-                
-                if (ModelState.IsValid)
-                {
-                    var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
-                    var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                    var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
-
-                    var card = cards.FirstOrDefault(x => x.Id.Equals(model.Id));
-
-                    if (card != null)
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    result = new
                     {
-                        if (model.ImagenNueva != null && model.ImagenNueva.Length > 0)
+                        success = false,
+                        message = "No Autorizado"
+                    };
+                else
+                {
+
+                    if (model.Titulo != null && model.Fecha != null && model.Contenido != null && model.Tipo != null)
+                    {
+                        var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
+                        var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
+
+                        var card = cards.FirstOrDefault(x => x.Id.Equals(model.Id));
+
+                        if (card != null)
                         {
-                            var rutaImagenAnterior = card.Imagen;
-                            var extension = Path.GetExtension(model.ImagenNueva.FileName);
-                            var rutaNuevoArchivo = CargarImagen(model.ImagenNueva, model.Id, extension).Result;
+                            if (model.ImagenNueva != null && model.ImagenNueva.Length > 0)
+                            {
+                                var rutaImagenAnterior = card.Imagen;
+                                var extension = Path.GetExtension(model.ImagenNueva.FileName);
+                                var rutaNuevoArchivo = CargarImagen(model.ImagenNueva, model.Id, extension).Result;
 
-                            card.Imagen = rutaNuevoArchivo;
+                                card.Imagen = rutaNuevoArchivo;
 
-                            EliminarImagen(rutaImagenAnterior);
+                                EliminarImagen(rutaImagenAnterior);
+                            }
+                            card.Id = model.Id;
+                            card.Titulo = model.Titulo;
+                            card.Contenido = model.Contenido;
+                            card.Fecha = model.Fecha;
+                            card.Publicador = model.Publicador;
+                            card.Tipo = model.Tipo;
+                            card.Tamanio = model.Tamanio;
+                            card.PosicionE = model.PosicionE;
+                            card.PosicionM = model.PosicionM;
                         }
-                        card.Id = model.Id;
-                        card.Titulo = model.Titulo;
-                        card.Contenido = model.Contenido;
-                        card.Fecha = model.Fecha;
-                        card.Publicador = model.Publicador;
-                        card.Tipo = model.Tipo;
-                        card.Tamanio = model.Tamanio;
-                        card.PosicionE = model.PosicionE;
-                        card.PosicionM = model.PosicionM;
+                        string json = JsonConvert.SerializeObject(cards);
+                        System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                        await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+
+                        result = new
+                        {
+                            success = true
+                        };
                     }
-                    string json = JsonConvert.SerializeObject(cards);
-                    System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
-
-                    await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
-
-
-                    return RedirectToAction("DetalleTarjeta", new { IdTarjeta = model.Id });                    
+                    else
+                    {
+                        result = new
+                        {
+                            success = false,
+                            message = "No Autorizado"
+                        };
+                    }
                 }
-                return RedirectToAction("DetalleTarjeta", new { IdTarjeta = model.Id });
             }
+            return Ok(result);
         }
         public async Task<IActionResult> AgregarTarjeta()
         {
@@ -573,105 +594,144 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         [HttpPost]
         public async Task<IActionResult> AgregarTarjeta(TarjetaModel model)
         {
+            dynamic result;
             if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return RedirectToAction("NoAutorizado", "Home");
+                result = new
+                {
+                    success = false,
+                    message = "No Autorizado"
+                };
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (!userInfo.Rol.Equals(InspeccionRol.Admin))
-                    return RedirectToAction("NoAutorizado", "Home");
-                else
-                {                    
-                    if (ModelState.IsValid)
+                    result = new
                     {
-                        if (model.ImagenNueva != null && model.ImagenNueva.Length > 0)
+                        success = false,
+                        message = "No Autorizado"
+                    };
+                else
+                {
+                    if (model.Titulo != null && model.ImagenNueva != null && model.ImagenNueva.Length > 0 && model.Fecha != null && model.Contenido != null && model.Tipo != null)
+                    {
+                        var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
+                        var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
+
+                        var cardsId = cards.Select(x => x.Id).ToList();
+                        var nuevoId = 1;
+
+                        while (cardsId.Contains(nuevoId))
+                            nuevoId++;
+
+                        var extension = Path.GetExtension(model.ImagenNueva.FileName);
+                        var rutaNuevoArchivo = CargarImagen(model.ImagenNueva, nuevoId, extension).Result;
+
+                        var card = new Home.TarjetaModel();
+                        card.Id = nuevoId;
+                        card.Titulo = model.Titulo;
+                        card.Contenido = model.Contenido;
+                        card.Imagen = rutaNuevoArchivo;
+                        card.Tipo = model.Tipo;
+                        card.Fecha = model.Fecha;
+                        card.Publicador = model.Publicador;
+                        card.Tamanio = model.Tamanio;
+                        card.PosicionE = model.PosicionE;
+                        card.PosicionM = model.PosicionM;
+
+                        cards.Add(card);
+
+                        string json = JsonConvert.SerializeObject(cards);
+                        System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                        await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+
+                        result = new
                         {
-                            var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
-                            var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                            var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
+                            success = true
+                        };
+                    }
+                    else
+                    {
+                        result = new
+                        {
+                            success = false,
+                            message = "Datos Incompletos"
+                        };
+                    }
+                }
+            }
 
-                            var cardsId = cards.Select(x => x.Id).ToList();
-                            var nuevoId = 1;
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarTarjeta(int IdTarjeta)
+        {
+            dynamic result;
+            try
+            {
+                if (!(HttpContext.Session.GetString("SessionUser") != null))
+                {
+                    result = new
+                    {
+                        success = false,
+                        message = "No Autorizado"
+                    };
+                }
+                else
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    {
+                        result = new
+                        {
+                            success = false,
+                            message = "No Autorizado"
+                        };
+                    }
+                    else
+                    {
+                        var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
+                        var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
 
-                            while (cardsId.Contains(nuevoId))
-                                nuevoId++;
+                        var card = cards.FirstOrDefault(x => x.Id.Equals(IdTarjeta));
 
-                            var extension = Path.GetExtension(model.ImagenNueva.FileName);
-                            var rutaNuevoArchivo = CargarImagen(model.ImagenNueva, nuevoId, extension).Result;
+                        if (card != null)
+                        {
+                            var rutaImagenAnterior = card.Imagen;
+                            EliminarImagen(rutaImagenAnterior);
 
-                            var card = new Home.TarjetaModel();
-                            card.Id = nuevoId;
-                            card.Titulo = model.Titulo;
-                            card.Contenido = model.Contenido;
-                            card.Imagen = rutaNuevoArchivo;
-                            card.Tipo = model.Tipo;
-                            card.Fecha = model.Fecha;
-                            card.Publicador = model.Publicador;
-                            card.Tamanio = model.Tamanio;
-                            card.PosicionE = model.PosicionE;
-                            card.PosicionM = model.PosicionM;
-
-                            cards.Add(card);
+                            cards.Remove(card);
 
                             string json = JsonConvert.SerializeObject(cards);
                             System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
                             await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
-
-                            return RedirectToAction("DetalleTarjeta", new { IdTarjeta = card.Id });
+                            result = new
+                            {
+                                success = true
+                            };
+                        }
+                        else
+                        {
+                            result = new
+                            {
+                                success = false,
+                                message = "No se encontró la tarjeta Id = " + IdTarjeta.ToString()
+                            };
                         }
                     }
-                    return RedirectToAction("AgregarTarjeta");
                 }
-            }
-        }
-        [HttpPost]
-        public async Task<IActionResult> EliminarTarjeta(int IdTarjeta)
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            }catch(Exception e)
             {
-                return RedirectToAction("NoAutorizado", "Home");
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
-
-                dynamic response;
-
-                var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
-                var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                var cards = JsonConvert.DeserializeObject<List<Home.TarjetaModel>>(cardsText);
-
-                var card = cards.FirstOrDefault(x => x.Id.Equals(IdTarjeta));
-
-                if (card != null)
+                result = new
                 {
-                    var rutaImagenAnterior = card.Imagen;
-                    EliminarImagen(rutaImagenAnterior);
-
-                    cards.Remove(card);
-
-                    string json = JsonConvert.SerializeObject(cards);
-                    System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
-
-                    await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
-                    response = new
-                    {
-                        Result = "Ok"
-                    };
-                }
-                else
-                    response = new
-                    {
-                        Result = "Error",
-                        Message = "No se encontró la tarjeta Id = "+IdTarjeta.ToString()
-                    };
-
-                return Ok(response);
+                    success = false,
+                    message = "Ocurrió un error: " + e.Message
+                };
             }
+            return Ok(result);
         }
         public async Task<string> CargarImagen(IFormFile archivo, int idTarjeta, string extension)
         {
@@ -802,11 +862,11 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleColor(int Id,string Msg)
+        public async Task<IActionResult> DetalleColor(int Id,string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id+ "&Msg="+ Msg });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id+ "&message="+ message });
             }
             else
             {
@@ -866,7 +926,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                         }
                         catch(Exception e)
                         {
-                            return RedirectToAction("DetalleColor", new { Id = model.Id, Msg= "No se pudo cambiar el color: "+e.Message });
+                            return RedirectToAction("DetalleColor", new { Id = model.Id, message= "No se pudo cambiar el color: "+e.Message });
                         }
                     }
                 }
@@ -984,11 +1044,11 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleFuente(int Id, string Msg)
+        public async Task<IActionResult> DetalleFuente(int Id, string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id + "&Msg=" + Msg });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?Id=" + Id + "&message=" + message });
             }
             else
             {
@@ -996,7 +1056,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;          
-                ViewBag.Mensaje = Msg;          
+                ViewBag.Mensaje = message;          
 
                 var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
                 var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -1047,7 +1107,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                         }
                         catch (Exception e)
                         {
-                            return RedirectToAction("DetalleFuente", new { Id = model.Id, Msg = "No se pudo cambiar el color: " + e.Message });
+                            return RedirectToAction("DetalleFuente", new { Id = model.Id, message = "No se pudo cambiar el color: " + e.Message });
                         }
                     }
                 }

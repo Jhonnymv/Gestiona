@@ -119,7 +119,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 //        result = new
                 //        {
                 //            success = false,
-                //            mensaje = "El usuario o la contraseña son incorrectas"
+                //            mensaje = "El usuario o la contraseña son incorrectos"
                 //        };
                 //}
                 var rol = await _getRolUsuario.Execute(model.User);

@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "ResumenTarjetas";
+    ViewData["Title"] = "Resumen Tarjetas";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
@@ -97,7 +97,7 @@
                         IdTarjeta: id
                     },
                     success: (response) => {
-                        if (response.result == "Ok") {
+                        if (response.success == true) {
                             FiltrarTarjetas(1);
                         }
                         else {

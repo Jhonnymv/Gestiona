@@ -35,7 +35,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         [Range(1, 99, ErrorMessage = "Debe seleccionar una opción")]
         public int PosicionE { get; set; }
         [DisplayName("Posición del Contenido")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opción")]
         public int PosicionM { get; set; }
     }
 }
