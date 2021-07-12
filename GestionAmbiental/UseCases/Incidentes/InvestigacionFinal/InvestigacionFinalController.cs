@@ -1051,8 +1051,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         {
                             case "Registrado": filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span></td>"; break;
                             case "Aprobado": filas_acciones += "<td><span class=\"badge bg-success\">" + fila.Estado + "</span></td>"; break;
-                            case "Rechazado": filas_acciones += "<td><span class=\"badge bg-mc-danger\">" + fila.Estado + "</span></td>"; break;
-                            case "Vencido": filas_acciones += "<td><span class=\"badge bg-mc-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Rechazado": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
+                            case "Vencido": filas_acciones += "<td><span class=\"badge bg-danger\">" + fila.Estado + "</span></td>"; break;
                             case "Ampliado": filas_acciones += "<td><span class=\"badge bg-warning\">" + fila.Estado + "</span></td>"; break;
                             default: filas_acciones += "<td><span class=\"badge bg-secondary\">" + fila.Estado + "</span>"; break;
                         }

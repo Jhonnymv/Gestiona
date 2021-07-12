@@ -16,19 +16,22 @@
 <body>
 
 
-    <div class="landing-page">
-        <nav class="navbar sticky-top navbar-expand-lg">
+    <div>
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#"><img src="~/img/logo-white.png" alt=""></a>
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="img/only-isotipo-white.png" class="brand-img" alt="">
+                    <span class="project-name">Gestiona</span>
+                </a>
                 <div class="nav-div-actions">
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
-                            aria-label="Toggle navigation">
-                        <svg width="24" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 24H34C35.1 24 36 23.1 36 22C36 20.9 35.1 20 34 20H2C0.9 20 0 20.9 0 22C0 23.1 0.9 24 2 24ZM2 14H34C35.1 14 36 13.1 36 12C36 10.9 35.1 10 34 10H2C0.9 10 0 10.9 0 12C0 13.1 0.9 14 2 14ZM0 2C0 3.1 0.9 4 2 4H34C35.1 4 36 3.1 36 2C36 0.9 35.1 0 34 0H2C0.9 0 0 0.9 0 2Z"
-                                  fill="#FFBE0B" />
-                        </svg>
-                    </button>
+                    @*<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                                aria-label="Toggle navigation">
+                            <svg width="24" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M2 24H34C35.1 24 36 23.1 36 22C36 20.9 35.1 20 34 20H2C0.9 20 0 20.9 0 22C0 23.1 0.9 24 2 24ZM2 14H34C35.1 14 36 13.1 36 12C36 10.9 35.1 10 34 10H2C0.9 10 0 10.9 0 12C0 13.1 0.9 14 2 14ZM0 2C0 3.1 0.9 4 2 4H34C35.1 4 36 3.1 36 2C36 0.9 35.1 0 34 0H2C0.9 0 0 0.9 0 2Z"
+                                      fill="#FFBE0B" />
+                            </svg>
+                        </button>*@
                     <button class="navbar-toggler btn-login" type="button" data-bs-toggle="modal"
                             data-bs-target="#loginModal">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -39,29 +42,29 @@
                         </svg>
                     </button>
                 </div>
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link active" aria-current="page" href="#">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Noticias</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Gestión Social</a>
-                        </li>
-                        <!--                <li class="nav-item dropdown">-->
-                        <!--                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
-                        <!--                        Dropdown link-->
-                        <!--                    </a>-->
-                        <!--                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
-                        <!--                        <li><a class="dropdown-item" href="#">Action</a></li>-->
-                        <!--                        <li><a class="dropdown-item" href="#">Another action</a></li>-->
-                        <!--                        <li><a class="dropdown-item" href="#">Something else here</a></li>-->
-                        <!--                    </ul>-->
-                        <!--                </li>-->
-                    </ul>
-                </div>
+                @*<div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
+                        <ul class="navbar-nav">
+                            <li class="nav-item active">
+                                <a class="nav-link active" aria-current="page" href="#">Inicio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Noticias</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Gestión Social</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dropdown link
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>*@
                 <a class="navbar-brand login-btn pull-right" href="#" data-bs-toggle="modal"
                    data-bs-target="#loginModal">
                     <span>Iniciar Sesión</span>
@@ -74,14 +77,23 @@
                 </a>
             </div>
         </nav>
-        <div class="landing-accesories">
-            <div class="cover-div">
+    </div>
 
-            </div>
-            <div class="bottom-bar">
-
-            </div>
+    <div id="mc-home-carousel" class="carousel slide mc-home-carousel" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <!-- Slide Bottom Buttons -->
         </div>
+        <div class="carousel-inner">
+            <!-- Slide Items -->
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#mc-home-carousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#mc-home-carousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 
     <div class="content">
@@ -99,7 +111,7 @@
 
     <!-- Custom JS -->
     <script type="text/javascript" src="~/js/template_script.js"></script>
-    <script type="text/javascript" charset="ISO-8859-1"  src="~/js/home.js"></script>
+    <script type="text/javascript" charset="ISO-8859-1" src="~/js/home.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

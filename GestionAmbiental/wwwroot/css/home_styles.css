@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');
 body {
     font-family: 'HelveticaNeueLT Std', sans-serif;
     background: #ffffff;
@@ -38,7 +39,7 @@ body::-webkit-scrollbar-track {
     NAVBAR AND LANDING
 ----------------------------------------------------- */
 
-.landing-page{
+.landing-page {
     padding: 0;
     z-index: 1;
     width: 100%;
@@ -52,15 +53,17 @@ body::-webkit-scrollbar-track {
     width: 100%;
     z-index: 999;
     background-color: rgba(45,100,155,0.8);
+    position: fixed;
 }
 
 .navbar .navbar-brand{
     width: 8em;
+    color: #ffffff;
 }
 
 
 .navbar .navbar-brand img{
-    width: 100%;
+    width: 1.5em;
 }
 
 .navbar .navbar-brand.login-btn{
@@ -124,10 +127,34 @@ body::-webkit-scrollbar-track {
 
 .landing-accesories{
     top:0;
-    z-index: 4;
+    z-index: 1;
     width: 100%;
     height: 65vh;
     position: absolute;
+}
+
+.mc-home-carousel .carousel-inner .carousel-item {
+    height: 65vh;
+}
+
+    .mc-home-carousel .carousel-inner .carousel-item img {
+        height: 65vh;
+        object-fit: cover;
+    }
+
+    .mc-home-carousel .carousel-inner .carousel-item .carousel-caption {
+        z-index: 4;
+        text-align: left;
+        bottom: 35%;
+    }
+
+        .mc-home-carousel .carousel-inner .carousel-item .carousel-caption h3 {
+            font-weight: bold;
+        }
+
+.mc-home-carousel .carousel-indicators {
+    bottom: 33px;
+    z-index: 4;
 }
 
 /* ---------------------------------------------------
@@ -352,6 +379,14 @@ body::-webkit-scrollbar-track {
     display: none;
     font-weight: bold;
     font-size: 14px;
+}
+
+.project-name {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 0 10px;
+    font-family: 'Lexend Tera', 'HelveticaNeueLT Std', sans-serif;
 }
 
 

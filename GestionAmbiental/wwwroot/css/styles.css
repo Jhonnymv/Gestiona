@@ -1,4 +1,4 @@
-
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');
 body {
     font-family: 'HelveticaNeueLT Std', sans-serif;
     background: #EEEEEE;
@@ -693,6 +693,10 @@ a:focus {
     border-radius: 10px;
 }
 
+/*FILTER ITEMS*/
+/*FILTER ITEMS*/
+/*FILTER ITEMS*/
+
 .filters-mc {
     padding: 20px 27px;
 }
@@ -701,7 +705,7 @@ a:focus {
     border-bottom: 2px solid #808080;
 }
 
-.filter-mc-content{
+.filter-mc-content {
     margin: 10px 0px;
 }
 
@@ -711,11 +715,11 @@ a:focus {
     margin-bottom: 10px;
 }
 
-.filter-mc-item-title span{
-    color: #2D649B;
-    white-space: pre-wrap;
-    text-align: center;
-}
+    .filter-mc-item-title span {
+        color: #2D649B;
+        white-space: pre-wrap;
+        text-align: center;
+    }
 
 .filter-mc-item-abr {
     width: 107.75px;
@@ -724,7 +728,6 @@ a:focus {
     top: 8px;
     font-size: 30px;
     font-weight: bold;
-    color: #2D649B;
     text-align: center;
 }
 
@@ -742,13 +745,62 @@ a:focus {
     transition-property: fill;
 }
 
-.filter-mc-item-body:hover svg path {
+.filter-mc-item-body.morado svg path {
+    stroke: #491EC4;
+}
+
+.filter-mc-item-body.morado .filter-mc-item-abr {
+    color: #491EC4;
+}
+
+.filter-mc-item-body.azul svg path {
+    stroke: #1a56dc;
+}
+
+.filter-mc-item-body.azul .filter-mc-item-abr {
+    color: #1a56dc;
+}
+
+.filter-mc-item-body.verde svg path {
+    stroke: #189e2a;
+}
+
+.filter-mc-item-body.verde .filter-mc-item-abr {
+    color: #189e2a;
+}
+
+.filter-mc-item-body.marcobre-color svg path {
+    stroke: #2D649B;
+}
+
+.filter-mc-item-body.marcobre-color .filter-mc-item-abr {
+    color: #2D649B;
+}
+
+/*HOVER*/
+.filter-mc-item-body.marcobre-color:hover svg path {
     fill: #2D649B;
 }
+
+.filter-mc-item-body.morado:hover svg path {
+    fill: #491EC4;
+}
+
+.filter-mc-item-body.azul:hover svg path {
+    fill: #1a56dc;
+}
+
+.filter-mc-item-body.verde:hover svg path {
+    fill: #189e2a;
+}
+/*END HOVER*/
 
 .filter-mc-item-body:hover > .filter-mc-item-abr {
     color: #ffffff;
 }
+/*END FILTER ITEMS*/
+/*END FILTER ITEMS*/
+/*END FILTER ITEMS*/
 
 .text-mc {
     color: #2D649B;
@@ -1161,10 +1213,45 @@ input[type="file"]:hover::-webkit-file-upload-button {
 }
 
 .detail-container {
+    /*padding: 10px 25px;*/
+    margin-bottom: 3em !important;
+    /*border: 1px solid #2D649B;*/
+    /*border-radius: 15px;*/
+}
+
+.detail-button-container {
     padding: 10px 25px;
-    margin-bottom: 1em;
-    border: 1px solid #EDEDED;
+    border: 1px solid #2D649B;
     border-radius: 15px;
+}
+
+.detail-header {
+    padding: 10px 25px;
+    margin: 0 !important;
+    background-color: #2D649B;
+    min-height: 4em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.details-content {
+    padding: 25px;
+    border: 1px solid #2D649B;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    margin: 0 !important;
+}
+
+.detail-separator {
+    padding: 2em 0px;
+}
+
+.detail-separator span{
+    width: 100%;
+    border-bottom: 2px solid #2D649B
 }
 
 .progress-mc {
@@ -1261,6 +1348,39 @@ input[type="file"]:hover::-webkit-file-upload-button {
     padding: 0px 12px;
 }
 
+.project-name {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 17px;
+    padding: 0 10px;
+    color: #2D649B;
+    font-family: 'Lexend Tera', 'HelveticaNeueLT Std', sans-serif;
+}
+
+.navbar .logout-btn {
+    display: none;
+}
+
+.navbar .btn-logout{
+    color:unset;
+    border:unset;
+}
+
+.navbar .btn-logout svg {
+    transform: rotate(180deg);
+}
+
+.navbar .btn-logout svg path{
+    fill: #2D649B;
+}
+
+.navbar .btn-goto-menu svg path{
+    fill: #2D649B;
+}
+
+.navbar .navbar-brand{
+    margin: 0;
+}
 /* ---------------------------------------------------
     MEDIA QUERIES
 ----------------------------------------------------- */
@@ -1281,6 +1401,38 @@ input[type="file"]:hover::-webkit-file-upload-button {
 
     .mc-modal .modal-body {
         padding: 2.5em;
+    }
+
+    .navbar .btn-logout {
+        display: none;
+    }
+
+    .navbar .logout-btn, .navbar .logout-btn svg {
+        display: block;
+        vertical-align: middle;
+    }
+
+    .navbar .logout-btn {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .navbar .logout-btn svg {
+        transform: rotate(180deg);
+    }
+
+    .navbar .logout-btn span {
+        font-size: 15px;
+        color: #2D649B;
+        margin: 0px 10px;
+    }
+
+    .navbar .logout-btn svg path {
+        fill: #2D649B;
+    }
+
+    .navbar .navbar-brand {
+        margin-right: 1rem;
     }
 }
 
