@@ -163,6 +163,9 @@
         });
         $("#IdResolucion").on('change', function () {
             var resol = $("#IdResolucion").val();
+            $("#Fecha").removeProp("min");
+            $("#Fecha").val("");
+            $("#LecturaInicial").val(0);
             for (var i = 0; i < resolucionesAct.length; i++) {
                 if (resolucionesAct[i].IdResolucionConsumoAgua == resol) {
                     $("#Resolucion").val(resolucionesAct[i].Resolucion);
@@ -176,9 +179,13 @@
                     $("#LecturaInicial").val(ultimosRegistros[i].LecturaInicial);
                     tiempoAnterior = 0;                    
                     caudalPromedio = ultimosRegistros[i].CaudalPromedio;
-                    return;
+                    break;
                 }
             }
+            if ($("#LecturaInicial").val() === '0')
+                $("#LecturaInicial").prop('readonly', false);
+            else 
+                $("#LecturaInicial").prop('readonly', true);
         });
         $("#Fecha").on('change', function () {
             tiempoAnterior = 0;

@@ -1636,8 +1636,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         //Tb_Lugar_Referencia_Fauna
         public async Task<List<LugarReferencia>> GetLugarReferencia(string filtro)
         {
-            var entities = await _context.Lugares_Referencia_AF.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
-
+            var data = await _context.Lugares_Referencia_AF.ToListAsync();
+            var entities = data.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToList();
             var output = new List<LugarReferencia>();
             foreach (var item in entities)
             {
@@ -1691,8 +1691,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         //Tb_Origen_Agua
         public async Task<List<OrigenAgua>> GetOrigenAgua(string filtro){
-            var entities = await _context.Origenes_Agua.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
-
+            var data = await _context.Origenes_Agua.ToListAsync();
+            var entities = data.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToList();
             var output = new List<OrigenAgua>();
             foreach (var item in entities)
             {
@@ -1734,7 +1734,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         //Tb_Fuente_Agua
         public async Task<List<FuenteAgua>> GetFuenteAgua(string filtro){
-            var entities = await _context.Fuentes_Agua.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToListAsync();
+            var data = await _context.Fuentes_Agua.ToListAsync();
+            var entities = data.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x => x.Descripcion).ToList();
             var origenes = await _context.Origenes_Agua.ToListAsync();
             var output = new List<FuenteAgua>();
             foreach (var item in entities)
@@ -1798,8 +1799,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         //Tb_Resolucion_Consumo_Agua
         public async Task<List<ResolucionConsumoAgua>> GetResolucionConsumoAgua(string filtro){
-            var entities = await _context.Resoluciones_Consumo_Agua.ToListAsync();
-            entities = entities.Where(x => x.Resolucion.Contains(filtro == null ? x.Resolucion : filtro)).OrderBy(x =>Int32.Parse(x.Anio)).ToList();
+            var data = await _context.Resoluciones_Consumo_Agua.ToListAsync();
+            var entities = data.Where(x => x.Resolucion.Contains(filtro == null ? x.Resolucion : filtro)).OrderBy(x => Int32.Parse(x.Anio)).ToList();
             var fuentes = await _context.Fuentes_Agua.ToListAsync();
             var origenes = await _context.Origenes_Agua.ToListAsync();
 

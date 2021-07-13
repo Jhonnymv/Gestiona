@@ -1,7 +1,7 @@
 $(document).ready(function () {
+    dataSlides();
 
     $(".input-login-mc input").val("");
-
 
     $(".input-login-mc input").focusout(function(){
         if($(this).val() !== ""){
@@ -54,27 +54,29 @@ $(document).ready(function () {
     });
 
 
-    /*TRAER DATOS*/
-    let data = [
-        { 'titulo': 'Primer Slide', 'contenido': 'Contenido Primer Slide', 'imagen': '/img/landing-page-img.png' },
-        { 'titulo': 'Segundo Slide', 'contenido': 'Contenido Segundo Slide', 'imagen': '/img/menu-bg.png' },
-        { 'titulo': 'Tercer Slide', 'contenido': 'Contenido Tercer Slide', 'imagen': '/img/back-inspection.png' },
-        { 'titulo': 'Cuarto Slide', 'contenido': 'Contenido Cuarto Slide', 'imagen': '/img/back-inspection.png' }
-    ];
 
-    /*CREAR SLIDERS*/
-    let indicators = '';
-    let inner_carousel = '';
-    for (let i = 0; i < data.length; i++) {
-        indicators += `<button type="button" data-bs-target="#mc-home-carousel" data-bs-slide-to="${i}" aria-label="Slide ${i}"></button>`;
-        inner_carousel += `
-            <div class="carousel-item">
+    function dataSlides() {
+        $.ajax({
+            type: "GET",
+            url: "/Configuracion/ConsultarSlides",
+            traditional: true,
+            success: (response) => {
+                if (response.success)
+                {
+                    /*TRAER DATOS*/
+                    let data = JSON.parse(response.data);
+                    /*CREAR SLIDERS*/
+                    let indicators = '';
+                    let inner_carousel = '';
+                    for (let i = 0; i < data.length; i++) {
+                        indicators += `<button type="button" data-bs-target="#mc-home-carousel" data-bs-slide-to="${i}" aria-label="Slide ${i}"></button>`;
+                        inner_carousel += `<div class="carousel-item">
                 <div>
-                    <img src="${data[i].imagen}" class="d-block w-100" alt="...">
+                    <img src="${data[i].Imagen}" class="d-block w-100" alt="...">
                 </div>
                 <div class="carousel-caption d-none d-md-block">
-                    <h3>${data[i].titulo}</h3>
-                    <p>${data[i].contenido}</p>
+                    <h3>${data[i].Titulo}</h3>
+                    <p>${data[i].Contenido}</p>
                 </div>
                 <div class="landing-accesories">
                     <div class="cover-div">
@@ -85,10 +87,23 @@ $(document).ready(function () {
                     </div>
                 </div>
             </div>`;
+                    }
+                    $('#mc-home-carousel .carousel-indicators').append(indicators);
+                    $('#mc-home-carousel .carousel-inner').append(inner_carousel);
+                    $('.carousel-indicators button').first().addClass('active');
+                    $('.carousel-item').first().addClass('active');
+                    $('.carousel-indicators').first().attr('aria-current', 'true');
+                } else {
+                    console.log("Ocurrió un problema: " + response.message);
+                }
+            }
+        });
     }
-    $('#mc-home-carousel .carousel-indicators').append(indicators);
-    $('#mc-home-carousel .carousel-inner').append(inner_carousel);
-    $('.carousel-indicators button').first().addClass('active');
-    $('.carousel-item').first().addClass('active');
-    $('.carousel-indicators').first().attr('aria-current', 'true');
+    //var data = [
+    //    { 'titulo': 'Primer Slide', 'contenido': 'Contenido Primer Slide', 'imagen': '/img/landing-page-img.png' },
+    //    { 'titulo': 'Segundo Slide', 'contenido': 'Contenido Segundo Slide', 'imagen': '/img/menu-bg.png' },
+    //    { 'titulo': 'Tercer Slide', 'contenido': 'Contenido Tercer Slide', 'imagen': '/img/back-inspection.png' },
+    //    { 'titulo': 'Cuarto Slide', 'contenido': 'Contenido Cuarto Slide', 'imagen': '/img/back-inspection.png' }
+    //];
+
 });

@@ -60,28 +60,28 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
             return Ok(response);
         }
-        public async Task<IActionResult> Resumen()
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-            {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+        //public async Task<IActionResult> Resumen()
+        //{
+        //    if (!(HttpContext.Session.GetString("SessionUser") != null))
+        //    {
+        //        return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
+        //    }
+        //    else
+        //    {
+        //        var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                ViewBag.Rol = userInfo.Rol.ToString();
-                ViewBag.Usuario = userInfo.NombreUsuario;
+        //        ViewBag.Rol = userInfo.Rol.ToString();
+        //        ViewBag.Usuario = userInfo.NombreUsuario;
 
-                var propiedadesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
-                var propiedadesText = System.IO.File.ReadAllText(propiedadesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+        //        var propiedadesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+        //        var propiedadesText = System.IO.File.ReadAllText(propiedadesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
-                ViewBag.ListaPropiedades = propiedadesText;
+        //        ViewBag.ListaPropiedades = propiedadesText;
 
 
-                return View();
-            }
-        } 
+        //        return View();
+        //    }
+        //} 
         public async Task<IActionResult> ResumenTarjetas()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -99,63 +99,63 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
         }
         //Propiedadaes módulos
-        [HttpPost]
-        public async Task<IActionResult> GuardarColores(string json)
-        {
-            dynamic response;
-            try
-            {
-                var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
-                //convertir a json y guardarlo en archivo json
-                var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(json);
-                string jsonToSave = JsonConvert.SerializeObject(propiedadesJson);
-                System.IO.File.WriteAllText(propiedadesJsonPath, jsonToSave, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                //listar propiedades
-                //Buscar archivo js con las propiedades
-                var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
-                var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                foreach (var propiedad in propiedadesJson)
-                {
-                    //Modificar JS     
+        //[HttpPost]
+        //public async Task<IActionResult> GuardarColores(string json)
+        //{
+        //    dynamic response;
+        //    try
+        //    {
+        //        var propiedadesJsonPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+        //        //convertir a json y guardarlo en archivo json
+        //        var propiedadesJson = JsonConvert.DeserializeObject<List<PropiedadModulo>>(json);
+        //        string jsonToSave = JsonConvert.SerializeObject(propiedadesJson);
+        //        System.IO.File.WriteAllText(propiedadesJsonPath, jsonToSave, System.Text.Encoding.GetEncoding("iso-8859-1"));
+        //        //listar propiedades
+        //        //Buscar archivo js con las propiedades
+        //        var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
+        //        var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+        //        foreach (var propiedad in propiedadesJson)
+        //        {
+        //            //Modificar JS     
 
-                    //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
-                    //primera letra + id.length + " = ".lenght
-                    var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
-                    //primera letra + id.length + " = ".lenght
-                    var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
-                    //primera letra + id.length + " = ".lenght
-                    var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
-                    //index of (primer valor de la variable) + index of(;)
-                    var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
-                    //reemplazar valores
-                    newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
-                    //convertir a json y guardarlo en archivo json
-                    System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
-                }
-                response = new
-                {
-                    success = true,
-                    propiedades = jsonToSave
-                };
-            }
-            catch(Exception e)
-            {
-                response = new
-                {
-                    success = false,
-                    message = e.Message
-                };
-            }
-            return Ok(response);
-        }
+        //            //Modificar colores (r-id,g-id,b-id) ej: (r2,g2,b2)
+        //            //primera letra + id.length + " = ".lenght
+        //            var rStartIndex = templateJsText.IndexOf("r" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+        //            //index of (primer valor de la variable) + index of(;)
+        //            var rLastIndex = rStartIndex + templateJsText.Substring(rStartIndex, 10).IndexOf(';');
+        //            //reemplazar valores
+        //            var newJs = templateJsText.Substring(0, rStartIndex + 1) + propiedad.r + templateJsText.Substring(rLastIndex);
+        //            //primera letra + id.length + " = ".lenght
+        //            var gStartIndex = newJs.IndexOf("g" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+        //            //index of (primer valor de la variable) + index of(;)
+        //            var gLastIndex = gStartIndex + newJs.Substring(gStartIndex, 10).IndexOf(';');
+        //            //reemplazar valores
+        //            newJs = newJs.Substring(0, gStartIndex + 1) + propiedad.g + newJs.Substring(gLastIndex);
+        //            //primera letra + id.length + " = ".lenght
+        //            var bStartIndex = newJs.IndexOf("b" + propiedad.id + " = ") + (propiedad.id.ToString().Length + 3);
+        //            //index of (primer valor de la variable) + index of(;)
+        //            var bLastIndex = bStartIndex + newJs.Substring(bStartIndex, 10).IndexOf(';');
+        //            //reemplazar valores
+        //            newJs = newJs.Substring(0, bStartIndex + 1) + propiedad.b + newJs.Substring(bLastIndex);
+        //            //convertir a json y guardarlo en archivo json
+        //            System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
+        //        }
+        //        response = new
+        //        {
+        //            success = true,
+        //            propiedades = jsonToSave
+        //        };
+        //    }
+        //    catch(Exception e)
+        //    {
+        //        response = new
+        //        {
+        //            success = false,
+        //            message = e.Message
+        //        };
+        //    }
+        //    return Ok(response);
+        //}
         [HttpPost]
         public async Task<IActionResult> FiltrarPropiedades(string filtro, int pagina, int rpp)
         {

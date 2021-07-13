@@ -51,6 +51,7 @@
     <Folder Include="logs\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
+    <Folder Include="Views\Configuracion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />
     <Folder Include="wwwroot\ExcelTemplates\ResiduoSolido\" />
@@ -73,6 +74,10 @@
     <None Include="UseCases\SGA_Documentos\Administracion\ActualizarDocumento.cshtml" />
     <None Include="UseCases\SGA_Documentos\Administracion\ActualizarDocumentoSRevision.cshtml" />
     <None Include="UseCases\GestorTablasMaestras\Gestiona\DetallePropiedades.cshtml" />
+    <None Include="UseCases\Configuracion\ResumenModulos.cshtml" />
+    <None Include="UseCases\Configuracion\ResumenPlataforma.cshtml" />
+    <None Include="UseCases\Configuracion\AgregarSlide.cshtml" />
+    <None Include="UseCases\Configuracion\DetalleSlide.cshtml" />
     <None Include="wwwroot\bootstrap\css\bootstrap-grid.css.map" />
     <None Include="wwwroot\bootstrap\css\bootstrap-grid.min.css.map" />
     <None Include="wwwroot\bootstrap\css\bootstrap-grid.rtl.css.map" />

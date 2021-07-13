@@ -1,0 +1,101 @@
+﻿
+@{
+    ViewData["Title"] = "Resumen Plataforma";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="configuration">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title configuration-opacity-color">
+                <h3>Plataforma</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <div class="action-container incidentes-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline configuration-color" asp-action="AgregarSlide" asp-controller="Configuracion">NUEVO SLIDE</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form w-100">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label for="">Buscar</label>
+                            <input type="text" class="form-control" id="filtro">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="FiltrarSlides(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive incidentes-color">
+            <table class="table" id="tabla_resumen_modulo">
+                <thead class="">
+                    <tr>
+                        <th>Título</th>
+                        <th>Contenido</th>
+                        <th>Imagen</th>
+                        <th colspan="2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container configuration-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            FiltrarSlides(1);
+        });
+        function FiltrarSlides(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/Configuracion/FiltrarSlides",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $("#filtro").val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen_modulo tbody').empty();
+                    $('#tabla_resumen_modulo tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
+                }
+            });
+        }
+        function EliminarSlide(id) {
+            if (confirm('¿Esta seguro que desea eliminar este slide?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Configuracion/EliminarSlide",
+                    data: {
+                        Id: id
+                    },
+                    success: (response) => {
+                        if (response.success == true) {
+                            FiltrarSlides(1);
+                        }
+                        else {
+                            console.log(response.message);
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}
