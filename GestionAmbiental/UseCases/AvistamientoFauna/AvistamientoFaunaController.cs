@@ -409,7 +409,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.DNI,
                     model.Opcion);
                 if (model.Opcion.Equals("GuardarEstado"))
-                    return RedirectToAction("EditarRegistro", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
+                    return RedirectToAction("Resumen");
                 else if (model.Opcion.Equals("Registrar"))
                     return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
                 
@@ -559,7 +559,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.Estado);
 
                 if (model.Opcion.Equals("GuardarEstado")|| model.Opcion.Equals("EditarAdmin"))
-                    return RedirectToAction("EditarRegistro", new { IdAvistamiento = model.IdEncriptado });
+                    return RedirectToAction("Resumen");
                 else if (model.Opcion.Equals("Registrar"))
                     return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdEncriptado });
             }

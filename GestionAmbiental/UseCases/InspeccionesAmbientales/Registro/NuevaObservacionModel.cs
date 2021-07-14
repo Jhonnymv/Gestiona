@@ -12,33 +12,33 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
     {
         public int idCabecera { get; set; }
         public int IdObservacion { get; set; }
-        [DisplayName("Tipo de Observación:")]
+        [DisplayName("Tipo de Observación")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string TipoInspeccion { get; set; }
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Asesor_MA_Seguridad { get; set; }
-        [DisplayName("Acto/Condición Subestándar Identificada:")]
+        [DisplayName("Acto/Condición Subestándar Identificada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string CondicionIdentificada { get; set; }
-        [DisplayName("Tipo de Condición/Acto Subestándar:")]
+        [DisplayName("Tipo de Condición/Acto Subestándar")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public int TipoCondicion { get; set; }
-        [DisplayName("Evidencia:")]
+        [DisplayName("Evidencia")]
         [Required(ErrorMessage = "Debe ingresar una evidencia")]
         public List<IFormFile> Evidencias { get; set; }
-        [DisplayName("Nivel de Riesgo:")]
+        [DisplayName("Nivel de Riesgo")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string NiveRiesgo { get; set; }
-        [DisplayName("Acción Preventiva / Correctiva:")]
+        [DisplayName("Acción Preventiva / Correctiva")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable de Marcobre para levantar Obs.:")]
+        [DisplayName("Responsable de Marcobre para levantar Obs.")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int ResponsableMarc { get; set; }
-        [DisplayName("Responsable Contratista:")]
+        [DisplayName("Responsable Contratista")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string ResponsableCont { get; set; }
-        [DisplayName("Fecha Programada para levantar Obs.:")]
+        [DisplayName("Fecha Programada para levantar Obs.")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string FechaProgramada { get; set; }
 

@@ -9,7 +9,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title incidentes-opacity-color">
-                <h3>Editar Reporte Preliminar</h3>
+                <h3>Editar Reporte Preliminar @Model.Codigo</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -24,7 +24,7 @@
                 <input type="hidden" asp-for="Estado" value="@Model.Estado" />
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">DATOS DEL TITULAR MINERO</span>
+                        <span class="text-white bold text-center">DATOS DEL TITULAR MINERO</span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -61,7 +61,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">DATOS DE LA EMPRESA CONTRATISTA <span class="text-danger">(Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</span> </span>
+                        <span class="text-white bold text-center ">DATOS DE LA EMPRESA CONTRATISTA <span class="text-danger">(Llenar esta sección en caso el incidente haya sido ocasionado por un contratista)</span> </span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -98,7 +98,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">DATOS DEL INCIDENTE AMBIENTAL</span>
+                        <span class="text-white bold text-center ">DATOS DEL INCIDENTE AMBIENTAL</span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -191,7 +191,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">CAUSAS INMEDIATAS DEL INCIDENTE</span>
+                        <span class="text-white bold text-center ">CAUSAS INMEDIATAS DEL INCIDENTE</span>
                     </div>
                     <div class="details-content">
                         @if (Model.Estado == "Pendiente")
@@ -243,7 +243,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">DATOS DE LOS INVOLUCRADOS</span>
+                        <span class="text-white bold text-center ">DATOS DE LOS INVOLUCRADOS</span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -299,7 +299,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">ACCIONES INMEDIATAS</span>
+                        <span class="text-white bold text-center ">ACCIONES INMEDIATAS</span>
                     </div>
                     <div class="details-content">
                         @if (Model.Estado == "Pendiente")
@@ -354,7 +354,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">SEGUIMIENTO</span>
+                        <span class="text-white bold text-center ">SEGUIMIENTO</span>
                     </div>
                     <div class="details-content">
                         <div class="row input_container">
@@ -369,7 +369,7 @@
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="detail-header">
-                        <span class="text-mc bold text-center">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
+                        <span class="text-white bold text-center ">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
                     </div>
                     <div class="details-content">
                         @if (Model.Estado == "Pendiente")

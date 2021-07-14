@@ -87,7 +87,7 @@ namespace GestionAmbiental.UseCases.Configuracion
                     filasTabla += "<td>" + fila.Contenido + "</td>";
                     filasTabla += "<td><img style=\"width:350px;height:auto;\" src=\"" + fila.Imagen + "\"></td>";
                     filasTabla += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarSlide(" + fila.Id + ")\">Eliminar</button></td>";
-                    filasTabla += "<td><a class=\"btn btn-mc text-white\" href=\"/Configuracion/DetalleSlide?Id=" + fila.Id + "\">Detalle</a></td>";
+                    filasTabla += "<td><a class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/Configuracion/DetalleSlide?Id=" + fila.Id + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
 
                 }

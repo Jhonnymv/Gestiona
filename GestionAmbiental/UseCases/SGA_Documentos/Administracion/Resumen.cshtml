@@ -10,7 +10,7 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title sga-opacity-color">
-                <h3><span id="titulo_pagina">Administracion de Documentos SGA</span></h3>
+                <h3><span id="titulo_pagina">Administración de Documentos SGA</span></h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
@@ -106,12 +106,12 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de Documento</label>
-                                <select class="selectpicker form-control" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Estado</label>
-                                <select class="selectpicker form-control" id="filtro_condicion" asp-items="ViewBag.Condiciones" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_condicion" asp-items="ViewBag.Condiciones" multiple>
                                 </select>
                             </div>
                         </div>
@@ -417,7 +417,7 @@
             }
         }
         $("#pills-docsga-tab").on('click', function () {
-            $("#titulo_pagina").text("Administracion de Documentos SGA");
+            $("#titulo_pagina").text("Administración de Documentos SGA");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumento", "SGAAdministracion", new { IdCategoria = 1 })');
             $("#btn_permisos").show();
@@ -427,7 +427,7 @@
             filtrar(1);
         });
         $("#pills-docsig-tab").on('click', function () {
-            $("#titulo_pagina").text("Administracion de Documentos SIG");
+            $("#titulo_pagina").text("Administración de Documentos SIG");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion", new { IdCategoria = 2 })');
             $("#btn_permisos").hide();
@@ -437,7 +437,7 @@
             filtrar(1);
         });
         $("#pills-docext-tab").on('click', function () {
-            $("#titulo_pagina").text("Administracion de Documentos Externos");
+            $("#titulo_pagina").text("Administración de Documentos Externos");
             $("#btn_cargar_documento").attr('href', '@Url.Action("CargarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
             $("#btn_actualizar_documento").attr('href', '@Url.Action("ActualizarDocumentoSRevision", "SGAAdministracion",new { IdCategoria = 3 })');
             $("#btn_permisos").hide();

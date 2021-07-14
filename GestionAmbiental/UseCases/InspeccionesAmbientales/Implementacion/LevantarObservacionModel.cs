@@ -14,29 +14,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         public int idObservacion { get; set; }
         public string EncryptedId { get; set; }
         public int idCabecera { get; set; }
-        [DisplayName("Tipo de Observación:")]
+        [DisplayName("Tipo de Observación")]
         public string TipoInspeccion { get; set; }
-        [DisplayName("Asesor MAP o SSO:")]
+        [DisplayName("Asesor MAP o SSO")]
         public string AsesorSeguridad { get; set; }
-        [DisplayName("Acto/Condición Subestándar Identificada:")]
+        [DisplayName("Acto/Condición Subestándar Identificada")]
         public string CondicionIdentificada { get; set; }
-        [DisplayName("Tipo de Condición/Acto Subestándar:")]
+        [DisplayName("Tipo de Condición/Acto Subestándar")]
         public string TipoCondicion { get; set; }
-        [DisplayName("Evidencia de Observación:")]
+        [DisplayName("Evidencia de Observación")]
         public List<string> Evidencia { get; set; }
-        [DisplayName("Nivel de Riesgo:")]
+        [DisplayName("Nivel de Riesgo")]
         public string NivelRiesgo { get; set; }
-        [DisplayName("Acción Preventiva / Correctiva Tomada:")]
+        [DisplayName("Acción Preventiva / Correctiva Tomada")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable de Marcobre para levantar Obs.:")]
+        [DisplayName("Responsable de Marcobre para levantar Obs.")]
         public string ResponsableMarc { get; set; }
-        [DisplayName("Responsable Contratista:")]
+        [DisplayName("Responsable Contratista")]
         public string ResponsableCont { get; set; }
-        [DisplayName("Fecha Programada para levantar Obs.:")]
+        [DisplayName("Fecha Programada para levantar Obs.")]
         public string FechaProgramada { get; set; }
-        [DisplayName("Evidencia de Implementación:")]
+        [DisplayName("Evidencia de Implementación")]
         public List<IFormFile> EvidenciasInspeccion { get; set; }
-        [DisplayName("Comentario:")]
+        [DisplayName("Comentario")]
         [Required(ErrorMessage ="Debe ingresar un comentario")]
         public string Comentario { get; set; }
 

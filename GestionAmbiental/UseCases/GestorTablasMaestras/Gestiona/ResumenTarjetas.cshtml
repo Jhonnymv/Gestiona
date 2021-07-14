@@ -22,8 +22,14 @@
             <form autocomplete="off" class="custom-form">
                 <div class="col-12 col-lg-9 row-center-center">
                     <div class="row input_container">
-                        <label for="filtro_nombre">Filtrar por Nombre o Contenido</label>
-                        <input type="text" class="form-control" id="filtro">
+                        <div class="col-12 col-md-6">
+                            <label for="filtro_nombre">Filtrar por Nombre o Contenido</label>
+                            <input type="text" class="form-control" id="filtro">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="filtro_nombre">Filtrar por Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>                        
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 row-center-center">
@@ -78,6 +84,7 @@
                     "pagina": pag,
                     "rpp": 10,
                     "filtro": $('#filtro').val(),
+                    "filtro_fecha": $('#filtro_fecha').val(),
                 },
                 traditional: true,
                 success: (response) => {

@@ -385,7 +385,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         }
         //Tarjetas
         [HttpPost]
-        public async Task<IActionResult> FiltrarTarjetas(string filtro, int pagina, int rpp)
+        public async Task<IActionResult> FiltrarTarjetas(string filtro,string filtro_fecha, int pagina, int rpp)
         {
             var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
             var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -407,22 +407,24 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             var filasTabla = "";
             var paginador = "";
             int nPaginas = cards.Count % rpp != 0 ? (cards.Count / rpp) + 1 : cards.Count / rpp;
+            if (filtro != null)
+                cards = cards.Where(x => x.Titulo.ToLower().Contains(filtro.ToLower()) || x.Contenido.ToLower().Contains(filtro.ToLower())).ToList();
+
+            if (filtro_fecha != null)
+                cards = cards.Where(x => Convert.ToDateTime(x.Fecha).Equals(Convert.ToDateTime(filtro_fecha))).ToList();
+
+            cards = cards.OrderBy(x => x.Fecha).ToList();
             if (cards.Count > 0)
             {
-                if(filtro!=null)
-                    cards = cards.Where(x=>x.Titulo.ToLower().Contains(filtro.ToLower()) || x.Contenido.ToLower().Contains(filtro.ToLower())).ToList();
-
-                cards = cards.OrderBy(x => x.Fecha).ToList();
                 foreach (var fila in cards)
                 {
-                    //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Titulo + "</td>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + (fila.Contenido.Length > 250 ? fila.Contenido.Substring(0, 250) + "..." : fila.Contenido) + "</td>";
                     filasTabla += "<td style=\"width:150px;\"><img src=\"" + Path.Combine(_hostingEnvironment.WebRootPath, fila.Imagen) + "\" style =\"width:100%;height:auto\"/></td>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Fecha + "</td>";
                     filasTabla += "<td style=\"vertical-align:middle;\">" + fila.Publicador + "</td>";
-                    filasTabla += "<td style=\"vertical-align:middle;\"><a href=\"/GestorContenido/DetalleTarjeta?IdTarjeta=" + fila.Id + "\">Detalle</a></td>";
+                    filasTabla += "<td style=\"vertical-align:middle;\"><a class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/GestorContenido/DetalleTarjeta?IdTarjeta=" + fila.Id + "\">Detalle</a></td>";
                     filasTabla += "<td style=\"vertical-align:middle;\"><button type=\"button\" class=\"btn btn-danger\" onclick=\"EliminarTarjeta("+fila.Id+")\">Eliminar</button></td>";
                     filasTabla += "</tr>";
                 }

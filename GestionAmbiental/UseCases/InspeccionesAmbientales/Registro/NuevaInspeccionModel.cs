@@ -16,34 +16,34 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public int Id_Inspeccion_Cabecera { get; set; }
         [DisplayName("Código")]
         public string Codigo { get; set; }
-        [DisplayName("Área Ejecutora de la Inspección:")]
+        [DisplayName("Área Ejecutora de la Inspección")]
         [Range(1,Int32.MaxValue,ErrorMessage ="Debe seleccionar una opción")]
         public int Id_Gerencia_Ejecutora { get; set; }
-        [DisplayName("Empresa Inspeccionada:")]
+        [DisplayName("Empresa Inspeccionada")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Empresa_Contratista { get; set; }
-        [DisplayName("Fecha:")]
+        [DisplayName("Fecha")]
         [Required(ErrorMessage ="Debe ingresar una fecha")]
         public string Fecha_Inspeccion { get; set; }
-        [DisplayName("Hora (24h):")]
+        [DisplayName("Hora (24h)")]
         [Required(ErrorMessage = "Debe ingresar una hora")]
         public string Hora_Inspeccion { get; set; }
-        [DisplayName("Área Inspeccionada:")]
+        [DisplayName("Área Inspeccionada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Lugar_Inspeccionado { get; set; }
-        [DisplayName("Tipo de Inspección:")]
+        [DisplayName("Tipo de Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opción")]
         public string Tipo_Inspeccion { get; set; }
-        [DisplayName("Responsable del Área Inspeccionada:")]
+        [DisplayName("Responsable del Área Inspeccionada")]
         [Range(1,Int32.MaxValue,ErrorMessage = "Debe seleccionar una opción")]
         public int Id_Responsable_Lugar { get; set; }
-        [DisplayName("Responsable de la Inspección:")]
+        [DisplayName("Responsable de la Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Responsable_Inspeccion { get; set; }
-        [DisplayName("Participantes de la Inspección:")]
+        [DisplayName("Participantes de la Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Inspectores { get; set; }
-        [DisplayName("Objetivo de la Inspección:")]
+        [DisplayName("Objetivo de la Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Objetivo { get; set; }
         //public NuevaObservacionModel Observacion { get; set; }

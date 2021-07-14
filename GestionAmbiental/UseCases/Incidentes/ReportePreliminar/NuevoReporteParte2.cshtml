@@ -20,149 +20,156 @@
                 <input type="hidden" asp-for="NInvolucrados" />
                 <input type="hidden" asp-for="NAcciones" />
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">CAUSAS INMEDIATAS DEL INCIDENTE</span>
+                    <div class="detail-header">
+                        <span class="text-white bold text-center  ">CAUSAS INMEDIATAS DEL INCIDENTE</span>
                     </div>
-                    <div class="row-center-center col-12">
-                        <div class="col-12 col-xl-4">
-                            <a class="btn btn-special-action incidentes-color" id="btn_nueva_causa" data-bs-toggle="modal" data-bs-target="">
-                                Agregar Causa
-                            </a>
-                        </div>
-                    </div>
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_causas">
-                                    <thead>
-                                        <tr>
-                                            <th>Acto/Condición Subestándar</th>
-                                            <th>Descripción</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">No hay registros</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="details-content">
+                        <div class="row-center-center col-12">
+                            <div class="col-12 col-xl-4">
+                                <a class="btn btn-special-action incidentes-color" id="btn_nueva_causa" data-bs-toggle="modal" data-bs-target="">
+                                    Agregar Causa
+                                </a>
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Otra_Causa"></label>
-                            <span class="text-danger" asp-validation-for="Otra_Causa"></span>
-                            <textarea class="form-control" asp-for="Otra_Causa" maxlength="300" rows="3"></textarea>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_causas">
+                                        <thead>
+                                            <tr>
+                                                <th>Acto/Condición Subestándar</th>
+                                                <th>Descripción</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">DATOS DE LOS INVOLUCRADOS</span>
-                    </div>
-                    <div class="row-center-center col-12">
-                        <div class="col-12 col-xl-4">
-                            <a class="btn btn-special-action incidentes-color" id="btn_nuevo_involucrado" data-bs-toggle="modal" data-bs-target="">
-                                Agregar Involucrado
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row-center-center col-12">
-                        <div class="col-12 col-xl-4">
-                            <span class="text-danger" id="alert_involucrados"></span>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Id_Gerencia_Responsable"></label>
-                            <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
-                            <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
-                        </div>
-                    </div>
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_involucrados">
-                                    <thead>
-                                        <tr>
-                                            <th>Tipo</th>
-                                            <th>Nombres y Apellidos</th>
-                                            <th>Correo Electrónico</th>
-                                            <th>Celular</th>
-                                            <th>Puesto de Trabajo</th>
-                                            <th>Turno</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">No hay registros</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Otra_Causa"></label>
+                                <span class="text-danger" asp-validation-for="Otra_Causa"></span>
+                                <textarea class="form-control" asp-for="Otra_Causa" maxlength="300" rows="3"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">ACCIONES INMEDIATAS</span>
+                    <div class="detail-header">
+                        <span class="text-white bold text-center  ">DATOS DE LOS INVOLUCRADOS</span>
                     </div>
-                    <div class="row-center-center col-12">
-                        <div class="col-12 col-xl-4">
-                            <a class="btn btn-special-action incidentes-color" id="btn_nueva_accion" data-bs-toggle="modal" data-bs-target="">
-                                Agregar Acción
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row-center-center col-12">
-                        <div class="col-12 col-xl-4">
-                            <span class="text-danger" id="alert_acciones"></span>
-                        </div>
-                    </div>
-                    <div class="incidentes">
-                        <div class="tertiary-content col-12">
-                            <div class="table-responsive incidentes-color">
-                                <table class="table" id="tabla_acciones">
-                                    <thead>
-                                        <tr>
-                                            <th>Acción Inmediata</th>
-                                            <th>Responsable Marcobre</th>
-                                            <th>Responsable Contratista</th>
-                                            <th>Fecha</th>
-                                            <th>Estatus</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td colspan="100%">No hay observaciones</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="details-content">
+                        <div class="row-center-center col-12">
+                            <div class="col-12 col-xl-4">
+                                <a class="btn btn-special-action incidentes-color" id="btn_nuevo_involucrado" data-bs-toggle="modal" data-bs-target="">
+                                    Agregar Involucrado
+                                </a>
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Comentario_Accion">Comentario</label>
-                            <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
-                            <input type="text" class="form-control" asp-for="Comentario_Accion" maxlength="250" />
+                        <div class="row-center-center col-12">
+                            <div class="col-12 col-xl-4">
+                                <span class="text-danger" id="alert_involucrados"></span>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Id_Gerencia_Responsable"></label>
+                                <span class="text-danger" asp-validation-for="Id_Gerencia_Responsable"></span>
+                                <select class="form-control" asp-items="@ViewBag.Gerencias" asp-for="Id_Gerencia_Responsable"></select>
+                            </div>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_involucrados">
+                                        <thead>
+                                            <tr>
+                                                <th>Tipo</th>
+                                                <th>Nombres y Apellidos</th>
+                                                <th>Correo Electrónico</th>
+                                                <th>Celular</th>
+                                                <th>Puesto de Trabajo</th>
+                                                <th>Turno</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay registros</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">SEGUIMIENTO</span>
+                    <div class="detail-header">
+                        <span class="text-white bold text-center  ">ACCIONES INMEDIATAS</span>
                     </div>
+                    <div class="details-content">
+                        <div class="row-center-center col-12">
+                            <div class="col-12 col-xl-4">
+                                <a class="btn btn-special-action incidentes-color" id="btn_nueva_accion" data-bs-toggle="modal" data-bs-target="">
+                                    Agregar Acción
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row-center-center col-12">
+                            <div class="col-12 col-xl-4">
+                                <span class="text-danger" id="alert_acciones"></span>
+                            </div>
+                        </div>
+                        <div class="incidentes">
+                            <div class="tertiary-content col-12">
+                                <div class="table-responsive incidentes-color">
+                                    <table class="table" id="tabla_acciones">
+                                        <thead>
+                                            <tr>
+                                                <th>Acción Inmediata</th>
+                                                <th>Responsable Marcobre</th>
+                                                <th>Responsable Contratista</th>
+                                                <th>Fecha</th>
+                                                <th>Estatus</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="100%">No hay observaciones</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Comentario_Accion">Comentario</label>
+                                <span class="text-danger" asp-validation-for="Comentario_Accion"></span>
+                                <input type="text" class="form-control" asp-for="Comentario_Accion" maxlength="250" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="detail-header">
+                        <span class="text-white bold text-center  ">SEGUIMIENTO</span>
+                    </div>
+                    <div class="details-content">
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-12">
                             <label asp-for="Id_Supervisor">Supervisor de Medio Ambiente encargado del seguimiento</label>
@@ -171,18 +178,21 @@
                         </div>
                     </div>
                 </div>
+                </div>
 
                 <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
+                    <div class="detail-header">
+                        <span class="text-white bold text-center  ">EVIDENCIAS: FOTOGRAFÍAS, PLANOS, DIAGRAMAS, ENTRE OTROS QUE APORTEN INFORMACIÓN SOBRE EL INCIDENTE (DEBEN CONTEMPLAR FECHA, HORA Y GEOREFERENCIA EN UTM DATUM WGS84)</span>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-12">
-                            <label asp-for="Evidencias">Seleccionar Evidencias</label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
-                                <span id="danger_evidencia" class=""></span>
-                            </span>
-                            <input type="file" class="form-control" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
+                    <div class="details-content">
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-12">
+                                <label asp-for="Evidencias">Seleccionar Evidencias</label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">
+                                    <span id="danger_evidencia" class=""></span>
+                                </span>
+                                <input type="file" class="form-control" asp-for="Evidencias" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
+                            </div>
                         </div>
                     </div>
                 </div>

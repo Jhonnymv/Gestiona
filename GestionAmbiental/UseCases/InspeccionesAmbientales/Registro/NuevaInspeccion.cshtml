@@ -42,12 +42,12 @@
                             <div class="message"></div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Id_Gerencia_Ejecutora">Área Ejecutora de la Inspección</label>
+                                    <label asp-for="Id_Gerencia_Ejecutora"></label>
                                     <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
                                     <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Id_Empresa_Contratista">Empresa Inspeccionada</label>
+                                    <label asp-for="Id_Empresa_Contratista"></label>
                                     <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
                                     <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
                                     </select>
@@ -55,31 +55,31 @@
                             </div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Lugar_Inspeccionado">Área Inspeccionada</label>
+                                    <label asp-for="Lugar_Inspeccionado"></label>
                                     <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
                                     <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Tipo_Inspeccion">Tipo de Inspección</label>
+                                    <label asp-for="Tipo_Inspeccion"></label>
                                     <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
                                     <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
                                 </div>
                             </div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Id_Responsable_Lugar">Responsable del Área Inspeccionada</label>
+                                    <label asp-for="Id_Responsable_Lugar"></label>
                                     <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                                     <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6 p-0 d-flex align-items-end">
                                     <div class="row mt-0 mb-0 col-12">
                                         <div class="col-5 mt-0 mb-0">
-                                            <label asp-for="Hora_Inspeccion">Hora (24h)</label>
+                                            <label asp-for="Hora_Inspeccion"></label>
                                             <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
                                             <input type="time" class="form-control" asp-for="Hora_Inspeccion">
                                         </div>
                                         <div class="col-7 mt-0 mb-0">
-                                            <label asp-for="Fecha_Inspeccion">Fecha</label>
+                                            <label asp-for="Fecha_Inspeccion"></label>
                                             <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
                                             <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
                                         </div>
@@ -88,19 +88,19 @@
                             </div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
+                                    <label asp-for="Responsable_Inspeccion"></label>
                                     <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
                                     <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
                                 </div>
                                 <div class="col-12 col-sm-6 col-lg-6">
-                                    <label asp-for="Inspectores">Participantes de la Inspección</label>
+                                    <label asp-for="Inspectores"></label>
                                     <span class="text-danger" asp-validation-for="Inspectores"></span>
                                     <input type="text" class="form-control" asp-for="Inspectores">
                                 </div>
                             </div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-12 col-lg-12">
-                                    <label asp-for="Objetivo">Objetivo de la Inspección</label>
+                                    <label asp-for="Objetivo"></label>
                                     <span class="text-danger" asp-validation-for="Objetivo"></span>
                                     <input type="text" class="form-control" asp-for="Objetivo">
                                 </div>
