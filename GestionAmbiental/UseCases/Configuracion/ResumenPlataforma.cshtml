@@ -9,10 +9,10 @@
         <div class="menu-settings container">
             <ul class="nav nav-pills mb-3 div-scroll-horizontal" id="pills-tabs-configuration" role="tablist">
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-sliders-tab" data-bs-toggle="pill" data-bs-target="#pills-sliders" type="button" role="tab" aria-controls="pills-sliders" aria-selected="true">Sliders</button>
+                    <button class="nav-link active" id="pills-sliders-tab" href="#pills-sliders-tab" data-bs-toggle="pill" data-bs-target="#pills-sliders" type="button" role="tab" aria-controls="pills-sliders" aria-selected="true">Sliders</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-general-img-tab" data-bs-toggle="pill" data-bs-target="#pills-general-img" type="button" role="tab" aria-controls="pills-general-img" aria-selected="false">Imagen General</button>
+                    <button class="nav-link" id="pills-general-img-tab" href="#pills-general-img-tab" data-bs-toggle="pill" data-bs-target="#pills-general-img" type="button" role="tab" aria-controls="pills-general-img" aria-selected="false">Imagen Menú Módulos</button>
                 </li>
             </ul>
 
@@ -57,7 +57,28 @@
                     </div>
                 </div>
                 <div class="tab-pane fade" id="pills-general-img" role="tabpanel" aria-labelledby="pills-general-img-tab">
-                    Contenido para ver y cambiar la imagen principal
+                    Contenido para ver y cambiar la imagen del menú de módulos
+                    <form id="form_imagen_modulos" autocomplete="off" class="custom-form w-100">
+                        <div class="row input_container align-items-lg-start">
+                            <div class="col-12 col-lg-6">
+                                <div class="row input_container">
+                                    <label for="">Imagen Actual</label>
+                                    <img id="imagen_actual_modulos" class="mt-2" style="width:100%;height:auto;" src="#"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6">
+                                <div class="row input_container">
+                                    <label for="">Imagen Nueva</label>
+                                    <span id="alerta_fotos" class="text-danger"></span>
+                                    <img id="previsualizacion" class="mt-2" style="width:100%;height:auto;display:none" />
+                                    <input type="file" id="nueva_imagen_modulos" class="form-control mt-2" accept=".jpg,.jpeg,.png" data-max-size="2097152" />
+                                </div>
+                            </div>
+                            <div class="col-12 row-center-center">
+                                <button id="botonCargarFoto" type="button" class="btn btn-mc" style="display:none;" onclick="CambiarImagenModulo()">Cargar Foto</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -68,7 +89,20 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-            FiltrarSlides(1);
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabConfigPlataforma');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('#'+activeTab).click();
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FiltrarSlides(1);
+            }
+        });
+        //Guardar tab activo en local storage
+        $('#pills-tabs-configuration .nav-link').click(function () {
+            localStorage.setItem('activeTabConfigPlataforma', $(this).attr('id'));
         });
         function FiltrarSlides(pag) {
             $.ajax({
@@ -105,6 +139,105 @@
                     }
                 });
             }
+        }
+        function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('previsualizacion');
+                output.src = reader.result;
+            }
+            try {
+                reader.readAsDataURL(event.target.files[0]);
+                $("#previsualizacion").show();
+                $("#botonCargarFoto").show();
+            } catch (error) {
+                $("#previsualizacion").hide();
+                $("#botonCargarFoto").hide();
+            }
+        }
+        $("#nueva_imagen_modulos").change(function (event) {
+            $("#alerta_fotos").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#nueva_imagen_modulos").data('max-size');
+            var archivos = $("#nueva_imagen_modulos").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#alerta_fotos").html("El  archivo supera el límite permitido de 2MB<br/>");
+                    $("#previsualizacion").hide();
+                    $("#botonCargarFoto").hide();
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#alerta_fotos").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+                preview_image(event);
+            }
+        });
+        $("#pills-sliders-tab").click(function () {
+            FiltrarSlides(1);
+        });
+        $("#pills-general-img-tab").click(function () {
+            ConsultarImagenModulo();
+        });
+        function ConsultarImagenModulo() {
+            $.ajax({
+                type: "GET",
+                url: "/Configuracion/ConsultarImagenModulos",                
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        console.log(JSON.parse(response.data));
+                        $("#imagen_actual_modulos").attr("src",JSON.parse(response.data).Imagen)
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            });
+        }
+        function CambiarImagenModulo() {
+            var formData = new FormData();
+                var files = document.getElementById("nueva_imagen_modulos").files;
+                for (var i = 0; i != files.length; i++) {
+                    formData.append("ImagenNueva", files[i]);
+                }
+            $.ajax({
+                type: "POST",
+                url: "/Configuracion/CambiarImagenModulo",     
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: (response) => {
+                    if (response.success) {
+                        location.reload();
+                    } else {
+                        console.log(response.message);
+                    }
+                }
+            });
         }
     </script>
 }

@@ -495,6 +495,114 @@ namespace GestionAmbiental.UseCases.Configuracion
             }
             return Ok(response);
         }
+        [HttpGet]
+        public IActionResult ConsultarImagenModulos()
+        {
+            dynamic response;
+            try
+            {
+                var imagenesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "imagenes_template.json");
+                var imagenesText = System.IO.File.ReadAllText(imagenesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var imagenes = JsonConvert.DeserializeObject<List<ImagenTemplate>>(imagenesText);
+                var imagenModulo = imagenes.Find(x => x.Nombre.Equals("menu_img_bg"));
+                if (imagenModulo!= null)
+                {
+
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(imagenModulo)
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "No se encontró la imagen"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
+        [HttpPost]
+        public IActionResult CambiarImagenModulo(IFormFile ImagenNueva)
+        {
+            dynamic response;
+            try
+            {
+                //Buscar json con las propiedades
+                var imagenesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "imagenes_template.json");
+                var imagenesText = System.IO.File.ReadAllText(imagenesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var imagenes = JsonConvert.DeserializeObject<List<ImagenTemplate>>(imagenesText);
+
+                //Buscar archivo js con las propiedades
+                var templateJsPath = Path.Combine(_hostingEnvironment.WebRootPath, "js", "template_script.js");
+                var templateJsText = System.IO.File.ReadAllText(templateJsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                var imagenModulo = imagenes.Find(x => x.Nombre.Equals("menu_img_bg"));
+                if (imagenModulo!= null && ImagenNueva!=null && ImagenNueva.Length>0)
+                {
+                    var extension = Path.GetExtension(ImagenNueva.FileName);
+                    var rutaNuevoArchivo = CargarImagen(ImagenNueva, "Modulos", extension).Result.Replace('\\','/');
+                    EliminarImagen(imagenModulo.Imagen);
+
+                    //Modificar ruta $('.menu_img_bg').css('background-image', 'url("/img/menu-bg.png")'); => $('.menu_img_bg').css('background-image', 'url("rutaNuevoArchivo")');
+                    //primera letra + id.length + " = ".lenght
+                    var textToFind = "$(\'.menu_img_bg\').css(\'background-image\', \'url(\"";
+                    var startIndex = templateJsText.IndexOf(textToFind);
+                    //index of ")');
+                    var lastIndex = startIndex + templateJsText.Substring(startIndex, 250).IndexOf("\")\');");
+                    if (startIndex > lastIndex)
+                    {
+                        response = new
+                        {
+                            success = false,
+                            message = "Error al reemplazar JS"
+                        };
+                        return Ok(response);
+                    }
+                    var newJs = templateJsText.Substring(0, startIndex +textToFind.Length) + rutaNuevoArchivo + templateJsText.Substring(lastIndex);                    
+                    //guardarlo en archivo js
+                    System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                    //guardar en json
+                    imagenModulo.Imagen = rutaNuevoArchivo;
+                    
+                    System.IO.File.WriteAllText(imagenesPath, JsonConvert.SerializeObject(imagenes), System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(imagenModulo)
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "No se encontró la imagen"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
         public async Task<string> CargarImagen(IFormFile archivo, string modulo, string extension)
         {
             var nuevoNombre = "Modulo_" + modulo + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + extension;
@@ -542,6 +650,11 @@ namespace GestionAmbiental.UseCases.Configuracion
             public int g { get; set; }
             public int b { get; set; }
             public string img_url { get; set; }
+        }
+        public class ImagenTemplate
+        {
+            public string Nombre { get; set; }
+            public string Imagen { get; set; }
         }
     }
 }
