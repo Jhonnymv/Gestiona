@@ -271,7 +271,7 @@
     }
 
     .article-card.large-article {
-        width: 90%;
+        width: calc(95% + 20px);
     }
 
     /*ARTICLES MOBILE 900px*/
