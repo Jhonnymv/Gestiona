@@ -231,14 +231,24 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         }
         public async Task<IActionResult> DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
         {
-            ViewBag.Empresa = empresa;
-            ViewBag.Gerencia = gerencia;
-            ViewBag.Responsable = respLevObs;
-            ViewBag.Asesor = asesor;
-            ViewBag.FechaInicio = FechaInicio;
-            ViewBag.FechaFin = FechaFin;
-            ViewBag.Estado = estado;
-            return View();
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                ViewBag.Empresa = empresa;
+                ViewBag.Gerencia = gerencia;
+                ViewBag.Responsable = respLevObs;
+                ViewBag.Asesor = asesor;
+                ViewBag.FechaInicio = FechaInicio;
+                ViewBag.FechaFin = FechaFin;
+                ViewBag.Estado = estado;
+                return View();
+            }
         }
         [HttpPost]
          public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp)
@@ -268,13 +278,13 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                     tabla += "<td>" + item.Tipo_Condicion + "</td>";
                     switch (item.Nivel_Riesgo)
                     {
-                        case "Tolerable": tabla += "<td><span class=\"badge badge-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        case "Alerta": tabla += "<td><span class=\"badge badge-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        case "No Aceptable": tabla += "<td><span class=\"badge badge-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        case "Bajo": tabla += "<td><span class=\"badge badge-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        case "Medio": tabla += "<td><span class=\"badge badge-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        case "Alto": tabla += "<td><span class=\"badge badge-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
-                        default: tabla += "<td><span class=\"badge badge-secondary\">" + item.Nivel_Riesgo + "</span>"; break;
+                        case "Tolerable": tabla += "<td><span class=\"badge bg-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Alerta": tabla += "<td><span class=\"badge bg-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "No Aceptable": tabla += "<td><span class=\"badge bg-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Bajo": tabla += "<td><span class=\"badge bg-success\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Medio": tabla += "<td><span class=\"badge bg-warning\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        case "Alto": tabla += "<td><span class=\"badge bg-danger\">" + item.Nivel_Riesgo + "</span></td>"; break;
+                        default: tabla += "<td><span class=\"badge bg-secondary\">" + item.Nivel_Riesgo + "</span>"; break;
                     }
                     tabla += "<td>" + item.Responsable + "</td>";
                     tabla += "<td>" + item.Fecha_Programada + "</td>";

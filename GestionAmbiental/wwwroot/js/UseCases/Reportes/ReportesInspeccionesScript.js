@@ -34,11 +34,13 @@ var data_ma_nr_tipo = [];
 var graph_ma_tol_tipo;
 var graph_ma_ale_tipo;
 var graph_ma_noa_tipo;
+var graph_ma_noaplica_tipo;
 //Variables gráfico SSO tipo condición por nivel riesgo
 var data_sso_nr_tipo = [];
 var graph_sso_baj_tipo;
 var graph_sso_med_tipo;
 var graph_sso_alt_tipo;
+var graph_sso_noaplica_tipo;
 
 
 $(document).ready(function () {
@@ -71,9 +73,9 @@ function ActualizarInspeccionesFecha() {
                 var nObs = response.nInspecciones;
                 ActualizarContadorInsXEst(nObs[0].valor, nObs[1].valor, nObs[2].valor);
 
-                ActualizarProductoInvestigacion();
+                ActualizarInspeccionesXFecha();
                 ActualizarContadorOxFecha();
-                ActualizaImpactoAgua();
+                ActualizaMAPvsSSO();
                 GetDataContadorOxE();
                 ActualizarDatosGraficoMAP_SSO_Estado();
                 ActualizarDatosGraficoMA_NR();
@@ -96,15 +98,15 @@ function ActualizarContadorInsXEst(pend, reg, tot) {
 }
 //Para contador de inspecciones x fecha
 $("#sel_frec_insp_fecha").on('change', function () {
-    ActualizarProductoInvestigacion();
-    ActualizaImpactoAgua();
+    ActualizarInspeccionesXFecha();
+    ActualizaMAPvsSSO();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
     ActualizarDatosGraficoMA_Clas();
     ActualizarDatosGraficoSSO_Clas();
 });
-function ActualizarProductoInvestigacion() {
+function ActualizarInspeccionesXFecha() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarInspeccionesXFecha",
@@ -195,7 +197,7 @@ function CrearGraficaInspeccionesFecha(labels, data, stepSize) {
 $("#sel_frec_obs_estado").on('change', function () {
     ActualizarContadorOxFecha();
     GetDataContadorOxE();
-    ActualizaImpactoAgua();
+    ActualizaMAPvsSSO();
     ActualizarDatosGraficoMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
@@ -247,7 +249,7 @@ function ActualizarContadorOxFecha() {
                 //Crear gráfica
                 CrearGraficaContardorOxFecha(labels, data, Math.max(data) / 10);
             }
-            ActualizaImpactoAgua()
+            ActualizaMAPvsSSO()
         }
     });
 }
@@ -332,7 +334,7 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     $("#ObsEncont").html(reg + imp + apr + rec + ven + amp );
 }
 //Para gráfico MAP vs SSO
-function ActualizaImpactoAgua() {
+function ActualizaMAPvsSSO() {
     $.ajax({
         type: "POST",
         url: "/ReportesInspecciones/ActualizarObsMAPvsSSO",
@@ -905,6 +907,7 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
             //0: Tolerable
             //1: Alerta
             //2: No aceptable
+            //3: No aplica
             if (data_ma_nr_tipo.length > 0) {
                 //Actualizar contador
                 data_ma_nr_tipo = response.tipoNivelRiesgoMA;
@@ -942,6 +945,17 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
                 graph_ma_noa_tipo.data.labels = labels;
                 graph_ma_noa_tipo.data.datasets[0].data = data;
                 graph_ma_noa_tipo.update();
+                labels = [];
+                data = [];
+                //No Aplica
+                for (var i = 0; i < data_ma_nr_tipo[3].length; i++) {
+                    labels.push(data_ma_nr_tipo[3][i].nombre);
+                    data.push(data_ma_nr_tipo[3][i].valor);
+                }
+                //Actualizar gráfica
+                graph_ma_noaplica_tipo.data.labels = labels;
+                graph_ma_noaplica_tipo.data.datasets[0].data = data;
+                graph_ma_noaplica_tipo.update();
             }
             else {
                 //Actualizar contador
@@ -975,6 +989,15 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
                 }
                 //Crear gráfica
                 CrearGraficoMA_No_Aceptable_Tipo(labels, data);
+                labels = [];
+                data = [];
+                //No aplica
+                for (var i = 0; i < data_ma_nr_tipo[3].length; i++) {
+                    labels.push(data_ma_nr_tipo[3][i].nombre);
+                    data.push(data_ma_nr_tipo[3][i].valor);
+                }
+                //Crear gráfica
+                CrearGraficoMA_No_Aplica_Tipo(labels, data);
             }
             $("#Modal_Nivel_Riesgo_MAP").modal('show');
         }
@@ -1086,6 +1109,41 @@ function CrearGraficoMA_No_Aceptable_Tipo(labels, data) {
         });
 }
 
+function CrearGraficoMA_No_Aplica_Tipo(labels, data) {
+    graph_ma_noaplica_tipo = new Chart(document.getElementById('chart_MAP_Nivel_Riesgo_No_Aplica'),
+        {
+            "type": "horizontalBar",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": "#Observaciones No Aplica MA",
+                    "data": data,
+                    "fill": false,
+                    "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                    "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                    "borderWidth": 1
+                }]
+            },
+            "options": {
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero": true,
+                            "stepSize": 1
+                        }
+                    }]
+                },
+                "plugins": {
+                    "datalabels": {
+                        "anchor": "center",
+                        "color": "black",
+                        "defaultFontSize": 15
+                    }
+                }
+            }
+        });
+}
+
 function ActualizarDatosGraficoSSO_NR_Tipo() {
     ActualizarInspeccionesFecha();
     $.ajax({
@@ -1142,6 +1200,17 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
                 graph_sso_alt_tipo.data.labels = labels;
                 graph_sso_alt_tipo.data.datasets[0].data = data;
                 graph_sso_alt_tipo.update();
+                labels = [];
+                data = [];
+                //No Aplica
+                for (var i = 0; i < data_sso_nr_tipo[3].length; i++) {
+                    labels.push(data_sso_nr_tipo[3][i].nombre);
+                    data.push(data_sso_nr_tipo[3][i].valor);
+                }
+                //Actualizar gráfica
+                graph_sso_noaplica_tipo.data.labels = labels;
+                graph_sso_noaplica_tipo.data.datasets[0].data = data;
+                graph_sso_noaplica_tipo.update();
             }
             else {
                 //Actualizar contador
@@ -1172,10 +1241,20 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
                 for (var i = 0; i < data_sso_nr_tipo[2].length; i++) {
                     labels.push(data_sso_nr_tipo[2][i].nombre);
                     data.push(data_sso_nr_tipo[2][i].valor);
-                }
-                
+                }                
                 //Crear gráfica
                 CrearGraficoSSO_Alto_Tipo(labels, data);
+                labels = [];
+                data = [];
+                //No Aplica
+                for (var i = 0; i < data_sso_nr_tipo[3].length; i++) {
+                    labels.push(data_sso_nr_tipo[3][i].nombre);
+                    data.push(data_sso_nr_tipo[3][i].valor);
+                }
+                //Crear gráfica
+                CrearGraficoSSO_Noaplica_Tipo(labels, data);
+                labels = [];
+                data = [];
             }
             $("#Modal_Nivel_Riesgo_SSO").modal('show');
         }
@@ -1260,6 +1339,41 @@ function CrearGraficoSSO_Alto_Tipo(labels, data) {
                 "labels": labels,
                 "datasets": [{
                     "label": "#Observaciones Alto SSO",
+                    "data": data,
+                    "fill": false,
+                    "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],
+                    "borderColor": ["rgb(255, 99, 132)", "rgb(255, 159, 64)", "rgb(255, 205, 86)", "rgb(75, 192, 192)", "rgb(54, 162, 235)", "rgb(153, 102, 255)", "rgb(201, 203, 207)"],
+                    "borderWidth": 1
+                }]
+            },
+            "options": {
+                "scales": {
+                    "xAxes": [{
+                        "ticks": {
+                            "beginAtZero": true,
+                            "stepSize": 1
+                        }
+                    }]
+                },
+                "plugins": {
+                    "datalabels": {
+                        "anchor": "center",
+                        "color": "black",
+                        "defaultFontSize": 15
+                    }
+                }
+            }
+        });
+}
+
+function CrearGraficoSSO_Noaplica_Tipo(labels, data) {
+    graph_sso_noaplica_tipo = new Chart(document.getElementById('chart_SSO_Nivel_Riesgo_No_Aplica'),
+        {
+            "type": "horizontalBar",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": "#Observaciones No Aplica SSO",
                     "data": data,
                     "fill": false,
                     "backgroundColor": ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)", "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)", "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"],

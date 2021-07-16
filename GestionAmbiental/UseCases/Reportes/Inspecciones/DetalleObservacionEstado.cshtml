@@ -4,77 +4,104 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Observaciones por estado </h2>
-    </div>
-</div>
-
-<div>
-    <input id="empresa" type="hidden" value="@ViewBag.Empresa" />
-    <input id="gerencia" type="hidden" value="@ViewBag.Gerencia" />
-    <input id="responsable" type="hidden" value="@ViewBag.Responsable" />
-    <input id="asesor" type="hidden" value="@ViewBag.Asesor" />
-    <input id="fechaInicio" type="hidden" value="@ViewBag.FechaInicio" />
-    <input id="fechaFin" type="hidden" value="@ViewBag.FechaFin" />
-    <input id="estado" type="hidden" value="@ViewBag.Estado" />
-
-        <div class="row mb-2" id="div_tabla_observaciones">
-            <div class="col-md-12">
-                <table class="table table-modal" id="tabla_observaciones">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Código de inspección</th>
-                            <th>Empresa</th>
-                            <th>Gerencia</th>
-                            <th>Fecha de Inspeccion</th>
-                            <th>Tipo de Observación</th>
-                            <th>Asesor MAP/SSO</th>
-                            <th>Tipo de Condición/Acto Subestándar</th>
-                            <th>Nivel de Riesgo</th>
-                            <th>Responsable Marcobre</th>
-                            <th>Fecha Programada</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
+<div class="inspection">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title inspection-opacity-color">
+                <h3 id="titulo">Observaciones por Estado</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-        <div class="row mb-2 justify-content-center">
-            <nav id="paginado" aria-label="pagination">
-            </nav>
+    </div>
+
+    <div class="secondary-content col-12">
+        <input id="empresa" type="hidden" value="@ViewBag.Empresa" />
+        <input id="gerencia" type="hidden" value="@ViewBag.Gerencia" />
+        <input id="responsable" type="hidden" value="@ViewBag.Responsable" />
+        <input id="asesor" type="hidden" value="@ViewBag.Asesor" />
+        <input id="fechaInicio" type="hidden" value="@ViewBag.FechaInicio" />
+        <input id="fechaFin" type="hidden" value="@ViewBag.FechaFin" />
+        <input id="estado" type="hidden" value="@ViewBag.Estado" />
+        <div class="table-responsive inspection-color">
+            <table class="table" id="tabla_observaciones">
+                <thead>
+                    <tr>
+                        <th>Código de inspección</th>
+                        <th>Empresa</th>
+                        <th>Gerencia</th>
+                        <th>Fecha de Inspeccion</th>
+                        <th>Tipo de Observación</th>
+                        <th>Asesor MAP/SSO</th>
+                        <th>Tipo de Condición/Acto Subestándar</th>
+                        <th>Nivel de Riesgo</th>
+                        <th>Responsable Marcobre</th>
+                        <th>Fecha Programada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
-</div>
-@section Scripts{ 
-<script type="text/javascript">
-    $(document).ready(function () {
-            filtrar(1);
-        });
-    function filtrar(pag) {
-        $.ajax({
-                type: "POST",
-                url: "/ReportesInspecciones/GetTablaObservacionesxEstado",
-                data: {
-                    "pag": pag,
-                    "rpp":10,
-                    "empresa": $('#empresa').val(),
-                    "gerencia": $('#gerencia').val(),
-                    "respLevObs": $("#responsable").val(),
-                    "asesor": $('#asesor').val(),
-                    "FechaInicio": $('#fechaInicio').val(),
-                    "FechaFin": $('#fechaFin').val(),
-                    "estado": $('#estado').val()
-                },
-                traditional: true,
-            success: (response) => {
-                console.log(response);
-                    $('#tabla_observaciones tbody').empty()
-                    $('#tabla_observaciones tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
-                    /*$('#nRegistros').html(response.nRegistros)*/
+        <div class="pagination-container inspection-color" id="paginado">
+        </div>
+    </div>
+    </div>
+    @section Scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                filtrar(1);
+                var estado = $("#estado").val();
+                switch (estado) {
+                    case 'Registrado': $("#titulo").text("Observaciones por Estado - Pendiente de Implementación");
+                    case 'Implementado': $("#titulo").text("Observaciones por Estado - Pendiente de Verificación");
+                    case 'Aprobado': $("#titulo").text("Observaciones por Estado - Aprobado");
+                    case 'Vencido': $("#titulo").text("Observaciones por Estado - Vencido");
+                    case 'Ampliado': $("#titulo").text("Observaciones por Estado - Ampliados");
                 }
             });
+            function filtrar(pag) {
+                $.ajax({
+                    type: "POST",
+                    url: "/ReportesInspecciones/GetTablaObservacionesxEstado",
+                    data: {
+                        "pag": pag,
+                        "rpp": 10,
+                        "empresa": $('#empresa').val(),
+                        "gerencia": $('#gerencia').val(),
+                        "respLevObs": $("#responsable").val(),
+                        "asesor": $('#asesor').val(),
+                        "FechaInicio": $('#fechaInicio').val(),
+                        "FechaFin": $('#fechaFin').val(),
+                        "estado": $('#estado').val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response);
+                        $('#tabla_observaciones tbody').empty()
+                        $('#tabla_observaciones tbody').html(response.data)
+                        $('#paginado').html(response.paginador)
+                        dataModulo();
+                    }
+                });
+            }
+            function dataModulo() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Inspecciones/PropiedadesModulo",
+                    traditional: true,
+                    success: (response) => {
+                        if (response.success) {
+                            let data = JSON.parse(response.data);
+                            let r = data.r;
+                            let g = data.g;
+                            let b = data.b;
+                            img_url = data.img_url;
+                            inspectionStyle(r, g, b);
+                        } else {
+                            console.log("Ocurrió un problema: " + response.msg);
+                        }
+                    }
+                });
+            }
+        </script>
     }
-</script>
-}

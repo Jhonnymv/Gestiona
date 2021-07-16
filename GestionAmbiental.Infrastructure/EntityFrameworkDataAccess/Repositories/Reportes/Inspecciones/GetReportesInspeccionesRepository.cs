@@ -659,6 +659,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Add(new Dimension("Tolerable", 0, 0));
             output.Add(new Dimension("Alerta", 0, 1));
             output.Add(new Dimension("No Aceptable", 0, 2));
+            output.Add(new Dimension("No Aplica", 0, 3));
             foreach (var item in observaciones)
             {
                 switch (item.Key)
@@ -666,6 +667,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     case "Tolerable": output.FirstOrDefault(x => x.Nombre.Equals("Tolerable")).Valor = item.Count(); break;
                     case "Alerta": output.FirstOrDefault(x => x.Nombre.Equals("Alerta")).Valor = item.Count(); break;
                     case "No Aceptable": output.FirstOrDefault(x => x.Nombre.Equals("No Aceptable")).Valor = item.Count(); break;
+                    case "No Aplica": output.FirstOrDefault(x => x.Nombre.Equals("No Aplica")).Valor = item.Count(); break;
                 }
             }
             return output;
@@ -695,6 +697,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Add(new Dimension("Bajo", 0, 0));
             output.Add(new Dimension("Medio", 0, 1));
             output.Add(new Dimension("Alto", 0, 2));
+            output.Add(new Dimension("No Aplica", 0, 3));
             foreach (var item in observaciones)
             {
                 switch (item.Key)
@@ -702,6 +705,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     case "Bajo": output.FirstOrDefault(x => x.Nombre.Equals("Bajo")).Valor = item.Count(); break;
                     case "Medio": output.FirstOrDefault(x => x.Nombre.Equals("Medio")).Valor = item.Count(); break;
                     case "Alto": output.FirstOrDefault(x => x.Nombre.Equals("Alto")).Valor = item.Count(); break;
+                    case "No Aplica": output.FirstOrDefault(x => x.Nombre.Equals("No Aplica")).Valor = item.Count(); break;
                 }
             }
             return output;
@@ -804,6 +808,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var list_no_aceptable = new List<Dimension>();
             var list_alerta = new List<Dimension>();
             var list_tolerable = new List<Dimension>();
+            var list_no_aplica = new List<Dimension>();
 
             foreach (var item in observaciones)
             {
@@ -833,12 +838,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             list_no_aceptable.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
                         }
                         break;
+                    case "No Aplica":
+                        var tipos_no_aplica = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_no_aplica)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_no_aplica.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
                 }
             }
 
             output.Add(list_tolerable);
             output.Add(list_alerta);
             output.Add(list_no_aceptable);
+            output.Add(list_no_aplica);
 
             return output;
         }
@@ -868,6 +882,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var list_alto = new List<Dimension>();
             var list_medio = new List<Dimension>();
             var list_bajo = new List<Dimension>();
+            var list_no_aplica = new List<Dimension>();
 
             foreach (var item in observaciones)
             {
@@ -897,12 +912,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             list_bajo.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
                         }
                         break;
+                    case "No Aplica":
+                        var tipos_no_aplica = item.GroupBy(x => x.Id_Tipo_Condicion).ToList();
+                        foreach (var subitem in tipos_no_aplica)
+                        {
+                            var tipo_condicion = tipos_condicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(subitem.Key));
+                            list_no_aplica.Add(new Dimension { Nombre = tipo_condicion.Descripcion, Valor = subitem.Count() });
+                        }
+                        break;
                 }
             }
 
             output.Add(list_bajo);
             output.Add(list_medio);
             output.Add(list_alto);
+            output.Add(list_no_aplica);
 
             return output;
         }
@@ -917,6 +941,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
 
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+               !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
                 observaciones.Select(y=>y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
                 x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&

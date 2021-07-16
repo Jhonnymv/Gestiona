@@ -75,7 +75,7 @@
             <div class="dashboard-item inspection">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
-                        <h6>Cantidad de inspecciones registradas hasta la fecha</h6>
+                        <h6>Inspecciones Hasta la Fecha</h6>
                         <h3 id="InsTotal"></h3>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
             <div class="dashboard-item inspection">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
-                        <h6>Observaciones registradas hasta la fecha </h6>
+                        <h6>Observaciones Hasta la Fecha </h6>
                         <h3 id="ObsTotal"></h3>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
             <div class="dashboard-item inspection">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
-                        <h6>Cantidad de inspecciones encontradas</h6>
+                        <h6>Inspecciones Encontradas</h6>
                         <h3 id="InsEncont"></h3>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
             <div class="dashboard-item inspection">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
-                        <h6>Observaciones encontradas</h6>
+                        <h6>Observaciones Encontradas</h6>
                         <h3 id="ObsEncont"></h3>
                     </div>
                 </div>
@@ -209,7 +209,7 @@
                     </div>
                 </div>
             </div>
-            <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('Obs')" style="cursor: pointer">
+            <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('Ven')" style="cursor: pointer">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
                         <h6>Observaciones Vencidas</h6>
@@ -318,418 +318,6 @@
         </div>
     </div>
 </div>
-
-@*<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Dashboard de Inspecciones</h2>
-    </div>
-</div>*@
-<!--Filtros-->
-<!--<form autocomplete="off">
-    <div class="container-fluid">-->
-        <!-- Filtro de Inspecciones -->
-        <!--<div class="row mb-2 justify-content-center">
-            <div class="col-lg-10 col-md-12 col-sm-12 border rounded" style="border-color:#2e6793 !important">
-                <div class="row mb-2 justify-content-center">
-                    <h3>Filtro para Inspecciones</h3>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="IdGerencia"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <select class="form-control" asp-for="IdGerencia" asp-items="@ViewBag.FiltroGerencias"></select>
-                    </div>
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="IdEmpresa"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <select class="form-control" asp-for="IdEmpresa" asp-items="@ViewBag.FiltroEmpresas"></select>
-                    </div>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="FInicio"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <input type="date" class="form-control" asp-for="FInicio" value="@ViewBag.FechaInicio" />
-                    </div>
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="FFin"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <input type="date" class="form-control" asp-for="FFin" value="@ViewBag.FechaFin" />
-                    </div>
-                </div>-->
-                <!-- Filtro de Observaciones -->
-                <!--<div class="row mb-2 justify-content-center">
-                    <h3>Filtro para Observaciones</h3>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="IdAsesor"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <select class="form-control" asp-for="IdAsesor" asp-items="@ViewBag.FiltroAsesor"></select>
-                    </div>
-                    <div class="col-lg-2 mt-1">
-                        <label asp-for="IdRespLev"></label>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <select class="form-control" asp-for="IdRespLev" asp-items="@ViewBag.FiltroRespLevObs"></select>
-                    </div>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <button type="button" class="btn btn-primary" onclick="Filtrar()">Filtrar</button>
-                </div>
-            </div>            
-            <div class="col-lg-2 col-md-6 col-sm-12 mb-2">
-                <div class="row ml-2">
-                    <div class="card border-left-rechazado shadow h-100">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Cantidad de inspecciones registradas hasta la fecha </div>
-                                    <div id="InsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row ml-2 mt-2">
-                    <div class="card border-left-rechazado shadow h-100">
-                        <div class="card-body">
-                            <div class="row no-gutters align-items-center">
-                                <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones registradas hasta la fecha </div>
-                                    <div id="ObsTotal" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>-->
-<!--Contador de Inspecciones x Estado-->
-<!--<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones</h6>
-            </div>
-            <div class="card-body">
-                <div class="row justify-content-center">-->
-                    <!--
-    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-        <div class="card border-left-pendiente shadow h-100">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Pendientes (TBD)</div>
-                        <div id="InsPendiente" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-        <div class="card border-left-pendiente shadow h-100">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Registradas</div>
-                        <div id="InsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    -->
-                    <!--<div class="col-xl-3 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Cantidad de inspecciones encontradas</div>
-                                        <div id="InsEncont" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-<!--Contador de inspecciones por fecha-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-8">
-                        <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Inspecciones Registradas</h6>
-                    </div>
-                    <div class="col-2">
-                        <select id="sel_frec_insp_fecha" class="form-control">
-                            <option value="Diario" selected>Diario</option>
-                            <option value="Semanal">Semanal</option>
-                            <option value="Mensual">Mensual</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class="">
-                            </div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class="">
-                            </div>
-                        </div>
-                    </div>
-                    <canvas id="chart_insp_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-
-<!--Contador de observaciones por fecha-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <div class="row">
-                    <div class="col-2"></div>
-                    <div class="col-8">
-                        <h6 class="m-0 font-weight-bold text-total" style="text-align:center">Cantidad de Observaciones Registradas</h6>
-                    </div>
-                    <div class="col-2">
-                        <select id="sel_frec_obs_estado" class="form-control">
-                            <option value="Tod" selected>TODOS</option>
-                            <option value="Reg">Registrado</option>
-                            <option value="Imp">Implementado</option>
-                            <option value="Ven">Vencido</option>
-                            <option value="Apr">Aprobado</option>
-                            <option value="Rec">Rechazado</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="chart-area">
-                    <div class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand">
-                            <div class="">
-                            </div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink">
-                            <div class="">
-                            </div>
-                        </div>
-                    </div>
-                    <canvas id="chart_obs_fechas" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-<!--Contador de Observaciones x Estado-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Cantidad de Observaciones</h6>
-            </div>
-            <div class="card-body">
-                <div class="row justify-content-center">
-                                        
-                    <div class="col-xl-3 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones encontradas</div>
-                                        <div id="ObsEncont" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-pendiente shadow h-100">
-                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Reg')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-pendiente text-uppercase mb-1">Observaciones Registradas</div>
-                                        <div id="ObsRegistrado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-implementado shadow h-100">
-                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Imp')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-implementado text-uppercase mb-1">Observaciones Implementadas</div>
-                                        <div id="ObsImplementado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-aprobado shadow h-100">
-                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Apr')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-aprobado text-uppercase mb-1">Observaciones Aprobadas</div>
-                                        <div id="ObsAprobado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-rechazado shadow h-100">
-                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Rec')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-rechazado text-uppercase mb-1">Observaciones Rechazadas</div>
-                                        <div id="ObsRechazado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-vencido shadow h-100">
-                            <div class="card-body click-option" onclick="ReporteDetalleEstado('Ven')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-vencido text-uppercase mb-1">Observaciones Vencidas</div>
-                                        <div id="ObsVencido" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-4 col-md-4 mb-2">
-                        <div class="card border-left-total shadow h-100">
-                            <div class="card-body  click-option" onclick="ReporteDetalleEstado('Amp')">
-                                <div class="row no-gutters align-items-center">
-                                    <div class="col mr-2">
-                                        <div class="text-xs font-weight-bold text-total text-uppercase mb-1">Observaciones Ampliadas</div>
-                                        <div id="ObsAmpliado" class="h5 mb-0 font-weight-bold text-gray-800"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-<!--Gráfico MAP vs SSO-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Comparativo MAP vs SSO</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;">#Observaciones MAP vs SSO</h6>
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_MAP_vs_SSO" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;">#Observaciones MAP vs SSO X Estado</h6>
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_MA_vs_SSO_Estado" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>*@
-<!--Gráficos MAP-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Observaciones MA</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;">#Observaciones MA por Nivel de Riesgo</h6>
-                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoMA_NR_Tipo()">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_MA_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;"># Observaciones</h6>
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_MA_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>*@
-<!--Gráficos SSO-->
-@*<div class="row mb-2">
-    <div class="col-xl-12 col-lg-12">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3">
-                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center">Observaciones SSO</h6>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;">#Observaciones SSO por Nivel de Riesgo</h6>
-                        <div class="chart-area click-option" onclick="ActualizarDatosGraficoSSO_NR_Tipo()">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_SSO_Nivel_Riesgo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-xl-6 col-lg-6 mb-2">
-                        <h6 class="card-title" style="text-align:center;">#Observaciones</h6>
-                        <div class="chart-area">
-                            <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                            <canvas id="chart_SSO_Clasificacion" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>*@
 <!-- Modal Detalles MAP-->
 <div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -793,67 +381,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="dashboard-section">
+                        <div class="dashboard-header">
+                            <h5>#Observaciones por Tipos de Condición de Nivel del Riesgo No Aplica</h5>
+                        </div>
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_MAP_Nivel_Riesgo_No_Aplica" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-
-@*<div class="modal fade" id="Modal_Nivel_Riesgo_MAP" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="Modal_Nivel_Riesgo_MAP_Title">Clasificación de Observaciones MA según Nivel de Riesgo</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición de Nivel de Riesgo Tolerable</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_MAP_Nivel_Riesgo_Tolerable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición del Nivel del Riesgo Alerta</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_MAP_Nivel_Riesgo_Alerta" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipos de Condición de Nivel del Riesgo No Aceptable</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_MAP_Nivel_Riesgo_No_Aceptable" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
 <!-- Modal Detalles SSO-->
 <div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -917,67 +465,27 @@
                             </div>
                         </div>
                     </div>
+                    <div class="dashboard-section">
+                        <div class="row">
+                            <div class="secondary-dashboard-item col-12">
+                                <div class="dashboard-header">
+                                    <h5>#Observaciones por Tipo de Condición del Nivel de Riesgo No Aplica</h5>
+                                </div>
+                                <div class="secondary-content">
+                                    <div class="col-12">
+                                        <div class="chart-area">
+                                            <canvas id="chart_SSO_Nivel_Riesgo_No_Aplica" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@*<div class="modal fade" id="Modal_Nivel_Riesgo_SSO" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="Modal_Nivel_Riesgo_SSO_Title">Clasificación de Observaciones SSO según Nivel de Riesgo</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Bajo</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_SSO_Nivel_Riesgo_Bajo" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Medio</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_SSO_Nivel_Riesgo_Medio" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-2">
-                    <div class="col-xl-12 col-lg-12">
-                        <div class="card shadow mb-4">
-                            <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-pendiente" style="text-align:center"># Observaciones por Tipo de Condición del Nivel de Riesgo Alto</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
-                                <canvas id="chart_SSO_Nivel_Riesgo_Alto" style="display: block; height: 450px; width: 100%;" class="chartjs-render-monitor"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>*@
-
 @section Scripts{
     <script src="~/js/UseCases/Reportes/ReportesInspeccionesScript.js" type="text/javascript"></script>
     <script type="text/javascript">
