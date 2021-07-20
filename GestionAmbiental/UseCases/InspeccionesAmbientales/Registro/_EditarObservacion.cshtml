@@ -33,8 +33,9 @@
                                         <label class="E_AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
                                         <label class="E_AsesorSeguridad" style="display:none">Asesor SSO:</label>
                                         <span class="text-danger" asp-validation-for="E_AsesorSeguridad"></span>
-                                        <select class="form-control E_AsesorMedioAmbiente" asp-for="E_AsesorSeguridad" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
-                                        <select class="form-control E_AsesorSeguridad" asp-for="E_AsesorSeguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
+                                        <input type="hidden" asp-for="E_AsesorSeguridad" style="display:none"/>
+                                        <select class="form-control E_AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
+                                        <select class="form-control E_AsesorSeguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
                                     </div>
                                 </div>
                                 <div class="row input_container w-100">
@@ -221,11 +222,9 @@
 
             ActualizarColorNivelRiesgo();
         });
-
         $("#E_NivelRiesgo").on('change', function () {
             ActualizarColorNivelRiesgo();
         });
-
         function ActualizarColorNivelRiesgo() {
             switch ($("#E_NivelRiesgo").val()) {
                 case "Tolerable":
@@ -243,7 +242,7 @@
             }
             $("#E_NivelRiesgo option").css("color", "black");
         }
-    $("#E_Nueva_Evidencia").change(function () {
+        $("#E_Nueva_Evidencia").change(function () {
             $("#danger_evidencia").html("");
             //Validacion del tamaño del archivo
             var maxSize = $("#E_Nueva_Evidencia").data('max-size');
@@ -279,8 +278,8 @@
                     $("#danger_evidencia").html("No se admiten este tipo de archivos<br/>");
                     //$("#modal_archivo").modal('show');
             }
-    });
-    $("#E_NivelRiesgo").on('change', function () {
+        });
+        $("#E_NivelRiesgo").on('change', function () {
             switch ($("#E_NivelRiesgo").val()) {
                 case "Tolerable":
                     $("#E_NivelRiesgo").css("background-color", "green");
@@ -296,8 +295,8 @@
                 default: $("#E_NivelRiesgo").css("background-color", "white"); $("#E_NivelRiesgo").css("color", "black"); break;
             }
             $("#E_NivelRiesgo option").css("color", "black")
-    });
-    $("#E_TipoInspeccion").on('change', function () {
+        });
+        $("#E_TipoInspeccion").on('change', function () {
             if ($("#E_TipoInspeccion").val() == "MAP") {
                 $(".E_OpcSeguridad").hide();
                 $(".E_OpcSeguridad").prop('disabled', 'disabled');
@@ -397,7 +396,7 @@
             //reiniciar estilo de nivel de riesgo
             $("#E_NivelRiesgo").css({"background-color": "white", "color": "black"});
         });
-    $("#E_CondicionIdentificada").on('change', function () {
+        $("#E_CondicionIdentificada").on('change', function () {
             var selectedOption = $("#CondicionIdentificada option:selected").val();
             if ($("#E_TipoInspeccion").val() == "MAP" && selectedOption == "Acto Subestándar") {
                 $(".E_Vacio").hide();
@@ -442,25 +441,25 @@
                 $("#E_TiposActoMA").val("");
                 $("#E_TiposCondicionMA").val("");
             }
-    });
-    //Validar cambios de tipo condicion
-    $(".E_SEG-Acto").on('change', function () {
+        });
+        //Validar cambios de tipo condicion
+        $(".E_SEG-Acto").on('change', function () {
         $("#E_TipoCondicion").val(this.value);
-    });
-    $(".E_SEG-Condicion").on('change', function () {
+        });
+        $(".E_SEG-Condicion").on('change', function () {
         $("#E_TipoCondicion").val(this.value);
-    });
-    $(".E_MA-Acto").on('change', function () {
+        });
+        $(".E_MA-Acto").on('change', function () {
         $("#E_TipoCondicion").val(this.value);
-    });
-    $(".E_MA-Condicion").on('change', function () {
+        });
+        $(".E_MA-Condicion").on('change', function () {
         $("#E_TipoCondicion").val(this.value);
-    });
-    //Validar cambios de asesores
-    $(".E_AsesorMedioAmbiente").on('change', function () {
+        });
+        //Validar cambios de asesores
+        $(".E_AsesorMedioAmbiente").on('change', function () {
         $("E_#AsesorSeguridad").val(this.value);
-    });
-    $(".E_AsesorSeguridad").on('change', function () {
+        });
+        $(".E_AsesorSeguridad").on('change', function () {
         $("#E_AsesorSeguridad").val(this.value);
     });
     </script>

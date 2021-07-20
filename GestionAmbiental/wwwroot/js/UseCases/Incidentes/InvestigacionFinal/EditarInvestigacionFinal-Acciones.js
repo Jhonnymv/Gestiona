@@ -115,7 +115,7 @@ $("#btn_editar_accion").on("click", function () {
                 estado: $('#select_estatus').val()
             },
             success: (response) => {
-                ResetInputsProducto();
+                ResetInputsAccion();
                 $("#modal_accion").modal('hide');
                 $('#tabla_acciones_inmediatas tbody').empty();
                 $('#tabla_acciones_inmediatas tbody').html(response.filas_acciones_inmediatas);

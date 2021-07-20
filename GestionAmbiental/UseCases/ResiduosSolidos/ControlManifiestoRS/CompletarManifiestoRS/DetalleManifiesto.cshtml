@@ -209,6 +209,8 @@
                             </div>
                         </div>
                     }
+                    @if (Model.Manifiesto_Doc != null)
+                    {
                     <div class="row input_container align-items-start">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Manifiesto_Doc"></label>
@@ -216,15 +218,20 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             @for (var i = 0; i < Model.Manifiesto_Doc.Count; i++)
                             {
-                                <a class="btn btn-mc-outline me-2" asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@Model.Manifiesto_Doc[i]" asp-route-tipo="man">@("Manifiesto " + (i+1))</a>
+                                <a class="btn btn-mc-outline me-2" asp-controller="CompletarManifiesto" asp-action="Download" asp-route-fileName="@Model.Manifiesto_Doc[i]" asp-route-tipo="man">@("Manifiesto " + (i + 1))</a>
                             }
                         </div>
                     </div>
+                    }
                 </div>
                 <div class="detail-container col-12 col-xl-10 mb-4 w-100">
                     <div class="row">
                         <div class="button-container">
                             <a class="btn btn-mc-outline-danger" asp-controller="CompletarManifiesto" asp-action="Resumen">Volver</a>
+                            @if (Model.Permiso)
+                            {
+                                <button id="btnEliminar" type="button" class="btn btn-mc-danger">Eliminar</button>
+                            }
                         </div>
                     </div>
                 </div>
@@ -234,7 +241,6 @@
 </div>
 @section Scripts{
     <script type="text/javascript">
-
         $("#Certificado").change(function () {
             $("#danger_certificado").html("");
             //Validacion del tamaño del archivo
@@ -364,5 +370,26 @@
         function getExt(fileName) {
             return (fileName.lastIndexOf('.') < 1) ? null : fileName.split('.').slice(-1);
         }
+        $("#btnEliminar").click(function () {
+            if (confirm("¿Esta seguro que desea eliminar este manifiesto?")) {
+                var formData = new FormData();
+                formData.append("IdManifiesto", $("#Id_Manifiesto_RS").val());
+                $.ajax({
+                    url: "@Url.Action("EliminarManifiesto", "CompletarManifiesto")",
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            window.location = "/CompletarManifiesto/Resumen/";
+                        }
+                        else {
+                            console.log("Ocurrió un error: " + response.message)
+                        }
+                    }
+                });
+            }
+        });
     </script>
 }

@@ -641,6 +641,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
                 var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
+                ViewBag.PermisoAdmin = investigacion.PermisoAdmin;
+
                 var model = new EditarInvestigacionModel();
                 model.Id_Investigacion_Final = investigacion.Id_Investigacion_Final;
                 model.Id_Encriptado_Investigacion_Final = IdInvestigacion;

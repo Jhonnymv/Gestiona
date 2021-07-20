@@ -590,7 +590,6 @@
     </script>
     @*Scripts partial Editar Observación*@
     <script type="text/javascript">
-
         function EditarObservacion(IdObservacion) {
             console.log(IdObservacion)
             var data;
@@ -605,9 +604,10 @@
                 $("#E_TipoInspeccion").val(data.TipoInspeccion);
                 $(".E_Vacio").hide();
                 $(".E_Vacio").prop('disabled', true);
+                $("#E_AsesorSeguridad").val(data.Asesor);
                 if (data.TipoInspeccion == "MAP") {
                     $(".E_AsesorMedioAmbiente").show();
-                    $("#E_AsesorSeguridad.E_AsesorMedioAmbiente").val(data.Asesor);
+                    $(".E_AsesorMedioAmbiente").val(data.Asesor);
                     $("#E_CondicionIdentificada").val(data.DescripcionCondicion);
                     $("#E_TipoCondicion").val(data.DescripcionCondicion);
                     if (data.DescripcionCondicion == "Acto Subestándar") {
@@ -632,7 +632,7 @@
                 }
                 else {
                     $(".E_AsesorSeguridad").show();
-                    $("#E_AsesorSeguridad.E_AsesorSeguridad").val(data.Asesor);
+                    $(".E_AsesorSeguridad").val(data.Asesor);
                     $("#E_CondicionIdentificada").val(data.DescripcionCondicion);
                     $("#E_TipoCondicion").val(data.DescripcionCondicion);
                     if (data.DescripcionCondicion == "Acto Subestándar") {
@@ -947,10 +947,10 @@
     });
         //Validar cambios de asesores
         $(".E_AsesorMedioAmbiente").on('change', function () {
-        $("E_#AsesorSeguridad").val(this.value);
-    });
+            $("#E_AsesorSeguridad").val(this.value);
+        });
         $(".E_AsesorSeguridad").on('change', function () {
-        $("#E_AsesorSeguridad").val(this.value);
+            $("#E_AsesorSeguridad").val(this.value);
         });
         function DescargarEvidenciaObservacion() {
             console.log($("#E_Evidencia").val());
@@ -965,7 +965,7 @@
             formData.append("E_IdCabecera", $("#E_IdCabecera").val());
             formData.append("E_IdObservacion", $("#E_IdObservacion").val());
             formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
-            formData.append("E_AsesorSeguridad",$("#E_AsesorSeguridad:not(:disabled)").val());
+            formData.append("E_AsesorSeguridad", $("#E_AsesorSeguridad").val());
             formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
             formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
             formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());

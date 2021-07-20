@@ -28,6 +28,10 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
                 output.PermisoMA = true;
             else
                 output.PermisoMA = false;
+            if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                output.PermisoAdmin = true;
+            else
+                output.PermisoAdmin = false;
             return output;
         }
         public async Task<InvestigacionFinalOutput> Execute(int IdInvestigacion)

@@ -52,6 +52,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal
         public int NAccionesAprobadas { get; set; }
         public int NAcciones { get; set; }
         public bool PermisoMA { get; set; }
+        public bool PermisoAdmin { get; set; }
         public InvestigacionFinalOutput(Domain.Incidentes.InvestigacionFinal.Investigacion_Final_Incidente investigacion)
         {
             Id_Investigacion_Final = investigacion.Id_Investigacion_Final;

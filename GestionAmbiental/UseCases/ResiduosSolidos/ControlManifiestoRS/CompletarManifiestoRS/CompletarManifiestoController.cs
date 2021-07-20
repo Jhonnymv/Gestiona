@@ -79,6 +79,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string nManifiesto, string fechaEmision, string observacion, int residuoSolido, int asesorMAP, int eors_salida, int eors_llegada, int pagina, int rpp)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
             var datosTabla = await _consultarManifiestosRS.Execute(nManifiesto, fechaEmision, observacion, residuoSolido, eors_salida, eors_llegada, asesorMAP, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
@@ -89,7 +91,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 {
                     var id_encriptado = _protector.Protect(fila.Id_Manifiesto_RS.ToString());
                     filasTabla += "<tr>";
-                    if (fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()))
+                    if (fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())|| userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filasTabla += "<td></td>";
                         filasTabla += "<td><a href=\"/CompletarManifiesto/DetalleManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
@@ -395,12 +397,29 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             }
             return RedirectToAction("CompletarManifiesto", new { IdManifiesto = model.Id_Encriptado });
         }
+        [HttpPost]
         public async Task<IActionResult> EliminarManifiesto(string IdManifiesto)
         {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            var Id_Decrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
-            await _eliminarManifiestoRS.Execute(Id_Decrypted, userInfo.NombreUsuario);
-            return RedirectToAction("Resumen");
+            dynamic response;
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var Id_Decrypted = Convert.ToInt32(IdManifiesto);
+                await _eliminarManifiestoRS.Execute(Id_Decrypted, userInfo.NombreUsuario);
+                response = new
+                {
+                    success = true
+                };
+            }catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
         }
         private string CreateUniqueFileName(int index,string tipo)
         {

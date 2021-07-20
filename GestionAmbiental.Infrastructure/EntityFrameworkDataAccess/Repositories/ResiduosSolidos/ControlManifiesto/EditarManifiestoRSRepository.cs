@@ -144,6 +144,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var manifiesto_entity = await _context.Manifiesto_RSs.FirstOrDefaultAsync(x => x.Id_Manifiesto_RS.Equals(IdManifiesto));
             manifiesto_entity.Estado = EstadosResiduosSolidos.Eliminado.ToString();
+            manifiesto_entity.Item = "TBD";
 
             _context.Manifiesto_RSs.Update(manifiesto_entity);
             await _context.SaveChangesAsync();
