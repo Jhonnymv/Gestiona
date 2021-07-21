@@ -14,5 +14,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
         Task<int> EditarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion);
         Task<int> EditarCausaIncidenteReporte(Causa_Incidente_Reporte causa);
         Task EliminarEvidencia(int IdReportePreliminar, string NombreArchivo);
+        Task<int> EliminarReportePreliminar(int IdReportePreliminar);
     }
 }

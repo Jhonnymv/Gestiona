@@ -55,8 +55,11 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
         {
             var reporte = await _getReportePreliminar.Execute(IdReporte);
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
+            involucrados = involucrados.Where(x =>!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var acciones = await _getAccionesIncidente.Execute(IdReporte);
+            acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var causas = await _getCausasIncidenteReporte.Execute(IdReporte);
+            causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
 
             string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Incidentes", "ReportePreliminar");
             string sFileName = @"JU-MAP-STD-001.F01_Reporte preliminar de incidente ambiental_V00.xlsx";

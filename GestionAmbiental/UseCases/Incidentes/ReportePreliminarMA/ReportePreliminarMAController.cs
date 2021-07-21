@@ -417,7 +417,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> ListarInvolucrados(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_involucrados = "";
             foreach (var fila in involucrados)
@@ -495,7 +498,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> ListarAcciones(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var acciones = await _getAccionesIncidente.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_acciones = "";
             foreach (var fila in acciones)
@@ -568,7 +574,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> ListarCausas(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var causas = await _getCausasIncidenteReporte.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_causas = "";
             foreach (var fila in causas)

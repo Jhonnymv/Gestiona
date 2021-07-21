@@ -24,7 +24,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var cabeceraEntity = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x=>x.Id_Inspeccion_Cabecera.Equals(cabecera.IdCabecera));
 
-            cabeceraEntity.Codigo = cabecera.Codigo;
             cabeceraEntity.Objetivo = cabecera.Objetivo;
             cabeceraEntity.Fecha_Inspeccion = cabecera.FechaInspeccion;
             cabeceraEntity.Tipo_Inspeccion = cabecera.TipoInspeccion;
@@ -34,8 +33,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Id_Responsable_Area = cabecera.IdResponsableArea;
             cabeceraEntity.Responsable_Inspeccion = cabecera.ResponsableInspeccion;
             cabeceraEntity.Participantes = cabecera.Inspectores;
-            cabeceraEntity.Estado = cabecera.Estado;
-
+            if (cabecera.Estado != null)
+            {
+                cabeceraEntity.Codigo = cabecera.Codigo;
+                cabeceraEntity.Estado = cabecera.Estado;
+            }
             _context.Inspecciones_Cabecera.Update(cabeceraEntity);
             await _context.SaveChangesAsync();
 
@@ -49,7 +51,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             _context.Log_Inspecciones.Add(log);
             await _context.SaveChangesAsync();
-
         }
 
         public async Task EditarInspeccionDetalle(NuevaInspeccionDetalle detalle, int idUsuario)

@@ -35,6 +35,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involucrado.RegistrarInvolucrado;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarReportePreliminar;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
@@ -64,6 +65,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         private readonly IEliminarCausaIncidenteReporte _eliminarCausaIncidenteReporte;
         private readonly IRegistrarCausaIncidenteReporte _registrarCausaIncidenteReporte;
         private readonly IEditarReportePreliminar _editarReportePreliminar;
+        IEliminarReportePreliminar _eliminarReportePreliminar;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
@@ -93,6 +95,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IEliminarCausaIncidenteReporte eliminarCausaIncidenteReporte,
             IRegistrarCausaIncidenteReporte registrarCausaIncidenteReporte,
             IEditarReportePreliminar editarReportePreliminar,
+            IEliminarReportePreliminar eliminarReportePreliminar,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -119,8 +122,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             _eliminarCausaIncidenteReporte = eliminarCausaIncidenteReporte;
             _getCausaIncidenteReporte = getCausaIncidenteReporte;
             _registrarCausaIncidenteReporte = registrarCausaIncidenteReporte;
-            _editarReportePreliminar = editarReportePreliminar;
-            _info_SGA = info_SGA;
+            _editarReportePreliminar = editarReportePreliminar; 
+            _eliminarReportePreliminar = eliminarReportePreliminar;
+             _info_SGA = info_SGA;
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
@@ -188,6 +192,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> GetTablaResumenFiltrada(string fecha,int id_asesor,int id_usuario, int id_gerencia, int rpp,int pagina)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            
             var datosTabla = await _getReportesPreliminares.Execute(fecha, id_usuario, id_gerencia,id_asesor, pagina, rpp);
             var filasTabla = "";
             var paginador = "";
@@ -196,6 +202,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             {
                 foreach (var fila in datosTabla.Reportes)
                 {
+                    if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString())||(fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) && userInfo.Rol.Equals(InspeccionRol.Admin)))
+                    {
                     var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -211,6 +219,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     filasTabla += "<td>" + fila.Equipo_Involucrado + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
                     filasTabla += "</tr>";
+                    }
                 }
 
                 paginador += "<ul class=\"pagination pagination-sm\">";
@@ -382,7 +391,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> ListarInvolucrados(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_involucrados = "";
             foreach (var fila in involucrados)
@@ -460,7 +472,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> ListarAcciones(int IdReporte)
         {
-            var acciones = await _getAccionesIncidente.Execute(IdReporte); 
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            var acciones = await _getAccionesIncidente.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_acciones = "";
             foreach (var fila in acciones)
@@ -533,7 +548,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [HttpPost]
         public async Task<IActionResult> ListarCausas(int IdReporte)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var causas = await _getCausasIncidenteReporte.Execute(IdReporte);
+            if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                causas = causas.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var estadoReporte = await _getEstadoReportePreliminar.Execute(IdReporte);
             var filas_causas = "";
             foreach (var fila in causas)
@@ -630,6 +648,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+
+                ViewBag.PermisosAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
+
                 var items = await _selectItems.GetSelectItems();
 
                 var tipo_Incidente = items.ItemsTipoIncidente.Select(g => new SelectListItem() { Value = g.Id_Tipo_Incidente.ToString(), Text = g.Descripcion }).ToList();
@@ -724,6 +745,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 model.Evidencias_Completas = reporte.Evidencia != null ? JsonConvert.SerializeObject(reporte.Evidencia) : null;
                 model.Estado = reporte.Estado;
 
+                ViewBag.TieneInvestigacion = reporte.Investigacion;
+
                 return View(model);
             }
         }
@@ -788,6 +811,42 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
             }
             return RedirectToAction("EditarReportePreliminar",new { IdReporte = model.Id_Encriptado_Reporte_Preliminar } );
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarReportePreliminar(string IdReporte)
+        {
+            dynamic response;
+
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (userInfo.Rol.Equals(InspeccionRol.Admin))
+                {
+                    var IdDesenc = Convert.ToInt32(_protector.Unprotect(IdReporte));
+                    await _eliminarReportePreliminar.Execute(IdDesenc);
+                    response = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "No está autorizado"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
         }
         //Carga y descarga de archivos
         private string CreateUniqueFileName(int index)

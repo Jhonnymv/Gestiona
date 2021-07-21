@@ -29,7 +29,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
         public async Task Execute(
             int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc, string lugar, string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion, string responsableInpseccion, string inspectores, string opcion, string usuario_red)
         {
-
             var cabecera = new NuevaInspeccionCabecera();
             cabecera.IdCabecera = idCabecera;
             cabecera.IdGerencia = gerenciaMarc;
@@ -66,6 +65,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
                         cabecera.Codigo = "IP-00001";
                     break;
                 case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
+                default:
+                    cabecera.Estado = null;
+                    break;
             }
 
             await _editarInspeccionReadonlyRepository.EditarInspeccionCabecera(cabecera, Id_Usuario);

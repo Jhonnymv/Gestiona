@@ -156,7 +156,11 @@
                                         <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
                                     </div>
                                     <div>
-                                        @if (ViewBag.Permiso)
+                                        @if (ViewBag.PermisosAdmin)
+                                        {
+                                            <button id="guardar_admin" type="button" onclick=" GuardarCambiosAdmin()" class="btn btn-mc-success">Guardar Cambios</button>
+                                        }
+                                        else if (ViewBag.Permiso)
                                         {
                                             <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
                                             <button id="guardar_estado" type="submit" class="btn btn-mc-outline-success">Guardar Estado</button>
@@ -221,7 +225,7 @@
         var listObservaciones = [];
         var img_url = "";
         $(document).ready(function () {
-            if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) {
+            if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()) || @(ViewBag.PermisosAdmin.ToString().ToLower())) {
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', false);
                 $('#Id_Empresa_Contratista').prop('disabled', false);
@@ -310,9 +314,15 @@
         function FinalizarRegistro() {
             if (listObservaciones.length > 0) {
                 $("#opcion").val("Guardar");
-                $("#Modal_Enviando_Correo").modal('show')
-                $("#form_nuevaInspeccion").submit();                
+                $("#Modal_Enviando_Correo").modal('show');
+                $("#mensajeModalConfig").text("Guardando cambios")
+                $("#form_nuevaInspeccion").submit();
             }
+        }
+        function GuardarCambiosAdmin() {
+            $("#opcion").val("EditarAdmin");
+            $("#Modal_Enviando_Correo").modal('show')
+            $("#form_nuevaInspeccion").submit();
         }
         function ConsultarObservaciones() {
             $.ajax({

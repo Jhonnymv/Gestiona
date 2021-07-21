@@ -40,6 +40,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar
         public string Supervisor_MA { get; set; }
         public List<string> Evidencia { get; set; }
         public string Estado { get; set; }
+        public bool Investigacion { get; set; } = false;
 
         public ReportePreliminarOutput()
         {

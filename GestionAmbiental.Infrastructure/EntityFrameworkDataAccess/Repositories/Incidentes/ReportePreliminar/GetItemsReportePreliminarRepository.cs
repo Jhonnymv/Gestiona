@@ -22,7 +22,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Involucrado_Incidente_Reporte>> GetInvolucradosReporte(int IdReportePreliminar)
         {
-            var involucrados = await _context.Involucrado_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+            var involucrados = await _context.Involucrado_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
             var output = new List<Involucrado_Incidente_Reporte>();
             foreach(var item in involucrados)
             {
@@ -45,7 +45,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Accion_Incidente_Reporte>> GetAccionesReporte(int IdReportePreliminar)
         {
-            var involucrados = await _context.Accion_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+            var involucrados = await _context.Accion_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
             var output = new List<Accion_Incidente_Reporte>();
             foreach (var item in involucrados)
             {
@@ -66,7 +66,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<List<Causa_Incidente_Reporte>> GetCausasReporte(int IdReportePreliminar)
         {
-            var causas = await _context.Causa_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar) && x.Estado.Equals(EstadosIncidentes.Registrado.ToString())).ToListAsync();
+            var causas = await _context.Causa_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
             var output = new List<Causa_Incidente_Reporte>();
             foreach (var item in causas)
             {

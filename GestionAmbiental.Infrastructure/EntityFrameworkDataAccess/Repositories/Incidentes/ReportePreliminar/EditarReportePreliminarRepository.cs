@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Domain.Incidentes.ReportePreliminar;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +24,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> EditarReportePreliminar(Reporte_Preliminar_Incidente reporte)
         {
             var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(reporte.Id_Reporte_Preliminar));
-            entity.Codigo = reporte.Codigo;
+
             entity.Num_Trabajadores = reporte.Num_Trabajadores;
             entity.Razon_Social_Contratista = reporte.Razon_Social_Contratista;
             entity.RUC_Contratista = reporte.RUC_Contratista;
@@ -49,7 +51,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Comentario_Accion = reporte.Comentario_Accion;
             if(reporte.Supervisor_MA != null)
                 entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
-            entity.Estado = reporte.Estado;
+            if (reporte.Estado != null)
+            {
+                entity.Codigo = reporte.Codigo;
+                entity.Estado = reporte.Estado;
+            }
 
             _context.Reporte_Preliminar_Incidente.Update(entity);
             await _context.SaveChangesAsync();
@@ -119,6 +125,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 _context.Reporte_Preliminar_Incidente.Update(reporte);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<int> EliminarReportePreliminar(int IdReportePreliminar)
+        {
+            var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar));
+            entity.Estado = EstadosIncidentes.Eliminado.ToString();
+
+            var acciones = await _context.Accion_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
+            acciones.ForEach(item => { item.Estado = EstadosIncidentes.Eliminado.ToString(); });
+            var causas = await _context.Causa_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
+            causas.ForEach(item => { item.Estado = EstadosIncidentes.Eliminado.ToString(); });
+            var involucrados = await _context.Involucrado_Incidente_Reporte.Where(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar)).ToListAsync();
+            involucrados.ForEach(item => { item.Estado = EstadosIncidentes.Eliminado.ToString(); });
+
+            _context.Reporte_Preliminar_Incidente.Update(entity);
+            _context.Accion_Incidente_Reporte.UpdateRange(acciones);
+            _context.Causa_Incidente_Reporte.UpdateRange(causas);
+            _context.Involucrado_Incidente_Reporte.UpdateRange(involucrados);
+
+            await _context.SaveChangesAsync();
+
+            return entity.Id_Reporte_Preliminar;
         }
     }
 }

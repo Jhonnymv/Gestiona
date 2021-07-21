@@ -143,6 +143,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         }
         public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroEmpresa,int filtroUsuario, string filtroCodigo, int pagina, int rpp)
         {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fecha;
             if (filtroFecha != null)
                 fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
@@ -162,7 +163,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<tr>";
                     var obsAvance = fila.NObsAprobadas;
                     double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NObservaciones * 100, 1) : 0;
-                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
+                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -663,7 +664,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.Tipo_Inspeccion = tiposInspeccion;
                     ViewBag.nObservacioness = observaciones.Count;
                     ViewBag.Permiso = cabecera.Permiso;
-                    ViewBag.PermisoAdmin = cabecera.PermisoAdmin;
+                    ViewBag.PermisosAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
 
                     ViewBag.TiposActoMA = tiposActoMA;
                     ViewBag.TiposCondicionMA = tiposCondicionMA;
@@ -706,7 +707,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
                     else if (model.opcion.Equals("Guardar"))
                         return RedirectToAction("NotificarInspeccion","NotificacionesInspecciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
-                    else if(model.opcion.Equals("Eliminar"))
+                    else
                         return RedirectToAction("Resumen");
             }
             return RedirectToAction("Resumen");

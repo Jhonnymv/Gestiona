@@ -438,5 +438,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
             return reporte.Evidencia;
         }
+
+        public async Task<bool> GetInvestigacionReporte(int IdReporte)
+        {
+            //Verificar si el reporte preliminar ya tiene una investigación
+            var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReporte));
+            if (investigacion != null)
+                return true;
+            else
+                return false;
+        }
     }
 }

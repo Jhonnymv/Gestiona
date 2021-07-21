@@ -19,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
         {
             var reporte = await _getReportePreliminarReadOnlyRepository.GetReporte(IdReporte);
             var output = new ReportePreliminarOutput(reporte);
+            output.Investigacion = await _getReportePreliminarReadOnlyRepository.GetInvestigacionReporte(IdReporte);
             return output;
         }
     }

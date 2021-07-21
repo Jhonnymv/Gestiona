@@ -66,6 +66,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Edi
                     reporteDomain.Codigo = "IA-" + (Convert.ToInt32(codigoAnterior.Remove(0, 3)) + 1).ToString().PadLeft(7, '0');
                     reporteDomain.Estado = EstadosIncidentes.Difundido.ToString();
                     break;
+                default:
+                    reporteDomain.Estado = null;
+                    break;
             }
             reporteDomain.Num_Trabajadores = Num_Trabajadores;
             reporteDomain.Razon_Social_Contratista = Razon_Social_Contratista;

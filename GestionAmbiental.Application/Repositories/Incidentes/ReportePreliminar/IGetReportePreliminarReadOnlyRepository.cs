@@ -14,7 +14,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.ReportePreliminar
         Task<Reporte_Preliminar_Incidente> GetReporte(int IdReporte);
         Task<string> GetEstadoReporte(int IdReporte);
         Task<string> GetEvidenciaReporteMA(int IdReporte);
-
-
+        Task<bool> GetInvestigacionReporte(int IdReporte);
     }
 }
