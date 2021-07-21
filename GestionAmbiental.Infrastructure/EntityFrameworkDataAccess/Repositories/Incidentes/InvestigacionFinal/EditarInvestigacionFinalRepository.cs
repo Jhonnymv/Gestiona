@@ -183,7 +183,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return investigacion_entity.Id_Investigacion_Final;
         }
-
+        public async Task<int> EditarAdminInvestigacion(Investigacion_Final_Incidente investigacion)
+        {
+            var investigacion_entity = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(investigacion.Id_Investigacion_Final));
+            investigacion_entity.Id_Supervisor_MA = investigacion.Supervisor_MA != null ? investigacion.Supervisor_MA.IdUsuario : investigacion_entity.Id_Supervisor_MA;
+            investigacion_entity.Evidencia_Papel = investigacion.Evidencia_Papel;
+            investigacion_entity.Evidencia_Persona = investigacion.Evidencia_Persona;
+            investigacion_entity.Evidencia_Posicion = investigacion.Evidencia_Posicion;
+            investigacion_entity.Evidencia_Parte = investigacion.Evidencia_Parte;
+            _context.Investigacion_Final_Incidente.Update(investigacion_entity); 
+            await _context.SaveChangesAsync();
+            return investigacion_entity.Id_Investigacion_Final;
+        }
         public async Task<int> ImplementarAccionCorrectivaInvestigacion(Accion_Incidente_Investigacion accion)
         {
             var entity = await _context.Accion_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Investigacion.Equals(accion.Id_Accion_Incidente_Investigacion));

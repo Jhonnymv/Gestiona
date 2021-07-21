@@ -11,6 +11,6 @@ namespace GestionAmbiental.Application.Repositories.Reportes
         Task<List<Dimension>> GetVolumenFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin, string frecuencia);
         Task<List<List<Dimension>>> GetVolumenRestante(int resolucion, int origen);
         Task<List<Dimension>> GetCaudalPromedioFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin, string frecuencia);
-        Task<List<Dimension>> GetTiempoBombeoFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin);
+        Task<List<Dimension>> GetTiempoBombeoFecha(int resolucion, int origen, DateTime FechaInicio, DateTime FechaFin,string frecuencia);
     }
 }

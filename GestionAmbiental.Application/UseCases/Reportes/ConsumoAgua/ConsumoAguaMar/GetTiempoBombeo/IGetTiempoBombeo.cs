@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.ConsumoAgua.ConsumoAgua
 {
     public interface IGetTiempoBombeo
     {
-        Task<List<DimensionOutput>> Execute(int resolucion, string FechaInicio, string FechaFin);
+        Task<List<DimensionOutput>> Execute(int resolucion, string FechaInicio, string FechaFin, string frecuencia);
     }
 }

@@ -41,6 +41,7 @@ using Microsoft.AspNetCore.DataProtection;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EliminarEvidenciaInvestigacion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciaInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarAdminInvestigacion;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
@@ -53,6 +54,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IGetEstadoInvestigacion _getEstadoInvestigacion;
         private readonly IGetImpactoAmbiental _getImpactoAmbiental;
         private readonly IEditarInvestigacionFinal _editarInvestigacionFinal;
+        private readonly IEditarAdminInvestigacion _editarAdminInvestigacion;
         private readonly IGetRolUsuario _getRolUsuario;
         //involucrados
         private readonly IGetInvolucradosIncidente _getInvolucradosIncidente;
@@ -93,7 +95,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IGetInvestigacionFinal getInvestigacionFinal,
             IGetEstadoInvestigacion getEstadoInvestigacion,
             IGetImpactoAmbiental getImpactoAmbiental,
-            IEditarInvestigacionFinal editarInvestigacionFinal,
+            IEditarInvestigacionFinal editarInvestigacionFinal, 
+            IEditarAdminInvestigacion editarAdminInvestigacion,
             IGetRolUsuario getRolUsuario,
 
             IGetInvolucradosIncidente getInvolucradosIncidente,
@@ -137,6 +140,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             _getEstadoInvestigacion = getEstadoInvestigacion;
             _getImpactoAmbiental = getImpactoAmbiental;
             _editarInvestigacionFinal = editarInvestigacionFinal;
+            _editarAdminInvestigacion = editarAdminInvestigacion;
 
             _getInvolucradosIncidente = getInvolucradosIncidente;
             _getInvolucradoIncidente = getInvolucradoIncidente;
@@ -1224,15 +1228,27 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> EliminarEvidencia(int IdInvestigacion, string Tipo, string Evidencia)
         {
-            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-            await _eliminarEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo, Evidencia,userInfo.NombreUsuario);
-            var nueva_evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion,Tipo);
-            dynamic response = new
+            dynamic response;
+            try
             {
-                evidencia = nueva_evidencia,
-                tipo = Tipo
-            };
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                await _eliminarEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo, Evidencia, userInfo.NombreUsuario);
+                var nueva_evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo);
+                response = new
+                {
+                    success = true,
+                    evidencia = nueva_evidencia,
+                    tipo = Tipo
+                };
+            }catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
             return Ok(response);            
         }
         [HttpPost]
@@ -1415,6 +1431,123 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             }
             return View("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
            
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarAdminInvestigacion(EditarInvestigacionModel model)
+        {
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            if (userInfo.Rol.Equals(InspeccionRol.Admin) && model.Id_Supervisor!=null && model.Id_Supervisor!=0)
+            {
+                var papeles = new List<string>();
+                var personas = new List<string>();
+                var posiciones = new List<string>();
+                var partes = new List<string>();
+                var max_file_size = 8388608;
+                //Papeles
+                if (model.Evidencias_Papel != null)
+                {
+                    for (int i = 0; i < model.Evidencias_Papel.Count; i++)
+                    {
+                        var extension = Path.GetExtension(model.Evidencias_Papel[i].FileName);
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencias_Papel[i].Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(i + 1, "papel") + ".zip";
+                            var filePath = await UploadZipFileAsync(model.Evidencias_Papel[i], newfileName, "papel");
+                            papeles.Add(filePath);
+                        }
+                    }
+                    if (model.Evidencias_Completas_Papel != null)
+                        papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
+                }
+                else if (model.Evidencias_Completas_Papel != null)
+                {
+                    papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
+                }
+
+                //Personas
+                if (model.Evidencias_Persona != null)
+                {
+                    for (int i = 0; i < model.Evidencias_Persona.Count; i++)
+                    {
+                        var extension = Path.GetExtension(model.Evidencias_Persona[i].FileName);
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencias_Persona[i].Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(i + 1, "persona") + ".zip";
+                            var filePath = await UploadZipFileAsync(model.Evidencias_Persona[i], newfileName, "persona");
+                            personas.Add(filePath); 
+                        }
+                    }
+                    if (model.Evidencias_Completas_Persona != null)
+                        personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
+                }
+                else if (model.Evidencias_Completas_Persona != null)
+                {
+                    personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
+                }
+
+                //Posicion
+                if (model.Evidencias_Posicion != null)
+                {
+                    for (int i = 0; i < model.Evidencias_Posicion.Count; i++)
+                    {
+                        var extension = Path.GetExtension(model.Evidencias_Posicion[i].FileName);
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencias_Posicion[i].Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(i + 1, "posicion") + ".zip";
+                            var filePath = await UploadZipFileAsync(model.Evidencias_Posicion[i], newfileName, "posicion");
+                            posiciones.Add(filePath); 
+                        }
+                    }
+                    if (model.Evidencias_Completas_Posicion != null)
+                        posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
+                }
+                else if (model.Evidencias_Completas_Posicion != null)
+                {
+                    posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
+                }
+
+                //Parte
+                if (model.Evidencias_Partes != null)
+                {
+                    for (int i = 0; i < model.Evidencias_Partes.Count; i++)
+                    {
+                        var extension = Path.GetExtension(model.Evidencias_Partes[i].FileName);
+
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                        if (allowed_extensions.Contains(extension) && model.Evidencias_Partes[i].Length < max_file_size)
+                        {
+                            var newfileName = CreateUniqueFileName(i + 1, "parte") + ".zip";
+                            var filePath = await UploadZipFileAsync(model.Evidencias_Partes[i], newfileName, "parte");
+                            partes.Add(filePath);
+                        }
+                    }
+                    if (model.Evidencias_Completas_Partes != null)
+                        partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
+                }
+                else if (model.Evidencias_Completas_Partes != null)
+                {
+                    partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
+                }
+
+                await _editarAdminInvestigacion.Execute(
+                    model.Id_Investigacion_Final,
+                    model.Id_Supervisor,
+                    papeles,
+                    personas,
+                    posiciones,
+                    partes);
+            }
+            return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(model.Id_Investigacion_Final.ToString()) });
         }
         //Carga y descarga de archivos
         private string CreateUniqueFileName(int index, string tipo)

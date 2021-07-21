@@ -431,6 +431,7 @@ function ActualizarTiempoBombeoFecha() {
                 "Resolucion": $("#Resolucion").val(),
                 "FechaInicio": $("#FInicio").val(),
                 "FechaFin": $("#FFin").val(),
+                "frecuencia": $("#frecuencia_tiempo_bombeo").val()
             },
             success: (response) => {
                 if (data_tiempo_bombeo_fechas.length > 0) {

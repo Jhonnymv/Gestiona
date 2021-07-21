@@ -94,9 +94,9 @@ namespace GestionAmbiental.UseCases.Reportes.ConsumoAgua.AguaMar
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetTiempoBombeoFecha(int resolucion, string fechaInicio, string fechaFin)
+        public async Task<IActionResult> GetTiempoBombeoFecha(int resolucion, string fechaInicio, string fechaFin, string frecuencia)
         {
-            var registros = await _getTiempoBombeo.Execute(resolucion,fechaInicio,fechaFin);
+            var registros = await _getTiempoBombeo.Execute(resolucion,fechaInicio,fechaFin,frecuencia);
 
             dynamic response = new
             {
