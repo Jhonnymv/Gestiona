@@ -19,17 +19,37 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fecha, int empresa,int reg_por, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
-                c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
-                && c.Id_Registrado_Por.Equals(reg_por != 0 ? reg_por : c.Id_Registrado_Por)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                && (c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || c.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
+            var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
+            cabeceras = cabeceras.Where(c =>
+                c.Fecha_Inspeccion >= fechaInicio &&
+                c.Fecha_Inspeccion <= fechaFin &&
+                (c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || c.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
                 .OrderByDescending(x=>x.Codigo)
-                .ToListAsync();
+                .ToList();
+
+            if (gerenciaFiltro.Length > 0)                
+                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+            
+            if (empresaFiltro.Length > 0)            
+                cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+            
+            if (registradoPorFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+            
+            if(responsableFiltro.Length>0 || asesorFiltro.Length > 0||estadoFiltro.Count>0)
+            {
+                var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+                if (responsableFiltro.Length > 0)
+                    observaciones = observaciones.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
+                if (asesorFiltro.Length > 0)
+                    observaciones = observaciones.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
+                if (estadoFiltro.Count > 0)
+                    observaciones = observaciones.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
+                cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+            }
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var detalles_cabecera = await _context.Inspecciones_Detalle
@@ -63,10 +83,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabecera.NObsRechazadas = nObsRechazadas;
                 cabecera.TipoInspeccion = item.Tipo_Inspeccion;
                 TablaResumen.Add(cabecera);
-
-                /*TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
-                    empContMar.Razon_Social, gerEjectEPCM.Descripcion, empContEPCM.Razon_Social,
-                    item.Lugar_Inspeccionado, item.Fecha_Inspeccion, nObservaciones, item.Estado));*/
             }
 
             return TablaResumen;
@@ -95,7 +111,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fecha, int empresa,int reg_por, string codigo,int id_usuario)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
             var obsPendImp = await _context.Inspecciones_Detalle
                  .Where(x =>
@@ -103,17 +119,32 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                  x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
                  x.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
                  .ToListAsync();
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
-                obsPendImp.Select(y => y.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera)
-                && c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
-                && c.Id_Registrado_Por.Equals(reg_por!=0 ? reg_por:c.Id_Registrado_Por)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                && c.Estado.Equals(EstadosInspeccion.Registrado.ToString())
-                )
+            var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
+            cabeceras = cabeceras.Where(c =>
+                c.Fecha_Inspeccion >= fechaInicio &&
+                c.Fecha_Inspeccion <= fechaFin &&
+                c.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
                 .OrderByDescending(x => x.Codigo)
-                .ToListAsync();
+                .ToList();
+
+            if (gerenciaFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+
+            if (empresaFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+
+            if (registradoPorFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+
+            if (responsableFiltro.Length > 0 || asesorFiltro.Length > 0 )
+            {
+                if (responsableFiltro.Length > 0)
+                    obsPendImp = obsPendImp.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
+                if (asesorFiltro.Length > 0)
+                    obsPendImp = obsPendImp.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();               
+                cabeceras = cabeceras.Where(x => obsPendImp.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+            }
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera) && e.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
@@ -159,23 +190,38 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fecha, int empresa,int reg_por, string codigo)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
             var obsPendVer = await _context.Inspecciones_Detalle
                .Where(x => x.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
                .ToListAsync();
 
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var cabeceras = await _context.Inspecciones_Cabecera.Where(c =>
-                obsPendVer.Select(y => y.Id_Inspeccion_Cabecera).Contains(c.Id_Inspeccion_Cabecera)
-                && c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) 
-                && c.Fecha_Inspeccion.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha_Inspeccion.Date)
-                && c.Id_Empresa.Equals(empresa != 0 ? empresa : c.Id_Empresa)
-                && c.Id_Registrado_Por.Equals(reg_por!=0?reg_por:c.Id_Registrado_Por)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                )
+            var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
+            cabeceras = cabeceras.Where(c =>
+                c.Fecha_Inspeccion >= fechaInicio &&
+                c.Fecha_Inspeccion <= fechaFin &&
+                c.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
                 .OrderByDescending(x => x.Codigo)
-                .ToListAsync();
+                .ToList();
+
+            if (gerenciaFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+
+            if (empresaFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+
+            if (registradoPorFiltro.Length > 0)
+                cabeceras = cabeceras.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+
+            if (responsableFiltro.Length > 0 || asesorFiltro.Length > 0)
+            {
+                if (responsableFiltro.Length > 0)
+                    obsPendVer = obsPendVer.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
+                if (asesorFiltro.Length > 0)
+                    obsPendVer = obsPendVer.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
+                cabeceras = cabeceras.Where(x => obsPendVer.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+            }
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var detalles_cabecera = await _context.Inspecciones_Detalle.Where(e => cabeceras.Select(c => c.Id_Inspeccion_Cabecera).Contains(e.Id_Inspeccion_Cabecera) && e.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();

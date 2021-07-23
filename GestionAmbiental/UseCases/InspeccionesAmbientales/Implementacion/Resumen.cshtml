@@ -1,7 +1,9 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Pendientes de Implementación";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
 }
 <div class="inspection">
     <div class="primary-content col-12">
@@ -12,33 +14,47 @@
             </div>
         </div>
         <div class="content-header container">
-            @*<div class="action-container inspection-color">
-                    <div class="w-100 row-center-center">
-                        <a class="btn btn-special-action-outline inspection-color" asp-action="NuevaInspeccion" asp-controller="Inspecciones">NUEVA INSPECCIÓN</a>
-                    </div>
-                </div>*@
             <form autocomplete="off" class="custom-form w-100">
                 <div class="col-12 col-lg-9">
                     <div class="row input_container">
                         <div class="col-12 col-md-6">
-                            <label for="">Fecha de Inspección</label>
-                            <input type="date" class="form-control" id="fecha_filtro">
+                            <label>Fecha de Inicio</label>
+                            <input id="fecha_inicio_filtro" type="date" class="form-control">
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="">Empresa Inspeccionada</label>
-                            <select id="empresaInspec_filtro" asp-items="@ViewBag.Empresas" class="form-control">
+                            <label>Fecha de Fin</label>
+                            <input id="fecha_fin_filtro" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label>Gerencia Inspeccionada</label>
+                            <select id="gerencia_filtro" asp-items="@ViewBag.Gerencias" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label>Empresa Inspeccionada</label>
+                            <select id="empresa_filtro" asp-items="@ViewBag.Empresas" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-md-6">
-                            <label for="">Registrado Por</label>
-                            <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="form-control">
+                            <label>Registrado Por</label>
+                            <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
                         <div class="col-12 col-md-6">
-                            <label for="">Buscar Código</label>
-                            <input type="text" class="form-control" placeholder="Introducir Texto" id="codigo_filtro">
+                            <label>Responsable del Levantamiento de Observación</label>
+                            <select id="responsable_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12">
+                            <label>Asesor MAP/SSO</label>
+                            <select id="asesor_filtro" asp-items="@ViewBag.Asesores" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -70,77 +86,9 @@
         </div>
     </div>
 </div>
-@*<div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Inspecciones - Pendientes de Implementación</h2>
-        </div>
-    </div>
-    <form autocomplete="off">
-        <div class="row mb-2 justify-content-center">
-            <div class="col-lg-2 mt-1">
-                <label>Fecha de Inspección:</label>
-            </div>
-            <div class="col-lg-3 mt-1">
-                <input type="date" class="form-control" id="fecha_filtro">
-            </div>
-            <div class="col-lg-2 mt-1">
-                <label>Empresa Inspeccionada:</label>
-            </div>
-            <div class="col-lg-3 mt-1">
-                <select id="empresaInspec_filtro" asp-items="@ViewBag.Empresas" class="form-control"></select>
-            </div>
-        </div>
-        <div class="row mb-2 justify-content-center">
-            <div class="col-lg-2 mt-1">
-                <label>Registrado Por:</label>
-            </div>
-            <div class="col-lg-3 mt-1">
-                <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="form-control"></select>
-            </div>
-            <div class="col-lg-2 mt-1">
-                <label>Buscar Código:</label>
-            </div>
-            <div class="col-lg-3 mt-1">
-                <input type="text" class="form-control" id="codigo_filtro">
-            </div>
-        </div>
-        <div class="row mb-2 justify-content-center">
-            <div class="col-lg-1 mt-1">
-                <button type="button" class="btn btn-primary" onclick="filtrar(1)">Filtrar</button>
-            </div>
-        </div>
-    </form>
-
-    <div class="inspection">
-        <div class="secondary-content col-12">
-            <div class="table-responsive inspection-color">
-                <table class="table" id="tabla_resumen_inspecciones">
-                    <thead class="">
-                        <tr>
-                            <th>Código</th>
-                            <th>Área Ejecutora de la Inspección</th>
-                            <th>Empresa Inspeccionada</th>
-                            <th>Área Inspeccionada</th>
-                            <th>Fecha de Inspección</th>
-                            <th>N° Observaciones</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="pagination-container inspection-color">
-                <ul class="pagination pagination-sm" id="paginado">
-
-                </ul>
-            </div>
-        </div>
-    </div>*@
-
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script>
         $(document).ready(function () {
             filtrar(1);
@@ -171,10 +119,14 @@
                 data: {
                     "pagina": pag,
                     "rpp": 10,
-                    "filtroFecha": $('#fecha_filtro').val(),
-                    "filtroEmpresa": $('#empresaInspec_filtro').val(),
-                    "filtroUsuario": $("#registrado_por_filtro").val(),
-                    "filtroCodigo": $('#codigo_filtro').val()
+                    "fechaInicioFiltro": $('#fecha_inicio_filtro').val(),
+                    "fechaFinFiltro": $('#fecha_fin_filtro').val(),
+                    "gerenciaFiltro": $('#gerencia_filtro').val(),
+                    "empresaFiltro": $('#empresa_filtro').val(),
+                    "registradoPorFiltro": $('#registrado_por_filtro').val(),
+                    "estadoFiltro": $('#estado_filtro').val(),
+                    "responsableFiltro": $('#responsable_filtro').val(),
+                    "asesorFiltro": $("#asesor_filtro").val()
                 },
                 traditional: true,
                 success: (response) => {
@@ -197,7 +149,7 @@
                     $('#tabla_resumen_inspecciones tbody').empty()
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
                     $('#paginado').html(response.paginador)
-                /*$('#nRegistros').html(response.nRegistros)*/
+                    /*$('#nRegistros').html(response.nRegistros)*/
                     dataModulo();
                 }
             });

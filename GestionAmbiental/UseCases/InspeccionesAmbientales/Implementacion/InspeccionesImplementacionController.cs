@@ -89,18 +89,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha, int filtroEmpresa, int filtroUsuario, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, int pagina, int rpp)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            
-            DateTime fecha;
-            if (filtroFecha != null)
-                fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
+            DateTime fechaInicio;
+            DateTime fechaFin;
+            if (fechaInicioFiltro != null)
+                fechaInicio = Convert.ToDateTime(fechaInicioFiltro);
             else
-                fecha = (DateTime)SqlDateTime.MinValue;
-
-            filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fecha, filtroEmpresa, filtroUsuario, filtroCodigo, userInfo.NombreUsuario);
+                fechaInicio = (DateTime)SqlDateTime.MinValue;
+            if (fechaFinFiltro != null)
+                fechaFin = Convert.ToDateTime(fechaFinFiltro);
+            else
+                fechaFin = DateTime.Now;
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;

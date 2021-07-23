@@ -17,9 +17,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Verificacion.Consul
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository ?? throw new ArgumentNullException(nameof(cabeceraInspeccionReadOnlyRepository));
         }
 
-        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int empresa,int reg_por, string codigo)
+        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraVerificacion(fecha, empresa,reg_por, codigo);
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraVerificacion(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro);
             var output = new InspeccionesCabeceraOutput();
             output.NCabeceras = cabeceras.Count;
             output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();

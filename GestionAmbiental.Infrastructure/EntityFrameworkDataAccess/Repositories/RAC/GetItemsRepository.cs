@@ -52,7 +52,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.Where(x=>x.Estado!="INA" && x.Id_Rol!=(int)InspeccionRol.Admin).ToListAsync();
+            var usuarios = await _context.Usuarios.Where(x=>x.Estado!="INA" && x.Id_Rol!=(int)InspeccionRol.Admin && x.Estado.Equals("ACT") && (x.Id_Area_Trabajo != null || x.Id_Empresa != null)).ToListAsync();
             var output = new List<Usuario>();
             foreach (var item in usuarios)
             {

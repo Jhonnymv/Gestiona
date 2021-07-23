@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.RAC;
+using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,9 @@ namespace GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRACs
         {
             _RACReadOnlyRepository = rACReadOnlyRepository ?? throw new ArgumentNullException(nameof(rACReadOnlyRepository));
         }
-        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fecha, string codigo,int filtroUsuario, int filtroGerenciaObs)
+        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var registros = await _RACReadOnlyRepository.GetRACsVerificacion(fecha, codigo,filtroUsuario,filtroGerenciaObs);
+            var registros = await _RACReadOnlyRepository.GetRACsVerificacion(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro);
             var output = new RACsOutput
             {
                 Registros = new List<RACOutput>(),

@@ -110,6 +110,8 @@
                             </div>
                         </div>
                         <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                            @if (ViewBag.Permiso)
+                            {
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
                                     <a class="btn btn-special-action inspection-color" id="nueva_obs" data-bs-toggle="modal" data-bs-target="#modalNuevaObservacion">
@@ -117,7 +119,7 @@
                                     </a>
                                 </div>
                             </div>
-
+                            }
                             <div class="inspection">
                                 <div class="tertiary-content col-12">
                                     <div class="table-responsive inspection-color">

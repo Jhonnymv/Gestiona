@@ -113,26 +113,48 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var items = await _selectItems.Execute();
-                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var gerenciasObs = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                gerenciasObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                ViewBag.Usuarios = usuarios;
-                ViewBag.GerenciasObs = gerenciasObs;
+                var filtroEmpresas = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var filtroGerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var filtroUsuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+                var usuariosAgrupados = items.ItemsUsuarios.GroupBy(x => x.IdRol).ToList();
+                var asesores = new List<SelectListItem>();
+                foreach (var grupo in usuariosAgrupados)
+                {
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorMAP))
+                    {
+                        var nuevoGrupo = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
+                    }
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorSSO))
+                    {
+                        var nuevoGrupo = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
+                    }
+                }
+
+                ViewBag.Empresas = filtroEmpresas;
+                ViewBag.Gerencias = filtroGerencias;
+                ViewBag.Usuarios = filtroUsuarios;
+                ViewBag.Asesores = asesores;
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string filtroFecha,int filtroUsuario,int filtroGerenciaObs, string filtroCodigo, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, int pagina, int rpp)
         {
-            DateTime fecha;
-            if (filtroFecha != null)
-                fecha = new DateTime(Int32.Parse(filtroFecha.Split("-")[0]), Int32.Parse(filtroFecha.Split("-")[1]), Int32.Parse(filtroFecha.Split("-")[2]));
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+            DateTime fechaInicio;
+            DateTime fechaFin;
+            if (fechaInicioFiltro != null)
+                fechaInicio = Convert.ToDateTime(fechaInicioFiltro);
             else
-                fecha = (DateTime)SqlDateTime.MinValue;
-
-            filtroCodigo = filtroCodigo ?? "";
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fecha, filtroCodigo,filtroUsuario, filtroGerenciaObs);
+                fechaInicio = (DateTime)SqlDateTime.MinValue;
+            if (fechaFinFiltro != null)
+                fechaFin = Convert.ToDateTime(fechaFinFiltro);
+            else
+                fechaFin = DateTime.Now;
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;

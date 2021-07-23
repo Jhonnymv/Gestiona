@@ -66,6 +66,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.SelectItems
             var output = new ItemsSelectResumen();
             output.GerenciaEjecutora = gerencias;
             output.EmpContratMarcobre = empresas;
+
             output.Usuarios = usuarios; 
             return output;
         }

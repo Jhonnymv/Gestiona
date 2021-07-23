@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.Inspecciones;
+using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 
 namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarCabeceras
@@ -15,13 +16,37 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
-        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fecha, int empresa,int reg_por, string codigo)
+        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fecha, empresa,reg_por, codigo);
+            var estados= new List<string>();
+            if (estadoFiltro.Length > 0)
+            {
+                if (estadoFiltro.Contains("Implementacion"))
+                {
+                    estados.Add(EstadosInspeccion.Registrado.ToString());
+                    estados.Add(EstadosInspeccion.Ampliado.ToString());
+                    estados.Add(EstadosInspeccion.Rechazado.ToString());
+                }
+                if (estadoFiltro.Contains("Verificacion"))
+                {
+                    estados.Add(EstadosInspeccion.Implementado.ToString());
+                    estados.Add(EstadosInspeccion.Rechazado.ToString());
+                }
+                if (estadoFiltro.Contains("Vencidos"))
+                    estados.Add(EstadosInspeccion.Vencido.ToString());
+                if (estadoFiltro.Contains("Aprobados"))
+                    estados.Add(EstadosInspeccion.Aprobado.ToString());
+            }
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro);
+            
             var output = new InspeccionesCabeceraOutput();
             output.NCabeceras = cabeceras.Count;
             output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
             return output;
+        }
+        public List<string> GetDataSourceTypes()
+        {
+            return Enum.GetNames(typeof(EstadosInspeccion)).ToList();
         }
     }
 }

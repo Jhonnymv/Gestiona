@@ -81,7 +81,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<Usuario>> GetUsuarios()
         {
-            var usuarios = await _context.Usuarios.Where(x=>!x.Id_Rol.Equals((int)InspeccionRol.Admin) && x.Estado.Equals("ACT")).ToListAsync();
+            var usuarios = await _context.Usuarios.Where(x=>!x.Id_Rol.Equals((int)InspeccionRol.Admin) && x.Estado.Equals("ACT")&& (x.Id_Area_Trabajo!=null||x.Id_Empresa!=null)).ToListAsync();
             var output = new List<Usuario>();
             foreach (var item in usuarios)
             {

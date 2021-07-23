@@ -68,17 +68,34 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fecha, string codigo, int id_Usuario, int filtroGerenciaObs)
+        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var registros = await _context.RACs.Where(c =>
-                !(c.Estado.Equals(EstadosRAC.Eliminado.ToString())&& c.Codigo.Equals("TBD"))&&
-                c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                && c.Id_Registrado_Por.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Registrado_Por)
-                && c.Id_Gerencia_Obs.Equals(filtroGerenciaObs != 0 ? filtroGerenciaObs : c.Id_Gerencia_Obs))
+            var registros = await _context.RACs.ToListAsync();
+            registros = registros.Where(c =>
+                !c.Estado.Equals(EstadosRAC.Eliminado.ToString())
+                && c.Fecha >= fechaInicio
+                && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
-                .ToListAsync();
+                .ToList();
+
+            if (gerenciaFiltro.Length > 0)
+                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+
+            if (empresaFiltro.Length > 0)
+                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+
+            if (registradoPorFiltro.Length > 0)
+                registros = registros.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+
+            if (responsableFiltro.Length > 0)
+                registros = registros.Where(x => responsableFiltro.Contains(x.Id_Responsable_Cierre)).ToList();
+
+            if (asesorFiltro.Length > 0)
+                registros = registros.Where(x => asesorFiltro.Contains(x.Id_Supervisor)).ToList();
+
+            if (estadoFiltro.Count > 0)
+                registros = registros.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
@@ -130,22 +147,35 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fecha, string codigo, int id_Usuario, int id_Gerencia_Obs)
+        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var registros = await _context.RACs.Where(c =>
-                !c.Estado.Equals(EstadosRAC.Eliminado.ToString()) &&
-                c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                && c.Id_Responsable_Cierre.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Responsable_Cierre)
-                && c.Id_Gerencia_Obs.Equals(id_Gerencia_Obs != 0 ? id_Gerencia_Obs : c.Id_Gerencia_Obs)
-                && (
+            var registros = await _context.RACs.ToListAsync();
+            registros = registros.Where(c =>
+                (
                 c.Estado.Equals(EstadosRAC.Registrado.ToString()) ||
                 c.Estado.Equals(EstadosRAC.Ampliado.ToString()) ||
                 c.Estado.Equals(EstadosRAC.Rechazado.ToString())
-                ))
+                )
+                && c.Fecha >= fechaInicio
+                && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
-                .ToListAsync();
+                .ToList();
+
+            if (gerenciaFiltro.Length > 0)
+                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+
+            if (empresaFiltro.Length > 0)
+                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+
+            if (registradoPorFiltro.Length > 0)
+                registros = registros.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+
+            if (responsableFiltro.Length > 0)
+                registros = registros.Where(x => responsableFiltro.Contains(x.Id_Responsable_Cierre)).ToList();
+
+            if (asesorFiltro.Length > 0)
+                registros = registros.Where(x => asesorFiltro.Contains(x.Id_Supervisor)).ToList();
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
@@ -197,18 +227,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fecha, string codigo, int id_Usuario, int id_Gerencia_Obs)
+        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
         {
-            var fechaFiltro = (fecha == DateTime.MinValue) ? (DateTime)SqlDateTime.MinValue : fecha;
-            var registros = await _context.RACs.Where(c =>
-                !c.Estado.Equals(EstadosRAC.Eliminado.ToString()) &&
-                c.Fecha.Date.Equals(fechaFiltro != (DateTime)SqlDateTime.MinValue ? fechaFiltro.Date : c.Fecha.Date)
-                && c.Codigo.Contains(codigo != "" ? codigo : c.Codigo)
-                && c.Id_Supervisor.Equals(id_Usuario != 0 ? id_Usuario : c.Id_Supervisor)
-                && c.Id_Gerencia_Obs.Equals(id_Gerencia_Obs != 0 ? id_Gerencia_Obs:c.Id_Gerencia_Obs)
-                && c.Estado.Equals(EstadosRAC.Implementado.ToString()))
+            var registros = await _context.RACs.ToListAsync();
+            registros = registros.Where(c =>
+                c.Estado.Equals(EstadosRAC.Implementado.ToString())
+                && c.Fecha >= fechaInicio
+                && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
-                .ToListAsync();
+                .ToList();
+
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
             var tipos_condicion = await _context.Tipos_Condicion.ToListAsync();
