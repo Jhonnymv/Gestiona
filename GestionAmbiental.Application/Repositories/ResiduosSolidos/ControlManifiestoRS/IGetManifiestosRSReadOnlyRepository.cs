@@ -13,5 +13,6 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlManif
         Task<Manifiesto_RS> GetManifiestoRS(int IdManifiestoRS);
         Task<Manifiesto_RS> GetManifiesto_RS_Completo(int IdManifiesto);
         Task<string> GetLastItem();
+        Task<string> GetEvidenciaManifiesto(int IdManifiesto, string Tipo);
     }
 }

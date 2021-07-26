@@ -58,5 +58,6 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         public string Estado { get; set; }
         public bool Permiso { get; set; }
+        public bool PermisoAdmin { get; set; }
     }
 }

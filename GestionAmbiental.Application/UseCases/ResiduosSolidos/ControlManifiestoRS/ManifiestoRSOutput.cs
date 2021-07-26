@@ -47,6 +47,8 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public int Id_Registrado_Por { get; set; }
         public string Estado { get; set; }
         public bool Permiso { get; set; }
+        public bool PermisoAsesor { get; set; }
+        public bool PermisoAdmin { get; set; }
         public ManifiestoRSOutput(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS)
         {
             Id_Manifiesto_RS = manifiesto_RS.Id_Manifiesto_RS;

@@ -79,10 +79,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
             if (gerenciaFiltro.Length > 0)
-                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
 
             if (empresaFiltro.Length > 0)
-                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();
 
             if (registradoPorFiltro.Length > 0)
                 registros = registros.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
@@ -162,10 +162,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
             if (gerenciaFiltro.Length > 0)
-                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
 
             if (empresaFiltro.Length > 0)
-                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
+                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();
 
             if (registradoPorFiltro.Length > 0)
                 registros = registros.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
@@ -236,6 +236,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
                 .ToList();
+
+            if (gerenciaFiltro.Length > 0)
+                registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
+
+            if (empresaFiltro.Length > 0)
+                registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();
+
+            if (registradoPorFiltro.Length > 0)
+                registros = registros.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
+
+            if (responsableFiltro.Length > 0)
+                registros = registros.Where(x => responsableFiltro.Contains(x.Id_Responsable_Cierre)).ToList();
+
+            if (asesorFiltro.Length > 0)
+                registros = registros.Where(x => asesorFiltro.Contains(x.Id_Supervisor)).ToList();
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();

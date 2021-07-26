@@ -307,5 +307,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = lista.Select(x=>Convert.ToInt32(x.Item)).OrderBy(x=>x).LastOrDefault();            
             return data.ToString();
         }
+        public async Task<string> GetEvidenciaManifiesto(int IdManifiesto, string Tipo)
+        {
+            var manifiesto = await _context.Manifiesto_RSs.FirstOrDefaultAsync(x => x.Id_Manifiesto_RS.Equals(IdManifiesto));
+            switch (Tipo)
+            {
+                case "cert": return manifiesto.Certificado_Trat_Disp;
+                case "inf": return manifiesto.Informe_Transporte;
+                default: return manifiesto.Manifiesto;
+            }
+        }
     }
 }

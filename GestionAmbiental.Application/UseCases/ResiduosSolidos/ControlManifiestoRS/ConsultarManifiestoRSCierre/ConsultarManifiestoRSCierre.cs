@@ -24,10 +24,9 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
             var data = await _getManifiestosRSReadOnlyRepository.GetManifiesto_RS_Completo(Id_Manifiesto);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var output = new ManifiestoRSOutput(data);
-            if (usuario.IdRol.Equals((int)RSRoles.AsesorMAP)|| usuario.IdRol.Equals((int)RSRoles.Admin))
-                output.Permiso = true;
-            else
-                output.Permiso = false;
+            output.Permiso = data.Id_Registrado_Por.Equals(usuario.IdUsuario);
+            output.PermisoAsesor = usuario.IdRol.Equals((int)RSRoles.AsesorMAP);
+            output.PermisoAdmin = usuario.IdRol.Equals((int)RSRoles.Admin);
             return output;
         }
     }

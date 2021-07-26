@@ -72,6 +72,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         [DisplayName("Asesor MAP Responsable de la Recepción de Documentos:")]
         public int Id_Asesor { get; set; }
         public string Estado { get; set; }
-        public bool Permiso { get; set; }
+        public bool PermisoAsesor { get; set; }
+        public bool PermisoAdmin { get; set; }
     }
 }

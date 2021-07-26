@@ -1,7 +1,9 @@
 ﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarEvidenciaManifiestoRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestoRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.ConsultarManifiestosRSCierre;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EditarManifiestoRS.CompletarManifiestoRS;
+using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EliminarEvidenciaManifiestoRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.EliminarManifiestoRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
 using GestionAmbiental.Domain.Enum;
@@ -27,25 +29,31 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         private readonly IGetSelectItems _getSelectItems;
         private readonly IConsultarManifiestosRSCierre _consultarManifiestosRS;
         private readonly IConsultarManifiestoRSCierre _consultarManifiestoRS;
+        private readonly IConsultarEvidenciaManifiestoRS _consultarEvidenciaManifiestoRS;
         private readonly ICompletarManifiestoRS _completarManifiestoRS;
         private readonly IEliminarManifiestoRS _eliminarManifiestoRS;
+        private readonly IEliminarEvidenciaManifiestoRS _eliminarEvidenciaManifiestoRS;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
 
         public CompletarManifiestoController(
             IGetSelectItems getSelectItems,
             IConsultarManifiestosRSCierre consultarManifiestosRS,
-            IConsultarManifiestoRSCierre consultarManifiestoRS,
+            IConsultarManifiestoRSCierre consultarManifiestoRS, 
+            IConsultarEvidenciaManifiestoRS consultarEvidenciaManifiestoRS,
             ICompletarManifiestoRS completarManifiestoRS,
             IDataProtectionProvider dataProtectionProvider,
             IEliminarManifiestoRS eliminarManifiestoRS,
+            IEliminarEvidenciaManifiestoRS eliminarEvidenciaManifiestoRS,
             IGetInfo_SGA info_SGA,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _getSelectItems = getSelectItems;
             _consultarManifiestosRS = consultarManifiestosRS;
             _consultarManifiestoRS = consultarManifiestoRS;
+            _consultarEvidenciaManifiestoRS = consultarEvidenciaManifiestoRS;
             _eliminarManifiestoRS = eliminarManifiestoRS;
+            _eliminarEvidenciaManifiestoRS = eliminarEvidenciaManifiestoRS;
             _info_SGA = info_SGA;
             _completarManifiestoRS = completarManifiestoRS;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoResiduosPeligrosSIdRouteValue);
@@ -91,15 +99,15 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 {
                     var id_encriptado = _protector.Protect(fila.Id_Manifiesto_RS.ToString());
                     filasTabla += "<tr>";
-                    if (fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString())|| userInfo.Rol.Equals(InspeccionRol.Admin))
-                    {
-                        filasTabla += "<td></td>";
-                        filasTabla += "<td><a href=\"/CompletarManifiesto/DetalleManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
-                    }
-                    else
+                    if (!fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                         filasTabla += "<td><a href=\"/CompletarManifiesto/CompletarManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
+                    }
+                    else
+                    {
+                        filasTabla += "<td></td>";
+                        filasTabla += "<td><a href=\"/CompletarManifiesto/DetalleManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
                     }
 
                     filasTabla += "<td>" + fila.Serie_Manifiesto + "</td>";
@@ -188,6 +196,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Permiso = data.Permiso;
+                model.PermisoAdmin = data.PermisoAdmin;
                 model.Estado = data.Estado;
                 //Asesor
                 model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto != null ? data.Cantidad_RS_Dispuesto.Value : 0;
@@ -259,7 +268,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 model.Num_Autorizacion_Sanitaria_Llegada = data.Num_Autorizacion_Sanitaria_Llegada;
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Estado = data.Estado;
-                model.Permiso = data.Permiso;
+                model.PermisoAsesor = data.PermisoAsesor;
+                model.PermisoAdmin = data.PermisoAdmin;
                 //Asesor
                 model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto != null ? data.Cantidad_RS_Dispuesto.Value : 0;
                 model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
@@ -318,7 +328,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if (model.Certificado_Lleno != null)
+                if (model.Certificado_Lleno != null)
                 {
                     certificados.AddRange(new List<string>(model.Certificado_Lleno.Split(',')));
                 }
@@ -338,7 +348,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if (model.Informe_Transporte_Lleno != null)
+                if (model.Informe_Transporte_Lleno != null)
                 {
                     informes.AddRange(new List<string>(model.Informe_Transporte_Lleno.Split(',')));
                 }
@@ -358,7 +368,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                         }
                     }
                 }
-                else if (model.Manifiesto_Doc_Lleno != null)
+                if (model.Manifiesto_Doc_Lleno != null)
                 {
                     manifiesto.AddRange(new List<string>(model.Manifiesto_Doc_Lleno.Split(',')));
                 }
@@ -412,6 +422,33 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     success = true
                 };
             }catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarEvidencia(int IdManifiesto, string Tipo, string Evidencia)
+        {
+            dynamic response;
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                await DeleteFTPFileAsync(Evidencia, Tipo);
+                await _eliminarEvidenciaManifiestoRS.Execute(IdManifiesto, Tipo, Evidencia, userInfo.NombreUsuario);
+                var nueva_evidencia = await _consultarEvidenciaManifiestoRS.Execute(IdManifiesto, Tipo);
+                response = new
+                {
+                    success = true,
+                    evidencia = nueva_evidencia,
+                    tipo = Tipo
+                };
+            }
+            catch (Exception e)
             {
                 response = new
                 {
@@ -726,6 +763,42 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             fsCrypt.Close();
 
         }
-    }
+        private async Task DeleteFTPFileAsync(string filename, string tipo)
+        {
+            Tipo_Info_SGA directorio;
+            switch (tipo)
+            {
+                case "cert": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSC; break;
+                case "inf": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSI; break;
+                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRSM; break;
+            }
+            var serverInfo = await _info_SGA.Execute(directorio);
 
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            try
+            {
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    sftp.DeleteFile(filename);
+
+                    sftp.Dispose();
+                }
+            }
+            catch (Exception e) { }
+        }
+    }
 }

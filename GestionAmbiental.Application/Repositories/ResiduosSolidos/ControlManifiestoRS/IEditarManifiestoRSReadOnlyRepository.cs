@@ -10,5 +10,6 @@ namespace GestionAmbiental.Application.Repositories.ResiduosSolidos.ControlManif
         Task CompletarManifiestoRS(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS,int usuario);
         Task EditarManifiestoContratista(Domain.ResiduosSolidos.Manifiesto_RS manifiesto_RS, int usuario);
         Task EliminarManifiesto(int IdManifiesto, int usuario);
+        Task EliminarEvidenciaInvestigacion(int IdManifiesto, string Tipo, string NombreArchivo);
     }
 }

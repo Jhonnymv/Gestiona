@@ -4,6 +4,7 @@ using GestionAmbiental.Domain.ResiduosSolidos;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -61,7 +62,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Manifiesto = manifiesto_RS.Manifiesto;
             if (manifiesto_RS.Asesor_MAP.IdUsuario != 0)
                 entity.Id_Asesor_MAP = manifiesto_RS.Asesor_MAP.IdUsuario;
-            //entity.Estado = EstadosResiduosSolidos.Cerrado.ToString();
             entity.Estado = manifiesto_RS.Estado;
 
             _context.Manifiesto_RSs.Update(entity);
@@ -159,6 +159,39 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             _context.Log_Manifiesto_RS.Add(log);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarEvidenciaInvestigacion(int IdManifiesto, string Tipo, string NombreArchivo)
+        {
+            var manifiesto = await _context.Manifiesto_RSs.FirstOrDefaultAsync(x => x.Id_Manifiesto_RS.Equals(IdManifiesto));
+            if (manifiesto != null)
+            {
+                JArray evidencias = new JArray();
+
+                switch (Tipo)
+                {
+                    case "cert": evidencias = JArray.Parse(manifiesto.Certificado_Trat_Disp); break;
+                    case "inf": evidencias = JArray.Parse(manifiesto.Informe_Transporte); break;
+                    case "man": evidencias = JArray.Parse(manifiesto.Manifiesto); break;
+                }
+
+                var temp = new List<string>();
+                foreach (var evidencia in evidencias)
+                {
+                    temp.Add((string)evidencia);
+                }
+                temp.Remove(NombreArchivo);
+
+                switch (Tipo)
+                {
+                    case "cert": manifiesto.Certificado_Trat_Disp = JsonConvert.SerializeObject(temp); break;
+                    case "inf": manifiesto.Informe_Transporte = JsonConvert.SerializeObject(temp); break;
+                    case "man": manifiesto.Manifiesto = JsonConvert.SerializeObject(temp); break;
+                }
+
+                _context.Manifiesto_RSs.Update(manifiesto);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

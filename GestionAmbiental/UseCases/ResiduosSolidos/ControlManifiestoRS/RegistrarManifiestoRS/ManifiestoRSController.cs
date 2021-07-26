@@ -245,6 +245,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Registra
                 model.Num_Autorizacion_Municipal_Llegada = data.Num_Autorizacion_Municipal_Llegada;
                 model.Estado = data.Estado;
                 model.Permiso = data.Permiso;
+                model.PermisoAdmin = data.PermisoAdmin;
 
                 var items = await _getSelectItems.Execute();
                 var residuos_solidos = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Id_Tipo_Residuo.Equals(1)).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
