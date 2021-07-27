@@ -15,6 +15,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         [DisplayName("Asesor MAP o SSO")]
         public string AsesorSeguridad { get; set; }
         public int idCabecera { get; set; }
+        [DisplayName("Descripción de Acto/Condición Subestándar")]
+        public string DescripcionActoCondicion { get; set; }
         [DisplayName("Acto/Condición Subestándar Identificada")]
         public string CondicionIdentificada { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar")]
@@ -29,6 +31,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         public string ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista")]
         public string ResponsableCont { get; set; }
+        [DisplayName("Correo Electrónico de Responsable Contratista")]
+        public string CorreoCont { get; set; }
         [DisplayName("Fecha Programada para levantar Obs.")]
         public string FechaProgramada { get; set; }
         [DisplayName("Evidencia Implementación")]

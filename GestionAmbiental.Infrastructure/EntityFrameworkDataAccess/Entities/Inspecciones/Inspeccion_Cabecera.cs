@@ -31,7 +31,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public int Id_Responsable_Area { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Responsable_Inspeccion { get; set; }
-        [Column(TypeName = "varchar(250)")]
+        [Column(TypeName = "varchar(500)")]
         public string Participantes { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Objetivo { get; set; }

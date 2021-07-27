@@ -37,10 +37,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             
             if (registradoPorFiltro.Length > 0)
                 cabeceras = cabeceras.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
-            
-            if(responsableFiltro.Length>0 || asesorFiltro.Length > 0||estadoFiltro.Count>0)
+
+            var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            if (responsableFiltro.Length>0 || asesorFiltro.Length > 0||estadoFiltro.Count>0)
             {
-                var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
                 if (responsableFiltro.Length > 0)
                     observaciones = observaciones.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
                 if (asesorFiltro.Length > 0)
@@ -287,8 +287,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 tiposCondicion_domain.Add(new Domain.ValueObjects.TipoCondicion(item.Id_Tipo_Condicion, item.Descripcion,item.Grupo));
             }
-
-
             var output = new InspeccionCabecera();
             output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
             output.Codigo = cabecera.Codigo;
@@ -312,11 +310,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 obs.IdInspeccionDetalle = observacion.Id_Inspeccion_Detalle;
                 obs.TipoObservacion = observacion.Tipo_Observacion;
                 obs.DescripcionCondicion = observacion.Descripcion_Condicion;
+                obs.DescripcionActoCondicion = observacion.Descripcion_Acto_Condicion;
                 obs.TipoCondicion = tiposCondicion_domain.FirstOrDefault(x => x.IdTipoCondicion.Equals(observacion.Id_Tipo_Condicion));
                 obs.NivelRiesgo = observacion.Nivel_Riesgo;
                 obs.DescripcionAccion = observacion.Descripcion_Accion;
                 obs.ResponsableMarcobre = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(observacion.Id_Responsable_Marcobre));
                 obs.ResponsableContratista = observacion.Responsable_Contratista;
+                obs.CorreoContratista = observacion.Correo_Contratista;
                 obs.FechaProgramada = observacion.Fecha_Programada;
                 obs.ComentarioImplementacion = observacion.Comentario_Implementacion;
                 obs.FechaCierre = observacion.Fecha_Cierre;
@@ -327,7 +327,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 obs.EvidenciaCondicion = observacion.Evidencia_Condicion;
                 output.Observaciones.Add(obs);
             }
-
             return output;
         }
     }

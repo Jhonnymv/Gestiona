@@ -32,6 +32,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public int Id_Responsable_Marcobre { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Responsable_Contratista { get; set; }
+        [Column(TypeName = "varchar(100)")]
+        public string Correo_Contratista { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Programada { get; set; }
         [Column(TypeName = "text")]
@@ -46,6 +48,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public string Comentario_Verificacion { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
+        [Column(TypeName = "varchar(500)")]
+        public string Descripcion_Acto_Condicion { get; set; }
 
     }
 }

@@ -223,7 +223,6 @@
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
-
         var listObservaciones = [];
         var img_url = "";
         $(document).ready(function () {
@@ -566,12 +565,14 @@
                 formData.append("TipoInspeccion", $("#TipoInspeccion").val());
                 formData.append("Asesor_MA_Seguridad", $("#Asesor_MA_Seguridad:not(:disabled)").val());
                 formData.append("CondicionIdentificada", $("#CondicionIdentificada").val());
+                formData.append("DescripcionActoCondicion", $("#DescripcionActoCondicion").val());
                 formData.append("TipoCondicion", $("#TipoCondicion:not(:disabled)").val());
                 formData.append("FechaProgramada", $("#FechaProgramada").val());
                 formData.append("NiveRiesgo", $("#NiveRiesgo").val());
                 formData.append("AccionTomada", $("#AccionTomada").val());
                 formData.append("ResponsableMarc", $("#ResponsableMarc").val());
                 formData.append("ResponsableCont", $("#ResponsableCont").val());
+                formData.append("CorreoCont", $("#CorreoCont").val());
                 $.ajax({
                     url: "@Url.Action("NuevaObservacion", "Inspecciones")",
                     method: "post",
@@ -597,6 +598,7 @@
             $(".AsesorSeguridad").val('0');
             $(".AsesorMedioAmbiente").hide();
             $(".AsesorSeguridad").hide();
+            $("#DescripcionActoCondicion").val('');
             $("#CondicionIdentificada").val('');
             $("#TipoCondicion").val('');
             $(".Vacio").val('');
@@ -630,6 +632,7 @@
         function ReiniciarMsgsValidacion() {
             $('span[data-valmsg-for="TipoInspeccion"]').text("");
             $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("");
+            $('span[data-valmsg-for="DescripcionActoCondicion"]').text("");
             $('span[data-valmsg-for="CondicionIdentificada"]').text("");
             $('span[data-valmsg-for="TipoCondicion"]').text("");
             $('span[data-valmsg-for="FechaProgramada"]').text("");
@@ -647,6 +650,7 @@
                 result = false; $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("Debe seleccionar una opción");
             }
             if ($("#CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
             if ($("#TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="TipoCondicion"]').text("Debe seleccionar una opción"); }
             if ($("#FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="FechaProgramada"]').text("Debe ingresar una fecha"); }
             if ($("#NiveRiesgo").val() == "") { result = false; $('span[data-valmsg-for="NiveRiesgo"]').text("Debe seleccionar una opción"); }
@@ -669,6 +673,7 @@
             if (data != null) {
                 $("#E_IdObservacion").val(data.IdObservacion);
                 $("#E_TipoInspeccion").val(data.TipoInspeccion);
+                $("#E_DescripcionActoCondicion").val(data.DescripcionActoCondicion);
                 $(".E_Vacio").hide();
                 $(".E_Vacio").prop('disabled', true);
                 $("#E_AsesorSeguridad").val(data.Asesor);
@@ -726,6 +731,7 @@
                 $("#E_AccionTomada").val(data.Accion);
                 $("#E_ResponsableMarc").val(data.ResponsableMarc);
                 $("#E_ResponsableCont").val(data.ResponsableCont);
+                $("#E_CorreoCont").val(data.CorreoCont);
                 $("#E_Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
                 $("#E_EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
                 $("#modalEditarObservacion").modal('show');
@@ -1033,12 +1039,14 @@
                 formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
                 formData.append("E_AsesorSeguridad", $("#E_AsesorSeguridad").val());
                 formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
+                formData.append("E_DescripcionActoCondicion", $("#E_DescripcionActoCondicion").val());
                 formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
                 formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());
                 formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
                 formData.append("E_AccionTomada", $("#E_AccionTomada").val());
                 formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
                 formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
+                formData.append("E_CorreoCont", $("#E_CorreoCont").val());
                 formData.append("E_Evidencia", $("#E_Evidencia").val());
                 $.ajax({
                     url: "@Url.Action("EditarObservacion", "Inspecciones")",
@@ -1062,6 +1070,7 @@
         function ReiniciarMsgsValidacionEditar() {
             $('span[data-valmsg-for="E_TipoInspeccion"]').text("");
             $('span[data-valmsg-for="E_AsesorSeguridad"]').text("");
+            $('span[data-valmsg-for="E_DescripcionActoCondicion"]').text("");
             $('span[data-valmsg-for="E_CondicionIdentificada"]').text("");
             $('span[data-valmsg-for="E_TipoCondicion"]').text("");
             $('span[data-valmsg-for="E_FechaProgramada"]').text("");
@@ -1078,41 +1087,13 @@
                 result = false; $('span[data-valmsg-for="E_AsesorSeguridad"]').text("Debe seleccionar una opción");
             }
             if ($("#E_CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="E_CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#E_DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="E_DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
             if ($("#E_TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="E_TipoCondicion"]').text("Debe seleccionar una opción"); }
             if ($("#E_FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="E_FechaProgramada"]').text("Debe ingresar una fecha"); }
             if ($("#E_NivelRiesgo").val() == "") { result = false; $('span[data-valmsg-for="E_NivelRiesgo"]').text("Debe seleccionar una opción"); }
             if ($("#E_AccionTomada").val() == "") { result = false; $('span[data-valmsg-for="E_AccionTomada"]').text("Debe completar este campo"); }
             if ($("#E_ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="E_ResponsableMarc"]').text("Debe seleccionar una opción"); }
             if ($("#E_ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="E_ResponsableCont"]').text("Debe completar este campo"); }
-            return result;
-        }
-        function ReiniciarMsgsValidacion() {
-            $('span[data-valmsg-for="TipoInspeccion"]').text("");
-            $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("");
-            $('span[data-valmsg-for="CondicionIdentificada"]').text("");
-            $('span[data-valmsg-for="TipoCondicion"]').text("");
-            $('span[data-valmsg-for="FechaProgramada"]').text("");
-            $('span[data-valmsg-for="NiveRiesgo"]').text("");
-            $('span[data-valmsg-for="AccionTomada"]').text("");
-            $('span[data-valmsg-for="ResponsableMarc"]').text("");
-            $('span[data-valmsg-for="ResponsableCont"]').text("");
-        }
-        function ValidarNuevaObservacion() {
-            var result = true;
-            ReiniciarMsgsValidacion();
-            if ($("#idCabecera").val() == "") result = false;
-            if ($("#TipoInspeccion").val() == "") { result = false; $('span[data-valmsg-for="TipoInspeccion"]').text("Debe seleccionar una opción"); }
-            if ($("#Asesor_MA_Seguridad:not(:disabled)").is(":visible") && $("#Asesor_MA_Seguridad:not(:disabled)").val() == "0") {
-                result = false; $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("Debe seleccionar una opción");
-            }
-            if ($("#CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="CondicionIdentificada"]').text("Debe seleccionar una opción"); }
-            if ($("#TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="TipoCondicion"]').text("Debe seleccionar una opción"); }
-            if ($("#FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="FechaProgramada"]').text("Debe ingresar una fecha"); }
-            if ($("#NiveRiesgo").val() == "") { result = false; $('span[data-valmsg-for="NiveRiesgo"]').text("Debe seleccionar una opción"); }
-            if ($("#AccionTomada").val() == "") { result = false; $('span[data-valmsg-for="AccionTomada"]').text("Debe completar este campo"); }
-            if ($("#ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="ResponsableMarc"]').text("Debe seleccionar una opción"); }
-            if ($("#ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="ResponsableCont"]').text("Debe completar este campo"); }
-            if (document.getElementById("Evidencias").files.length == 0) { result = false; $("#danger_evidencia").text("Debe seleccionar un archivo"); }
             return result;
         }
     </script>

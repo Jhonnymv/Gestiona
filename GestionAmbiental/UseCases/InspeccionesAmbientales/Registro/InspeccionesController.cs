@@ -436,6 +436,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             model.idCabecera,
                             model.TipoInspeccion,
                             model.Asesor_MA_Seguridad,
+                            model.DescripcionActoCondicion,
                             model.CondicionIdentificada,
                             model.TipoCondicion,
                             evidencias,
@@ -443,6 +444,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             model.AccionTomada,
                             model.ResponsableMarc,
                             model.ResponsableCont,
+                            model.CorreoCont,
                             model.FechaProgramada,
                             userInfo.NombreUsuario);                                
                 response = new
@@ -530,12 +532,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     EvidenciasCondicion = JsonConvert.SerializeObject(x.EvidenciaCondicion),
                     TipoInspeccion = x.TipoInspeccion,
                     Asesor = x.IdAsesor,
+                    DescripcionActoCondicion = x.DescripcionActoCondicion,
                     DescripcionCondicion = x.DescripcionCondicion,
                     TipoCondicion = x.IdTipoCondicion,
                     NivelRiesgo = x.NivelRiesgo,
                     Accion = x.DescripcionAccion,
                     ResponsableMarc = x.IdResponsableMarcobre,
                     ResponsableCont = x.ResponsableContratista,
+                    CorreoCont = x.CorreoContratista,
                     FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
                     Estado = x.Estado,
                     PermisoEditar = x.PermisosAsesor
@@ -762,6 +766,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.E_IdObservacion,
                     model.E_TipoInspeccion,
                     model.E_AsesorSeguridad,
+                    model.E_DescripcionActoCondicion,
                     model.E_CondicionIdentificada,
                     model.E_TipoCondicion,
                     evidencias.Count>0?evidencias:model.E_Evidencia,
@@ -769,6 +774,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.E_AccionTomada,
                     model.E_ResponsableMarc,
                     model.E_ResponsableCont,
+                    model.E_CorreoCont,
                     model.E_FechaProgramada,
                     userInfo.NombreUsuario);
                 response = new

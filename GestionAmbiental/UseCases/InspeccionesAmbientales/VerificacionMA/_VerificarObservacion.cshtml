@@ -41,30 +41,41 @@
                                         <input type="text" class="form-control" asp-for="TipoCondicion" readonly />
                                     </div>
                                 </div>
-                                <div class="row input_container w-100">
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="DescripcionActoCondicion"></label>
+                                        <span class="text-danger" asp-validation-for="DescripcionActoCondicion"></span>
+                                        <textarea class="form-control" rows="1" asp-for="DescripcionActoCondicion"></textarea>
+                                    </div>
                                     <div class="col-12 col-sm-6 col-lg-6">
                                         <label asp-for="FechaProgramada"></label>
                                         <input type="date" class="form-control" asp-for="FechaProgramada" readonly />
                                     </div>
+                                </div>
+                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="NivelRiesgo"></label>
                                         <input type="text" class="form-control" asp-for="NivelRiesgo" readonly />
                                     </div>
-                                </div>
-                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="AccionTomada"></label>
                                         <input type="text" class="form-control" asp-for="AccionTomada" readonly />
                                     </div>
+                                </div>
+                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="ResponsableMarc"></label>
                                         <input type="text" class="form-control" asp-for="ResponsableMarc" readonly />
                                     </div>
-                                </div>
-                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="ResponsableCont"></label>
                                         <input type="text" class="form-control" asp-for="ResponsableCont" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="CorreoCont"></label>
+                                        <input type="email" class="form-control" asp-for="CorreoCont" readonly />
                                     </div>
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="Evidencia"></label>

@@ -22,7 +22,7 @@ namespace GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiest
         public async Task Execute(int IdManifiesto, string Tipo, string NombreArchivo, string usuarioRed)
         {
             var usuario = await _getUsuario.Execute(usuarioRed);
-            if (usuario.IdRol.Equals((int)InspeccionRol.Admin))
+            if (usuario.IdRol.Equals((int)InspeccionRol.Admin)|| usuario.IdRol.Equals((int)InspeccionRol.AsesorMAP))
                 await _editarManifiestoRSReadOnlyRepository.EliminarEvidenciaInvestigacion(IdManifiesto, Tipo, NombreArchivo);
         }
     }

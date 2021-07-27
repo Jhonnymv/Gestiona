@@ -59,6 +59,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             detalleEntity.Tipo_Observacion = detalle.TipoInspeccion == detalleEntity.Tipo_Observacion ? detalleEntity.Tipo_Observacion : detalle.TipoInspeccion;
             detalleEntity.Id_Asesor = detalle.IdAsesorMASeguridad == detalleEntity.Id_Asesor ? detalleEntity.Id_Asesor : detalle.IdAsesorMASeguridad;
+            detalleEntity.Descripcion_Acto_Condicion = detalle.DescripcionActoCondicion == detalleEntity.Descripcion_Acto_Condicion ? detalleEntity.Descripcion_Acto_Condicion : detalle.DescripcionActoCondicion;
             detalleEntity.Descripcion_Condicion = detalle.DescripcionCondicion == detalleEntity.Descripcion_Condicion ? detalleEntity.Descripcion_Condicion : detalle.DescripcionCondicion;
             detalleEntity.Id_Tipo_Condicion = detalle.IdTipoCondicion == detalleEntity.Id_Tipo_Condicion ? detalleEntity.Id_Tipo_Condicion : detalle.IdTipoCondicion;
             detalleEntity.Evidencia_Condicion = detalle.EvidenciaCondicion == detalleEntity.Evidencia_Condicion ? detalleEntity.Evidencia_Condicion : detalle.EvidenciaCondicion;
@@ -66,7 +67,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Descripcion_Accion = detalle.DescripcionAccion == detalleEntity.Descripcion_Accion ? detalleEntity.Descripcion_Accion : detalle.DescripcionAccion;
             detalleEntity.Id_Responsable_Marcobre = detalle.IdResponsableMarcobre == detalleEntity.Id_Responsable_Marcobre ? detalleEntity.Id_Responsable_Marcobre : detalle.IdResponsableMarcobre;
             detalleEntity.Responsable_Contratista = detalleEntity.Responsable_Contratista == detalle.ResponsableContratista ? detalleEntity.Responsable_Contratista : detalle.ResponsableContratista;
-                        
+            detalleEntity.Correo_Contratista = detalleEntity.Correo_Contratista == detalle.CorreoContratista ? detalleEntity.Correo_Contratista : detalle.CorreoContratista;
             detalleEntity.Fecha_Programada = detalle.FechaProgramada;
             detalleEntity.Estado = detalle.Estado;
 

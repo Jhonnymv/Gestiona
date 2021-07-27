@@ -31,6 +31,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
             observacion.IdInspeccionDetalle = idObservacion;
             observacion.TipoInspeccion = data_obs.TipoObservacion;
             observacion.IdAsesorMASeguridad = data_obs.Asesor.IdUsuario;
+            observacion.DescripcionActoCondicion = data_obs.DescripcionActoCondicion;
             observacion.DescripcionCondicion = data_obs.DescripcionCondicion;
             observacion.IdTipoCondicion = data_obs.TipoCondicion.IdTipoCondicion;
             observacion.EvidenciaCondicion = data_obs.EvidenciaCondicion;
@@ -38,7 +39,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
             observacion.DescripcionAccion = data_obs.DescripcionAccion;
             observacion.IdResponsableMarcobre = data_obs.ResponsableMarcobre.IdUsuario;
             observacion.ResponsableContratista = data_obs.ResponsableContratista;
-            
+            observacion.CorreoContratista = data_obs.CorreoContratista;            
             observacion.FechaProgramada = Convert.ToDateTime(nuevaFecha);
             observacion.Estado = EstadosInspeccion.Ampliado.ToString();
 

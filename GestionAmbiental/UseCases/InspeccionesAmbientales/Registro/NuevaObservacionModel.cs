@@ -20,6 +20,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Acto/Condición Subestándar Identificada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string CondicionIdentificada { get; set; }
+        [DisplayName("Descripción de Acto/Condición Subestándar")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
+        public string DescripcionActoCondicion { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public int TipoCondicion { get; set; }
@@ -38,6 +41,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Responsable Contratista")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string ResponsableCont { get; set; }
+        [DisplayName("Correo Electrónico de Responsable Contratista")]
+        public string CorreoCont { get; set; }
         [DisplayName("Fecha Programada para levantar Obs.")]
         [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string FechaProgramada { get; set; }

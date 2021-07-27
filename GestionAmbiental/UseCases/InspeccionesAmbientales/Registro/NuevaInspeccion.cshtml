@@ -111,39 +111,6 @@
                                 </div>
                             </div>
                         </div>
-                        @*<div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
-                                <div class="message"></div>
-                                <div class="row input_container">
-                                    <div class="col-12 col-sm-6 col-lg-6">
-                                        <label asp-for="Responsable_Inspeccion">Responsable del Área Inspeccionada</label>
-                                        <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                                        <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
-                                    </div>
-                                    <div class="col-12 col-sm-6 col-lg-6">
-                                        <label asp-for="Inspectores">Participantes de la Inspección</label>
-                                        <span class="text-danger" asp-validation-for="Inspectores"></span>
-                                        <input type="text" class="form-control" asp-for="Inspectores">
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12 col-sm-12 col-lg-12">
-                                        <label asp-for="Objetivo">Objetivo de la Inspección</label>
-                                        <span class="text-danger" asp-validation-for="Objetivo"></span>
-                                        <input type="text" class="form-control" asp-for="Objetivo">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="button-container mc-row-reverse col-12 col-lg-10">
-                                        <div class="d-flex justify-content-between">
-                                            <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
-                                            <button type="button" class="btn btn-mc next-btn">Siguiente</button>
-                                        </div>
-                                        <div class="col-12 col-lg-2">
-                                            <a type="button" class="btn btn-mc-outline-danger" asp-action="Resumen">Cancelar</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>*@
                         <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -252,7 +219,6 @@
 @section scripts{
     <script src="~/js/stepper.js"></script>
     <script>
-
         var listObservaciones = [];
         function dataModulo() {
             $.ajax({
@@ -618,12 +584,14 @@
                 formData.append("TipoInspeccion", $("#TipoInspeccion").val());
                 formData.append("Asesor_MA_Seguridad", $("#Asesor_MA_Seguridad:not(:disabled)").val());
                 formData.append("CondicionIdentificada", $("#CondicionIdentificada").val());
+                formData.append("DescripcionActoCondicion", $("#DescripcionActoCondicion").val());
                 formData.append("TipoCondicion", $("#TipoCondicion:not(:disabled)").val());
                 formData.append("FechaProgramada", $("#FechaProgramada").val());
                 formData.append("NiveRiesgo", $("#NiveRiesgo").val());
                 formData.append("AccionTomada", $("#AccionTomada").val());
                 formData.append("ResponsableMarc", $("#ResponsableMarc").val());
                 formData.append("ResponsableCont", $("#ResponsableCont").val());
+                formData.append("CorreoCont", $("#CorreoCont").val());
                 $.ajax({
                     url: "@Url.Action("NuevaObservacion", "Inspecciones")",
                     method: "post",
@@ -649,6 +617,7 @@
             $(".AsesorSeguridad").val('0');
             $(".AsesorMedioAmbiente").hide();
             $(".AsesorSeguridad").hide();
+            $("#DescripcionActoCondicion").val('');
             $("#CondicionIdentificada").val('');
             $("#TipoCondicion").val('');
             $(".Vacio").val('');
@@ -673,6 +642,7 @@
             $("#AccionTomada").val('');
             $("#ResponsableMarc").val('0');
             $("#ResponsableCont").val('');
+            $("#CorreoCont").val('');
             $("#Evidencias").val('');
             $("#files_name").text('0 Archivos');
             $("#NiveRiesgo").find('option').remove();
@@ -682,6 +652,7 @@
         function ReiniciarMsgsValidacion() {
             $('span[data-valmsg-for="TipoInspeccion"]').text("");
             $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("");
+            $('span[data-valmsg-for="DescripcionActoCondicion"]').text("");
             $('span[data-valmsg-for="CondicionIdentificada"]').text("");
             $('span[data-valmsg-for="TipoCondicion"]').text("");
             $('span[data-valmsg-for="FechaProgramada"]').text("");
@@ -699,6 +670,7 @@
                 result = false; $('span[data-valmsg-for="Asesor_MA_Seguridad"]').text("Debe seleccionar una opción");
             }
             if ($("#CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
             if ($("#TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="TipoCondicion"]').text("Debe seleccionar una opción"); }
             if ($("#FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="FechaProgramada"]').text("Debe ingresar una fecha"); }
             if ($("#NiveRiesgo").val() == "") { result = false; $('span[data-valmsg-for="NiveRiesgo"]').text("Debe seleccionar una opción"); }
@@ -721,6 +693,8 @@
             if (data != null) {
                 $("#E_IdObservacion").val(data.IdObservacion);
                 $("#E_TipoInspeccion").val(data.TipoInspeccion);
+                $("#E_DescripcionActoCondicion").val(data.DescripcionActoCondicion);
+                $("#E_CorreoCont").val(data.CorreoCont);
                 $(".E_Vacio").hide();
                 $(".E_Vacio").prop('disabled', true);
                 if (data.TipoInspeccion == "MAP") {
@@ -1080,12 +1054,14 @@
                 formData.append("E_TipoInspeccion", $("#E_TipoInspeccion").val());
                 formData.append("E_AsesorSeguridad", $("#E_AsesorSeguridad:not(:disabled)").val());
                 formData.append("E_CondicionIdentificada", $("#E_CondicionIdentificada").val());
+                formData.append("E_DescripcionActoCondicion", $("#E_DescripcionActoCondicion").val());
                 formData.append("E_TipoCondicion", $("#E_TipoCondicion:not(:disabled)").val());
                 formData.append("E_FechaProgramada", $("#E_FechaProgramada").val());
                 formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
                 formData.append("E_AccionTomada", $("#E_AccionTomada").val());
                 formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
                 formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
+                formData.append("E_CorreoCont", $("#E_CorreoCont").val());
                 formData.append("E_Evidencia", $("#E_Evidencia").val());
                 $.ajax({
                     url: "@Url.Action("EditarObservacion", "Inspecciones")",
@@ -1109,6 +1085,7 @@
         function ReiniciarMsgsValidacionEditar() {
             $('span[data-valmsg-for="E_TipoInspeccion"]').text("");
             $('span[data-valmsg-for="E_AsesorSeguridad"]').text("");
+            $('span[data-valmsg-for="E_DescripcionActoCondicion"]').text("");
             $('span[data-valmsg-for="E_CondicionIdentificada"]').text("");
             $('span[data-valmsg-for="E_TipoCondicion"]').text("");
             $('span[data-valmsg-for="E_FechaProgramada"]').text("");
@@ -1125,6 +1102,7 @@
                 result = false; $('span[data-valmsg-for="E_AsesorSeguridad"]').text("Debe seleccionar una opción");
             }
             if ($("#E_CondicionIdentificada").val() == "") { result = false; $('span[data-valmsg-for="E_CondicionIdentificada"]').text("Debe seleccionar una opción"); }
+            if ($("#E_DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="E_DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
             if ($("#E_TipoCondicion:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="E_TipoCondicion"]').text("Debe seleccionar una opción"); }
             if ($("#E_FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="E_FechaProgramada"]').text("Debe ingresar una fecha"); }
             if ($("#E_NivelRiesgo").val() == "") { result = false; $('span[data-valmsg-for="E_NivelRiesgo"]').text("Debe seleccionar una opción"); }
@@ -1135,107 +1113,3 @@
         }
     </script>
 }
-@*<div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-12 titulo-pagina">
-                <h2>Nueva Inspección</h2>
-            </div>
-        </div>
-        <form class="form-group" id="form_nuevaInspeccion" asp-action="NuevaInspeccion" asp-controller="Inspecciones" method="post" enctype="multipart/form-data" autocomplete="off">
-
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Id_Gerencia_Ejecutora"></label>
-                </div>
-
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Id_Gerencia_Ejecutora"></span>
-                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Ejecutora"></select>
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Id_Empresa_Contratista"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Id_Empresa_Contratista"></span>
-                    <select class="form-control" asp-items="@ViewBag.EmpresasMC" asp-for="Id_Empresa_Contratista">
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Lugar_Inspeccionado"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
-                    <input type="text" class="form-control" asp-for="Lugar_Inspeccionado">
-                </div>
-
-                <div class="col-lg-2">
-                    <label asp-for="Tipo_Inspeccion"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
-                    <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion"></select>
-                </div>
-
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Id_Responsable_Lugar"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
-                    <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar"></select>
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Hora_Inspeccion"></label>
-                </div>
-                <div class="col-lg-2">
-                    <span class="text-danger" asp-validation-for="Hora_Inspeccion"></span>
-                    <input type="time" class="form-control" asp-for="Hora_Inspeccion">
-                </div>
-                <div class="col-lg-1">
-                    <label asp-for="Fecha_Inspeccion"></label>
-                </div>
-                <div class="col-lg-2">
-                    <span class="text-danger" asp-validation-for="Fecha_Inspeccion"></span>
-                    <input type="date" class="form-control" asp-for="Fecha_Inspeccion">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Responsable_Inspeccion"></label>
-                </div>
-                <div class="col-lg-3">
-                    <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                    <input type="text" class="form-control" asp-for="Responsable_Inspeccion">
-                </div>
-                <div class="col-lg-2">
-                    <label asp-for="Inspectores"></label>
-                </div>
-                <div class="col-lg-5">
-                    <span class="text-danger" asp-validation-for="Inspectores"></span>
-                    <input type="text" class="form-control" asp-for="Inspectores">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-2">
-                    <label asp-for="Objetivo"></label>
-                </div>
-                <div class="col-lg-10">
-                    <span class="text-danger" asp-validation-for="Objetivo"></span>
-                    <input type="text" class="form-control" asp-for="Objetivo">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-md-12">
-                    <button id="nueva_obs" type="submit" class="btn btn-primary float-right">Agregar Observación</button>
-                </div>
-            </div>
-            <div class="buttons d-flex justify-content-end">
-                <a type="button" class="btn btn-secondary mr-2" style="color:white;" asp-action="Resumen">Cancelar</a>
-                <button id="guardar_estado" type="submit" class="btn btn-primary">Guardar Estado</button>
-            </div>
-            <input type="hidden" asp-for="opcion" />
-        </form>
-    </div>*@

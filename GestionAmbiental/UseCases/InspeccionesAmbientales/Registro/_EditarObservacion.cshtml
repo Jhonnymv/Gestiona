@@ -33,7 +33,7 @@
                                         <label class="E_AsesorMedioAmbiente" style="display:none">Asesor MAP:</label>
                                         <label class="E_AsesorSeguridad" style="display:none">Asesor SSO:</label>
                                         <span class="text-danger" asp-validation-for="E_AsesorSeguridad"></span>
-                                        <input type="hidden" asp-for="E_AsesorSeguridad" style="display:none"/>
+                                        <input type="hidden" asp-for="E_AsesorSeguridad" style="display:none" />
                                         <select class="form-control E_AsesorMedioAmbiente" asp-items="@ViewBag.AsesoresMA" style="display:none"></select>
                                         <select class="form-control E_AsesorSeguridad" asp-items="@ViewBag.AsesoresSeguridad" style="display:none"></select>
                                     </div>
@@ -60,12 +60,19 @@
                                         <select class="form-control E_SEG-Condicion" asp-for="E_TipoCondicion" asp-items="@ViewBag.TiposCondicionSEG" style="display:none"></select>
                                     </div>
                                 </div>
-                                <div class="row input_container w-100">
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="E_DescripcionActoCondicion"></label>
+                                        <span class="text-danger" asp-validation-for="E_DescripcionActoCondicion"></span>
+                                        <textarea class="form-control" rows="1" asp-for="E_DescripcionActoCondicion" maxlength="400"></textarea>
+                                    </div>
                                     <div class="col-12 col-sm-6 col-lg-6">
                                         <label asp-for="E_FechaProgramada"></label>
                                         <span class="text-danger" asp-validation-for="E_FechaProgramada"></span>
                                         <input type="date" class="form-control" asp-for="E_FechaProgramada" />
                                     </div>
+                                </div>
+                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_NivelRiesgo"></label>
                                         <span class="text-danger" asp-validation-for="E_NivelRiesgo"></span>
@@ -73,30 +80,33 @@
                                             <option value="" style="background-color:white;color:black;">-- SELECCIONE --</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_AccionTomada"></label>
                                         <span class="text-danger" asp-validation-for="E_AccionTomada"></span>
                                         <input type="text" class="form-control" asp-for="E_AccionTomada" maxlength="250" />
                                     </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_ResponsableMarc"></label>
                                         <span class="text-danger" asp-validation-for="E_ResponsableMarc"></span>
                                         <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="E_ResponsableMarc"></select>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_ResponsableCont"></label>
                                         <span class="text-danger" asp-validation-for="E_ResponsableCont"></span>
                                         <input type="text" class="form-control" asp-for="E_ResponsableCont" />
                                         <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                                     </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="E_CorreoCont"></label>
+                                        <span class="text-danger" asp-validation-for="E_CorreoCont"></span>
+                                        <input type="email" class="form-control" asp-for="E_CorreoCont" maxlength="100"/>
+                                    </div>
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_Evidencia"></label>
-                                        @*<input type="hidden" asp-for="E_Evidencia" value="@Model.E_Evidencia[0]" />*@
-                                        @*<a asp-action="Download" asp-controller="Inspecciones" asp-route-fileName="@Model.E_Evidencia[0]">Evidencia</a>*@
                                         <input type="hidden" asp-for="E_Evidencia" />
                                         <button type="button" class="btn btn-mc-success form-control" id="E_EvidenciaDescarga" onclick="DescargarEvidenciaObservacion()">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

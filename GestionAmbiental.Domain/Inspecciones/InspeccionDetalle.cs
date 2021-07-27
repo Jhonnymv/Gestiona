@@ -17,6 +17,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string DescripcionAccion { get; set; }
         public Usuario ResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }
+        public string CorreoContratista { get; set; }
         public DateTime FechaProgramada { get; set; }
         public string EvidenciaImplementacion { get; set; }
         public string ComentarioImplementacion { get; set; }
@@ -25,6 +26,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public DateTime? FechaVerificacion { get; set; }
         public string ComentarioVerificacion { get; set; }
         public string Estado { get; set; }
+        public string DescripcionActoCondicion { get; set; }
                 
         public InspeccionDetalle(
             int id_Inspeccion_Cabecera,

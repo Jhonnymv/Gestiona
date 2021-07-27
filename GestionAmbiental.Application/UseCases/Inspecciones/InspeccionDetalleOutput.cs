@@ -15,6 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public string TipoInspeccion { get; set; }
         public int IdAsesor { get; set; }
         public string AsesorMASeguridad { get; set; }
+        public string DescripcionActoCondicion { get; set; }
         public string DescripcionCondicion { get; set; }
         public int IdTipoCondicion { get; set; }
         public string TipoCondicion { get; set; }
@@ -24,6 +25,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public string ResponsableMarcobre { get; set; }
         public int IdResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }
+        public string CorreoContratista { get; set; }
         public DateTime FechaProgramada { get; set; }
         public List<string> EvidenciaImplementacion { get; set; }
         public string ComentarioImplementacion { get; set; }
@@ -41,6 +43,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             IdInspeccionDetalle = detalle.IdInspeccionDetalle;
             TipoInspeccion = detalle.TipoObservacion;
             AsesorMASeguridad = detalle.Asesor.Nombres+ " " +detalle.Asesor.Apellidos;
+            DescripcionActoCondicion = detalle.DescripcionActoCondicion;
             DescripcionCondicion = detalle.DescripcionCondicion;
             TipoCondicion = detalle.TipoCondicion.Descripcion;
             IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
@@ -55,6 +58,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             DescripcionAccion = detalle.DescripcionAccion;
             ResponsableMarcobre = detalle.ResponsableMarcobre.Nombres + " " + detalle.ResponsableMarcobre.Apellidos;
             ResponsableContratista = detalle.ResponsableContratista;
+            CorreoContratista = detalle.CorreoContratista;
             IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
             FechaProgramada = detalle.FechaProgramada;
 
@@ -84,6 +88,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             IdInspeccionDetalle = detalle.IdInspeccionDetalle;
             TipoInspeccion = detalle.TipoObservacion;
             AsesorMASeguridad = detalle.Asesor.Nombres + " " + detalle.Asesor.Apellidos;
+            DescripcionActoCondicion = detalle.DescripcionActoCondicion;
             DescripcionCondicion = detalle.DescripcionCondicion;
             TipoCondicion = detalle.TipoCondicion.Descripcion;
             IdAsesor = detalle.Asesor.IdUsuario;
@@ -100,6 +105,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             ResponsableMarcobre = detalle.ResponsableMarcobre.Nombres + " " + detalle.ResponsableMarcobre.Apellidos;
             IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
             ResponsableContratista = detalle.ResponsableContratista;
+            CorreoContratista = detalle.CorreoContratista;
             FechaProgramada = detalle.FechaProgramada;
 
             if (detalle.EvidenciaImplementacion != null)

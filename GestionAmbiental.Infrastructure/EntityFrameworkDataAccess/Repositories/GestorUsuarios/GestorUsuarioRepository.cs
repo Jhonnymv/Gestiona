@@ -23,21 +23,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             try
             {
                 var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.usuario_red.Equals(usuario_red) && x.Estado.Equals("ACT"));
-
                 if (usuario != null)
                 {
                     var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
-
                     return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
-
-                    /*if (usuario.Id_Rol.Equals((int)InspeccionRol.Admin))
-                        return InspeccionRol.Admin;
-                    else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorMAP))
-                        return InspeccionRol.AsesorMAP;
-                    else if (usuario.Id_Rol.Equals((int)InspeccionRol.AsesorSSO))
-                        return InspeccionRol.AsesorSSO;
-                    else
-                        return InspeccionRol.Inspector;*/
                 }
                 else
                     return null;
