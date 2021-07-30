@@ -39,7 +39,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             _consultarInspeccionDescarga = consultarInspeccionDescarga;
             _info_SGA = info_SGA;
         }
-
+        
         public async Task<IActionResult> DescargaInspeccion(int IdCabecera)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -87,7 +87,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 sheet.GetRow(15).GetCell(7).SetCellValue(cabecera.ResponsableArea.Nombres + " " + cabecera.ResponsableArea.Apellidos);
                 //->RESPONSABLE DE LA INSPECCION:	
                 sheet.GetRow(15).GetCell(24).SetCellValue(cabecera.ResponsableInspeccion);
-                
                 //->OBJETIVO DE LA INSPECCIÓN: 	
                 sheet.GetRow(17).GetCell(7).SetCellValue(cabecera.Objetivo);
 

@@ -257,8 +257,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-
 
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
                 tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -287,16 +287,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                 ViewBag.EmpresasMC = empresasMC;
                 ViewBag.Responsables = responsables;
+                ViewBag.Usuarios = usuarios;
                 ViewBag.Tipo_Inspeccion = tiposInspeccion;
+                ViewBag.AsesoresMA = asesoresMA;
+                ViewBag.AsesoresSeguridad = asesoresSeguridad;
 
                 ViewBag.TiposActoMA = tiposActoMA;
                 ViewBag.TiposCondicionMA = tiposCondicionMA;
                 ViewBag.TiposActoSEG = tiposActoSEG;
                 ViewBag.TiposCondicionSEG = tiposCondicionSEG;
 
-                ViewBag.Responsables = responsables;
-                ViewBag.AsesoresMA = asesoresMA;
-                ViewBag.AsesoresSeguridad = asesoresSeguridad;
                 return View(new NuevaInspeccionModel());
             }
         }
@@ -492,6 +492,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.NivelRiesgo)
@@ -507,6 +508,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
+                        filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
@@ -584,6 +586,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -659,6 +662,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.NivelRiesgo)
@@ -674,6 +678,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
+                        filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor||observacion.PermisosAdmin))
                         {
@@ -685,6 +690,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                     ViewBag.EmpresasMC = empresasMC;
                     ViewBag.Responsables = responsables;
+                    ViewBag.Usuarios = usuarios;
                     ViewBag.Tipo_Inspeccion = tiposInspeccion;
                     ViewBag.nObservacioness = observaciones.Count;
                     ViewBag.Permiso = cabecera.Permiso;
@@ -695,7 +701,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.TiposActoSEG = tiposActoSEG;
                     ViewBag.TiposCondicionSEG = tiposCondicionSEG;
 
-                    ViewBag.Responsables = responsables;
                     ViewBag.CabeceraEncriptada = IdCabecera;
                     ViewBag.idCabecera = IdDesencriptado;
 
@@ -813,6 +818,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -865,6 +871,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                     ViewBag.EmpresasMC = empresasMC;
                     ViewBag.Responsables = responsables;
+                    ViewBag.Usuarios = usuarios;
                     ViewBag.Tipo_Inspeccion = tiposInspeccion;
                     ViewBag.nObservacioness = observaciones.Count;
                     ViewBag.Permiso = cabecera.Permiso;
@@ -875,7 +882,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ViewBag.TiposActoSEG = tiposActoSEG;
                     ViewBag.TiposCondicionSEG = tiposCondicionSEG;
 
-                    ViewBag.Responsables = responsables;
                     ViewBag.CabeceraEncriptada = IdCabecera;
                     ViewBag.idCabecera = IdDesencriptado;
 

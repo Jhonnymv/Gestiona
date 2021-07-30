@@ -8,8 +8,8 @@ $('.next-btn').click( function (){
     let empty_inputs = 0;
 
     $('#' + actual_id_pill + ' input').each(function () {
-        if ($(this).attr('readonly') === undefined && $(this).is(':disabled') === false) {
-            if ($(this).val() === '') {
+        if ($(this).attr('readonly') === undefined && $(this).is(':disabled') === false && $(this).attr("type") != "search") {
+            if ($(this).val() === '' || $(this).val() === '[]') {
                 empty_inputs++;
             }
         }

@@ -69,9 +69,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
                 var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
-                filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                filtroUsuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.Empresas = filtroEmpresas;
                 ViewBag.Usuarios = filtroUsuarios;
@@ -189,6 +187,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.NivelRiesgo)
@@ -204,6 +203,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
+                        filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.ComentarioImplementacion + "</td>";
@@ -215,6 +215,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         EvidenciasCondicion = JsonConvert.SerializeObject(x.EvidenciaCondicion),
                         TipoInspeccion = x.TipoInspeccion,
                         Asesor = x.AsesorMASeguridad,
+                        DescripcionActoCondicion = x.DescripcionActoCondicion,
                         DescripcionCondicion = x.DescripcionCondicion,
                         TipoCondicion = x.TipoCondicion,
                         NivelRiesgo = x.NivelRiesgo,

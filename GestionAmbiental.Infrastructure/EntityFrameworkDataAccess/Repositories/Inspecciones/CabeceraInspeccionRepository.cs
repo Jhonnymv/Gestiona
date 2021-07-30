@@ -2,6 +2,8 @@
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Inspecciones;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -47,8 +49,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     observaciones = observaciones.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
                 if (estadoFiltro.Count > 0)
                     observaciones = observaciones.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
-                cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
             }
+            cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -141,9 +143,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 if (responsableFiltro.Length > 0)
                     obsPendImp = obsPendImp.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
                 if (asesorFiltro.Length > 0)
-                    obsPendImp = obsPendImp.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();               
-                cabeceras = cabeceras.Where(x => obsPendImp.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+                    obsPendImp = obsPendImp.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
             }
+            cabeceras = cabeceras.Where(x => obsPendImp.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -163,7 +165,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<InspeccionCabecera> GetInspeccionCabeceraImplementacion(int idCabecera)
         {
-            var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -174,19 +176,26 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario,item.Id_Rol,item.Nombres,item.Apellidos,item.Email));
             }
             var output = new InspeccionCabecera();
-            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
-            output.Codigo = cabeccera.Codigo;
-            output.Objetivo = cabeccera.Objetivo;
-            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia)).Descripcion;
-            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabeccera.Id_Empresa)).Razon_Social;
-            output.AreaInspeccionada = cabeccera.Area_Inspeccionada;
-            output.ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabeccera.Id_Responsable_Area));
-            output.FechaInspeccion = cabeccera.Fecha_Inspeccion;
+            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabecera.Codigo;
+            output.Objetivo = cabecera.Objetivo;
+            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
+            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
+            output.AreaInspeccionada = cabecera.Area_Inspeccionada;
+            output.ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabecera.Id_Responsable_Area));
+            output.FechaInspeccion = cabecera.Fecha_Inspeccion;
             output.NObservaciones = observaciones.Count;
-            output.Participantes = cabeccera.Participantes;
-            output.Estado = cabeccera.Estado;
-            output.TipoInspeccion = cabeccera.Tipo_Inspeccion;
-            output.ResponsableInspeccion = cabeccera.Responsable_Inspeccion;
+            output.Participantes = cabecera.Participantes;
+            output.Estado = cabecera.Estado;
+            output.TipoInspeccion = cabecera.Tipo_Inspeccion; 
+            if (!IsValidJson(cabecera.Responsable_Inspeccion))
+                output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
+            else
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
+                output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+            }
             return output;
         }
 
@@ -219,8 +228,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     obsPendVer = obsPendVer.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
                 if (asesorFiltro.Length > 0)
                     obsPendVer = obsPendVer.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
-                cabeceras = cabeceras.Where(x => obsPendVer.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
             }
+            cabeceras = cabeceras.Where(x => obsPendVer.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
@@ -242,28 +251,36 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera)
         {
-            var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
+            var cabecera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera) && x.Estado != EstadosInspeccion.Eliminado.ToString()).ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
-            var responsable_area = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(cabeccera.Id_Responsable_Area));
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var responsable_area = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Area));
 
             var responsable_area_domain = new Domain.ValueObjects.Usuario(responsable_area.Id_Usuario, responsable_area.Id_Rol, responsable_area.Nombres, responsable_area.Apellidos, responsable_area.Email);
 
             var output = new InspeccionCabecera();
-            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
-            output.Codigo = cabeccera.Codigo;
-            output.Objetivo = cabeccera.Objetivo;
-            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabeccera.Id_Gerencia)).Descripcion;
-            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabeccera.Id_Empresa)).Razon_Social;
-            output.AreaInspeccionada = cabeccera.Area_Inspeccionada;
+            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
+            output.Codigo = cabecera.Codigo;
+            output.Objetivo = cabecera.Objetivo;
+            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
+            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
+            output.AreaInspeccionada = cabecera.Area_Inspeccionada;
             output.ResponsableArea = responsable_area_domain;
-            output.FechaInspeccion = cabeccera.Fecha_Inspeccion;
+            output.FechaInspeccion = cabecera.Fecha_Inspeccion;
             output.NObservaciones = observaciones.Count;
-            output.Participantes = cabeccera.Participantes;
-            output.Estado = cabeccera.Estado;
-            output.TipoInspeccion = cabeccera.Tipo_Inspeccion;
-            output.ResponsableInspeccion = cabeccera.Responsable_Inspeccion;
+            output.Participantes = cabecera.Participantes;
+            output.Estado = cabecera.Estado;
+            output.TipoInspeccion = cabecera.Tipo_Inspeccion;
+            if (!IsValidJson(cabecera.Responsable_Inspeccion))
+                output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
+            else
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
+                output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+            }
             return output;
         }
         public async Task<InspeccionCabecera> GetInspeccionCabeceraDescarga(int idCabecera)
@@ -299,7 +316,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Participantes = cabecera.Participantes;
             output.Estado = cabecera.Estado;
             output.TipoInspeccion = cabecera.Tipo_Inspeccion;
-            output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
+            if (!IsValidJson(cabecera.Responsable_Inspeccion))
+                output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
+            else
+            {
+                var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
+                output.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+            }
             
 
             output.Observaciones = new List<InspeccionDetalle>();
@@ -328,6 +352,47 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Observaciones.Add(obs);
             }
             return output;
+        }        
+        private static bool IsValidJson(string strInput)
+        {
+            if (string.IsNullOrWhiteSpace(strInput)) { return false; }
+            strInput = strInput.Trim();
+            if ((strInput.StartsWith("{") && strInput.EndsWith("}")) || //For object
+                (strInput.StartsWith("[") && strInput.EndsWith("]"))) //For array
+            {
+                try
+                {
+                    var obj = JToken.Parse(strInput);
+                    return true;
+                }
+                catch (JsonReaderException jex)
+                {
+                    //Exception in parsing json
+                    Console.WriteLine(jex.Message);
+                    return false;
+                }
+                catch (Exception ex) //some other exception
+                {
+                    Console.WriteLine(ex.ToString());
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        private static string ConcatUsingComa(List<string> lista)
+        {
+            string nuevo_texto = "";
+
+            for (int i = 0; i < lista.Count; i++)
+            {
+                nuevo_texto += lista[i]+", ";
+            }
+
+            nuevo_texto = nuevo_texto.Remove(nuevo_texto.Length - 2);
+            return nuevo_texto;
         }
     }
 }

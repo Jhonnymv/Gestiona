@@ -49,16 +49,16 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Responsable de la Inspección</label>
-                            <input type="text" class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" readonly="readonly">
+                        <div class="col-12">
+                            <label>Responsables de la Inspección</label>
+                            <textarea class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" rows="2" readonly>@ViewBag.Cabecera.ResponsableInspeccion</textarea>
                         </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Participantes de la Inspección</label>
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.Participantes" readonly="readonly">
                         </div>
-                    </div>
-                    <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Objetivo de Inspección</label>
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.Objetivo" readonly="readonly">
@@ -79,12 +79,14 @@
                                             <th>Tipo de Observación</th>
                                             <th>Asesor de MAP/SSO</th>
                                             <th>Acto/Condición Subestándar Identificada</th>
+                                            <th>Descripción del Acto/Condición Subestándar</th>
                                             <th>Tipo de Condición/Acto Subestándar</th>
                                             <th>Evidencia</th>
                                             <th>Nivel de Riesgo</th>
                                             <th>Acción Preventiva / Correctiva Tomada</th>
                                             <th>Responsable Marcobre</th>
                                             <th>Responsable Contratista</th>
+                                            <th>Correo Contratista</th>
                                             <th>Fecha Programada</th>
                                         </tr>
                                     </thead>
@@ -169,6 +171,7 @@
                 $("#idObs").val(data.IdObservacion);
                 $("#TipoInspeccion").val(data.TipoInspeccion);
                 $("#AsesorSeguridad").val(data.Asesor);
+                $("#DescripcionActoCondicion").val(data.DescripcionActoCondicion);
                 $("#CondicionIdentificada").val(data.DescripcionCondicion);
                 $("#TipoCondicion").val(data.TipoCondicion);
                 $("#FechaProgramada").val(data.FechaProgramada);

@@ -84,8 +84,8 @@
                                         <input type="text" class="form-control" asp-for="AccionTomada" maxlength="250" />
                                     </div>
                                 </div>
-                                <div class="row input_container w-100">
-                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6">
                                         <label asp-for="ResponsableMarc"></label>
                                         <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
                                         <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>

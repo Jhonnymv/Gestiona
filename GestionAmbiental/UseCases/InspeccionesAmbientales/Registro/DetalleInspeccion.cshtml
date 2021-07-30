@@ -5,7 +5,9 @@
     ViewData["Title"] = "Detalle Inspeccion";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+}
 @{
     Html.RenderPartial("_EditarObservacion", new EditarObservacionModel());
 }
@@ -74,10 +76,17 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-6 col-lg-6">
+                        <input type="hidden" class="form-control" asp-for="Responsable_Inspeccion">
+                        <div class="col-12 col-sm-6 col-lg-6" id="Responsable_List_Group" disabled style="display:none">
                             <label asp-for="Responsable_Inspeccion"></label>
                             <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
-                            <input type="text" class="form-control" asp-for="Responsable_Inspeccion" readonly>
+                            <select id="Responsable_Inspeccion_List" name="Responsable_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple disabled>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-6" id="Responsable_Text_Group" style="display:none">
+                            <label asp-for="Responsable_Inspeccion"></label>
+                            <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
+                            <input id="Responsable_Inspeccion_Text" type="text" class="form-control" readonly>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label asp-for="Inspectores"></label>
@@ -106,12 +115,14 @@
                                             <th>Tipo de Observación</th>
                                             <th>Asesor de MAP/SSO</th>
                                             <th>Acto/Condición Subestándar Identificada</th>
+                                            <th>Descripción del Acto/Condición Subestándar</th>
                                             <th>Tipo de Condición/Acto Subestándar</th>
                                             <th>Evidencia</th>
                                             <th>Nivel de Riesgo</th>
                                             <th>Acción Preventiva / Correctiva Tomada</th>
                                             <th>Responsable Marcobre</th>
                                             <th>Responsable Contratista</th>
+                                            <th>Correo Contratista</th>
                                             <th>Fecha Programada</th>
                                             <th colspan="2"></th>
                                             <th></th>
@@ -190,6 +201,8 @@
     </div>
 </div>
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
 
@@ -206,9 +219,23 @@
                 $('#Inspectores').prop('readonly', false);
                 $('#Hora_Inspeccion').prop('readonly', false);
                 $('#Fecha_Inspeccion').prop('readonly', false);
-                $('#Responsable_Inspeccion').prop('readonly', false);
                 $('#Objetivo').prop('readonly', false);
                 $('#Tipo_Inspeccion').prop('disabled', false);
+            }
+            var responsable_inspeccion = $("#Responsable_Inspeccion").val();
+            if (isJson(responsable_inspeccion)) {
+                $("#Responsable_List_Group").show();
+                $("#Responsable_Text_Group").hide();
+                $("#Responsable_Inspeccion_List").val(JSON.parse(responsable_inspeccion));
+                if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()))
+                    $('#Responsable_Inspeccion_List').prop('disabled', false);
+            }
+            else {
+                $("#Responsable_List_Group").hide();
+                $("#Responsable_Text_Group").show();
+                $("#Responsable_Inspeccion_Text").val(responsable_inspeccion);
+                if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()))
+                    $('#Responsable_Inspeccion_Text').prop('readonly', false);
             }
             dataModulo();
             ConsultarObservaciones();
@@ -231,6 +258,14 @@
                     }
                 }
             });
+        }
+        function isJson(str) {
+            try {
+                JSON.parse(str);
+            } catch (e) {
+                return false;
+            }
+            return true;
         }
         $("#guardar").click(function () {
             $("#opcion").val("Guardar");
@@ -317,6 +352,13 @@
             });
 
         }
+        $("#Responsable_Inspeccion_List").change(function () {
+            var data = $("#Responsable_Inspeccion_List").val();
+            $("#Responsable_Inspeccion").val(JSON.stringify(data));
+        });
+        $("#Responsable_Inspeccion_Text").change(function () {
+            $("#Responsable_Inspeccion").val($("#Responsable_Inspeccion_Text").val());
+        });
     </script>
     @*Scripts partial Nueva Observación*@
     <script>
