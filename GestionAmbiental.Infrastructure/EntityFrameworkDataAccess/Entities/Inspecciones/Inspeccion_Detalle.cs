@@ -21,11 +21,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Condicion { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Tipo_Condicion { get; set; }
+        public int? Id_Tipo_Condicion { get; set; }
         [Column(TypeName = "text")]
         public string Evidencia_Condicion { get; set; }
         [Column(TypeName = "varchar(10)")]
-        public string Nivel_Riesgo { get; set; }
+        public string? Nivel_Riesgo { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Accion { get; set; }
         [Column(TypeName = "int")]
@@ -35,7 +35,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         [Column(TypeName = "varchar(100)")]
         public string Correo_Contratista { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime Fecha_Programada { get; set; }
+        public DateTime? Fecha_Programada { get; set; }
         [Column(TypeName = "text")]
         public string Evidencia_Implementacion { get; set; }
         [Column(TypeName = "varchar(250)")]

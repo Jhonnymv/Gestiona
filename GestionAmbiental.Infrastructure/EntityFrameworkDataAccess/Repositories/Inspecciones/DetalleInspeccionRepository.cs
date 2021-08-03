@@ -32,12 +32,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var responsableMarc = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
                 var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor));
                 var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
-                detalles.Add(new InspeccionDetalle {
+                var detalle = new InspeccionDetalle
+                {
                     IdInspeccionCabecera = item.Id_Inspeccion_Cabecera,
                     IdInspeccionDetalle = item.Id_Inspeccion_Detalle,
                     TipoObservacion = item.Tipo_Observacion,
                     DescripcionCondicion = item.Descripcion_Condicion,
-                    TipoCondicion = new Domain.ValueObjects.TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo),
                     EvidenciaCondicion = item.Evidencia_Condicion,
                     NivelRiesgo = item.Nivel_Riesgo,
                     DescripcionAccion = item.Descripcion_Accion,
@@ -48,12 +48,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     EvidenciaImplementacion = item.Evidencia_Implementacion,
                     ComentarioImplementacion = item.Comentario_Implementacion,
                     FechaCierre = item.Fecha_Cierre,
-                    Asesor = new Domain.ValueObjects.Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres,responsableMA.Apellidos, responsableMA.Email),
+                    Asesor = new Domain.ValueObjects.Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email),
                     FechaVerificacion = item.Fecha_Verificacion,
                     ComentarioVerificacion = item.Comentario_Verificacion,
                     Estado = item.Estado,
                     DescripcionActoCondicion = item.Descripcion_Acto_Condicion
-                });
+                };
+                if (tipoCondicion != null)
+                    detalle.TipoCondicion = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
+
+                detalles.Add(detalle);
             }
             
             return detalles;

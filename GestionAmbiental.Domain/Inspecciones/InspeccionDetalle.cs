@@ -11,14 +11,14 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int IdInspeccionDetalle { get; set; }
         public string TipoObservacion { get; set; }
         public string DescripcionCondicion { get; set; }
-        public TipoCondicion TipoCondicion { get; set; }
+        public TipoCondicion? TipoCondicion { get; set; }
         public string EvidenciaCondicion { get; set; }
-        public string NivelRiesgo { get; set; }
+        public string? NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
         public Usuario ResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }
         public string CorreoContratista { get; set; }
-        public DateTime FechaProgramada { get; set; }
+        public DateTime? FechaProgramada { get; set; }
         public string EvidenciaImplementacion { get; set; }
         public string ComentarioImplementacion { get; set; }
         public DateTime? FechaCierre { get; set; }

@@ -179,7 +179,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         }
                         evidencia_implementacion += "</label>";
                         filaObservacion += "<tr>";
-                        if (observacion.EvidenciaImplementacion != null && observacion.EvidenciaImplementacion.Count != 0 && observacion.Estado != EstadosInspeccion.Aprobado.ToString() && observacion.Estado != EstadosInspeccion.Rechazado.ToString() && observacion.PermisosAsesor)
+                        if (observacion.Estado == EstadosInspeccion.Implementado.ToString() && observacion.PermisosAsesor)
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"VerificarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Verificar" + "</button></td>";
                         else
                             filaObservacion += "<td></td>";
@@ -204,7 +204,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
                         filaObservacion += "<td>" + evidencia_implementacion + "</td>";
                         filaObservacion += "<td>" + observacion.ComentarioImplementacion + "</td>";
                         filaObservacion += "</tr>";
@@ -222,7 +222,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                         Accion = x.DescripcionAccion,
                         ResponsableMarc = x.ResponsableMarcobre,
                         ResponsableCont = x.ResponsableContratista,
-                        FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
+                        FechaProgramada = x.FechaProgramada.HasValue ? x.FechaProgramada.Value.ToString("yyyy-MM-dd") : "",
                         Estado = x.Estado,
                         EvidenciasImplementacion = JsonConvert.SerializeObject(x.EvidenciaImplementacion),
                         Comentario = x.ComentarioImplementacion,
@@ -262,7 +262,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
                 model.AccionTomada = observacion.DescripcionAccion;
                 model.ResponsableMarc = observacion.ResponsableMarcobre;
                 model.ResponsableCont = observacion.ResponsableContratista;
-                model.FechaProgramada = observacion.FechaProgramada.ToShortDateString();
+                model.FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "";
                 model.EvidenciasImplementacion = observacion.EvidenciaImplementacion;
                 model.ComentarioImplementacion = observacion.ComentarioImplementacion;
 

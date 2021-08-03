@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
         }
 
         public async Task<int> Execute(
-            int Id_Inspeccion_Cabecera, string Tipo_Inspeccion, int Asesor_MA_Seguridad, string Descripcion_Acto_Condicion, string Descripcion_Condicion, int Id_Tipo_Condicion, List<string> Evidencia_Condicion,
+            int Id_Inspeccion_Cabecera, string Tipo_Inspeccion, int Asesor_MA_Seguridad, string Descripcion_Acto_Condicion, string Descripcion_Condicion, int? Id_Tipo_Condicion, List<string> Evidencia_Condicion,
             string Nivel_Riesgo_Ambiental, string Descripcion_Accion, int Id_Responsable_Marcobre, string Responsable_Contratista, string Correo_Contratista,
             string Fecha_Programada, string usuario_red)
         {
@@ -41,8 +41,9 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
                 IdResponsableMarcobre = Id_Responsable_Marcobre,
                 ResponsableContratista = Responsable_Contratista,
                 CorreoContratista = Correo_Contratista,
-                FechaProgramada = Convert.ToDateTime(Fecha_Programada)
             };
+            if (Fecha_Programada != null && Fecha_Programada.Length > 0)
+                detalle.FechaProgramada = Convert.ToDateTime(Fecha_Programada);
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 
             return await _registarInspeccionReadOnlyRepository.RegistrarInspeccionDetalle(detalle, Id_Usuario);

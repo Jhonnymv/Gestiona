@@ -72,39 +72,78 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 Log.Error(e.Message);
             }
             var info = await _getNuevaInspeccionInfo.Execute(IdCabecera);
-            var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "NuevaObservacion.html");
-            StreamReader SourceReader = System.IO.File.OpenText(template);
-            var templateReaded = SourceReader.ReadToEnd();
-
+            var template = "";
             foreach (var observacion in info.Observaciones)
             {
-                var msgBody = string.Format(templateReaded,
-                info.Gerencia,
-                info.Empresa,
-                info.AreaInspeccionada,
-                info.TipoInspeccion,
-                info.FechaInspeccion,
-                info.ResponsableArea.Nombres + " " + info.ResponsableArea.Apellidos,
-                info.ResponsableInspeccion,
-                info.Participantes,
-                info.Objetivo,
-                observacion.TipoObservacion,
-                observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
-                observacion.DescripcionCondicion,
-                observacion.TipoCondicion.Descripcion,
-                observacion.NivelRiesgo,
-                observacion.DescripcionAccion,
-                observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
-                observacion.ResponsableContratista,
-                observacion.FechaProgramada.ToShortDateString(),
-                info.Codigo,
-                _protector.Protect(IdCabecera.ToString()),
-                r,
-                g,
-                b,
-                img_url
-                );
-
+                if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                    template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "NuevaObservacion.html");
+                else
+                    template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
+                StreamReader SourceReader = System.IO.File.OpenText(template);
+                var templateReaded = SourceReader.ReadToEnd();
+                var msgBody = "";
+                if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                {
+                    msgBody = string.Format(templateReaded,
+                        info.Gerencia,
+                        info.Empresa,
+                        info.AreaInspeccionada,
+                        info.TipoInspeccion,
+                        info.FechaInspeccion,
+                        info.ResponsableArea.Nombres + " " + info.ResponsableArea.Apellidos,
+                        info.ResponsableInspeccion,
+                        info.Participantes,
+                        info.Objetivo,
+                        observacion.TipoObservacion,
+                        observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
+                        observacion.DescripcionCondicion,
+                        observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
+                        observacion.DescripcionActoCondicion,
+                        observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
+                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
+                        observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                        observacion.ResponsableContratista,
+                        (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
+                        info.Codigo,
+                        _protector.Protect(IdCabecera.ToString()),
+                        r,
+                        g,
+                        b,
+                        img_url
+                        );
+                }
+                else
+                {
+                    msgBody = string.Format(templateReaded,
+                        info.Gerencia,
+                        info.Empresa,
+                        info.AreaInspeccionada,
+                        info.TipoInspeccion,
+                        info.FechaInspeccion,
+                        info.ResponsableArea.Nombres + " " + info.ResponsableArea.Apellidos,
+                        info.ResponsableInspeccion,
+                        info.Participantes,
+                        info.Objetivo,
+                        observacion.TipoObservacion,
+                        observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
+                        observacion.DescripcionCondicion,
+                        observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
+                        observacion.DescripcionActoCondicion,
+                        observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
+                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
+                        observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                        observacion.ResponsableContratista,
+                        (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
+                        info.Codigo,
+                        _protector.Protect(IdCabecera.ToString()),
+                        r,
+                        g,
+                        b,
+                        img_url,
+                        "No Aplica", //Comentario Implementacion
+                        "No Aplica" //Fecha Implementacion
+                        );
+                }
                 var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
                 string smtp = "", port = "", user = "", pass = "", mailFrom = "";
                 foreach (var item in credenciales.Info)
@@ -125,7 +164,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
-                msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                if(!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                    msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                else
+                    msg.To.Add(new MailAddress(observacion.Asesor.Email));
                 msg.Subject = "Nueva Observacion Asignada";
                 msg.SubjectEncoding = Encoding.UTF8;
                 msg.IsBodyHtml = true;
@@ -135,6 +177,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 await mail.SendMailAsync(msg);
                 mail.Dispose();
                 msg.Dispose();
+                SourceReader.Close();
             }
             var IdEncriptado = _protector.Protect(IdCabecera.ToString());
             return RedirectToAction("DetalleInspeccion", "Inspecciones", new { IdCabecera = IdEncriptado });
@@ -168,32 +211,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var info = await _getObservacionImplementada.Execute(IdObsDesencriptado);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
-            var templateReaded = SourceReader.ReadToEnd();
-            /*
-                        Área Ejecutora{0}
-                        Empresa{1}
-                        Área Inspeccionada{2}
-                        Tipo Inspección{3}
-                        Fecha Inspección{4}
-                        Responsable Lugar Inspeccionado{5}
-                        Responsable de la inspección{6}
-                        Participantes {7}
-                        Objetivo de la Inspección{8}
-
-                        TipoInspeccion{9}
-                        Asesor SSO/MAP{10}
-                        Acto / Condición Subestándar Identificada{11}
-                        Tipo de Condición / Acto Subestándar{12}
-                        Nivel de Riesgo del Aspecto Ambiental{13}
-                        Acción Preventiva / Correctiva Tomada{14}
-                        Responsable Marcobre{15}
-                        Responsable Contratista{16}
-                        Fecha Programada{17}
-                        Comentario de la Implementación{18}
-                        Fecha Implementación {19}
-                        Codigo {20}
-                        Id_Cabecera{21}
-                        */
+            var templateReaded = SourceReader.ReadToEnd();            
             var msgBody = string.Format(templateReaded,
                 info.AreaEjecutora,
                 info.Empresa,
@@ -205,6 +223,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.Participantes,
                 info.Objetivo,
                 info.TipoObservacion,
+                info.DescripcionActoCondicion,
                 info.Asesor,
                 info.DescripcionCondicion,
                 info.TipoCondicion,
@@ -212,7 +231,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.DescripcionAccion,
                 info.ResponsableMarcobre,
                 info.ResponsableContratista,
-                info.FechaProgramada.ToShortDateString(),
+                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
                 info.Codigo,
                 _protector.Protect(info.IdInspeccionCabecera.ToString()),
                 r,
@@ -285,33 +304,6 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionRechazada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
-            /*
-                        Área Ejecutora{0}
-                        Empresa{1}
-                        Área Inspeccionada{2}
-                        Tipo Inspección{3}
-                        Fecha Inspección{4}
-                        Responsable Lugar Inspeccionado{5}
-                        Responsable de la inspección{6}
-                        Participantes {7}
-                        Objetivo de la Inspección{8}
-
-                        TipoInspeccion{9}
-                        Asesor SSO/MAP{10}
-                        Acto / Condición Subestándar Identificada{11}
-                        Tipo de Condición / Acto Subestándar{12}
-                        Nivel de Riesgo del Aspecto Ambiental{13}
-                        Acción Preventiva / Correctiva Tomada{14}
-                        Responsable Marcobre{15}
-                        Responsable Contratista{16}
-                        Fecha Programada{17}
-                        Comentario de la Implementación{18}
-                        Fecha Implementación {19}                        
-                        Comentario de la Verificación{20}
-                        Fecha Verificación {21}
-                        Codigo {22}
-                        Id_Cabecera{23}
-                        */
             var msgBody = string.Format(templateReaded,
                info.AreaEjecutora,
                info.Empresa,
@@ -326,11 +318,12 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                info.Asesor,
                info.DescripcionCondicion,
                info.TipoCondicion,
+               info.DescripcionActoCondicion,
                info.NivelRiesgo,
                info.DescripcionAccion,
                info.ResponsableMarcobre,
                info.ResponsableContratista,
-               info.FechaProgramada.ToShortDateString(),
+               info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
                info.Codigo,
                _protector.Protect(info.IdInspeccionCabecera.ToString()),
                r,

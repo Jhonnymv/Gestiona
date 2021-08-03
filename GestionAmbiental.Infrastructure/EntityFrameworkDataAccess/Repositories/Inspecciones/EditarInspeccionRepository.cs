@@ -61,10 +61,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Id_Asesor = detalle.IdAsesorMASeguridad == detalleEntity.Id_Asesor ? detalleEntity.Id_Asesor : detalle.IdAsesorMASeguridad;
             detalleEntity.Descripcion_Acto_Condicion = detalle.DescripcionActoCondicion == detalleEntity.Descripcion_Acto_Condicion ? detalleEntity.Descripcion_Acto_Condicion : detalle.DescripcionActoCondicion;
             detalleEntity.Descripcion_Condicion = detalle.DescripcionCondicion == detalleEntity.Descripcion_Condicion ? detalleEntity.Descripcion_Condicion : detalle.DescripcionCondicion;
-            detalleEntity.Id_Tipo_Condicion = detalle.IdTipoCondicion == detalleEntity.Id_Tipo_Condicion ? detalleEntity.Id_Tipo_Condicion : detalle.IdTipoCondicion;
+            detalleEntity.Id_Tipo_Condicion = detalle.IdTipoCondicion;
             detalleEntity.Evidencia_Condicion = detalle.EvidenciaCondicion == detalleEntity.Evidencia_Condicion ? detalleEntity.Evidencia_Condicion : detalle.EvidenciaCondicion;
-            detalleEntity.Nivel_Riesgo = detalle.NivelRiesgo == detalleEntity.Nivel_Riesgo ? detalleEntity.Nivel_Riesgo : detalle.NivelRiesgo;
-            detalleEntity.Descripcion_Accion = detalle.DescripcionAccion == detalleEntity.Descripcion_Accion ? detalleEntity.Descripcion_Accion : detalle.DescripcionAccion;
+            detalleEntity.Nivel_Riesgo = detalle.NivelRiesgo;
+            detalleEntity.Descripcion_Accion = detalle.DescripcionAccion;
             detalleEntity.Id_Responsable_Marcobre = detalle.IdResponsableMarcobre == detalleEntity.Id_Responsable_Marcobre ? detalleEntity.Id_Responsable_Marcobre : detalle.IdResponsableMarcobre;
             detalleEntity.Responsable_Contratista = detalleEntity.Responsable_Contratista == detalle.ResponsableContratista ? detalleEntity.Responsable_Contratista : detalle.ResponsableContratista;
             detalleEntity.Correo_Contratista = detalleEntity.Correo_Contratista == detalle.CorreoContratista ? detalleEntity.Correo_Contratista : detalle.CorreoContratista;
@@ -74,16 +74,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.Inspecciones_Detalle.Update(detalleEntity);
             await _context.SaveChangesAsync();
 
-           var log = new Log_Inspeccion();
-           var bkp = JsonConvert.SerializeObject(detalleEntity);
-           log.Bkp = bkp;
-           log.Fecha = DateTime.Now;
-           log.Id_Inspeccion_Cabecera = detalleEntity.Id_Inspeccion_Cabecera;
-           log.Id_Usuario = idUsuario;
-           log.Tipo = TipoAccion.UPDATE.ToString();
+            var log = new Log_Inspeccion();
+            var bkp = JsonConvert.SerializeObject(detalleEntity);
+            log.Bkp = bkp;
+            log.Fecha = DateTime.Now;
+            log.Id_Inspeccion_Cabecera = detalleEntity.Id_Inspeccion_Cabecera;
+            log.Id_Usuario = idUsuario;
+            log.Tipo = TipoAccion.UPDATE.ToString();
 
-           _context.Log_Inspecciones.Add(log);
-           await _context.SaveChangesAsync();
+            _context.Log_Inspecciones.Add(log);
+            await _context.SaveChangesAsync();
         }
         public async Task EliminarInspeccionDetalle(int IdObservacion,int idUsuario)
         {
@@ -107,6 +107,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var codigo = await _context.Inspecciones_Cabecera.Where(x => x.Estado.Equals(EstadosInspeccion.Registrado.ToString())).OrderBy(x=>x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
             return codigo;
+        }
+        public async Task ActualizarEstadoBuenasPracticas(int IdCabecera)
+        {
+            var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(IdCabecera) && !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())).ToListAsync();
+            foreach(var item in observaciones)
+            {
+                if (item.Descripcion_Condicion.Equals("Buenas Prácticas"))
+                    item.Estado = EstadosInspeccion.Implementado.ToString();
+            }
+            _context.Inspecciones_Detalle.UpdateRange(observaciones);
+            await _context.SaveChangesAsync();
         }
     }
 }

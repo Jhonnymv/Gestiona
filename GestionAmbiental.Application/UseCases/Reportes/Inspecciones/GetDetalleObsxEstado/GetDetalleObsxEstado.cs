@@ -57,7 +57,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
                     itemOutput.Tipo_Condicion = subitem.TipoCondicion.Descripcion;
                     itemOutput.Nivel_Riesgo = subitem.NivelRiesgo;
                     itemOutput.Responsable = subitem.ResponsableMarcobre.Nombres + " " + subitem.ResponsableMarcobre.Apellidos;
-                    itemOutput.Fecha_Programada = subitem.FechaProgramada.ToString("dd/MM/yyyy");
+                    itemOutput.Fecha_Programada = subitem.FechaProgramada.HasValue? subitem.FechaProgramada.Value.ToString("dd/MM/yyyy"):"";
                     output.Add(itemOutput);
                 }
             }

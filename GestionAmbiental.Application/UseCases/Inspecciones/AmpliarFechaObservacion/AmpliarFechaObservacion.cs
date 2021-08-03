@@ -26,22 +26,33 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
         {
             var data_obs = await _detalleInspeccionReadOnlyRepository.GetInspeccionDetalle(idObservacion);
 
-            var observacion = new NuevaInspeccionDetalle();
-            
-            observacion.IdInspeccionDetalle = idObservacion;
-            observacion.TipoInspeccion = data_obs.TipoObservacion;
-            observacion.IdAsesorMASeguridad = data_obs.Asesor.IdUsuario;
-            observacion.DescripcionActoCondicion = data_obs.DescripcionActoCondicion;
-            observacion.DescripcionCondicion = data_obs.DescripcionCondicion;
-            observacion.IdTipoCondicion = data_obs.TipoCondicion.IdTipoCondicion;
-            observacion.EvidenciaCondicion = data_obs.EvidenciaCondicion;
-            observacion.NivelRiesgo = data_obs.NivelRiesgo;
-            observacion.DescripcionAccion = data_obs.DescripcionAccion;
-            observacion.IdResponsableMarcobre = data_obs.ResponsableMarcobre.IdUsuario;
-            observacion.ResponsableContratista = data_obs.ResponsableContratista;
-            observacion.CorreoContratista = data_obs.CorreoContratista;            
-            observacion.FechaProgramada = Convert.ToDateTime(nuevaFecha);
-            observacion.Estado = EstadosInspeccion.Ampliado.ToString();
+            var observacion = new NuevaInspeccionDetalle
+            {
+                IdInspeccionDetalle = idObservacion,
+                TipoInspeccion = data_obs.TipoObservacion,
+                IdAsesorMASeguridad = data_obs.Asesor.IdUsuario,
+                DescripcionActoCondicion = data_obs.DescripcionActoCondicion,
+                DescripcionCondicion = data_obs.DescripcionCondicion,
+                EvidenciaCondicion = data_obs.EvidenciaCondicion,
+                IdResponsableMarcobre = data_obs.ResponsableMarcobre.IdUsuario,
+                ResponsableContratista = data_obs.ResponsableContratista,
+                CorreoContratista = data_obs.CorreoContratista,
+                Estado = EstadosInspeccion.Ampliado.ToString()
+            };
+            if (data_obs.DescripcionCondicion== "Buenas Prácticas")
+            {
+                observacion.NivelRiesgo = null;
+                observacion.IdTipoCondicion = null;
+                observacion.FechaProgramada = null;
+                observacion.DescripcionAccion = null;
+            }
+            else
+            {
+                observacion.NivelRiesgo = data_obs.NivelRiesgo;
+                observacion.IdTipoCondicion = data_obs.TipoCondicion.IdTipoCondicion;
+                observacion.FechaProgramada = Convert.ToDateTime(nuevaFecha);
+                observacion.DescripcionAccion = data_obs.DescripcionAccion;
+            }
 
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 

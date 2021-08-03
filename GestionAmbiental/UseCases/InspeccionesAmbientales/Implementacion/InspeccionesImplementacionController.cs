@@ -190,7 +190,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
                         if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || 
                             observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) || 
-                            observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString())) &&
+                            (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()) && !observacion.DescripcionCondicion.Equals("Buenas Prácticas"))) &&
                             observacion.PermisosImplementar)                        
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"ImplementarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Implementar" + "</button></td>";
                         
@@ -222,7 +222,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
                         if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString())) &&
                             observacion.PermisosAsesor)
                         {
@@ -262,7 +262,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         Accion = x.DescripcionAccion,
                         ResponsableMarc = x.ResponsableMarcobre,
                         ResponsableCont = x.ResponsableContratista,
-                        FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
+                        FechaProgramada = x.FechaProgramada.HasValue ? x.FechaProgramada.Value.ToString("yyyy-MM-dd") : "",
                         Estado = x.Estado,
                         PermisoImplementar = x.PermisosImplementar
                     }));
@@ -301,7 +301,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 model.AccionTomada = observacion.DescripcionAccion;
                 model.ResponsableMarc = observacion.ResponsableMarcobre;
                 model.ResponsableCont = observacion.ResponsableContratista;
-                model.FechaProgramada = observacion.FechaProgramada.ToShortDateString();
+                model.FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "";
 
                 ViewBag.IdCabecera = IdCabeceraEncriptado;
                 return View(model);

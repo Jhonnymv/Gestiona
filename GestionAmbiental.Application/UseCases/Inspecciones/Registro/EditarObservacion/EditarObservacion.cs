@@ -22,7 +22,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
         }
 
         public async Task Execute(int Id_Inspeccion_Cabecera,int Id_Observacion, string Tipo_Inspeccion, int Asesor_MA_Seguridad, string Descripcion_Acto_Condicion, string Descripcion_Condicion,
-            int Id_Tipo_Condicion, List<string> Evidencia_Condicion, string Nivel_Riesgo_Ambiental, string Descripcion_Accion, 
+            int? Id_Tipo_Condicion, List<string> Evidencia_Condicion, string Nivel_Riesgo_Ambiental, string Descripcion_Accion, 
             int Id_Responsable_Marcobre, string Responsable_Contratista, string Correo_Contratista, string Fecha_Programada, string usuario_red)
         {
             var evidencia = JsonConvert.SerializeObject(Evidencia_Condicion);
@@ -42,9 +42,13 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
                 IdResponsableMarcobre = Id_Responsable_Marcobre,
                 ResponsableContratista = Responsable_Contratista,
                 CorreoContratista = Correo_Contratista,
-                FechaProgramada = Convert.ToDateTime(Fecha_Programada),
                 Estado = EstadosInspeccion.Registrado.ToString()                
             };
+
+            if (Fecha_Programada!=null && Fecha_Programada.Length > 0)
+                detalle.FechaProgramada = Convert.ToDateTime(Fecha_Programada);
+
+
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
             await _editarInspeccionReadOnlyRepository.EditarInspeccionDetalle(detalle, Id_Usuario);
         }

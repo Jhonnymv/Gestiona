@@ -55,6 +55,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
                 case "Observacion": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
                 case "Guardar":
                     cabecera.Estado = EstadosInspeccion.Registrado.ToString();
+                    
                     var codigoAnterior = await _editarInspeccionReadonlyRepository.GetUltimoCodigo();
                     if (codigoAnterior != null)
                     {
@@ -63,6 +64,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
                     }
                     else
                         cabecera.Codigo = "IP-00001";
+                    await _editarInspeccionReadonlyRepository.ActualizarEstadoBuenasPracticas(idCabecera);
                     break;
                 case "GuardarEstado": cabecera.Estado = EstadosInspeccion.Pendiente.ToString(); cabecera.Codigo = "TBD"; break;
                 default:

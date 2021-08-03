@@ -17,25 +17,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public string TipoInspeccion { get; set; }
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int Asesor_MA_Seguridad { get; set; }
-        [DisplayName("Acto/Condición Subestándar Identificada")]
+        [DisplayName("Acto/Condición Identificada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string CondicionIdentificada { get; set; }
-        [DisplayName("Descripción de Acto/Condición Subestándar")]
+        [DisplayName("Descripción de Acto/Condición")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string DescripcionActoCondicion { get; set; }
         [DisplayName("Tipo de Condición/Acto Subestándar")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
-        public int TipoCondicion { get; set; }
+        public int? TipoCondicion { get; set; }
         [DisplayName("Evidencia")]
         [Required(ErrorMessage = "Debe ingresar una evidencia")]
         public List<IFormFile> Evidencias { get; set; }
         [DisplayName("Nivel de Riesgo")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opcción")]
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable de Marcobre para levantar Obs.")]
+        [DisplayName("Resp. Marcobre levantar Obs. / Buenas Prácticas")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int ResponsableMarc { get; set; }
         [DisplayName("Responsable Contratista")]
@@ -44,7 +41,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Correo Electrónico de Responsable Contratista")]
         public string CorreoCont { get; set; }
         [DisplayName("Fecha Programada para levantar Obs.")]
-        [Required(ErrorMessage = "Debe ingresar una fecha")]
         public string FechaProgramada { get; set; }
 
         public NuevaObservacionModel()

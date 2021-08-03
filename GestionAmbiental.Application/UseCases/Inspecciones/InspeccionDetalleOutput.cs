@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public string AsesorMASeguridad { get; set; }
         public string DescripcionActoCondicion { get; set; }
         public string DescripcionCondicion { get; set; }
-        public int IdTipoCondicion { get; set; }
+        public int? IdTipoCondicion { get; set; }
         public string TipoCondicion { get; set; }
         public List<string> EvidenciaCondicion { get; set; }
         public string NivelRiesgo { get; set; }
@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public int IdResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }
         public string CorreoContratista { get; set; }
-        public DateTime FechaProgramada { get; set; }
+        public DateTime? FechaProgramada { get; set; }
         public List<string> EvidenciaImplementacion { get; set; }
         public string ComentarioImplementacion { get; set; }
         public DateTime? FechaCierre { get; set; }
@@ -45,8 +45,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             AsesorMASeguridad = detalle.Asesor.Nombres+ " " +detalle.Asesor.Apellidos;
             DescripcionActoCondicion = detalle.DescripcionActoCondicion;
             DescripcionCondicion = detalle.DescripcionCondicion;
-            TipoCondicion = detalle.TipoCondicion.Descripcion;
-            IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
+            if (detalle.TipoCondicion != null)
+            {
+                TipoCondicion = detalle.TipoCondicion.Descripcion;
+                IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
+            }
             IdAsesor = detalle.Asesor != null ? detalle.Asesor.IdUsuario : 0;
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             EvidenciaCondicion = new List<string>();
@@ -90,9 +93,12 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             AsesorMASeguridad = detalle.Asesor.Nombres + " " + detalle.Asesor.Apellidos;
             DescripcionActoCondicion = detalle.DescripcionActoCondicion;
             DescripcionCondicion = detalle.DescripcionCondicion;
-            TipoCondicion = detalle.TipoCondicion.Descripcion;
-            IdAsesor = detalle.Asesor.IdUsuario;
-            IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
+            if (detalle.TipoCondicion != null)
+            {
+                TipoCondicion = detalle.TipoCondicion.Descripcion;
+                IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
+            }
+                IdAsesor = detalle.Asesor.IdUsuario;
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             var listEvidencias = new List<string>();
             foreach (var evidencia in evidencias)

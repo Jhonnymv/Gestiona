@@ -43,7 +43,8 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
             output.Participantes = cabecera.Participantes;
             output.Objetivo = cabecera.Objetivo;
             output.DescripcionCondicion = observacion.DescripcionCondicion;
-            output.TipoCondicion = observacion.TipoCondicion.Descripcion;
+            output.DescripcionActoCondicion = observacion.DescripcionActoCondicion;
+            output.TipoCondicion = observacion.TipoCondicion?.Descripcion;
             if (observacion.EvidenciaCondicion != null)
             {
                 var evidencias_condicion = JArray.Parse(observacion.EvidenciaCondicion);

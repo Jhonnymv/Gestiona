@@ -492,8 +492,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
-                        filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
                         filaObservacion += "<td>" + observacion.TipoCondicion + "</td>";
+                        filaObservacion += "<td>" + observacion.DescripcionActoCondicion + "</td>";
                         filaObservacion += "<td>" + evidencia + "</td>";
                         switch (observacion.NivelRiesgo)
                         {
@@ -509,7 +509,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue?observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";
                         if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
                         else
@@ -542,7 +542,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ResponsableMarc = x.IdResponsableMarcobre,
                     ResponsableCont = x.ResponsableContratista,
                     CorreoCont = x.CorreoContratista,
-                    FechaProgramada = x.FechaProgramada.ToString("yyyy-MM-dd"),
+                    FechaProgramada = x.FechaProgramada.HasValue? x.FechaProgramada.Value.ToString("yyyy-MM-dd"):"",
                     Estado = x.Estado,
                     PermisoEditar = x.PermisosAsesor
                 }));
@@ -679,7 +679,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + observacion.FechaProgramada.ToShortDateString() + "</td>";
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue? observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";
                         if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor||observacion.PermisosAdmin))
                         {
                             filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
@@ -710,6 +710,55 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 }
                 return View(model);
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarInspeccionNoSubmit(NuevaInspeccionModel model)
+        {
+            dynamic response;
+            try
+            {
+                if (ModelState.IsValid)
+                {
+
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                    await _editarInspeccionCabecera.Execute(
+                    model.Id_Inspeccion_Cabecera,
+                    model.Objetivo,
+                    model.Id_Gerencia_Ejecutora,
+                    model.Id_Empresa_Contratista,
+                    model.Lugar_Inspeccionado,
+                    model.Tipo_Inspeccion,
+                    model.Id_Responsable_Lugar,
+                    model.Hora_Inspeccion,
+                    model.Fecha_Inspeccion,
+                    model.Responsable_Inspeccion,
+                    model.Inspectores,
+                    model.opcion,
+                    userInfo.NombreUsuario);
+                    response = new
+                    {
+                        success = true
+                    };
+                }
+                else
+                {
+                    response = new
+                    {
+                        success = false,
+                        message = "Datos incompletos"
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> EditarInspeccion(NuevaInspeccionModel model)

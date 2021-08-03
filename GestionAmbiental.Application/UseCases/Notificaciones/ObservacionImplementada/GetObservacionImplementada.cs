@@ -40,7 +40,8 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplem
             output.TipoObservacion = observacion.TipoObservacion;
             output.Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos;
             output.DescripcionCondicion = observacion.DescripcionCondicion;
-            output.TipoCondicion = observacion.TipoCondicion.Descripcion;
+            output.DescripcionActoCondicion = observacion.DescripcionActoCondicion;
+            output.TipoCondicion = observacion.TipoCondicion!=null? observacion.TipoCondicion.Descripcion:"No Aplica";
             output.DescripcionAccion = observacion.DescripcionAccion;
             if (observacion.EvidenciaCondicion != null)
             {
@@ -52,15 +53,15 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplem
                 }
                 output.EvidenciaCondicion = listEvidencias_condicion;
             }
-            output.NivelRiesgo = observacion.NivelRiesgo;
-            output.DescripcionAccion = observacion.DescripcionAccion;
+            output.NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica"; 
+            output.DescripcionAccion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica";
             output.ResponsableMarcobre = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos;
             output.ResponsableContratista = observacion.ResponsableContratista;
             output.FechaProgramada = observacion.FechaProgramada;
             output.Estado = observacion.Estado;
 
-            output.ComentarioImplementacion = observacion.ComentarioImplementacion;
-            output.FechaCierre = observacion.FechaCierre.Value.ToString("dd/MM/yyyy");
+            output.ComentarioImplementacion = observacion.ComentarioImplementacion != null ? observacion.NivelRiesgo : "No Aplica";
+            output.FechaCierre = observacion.FechaCierre!=null? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "No Aplica";
             if (observacion.EvidenciaImplementacion != null)
             {
                 var evidencia_implementacion = JArray.Parse(observacion.EvidenciaImplementacion);

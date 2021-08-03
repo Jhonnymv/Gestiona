@@ -14,7 +14,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
             int Asesor_MA_Seguridad,
             string Descripcion_Acto_Condicion,
             string Descripcion_Condicion,
-            int Id_Tipo_Condicion,
+            int? Id_Tipo_Condicion,
             List<string> Evidencia_Condicion,
             string Nivel_Riesgo_Ambiental, 
             string Descripcion_Accion,

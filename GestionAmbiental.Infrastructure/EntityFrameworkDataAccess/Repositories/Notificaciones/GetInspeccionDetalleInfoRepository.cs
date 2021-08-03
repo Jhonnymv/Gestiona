@@ -23,7 +23,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion)&&x.Estado!=EstadosInspeccion.Eliminado.ToString());
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
-            var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
+            var tipoCondicion_Domain = new TipoCondicion();
+            if (tipoCondicion != null)
+            {
+                tipoCondicion_Domain.IdTipoCondicion = tipoCondicion.Id_Tipo_Condicion;
+                tipoCondicion_Domain.Descripcion = tipoCondicion.Descripcion;
+                tipoCondicion_Domain.Grupo = tipoCondicion.Grupo;
+            }
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
             var detalle = new InspeccionDetalle();
@@ -31,8 +37,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalle.IdInspeccionCabecera = inspeccionDetalle.Id_Inspeccion_Cabecera;
             detalle.IdInspeccionDetalle = inspeccionDetalle.Id_Inspeccion_Detalle;
             detalle.TipoObservacion = inspeccionDetalle.Tipo_Observacion;
+            detalle.DescripcionActoCondicion = inspeccionDetalle.Descripcion_Acto_Condicion;
             detalle.DescripcionCondicion = inspeccionDetalle.Descripcion_Condicion;
-            detalle.TipoCondicion = tipoCondicion_Domain;
+            detalle.TipoCondicion = tipoCondicion!=null?tipoCondicion_Domain:null;
             detalle.DescripcionAccion = inspeccionDetalle.Descripcion_Accion;
             detalle.EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion;
             detalle.NivelRiesgo = inspeccionDetalle.Nivel_Riesgo;
@@ -45,7 +52,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
-            var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
+            var tipoCondicion_Domain = new TipoCondicion();
+            if (tipoCondicion != null)
+            {
+                tipoCondicion_Domain.IdTipoCondicion = tipoCondicion.Id_Tipo_Condicion;
+                tipoCondicion_Domain.Descripcion = tipoCondicion.Descripcion;
+                tipoCondicion_Domain.Grupo = tipoCondicion.Grupo;
+            }
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
             var Asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
@@ -56,7 +69,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalle.IdInspeccionDetalle = inspeccionDetalle.Id_Inspeccion_Detalle;
             detalle.TipoObservacion = inspeccionDetalle.Tipo_Observacion;
             detalle.DescripcionCondicion = inspeccionDetalle.Descripcion_Condicion;
-            detalle.TipoCondicion = tipoCondicion_Domain;
+            detalle.DescripcionActoCondicion = inspeccionDetalle.Descripcion_Acto_Condicion;
+            detalle.TipoCondicion = tipoCondicion != null ? tipoCondicion_Domain : null;
             detalle.DescripcionAccion = inspeccionDetalle.Descripcion_Accion;
             detalle.EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion;
             detalle.NivelRiesgo = inspeccionDetalle.Nivel_Riesgo;
@@ -73,7 +87,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(IdObservacion));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
-            var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
+            var tipoCondicion_Domain = new TipoCondicion();
+            if (tipoCondicion != null)
+            {
+                tipoCondicion_Domain.IdTipoCondicion = tipoCondicion.Id_Tipo_Condicion; 
+                tipoCondicion_Domain.Descripcion = tipoCondicion.Descripcion;
+                tipoCondicion_Domain.Grupo = tipoCondicion.Grupo;
+            }
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
             var Asesor = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
@@ -84,7 +104,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalle.IdInspeccionDetalle = inspeccionDetalle.Id_Inspeccion_Detalle;
             detalle.TipoObservacion = inspeccionDetalle.Tipo_Observacion;
             detalle.DescripcionCondicion = inspeccionDetalle.Descripcion_Condicion;
-            detalle.TipoCondicion = tipoCondicion_Domain;
+            detalle.DescripcionActoCondicion = inspeccionDetalle.Descripcion_Acto_Condicion;
+            detalle.TipoCondicion = tipoCondicion != null ? tipoCondicion_Domain : null;
             detalle.DescripcionAccion = inspeccionDetalle.Descripcion_Accion;
             detalle.EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion;
             detalle.NivelRiesgo = inspeccionDetalle.Nivel_Riesgo;

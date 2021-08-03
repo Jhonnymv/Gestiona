@@ -50,16 +50,7 @@ namespace GestionAmbiental.Controllers
                 Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
                 Log.Error(e.Message);
             }
-            /*
-            var rol = await _getRolUsuario.Execute("kevin");
-
-             var userInfo = new UserInfo { NombreUsuario = "kevin", Rol = rol.Value };
-             HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-
-             ViewBag.Rol = userInfo.Rol.ToString();
-             ViewBag.Usuario = userInfo.NombreUsuario;
-            */
-            
+                       
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
@@ -84,13 +75,6 @@ namespace GestionAmbiental.Controllers
                 return RedirectToAction("NoAutorizado", new { returnUrl = "/"+ControllerContext.ActionDescriptor.ControllerName+"/"+ ControllerContext.ActionDescriptor.ActionName });
             }
         }
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View();
-        //}
-
-
         public IActionResult NoAutorizado(string returnUrl)
         {
             if (HttpContext.Session.GetString("SessionUser") != null)

@@ -182,8 +182,13 @@
                 $("#ComentarioImplementacion").val(data.Comentario);
                 $("#Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
                 $("#EvidenciaDescarga").prop('href', '@Url.Action("Download","Inspecciones")' + '?fileName=' + JSON.parse(data.EvidenciasCondicion)[0]);
-                $("#EvidenciasImplementacion").val(JSON.parse(data.EvidenciasImplementacion)[0]);
-                $("#EvidenciaImpDescarga").prop('href', '@Url.Action("Download", "InspeccionesImplementacion")' + '?fileName=' + JSON.parse(data.EvidenciasImplementacion)[0]);
+                if (data.EvidenciasImplementacion != "null") {
+                    $("#EvidenciasImplementacion").val(JSON.parse(data.EvidenciasImplementacion)[0]);
+                    $("#EvidenciaImpDescarga").prop('href', '@Url.Action("Download", "InspeccionesImplementacion")' + '?fileName=' + JSON.parse(data.EvidenciasImplementacion)[0]);
+                    $("#EvidenciaImpDescarga").show();
+                } else {
+                    $("#EvidenciaImpDescarga").hide();
+                }
                 $("#modalVerificarObservacion").modal('show');
             }
         }

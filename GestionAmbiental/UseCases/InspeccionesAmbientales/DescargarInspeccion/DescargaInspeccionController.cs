@@ -199,7 +199,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
                     row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
                     //->Fecha Programada
-                    row.GetCell(24).SetCellValue(observacion.FechaProgramada.ToString("dd/MM/yyyy"));
+                    row.GetCell(24).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
 
                     row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
                                         
