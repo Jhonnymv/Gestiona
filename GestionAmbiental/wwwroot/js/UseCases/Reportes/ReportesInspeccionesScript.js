@@ -10,6 +10,7 @@ var data_insp_fechas = [];
 var graph_insp_fechas;
 //Variable gráfico Observaciones X Fecha
 var data_obs_fechas = [];
+var data_bp_fechas = [];
 var graph_obs_fechas;
 //Variable gráfico MAP vs SSO
 var data_map_vs_sso = [];
@@ -17,6 +18,12 @@ var graph_map_vs_sso;
 //Variable gráfico MAP vs SSO x Estado
 var data_map_vs_sso_estado = [];
 var graph_map_vs_sso_estado;
+//Variable gráfico MAP vs SSO
+var data_bp_map_vs_sso = [];
+var graph_bp_map_vs_sso;
+//Variable gráfico MAP vs SSO x Estado
+var data_bp_map_vs_sso_estado = [];
+var graph_bp_map_vs_sso_estado;
 //Variables gráfico MA nivel de riesgo
 var data_obs_ma_nr = [];
 var graph_obs_ma_nr;
@@ -76,8 +83,10 @@ function ActualizarInspeccionesFecha() {
                 ActualizarInspeccionesXFecha();
                 ActualizarContadorOxFecha();
                 ActualizaMAPvsSSO();
+                ActualizaBPMAPvsSSO();
                 GetDataContadorOxE();
                 ActualizarDatosGraficoMAP_SSO_Estado();
+                ActualizarDatosGraficoBPMAP_SSO_Estado();
                 ActualizarDatosGraficoMA_NR();
                 ActualizarDatosGraficoSSO_NR();
                 ActualizarDatosGraficoMA_Clas();
@@ -101,6 +110,8 @@ $("#sel_frec_insp_fecha").on('change', function () {
     ActualizarInspeccionesXFecha();
     ActualizaMAPvsSSO();
     ActualizarDatosGraficoMAP_SSO_Estado();
+    ActualizaBPMAPvsSSO();
+    ActualizarDatosGraficoBPMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
     ActualizarDatosGraficoMA_Clas();
@@ -199,6 +210,8 @@ $("#sel_frec_obs_estado").on('change', function () {
     GetDataContadorOxE();
     ActualizaMAPvsSSO();
     ActualizarDatosGraficoMAP_SSO_Estado();
+    ActualizaBPMAPvsSSO();
+    ActualizarDatosGraficoBPMAP_SSO_Estado();
     ActualizarDatosGraficoMA_NR();
     ActualizarDatosGraficoSSO_NR();
     ActualizarDatosGraficoMA_Clas();
@@ -220,54 +233,76 @@ function ActualizarContadorOxFecha() {
         },
         traditional: true,
         success: (response) => {
-            if (data_obs_fechas.length > 0) {
+            if (data_obs_fechas.length > 0 || data_bp_fechas.length > 0) {
                 //Actualizar contador
-                data_obs_fechas = response.observacionesXFecha;
+                data_obs_fechas = response.observacionesXFecha[0];
+                data_bp_fechas = response.observacionesXFecha[1];
 
                 var labels = [];
-                var data = [];
+                var dataObs = [];
+                var dataBP = [];
                 for (var i = 0; i < data_obs_fechas.length; i++) {
                     labels.push(data_obs_fechas[i].nombre);
-                    data.push(data_obs_fechas[i].valor);
+                    dataObs.push(data_obs_fechas[i].valor);
+                }
+                for (var i = 0; i < data_bp_fechas.length; i++) {
+                    dataBP.push(data_bp_fechas[i].valor);
                 }
                 //Actualizar gráfica
                 graph_obs_fechas.data.labels = labels;
-                graph_obs_fechas.data.datasets[0].data = data;
-                graph_obs_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(data) / 10;
+                graph_obs_fechas.data.datasets[0].data = dataObs;
+                graph_obs_fechas.data.datasets[1].data = dataBP;
+                graph_obs_fechas.options.scales.yAxes[0].ticks.stepSize = Math.max(dataObs) / 10;
                 graph_obs_fechas.update();
             }
             else {
                 //Actualizar contador
-                data_obs_fechas = response.observacionesXFecha;
+                data_obs_fechas = response.observacionesXFecha[0];
+                data_bp_fechas = response.observacionesXFecha[1];
 
                 var labels = [];
-                var data = [];
+                var dataObs = [];
+                var dataBP = [];
                 for (var i = 0; i < data_obs_fechas.length; i++) {
                     labels.push(data_obs_fechas[i].nombre);
-                    data.push(data_obs_fechas[i].valor);
+                    dataObs.push(data_obs_fechas[i].valor);
+                }
+                for (var i = 0; i < data_bp_fechas.length; i++) {
+                    dataBP.push(data_bp_fechas[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficaContardorOxFecha(labels, data, Math.max(data) / 10);
+                CrearGraficaContardorOxFecha(labels, dataObs, dataBP, Math.max(dataObs) / 10);
             }
-            ActualizaMAPvsSSO()
+            ActualizaMAPvsSSO();
+            ActualizaBPMAPvsSSO();
         }
     });
 }
-function CrearGraficaContardorOxFecha(labels, data, stepSize) {
+function CrearGraficaContardorOxFecha(labels, dataObs, dataBP, stepSize) {
     graph_obs_fechas = new Chart(
         document.getElementById("chart_obs_fechas"),
         {
             "type": "bar",
             "data": {
                 "labels": labels,
-                "datasets": [{
-                    "label": "# Observaciones Registradas",
-                    "data": data,
-                    "fill": false,
-                    "backgroundColor": "#36b9cc",
-                    "borderColor": "#36b9cc",
-                    "lineTension": 0.1
-                }]
+                "datasets": [
+                    {
+                        "label": "# Observaciones Registradas",
+                        "data": dataObs,
+                        "fill": false,
+                        "backgroundColor": "#36b9cc",
+                        "borderColor": "#36b9cc",
+                        "lineTension": 0.1
+                    },
+                    {
+                        "label": "# Buenas Prácticas Registradas",
+                        "data": dataBP,
+                        "fill": false,
+                        "backgroundColor": "#36CC3F",
+                        "borderColor": "#36CC3F",
+                        "lineTension": 0.1
+                    },
+                ]
             },
             "options": {
                 "scales": {
@@ -309,11 +344,11 @@ function GetDataContadorOxE() {
         },
         success: (response) => {
             var nObs = response.nObservaciones;
-            ActualizarContadorOxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor, nObs[6].valor);
+            ActualizarContadorOxE(nObs[0].valor, nObs[1].valor, nObs[2].valor, nObs[3].valor, nObs[4].valor, nObs[5].valor, nObs[6].valor, nObs[7].valor, nObs[8].valor, nObs[9].valor);
         }
     });
 }
-function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
+function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total,bimp,bapr,brec) {
     //Reiniciar valores
     $("#ObsRegistrado").html(0);
     $("#ObsImplementado").html(0);
@@ -323,6 +358,10 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     $("#ObsAmpliado").html(0);
     $("#ObsTotal").html(0);
     $("#ObsEncont").html(0);
+    $("#BPEncont").html(0);
+    $("#BImplementadas").html(0);
+    $("#BPAprobado").html(0);
+    $("#BPRechazado").html(0);
     //Nuevo valores
     $("#ObsRegistrado").html(reg);
     $("#ObsImplementado").html(imp);
@@ -331,7 +370,11 @@ function ActualizarContadorOxE(reg, imp, apr, rec, ven, amp, total) {
     $("#ObsVencido").html(ven);
     $("#ObsAmpliado").html(amp);
     $("#ObsTotal").html(total);
-    $("#ObsEncont").html(reg + imp + apr + rec + ven + amp );
+    $("#ObsEncont").html(reg + imp + apr + rec + ven + amp);
+    $("#BPEncont").html(bimp + bapr + brec);
+    $("#BImplementadas").html(bimp);
+    $("#BPAprobado").html(bapr);
+    $("#BPRechazado").html(brec);
 }
 //Para gráfico MAP vs SSO
 function ActualizaMAPvsSSO() {
@@ -374,12 +417,12 @@ function ActualizaMAPvsSSO() {
                     data.push(data_map_vs_sso[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoImpactoAgua(labels, data);
+                CrearGraficoMAPvsSSO(labels, data);
             }
         }
     });
 }
-function CrearGraficoImpactoAgua(labels, data) {
+function CrearGraficoMAPvsSSO(labels, data) {
     graph_map_vs_sso = new Chart(
         document.getElementById("chart_MAP_vs_SSO"),
         {
@@ -387,7 +430,7 @@ function CrearGraficoImpactoAgua(labels, data) {
             "data": {
                 "labels": labels,
                 "datasets": [{
-                    "label": "# Reportes registrados",
+                    "label": "#Observaciones",
                     "data": data,
                     "backgroundColor": [
                         '#2e6793',
@@ -498,6 +541,199 @@ function CrearGraficoMAP_SSO_Estado(labels, dataset1, dataset2) {
                     },
                     {
                         "label": "# Observaciones SSO",
+                        "data": dataset2,
+                        "backgroundColor": [
+                            '#1cc88a',
+                            '#1cc88a',
+                            '#1cc88a',
+                            '#1cc88a'
+                        ],
+                        "lineTension": 0.1
+                    }
+                ]
+            },
+            "options": {
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',                        
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        }
+    );
+}
+//Para gráfico BP MAP vs SSO
+function ActualizaBPMAPvsSSO() {
+    $.ajax({
+        type: "POST",
+        url: "/ReportesInspecciones/ActualizarBPMAPvsSSO",
+        data: {
+            "gerencia": $("#IdGerencia").val(),
+            "empresa": $("#IdEmpresa").val(),
+            "asesor": $("#IdAsesor").val(),
+            "respLevObs": $("#IdRespLev").val(),
+            "FechaInicio": $("#FInicio").val(),
+            "FechaFin": $("#FFin").val(),
+            "estado": $("#sel_frec_obs_estado").val()
+        },
+        traditional: true,
+        success: (response) => {
+            if (data_bp_map_vs_sso.length > 0) {
+                //Actualizar contador
+                data_bp_map_vs_sso = response.mapvssso;
+
+                var labels = [];
+                var data = [];
+                for (var i = 0; i < data_bp_map_vs_sso.length; i++) {
+                    labels.push(data_bp_map_vs_sso[i].nombre);
+                    data.push(data_bp_map_vs_sso[i].valor);
+                }
+                //Actualizar gráfica
+                graph_bp_map_vs_sso.data.labels = labels;
+                graph_bp_map_vs_sso.data.datasets[0].data = data;
+                graph_bp_map_vs_sso.update();
+            } else {
+                //Actualizar contador
+                data_bp_map_vs_sso = response.mapvssso;
+
+                var labels = [];
+                var data = [];
+                for (var i = 0; i < data_bp_map_vs_sso.length; i++) {
+                    labels.push(data_bp_map_vs_sso[i].nombre);
+                    data.push(data_bp_map_vs_sso[i].valor);
+                }
+                //Crear gráfica
+                CrearGraficoBPMAPvsSSO(labels, data);
+            }
+        }
+    });
+}
+function CrearGraficoBPMAPvsSSO(labels, data) {
+    graph_bp_map_vs_sso = new Chart(
+        document.getElementById("chart_BP_MAP_vs_SSO"),
+        {
+            "type": "doughnut",
+            "data": {
+                "labels": labels,
+                "datasets": [{
+                    "label": "#Buenas Prácticas",
+                    "data": data,
+                    "backgroundColor": [
+                        '#2e6793',
+                        '#1cc88a'
+                    ],
+                    "lineTension": 0.1
+                }]
+            },
+            "options": {
+                "legend": {
+                    "labels": {
+                        // This more specific font property overrides the global property
+                        fontColor: 'black'
+                    }
+                },
+                "plugins": {
+                    datalabels: {
+                        color: 'white',
+                        formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += data;
+                            });
+                            let percentage = (value * 100 / sum).toFixed(2) + "%";
+                            return percentage;
+                        },
+                        defaultFontSize: 15
+                    }
+                }
+            }
+        }
+    );
+}
+//Para gráfico BP MAP vs SSO x Estado
+function ActualizarDatosGraficoBPMAP_SSO_Estado() {
+    $.ajax({
+        type: "POST",
+        url: "/ReportesInspecciones/ActualizarBPMAPvsSSO_x_Estado",
+        data: {
+            "gerencia": $("#IdGerencia").val(),
+            "empresa": $("#IdEmpresa").val(),
+            "asesor": $("#IdAsesor").val(),
+            "respLevObs": $("#IdRespLev").val(),
+            "FechaInicio": $("#FInicio").val(),
+            "FechaFin": $("#FFin").val(),
+            "estado": $("#sel_frec_obs_estado").val()
+        },
+        traditional: true,
+        success: (response) => {
+            if (data_bp_map_vs_sso_estado.length > 0) {
+                //Actualizar contador
+                data_bp_map_vs_sso_estado = response.mapvssso;
+
+                var labels = [];
+                var dataset1 = [];
+                var dataset2 = [];
+                for (var i = 0; i < data_bp_map_vs_sso_estado[0].length; i++) {
+                    labels.push(data_bp_map_vs_sso_estado[0][i].nombre);
+                    dataset1.push(data_bp_map_vs_sso_estado[0][i].valor);
+                }
+                for (var i = 0; i < data_bp_map_vs_sso_estado[1].length; i++) {
+                    dataset2.push(data_bp_map_vs_sso_estado[1][i].valor);
+                }
+                //Actualizar gráfica
+                graph_bp_map_vs_sso_estado.data.labels = labels;
+                graph_bp_map_vs_sso_estado.data.datasets[0].data = dataset1;
+                graph_bp_map_vs_sso_estado.data.datasets[1].data = dataset2;
+                graph_bp_map_vs_sso_estado.update();
+            } else {
+                //Actualizar contador
+                data_bp_map_vs_sso_estado = response.mapvssso;
+
+                var labels = [];
+                var dataset1 = [];
+                var dataset2 = [];
+                for (var i = 0; i < data_bp_map_vs_sso_estado[0].length; i++) {
+                    labels.push(data_bp_map_vs_sso_estado[0][i].nombre);
+                    dataset1.push(data_bp_map_vs_sso_estado[0][i].valor);
+                }
+                for (var i = 0; i < data_bp_map_vs_sso_estado[1].length; i++) {
+                    dataset2.push(data_bp_map_vs_sso_estado[1][i].valor);
+                }
+                //Crear gráfica
+                CrearGraficoBPMAP_SSO_Estado(labels, dataset1, dataset2);
+            }
+        }
+    });
+}
+function CrearGraficoBPMAP_SSO_Estado(labels, dataset1, dataset2) {
+    graph_bp_map_vs_sso_estado = new Chart(
+        document.getElementById("chart_BP_MA_vs_SSO_Estado"),
+        {
+            "type": "horizontalBar",
+            "data": {
+                "labels": labels,
+                "datasets": [
+                    {
+                        "label": "# Buenas Prácticas MAP",
+                        "data": dataset1,
+                        "backgroundColor": [
+                            '#2e6793',
+                            '#2e6793',
+                            '#2e6793',
+                            '#2e6793'
+                        ],
+                        "lineTension": 0.1
+                    },
+                    {
+                        "label": "# Buenas Prácticas SSO",
                         "data": dataset2,
                         "backgroundColor": [
                             '#1cc88a',
@@ -765,7 +1001,8 @@ function CrearGraficoMA_Clas(labels, data) {
                     "data": data,
                     "backgroundColor": [
                         '#ed4c4c',
-                        '#36b9cc'
+                        '#36b9cc',
+                        '#3DFE8E'
                     ],
                     "lineTension": 0.1
                 }]
@@ -854,7 +1091,8 @@ function CrearGraficoSSO_Clas(labels, data) {
                     "data": data,
                     "backgroundColor": [
                         '#ed4c4c',
-                        '#36b9cc'
+                        '#36b9cc',
+                        '#3DFE8E'
                     ],
                     "lineTension": 0.1
                 }]
@@ -885,8 +1123,6 @@ function CrearGraficoSSO_Clas(labels, data) {
         }
     );
 }
-
-
 
 function ActualizarDatosGraficoMA_NR_Tipo() {
     ActualizarInspeccionesFecha();

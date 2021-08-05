@@ -30,6 +30,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPv
                 fFinal = DateTime.MaxValue;
             //Obtener valores
             EstadosInspeccion? enum_estado = null;
+            bool buenaPractica = false;
             switch (estado)
             {
                 case "Reg": enum_estado = EstadosInspeccion.Registrado; break;
@@ -37,6 +38,9 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPv
                 case "Ven": enum_estado = EstadosInspeccion.Vencido; break;
                 case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
                 case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
+                case "BImplementadas": enum_estado = EstadosInspeccion.Implementado; buenaPractica = true; break;
+                case "BAprobadas": enum_estado = EstadosInspeccion.Aprobado; buenaPractica = true; break;
+                case "BRechazadas": enum_estado = EstadosInspeccion.Rechazado; buenaPractica = true; break;
             }
             var data = await _getReportesInspeccionesReadOnlyRepository.GetObsMAPvsSSO_Estado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado);
 

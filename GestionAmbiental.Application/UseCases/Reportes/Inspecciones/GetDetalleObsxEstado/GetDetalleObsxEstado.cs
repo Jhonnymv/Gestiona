@@ -30,6 +30,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
                 fFinal = DateTime.MaxValue;
             //Obtener valores
             EstadosInspeccion enum_estado = EstadosInspeccion.Registrado;
+            bool buenaPractica = false;
             switch (estado)
             {
                 case "Reg": enum_estado = EstadosInspeccion.Registrado; break;
@@ -38,9 +39,12 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
                 case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
                 case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
                 case "Amp": enum_estado = EstadosInspeccion.Ampliado; break; 
+                case "BImplementadas": enum_estado = EstadosInspeccion.Implementado; buenaPractica = true; break; 
+                case "BAprobadas": enum_estado = EstadosInspeccion.Aprobado; buenaPractica = true; break; 
+                case "BRechazadas": enum_estado = EstadosInspeccion.Rechazado; buenaPractica = true; break; 
             }      
 
-            var data =  await _getReportesInspeccionesReadOnlyRepository.GetDetalleObsxEstado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado);
+            var data =  await _getReportesInspeccionesReadOnlyRepository.GetDetalleObsxEstado(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado,buenaPractica);
             var output = new List<DetalleObsxEstadoOutput>();
             foreach(var item in data)
             {
@@ -54,7 +58,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalle
                     itemOutput.Fecha_Inspeccion = item.FechaInspeccion.ToString("dd/MM/yyyy");
                     itemOutput.Tipo_Observacion = subitem.TipoObservacion;
                     itemOutput.Asesor = subitem.Asesor.Nombres + " " + subitem.Asesor.Apellidos;
-                    itemOutput.Tipo_Condicion = subitem.TipoCondicion.Descripcion;
+                    itemOutput.Tipo_Condicion = subitem.TipoCondicion?.Descripcion;
                     itemOutput.Nivel_Riesgo = subitem.NivelRiesgo;
                     itemOutput.Responsable = subitem.ResponsableMarcobre.Nombres + " " + subitem.ResponsableMarcobre.Apellidos;
                     itemOutput.Fecha_Programada = subitem.FechaProgramada.HasValue? subitem.FechaProgramada.Value.ToString("dd/MM/yyyy"):"";

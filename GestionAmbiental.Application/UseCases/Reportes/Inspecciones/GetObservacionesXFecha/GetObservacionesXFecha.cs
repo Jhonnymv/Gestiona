@@ -14,7 +14,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
         {
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
-        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia, string estado)
+        public async Task<List<List<DimensionOutput>>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia, string estado)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -39,11 +39,19 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
             }
             var data = await _getReportesInspeccionesReadOnlyRepository.GetObservacionesXFecha(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, frecuencia, enum_estado);
 
-            var output = new List<DimensionOutput>();
-            foreach (var item in data)
+            var output = new List<List<DimensionOutput>>();
+            var outputObs = new List<DimensionOutput>();
+            var outputBP = new List<DimensionOutput>();
+            foreach (var item in data[0])
             {
-                output.Add(new DimensionOutput(item));
+                outputObs.Add(new DimensionOutput(item));
             }
+            foreach (var item in data[1])
+            {
+                outputBP.Add(new DimensionOutput(item));
+            }
+            output.Add(outputObs);
+            output.Add(outputBP);
             return output;
         }
     }

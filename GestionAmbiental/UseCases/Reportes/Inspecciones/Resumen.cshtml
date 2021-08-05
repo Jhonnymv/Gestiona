@@ -96,6 +96,22 @@
                     </div>
                 </div>
             </div>
+            <div class="dashboard-item inspection">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title inspection-opacity-color">
+                        <h6>Observaciones Encontradas</h6>
+                        <h3 id="ObsEncont"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item inspection">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title inspection-opacity-color">
+                        <h6>Buenas Prácticas Encontradas</h6>
+                        <h3 id="BPEncont"></h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -168,15 +184,7 @@
         <div class="dashboard-header">
             <h5>Cantidad de Observaciones</h5>
         </div>
-        <div class="wrap-scroll-horizontal">
-            <div class="dashboard-item inspection">
-                <div class="image-header-container">
-                    <div class="dashboard-item-title inspection-opacity-color">
-                        <h6>Observaciones Encontradas</h6>
-                        <h3 id="ObsEncont"></h3>
-                    </div>
-                </div>
-            </div>
+        <div class="wrap-scroll-horizontal">            
             <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('Reg')" style="cursor: pointer">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
@@ -225,12 +233,36 @@
                     </div>
                 </div>
             </div>
+            <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('BImplementadas')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title inspection-opacity-color">
+                        <h6>Buenas Prácticas Pendientes de Verificación</h6>
+                        <h3 id="BImplementadas"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('BAprobadas')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title inspection-opacity-color">
+                        <h6>Buenas Prácticas Aprobadas</h6>
+                        <h3 id="BPAprobado"></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('BRechazadas')" style="cursor: pointer">
+                <div class="image-header-container">
+                    <div class="dashboard-item-title inspection-opacity-color">
+                        <h6>Buenas Prácticas Rechazadas</h6>
+                        <h3 id="BPRechazado"></h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="dashboard-section">
         <div class="dashboard-header">
-            <h5>Comparativo MAP vs SSO</h5>
+            <h5>Comparativo Observaciones MAP vs SSO</h5>
         </div>
         <div class="row">
             <div class="secondary-dashboard-item col-12 col-lg-6">
@@ -252,6 +284,35 @@
                     </div>
                     <div class="col-12">
                         <canvas id="chart_MA_vs_SSO_Estado" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-section">
+        <div class="dashboard-header">
+            <h5>Comparativo Buenas Prácticas MAP vs SSO</h5>
+        </div>
+        <div class="row">
+            <div class="secondary-dashboard-item col-12 col-lg-6">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center">#Buenas Prácticas MAP vs SSO</h6>
+                    </div>
+                    <div class="col-12">
+                        <div class="chart-area">
+                            <canvas id="chart_BP_MAP_vs_SSO" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-dashboard-item col-12 col-lg-6">
+                <div class="secondary-content">
+                    <div>
+                        <h6 class="text-center">#Buenas Prácticas MAP vs SSO X Estado</h6>
+                    </div>
+                    <div class="col-12">
+                        <canvas id="chart_BP_MA_vs_SSO_Estado" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
                     </div>
                 </div>
             </div>

@@ -250,9 +250,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Dimension>> GetObservacionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, EstadosInspeccion? estado)
+        public async Task<List<List<Dimension>>> GetObservacionesXFecha(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, string frecuencia, EstadosInspeccion? estado)
         {
-            var output = new List<Dimension>();
+            var output = new List<List<Dimension>>();
+            var outputObs = new List<Dimension>();
+            var outputBP = new List<Dimension>();
 
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                 !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -262,7 +264,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Inspeccion <= FechaFin)
                 .ToListAsync();
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
-            observaciones = observaciones.Where(x =>
+            var buenasPracticas = observaciones.Where(x =>
+                x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor)).ToList();
+            observaciones = observaciones.Where(x => 
+                !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
@@ -271,6 +281,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             //Crear una lista de obs por cada inspeccion
             var obsXInsp = observaciones.GroupBy(x => x.Id_Inspeccion_Cabecera).ToList();
+            var bpXInsp = buenasPracticas.GroupBy(x => x.Id_Inspeccion_Cabecera).ToList();
             if (frecuencia.Equals("Diario"))
             {
                 //Agrupar inspecciones x fecha
@@ -284,35 +295,48 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     nDias = FechaFin.DayOfYear - FechaInicio.DayOfYear;
 
                 var lstDiasSinValor = new List<Dimension>();
-                var lstDiasConValor = new List<Dimension>();
+                var lstDiasConValorObs = new List<Dimension>();
+                var lstDiasConValorBP = new List<Dimension>();
                 for (int i = nDias; i >= 0; i--)
                 {
                     var diaAnio = FechaFin.AddDays(-i).DayOfYear;
                     lstDiasSinValor.Add(new Dimension(FechaFin.AddDays(-i).ToString("dd MMMM").Substring(0, 6), 0, (FechaFin.AddDays(-i).Year * 1000) + diaAnio));
                 }
-                if (obsXInsp.Count > 0)
+                if (obsXInsp.Count > 0||bpXInsp.Count>0)
                 {
                     var frec_obs_x_fecha = new List<ObsXFecha>();
+                    var frec_bp_x_fecha = new List<ObsXFecha>();
                     //Iterar cada fecha
                     foreach (var fecha in frec_cabeceras)
                     {
-                        var contador = 0;
+                        var contadorObs = 0;
+                        var contadorBP = 0;
                         //Iterar las cabeceras de una fecha
                         foreach (var cabecera in fecha)
                         {
                             if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)) != null)
-                                contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)).Count();
+                                contadorObs += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)).Count();
+                            if (bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)) != null)
+                                contadorBP += bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera.Id_Inspeccion_Cabecera)).Count();
                         }
-                        frec_obs_x_fecha.Add(new ObsXFecha { Fecha = fecha.Key, Cantidad = contador });
+                        frec_obs_x_fecha.Add(new ObsXFecha { Fecha = fecha.Key, Cantidad = contadorObs });
+                        frec_bp_x_fecha.Add(new ObsXFecha { Fecha = fecha.Key, Cantidad = contadorBP });
                     }
                     foreach (var item in frec_obs_x_fecha)
                     {
                         var diaAnio = item.Fecha.DayOfYear;
-                        lstDiasConValor.Add(new Dimension(item.Fecha.ToString("dd MMMM").Substring(0, 6), item.Cantidad, (item.Fecha.Year * 1000) + item.Fecha.DayOfYear));
+                        lstDiasConValorObs.Add(new Dimension(item.Fecha.ToString("dd MMMM").Substring(0, 6), item.Cantidad, (item.Fecha.Year * 1000) + item.Fecha.DayOfYear));
+                    }
+                    foreach (var item in frec_bp_x_fecha)
+                    {
+                        var diaAnio = item.Fecha.DayOfYear;
+                        lstDiasConValorBP.Add(new Dimension(item.Fecha.ToString("dd MMMM").Substring(0, 6), item.Cantidad, (item.Fecha.Year * 1000) + item.Fecha.DayOfYear));
                     }
                 }
-                var distinct = lstDiasSinValor.Where(x => !lstDiasConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                output = distinct.Union(lstDiasConValor).OrderBy(x => x.Index).ToList();
+                var distinctObs = lstDiasSinValor.Where(x => !lstDiasConValorObs.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                outputObs = distinctObs.Union(lstDiasConValorObs).OrderBy(x => x.Index).ToList();
+                var distinctBP = lstDiasSinValor.Where(x => !lstDiasConValorBP.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                outputBP = distinctBP.Union(lstDiasConValorBP).OrderBy(x => x.Index).ToList();
             }
             else if (frecuencia.Equals("Semanal"))
             {
@@ -327,7 +351,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 int nSemFinal = cul.Calendar.GetWeekOfYear(FechaFin, CalendarWeekRule.FirstDay, DayOfWeek.Monday);
 
                 var lstSemSinValor = new List<Dimension>();
-                var lstSemConValor = new List<Dimension>();
+                var lstSemConValorObs = new List<Dimension>();
+                var lstSemConValorBP = new List<Dimension>();
 
                 int nSem = 0;
                 //Mismo año
@@ -338,28 +363,35 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     {
                         lstSemSinValor.Add(new Dimension("Sem " + (nSemInicial + i).ToString() + " - " + FechaInicio.Year, 0, nSemInicial + i));
                     }
-                    if (obsXInsp.Count > 0)
+                    if (obsXInsp.Count > 0 || bpXInsp.Count > 0)
                     {
                         //Iterar cada semana
                         foreach (var sem in frec_cabeceras)
                         {
-                            var contador = 0;
+                            var contadorObs = 0;
+                            var contadorBp = 0;
                             //Iterar las cabeceras de cada semana
                             foreach (var cabecera in sem.Select(x => x.cabecera).ToList())
                             {
                                 if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
-                                    contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                                    contadorObs += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                                if (bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
+                                    contadorBp += bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
                             }
                             var semana = Convert.ToInt32(sem.Key.Substring(0, 2));
                             var anio = Convert.ToInt32(sem.Key.Substring(3, 4));
                             var nombre = "Sem " + semana.ToString() + " - " + anio.ToString();
-                            lstSemConValor.Add(new Dimension(nombre, contador, (anio * 100) + semana));
+                            lstSemConValorObs.Add(new Dimension(nombre, contadorObs, (anio * 100) + semana));
+                            lstSemConValorBP.Add(new Dimension(nombre, contadorBp, (anio * 100) + semana));
                         }
                     }
 
-                    var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    output = output.OrderBy(x => x.Index).ToList();
+                    var distinctObs = lstSemSinValor.Where(x => !lstSemConValorObs.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    outputObs = distinctObs.Union(lstSemConValorObs).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    outputObs = outputObs.OrderBy(x => x.Index).ToList();
+                    var distinctBP = lstSemSinValor.Where(x => !lstSemConValorBP.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    outputBP = distinctBP.Union(lstSemConValorBP).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    outputBP = outputBP.OrderBy(x => x.Index).ToList();
                 }
                 //Diferentes años
                 else
@@ -403,18 +435,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         if (semAnt > semAct)
                             nAnio++;
                         //Iterar cada cabecera de la semana
-                        var contador = 0;
+                        var contadorObs = 0;
+                        var contadorBP = 0;
                         foreach (var cabecera in sem.Select(x => x.cabecera).ToList())
                         {
                             if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
-                                contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                                contadorObs += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                            if (bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
+                                contadorBP += bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
                         }
-                        lstSemConValor.Add(new Dimension(nombre, contador, (anioAct * 100) + semAct));
+                        lstSemConValorObs.Add(new Dimension(nombre, contadorObs, (anioAct * 100) + semAct));
+                        lstSemConValorBP.Add(new Dimension(nombre, contadorBP, (anioAct * 100) + semAct));
                         semAnt = semAct;
                     }
-                    var distinct = lstSemSinValor.Where(x => !lstSemConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    output = distinct.Union(lstSemConValor).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    output = output.OrderBy(x => x.Index).ToList();
+                    var distinctObs = lstSemSinValor.Where(x => !lstSemConValorObs.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    outputObs = distinctObs.Union(lstSemConValorObs).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    outputObs = outputObs.OrderBy(x => x.Index).ToList();
+                    var distinctBP = lstSemSinValor.Where(x => !lstSemConValorBP.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                    outputBP = distinctBP.Union(lstSemConValorBP).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
+                    outputBP = outputBP.OrderBy(x => x.Index).ToList();
                 }
             }
             else if (frecuencia.Equals("Mensual"))
@@ -425,7 +464,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 int nMeses;
                 var lstMesSinValor = new List<Dimension>();
-                var lstMesConValor = new List<Dimension>();
+                var lstMesConValorObs = new List<Dimension>();
+                var lstMesConValorBP = new List<Dimension>();
 
                 if (FechaInicio.Year == FechaFin.Year)
                 {
@@ -478,25 +518,36 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     //Iterar cada semana
                     foreach (var mes in frec_cabeceras)
                     {
-                        var contador = 0;
+                        var contadorObs = 0;
+                        var contadorBP = 0;
                         //Iterar las cabeceras de cada semana
                         foreach (var cabecera in mes.Select(x => x.cabecera).ToList())
                         {
                             if (obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
-                                contador += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                                contadorObs += obsXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
+                            if (bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)) != null)
+                                contadorBP += bpXInsp.FirstOrDefault(x => x.Key.Equals(cabecera)).Count();
                         }
 
                         var nMes = Convert.ToInt32(mes.Key.Substring(0, 2));
                         var anio = Convert.ToInt32(mes.Key.Substring(3, 4));
                         var fecha = new DateTime(anio, nMes, 1);
                         var nombre = fecha.ToString("MMMM").Substring(0, 3) + " " + fecha.ToString("yyyy");
-                        lstMesConValor.Add(new Dimension(nombre, contador, (anio * 100) + nMes));
+                        lstMesConValorObs.Add(new Dimension(nombre, contadorObs, (anio * 100) + nMes));
+                        lstMesConValorBP.Add(new Dimension(nombre, contadorBP, (anio * 100) + nMes));
                     }
                 }
-                var distinct = lstMesSinValor.Where(x => !lstMesConValor.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                output = distinct.Union(lstMesConValor).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();
+                var distinctObs = lstMesSinValor.Where(x => !lstMesConValorObs.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                outputObs = distinctObs.Union(lstMesConValorObs).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();
+                var distinctBP = lstMesSinValor.Where(x => !lstMesConValorBP.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
+                outputBP = distinctBP.Union(lstMesConValorBP).Where(x => x.Index >= 0).OrderBy(x => x.Index).ToList();
             }
-            return output;
+            outputObs = outputObs.OrderBy(x => x.Index).ToList();
+            outputBP = outputBP.OrderBy(x => x.Index).ToList();
+
+            output.Add(outputObs);
+            output.Add(outputBP);
+            return output; 
         }
         public async Task<List<Dimension>> GetNObservaciones(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
         {
@@ -512,13 +563,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()))
                 .ToListAsync();
 
-            var observaciones = tempObservaciones.Where(x =>
+            var buenasPracticas = tempObservaciones.Where(x =>
+                x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .GroupBy(x => x.Estado)
                 .ToList();
-            //Se considera también eliminados            
+
+            var observaciones = tempObservaciones.Where(x =>
+                !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
+                .GroupBy(x => x.Estado)
+                .ToList();       
 
             var output = new List<Dimension>();
             output.Add(new Dimension(EstadosInspeccion.Registrado.ToString(), 0, 0));
@@ -528,10 +587,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Add(new Dimension(EstadosInspeccion.Vencido.ToString(), 0, 4));
             output.Add(new Dimension(EstadosInspeccion.Ampliado.ToString(), 0, 5));
             output.Add(new Dimension("Total", tempObservaciones.Count(), 6));
+            output.Add(new Dimension("B"+EstadosInspeccion.Implementado.ToString(), 0, 7));
+            output.Add(new Dimension("B" + EstadosInspeccion.Aprobado.ToString(), 0, 8));
+            output.Add(new Dimension("B" + EstadosInspeccion.Rechazado.ToString(), 0, 9));
 
             foreach (var item in observaciones)
             {
                 output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
+            }
+            foreach (var item in buenasPracticas)
+            {
+                output.FirstOrDefault(x => x.Nombre.Equals("B" + item.Key)).Valor = item.Count();
             }
             return output;
         }
@@ -546,6 +612,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
             var observaciones = tempObservaciones.Where(x =>
+                !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
@@ -573,6 +640,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
             var observaciones = tempObservaciones.Where(x =>
+                !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
@@ -625,6 +693,98 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             case "Implementado": obsSSOxEstado.FirstOrDefault(x => x.Index == 1).Valor += subitem.Count(); break;
                             case "Aprobado": obsMAPxEstado.FirstOrDefault(x => x.Index == 2).Valor += subitem.Count(); break;
                             case "Vencido": obsSSOxEstado.FirstOrDefault(x => x.Index == 3).Valor += subitem.Count(); break;
+                        }
+                    }
+                }
+            }
+            output.Add(obsMAPxEstado);
+            output.Add(obsSSOxEstado);
+
+            return output;
+        }public async Task<List<Dimension>> GetBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin)
+                .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
+                .GroupBy(x => x.Tipo_Observacion)
+                .ToList();
+            var output = new List<Dimension>();
+            output.Add(new Dimension("MAP", 0, 0));
+            output.Add(new Dimension("SSO", 0, 1));
+            foreach (var item in observaciones)
+            {
+                output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
+            }
+            return output;
+        }
+        public async Task<List<List<Dimension>>> GetBPMAPvsSSO_Estado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion? estado)
+        {
+            var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
+                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
+                x.Id_Empresa.Equals(empresa > 0 ? empresa : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(gerencia > 0 ? gerencia : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin)
+                .ToListAsync();
+            var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            var observaciones = tempObservaciones.Where(x =>
+                x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
+                cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+                x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
+                x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
+                .GroupBy(x => x.Tipo_Observacion)
+                .ToList();
+
+            var output = new List<List<Dimension>>();
+            var obsMAPxEstado = new List<Dimension>();
+            var obsSSOxEstado = new List<Dimension>();
+
+            obsMAPxEstado.Add(new Dimension("Pendientes de verificación", 0, 0));
+            obsMAPxEstado.Add(new Dimension("Aprobados", 0, 1));
+            obsMAPxEstado.Add(new Dimension("Rechazados", 0, 2));
+
+            obsSSOxEstado.Add(new Dimension("Pendientes de verificación", 0, 0));
+            obsSSOxEstado.Add(new Dimension("Aprobados", 0, 1));
+            obsSSOxEstado.Add(new Dimension("Rechazados", 0, 2));
+
+            foreach (var item in observaciones)
+            {
+                var obsXEstado = item.GroupBy(x => x.Estado).ToList();
+                if (item.Key.Equals("MAP"))
+                {
+                    foreach (var subitem in obsXEstado)
+                    {
+                        switch (subitem.Key)
+                        {
+                            case "Implementado": obsMAPxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Aprobado": obsMAPxEstado.FirstOrDefault(x => x.Index == 1).Valor += subitem.Count(); break;
+                            case "Rechazado": obsMAPxEstado.FirstOrDefault(x => x.Index == 2).Valor += subitem.Count(); break;
+                        }
+                    }
+                }
+                else if (item.Key.Equals("SSO"))
+                {
+                    foreach (var subitem in obsXEstado)
+                    {
+                        switch (subitem.Key)
+                        {
+                            case "Implementado": obsSSOxEstado.FirstOrDefault(x => x.Index == 0).Valor += subitem.Count(); break;
+                            case "Aprobado": obsMAPxEstado.FirstOrDefault(x => x.Index == 1).Valor += subitem.Count(); break;
+                            case "Rechazado": obsSSOxEstado.FirstOrDefault(x => x.Index == 2).Valor += subitem.Count(); break;
                         }
                     }
                 }
@@ -735,6 +895,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             output.Add(new Dimension("Condición Subestándar", 0, 1));
             output.Add(new Dimension("Acto Subestándar", 0, 2));
+            output.Add(new Dimension("Buenas Prácticas", 0, 3));
 
             foreach (var item in observaciones)
             {
@@ -742,6 +903,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
                     case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                    case "Buenas Prácticas": output.FirstOrDefault(x => x.Nombre.Equals("Buenas Prácticas")).Valor = item.Count(); break;
                 }
             }
             return output;
@@ -771,6 +933,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             output.Add(new Dimension("Condición Subestándar", 0, 1));
             output.Add(new Dimension("Acto Subestándar", 0, 2));
+            output.Add(new Dimension("Buenas Prácticas", 0, 3));
 
             foreach (var item in observaciones)
             {
@@ -778,6 +941,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     case "Condición Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Condición Subestándar")).Valor = item.Count(); break;
                     case "Acto Subestándar": output.FirstOrDefault(x => x.Nombre.Equals("Acto Subestándar")).Valor = item.Count(); break;
+                    case "Buenas Prácticas": output.FirstOrDefault(x => x.Nombre.Equals("Buenas Prácticas")).Valor = item.Count(); break;
                 }
             }
             return output;
@@ -930,15 +1094,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Domain.Inspecciones.InspeccionCabecera>> GetDetalleObsxEstado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion estado)
+        public async Task<List<Domain.Inspecciones.InspeccionCabecera>> GetDetalleObsxEstado(int empresa, int gerencia, int respLevObs, int Asesor, DateTime FechaInicio, DateTime FechaFin, EstadosInspeccion estado, bool buenaPractica)
         {
             var output = new List<Domain.Inspecciones.InspeccionCabecera>();
 
-            var observaciones = await _context.Inspecciones_Detalle.Where(x =>
+            var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            observaciones = observaciones.Where(x =>
+                (buenaPractica?x.Descripcion_Condicion.Equals("Buenas Prácticas"): !x.Descripcion_Condicion.Equals("Buenas Prácticas")) &&
                 x.Estado.Equals(estado.ToString()) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
-                .ToListAsync();
+                .ToList();
 
             var cabeceras = await _context.Inspecciones_Cabecera.Where(x =>
                !(x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) || x.Estado.Equals(EstadosInspeccion.Pendiente.ToString())) &&
@@ -976,7 +1142,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     obs.FechaProgramada = subitem.Fecha_Programada;
                     obs.NivelRiesgo = subitem.Nivel_Riesgo;
                     obs.TipoObservacion = subitem.Tipo_Observacion;
-                    obs.TipoCondicion = new Domain.ValueObjects.TipoCondicion(tipo_condicion_obj.Id_Tipo_Condicion, tipo_condicion_obj.Descripcion, tipo_condicion_obj.Grupo);
+                    if(tipo_condicion_obj!=null)
+                        obs.TipoCondicion = new Domain.ValueObjects.TipoCondicion(tipo_condicion_obj.Id_Tipo_Condicion, tipo_condicion_obj.Descripcion, tipo_condicion_obj.Grupo);
 
                     outputItem.Observaciones.Add(obs);
                 }

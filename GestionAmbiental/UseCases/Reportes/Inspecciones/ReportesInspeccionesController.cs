@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetBPMAPvsSSO;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetBPMAPvsSSO_Estado;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetDetalleObsxEstado;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspeccionesXFecha;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
@@ -36,6 +38,8 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         private readonly IGetNObservaciones _getNObservaciones;
         private readonly IGetObsMAPvsSSO _getObsMAPvsSSO;
         private readonly IGetObsMAPvsSSO_Estado _getObsMAPvsSSO_Estado;
+        private readonly IGetBPMAPvsSSO _getBPMAPvsSSO;
+        private readonly IGetBPMAPvsSSO_Estado _getBPMAPvsSSO_Estado;
         private readonly IGetObsNivelRiesgoMA _getObsNivelRiesgoMA;
         private readonly IGetObsNivelRiesgoSSO _getObsNivelRiesgoSSO;
         private readonly IGetObsClasificacionMA _getObsClasificacionMA;
@@ -54,6 +58,8 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             IGetNObservaciones getNObservaciones,
             IGetObsMAPvsSSO getObsMAPvsSSO,
             IGetObsMAPvsSSO_Estado getObsMAPvsSSO_Estado,
+            IGetBPMAPvsSSO getBPMAPvsSSO,
+            IGetBPMAPvsSSO_Estado getBPMAPvsSSO_Estado,
             IGetObsNivelRiesgoMA getObsNivelRiesgoMA,
             IGetObsNivelRiesgoSSO getObsNivelRiesgoSSO,
             IGetObsClasificacionMA getObsClasificacionMA,
@@ -71,6 +77,8 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             _getNObservaciones = getNObservaciones;
             _getObsMAPvsSSO = getObsMAPvsSSO;
             _getObsMAPvsSSO_Estado = getObsMAPvsSSO_Estado;
+            _getBPMAPvsSSO = getBPMAPvsSSO;
+            _getBPMAPvsSSO_Estado = getBPMAPvsSSO_Estado;
             _getObsNivelRiesgoMA = getObsNivelRiesgoMA;
             _getObsNivelRiesgoSSO = getObsNivelRiesgoSSO;
             _getObsClasificacionMA = getObsClasificacionMA;
@@ -169,6 +177,24 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         public async Task<IActionResult> ActualizarObsMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
         {
             var mapvssso = await _getObsMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                mapvssso = mapvssso
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarBPMAPvsSSO(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var mapvssso = await _getBPMAPvsSSO.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
+            dynamic response = new
+            {
+                mapvssso = mapvssso
+            };
+            return Ok(response);
+        }
+        public async Task<IActionResult> ActualizarBPMAPvsSSO_x_Estado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        {
+            var mapvssso = await _getBPMAPvsSSO_Estado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
             dynamic response = new
             {
                 mapvssso = mapvssso

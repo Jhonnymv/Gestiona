@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObserva
 {
     public interface IGetObservacionesXFecha
     {
-        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia,string estado);
+        Task<List<List<DimensionOutput>>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia,string estado);
     }
 }
