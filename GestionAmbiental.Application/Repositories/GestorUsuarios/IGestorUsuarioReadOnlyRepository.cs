@@ -18,5 +18,7 @@ namespace GestionAmbiental.Application.Repositories.GestorUsuarios
         Task<List<AreaTrabajo>> GetAreasTrabajo();
         Task<int> AgregarEmpresa(Empresa empresa);
         Task<int> AgregarAreaTrabajo(AreaTrabajo area);
+
+        Task<string> ReasignarEmpresas();
     }
 }

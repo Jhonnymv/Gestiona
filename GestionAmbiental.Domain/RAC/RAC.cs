@@ -11,9 +11,9 @@ namespace GestionAmbiental.Domain.RAC
         public string Codigo { get; set; }
         public string Nombres_Apellidos { get; set; }
         public int Id_Registrado_Por { get; set; }
-        public int Id_Gerencia { get; set; }
+        public int? Id_Gerencia { get; set; }
         public Gerencia Gerencia { get; set; }
-        public int Id_Empresa { get; set; }
+        public int? Id_Empresa { get; set; }
         public Empresa Empresa { get; set; }
         public string Otra_Empresa { get; set; }
         public int Id_Empresa_Obs { get; set; }

@@ -22,6 +22,7 @@ using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Renci.SshNet;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -30,16 +31,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         private IHostingEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
         private readonly IGetInfo_SGA _info_SGA;
+        private readonly IDataProtector _protector;
         public DescargaInspeccionController(
             IHostingEnvironment hostingEnvironment,
             IConsultarInspeccionDescarga consultarInspeccionDescarga,
-            IGetInfo_SGA info_SGA)
+            IGetInfo_SGA info_SGA,
+            IDataProtectionProvider dataProtectionProvider,
+            DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _hostingEnvironment = hostingEnvironment;
             _consultarInspeccionDescarga = consultarInspeccionDescarga;
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
         }
-        
+
         public async Task<IActionResult> DescargaInspeccion(int IdCabecera)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -144,13 +149,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
-                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 9, rowHeight, imageIndex, "condicion");
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 9, rowHeight, imageIndex, "condicion", false);
                         rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                         imageIndex++;
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
-                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 25, rowHeight, imageIndex, "inspeccion");
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 25, rowHeight, imageIndex, "inspeccion", false);
                         rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                         imageIndex++;
                     }
@@ -173,7 +178,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if ((evidencia_inspeccion.extension == ".jpg" ||
                         evidencia_inspeccion.extension == ".png" ||
-                        evidencia_inspeccion.extension == ".jpeg" || 
+                        evidencia_inspeccion.extension == ".jpeg" ||
                         evidencia_inspeccion.extension == ".JPG" ||
                         evidencia_inspeccion.extension == ".PNG" ||
                         evidencia_inspeccion.extension == ".JPEG") &&
@@ -202,7 +207,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
 
                     row.GetCell(29).SetCellValue(observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "");
-                                        
+
                     obsIndex++;
                     fila++;
 
@@ -218,14 +223,239 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 ms.Position = 0;
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
-        }        
+        }
+        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + FechaInicio + "&FechaFin=" + FechaFin });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin);
+                var observaciones = new List<ObservacionReporte>();
+                string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
+                string sFileName = @"DescargaObservacionesInspección.xlsx";
+                string sFilePath = Path.Combine(sWebRootFolder, sFileName);
+                FileStream fs = new FileStream(sFilePath, FileMode.Open, FileAccess.Read);
+                // Load the template into a NPOI workbook
+                XSSFWorkbook templateWorkbook = new XSSFWorkbook(fs);
+
+                // Load the sheet you are going to use as a template into NPOI
+                ISheet sheet = templateWorkbook.GetSheet("Observaciones");
+                //->Fila observaciones en el formato
+                int fila = 2;
+                //->Cell Style
+                XSSFCellStyle estiloNormal = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFCellStyle estiloImplementacion = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFFont fuenteImplementacion = (XSSFFont)templateWorkbook.CreateFont();
+                XSSFCellStyle estiloVerificacion = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFFont fuenteVerificacion = (XSSFFont)templateWorkbook.CreateFont();
+                XSSFCellStyle estiloVencido = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFFont fuenteVencido = (XSSFFont)templateWorkbook.CreateFont();
+                XSSFCellStyle estiloAprobado = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFFont fuenteAprobado = (XSSFFont)templateWorkbook.CreateFont();
+                XSSFCellStyle estiloRechazado = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                XSSFFont fuenteRechazado = (XSSFFont)templateWorkbook.CreateFont();
+
+                var estilos = new List<Estilo>();
+                estilos.Add(new Estilo("Pendiente de Implementación", templateWorkbook,(byte)255, (byte)240, (byte)128, IndexedColors.DarkYellow.Index));
+                estilos.Add(new Estilo("Pendiente de Verificación", templateWorkbook, (byte)128, (byte)255, (byte)240, IndexedColors.DarkBlue.Index));
+                estilos.Add(new Estilo("Vencido", templateWorkbook, (byte)255, (byte)103, (byte)103, IndexedColors.DarkRed.Index));
+                estilos.Add(new Estilo("Aprobado", templateWorkbook, (byte)159, (byte)255, (byte)128, IndexedColors.DarkGreen.Index));
+                estilos.Add(new Estilo("Rechazado", templateWorkbook, (byte)255, (byte)222, (byte)128, IndexedColors.Orange.Index));
+
+                estiloNormal.WrapText = true;
+                estiloNormal.VerticalAlignment = VerticalAlignment.Center;
+                estiloNormal.BorderTop = BorderStyle.Thin;
+                estiloNormal.BorderBottom = BorderStyle.Thin;
+                estiloNormal.BorderLeft = BorderStyle.Thin;
+                estiloNormal.BorderRight = BorderStyle.Thin;
+                estiloNormal.Alignment = HorizontalAlignment.Center;
+
+                foreach (var inspeccion in inspecciones)
+                    foreach (var observacion in inspeccion.Observaciones)
+                    {
+                        var estado = "";
+                        switch (observacion.Estado)
+                        {
+                            case "Registrado":
+                            case "Ampliado":
+                                estado = "Pendiente de Implementación";
+                                break;
+                            case "Implementado":
+                                estado = "Pendiente de Verificación";
+                                break;
+                            case "Vencido":
+                                estado = "Vencido";
+                                break;
+                            case "Aprobado":
+                                estado = "Aprobado";
+                                break;
+                            case "Rechazado":
+                                if (observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                                    estado = "Rechazado";
+                                else
+                                    estado = "Pendiente de Implementación";
+                                break;
+                        }
+                        observaciones.Add(new ObservacionReporte
+                        {
+                            IdInspeccion = inspeccion.IdCabecera.ToString(),
+                            SSO_MA = observacion.TipoObservacion,
+                            ActoCondicion = observacion.DescripcionCondicion,
+                            EvidenciaCondicion = observacion.EvidenciaCondicion,
+                            TipoCondicion = observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
+                            NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
+                            Accion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
+                            ResponsableLevantamiento = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                            FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "No Aplica",
+                            EvidenciaImplementacion = observacion.EvidenciaImplementacion,
+                            FechaCierre = observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "No Aplica",
+                            Estado = estado,
+                            ResponsableInspeccion = inspeccion.ResponsableInspeccion,
+                            FechaInspeccion = inspeccion.FechaInspeccion.ToString("dd/MM/yyyy"),
+                            RiesgoFatalidad = "",
+                            GerenciaLevantamiento = "",
+                            GerenciaInspeccion = inspeccion.Gerencia,
+                            Codigo = inspeccion.Codigo
+                        });
+                    }
+                observaciones = observaciones.OrderBy(x => x.FechaInspeccion).ToList();
+
+                //índice de la primera imagen a insertar en la colección de images del workbook
+                int imageIndex = -1;
+                //indice de observacion
+                int obsIndex = 1;
+
+                foreach (var observacion in observaciones)
+                {
+                    short rowHeight = 850;
+                    IRow row = sheet.CreateRow(fila);
+
+                    //Aplicar cell style a una fila de observación
+                    for (int i = 1; i <= 18; i++)
+                    {
+                        row.CreateCell(i);
+                        row.GetCell(i).CellStyle = estiloNormal;
+                    }
+
+                    ImageProperties evidencia_condicion = new ImageProperties();
+                    ImageProperties evidencia_inspeccion = new ImageProperties();
+
+                    //adaptar el tamaño de la fila al mayor determinado por la imagen
+                    row.Height = rowHeight;
+
+                    if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
+                    {
+                        try {
+                            evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                            imageIndex++;
+                        }
+                        catch (Exception e) { }
+                    }
+                    if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
+                    {
+                        try
+                        {
+                            evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion", true);
+                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                            imageIndex++;
+                        }
+                        catch (Exception e) { }
+                    }
+                    //adaptar el tamaño de la fila al mayor determinado por la imagen
+                    row.Height = rowHeight;
+                    //rezise images
+
+                    if ((evidencia_condicion.extension == ".jpg" ||
+                        evidencia_condicion.extension == ".png" ||
+                        evidencia_condicion.extension == ".jpeg" ||
+                        evidencia_condicion.extension == ".JPG" ||
+                        evidencia_condicion.extension == ".PNG" ||
+                        evidencia_condicion.extension == ".JPEG" &&
+                        evidencia_condicion.extension != null) &&
+                        evidencia_condicion.rowHeight != 0 &&
+                        evidencia_condicion.rowHeight < row.Height)
+                        evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+
+                    if ((evidencia_inspeccion.extension == ".jpg" ||
+                        evidencia_inspeccion.extension == ".png" ||
+                        evidencia_inspeccion.extension == ".jpeg" ||
+                        evidencia_inspeccion.extension == ".JPG" ||
+                        evidencia_inspeccion.extension == ".PNG" ||
+                        evidencia_inspeccion.extension == ".JPEG") &&
+                        evidencia_inspeccion.extension != null &&
+                        evidencia_inspeccion.rowHeight != 0 &&
+                        evidencia_inspeccion.rowHeight < row.Height)
+                        evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+
+                    int startIndex = 1;
+                    //->Index
+                    row.GetCell(startIndex).SetCellValue(obsIndex);
+                    //->SSO/MA
+                    row.GetCell(startIndex + 1).SetCellValue(observacion.SSO_MA);
+                    //->Acto/Condición Subestándar Identificada
+                    row.GetCell(startIndex + 2).SetCellValue(observacion.ActoCondicion);
+                    //->Tipo de Condición / Acto Subestándar
+                    row.GetCell(startIndex + 4).SetCellValue(observacion.TipoCondicion);
+                    //->Nivel de Riesgo
+                    row.GetCell(startIndex + 5).SetCellValue(observacion.NivelRiesgo);
+                    //->Acción Preventiva / Correctiva Tomada
+                    row.GetCell(startIndex + 6).SetCellValue(observacion.Accion);
+                    //->Responsable del Levanamiento del Acto / Condición Subestándar
+                    row.GetCell(startIndex + 7).SetCellValue(observacion.ResponsableLevantamiento);
+                    //->Fecha Programada
+                    row.GetCell(startIndex + 8).SetCellValue(observacion.FechaProgramada);
+                    //->Fecha Cierre
+                    row.GetCell(startIndex + 10).SetCellValue(observacion.FechaCierre);
+                    //-> Estado
+                    row.GetCell(startIndex + 11).SetCellValue(observacion.Estado);
+                    row.GetCell(startIndex + 11).CellStyle = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado)).EstiloCelda;
+                    //-> Responsable Inspección
+                    row.GetCell(startIndex + 12).SetCellValue(observacion.ResponsableInspeccion);
+                    //-> Fecha Inspección
+                    row.GetCell(startIndex + 13).SetCellValue(observacion.FechaInspeccion);
+                    //-> Riesgo de Fatalidad
+                    row.GetCell(startIndex + 14).SetCellValue(observacion.RiesgoFatalidad);
+                    //-> Gerencia Responsable Levantamiento
+                    row.GetCell(startIndex + 15).SetCellValue(observacion.GerenciaLevantamiento);
+                    //-> Gerencia Responsable Levantamiento
+                    row.GetCell(startIndex + 16).SetCellValue(observacion.GerenciaInspeccion);
+                    //-> N° Inspección GESTIONA
+                    row.GetCell(startIndex + 17).SetCellValue(observacion.Codigo);
+                    //XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
+                    //{
+                    //    //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
+                    //    Address = "https://localhost:44387/Inspecciones/DetalleInspeccion?IdCabecera=" + (_protector.Protect(observacion.IdInspeccion))
+                    //};
+                    //row.GetCell(startIndex + 17).Hyperlink = (UrlLinkLugReg);
+
+                    obsIndex++;
+                    fila++;
+                }
+                // Force formulas to update with new data we added
+                sheet.ForceFormulaRecalculation = true;
+                // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
+                MemoryStream ms = new MemoryStream();
+                templateWorkbook.Write(ms);
+
+                // Send the memory stream to the browser
+                ms.Position = 0;
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteObservaciones-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+            }
+        }
         private double GetRowHeight(int image_width, int image_height, double cellWidth)
         {
             //double cellWidth = 7.16;//cm
-            return ((image_height * cellWidth) / image_width)/3;
+            return ((image_height * cellWidth) / image_width) / 3;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet,string path,int row, int column, short rowHeight,int imageIndex,string tipoEvidencia)
+        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int column, short rowHeight, int imageIndex, string tipoEvidencia, bool reporte)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
@@ -261,7 +491,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 var serverInfo = new Info_SGAOutput();
                 if (tipoEvidencia == "condicion")
                 {
-                    imgNCol = 5;
+                    if (!reporte)
+                        imgNCol = 5;
                     serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
                     foreach (var item in serverInfo.Info)
                     {
@@ -277,7 +508,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 else
                 {
-                    imgNCol = 4;
+                    if (!reporte)
+                        imgNCol = 4;
                     serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
                     foreach (var item in serverInfo.Info)
                     {
@@ -304,7 +536,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     sftp.Dispose();
                 }
                 fileStream.Close();
-                
+
                 //3. Desencriptar archivo
                 await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
                 var pathDesencriptado = archivePath + "desencriptado.zip";
@@ -318,13 +550,13 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     {
                         filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
                         if (filePath.StartsWith(filePath, StringComparison.Ordinal))
-                                entry.ExtractToFile(filePath);
+                            entry.ExtractToFile(filePath);
                     }
                 }
                 //5. validar extension y cargar en una celda
                 var extension = Path.GetExtension(filePath);
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg") )
-                {                
+                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
+                {
                     byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                     PictureType pType;
                     if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg"))
@@ -380,7 +612,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     anchor.Col2 = column + imgNCol;
 
                     IDrawing drawing = sheet.CreateDrawingPatriarch();
-                    
+
                     IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
                     var image_dim = picture.GetImageDimension();
                     var mergedCellWidth = 0.0;
@@ -392,11 +624,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     picture.Resize(1.0);
 
                     output.rowHeight = rowHeight;
-                    output.image = picture;                   
+                    output.image = picture;
                 }
                 output.extension = extension;
-            }            
-           
+            }
+
             return output;
         }
         private class ImageProperties
@@ -462,6 +694,56 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             cs.Close();
             fsCrypt.Close();
 
+        }
+        private class ObservacionReporte
+        {
+            public string IdInspeccion { get; set; }
+            public string SSO_MA { get; set; }
+            public string ActoCondicion { get; set; }
+            public string EvidenciaCondicion { get; set; }
+            public string TipoCondicion { get; set; }
+            public string NivelRiesgo { get; set; }
+            public string Accion { get; set; }
+            public string ResponsableLevantamiento { get; set; }
+            public string FechaProgramada { get; set; }
+            public string EvidenciaImplementacion { get; set; }
+            public string FechaCierre { get; set; }
+            public string Estado { get; set; }
+            public XSSFCellStyle EstadoEstilo { get; set; }
+            public string ResponsableInspeccion { get; set; }
+            public string FechaInspeccion { get; set; }
+            public string RiesgoFatalidad { get; set; }
+            public string GerenciaLevantamiento { get; set; }
+            public string GerenciaInspeccion { get; set; }
+            public string Codigo { get; set; }
+        }
+        private class Estilo{
+            public string Estado { get; set; }
+            public XSSFCellStyle EstiloCelda { get; set; }
+            public XSSFFont Fuente { get; set; }
+            public Estilo()
+            {
+
+            }
+            public Estilo(string estado, XSSFWorkbook libro,byte r, byte g, byte b, short colorTexto)
+            {
+                Estado = estado;
+                EstiloCelda = (XSSFCellStyle)libro.CreateCellStyle();
+                EstiloCelda.WrapText = true;
+                EstiloCelda.VerticalAlignment = VerticalAlignment.Center;
+                EstiloCelda.BorderTop = BorderStyle.Thin;
+                EstiloCelda.BorderBottom = BorderStyle.Thin;
+                EstiloCelda.BorderLeft = BorderStyle.Thin;
+                EstiloCelda.BorderRight = BorderStyle.Thin;
+                EstiloCelda.Alignment = HorizontalAlignment.Center;
+                EstiloCelda.SetFillForegroundColor(new NPOI.XSSF.UserModel.XSSFColor(new byte[] { r, g, b }));
+                EstiloCelda.FillPattern = FillPattern.SolidForeground;
+
+                Fuente = (XSSFFont)libro.CreateFont();
+                Fuente.Color = colorTexto;
+
+                EstiloCelda.SetFont(Fuente);
+            }
         }
     }
 }

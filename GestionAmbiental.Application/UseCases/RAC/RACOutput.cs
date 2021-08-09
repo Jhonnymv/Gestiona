@@ -10,9 +10,9 @@ namespace GestionAmbiental.Application.UseCases.RAC
         public string Codigo { get; set; }
         public string Nombres_Apellidos { get; set; }
         public int Id_Registrado_Por { get; set; }
-        public int Id_Gerencia { get; set; }
+        public int? Id_Gerencia { get; set; }
         public string Gerencia { get; set; }
-        public int Id_Empresa { get; set; }
+        public int? Id_Empresa { get; set; }
         public string Empresa { get; set; }
         public string Otra_Empresa { get; set; }
         public int Id_Empresa_Obs { get; set; }

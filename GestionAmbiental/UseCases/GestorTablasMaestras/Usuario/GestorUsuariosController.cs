@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.EditarUsuario;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.ReasignarEmpresas;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.UpdateUsuarios;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
@@ -25,6 +26,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         private readonly IGetUsuario _getUsuario;
         private readonly IEditarUsuario _editarUsuario;
         private readonly IUpdateUsuarios _updateUsuarios;
+        private readonly IReasignarEmpresas _reasignarEmpresas;
 
         private readonly IGetInfo_SGA _info_SGA;
         public GestorUsuariosController(
@@ -32,6 +34,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             IGetUsuario getUsuario,
             IEditarUsuario editarUsuario,
             IUpdateUsuarios updateUsuarios,
+            IReasignarEmpresas reasignarEmpresas,
             IGetInfo_SGA info_SGA
             )
         {
@@ -39,6 +42,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
             _editarUsuario = editarUsuario ?? throw new ArgumentNullException(nameof(editarUsuario));
             _updateUsuarios = updateUsuarios ?? throw new ArgumentNullException(nameof(updateUsuarios));
+            _reasignarEmpresas = reasignarEmpresas ?? throw new ArgumentNullException(nameof(reasignarEmpresas));
             _info_SGA = info_SGA ?? throw new ArgumentNullException(nameof(info_SGA));
         }
 
@@ -287,6 +291,45 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                 };
                 return Ok(response);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ReasignarEmpresas()
+        {
+            dynamic response;
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+                response = new
+                {
+                    success = false,
+                    message = "No Autorizado"
+                };
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                if (!userInfo.Rol.Equals(InspeccionRol.Admin))
+                    response = new
+                    {
+                        success = false,
+                        message = "No Autorizado"
+                    };
+                else
+                {
+                    var result = await _reasignarEmpresas.Execute();
+                    if (result == "Ok")
+                        response = new
+                        {
+                            success = true,
+                            message = result
+                        };
+                    else
+                        response = new
+                        {
+                            success = false,
+                            message = result
+                        };
+                }
+            }
+            return Ok(response);
         }
         private string GetValidProperty(DirectoryEntry directoryEntry, string propertyName)
         {

@@ -56,10 +56,13 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-1 row-center-center">
-                </div>
-                <div class="col-12 col-lg-2 row-center-center">
-                    <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                <div class="col-12 col-lg-3 flex-column">
+                    <div class="row-center-center">
+                        <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                    </div>
+                    <div class="row-center-center">
+                        <button type="button" class="btn btn-mc-success w-100" onclick="DescargarObservaciones()">Descargar Observaciones</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -184,7 +187,7 @@
         <div class="dashboard-header">
             <h5>Cantidad de Observaciones</h5>
         </div>
-        <div class="wrap-scroll-horizontal">            
+        <div class="wrap-scroll-horizontal">
             <div class="dashboard-item inspection" onclick="ReporteDetalleEstado('Reg')" style="cursor: pointer">
                 <div class="image-header-container">
                     <div class="dashboard-item-title inspection-opacity-color">
@@ -547,11 +550,37 @@
         </div>
     </div>
 </div>
+<!-- Modal Enviando Correo-->
+<div class="modal fade mc-modal" id="Modal_Descargando_Archivo" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label class="text-white">Descargando Archivo</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="~/js/UseCases/Reportes/ReportesInspeccionesScript.js" type="text/javascript"></script>
     <script type="text/javascript">
         function ReporteDetalleEstado(estado) {
-            
+
             var gerencia = $("#IdGerencia").val();
             var empresa = $("#IdEmpresa").val();
             var asesor = $("#IdAsesor").val();
@@ -559,6 +588,20 @@
             var fechaInicio = $("#FInicio").val();
             var fechaFin = $("#FFin").val();
             window.location.assign("@Url.Action("DetalleObservacionEstado","ReportesInspecciones")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin + "&estado=" + estado);
+        }
+        function DescargarObservaciones() {
+            Filtrar();
+            $("#Modal_Descargando_Archivo").modal('show');
+            var gerencia = $("#IdGerencia").val();
+            var empresa = $("#IdEmpresa").val();
+            var asesor = $("#IdAsesor").val();
+            var respLevObs = $("#IdRespLev").val();
+            var fechaInicio = $("#FInicio").val();
+            var fechaFin = $("#FFin").val();
+            window.location.assign("@Url.Action("DescargarFechas", "DescargaInspeccion")" + "?empresa=" + empresa + "&gerencia=" + gerencia + "&respLevObs=" + respLevObs + "&asesor=" + asesor + "&FechaInicio=" + fechaInicio + "&FechaFin=" + fechaFin);
+            setTimeout(function () {
+                $("#Modal_Descargando_Archivo").modal('hide');
+            }, 5000);
         }
     </script>
 }

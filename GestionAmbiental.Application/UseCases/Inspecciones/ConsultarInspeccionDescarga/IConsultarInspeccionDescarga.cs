@@ -9,5 +9,6 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.ConsultarInspeccion
     public interface IConsultarInspeccionDescarga
     {
         Task<InspeccionCabecera> Execute(int idCabecera);
+        Task<List<InspeccionCabecera>> Execute(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin);
     }
 }

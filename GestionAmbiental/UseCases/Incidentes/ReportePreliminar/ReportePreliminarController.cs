@@ -206,8 +206,11 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     {
                     var IdEncriptado = _protector.Protect(fila.Id_Reporte_Preliminar.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
+                        if (!fila.Estado.Equals(EstadosIncidentes.Eliminado.ToString()))
+                            filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                        else
+                            filasTabla += "<td style=\"width: 115px;\"><a href=\"/ReportePreliminar/EditarReportePreliminar?IdReporte=" + IdEncriptado + "\">" + fila.Codigo + " (Eliminado)" + "</a></td>";
+                        filasTabla += "<td>" + fila.Tipo_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Nivel_Incidente + "</td>";
                     filasTabla += "<td style=\"width: 150px;\">";
                     filasTabla += fila.Fecha_Incidente != null ? fila.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm") : "";

@@ -18,6 +18,7 @@
                     <div class="detail-header">
                         <span class="text-white bold text-center text-uppercase">Datos del Personal que Reporta</span>
                     </div>
+                    <input type="hidden" class="form-control" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
                     <div class="details-content">
                         <div class="row input_container">
                             <div class="col-12 col-sm-6 col-lg-6">
@@ -190,11 +191,11 @@
                             <a class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="Resumen">Cancelar</a>
                             @if (Model.Estado.Equals("Vencido") && (ViewBag.Rol.Equals("AsesorMAP") || ViewBag.Rol.Equals("AsesorSSO")))
                             {
-                                <a class="btn btn-primary" onclick="ampliarInspeccion()">Ampliar Fecha</a>
+                                <button type="button" class="btn btn-mc" onclick="ampliarInspeccion()">Ampliar Fecha</button>
                             }
                             @if (ViewBag.Permiso)
                             {
-                                <a class="btn btn-mc-outline-danger" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
+                                <a class="btn btn-mc-danger" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
                             }
                             <a class="btn btn-mc-success" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">                                
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -215,29 +216,39 @@
 <!-- Modal Ampliar Fecha-->
 <div class="modal fade" id="modal_ampliacion" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_ampliacion"
      aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="titulo_modal_ampliacion">
-                    Ampliar Fecha de Cierre Programada
-                </h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row mb-2">
-                    <div class="col-lg-4">
-                        <label>Nueva Fecha:</label>
-                    </div>
-                    <div class="col-8">
-                        <input type="date" class="form-control" id="nuevaFecha" />
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-menu modal-inspecciones">
+            <div class="modal-content">
+                <div class="inspection">
+                    <div class="image-header-container"
+                         style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+                        <div class="header-title inspection-opacity-color">
+                            <h3>Ampliar Fecha de Cierre Programada</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+                        </div><button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="Close"></button>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
+                <div class="modal-body">
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form details-container w-100">
+                            <div class="row input_container w-100">
+                                <div class="col-lg-12">
+                                    <label>Nueva Fecha</label>
+                                    <input type="date" class="form-control" id="nuevaFecha" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="button-container">
+                            <div></div>
+                            <div>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <a class="btn btn-primary" style="color:white" onclick="EnviarNuevaFecha()">Guardar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

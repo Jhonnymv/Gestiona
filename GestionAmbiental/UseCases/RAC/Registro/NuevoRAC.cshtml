@@ -279,6 +279,11 @@
 @section Scripts{
     <script src="~/js/stepper.js"></script>
     <script type="text/javascript">
+        var empresaUsuario = '@ViewBag.EmpresaUsuario';
+        $(document).ready(function () {
+            if (empresaUsuario != 'null')
+                $("#Id_Empresa").val(empresaUsuario);
+        });
         $("#Evidencia_Obs").change(function () {
             $("#danger_evidencia").html("");
             //Validacion del tamaño del archivo

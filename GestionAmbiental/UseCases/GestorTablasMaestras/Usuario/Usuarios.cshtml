@@ -13,6 +13,7 @@
         <div class="content-header">
             <div class="action-container tablas-color">
                 <button class="btn btn-special-action-outline tablas-color" onclick="ActualizarUsuarios()">Actualizar Información desde AD</button>
+                <button class="btn btn-special-action-outline tablas-color" onclick="ReasignarEmpresas()">Reasignar Empresas Inactivas</button>
             </div>
             <form autocomplete="off" class="custom-form">
                 <div class="col-12 col-lg-9">
@@ -182,6 +183,26 @@
                 url: "/GestorUsuarios/ActualizarInformacion",
                 traditional: true,
                 data: {},
+                success: (response) => {
+                    console.log(response)
+                    if (response.success) {
+                        $('#modal_msg').html(response.mensaje);
+                    } else {
+                        $('#modal_msg').html(response.mensaje);
+                    }
+                    $("#modal_icon").hide();
+                    $("#btn_modal_aceptar").show();
+                }
+            });
+        }
+        function ReasignarEmpresas() {
+            $('#Modal_Usuarios_AD').modal('show');
+            $('#modal_msg').html("Reasignando Empresas");
+            console.log("Enviando ajax ...")
+            $.ajax({
+                type: "GET",
+                url: "/GestorUsuarios/ReasignarEmpresas",
+                traditional: true,
                 success: (response) => {
                     console.log(response)
                     if (response.success) {

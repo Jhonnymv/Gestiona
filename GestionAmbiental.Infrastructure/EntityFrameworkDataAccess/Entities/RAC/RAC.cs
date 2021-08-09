@@ -18,9 +18,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC
         [Column(TypeName = "int")]
         public int Id_Registrado_Por { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Gerencia { get; set; }
+        public int? Id_Gerencia { get; set; }
         [Column(TypeName = "int")]
-        public int Id_Empresa { get; set; }
+        public int? Id_Empresa { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Otra_Empresa { get; set; }
         [Column(TypeName = "int")]

@@ -11,9 +11,9 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int IdInspeccionDetalle { get; set; }
         public string TipoObservacion { get; set; }
         public string DescripcionCondicion { get; set; }
-        public TipoCondicion? TipoCondicion { get; set; }
+        public TipoCondicion TipoCondicion { get; set; }
         public string EvidenciaCondicion { get; set; }
-        public string? NivelRiesgo { get; set; }
+        public string NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
         public Usuario ResponsableMarcobre { get; set; }
         public string ResponsableContratista { get; set; }

@@ -184,5 +184,48 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entidad.Id_Area_Trabajo;
         }
+
+        public async Task<string> ReasignarEmpresas()
+        {
+            try
+            {
+                var empresas = await _context.Empresas.ToListAsync();
+                var activas = empresas.Where(x => x.Estado.Equals("ACT")).ToList();
+                var inactivas = empresas.Where(x => x.Estado.Equals("INA")).ToList();
+                var usuariosEmpIna = await _context.Usuarios.ToListAsync();
+                usuariosEmpIna = usuariosEmpIna.Where(x => x.Estado.Equals("ACT") && x.Id_Empresa.HasValue && inactivas.Select(y => y.Id_Empresa).Contains(x.Id_Empresa.Value)).ToList();
+
+                var cambios = new List<CambioEmpresa>();
+                var usuarioActualizar = new List<Entities.Usuario>();
+                foreach (var inactiva in inactivas)
+                {
+                    foreach(var activa in activas)
+                    {
+                        if (activa.Razon_Social.Contains(inactiva.Razon_Social))
+                        {
+                            cambios.Add(new CambioEmpresa { IdAnterior = inactiva.Id_Empresa, IdNueva = activa.Id_Empresa });
+                            break;
+                        }
+                    }
+                }
+                foreach(var cambio in cambios)
+                {
+                    var toChange = usuariosEmpIna.Where(x => x.Id_Empresa.Equals(cambio.IdAnterior)).ToList();
+                    usuarioActualizar.AddRange(toChange.Select(x => { x.Id_Empresa = cambio.IdNueva; return x; }).ToList());
+                }
+                _context.Usuarios.UpdateRange(usuarioActualizar);
+                await _context.SaveChangesAsync();
+
+                return "Ok";
+            }catch(Exception e)
+            {
+                return e.Message;
+            }
+        }
+        private class CambioEmpresa
+        {
+            public int IdAnterior { get; set; }
+            public int IdNueva { get; set; }
+        }
     }
 }

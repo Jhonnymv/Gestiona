@@ -15,6 +15,7 @@ using GestionAmbiental.Application.UseCases.RAC.Registro.AmpliarFechaRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
+using GestionAmbiental.Application.UseCases.RAC.Registro.EditarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.EliminarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
@@ -36,6 +37,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarRAC _registrarRAC;
+        private readonly IEditarRAC _editarRAC;
         private readonly IConsultarRAC _consultarRAC;
         private readonly IGetUsuario _getUsuario;
         private readonly IAmpliarFechaRAC _ampliarFechaRAC;
@@ -48,7 +50,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
             ISelectItems selectItems,
-            IRegistrarRAC registrarRAC,
+            IRegistrarRAC registrarRAC, 
+            IEditarRAC editarRAC,
             IGetUsuario getUsuario,
             IAmpliarFechaRAC ampliarFechaRAC,
             IEliminarRAC eliminarRAC,
@@ -61,6 +64,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _consultarRAC = consultarRAC;
             _selectItems = selectItems;
             _registrarRAC = registrarRAC;
+            _editarRAC = editarRAC;
             _getUsuario = getUsuario;
             _ampliarFechaRAC = ampliarFechaRAC;
             _eliminarRAC = eliminarRAC;
@@ -103,12 +107,12 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                                
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
@@ -164,8 +168,13 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 {
                     var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
                     filasTabla += "<tr>";
-                    if(fila.Estado != EstadosRAC.Eliminado.ToString())
-                        filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC="+IdEncriptado+"\">" + fila.Codigo + "</a></label></td>";
+                    if (fila.Estado != EstadosRAC.Eliminado.ToString())
+                    {
+                        if(!userInfo.Rol.Equals(InspeccionRol.Admin))
+                            filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
+                        else
+                            filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/EditarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
+                    }
                     else
                         filasTabla += "<td><label style=\"width:80px;\">" + fila.Codigo + "</label></td>";
                     filasTabla += "<td>" + fila.Empresa_Ob + "</td>";
@@ -230,7 +239,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var items = await _selectItems.Execute();
@@ -239,7 +248,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var empresas = items.ItemsEmpresa.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var empresas = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var tiposActoMA = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -270,6 +279,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.AsesoresSSO = asesoresSSO;
 
                 ViewBag.NombreUsuario = usuario.Nombres + " " + usuario.Apellidos;
+                ViewBag.EmpresaUsuario = usuario.Id_Empresa;
 
                 ViewBag.ActoMA = tiposActoMA;
                 ViewBag.CondicionMA = tiposCondicionMA;
@@ -290,7 +300,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 }
                 else
                 {
-                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                    
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                     var filePath = "";
 
                     if (model.Evidencia_Obs != null)
@@ -303,7 +313,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                         if (allowed_extensions.Contains(extension) && model.Evidencia_Obs.Length < max_file_size)
                         {
                             var newfileName = CreateUniqueFileName(1) + ".zip";
-                            filePath = await UploadZipFileAsync(model.Evidencia_Obs, newfileName);
+                            filePath = await UploadZipFileAsync(model.Evidencia_Obs, newfileName, "registro");
                         }
                     }
                     var Id_RAC = await _registrarRAC.Execute(
@@ -344,11 +354,11 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                            
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
-                var reporte = await _consultarRAC.Execute(IdDescencriptado,userInfo.NombreUsuario);
+                var reporte = await _consultarRAC.Execute(IdDescencriptado, userInfo.NombreUsuario);
                 var model = new DetallerRACModel
                 {
                     Id_RAC = reporte.Id_RAC,
@@ -376,13 +386,211 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Evidencia_Cierre = reporte.Evidencia_Cierre,
                     Comentario_Cierre = reporte.Comentario_Cierre,
                     Comentario_Verificacion = reporte.Comentario_Verificacion,
-                    Estado = reporte.Estado                   
+                    Estado = reporte.Estado
                 };
                 ViewBag.Permiso = reporte.Permiso;
                 ViewBag.Codigo = reporte.Codigo;
 
                 return View(model);
             }
+        }
+        public async Task<IActionResult> EditarRAC(string IdRAC)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdRAC=" + IdRAC });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                var items = await _selectItems.Execute();
+                var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
+
+                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var empresas = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                empresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposActoMA = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionMA = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposActoSSO = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposActoSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var tiposCondicionSSO = items.ItemsTiposCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSS.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
+                tiposCondicionSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var usuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresMAP = items.ItemsAsesoresMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresMAP.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var asesoresSSO = items.ItemsAsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                asesoresSSO.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                ViewBag.Gerencias = gerencias;
+                ViewBag.Empresas = empresas;
+                ViewBag.Usuarios = usuarios;
+                ViewBag.AsesoresMA = asesoresMAP;
+                ViewBag.AsesoresSSO = asesoresSSO;
+
+                ViewBag.NombreUsuario = usuario.Nombres + " " + usuario.Apellidos;
+                ViewBag.EmpresaUsuario = usuario.Id_Empresa;
+
+                ViewBag.ActoMA = tiposActoMA;
+                ViewBag.CondicionMA = tiposCondicionMA;
+                ViewBag.ActoSSO = tiposActoSSO;
+                ViewBag.CondicionSSO = tiposCondicionSSO;
+
+                var IdDescencriptado = Int32.Parse(_protector.Unprotect(IdRAC));
+                var reporte = await _consultarRAC.Execute(IdDescencriptado, userInfo.NombreUsuario);
+                var model = new EditarRACModel
+                {
+                    Id_RAC = reporte.Id_RAC,
+                    IdEncriptado = IdRAC,
+                    Nombres_Apellidos = reporte.Nombres_Apellidos,
+                    Id_Gerencia = reporte.Id_Gerencia!=null? reporte.Id_Gerencia.Value:0,
+                    Id_Empresa = reporte.Id_Empresa != null ? reporte.Id_Empresa.Value : 0,
+                    Otra_Empresa = reporte.Otra_Empresa,
+                    Id_Empresa_Obs = reporte.Id_Empresa_Obs,
+                    Id_Gerencia_Obs = reporte.Id_Gerencia_Obs,
+                    Ubicacion = reporte.Ubicacion,
+                    Fecha = reporte.Fecha.ToString("yyyy-MM-dd"),
+                    Hora = reporte.Fecha.ToString("HH:mm"),
+                    SSO_MA = reporte.SSO_MA,
+                    Clasificacion = reporte.Clasificacion,
+                    NivelRiesgo = reporte.NivelRiesgo,
+                    Id_Tipo_Condicion = reporte.Id_Tipo_Condicion,
+                    Descripcion_Acto_Cond = reporte.Descripcion_Acto_Cond,
+                    Medida_Control = reporte.Medida_Control,
+                    PAC = reporte.PAC,
+                    Id_Responsable_Cierre = reporte.Id_Responsable_Cierre,
+                    Fecha_Cierre = reporte.Fecha_Cierre.ToString("yyyy-MM-dd"),
+                    Id_Supervisor = reporte.Id_Supervisor,
+                    Evidencia_Obs_Llena = reporte.Evidencia_Obs,
+                    Evidencia_Cierre_Llena = reporte.Evidencia_Cierre,
+                    Comentario_Cierre = reporte.Comentario_Cierre,
+                    Comentario_Verificacion = reporte.Comentario_Verificacion,
+                    Estado = reporte.Estado
+                };
+                var toJson = new EditarRACModel
+                {
+                    Id_RAC = reporte.Id_RAC,
+                    IdEncriptado = IdRAC,
+                    Nombres_Apellidos = reporte.Nombres_Apellidos,
+                    Id_Gerencia = reporte.Id_Gerencia != null ? reporte.Id_Gerencia.Value : 0,
+                    Id_Empresa = reporte.Id_Empresa != null ? reporte.Id_Empresa.Value : 0,
+                    Otra_Empresa = reporte.Otra_Empresa,
+                    Id_Empresa_Obs = reporte.Id_Empresa_Obs,
+                    Id_Gerencia_Obs = reporte.Id_Gerencia_Obs,
+                    Ubicacion = reporte.Ubicacion,
+                    Fecha = reporte.Fecha.ToString("yyyy-MM-dd"),
+                    Hora = reporte.Fecha.ToString("HH:mm"),
+                    SSO_MA = reporte.SSO_MA,
+                    Clasificacion = reporte.Clasificacion,
+                    NivelRiesgo = reporte.NivelRiesgo,
+                    Id_Tipo_Condicion = reporte.Id_Tipo_Condicion,
+                    PAC = reporte.PAC,
+                    Id_Responsable_Cierre = reporte.Id_Responsable_Cierre,
+                    Fecha_Cierre = reporte.Fecha_Cierre.ToString("yyyy-MM-dd"),
+                    Id_Supervisor = reporte.Id_Supervisor,
+                    Evidencia_Obs_Llena = reporte.Evidencia_Obs,
+                    Evidencia_Cierre_Llena = reporte.Evidencia_Cierre,
+                    Estado = reporte.Estado
+                };
+
+                ViewBag.Permiso = reporte.Permiso;
+                ViewBag.Codigo = reporte.Codigo;                
+                ViewBag.ModelJSON = JsonConvert.SerializeObject(toJson);
+                return View(model);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarRAC(EditarRACModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (!(HttpContext.Session.GetString("SessionUser") != null))
+                {
+                    return RedirectToAction("NoAutorizado", "Home");
+                }
+                else
+                {
+                    var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                    if (userInfo.Rol == InspeccionRol.Admin)
+                    {
+                        var filePathObs = "";
+                        var filePathCierre = "";
+
+                        if (model.Evidencia_Obs != null)
+                        {
+                            var extension = Path.GetExtension(model.Evidencia_Obs.FileName);
+                            var max_file_size = 8388608;
+
+                            var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                            if (allowed_extensions.Contains(extension) && model.Evidencia_Obs.Length < max_file_size)
+                            {
+                                var newfileName = CreateUniqueFileName(1) + ".zip";
+                                filePathObs = await UploadZipFileAsync(model.Evidencia_Obs, newfileName, "registro");
+                            }
+                        }
+                        if (model.Evidencia_Cierre != null)
+                        {
+                            var extension = Path.GetExtension(model.Evidencia_Cierre.FileName);
+                            var max_file_size = 8388608;
+
+                            var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                            if (allowed_extensions.Contains(extension) && model.Evidencia_Cierre.Length < max_file_size)
+                            {
+                                var newfileName = CreateUniqueFileName(1) + ".zip";
+                                filePathCierre = await UploadZipFileAsync(model.Evidencia_Cierre, newfileName, "implementacion");
+                            }
+                        }
+                        await _editarRAC.Execute(
+                            model.Id_RAC,
+                            model.Nombres_Apellidos,
+                            model.Id_Gerencia,
+                            model.Id_Empresa,
+                            model.Otra_Empresa,
+                            model.Id_Empresa_Obs,
+                            model.Id_Gerencia_Obs,
+                            model.Ubicacion,
+                            (model.Fecha + " " + model.Hora),
+                            model.SSO_MA,
+                            model.Clasificacion,
+                            model.NivelRiesgo,
+                            model.Id_Tipo_Condicion,
+                            model.Descripcion_Acto_Cond,
+                            model.Medida_Control,
+                            model.PAC,
+                            model.Id_Responsable_Cierre,
+                            model.Fecha_Cierre,
+                            model.Id_Supervisor,
+                            filePathObs,
+                            filePathCierre,
+                            model.Comentario_Cierre,
+                            model.Comentario_Verificacion,
+                            userInfo.NombreUsuario);
+                        //Notificar
+                        return RedirectToAction("Resumen");
+                    }
+                    else
+                        return RedirectToAction("NoAutorizado", "Home");
+                }
+            }
+            else
+                return RedirectToAction("EditarRAC",new { IdRAC = _protector.Protect(model.Id_RAC.ToString()) } );
         }
         [HttpPost]
         public async Task<IActionResult> AmpliarFecha(string idRAC, string fecha)
@@ -468,13 +676,19 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 }
             }
         }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
+        public async Task<string> UploadFTPFileAsync(string path, string newFileName,string tipo)
         {
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
+                Tipo_Info_SGA directorio;
+                switch (tipo)
+                {
+                    case "implementacion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACI; break;
+                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACR; break;
+                }
+                var serverInfo = await _info_SGA.Execute(directorio);
                 string host = "", port = "", user = "", pass = "", dir = "";
                 foreach (var item in serverInfo.Info)
                 {
@@ -495,6 +709,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     using (FileStream fs = System.IO.File.OpenRead(path))
                     {
                         sftp.UploadFile(fs, newFileName, true);
+                        fs.Close();
+                        fs.Dispose();
                     }
                     sftp.Dispose();
                 }
@@ -504,7 +720,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 return "NoAutorizado"; 
             }
         }
-        public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
+        public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -549,7 +765,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
                 await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName,tipo);
             }
         }
         public async Task<string> DownloadFTPFileAsync(string fileName)
