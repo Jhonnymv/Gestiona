@@ -212,7 +212,7 @@
                             <div class="row input_container">
                                 <div class="col-12">
                                     <label asp-for="Descripcion_Incidente">Descripción detallada del incidente</label>
-                                    <textarea class="form-control" asp-for="Descripcion_Incidente" maxlength="600" rows="3" disabled></textarea>
+                                    <textarea class="form-control" asp-for="Descripcion_Incidente" maxlength="1400" rows="3" disabled></textarea>
                                 </div>
                             </div>
                         </div>
@@ -564,7 +564,7 @@
                             <div class="row input_container">
                                 <div class="col-12">
                                     <label asp-for="ImpactoAmbiental.EO_RS">EO-RS (recolección, transporte y disposición)</label>
-                                    <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" disabled />
+                                    <input type="text" class="form-control" asp-for="ImpactoAmbiental.EO_RS" maxlength="150" disabled />
                                 </div>
                             </div>
                         </div>
