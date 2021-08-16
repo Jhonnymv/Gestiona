@@ -12,7 +12,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 {
     public class GestorUsuarioRepository : IGestorUsuarioReadOnlyRepository
     {
-        private Context _context;
+        private readonly Context _context;
 
         public GestorUsuarioRepository(Context context)
         {
@@ -20,22 +20,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<InspeccionRol?> GetRolUsuario(string usuario_red)
         {
-            try
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.usuario_red.Equals(usuario_red) && x.Estado.Equals("ACT"));
+            if (usuario != null)
             {
-                var usuario = await _context.Usuarios.FirstOrDefaultAsync(x => x.usuario_red.Equals(usuario_red) && x.Estado.Equals("ACT"));
-                if (usuario != null)
-                {
-                    var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
-                    return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
-                }
-                else
-                    return null;
+                var enumList = Enum.GetValues(typeof(InspeccionRol)).OfType<InspeccionRol>().ToList();
+                return enumList.FirstOrDefault(x => usuario.Id_Rol.Equals((int)x));
             }
-            catch (Exception e)
-            {
+            else
                 return null;
-                throw;
-            }
         }
 
         public async Task<Usuario> GetUsuario(string usuario_red)
@@ -45,12 +37,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var empresa = await _context.Empresas.FirstOrDefaultAsync(x => x.Id_Empresa.Equals(usuario.Id_Empresa));
 
 
-            var output = new Usuario();
-            output.Nombres = usuario.Nombres;
-            output.Apellidos = usuario.Apellidos;
-            output.Email = usuario.Email;
-            output.UsuarioRed = usuario.usuario_red;
-            output.IdUsuario = usuario.Id_Usuario;
+            var output = new Usuario
+            {
+                Nombres = usuario.Nombres,
+                Apellidos = usuario.Apellidos,
+                Email = usuario.Email,
+                UsuarioRed = usuario.usuario_red,
+                IdUsuario = usuario.Id_Usuario,
+                IdRol = usuario.Id_Rol,
+                IdSuperior = usuario.Id_Superior,
+                DNI = usuario.DNI,
+                Celular = usuario.Celular,
+                Puesto = usuario.Puesto
+            };
             if (areaTrabajo != null)
                 output.AreaTrabajo = new AreaTrabajo
                 {
@@ -65,11 +64,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     RazonSocial = empresa.Razon_Social,
                     Estado = empresa.Estado
                 };
-            output.IdRol = usuario.Id_Rol;
-            output.IdSuperior = usuario.Id_Superior;
-            output.DNI = usuario.DNI;
-            output.Celular = usuario.Celular;
-            output.Puesto = usuario.Puesto;
 
             return output;
         }

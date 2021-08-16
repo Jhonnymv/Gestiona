@@ -9,7 +9,7 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
 {
     public class Info_SGAOutput
     {
-        private string Key = @"MarcobreSGA";
+        private readonly string Key = @"MarcobreSGA";
         public int IdInfo { get; set; }
         public Dictionary<string,string> Info { get; set; }
         public string Tipo { get; set; }

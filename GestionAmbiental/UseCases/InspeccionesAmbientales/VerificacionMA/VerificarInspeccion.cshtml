@@ -34,22 +34,26 @@
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.AreaInspeccionada" readonly="readonly" />
                         </div>
                         <div class="col-12 col-sm-6 col-lg-6">
-                            <label>Tipo de Inspección</label>
-                            <input type="text" class="form-control" value="@ViewBag.Cabecera.TipoInspeccion" readonly="readonly" />
+                            <label>Gerencia Inspeccionada</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.GerenciaInspeccionada" readonly="readonly" />
                         </div>
                     </div>
                     <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-6">
+                            <label>Tipo de Inspección</label>
+                            <input type="text" class="form-control" value="@ViewBag.Cabecera.TipoInspeccion" readonly="readonly" />
+                        </div>
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Responsable del Área Inspeccionada</label>
                             <input type="text" class="form-control" value="@(ViewBag.Cabecera.ResponsableArea.Nombres+" "+ViewBag.Cabecera.ResponsableArea.Apellidos)" readonly="readonly">
                         </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-6">
                             <label>Fecha de Inspección</label>
                             <input type="text" class="form-control" value="@ViewBag.Cabecera.FechaInspeccion" readonly="readonly">
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12">
+                        <div class="col-12 col-sm-6 col-lg-6">
                             <label>Responsables de la Inspección</label>
                             <textarea class="form-control" value="@ViewBag.Cabecera.ResponsableInspeccion" rows="2" readonly>@ViewBag.Cabecera.ResponsableInspeccion</textarea>
                         </div>

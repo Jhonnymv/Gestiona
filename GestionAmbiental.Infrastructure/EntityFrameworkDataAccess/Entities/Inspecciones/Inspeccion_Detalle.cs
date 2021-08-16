@@ -25,7 +25,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         [Column(TypeName = "text")]
         public string Evidencia_Condicion { get; set; }
         [Column(TypeName = "varchar(10)")]
-        public string? Nivel_Riesgo { get; set; }
+        public string Nivel_Riesgo { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Descripcion_Accion { get; set; }
         [Column(TypeName = "int")]

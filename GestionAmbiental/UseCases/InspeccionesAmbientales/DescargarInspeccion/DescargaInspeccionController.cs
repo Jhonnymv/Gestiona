@@ -77,7 +77,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 //->ÁREA EJECUTORA:
                 sheet.GetRow(11).GetCell(7).SetCellValue(cabecera.Gerencia);
                 //->LUGAR INSPECCIONADO
-                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.AreaInspeccionada);
+                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.GerenciaInspeccionada + " - "+cabecera.AreaInspeccionada);
                 //->EMPRESA:   
                 sheet.GetRow(11).GetCell(24).SetCellValue(cabecera.Empresa);
                 //->TIPO DE INSPECCION
@@ -351,22 +351,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
-                        try {
-                            evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
-                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
-                            imageIndex++;
-                        }
-                        catch (Exception e) { }
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
+                        rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                        imageIndex++;
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
-                        try
-                        {
-                            evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion", true);
-                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
-                            imageIndex++;
-                        }
-                        catch (Exception e) { }
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion", true);
+                        rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                        imageIndex++;
                     }
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     row.Height = rowHeight;

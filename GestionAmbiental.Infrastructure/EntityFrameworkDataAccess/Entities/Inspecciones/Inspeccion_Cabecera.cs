@@ -37,5 +37,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public string Objetivo { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Gerencia_Inspeccionada { get; set; }
     }
 }

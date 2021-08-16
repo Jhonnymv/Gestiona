@@ -38,10 +38,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarC
                     estados.Add(EstadosInspeccion.Aprobado.ToString());
             }
             var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabecera(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro);
-            
-            var output = new InspeccionesCabeceraOutput();
-            output.NCabeceras = cabeceras.Count;
-            output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
+            var output = new InspeccionesCabeceraOutput
+            {
+                NCabeceras = cabeceras.Count,
+                Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList()
+            };
             return output;
         }
         public List<string> GetDataSourceTypes()

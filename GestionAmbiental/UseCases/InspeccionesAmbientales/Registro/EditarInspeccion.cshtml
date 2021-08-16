@@ -56,22 +56,30 @@
                             </div>
                             <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Id_Gerencia_Inspeccionada"></label>
+                                    <span class="text-danger" asp-validation-for="Id_Gerencia_Inspeccionada"></span>
+                                    <select class="form-control" asp-items="@ViewBag.GerenciaMC" asp-for="Id_Gerencia_Inspeccionada" disabled>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Lugar_Inspeccionado"></label>
                                     <span class="text-danger" asp-validation-for="Lugar_Inspeccionado"></span>
                                     <input type="text" class="form-control" asp-for="Lugar_Inspeccionado" readonly>
                                 </div>
+                            </div>
+                            <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Tipo_Inspeccion"></label>
                                     <span class="text-danger" asp-validation-for="Tipo_Inspeccion"></span>
                                     <select class="form-control" asp-items="@ViewBag.Tipo_Inspeccion" asp-for="Tipo_Inspeccion" disabled></select>
                                 </div>
-                            </div>
-                            <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Id_Responsable_Lugar"></label>
                                     <span class="text-danger" asp-validation-for="Id_Responsable_Lugar"></span>
                                     <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="Id_Responsable_Lugar" disabled></select>
                                 </div>
+                            </div>
+                            <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6 p-0">
                                     <div class="row mt-0 mb-0">
                                         <div class="col-5 mt-0 mb-0">
@@ -86,8 +94,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row input_container">
                                 <input type="hidden" class="form-control" asp-for="Responsable_Inspeccion">
                                 <div class="col-12 col-sm-6 col-lg-6" id="Responsable_List_Group" disabled style="display:none">
                                     <label asp-for="Responsable_Inspeccion"></label>
@@ -95,19 +101,19 @@
                                     <select id="Responsable_Inspeccion_List" name="Responsable_Inspeccion_List" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="--SELECCIONE--" multiple style="background-color: #e9ecef;opacity:1;" disabled>
                                     </select>
                                 </div>
-                                <div class="col-12 col-sm-6 col-lg-6"id="Responsable_Text_Group" style="display:none">
+                                <div class="col-12 col-sm-6 col-lg-6" id="Responsable_Text_Group" style="display:none">
                                     <label asp-for="Responsable_Inspeccion"></label>
                                     <span class="text-danger" asp-validation-for="Responsable_Inspeccion"></span>
                                     <input id="Responsable_Inspeccion_Text" type="text" class="form-control" readonly>
                                 </div>
+                            </div>
+                            <div class="row input_container">
                                 <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Inspectores"></label>
                                     <span class="text-danger" asp-validation-for="Inspectores"></span>
                                     <input type="text" class="form-control" asp-for="Inspectores" readonly>
                                 </div>
-                            </div>
-                            <div class="row input_container">
-                                <div class="col-12 col-sm-12 col-lg-12">
+                                <div class="col-12 col-sm-6 col-lg-6">
                                     <label asp-for="Objetivo"></label>
                                     <span class="text-danger" asp-validation-for="Objetivo"></span>
                                     <input type="text" class="form-control" asp-for="Objetivo" readonly>
@@ -245,6 +251,7 @@
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', false);
                 $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Gerencia_Inspeccionada').prop('disabled', false);
                 $('#Id_Responsable_Lugar').prop('disabled', false);
                 $('#Id_Responsable_MA').prop('disabled', false);
                 $('#Lugar_Inspeccionado').prop('readonly', false);
@@ -310,6 +317,7 @@
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', false);
                 $('#Id_Empresa_Contratista').prop('disabled', false);
+                $('#Id_Gerencia_Inspeccionada').prop('disabled', false);
                 $('#Id_Responsable_Lugar').prop('disabled', false);
                 $('#Id_Responsable_MA').prop('disabled', false);
                 $('#Lugar_Inspeccionado').prop('disabled', false);

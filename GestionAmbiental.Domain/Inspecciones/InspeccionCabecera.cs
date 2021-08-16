@@ -16,6 +16,8 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int IdEmpresa { get; set; }
         public string Empresa { get; set; }
         public string TipoInspeccion { get; set; }
+        public int? IdGerenciaInspeccionada { get; set; }
+        public string GerenciaInspeccionada { get; set; }
         public string AreaInspeccionada { get; set; }
         public int IdResponsableArea { get; set; }
         public Usuario ResponsableArea { get; set; }
@@ -34,13 +36,14 @@ namespace GestionAmbiental.Domain.Inspecciones
         public InspeccionCabecera(
             int idCabecera, string codigo, string gerenEjecMar,
             string empContratMarc, string lugarInspec, DateTime fechaInspec,
-            int nObservaciones, string estado)
+            int nObservaciones, string estado,string gerenciaInspec)
         {
             IdCabecera = idCabecera;
             Codigo = codigo;
             Gerencia = gerenEjecMar;
             Empresa = empContratMarc;
             AreaInspeccionada = lugarInspec;
+            GerenciaInspeccionada = gerenciaInspec;
             FechaInspeccion = fechaInspec;
             NObservaciones = nObservaciones;
             Estado = estado;

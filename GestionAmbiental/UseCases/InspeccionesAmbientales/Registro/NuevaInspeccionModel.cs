@@ -31,6 +31,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [DisplayName("Área Inspeccionada")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Lugar_Inspeccionado { get; set; }
+        [DisplayName("Gerencia Inspeccionada")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        public int Id_Gerencia_Inspeccionada { get; set; }
         [DisplayName("Tipo de Inspección")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe seleccionar una opción")]
         public string Tipo_Inspeccion { get; set; }

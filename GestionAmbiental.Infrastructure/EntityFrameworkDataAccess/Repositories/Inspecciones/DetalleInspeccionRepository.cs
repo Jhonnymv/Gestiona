@@ -106,7 +106,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 empresa != 0 ? x.Id_Empresa.Equals(empresa) : x.Id_Empresa.Equals(x.Id_Empresa) &&
-                gerencia != 0 ? x.Id_Gerencia.Equals(gerencia) : x.Id_Gerencia.Equals(x.Id_Gerencia) &&
+                gerencia != 0 ? x.Id_Gerencia_Inspeccionada.Equals(gerencia) : x.Id_Gerencia_Inspeccionada.Equals(x.Id_Gerencia_Inspeccionada) &&
                 x.Fecha_Inspeccion>=FechaInicio &&
                 x.Fecha_Inspeccion<=FechaFin
             ).ToList();
@@ -135,6 +135,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Estado = cabecera.Estado,
                     IdEmpresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Id_Empresa,
                     IdGerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Id_Gerencia,
+                    IdGerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada.Value))?.Id_Gerencia,
                     Objetivo = cabecera.Objetivo,
                     Participantes = cabecera.Participantes,
                     ResponsableArea = new Usuario { 
@@ -146,6 +147,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 };
                 if (!IsValidJson(cabecera.Responsable_Inspeccion))
                     cabDomain.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
+                else
+                {
+                    var lista_ids = JsonConvert.DeserializeObject<List<int>>(cabecera.Responsable_Inspeccion);
+                    var lista_usuario = usuarios.Where(x => lista_ids.Contains(x.Id_Usuario)).Select(x => x.Nombres.ToUpper() + " " + x.Apellidos.ToUpper()).ToList();
+                    cabDomain.ResponsableInspeccion = ConcatUsingComa(lista_usuario);
+                }
                 var observacionesCab = observaciones.Where(x => x.Id_Inspeccion_Cabecera.Equals(cabecera.Id_Inspeccion_Cabecera)).ToList();
                 var obsDomain = new List<InspeccionDetalle>();
                 foreach (var item in observacionesCab)

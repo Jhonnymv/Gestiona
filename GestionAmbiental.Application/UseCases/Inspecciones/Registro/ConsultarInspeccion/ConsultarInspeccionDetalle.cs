@@ -13,17 +13,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
     public class ConsultarInspeccionDetalle : IConsultarInspeccionDetalle
     {
         private readonly IDetalleInspeccionReadOnlyRepository _detalleInspeccionReadOnlyRepository;
-        private readonly ICabeceraInspeccionReadOnlyRepository _cabeceraInspeccionReadOnlyRepository;
         private readonly IGestorUsuarioReadOnlyRepository _gestorUsuarioReadOnlyRepository;
 
         public ConsultarInspeccionDetalle(
             IDetalleInspeccionReadOnlyRepository detalleInspeccionReadOnlyRepository,
-            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository,
-            ICabeceraInspeccionReadOnlyRepository cabeceraInspeccionReadOnlyRepository)
+            IGestorUsuarioReadOnlyRepository gestorUsuarioReadOnlyRepository)
         {
             _detalleInspeccionReadOnlyRepository = detalleInspeccionReadOnlyRepository;
             _gestorUsuarioReadOnlyRepository = gestorUsuarioReadOnlyRepository;
-            _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
         public async Task<List<InspeccionDetalleOutput>> Execute(int idCabecera, string usuario_red)
         {

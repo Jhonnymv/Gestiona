@@ -29,8 +29,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var empresas = await _context.Empresas.ToListAsync();
             var usuarios = await _context.Usuarios.ToListAsync();
 
-            var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(cabecera.Id_Gerencia)).FirstOrDefault().Descripcion;
-            var empContMar = empresas.Where(e => e.Id_Empresa.Equals(cabecera.Id_Empresa)).FirstOrDefault().Razon_Social;
+            var gerEjectMar = gerencias.FirstOrDefault(g => g.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
+            var gerInspec = gerencias.FirstOrDefault(g => cabecera.Id_Gerencia_Inspeccionada.HasValue && g.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada))?.Descripcion;
+            var empContMar = empresas.FirstOrDefault(e => e.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
            
             var responsableLugar = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(cabecera.Id_Responsable_Area));
             var responsableLugarDomain = new Usuario(responsableLugar.Id_Usuario, responsableLugar.Id_Rol, responsableLugar.Nombres, responsableLugar.Apellidos, responsableLugar.Email);
@@ -43,6 +44,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Codigo = cabecera.Codigo;
             output.Objetivo = cabecera.Objetivo;
             output.Gerencia = gerEjectMar;
+            output.GerenciaInspeccionada = gerInspec;
             output.Empresa = empContMar;
             output.AreaInspeccionada = cabecera.Area_Inspeccionada;
             output.TipoInspeccion = cabecera.Tipo_Inspeccion;

@@ -190,6 +190,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
+                    filasTabla += "<td>" + fila.GerenciaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
@@ -224,9 +225,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-                var nCol = 7;
                 filasTabla += "<tr>";
-                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filasTabla += "</tr>";
             }
             dynamic response = new
@@ -315,6 +315,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         userInfo.NombreUsuario,
                         model.Id_Gerencia_Ejecutora,
                         model.Id_Empresa_Contratista,
+                        model.Id_Gerencia_Inspeccionada,
                         model.Lugar_Inspeccionado,
                         model.Fecha_Inspeccion,
                         model.Hora_Inspeccion,
@@ -628,6 +629,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Tipo_Inspeccion = cabecera.TipoInspeccion;
                         model.Id_Empresa_Contratista = cabecera.IdEmpresa;
                         model.Id_Gerencia_Ejecutora = cabecera.IdGerencia;
+                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue? cabecera.IdGerenciaInspeccionada.Value:0;
                         model.Lugar_Inspeccionado = cabecera.AreaInspeccionada;
                         model.Id_Responsable_Lugar = cabecera.IdResponsableArea;
                         model.Fecha_Inspeccion = cabecera.FechaInspeccion.Year + "-" + (cabecera.FechaInspeccion.Month.ToString().Length > 1 ? cabecera.FechaInspeccion.Month.ToString() : "0" + cabecera.FechaInspeccion.Month.ToString()) + "-" + (cabecera.FechaInspeccion.Day.ToString().Length > 1 ? cabecera.FechaInspeccion.Day.ToString() : "0" + cabecera.FechaInspeccion.Day.ToString());
@@ -719,7 +721,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             {
                 if (ModelState.IsValid)
                 {
-
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                     await _editarInspeccionCabecera.Execute(
@@ -727,6 +728,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.Objetivo,
                     model.Id_Gerencia_Ejecutora,
                     model.Id_Empresa_Contratista,
+                    model.Id_Gerencia_Inspeccionada,
                     model.Lugar_Inspeccionado,
                     model.Tipo_Inspeccion,
                     model.Id_Responsable_Lugar,
@@ -766,27 +768,28 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                    
-                    await _editarInspeccionCabecera.Execute(
-                    model.Id_Inspeccion_Cabecera,
-                    model.Objetivo,
-                    model.Id_Gerencia_Ejecutora,
-                    model.Id_Empresa_Contratista,
-                    model.Lugar_Inspeccionado,
-                    model.Tipo_Inspeccion,
-                    model.Id_Responsable_Lugar,
-                    model.Hora_Inspeccion,
-                    model.Fecha_Inspeccion,
-                    model.Responsable_Inspeccion,
-                    model.Inspectores,
-                    model.opcion,
-                    userInfo.NombreUsuario);
-                    if (model.opcion.Equals("Observacion"))
-                        return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
-                    else if (model.opcion.Equals("Guardar"))
-                        return RedirectToAction("NotificarInspeccion","NotificacionesInspecciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
-                    else
-                        return RedirectToAction("Resumen");
+
+                await _editarInspeccionCabecera.Execute(
+                model.Id_Inspeccion_Cabecera,
+                model.Objetivo,
+                model.Id_Gerencia_Ejecutora,
+                model.Id_Empresa_Contratista,
+                model.Id_Gerencia_Inspeccionada,
+                model.Lugar_Inspeccionado,
+                model.Tipo_Inspeccion,
+                model.Id_Responsable_Lugar,
+                model.Hora_Inspeccion,
+                model.Fecha_Inspeccion,
+                model.Responsable_Inspeccion,
+                model.Inspectores,
+                model.opcion,
+                userInfo.NombreUsuario);
+                if (model.opcion.Equals("Observacion"))
+                    return RedirectToAction("NuevaObservacion", new { IdCabecera = model.EncryptedId });
+                else if (model.opcion.Equals("Guardar"))
+                    return RedirectToAction("NotificarInspeccion", "NotificacionesInspecciones", new { IdCabecera = model.Id_Inspeccion_Cabecera });
+                else
+                    return RedirectToAction("Resumen");
             }
             return RedirectToAction("Resumen");
         }
@@ -909,6 +912,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Tipo_Inspeccion = cabecera.TipoInspeccion;
                         model.Id_Empresa_Contratista = cabecera.IdEmpresa;
                         model.Id_Gerencia_Ejecutora = cabecera.IdGerencia;
+                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue?cabecera.IdGerenciaInspeccionada.Value:0;
                         model.Lugar_Inspeccionado = cabecera.AreaInspeccionada;
                         model.Id_Responsable_Lugar = cabecera.IdResponsableArea;
                         model.Fecha_Inspeccion = cabecera.FechaInspeccion.Year + "-" + (cabecera.FechaInspeccion.Month.ToString().Length > 1 ? cabecera.FechaInspeccion.Month.ToString() : "0" + cabecera.FechaInspeccion.Month.ToString()) + "-" + (cabecera.FechaInspeccion.Day.ToString().Length > 1 ? cabecera.FechaInspeccion.Day.ToString() : "0" + cabecera.FechaInspeccion.Day.ToString());

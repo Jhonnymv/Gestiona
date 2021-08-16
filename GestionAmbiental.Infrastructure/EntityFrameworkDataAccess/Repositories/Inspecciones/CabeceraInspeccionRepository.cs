@@ -32,7 +32,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
             if (gerenciaFiltro.Length > 0)                
-                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.HasValue && gerenciaFiltro.Contains(x.Id_Gerencia_Inspeccionada.Value)).ToList();
             
             if (empresaFiltro.Length > 0)            
                 cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
@@ -62,8 +62,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
             {
-                var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia)).FirstOrDefault();
-                var empContMar = empresas.Where(e => e.Id_Empresa.Equals(item.Id_Empresa)).FirstOrDefault();
+                var gerEjectMar = gerencias.FirstOrDefault(g => g.Id_Gerencia.Equals(item.Id_Gerencia));
+                var gerInspec = gerencias.FirstOrDefault(g => item.Id_Gerencia_Inspeccionada.HasValue && g.Id_Gerencia.Equals(item.Id_Gerencia_Inspeccionada));
+                var empContMar = empresas.FirstOrDefault(e => e.Id_Empresa.Equals(item.Id_Empresa));
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)&&d.Estado!=EstadosInspeccion.Eliminado.ToString()).Count();
                 var nObsImplementadas = detalles_cabecera.Where(
                     d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && 
@@ -71,19 +72,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var nObsAprobadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).Count();
                 var nObsRechazadas = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera) && d.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).Count();
 
-                var cabecera = new InspeccionCabecera();
-                cabecera.IdCabecera = item.Id_Inspeccion_Cabecera;
-                cabecera.Codigo = item.Codigo;
-                cabecera.Gerencia = gerEjectMar.Descripcion;
-                cabecera.Empresa = empContMar.Razon_Social;
-                cabecera.AreaInspeccionada = item.Area_Inspeccionada;
-                cabecera.FechaInspeccion = item.Fecha_Inspeccion;
-                cabecera.NObservaciones = nObservaciones;
-                cabecera.Estado = item.Estado;
-                cabecera.NObsImplementadas = nObsImplementadas;
-                cabecera.NObsAprobadas = nObsAprobadas;
-                cabecera.NObsRechazadas = nObsRechazadas;
-                cabecera.TipoInspeccion = item.Tipo_Inspeccion;
+                var cabecera = new InspeccionCabecera
+                {
+                    IdCabecera = item.Id_Inspeccion_Cabecera,
+                    Codigo = item.Codigo,
+                    Gerencia = gerEjectMar.Descripcion,
+                    GerenciaInspeccionada = gerInspec?.Descripcion,
+                    Empresa = empContMar.Razon_Social,
+                    AreaInspeccionada = item.Area_Inspeccionada,
+                    FechaInspeccion = item.Fecha_Inspeccion,
+                    NObservaciones = nObservaciones,
+                    Estado = item.Estado,
+                    NObsImplementadas = nObsImplementadas,
+                    NObsAprobadas = nObsAprobadas,
+                    NObsRechazadas = nObsRechazadas,
+                    TipoInspeccion = item.Tipo_Inspeccion
+                };
                 TablaResumen.Add(cabecera);
             }
 
@@ -94,21 +98,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var cabeccera = await _context.Inspecciones_Cabecera.FirstOrDefaultAsync(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera));
             var observaciones = await _context.Inspecciones_Detalle.Where(x => x.Id_Inspeccion_Cabecera.Equals(idCabecera)&&x.Estado!=EstadosInspeccion.Eliminado.ToString()).ToListAsync();
-            var output = new InspeccionCabecera();
-            output.IdCabecera = cabeccera.Id_Inspeccion_Cabecera;
-            output.IdRegistradoPor = cabeccera.Id_Registrado_Por;
-            output.Codigo = cabeccera.Codigo;
-            output.IdGerencia = cabeccera.Id_Gerencia;
-            output.IdEmpresa = cabeccera.Id_Empresa;
-            output.TipoInspeccion = cabeccera.Tipo_Inspeccion;
-            output.AreaInspeccionada = cabeccera.Area_Inspeccionada;
-            output.FechaInspeccion = cabeccera.Fecha_Inspeccion;
-            output.NObservaciones = observaciones.Count;
-            output.Estado = cabeccera.Estado;
-            output.IdResponsableArea = cabeccera.Id_Responsable_Area;
-            output.Objetivo = cabeccera.Objetivo;
-            output.ResponsableInspeccion = cabeccera.Responsable_Inspeccion;
-            output.Participantes = cabeccera.Participantes;
+            var output = new InspeccionCabecera
+            {
+                IdCabecera = cabeccera.Id_Inspeccion_Cabecera,
+                IdRegistradoPor = cabeccera.Id_Registrado_Por,
+                Codigo = cabeccera.Codigo,
+                IdGerencia = cabeccera.Id_Gerencia,
+                IdGerenciaInspeccionada = cabeccera.Id_Gerencia_Inspeccionada,
+                IdEmpresa = cabeccera.Id_Empresa,
+                TipoInspeccion = cabeccera.Tipo_Inspeccion,
+                AreaInspeccionada = cabeccera.Area_Inspeccionada,
+                FechaInspeccion = cabeccera.Fecha_Inspeccion,
+                NObservaciones = observaciones.Count,
+                Estado = cabeccera.Estado,
+                IdResponsableArea = cabeccera.Id_Responsable_Area,
+                Objetivo = cabeccera.Objetivo,
+                ResponsableInspeccion = cabeccera.Responsable_Inspeccion,
+                Participantes = cabeccera.Participantes
+            };
 
             return output;
         }
@@ -130,7 +137,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
             if (gerenciaFiltro.Length > 0)
-                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.HasValue && gerenciaFiltro.Contains(x.Id_Gerencia_Inspeccionada.Value)).ToList();
 
             if (empresaFiltro.Length > 0)
                 cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
@@ -154,12 +161,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
             {
-                var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia)).FirstOrDefault();
-                var empContMar = empresas.Where(e => e.Id_Empresa.Equals(item.Id_Empresa)).FirstOrDefault();
+                var gerEjectMar = gerencias.FirstOrDefault(g => g.Id_Gerencia.Equals(item.Id_Gerencia));
+                var gerInspec = gerencias.FirstOrDefault(g => item.Id_Gerencia_Inspeccionada.HasValue && g.Id_Gerencia.Equals(item.Id_Gerencia_Inspeccionada.Value));
+                var empContMar = empresas.FirstOrDefault(e => e.Id_Empresa.Equals(item.Id_Empresa));
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
 
                 TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
-                    empContMar.Razon_Social, item.Area_Inspeccionada, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+                    empContMar.Razon_Social, item.Area_Inspeccionada, item.Fecha_Inspeccion, nObservaciones, item.Estado, gerInspec?.Descripcion));
             }
             return TablaResumen;
         }
@@ -175,19 +183,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 usuarios_domain.Add(new Domain.ValueObjects.Usuario(item.Id_Usuario,item.Id_Rol,item.Nombres,item.Apellidos,item.Email));
             }
-            var output = new InspeccionCabecera();
-            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
-            output.Codigo = cabecera.Codigo;
-            output.Objetivo = cabecera.Objetivo;
-            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
-            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
-            output.AreaInspeccionada = cabecera.Area_Inspeccionada;
-            output.ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabecera.Id_Responsable_Area));
-            output.FechaInspeccion = cabecera.Fecha_Inspeccion;
-            output.NObservaciones = observaciones.Count;
-            output.Participantes = cabecera.Participantes;
-            output.Estado = cabecera.Estado;
-            output.TipoInspeccion = cabecera.Tipo_Inspeccion; 
+            var output = new InspeccionCabecera
+            {
+                IdCabecera = cabecera.Id_Inspeccion_Cabecera,
+                Codigo = cabecera.Codigo,
+                Objetivo = cabecera.Objetivo,
+                Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion,
+                GerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada))?.Descripcion,
+                Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social,
+                AreaInspeccionada = cabecera.Area_Inspeccionada,
+                ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabecera.Id_Responsable_Area)),
+                FechaInspeccion = cabecera.Fecha_Inspeccion,
+                NObservaciones = observaciones.Count,
+                Participantes = cabecera.Participantes,
+                Estado = cabecera.Estado,
+                TipoInspeccion = cabecera.Tipo_Inspeccion
+            };
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
             else
@@ -214,7 +225,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
             if (gerenciaFiltro.Length > 0)
-                cabeceras = cabeceras.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia)).ToList();
+                cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.HasValue && gerenciaFiltro.Contains(x.Id_Gerencia_Inspeccionada.Value)).ToList();
 
             if (empresaFiltro.Length > 0)
                 cabeceras = cabeceras.Where(x => empresaFiltro.Contains(x.Id_Empresa)).ToList();
@@ -238,12 +249,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
             {
-                var gerEjectMar = gerencias.Where(g => g.Id_Gerencia.Equals(item.Id_Gerencia)).FirstOrDefault();
-                var empContMar = empresas.Where(e => e.Id_Empresa.Equals(item.Id_Empresa)).FirstOrDefault();
+                var gerEjectMar = gerencias.FirstOrDefault(g => g.Id_Gerencia.Equals(item.Id_Gerencia));
+                var gerInspec = gerencias.FirstOrDefault(g => item.Id_Gerencia_Inspeccionada.HasValue && g.Id_Gerencia.Equals(item.Id_Gerencia_Inspeccionada.Value));
+                var empContMar = empresas.FirstOrDefault(e => e.Id_Empresa.Equals(item.Id_Empresa));
                 var nObservaciones = detalles_cabecera.Where(d => d.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).Count();
 
                 TablaResumen.Add(new InspeccionCabecera(item.Id_Inspeccion_Cabecera, item.Codigo, gerEjectMar.Descripcion,
-                    empContMar.Razon_Social, item.Area_Inspeccionada, item.Fecha_Inspeccion, nObservaciones, item.Estado));
+                    empContMar.Razon_Social, item.Area_Inspeccionada, item.Fecha_Inspeccion, nObservaciones, item.Estado, gerInspec?.Descripcion));
             }
 
             return TablaResumen;
@@ -260,19 +272,22 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var responsable_area_domain = new Domain.ValueObjects.Usuario(responsable_area.Id_Usuario, responsable_area.Id_Rol, responsable_area.Nombres, responsable_area.Apellidos, responsable_area.Email);
 
-            var output = new InspeccionCabecera();
-            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
-            output.Codigo = cabecera.Codigo;
-            output.Objetivo = cabecera.Objetivo;
-            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
-            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
-            output.AreaInspeccionada = cabecera.Area_Inspeccionada;
-            output.ResponsableArea = responsable_area_domain;
-            output.FechaInspeccion = cabecera.Fecha_Inspeccion;
-            output.NObservaciones = observaciones.Count;
-            output.Participantes = cabecera.Participantes;
-            output.Estado = cabecera.Estado;
-            output.TipoInspeccion = cabecera.Tipo_Inspeccion;
+            var output = new InspeccionCabecera
+            {
+                IdCabecera = cabecera.Id_Inspeccion_Cabecera,
+                Codigo = cabecera.Codigo,
+                Objetivo = cabecera.Objetivo,
+                Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion,
+                GerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada))?.Descripcion,
+                Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social,
+                AreaInspeccionada = cabecera.Area_Inspeccionada,
+                ResponsableArea = responsable_area_domain,
+                FechaInspeccion = cabecera.Fecha_Inspeccion,
+                NObservaciones = observaciones.Count,
+                Participantes = cabecera.Participantes,
+                Estado = cabecera.Estado,
+                TipoInspeccion = cabecera.Tipo_Inspeccion
+            };
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
             else
@@ -304,18 +319,21 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 tiposCondicion_domain.Add(new Domain.ValueObjects.TipoCondicion(item.Id_Tipo_Condicion, item.Descripcion,item.Grupo));
             }
-            var output = new InspeccionCabecera();
-            output.IdCabecera = cabecera.Id_Inspeccion_Cabecera;
-            output.Codigo = cabecera.Codigo;
-            output.Objetivo = cabecera.Objetivo;
-            output.Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion;
-            output.Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social;
-            output.AreaInspeccionada = cabecera.Area_Inspeccionada;
-            output.ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabecera.Id_Responsable_Area));
-            output.FechaInspeccion = cabecera.Fecha_Inspeccion;
-            output.Participantes = cabecera.Participantes;
-            output.Estado = cabecera.Estado;
-            output.TipoInspeccion = cabecera.Tipo_Inspeccion;
+            var output = new InspeccionCabecera
+            {
+                IdCabecera = cabecera.Id_Inspeccion_Cabecera,
+                Codigo = cabecera.Codigo,
+                Objetivo = cabecera.Objetivo,
+                Gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Descripcion,
+                GerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada.Value))?.Descripcion,
+                Empresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Razon_Social,
+                AreaInspeccionada = cabecera.Area_Inspeccionada,
+                ResponsableArea = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(cabecera.Id_Responsable_Area)),
+                FechaInspeccion = cabecera.Fecha_Inspeccion,
+                Participantes = cabecera.Participantes,
+                Estado = cabecera.Estado,
+                TipoInspeccion = cabecera.Tipo_Inspeccion
+            };
             if (!IsValidJson(cabecera.Responsable_Inspeccion))
                 output.ResponsableInspeccion = cabecera.Responsable_Inspeccion;
             else
@@ -329,26 +347,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Observaciones = new List<InspeccionDetalle>();
             foreach(var observacion in observaciones)
             {
-                var obs = new InspeccionDetalle();
-                obs.IdInspeccionCabecera = idCabecera;
-                obs.IdInspeccionDetalle = observacion.Id_Inspeccion_Detalle;
-                obs.TipoObservacion = observacion.Tipo_Observacion;
-                obs.DescripcionCondicion = observacion.Descripcion_Condicion;
-                obs.DescripcionActoCondicion = observacion.Descripcion_Acto_Condicion;
-                obs.TipoCondicion = tiposCondicion_domain.FirstOrDefault(x => x.IdTipoCondicion.Equals(observacion.Id_Tipo_Condicion));
-                obs.NivelRiesgo = observacion.Nivel_Riesgo;
-                obs.DescripcionAccion = observacion.Descripcion_Accion;
-                obs.ResponsableMarcobre = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(observacion.Id_Responsable_Marcobre));
-                obs.ResponsableContratista = observacion.Responsable_Contratista;
-                obs.CorreoContratista = observacion.Correo_Contratista;
-                obs.FechaProgramada = observacion.Fecha_Programada;
-                obs.ComentarioImplementacion = observacion.Comentario_Implementacion;
-                obs.FechaCierre = observacion.Fecha_Cierre;
-                obs.ComentarioVerificacion = observacion.Comentario_Verificacion;
-                obs.FechaVerificacion = observacion.Fecha_Verificacion;
-                obs.Estado = observacion.Estado;
-                obs.EvidenciaImplementacion = observacion.Evidencia_Implementacion;
-                obs.EvidenciaCondicion = observacion.Evidencia_Condicion;
+                var obs = new InspeccionDetalle
+                {
+                    IdInspeccionCabecera = idCabecera,
+                    IdInspeccionDetalle = observacion.Id_Inspeccion_Detalle,
+                    TipoObservacion = observacion.Tipo_Observacion,
+                    DescripcionCondicion = observacion.Descripcion_Condicion,
+                    DescripcionActoCondicion = observacion.Descripcion_Acto_Condicion,
+                    TipoCondicion = tiposCondicion_domain.FirstOrDefault(x => x.IdTipoCondicion.Equals(observacion.Id_Tipo_Condicion)),
+                    NivelRiesgo = observacion.Nivel_Riesgo,
+                    DescripcionAccion = observacion.Descripcion_Accion,
+                    ResponsableMarcobre = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(observacion.Id_Responsable_Marcobre)),
+                    ResponsableContratista = observacion.Responsable_Contratista,
+                    CorreoContratista = observacion.Correo_Contratista,
+                    FechaProgramada = observacion.Fecha_Programada,
+                    ComentarioImplementacion = observacion.Comentario_Implementacion,
+                    FechaCierre = observacion.Fecha_Cierre,
+                    ComentarioVerificacion = observacion.Comentario_Verificacion,
+                    FechaVerificacion = observacion.Fecha_Verificacion,
+                    Estado = observacion.Estado,
+                    EvidenciaImplementacion = observacion.Evidencia_Implementacion,
+                    EvidenciaCondicion = observacion.Evidencia_Condicion
+                };
                 output.Observaciones.Add(obs);
             }
             return output;

@@ -78,11 +78,30 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-                var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
+                var usuariosAgrupados = selectItemsResumen.Usuarios.GroupBy(x => x.IdRol).ToList();
+                var asesores = new List<SelectListItem>();
+                foreach (var grupo in usuariosAgrupados)
+                {
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorMAP))
+                    {
+                        var nuevoGrupo = new SelectListGroup() { Name = "Asesores MAP", Disabled = false };
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
+                    }
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorSSO))
+                    {
+                        var nuevoGrupo = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
+                    }
+                }
+
                 ViewBag.Empresas = filtroEmpresas;
+                ViewBag.Gerencias = filtroGerencias;
                 ViewBag.Usuarios = filtroUsuarios;
+                ViewBag.Asesores = asesores;
 
                 return View();
             }
@@ -114,6 +133,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                     filasTabla += "<td><a href=\"/InspeccionesImplementacion/ImplementarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
+                    filasTabla += "<td>" + fila.GerenciaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.AreaInspeccionada + "</td>";
                     filasTabla += "<td>" + fila.FechaInspeccion.ToString("dd/MM/yyyy HH:mm") + "</td>";
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
@@ -139,9 +159,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             }
             else
             {
-                var nCol = 6;
                 filasTabla += "<tr>";
-                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"" + nCol + "\">Sin Datos</td>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"100%\"\">Sin Datos</td>";
                 filasTabla += "</tr>";
             }
             dynamic response = new

@@ -85,8 +85,14 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
                 {
                     msgBody = string.Format(templateReaded,
+                        img_url,
+                        r,
+                        g,
+                        b,
+                        info.Codigo,
                         info.Gerencia,
                         info.Empresa,
+                        info.GerenciaInspeccionada,
                         info.AreaInspeccionada,
                         info.TipoInspeccion,
                         info.FechaInspeccion,
@@ -104,19 +110,20 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
                         observacion.ResponsableContratista,
                         (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
-                        info.Codigo,
-                        _protector.Protect(IdCabecera.ToString()),
-                        r,
-                        g,
-                        b,
-                        img_url
+                        _protector.Protect(IdCabecera.ToString())
                         );
                 }
                 else
                 {
-                    msgBody = string.Format(templateReaded,
+                    msgBody = string.Format(templateReaded, 
+                        img_url,
+                        r,
+                        g,
+                        b, 
+                        info.Codigo,
                         info.Gerencia,
                         info.Empresa,
+                        info.GerenciaInspeccionada,
                         info.AreaInspeccionada,
                         info.TipoInspeccion,
                         info.FechaInspeccion,
@@ -134,14 +141,9 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
                         observacion.ResponsableContratista,
                         (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
-                        info.Codigo,
-                        _protector.Protect(IdCabecera.ToString()),
-                        r,
-                        g,
-                        b,
-                        img_url,
                         "No Aplica", //Comentario Implementacion
-                        "No Aplica" //Fecha Implementacion
+                        "No Aplica", //Fecha Implementacion             
+                        _protector.Protect(IdCabecera.ToString())
                         );
                 }
                 var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
@@ -160,7 +162,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
                 MailMessage msg = new MailMessage();
                 msg.Priority = MailPriority.Normal;
-                mail.EnableSsl = false;
+                mail.EnableSsl = true;
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
@@ -212,9 +214,15 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();            
-            var msgBody = string.Format(templateReaded,
+            var msgBody = string.Format(templateReaded, 
+                img_url,
+                r,
+                g,
+                b,
+                info.Codigo,
                 info.AreaEjecutora,
                 info.Empresa,
+                info.GerenciaInspeccionada,
                 info.AreaInspeccionada,
                 info.TipoInspeccion,
                 info.FechaInspeccion,
@@ -231,15 +239,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.DescripcionAccion,
                 info.ResponsableMarcobre,
                 info.ResponsableContratista,
-                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
-                info.Codigo,
-                _protector.Protect(info.IdInspeccionCabecera.ToString()),
-                r,
-                g,
-                b,
-                img_url,
+                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",     
                 info.ComentarioImplementacion,
-                info.FechaCierre
+                info.FechaCierre,
+                _protector.Protect(info.IdInspeccionCabecera.ToString())
                 );
 
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
@@ -258,7 +261,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
@@ -305,36 +308,37 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
             var msgBody = string.Format(templateReaded,
-               info.AreaEjecutora,
-               info.Empresa,
-               info.AreaInspeccionada,
-               info.TipoInspeccion,
-               info.FechaInspeccion,
-               info.ResponsableLugar,
-               info.ResponsableInspeccion,
-               info.Participantes,
-               info.Objetivo,
-               info.TipoObservacion,
-               info.Asesor,
-               info.DescripcionCondicion,
-               info.TipoCondicion,
-               info.DescripcionActoCondicion,
-               info.NivelRiesgo,
-               info.DescripcionAccion,
-               info.ResponsableMarcobre,
-               info.ResponsableContratista,
-               info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
-               info.Codigo,
-               _protector.Protect(info.IdInspeccionCabecera.ToString()),
-               r,
-               g,
-               b,
-               img_url,
-               info.ComentarioImplementacion,
-               info.FechaCierre,
-               info.ComentarioVerificacion,
-               info.FechaVerificacion
-               );
+                img_url,
+                r,
+                g,
+                b,
+                info.Codigo,
+                info.AreaEjecutora,
+                info.Empresa,
+                info.GerenciaInspeccionada,
+                info.AreaInspeccionada,
+                info.TipoInspeccion,
+                info.FechaInspeccion,
+                info.ResponsableLugar,
+                info.ResponsableInspeccion,
+                info.Participantes,
+                info.Objetivo,
+                info.TipoObservacion,
+                info.Asesor,
+                info.DescripcionCondicion,
+                info.TipoCondicion,
+                info.DescripcionActoCondicion,
+                info.NivelRiesgo,
+                info.DescripcionAccion,
+                info.ResponsableMarcobre,
+                info.ResponsableContratista,
+                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
+                info.ComentarioImplementacion,
+                info.FechaCierre,
+                info.ComentarioVerificacion,
+                info.FechaVerificacion,
+                _protector.Protect(info.IdInspeccionCabecera.ToString())
+                );
             var credenciales = await _info_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
             string smtp = "", port = "", user = "", pass = "", mailFrom = "";
             foreach (var item in credenciales.Info)
@@ -351,7 +355,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
             MailMessage msg = new MailMessage();
             msg.Priority = MailPriority.Normal;
-            mail.EnableSsl = false;
+            mail.EnableSsl = true;
             mail.UseDefaultCredentials = false;
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;

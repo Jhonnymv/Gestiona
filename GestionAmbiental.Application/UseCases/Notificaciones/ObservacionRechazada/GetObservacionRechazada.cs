@@ -29,6 +29,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechaz
             output.IdInspeccionDetalle = observacion.IdInspeccionDetalle;
             output.AreaEjecutora = cabecera.Gerencia;
             output.Empresa = cabecera.Empresa;
+            output.GerenciaInspeccionada = cabecera.GerenciaInspeccionada;
             output.AreaInspeccionada = cabecera.AreaInspeccionada;
             output.TipoInspeccion = cabecera.TipoInspeccion;
             output.FechaInspeccion = cabecera.FechaInspeccion.ToString();

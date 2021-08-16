@@ -13,6 +13,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int IdEmpresa { get; set; }
         public DateTime FechaInspeccion { get; set; }
         public string LugarInspeccionado { get; set; }
+        public int IdGerenciaInspeccionada { get; set; }
         public string TipoInspeccion { get; set; }
         public int IdResponsableArea { get; set; }
         public string ResponsableInspeccion { get; set; }

@@ -6,32 +6,12 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
 {
     public class NuevaObservacionOutput
     {
-        /*
-             Área Ejecutora{0}
-             Empresa{1}
-             Área Inspeccionada{2}
-             Tipo Inspección{3}
-             Fecha Inspección{4}
-             Responsable Lugar Inspeccionado{5}
-             Responsable de la inspección{6}
-             Participantes {7}
-             Objetivo de la Inspección{8}
-
-             TipoInspeccion{9}
-             Asesor SSO/MAP{10}
-             Acto / Condición Subestándar Identificada{11}
-             Tipo de Condición / Acto Subestándar{12}
-             Nivel de Riesgo del Aspecto Ambiental{13}
-             Acción Preventiva / Correctiva Tomada{14}
-             Responsable Marcobre{15}
-             Responsable Contratista{16}
-             Fecha Programada{17}
-             */
         public int IdInspeccionCabecera { get; set; }
         public int IdInspeccionDetalle { get; set; }
         public string Codigo { get; set; }
         public string AreaEjecutora { get; set; }
         public string Empresa { get; set; }
+        public string GerenciaInspeccionada { get; set; }
         public string AreaInspeccionada { get; set; }
         public string TipoInspeccion { get; set; }
         public string FechaInspeccion { get; set; }

@@ -27,19 +27,22 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarInsp
         }
 
         public async Task Execute(
-            int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc, string lugar, string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion, string responsableInpseccion, string inspectores, string opcion, string usuario_red)
+            int idCabecera, string objetivo, int gerenciaMarc, int empresaMarc,int gerenciaInspec, string lugar, string tipoInspeccion, int responsableLugar, string hora, string fechaInspeccion, string responsableInpseccion, string inspectores, string opcion, string usuario_red)
         {
-            var cabecera = new NuevaInspeccionCabecera();
-            cabecera.IdCabecera = idCabecera;
-            cabecera.IdGerencia = gerenciaMarc;
-            cabecera.IdEmpresa = empresaMarc;
-            cabecera.LugarInspeccionado = lugar;
-            cabecera.TipoInspeccion = tipoInspeccion;
-            cabecera.IdResponsableArea = responsableLugar;
-            cabecera.FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
-            cabecera.ResponsableInspeccion = responsableInpseccion;
-            cabecera.Inspectores = inspectores;
-            cabecera.Objetivo = objetivo;
+            var cabecera = new NuevaInspeccionCabecera
+            {
+                IdCabecera = idCabecera,
+                IdGerencia = gerenciaMarc,
+                IdEmpresa = empresaMarc,
+                IdGerenciaInspeccionada = gerenciaInspec,
+                LugarInspeccionado = lugar,
+                TipoInspeccion = tipoInspeccion,
+                IdResponsableArea = responsableLugar,
+                FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora),
+                ResponsableInspeccion = responsableInpseccion,
+                Inspectores = inspectores,
+                Objetivo = objetivo
+            };
 
             var Id_Usuario = await _gestorUsuarioReadOnlyRepository.GetIdUsuario(usuario_red);
 

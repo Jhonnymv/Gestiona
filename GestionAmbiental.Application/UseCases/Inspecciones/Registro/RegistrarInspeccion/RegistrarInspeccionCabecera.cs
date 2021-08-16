@@ -21,20 +21,23 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarI
         }
 
 
-        public async Task<int> Execute(string objetivo, string usuario_red, int gerenciaMarc, int empresaMarc, string lugar, string fechaInspeccion, string hora, string tipoInspeccion, int responsableLugar, string responsableInspeccion, string inspectores, string opcion)
+        public async Task<int> Execute(string objetivo, string usuario_red, int gerenciaMarc, int empresaMarc, int gerenciaInspec, string lugar, string fechaInspeccion, string hora, string tipoInspeccion, int responsableLugar, string responsableInspeccion, string inspectores, string opcion)
         {
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
-            var cabecera = new NuevaInspeccionCabecera();
-            cabecera.IdGerencia = gerenciaMarc;
-            cabecera.IdRegistradoPor = usuario.IdUsuario;
-            cabecera.IdEmpresa = empresaMarc;
-            cabecera.FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora);
-            cabecera.LugarInspeccionado = lugar;
-            cabecera.TipoInspeccion = tipoInspeccion;
-            cabecera.IdResponsableArea = responsableLugar;
-            cabecera.ResponsableInspeccion = responsableInspeccion;
-            cabecera.Inspectores = inspectores;
-            cabecera.Objetivo = objetivo;
+            var cabecera = new NuevaInspeccionCabecera
+            {
+                IdGerencia = gerenciaMarc,
+                IdGerenciaInspeccionada = gerenciaInspec,
+                IdRegistradoPor = usuario.IdUsuario,
+                IdEmpresa = empresaMarc,
+                FechaInspeccion = Convert.ToDateTime(fechaInspeccion + " " + hora),
+                LugarInspeccionado = lugar,
+                TipoInspeccion = tipoInspeccion,
+                IdResponsableArea = responsableLugar,
+                ResponsableInspeccion = responsableInspeccion,
+                Inspectores = inspectores,
+                Objetivo = objetivo
+            };
 
             switch (opcion)
             {

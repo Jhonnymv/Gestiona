@@ -27,8 +27,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             cabeceraEntity.Objetivo = cabecera.Objetivo;
             cabeceraEntity.Fecha_Inspeccion = cabecera.FechaInspeccion;
             cabeceraEntity.Tipo_Inspeccion = cabecera.TipoInspeccion;
-            cabeceraEntity.Id_Empresa = cabecera.IdEmpresa != 0 ? cabecera.IdEmpresa: 1;
-            cabeceraEntity.Id_Gerencia = cabecera.IdGerencia != 0 ? cabecera.IdGerencia : 1;
+            cabeceraEntity.Id_Empresa = cabecera.IdEmpresa;
+            cabeceraEntity.Id_Gerencia = cabecera.IdGerencia;
+            cabeceraEntity.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada;
             cabeceraEntity.Area_Inspeccionada = cabecera.LugarInspeccionado;
             cabeceraEntity.Id_Responsable_Area = cabecera.IdResponsableArea;
             cabeceraEntity.Responsable_Inspeccion = cabecera.ResponsableInspeccion;
