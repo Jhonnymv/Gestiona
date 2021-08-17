@@ -360,13 +360,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                         }).ToList();
 
                         //convertir a json y guardarlo en archivo json
-                        string json = JsonConvert.SerializeObject(toJson);
-                        System.IO.File.WriteAllText(propiedadesJsonPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                        string newJson = JsonConvert.SerializeObject(toJson);
+                        System.IO.File.WriteAllText(propiedadesJsonPath, newJson, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
                         //guardar nuevo js
                         System.IO.File.WriteAllText(templateJsPath, newJs, System.Text.Encoding.GetEncoding("iso-8859-1"));
                     }
                 }
+                var json = JsonConvert.SerializeObject(propiedadesJsonNuevo);
+                await _editarConfiguracion.Exectue("propiedades_modulos.json", propiedadesJsonPath, json);
                 response = new
                 {
                     success = true,

@@ -194,7 +194,7 @@
                         <span class="text-white bold text-center ">CAUSAS INMEDIATAS DEL INCIDENTE</span>
                     </div>
                     <div class="details-content">
-                        @if (Model.Estado == "Pendiente"|| (!Model.Estado.Equals("Eliminado")&& ViewBag.PermisosAdmin))
+                        @if (Model.Estado == "Pendiente" || (!Model.Estado.Equals("Eliminado") && ViewBag.PermisosAdmin))
                         {
                             <div class="row-center-center col-12">
                                 <div class="col-12 col-xl-4">
@@ -202,6 +202,8 @@
                                         Agregar Causa
                                     </a>
                                 </div>
+                            </div>
+                            <div class="row-center-center col-12" style="color:red" id="alert_causas">
                             </div>
                         }
                         <div class="incidentes">
@@ -262,6 +264,8 @@
                                     </a>
                                 </div>
                             </div>
+                            <div class="row-center-center col-12" style="color:red" id="alert_involucrados">
+                            </div>
                         }
                         <div class="incidentes">
                             <div class="tertiary-content col-12">
@@ -310,6 +314,8 @@
                                         Agregar Acción
                                     </a>
                                 </div>
+                            </div>
+                            <div class="row-center-center col-12" style="color:red" id="alert_acciones">                                
                             </div>
                         }
                         <div class="incidentes">
@@ -893,6 +899,9 @@
             $("[data-valmsg-for='Id_Gerencia_Responsable']").html("");
             $("[data-valmsg-for='Comentario_Accion']").html("");
             $("[data-valmsg-for='Id_Supervisor']").html("");
+            $("#alert_causas").html("");
+            $("#alert_involucrados").html("");
+            $("#alert_acciones").html("");
 
             if ($("#Num_Trabajadores").val() == "") {
                 $("#Num_Trabajadores").focus();
