@@ -12,10 +12,8 @@ namespace GestionAmbiental.UseCases.Configuracion
     {
             public int Id { get; set; }
             [DisplayName("Título del Slide")]
-            [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
             public string Titulo { get; set; }
             [DisplayName("Contenido del Slide")]
-            [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
             public string Contenido { get; set; }
             [DisplayName("Imagen del Slide")]
             public IFormFile ImagenNueva { get; set; }

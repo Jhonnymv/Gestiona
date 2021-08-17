@@ -1021,7 +1021,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
 
-                    var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2\\";
+                    var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
                     if (!Directory.Exists(SGATempPath))
                     {
                         Directory.CreateDirectory(SGATempPath);
@@ -1089,7 +1089,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
@@ -1151,7 +1151,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 /* Save file in application server to decrypt */
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-Prueba-v2/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

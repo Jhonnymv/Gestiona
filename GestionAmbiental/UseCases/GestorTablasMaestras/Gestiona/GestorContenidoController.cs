@@ -368,7 +368,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                     }
                 }
                 var json = JsonConvert.SerializeObject(propiedadesJsonNuevo);
-                await _editarConfiguracion.Exectue("propiedades_modulos.json", propiedadesJsonPath, json);
+                await _editarConfiguracion.Exectue("propiedades_modulos.json", "/json/propiedades_modulos.json", json);
                 response = new
                 {
                     success = true,
@@ -560,7 +560,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                         string json = JsonConvert.SerializeObject(cards);
                         System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
-                        await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+                        await _editarConfiguracion.Exectue("tarjetas.json", "/json/tarjetas.json", json);
 
                         result = new
                         {
@@ -648,7 +648,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                         string json = JsonConvert.SerializeObject(cards);
                         System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
-                        await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+                        await _editarConfiguracion.Exectue("tarjetas.json", "/json/tarjetas.json", json);
 
                         result = new
                         {
@@ -711,7 +711,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             string json = JsonConvert.SerializeObject(cards);
                             System.IO.File.WriteAllText(cardsPath, json, System.Text.Encoding.GetEncoding("iso-8859-1"));
 
-                            await _editarConfiguracion.Exectue("tarjetas.json", cardsPath, json);
+                            await _editarConfiguracion.Exectue("tarjetas.json", "/json/tarjetas.json", json);
                             result = new
                             {
                                 success = true
@@ -926,7 +926,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             //Actualizar css
                             ActualizarColoresCSS();
                             
-                            await _editarConfiguracion.Exectue("variables-estilo.json", variablesPath, json);
+                            await _editarConfiguracion.Exectue("variables-estilo.json", "/json/variables-estilo.json", json);
                         }
                         catch(Exception e)
                         {
@@ -1107,7 +1107,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             //Actualizar css
                             ActualizarFuentesCSS();
 
-                            await _editarConfiguracion.Exectue("variables-estilo.json", variablesPath, json);
+                            await _editarConfiguracion.Exectue("variables-estilo.json", "/json/variables-estilo.json", json);
                         }
                         catch (Exception e)
                         {

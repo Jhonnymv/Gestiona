@@ -73,7 +73,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 row-center-center">
-                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                    <button id="btn_filtrar" type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
                 </div>
             </form>
         </div>
@@ -109,7 +109,6 @@
         $(document).ready(function () {
             filtrar(1);
         });
-
         function dataModulo() {
             $.ajax({
                 type: "POST",

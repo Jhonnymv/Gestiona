@@ -132,6 +132,13 @@ namespace GestionAmbiental.UseCases.Configuracion
                 var slidesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "slides.json");
                 var slidesText = System.IO.File.ReadAllText(slidesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
                 var slides = JsonConvert.DeserializeObject<List<SlideModel>>(slidesText);
+                foreach(var item in slides)
+                {
+                    if (item.Titulo == null)
+                        item.Titulo = " ";
+                    if (item.Contenido == null)
+                        item.Contenido = " ";
+                }
                 response = new
                 {
                     success = true,

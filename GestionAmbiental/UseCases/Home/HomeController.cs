@@ -34,31 +34,33 @@ namespace GestionAmbiental.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = new HomeModel();
-            try
-            {
-                var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
-
-                var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
-
-                var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
-
-                model.Tarjetas = cards.OrderBy(x=>x.Fecha).ToList();
-            }
-            catch(Exception e)
-            {
-                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
-                Log.Error(e.Message);
-            }
-                       
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
+                return RedirectToAction("Modulos");
             }
-            
-            return View(model);
+            else
+            {
+                var model = new HomeModel();
+                try
+                {
+                    var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
+
+                    var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+
+                    var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
+
+                    model.Tarjetas = cards.OrderBy(x => x.Fecha).ToList();
+                }
+                catch (Exception e)
+                {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message);
+                }
+                return View(model);
+            }
         }
 
         public async Task<IActionResult> Modulos()
