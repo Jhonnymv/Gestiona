@@ -408,7 +408,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 10).SetCellValue(observacion.FechaCierre);
                     //-> Estado
                     row.GetCell(startIndex + 11).SetCellValue(observacion.Estado);
-                    row.GetCell(startIndex + 11).CellStyle = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado)).EstiloCelda;
+                    var estilo = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado));
+                    if(estilo!=null)
+                        row.GetCell(startIndex + 11).CellStyle = estilo.EstiloCelda;
                     //-> Responsable Inspección
                     row.GetCell(startIndex + 12).SetCellValue(observacion.ResponsableInspeccion);
                     //-> Fecha Inspección

@@ -112,6 +112,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             ).ToList();
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             observaciones = observaciones.Where(x =>
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
             observaciones = observaciones.Where(x =>
                 respLevObs != 0 ? x.Id_Responsable_Marcobre.Equals(respLevObs) : x.Id_Responsable_Marcobre.Equals(x.Id_Responsable_Marcobre) &&
