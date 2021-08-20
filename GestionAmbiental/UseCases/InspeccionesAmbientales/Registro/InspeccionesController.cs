@@ -158,7 +158,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 return View();
            }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro,string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro,string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigoFiltro, int pagina, int rpp)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -172,7 +172,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             else
                 fechaFin = DateTime.Now;
 
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro,estadoFiltro, responsableFiltro, asesorFiltro);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro,estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
@@ -490,6 +490,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                                 evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
                         }
                         filaObservacion += "<tr>";
+                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
+                            filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
+                        else
+                            filaObservacion += "<td></td>";
+                        if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && (cabecera.Permiso||cabecera.PermisoAdmin))
+                            filaObservacion += "<td><button class=\"btn btn-mc-danger\" type=\"button\" onclick=\"EliminarObservacion('" + IdObsEncriptado + "','" + observacion.IdInspeccionCabecera + "')\">" + "Eliminar" + "</button></td>";
+                        //filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + observacion.IdInspeccionCabecera + "\">" + "Eliminar" + "</a></td>";
+                        else
+                            filaObservacion += "<td></td>";
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";
@@ -510,16 +519,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue?observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";
-                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || ((observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && observacion.PermisosAsesor) || observacion.PermisosAdmin))
-                            filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
-                        else
-                            filaObservacion += "<td></td>";
-                         if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso)
-                            filaObservacion += "<td><button class=\"btn btn-mc-danger\" type=\"button\" onclick=\"EliminarObservacion('" + IdObsEncriptado + "','" + observacion.IdInspeccionCabecera + "')\">" + "Eliminar" + "</button></td>";
-                            //filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + observacion.IdInspeccionCabecera + "\">" + "Eliminar" + "</a></td>";
-                        else
-                            filaObservacion += "<td></td>";                       
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue?observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";                                             
                         filaObservacion += "</tr>";
                     }
                 }
@@ -649,7 +649,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             else
                                 evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
                         }
-                        filaObservacion += "<tr>";
+                        filaObservacion += "<tr>"; 
+                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor || observacion.PermisosAdmin))
+                        {
+                            filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
+                        }
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
                         if (observacion.PermisosAsesor && cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                         {
@@ -681,11 +685,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue? observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";
-                        if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor||observacion.PermisosAdmin))
-                        {
-                            filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
-                        }
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue? observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";                        
                         filaObservacion += "</tr>";
                     }
                     ViewBag.ContenidoTabla = filaObservacion;      

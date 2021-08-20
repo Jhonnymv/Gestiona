@@ -15,12 +15,14 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Implementacion.Cons
         {
             _cabeceraInspeccionReadOnlyRepository = cabeceraInspeccionReadOnlyRepository;
         }
-        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<InspeccionesCabeceraOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo)
         {
-            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro);
-            var output = new InspeccionesCabeceraOutput();
-            output.NCabeceras = cabeceras.Count;
-            output.Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList();
+            var cabeceras = await _cabeceraInspeccionReadOnlyRepository.GetInspeccionCabeceraImplementacion(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, responsableFiltro, asesorFiltro,codigo);
+            var output = new InspeccionesCabeceraOutput
+            {
+                NCabeceras = cabeceras.Count,
+                Cabeceras = cabeceras.Skip((pagina - 1) * fpp).Take(fpp).ToList()
+            };
             return output;
         }
     }

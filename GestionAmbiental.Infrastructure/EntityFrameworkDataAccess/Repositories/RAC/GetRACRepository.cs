@@ -68,11 +68,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
                 !c.Estado.Equals(EstadosRAC.Eliminado.ToString())
+                && c.Codigo.Contains(codigoFiltro ?? c.Codigo) 
                 && c.Fecha >= fechaInicio
                 && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
@@ -147,7 +148,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
@@ -156,6 +157,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 c.Estado.Equals(EstadosRAC.Ampliado.ToString()) ||
                 c.Estado.Equals(EstadosRAC.Rechazado.ToString())
                 )
+                && c.Codigo.Contains(codigoFiltro ?? c.Codigo)
                 && c.Fecha >= fechaInicio
                 && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)
@@ -227,11 +229,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
                 c.Estado.Equals(EstadosRAC.Implementado.ToString())
+                && c.Codigo.Contains(codigoFiltro ?? c.Codigo)
                 && c.Fecha >= fechaInicio
                 && c.Fecha <= fechaFin)
                 .OrderByDescending(x => x.Codigo)

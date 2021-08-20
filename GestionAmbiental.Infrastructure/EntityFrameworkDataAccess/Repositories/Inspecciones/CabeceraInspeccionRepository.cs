@@ -21,10 +21,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabecera(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo)
         {
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(c =>
+                c.Codigo.Contains(codigo ?? c.Codigo) &&
                 c.Fecha_Inspeccion >= fechaInicio &&
                 c.Fecha_Inspeccion <= fechaFin &&
                 (c.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || c.Estado.Equals(EstadosInspeccion.Pendiente.ToString())))
@@ -120,7 +121,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo)
         {
             var obsPendImp = await _context.Inspecciones_Detalle
                  .Where(x =>
@@ -130,6 +131,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                  .ToListAsync();
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(c =>
+                c.Codigo.Contains(codigo ?? c.Codigo) &&
                 c.Fecha_Inspeccion >= fechaInicio &&
                 c.Fecha_Inspeccion <= fechaFin &&
                 c.Estado.Equals(EstadosInspeccion.Registrado.ToString()))
@@ -210,7 +212,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo)
         {
             var obsPendVer = await _context.Inspecciones_Detalle
                .Where(x => x.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
@@ -218,6 +220,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(c =>
+                c.Codigo.Contains(codigo ?? c.Codigo) &&
                 c.Fecha_Inspeccion >= fechaInicio &&
                 c.Fecha_Inspeccion <= fechaFin &&
                 c.Estado.Equals(EstadosInspeccion.Registrado.ToString()))

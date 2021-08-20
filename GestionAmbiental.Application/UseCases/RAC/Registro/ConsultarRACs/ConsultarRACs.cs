@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs
         {
             _RACReadOnlyRepository = rACReadOnlyRepository ?? throw new ArgumentNullException(nameof(rACReadOnlyRepository));
         }
-        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro)
+        public async Task<RACsOutput> Execute(int pagina, int fpp, DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var estados = new List<string>();
             if (estadoFiltro.Length > 0)
@@ -36,7 +36,7 @@ namespace GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs
                 if (estadoFiltro.Contains("Aprobados"))
                     estados.Add(EstadosRAC.Aprobado.ToString());
             }
-            var registros = await _RACReadOnlyRepository.GetRACs(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro);
+            var registros = await _RACReadOnlyRepository.GetRACs(fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estados, responsableFiltro, asesorFiltro, codigoFiltro);
             var output = new RACsOutput
             {
                 Registros = new List<RACOutput>(),

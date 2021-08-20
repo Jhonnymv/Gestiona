@@ -21,37 +21,35 @@
                     <a class="btn btn-special-action-outline rac-color" asp-action="NuevoRAC" asp-controller="RegistroRAC">NUEVO REPORTE</a>
                 </div>
             </div>
-            <form autocomplete="off" class="custom-form">
+            <form autocomplete="off" class="custom-form" id="form_filtro">
                 <div class="col-12 col-lg-9">
                     <div class="row input_container">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Fecha de Inicio</label>
                             <input id="fecha_inicio_filtro" type="date" class="form-control">
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Fecha de Fin</label>
                             <input id="fecha_fin_filtro" type="date" class="form-control">
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Gerencia Observada</label>
                             <select id="gerencia_filtro" asp-items="@ViewBag.Gerencias" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
                             <label>Empresa Observada</label>
                             <select id="empresa_filtro" asp-items="@ViewBag.Empresas" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Registrado Por</label>
                             <select id="registrado_por_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Estado</label>
                             <select id="estado_filtro" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                                 <option data-tokens="Implementacion" value="Implementacion">Pendientes de Implementación</option>
@@ -62,20 +60,29 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Responsable del Levantamiento de Observación</label>
                             <select id="responsable_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <div class="col-12 col-md-4">
                             <label>Asesor MA/SSO</label>
                             <select id="asesor_filtro" asp-items="@ViewBag.Asesores" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
+                        <div class="col-12 col-md-4">
+                            <label>Código</label>
+                            <input id="codigo_filtro" type="text" class="form-control">
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-3 row-center-center">
-                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                <div class="col-12 col-lg-3">
+                    <div class="row ms-1 me-1">
+                        <button id="btn_filtrar" type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                    </div>
+                    <div class="row ms-1 me-1">
+                        <button id="btn_reset" type="button" class="btn btn-mc-outline">Limpiar Filtros</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -147,7 +154,8 @@
                     "registradoPorFiltro": $('#registrado_por_filtro').val(),
                     "estadoFiltro": $('#estado_filtro').val(),
                     "responsableFiltro": $('#responsable_filtro').val(),
-                    "asesorFiltro": $("#asesor_filtro").val()
+                    "asesorFiltro": $("#asesor_filtro").val(),
+                    "codigoFiltro": $("#codigo_filtro").val()
                 },
                 traditional: true,
                 success: (response) => {
@@ -157,6 +165,14 @@
                     dataModulo();
                 }
             });
+        }
+        $("#btn_reset").on('click', function () {
+            reset();
+        });
+        function reset() {
+            $("#form_filtro")[0].reset();
+            $('.selectpicker').selectpicker('refresh');
+            filtrar(1);
         }
     </script>
 }
