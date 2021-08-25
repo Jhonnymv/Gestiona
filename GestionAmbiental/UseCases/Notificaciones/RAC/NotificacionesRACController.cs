@@ -75,10 +75,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.RAC
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Nombres_Apellidos,
                 info.Gerencia,
@@ -168,10 +165,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.RAC
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Nombres_Apellidos,
                 info.Gerencia,
@@ -264,10 +258,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.RAC
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                 img_url,
-                 r,
-                 g,
-                 b,
+                 $"#{r:X2}{g:X2}{b:X2}",
                  info.Codigo,
                  info.Nombres_Apellidos,
                  info.Gerencia,

@@ -79,12 +79,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Incidentes","ReportePreliminar", "NuevaReportePreliminar.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
-
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,
@@ -166,10 +162,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,

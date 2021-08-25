@@ -85,10 +85,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
                 {
                     msgBody = string.Format(templateReaded,
-                        img_url,
-                        r,
-                        g,
-                        b,
+                        $"#{r:X2}{g:X2}{b:X2}",
                         info.Codigo,
                         info.Gerencia,
                         info.Empresa,
@@ -115,11 +112,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 }
                 else
                 {
-                    msgBody = string.Format(templateReaded, 
-                        img_url,
-                        r,
-                        g,
-                        b, 
+                    msgBody = string.Format(templateReaded,
+                        $"#{r:X2}{g:X2}{b:X2}",
                         info.Codigo,
                         info.Gerencia,
                         info.Empresa,
@@ -214,11 +208,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();            
-            var msgBody = string.Format(templateReaded, 
-                img_url,
-                r,
-                g,
-                b,
+            var msgBody = string.Format(templateReaded,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.AreaEjecutora,
                 info.Empresa,
@@ -308,10 +299,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             StreamReader SourceReader = System.IO.File.OpenText(template);
             var templateReaded = SourceReader.ReadToEnd();
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.AreaEjecutora,
                 info.Empresa,

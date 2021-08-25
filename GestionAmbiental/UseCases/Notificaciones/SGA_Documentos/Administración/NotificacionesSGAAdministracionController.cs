@@ -173,10 +173,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administració
                 }
             }
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 documento.DocCodigo,
                 documento.DocNombre,
                 documento.DocVersion,

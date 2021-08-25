@@ -21,13 +21,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var avistamientoFauna = await _context.Avistamientos_Fauna.FirstOrDefaultAsync(x => x.Id_Avistamiento_Fauna.Equals(id_avistamiento));
 
-            var output = new Domain.AvistamientoFauna.AvistamientoFauna();
-            output.IdAvistamientoFauna = avistamientoFauna.Id_Avistamiento_Fauna;
-            output.Codigo = avistamientoFauna.Codigo;
-            output.Fotos = avistamientoFauna.Fotos;
-            output.FechaAvistamiento = avistamientoFauna.Fecha_Avistamiento;
-            output.Ubicacion = avistamientoFauna.Ubicacion;
-            output.Cantidad = avistamientoFauna.Cantidad;
+            var output = new Domain.AvistamientoFauna.AvistamientoFauna
+            {
+                IdAvistamientoFauna = avistamientoFauna.Id_Avistamiento_Fauna,
+                Codigo = avistamientoFauna.Codigo,
+                Fotos = avistamientoFauna.Fotos,
+                FechaAvistamiento = avistamientoFauna.Fecha_Avistamiento,
+                Ubicacion = avistamientoFauna.Ubicacion,
+                Cantidad = avistamientoFauna.Cantidad
+            };
 
 
             if (avistamientoFauna.Id_Nombre_Comun_Fauna != null)
@@ -167,16 +169,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             foreach (var item in avistamientos)
             {
-                var outputItem = new Domain.AvistamientoFauna.AvistamientoFauna();
-                outputItem.IdAvistamientoFauna = item.Id_Avistamiento_Fauna;
-                outputItem.Codigo = item.Codigo;
-                outputItem.Fotos = item.Fotos;
-                outputItem.FechaAvistamiento = item.Fecha_Avistamiento;
-                outputItem.Ubicacion = item.Ubicacion;
-                outputItem.Cantidad = item.Cantidad;
-                outputItem.DescripcionAccion = item.Descripcion_Accion;
-                outputItem.EvidenciaAccion = item.Evidencia_Accion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Domain.AvistamientoFauna.AvistamientoFauna
+                {
+                    IdAvistamientoFauna = item.Id_Avistamiento_Fauna,
+                    Codigo = item.Codigo,
+                    Fotos = item.Fotos,
+                    FechaAvistamiento = item.Fecha_Avistamiento,
+                    Ubicacion = item.Ubicacion,
+                    Cantidad = item.Cantidad,
+                    DescripcionAccion = item.Descripcion_Accion,
+                    EvidenciaAccion = item.Evidencia_Accion,
+                    Estado = item.Estado
+                };
 
                 if (item.Id_Nombre_Comun_Fauna.HasValue)
                 {
@@ -318,16 +322,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             foreach (var item in avistamientos)
             {
-                var outputItem = new Domain.AvistamientoFauna.AvistamientoFauna();
-                outputItem.IdAvistamientoFauna = item.Id_Avistamiento_Fauna;
-                outputItem.Codigo = item.Codigo;
-                outputItem.Fotos = item.Fotos;
-                outputItem.FechaAvistamiento = item.Fecha_Avistamiento;
-                outputItem.Ubicacion = item.Ubicacion;
-                outputItem.Cantidad = item.Cantidad;
-                outputItem.DescripcionAccion = item.Descripcion_Accion;
-                outputItem.EvidenciaAccion = item.Evidencia_Accion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Domain.AvistamientoFauna.AvistamientoFauna
+                {
+                    IdAvistamientoFauna = item.Id_Avistamiento_Fauna,
+                    Codigo = item.Codigo,
+                    Fotos = item.Fotos,
+                    FechaAvistamiento = item.Fecha_Avistamiento,
+                    Ubicacion = item.Ubicacion,
+                    Cantidad = item.Cantidad,
+                    DescripcionAccion = item.Descripcion_Accion,
+                    EvidenciaAccion = item.Evidencia_Accion,
+                    Estado = item.Estado
+                };
 
                 if (item.Id_Nombre_Comun_Fauna.HasValue)
                 {

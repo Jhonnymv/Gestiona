@@ -214,7 +214,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.CompletarRegistroMA
 
                 var model = new AvistamientoFaunaModel();
                 model.IdAvistamientoFauna = avistamiento.IdAvistamientoFauna;
-                model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy");
+                model.Fecha_Avistamiento = avistamiento.FechaAvistamiento.ToString("yyyy-MM-dd");
                 model.Hora_Avistamiento = avistamiento.FechaAvistamiento.ToString("HH:mm");
                 model.Ubicacion = avistamiento.Ubicacion;
                 model.Cantidad = avistamiento.Cantidad;

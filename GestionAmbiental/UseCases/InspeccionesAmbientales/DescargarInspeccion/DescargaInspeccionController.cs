@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Renci.SshNet;
 using Microsoft.AspNetCore.DataProtection;
+using NPOI.Util;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -196,7 +197,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Acto/Condición Subestándar Identificada
                     row.GetCell(3).SetCellValue(observacion.DescripcionCondicion);
                     //->Tipo de Condición / Acto Subestándar
-                    row.GetCell(14).SetCellValue(observacion.TipoCondicion.Descripcion);
+                    row.GetCell(14).SetCellValue(observacion.TipoCondicion?.Descripcion);
                     //->Nivel de Riesgo
                     row.GetCell(17).SetCellValue(observacion.NivelRiesgo);
                     //->Acción Preventiva / Correctiva Tomada
@@ -374,7 +375,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         evidencia_condicion.extension != null) &&
                         evidencia_condicion.rowHeight != 0 &&
                         evidencia_condicion.rowHeight < row.Height)
-                        evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                    {
+                        //evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                        evidencia_condicion.image.Resize(0.5, 1.0);
+                    }
 
                     if ((evidencia_inspeccion.extension == ".jpg" ||
                         evidencia_inspeccion.extension == ".png" ||
@@ -385,8 +389,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                         evidencia_inspeccion.extension != null &&
                         evidencia_inspeccion.rowHeight != 0 &&
                         evidencia_inspeccion.rowHeight < row.Height)
-                        evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
-
+                    {
+                        //evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+                        evidencia_inspeccion.image.Resize(0.5, 1.0);
+                    }
                     int startIndex = 1;
                     //->Index
                     row.GetCell(startIndex).SetCellValue(obsIndex);
@@ -580,7 +586,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     }
 
                     rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
-                    picture.Resize(1.0);
+                    picture.Resize(1.0);                    
 
                     output.rowHeight = rowHeight;
                     output.image = picture;

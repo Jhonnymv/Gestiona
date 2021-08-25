@@ -99,10 +99,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 }
             }
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 avistamiento.Codigo,
                 avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
                 avistamiento.FechaAvistamiento.ToString("HH:mm"),
@@ -212,10 +209,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
                 }
             }
             var msgBody = string.Format(templateReaded,
-               img_url,
-               r,
-               g,
-               b,
+               $"#{r:X2}{g:X2}{b:X2}",
                avistamiento.Codigo,
                avistamiento.FechaAvistamiento.ToString("dd/MM/yyyy"),
                avistamiento.FechaAvistamiento.ToString("HH:mm"),

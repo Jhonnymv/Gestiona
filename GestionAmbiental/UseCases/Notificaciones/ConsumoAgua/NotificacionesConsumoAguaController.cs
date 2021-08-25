@@ -90,10 +90,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
             var idEncriptado = _protector.Protect(IdConsumo.ToString());
             
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 limiteMensual,
                 volumenActual,
                 consumo.ResolucionConsumoAgua,

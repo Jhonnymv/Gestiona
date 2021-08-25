@@ -12,7 +12,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 {
     public class GetReportesInspeccionesRepository : IGetReportesInspeccionesReadOnlyRepository
     {
-        private Context _context;
+        private readonly Context _context;
 
         public GetReportesInspeccionesRepository(Context context)
         {
@@ -41,10 +41,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .GroupBy(x => x.Estado)
                 .ToList();
 
-            var output = new List<Dimension>();
-            output.Add(new Dimension("Pendiente", 0, 0));
-            output.Add(new Dimension("Registrado", 0, 1));
-            output.Add(new Dimension("Total", temp_cabeceras.Count(), 2));
+            var output = new List<Dimension>
+            {
+                new Dimension("Pendiente", 0, 0),
+                new Dimension("Registrado", 0, 1),
+                new Dimension("Total", temp_cabeceras.Count(), 2)
+            };
 
             foreach (var item in cabeceras)
             {
@@ -564,6 +566,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
 
             var buenasPracticas = tempObservaciones.Where(x =>
+                !x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
                 x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 x.Estado.Equals(estado.HasValue ? estado.Value.ToString() : x.Estado) &&
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
@@ -577,27 +580,29 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Responsable_Marcobre.Equals(respLevObs > 0 ? respLevObs : x.Id_Responsable_Marcobre) &&
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .GroupBy(x => x.Estado)
-                .ToList();       
+                .ToList();
 
-            var output = new List<Dimension>();
-            output.Add(new Dimension(EstadosInspeccion.Registrado.ToString(), 0, 0));
-            output.Add(new Dimension(EstadosInspeccion.Implementado.ToString(), 0, 1));
-            output.Add(new Dimension(EstadosInspeccion.Aprobado.ToString(), 0, 2));
-            output.Add(new Dimension(EstadosInspeccion.Rechazado.ToString(), 0, 3));
-            output.Add(new Dimension(EstadosInspeccion.Vencido.ToString(), 0, 4));
-            output.Add(new Dimension(EstadosInspeccion.Ampliado.ToString(), 0, 5));
-            output.Add(new Dimension("Total", tempObservaciones.Count(), 6));
-            output.Add(new Dimension("B"+EstadosInspeccion.Implementado.ToString(), 0, 7));
-            output.Add(new Dimension("B" + EstadosInspeccion.Aprobado.ToString(), 0, 8));
-            output.Add(new Dimension("B" + EstadosInspeccion.Rechazado.ToString(), 0, 9));
+            var output = new List<Dimension>
+            {
+                new Dimension(EstadosInspeccion.Registrado.ToString(), 0, 0),
+                new Dimension(EstadosInspeccion.Implementado.ToString(), 0, 1),
+                new Dimension(EstadosInspeccion.Aprobado.ToString(), 0, 2),
+                new Dimension(EstadosInspeccion.Rechazado.ToString(), 0, 3),
+                new Dimension(EstadosInspeccion.Vencido.ToString(), 0, 4),
+                new Dimension(EstadosInspeccion.Ampliado.ToString(), 0, 5),
+                new Dimension("Total", tempObservaciones.Count(), 6),
+                new Dimension("B" + EstadosInspeccion.Implementado.ToString(), 0, 7),
+                new Dimension("B" + EstadosInspeccion.Aprobado.ToString(), 0, 8),
+                new Dimension("B" + EstadosInspeccion.Rechazado.ToString(), 0, 9)
+            };
 
             foreach (var item in observaciones)
             {
                 output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
             }
-            foreach (var item in buenasPracticas)
+            foreach (var itemBP in buenasPracticas)
             {
-                output.FirstOrDefault(x => x.Nombre.Equals("B" + item.Key)).Valor = item.Count();
+                output.FirstOrDefault(x => x.Nombre.Equals("B" + itemBP.Key)).Valor = itemBP.Count();
             }
             return output;
         }
@@ -620,9 +625,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .GroupBy(x => x.Tipo_Observacion)
                 .ToList();
-            var output = new List<Dimension>();
-            output.Add(new Dimension("MAP", 0, 0));
-            output.Add(new Dimension("SSO", 0, 1));
+            var output = new List<Dimension>
+            {
+                new Dimension("MAP", 0, 0),
+                new Dimension("SSO", 0, 1)
+            };
             foreach (var item in observaciones)
             {
                 output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
@@ -640,6 +647,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToListAsync();
             var tempObservaciones = await _context.Inspecciones_Detalle.ToListAsync();
             var observaciones = tempObservaciones.Where(x =>
+                !x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) &&
                 !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
@@ -720,9 +728,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Id_Asesor.Equals(Asesor > 0 ? Asesor : x.Id_Asesor))
                 .GroupBy(x => x.Tipo_Observacion)
                 .ToList();
-            var output = new List<Dimension>();
-            output.Add(new Dimension("MAP", 0, 0));
-            output.Add(new Dimension("SSO", 0, 1));
+            var output = new List<Dimension>
+            {
+                new Dimension("MAP", 0, 0),
+                new Dimension("SSO", 0, 1)
+            };
             foreach (var item in observaciones)
             {
                 output.FirstOrDefault(x => x.Nombre.Equals(item.Key)).Valor = item.Count();
@@ -814,12 +824,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .GroupBy(x => x.Nivel_Riesgo)
                 .ToList();
 
-            var output = new List<Dimension>();
-
-            output.Add(new Dimension("Tolerable", 0, 0));
-            output.Add(new Dimension("Alerta", 0, 1));
-            output.Add(new Dimension("No Aceptable", 0, 2));
-            output.Add(new Dimension("No Aplica", 0, 3));
+            var output = new List<Dimension>
+            {
+                new Dimension("Tolerable", 0, 0),
+                new Dimension("Alerta", 0, 1),
+                new Dimension("No Aceptable", 0, 2),
+                new Dimension("No Aplica", 0, 3)
+            };
             foreach (var item in observaciones)
             {
                 switch (item.Key)
@@ -852,12 +863,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .GroupBy(x => x.Nivel_Riesgo)
                 .ToList();
 
-            var output = new List<Dimension>();
-
-            output.Add(new Dimension("Bajo", 0, 0));
-            output.Add(new Dimension("Medio", 0, 1));
-            output.Add(new Dimension("Alto", 0, 2));
-            output.Add(new Dimension("No Aplica", 0, 3));
+            var output = new List<Dimension>
+            {
+                new Dimension("Bajo", 0, 0),
+                new Dimension("Medio", 0, 1),
+                new Dimension("Alto", 0, 2),
+                new Dimension("No Aplica", 0, 3)
+            };
             foreach (var item in observaciones)
             {
                 switch (item.Key)
@@ -891,11 +903,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
 
-            var output = new List<Dimension>();
-
-            output.Add(new Dimension("Condición Subestándar", 0, 1));
-            output.Add(new Dimension("Acto Subestándar", 0, 2));
-            output.Add(new Dimension("Buenas Prácticas", 0, 3));
+            var output = new List<Dimension>
+            {
+                new Dimension("Condición Subestándar", 0, 1),
+                new Dimension("Acto Subestándar", 0, 2),
+                new Dimension("Buenas Prácticas", 0, 3)
+            };
 
             foreach (var item in observaciones)
             {
@@ -929,11 +942,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .ToList();
 
 
-            var output = new List<Dimension>();
-
-            output.Add(new Dimension("Condición Subestándar", 0, 1));
-            output.Add(new Dimension("Acto Subestándar", 0, 2));
-            output.Add(new Dimension("Buenas Prácticas", 0, 3));
+            var output = new List<Dimension>
+            {
+                new Dimension("Condición Subestándar", 0, 1),
+                new Dimension("Acto Subestándar", 0, 2),
+                new Dimension("Buenas Prácticas", 0, 3)
+            };
 
             foreach (var item in observaciones)
             {
@@ -1127,8 +1141,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var obs_item = observaciones.Where(x => x.Id_Inspeccion_Cabecera.Equals(item.Id_Inspeccion_Cabecera)).ToList();
                 var nObs = obs_item.Count;
 
-                var outputItem = new Domain.Inspecciones.InspeccionCabecera();
-                outputItem.Observaciones = new List<Domain.Inspecciones.InspeccionDetalle>();
+                var outputItem = new Domain.Inspecciones.InspeccionCabecera
+                {
+                    Observaciones = new List<Domain.Inspecciones.InspeccionDetalle>()
+                };
                 foreach (var subitem in obs_item)
                 {
                     var obs = new Domain.Inspecciones.InspeccionDetalle();

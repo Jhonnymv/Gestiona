@@ -105,10 +105,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             {
                 var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
                 var msgBody = string.Format(templateReaded,
-                    img_url,
-                    r,
-                    g,
-                    b,
+                    $"#{r:X2}{g:X2}{b:X2}",
                     info.Codigo,
                     info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                     info.Tipo_Incidente,
@@ -180,10 +177,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,
@@ -304,10 +298,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
 
             var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,
@@ -397,10 +388,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             }
             var IdEncriptado = _protector.Protect(accion.Id_Accion_Correctiva_Incidente.ToString());
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
                 info.Fecha_Incidente.Value.ToString("dd/MM/yyyy HH:mm"),
                 info.Tipo_Incidente,

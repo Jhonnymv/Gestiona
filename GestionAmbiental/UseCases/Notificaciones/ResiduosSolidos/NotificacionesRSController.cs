@@ -73,10 +73,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
             var templateReaded = SourceReader.ReadToEnd();
 
             var msgBody = string.Format(templateReaded,
-                img_url,
-                r,
-                g,
-                b,
+                $"#{r:X2}{g:X2}{b:X2}",
                 info.Item,
                 info.Serie_Manifiesto,
                 info.Num_Manifiesto,
