@@ -34,18 +34,23 @@
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="IdElaboradoPor"></label>
+                            <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
+                            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
                             <span class="text-danger" asp-validation-for="DocNombre"></span>
                             <input type="hidden" asp-for="DocNombre" class="form-control">
                             <select asp-for="DocPredecesor" class="form-control"></select>
                         </div>
+                    </div>
+                    <div class="row input_container align-items-start">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocCodigo"></label>
                             <span class="text-danger" asp-validation-for="DocCodigo"></span>
                             <input type="text" asp-for="DocCodigo" class="form-control" readonly>
                         </div>
-                    </div>
-                    <div class="row input_container align-items-start">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Comentario"></label>
                             <span class="text-danger" asp-validation-for="Comentario"></span>
@@ -55,25 +60,25 @@
                                 <span>/ 500</span>
                             </div>
                         </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="FechaAprobacion"></label>
                             <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
                             <input type="date" asp-for="FechaAprobacion" class="form-control">
                         </div>
-                    </div>
-                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="FechaTentativa"></label>
                             <span class="text-danger" asp-validation-for="FechaTentativa"></span>
                             <input type="date" asp-for="FechaTentativa" class="form-control">
                         </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label>Documento Editable Versión Anterior:</label>
                             <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocumentoPdf"></label>
                             <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
@@ -81,6 +86,8 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocumentoEditable"></label>
                             <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
@@ -510,12 +517,14 @@
             var nombre = $("#DocNombre").val();
             var codigo = $("#DocCodigo").val();
             var documento = $("#Documento").val();
+            var elaborado = $("#IdElaboradoPor").val();
 
             $('span[data-valmsg-for="IdSGATipo_Documento"]').text("");
             $('span[data-valmsg-for="DocVersion"]').text("");
             $('span[data-valmsg-for="DocNombre"]').text("");
             $('span[data-valmsg-for="DocCodigo"]').text("");
             $('span[data-valmsg-for="Documento"]').text("");
+            $('span[data-valmsg-for="IdElaboradoPor"]').text("");
 
             if (tipo != '0' && version != "" && nombre != "" && documento != "")
                 return true;
@@ -530,6 +539,9 @@
                     $('span[data-valmsg-for="DocCodigo"]').text("Este campo es requerido");
                 if (documento == "")
                     $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
+                
+                if (elaborado == '0')
+                    $('span[data-valmsg-for="IdElaboradoPor"]').text("Este campo es requerido");
 
                 return false;
             }

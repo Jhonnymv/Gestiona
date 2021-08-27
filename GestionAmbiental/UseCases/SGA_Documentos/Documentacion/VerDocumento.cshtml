@@ -190,146 +190,171 @@
 
 
 @*<div class="row mb-2">
-    <div class="col-12 titulo-pagina">
-        <h2>Detalles del Documento @ViewBag.CategoriaDoc</h2>
-    </div>
-</div>
-<form class="form-group" id="form_registrar_documento" method="post" enctype="multipart/form-data" autocomplete="off">
-    <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
-    <div class="row mb-2 align-items-center">
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdSGATipoDocumento"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
-            <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="IdElaboradoPor"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
-            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="DocVersion"></label>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="DocVersion"></span>
-            <input type="number" asp-for="DocVersion" class="form-control" readonly>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="DocNombre"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="DocNombre"></span>
-            <input type="text" asp-for="DocNombre" class="form-control" readonly>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="DocCodigo"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="DocCodigo"></span>
-            <input type="text" asp-for="DocCodigo" class="form-control" readonly>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="FechaAprobacion"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
-            <input type="text" asp-for="FechaAprobacion" class="form-control" readonly>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="FechaTentativa"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-            <input type="text" asp-for="FechaTentativa" class="form-control" readonly>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Condicion"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Condicion"></span>
-            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="Comentario"></label>
-        </div>
-        <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
-            <span class="text-danger" asp-validation-for="Comentario"></span>
-            <textarea asp-for="Comentario" class="form-control" readonly></textarea>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="DocumentoPdf"></label>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4">
-            <button class="btn btn-primary" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
-        </div>
-        <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
-            <label asp-for="DocumentoEditable"></label>
-        </div>
-        <div class="col-sm-12 col-md-4 col-lg-4">
-            <button class="btn btn-primary" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+        <div class="col-12 titulo-pagina">
+            <h2>Detalles del Documento @ViewBag.CategoriaDoc</h2>
         </div>
     </div>
-    @if (Model.Secundarios.Length > 2)
-    {
+    <form class="form-group" id="form_registrar_documento" method="post" enctype="multipart/form-data" autocomplete="off">
+        <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
+        <div class="row mb-2 align-items-center">
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="IdSGATipoDocumento"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
+                <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="IdElaboradoPor"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
+                <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="DocVersion"></label>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="DocVersion"></span>
+                <input type="number" asp-for="DocVersion" class="form-control" readonly>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="DocNombre"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="DocNombre"></span>
+                <input type="text" asp-for="DocNombre" class="form-control" readonly>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="DocCodigo"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="DocCodigo"></span>
+                <input type="text" asp-for="DocCodigo" class="form-control" readonly>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="FechaAprobacion"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+                <input type="text" asp-for="FechaAprobacion" class="form-control" readonly>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="FechaTentativa"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                <input type="text" asp-for="FechaTentativa" class="form-control" readonly>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="Condicion"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="Condicion"></span>
+                <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="Comentario"></label>
+            </div>
+            <div class="col-sm-12 col-md-9 col-lg-4 mb-2">
+                <span class="text-danger" asp-validation-for="Comentario"></span>
+                <textarea asp-for="Comentario" class="form-control" readonly></textarea>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="DocumentoPdf"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-primary" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
+            </div>
+            <div class="col-sm-12 col-md-3 col-lg-2 mb-2">
+                <label asp-for="DocumentoEditable"></label>
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <button class="btn btn-primary" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+            </div>
+        </div>
+        @if (Model.Secundarios.Length > 2)
+        {
+            <div class="row mb-2">
+                <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                    <h2>Documentos Relacionados</h2>
+                </div>
+            </div>
+            <div class="row mb-2 align-items-center">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                    <table class="table" id="tabla_secundarios">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo de Documento</th>
+                                <th>Nombre</th>
+                                <th>Versión</th>
+                                <th>Condición</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+        @if (Model.Revisores.Length > 2 || Model.Aprobadores.Length > 2)
+        {
+            <div class="row mb-2 mr-2">
+                <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
+                    <h2>Revisores y Aprobadores</h2>
+                </div>
+            </div>
+            <div class="row mb-2 mr-2 d-flex justify-content-center">
+                <div class="col-sm-12 col-md-12 col-lg-8 mb-2">
+                    <input type="hidden" asp-for="Revisores" />
+                    <table class="table" id="tabla_revisores">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha de Revisión</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row mb-2 mr-2 d-flex justify-content-center">
+                <div class="col-sm-12 col-md-12 col-lg-8 mb-2">
+                    <input type="hidden" asp-for="Aprobadores" />
+                    <table class="table" id="tabla_aprobadores">
+                        <thead class="thead-mcolor">
+                            <tr>
+                                <th>Usuario</th>
+                                <th>Fecha de Aprobación</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
         <div class="row mb-2">
             <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Documentos Relacionados</h2>
+                <h2>Versiones Anteriores</h2>
             </div>
         </div>
         <div class="row mb-2 align-items-center">
             <div class="col-sm-12 col-md-12 col-lg-12">
-                <table class="table" id="tabla_secundarios">
+                <table class="table" id="tabla_documentos">
                     <thead class="thead-mcolor">
                         <tr>
                             <th>Código</th>
-                            <th>Tipo de Documento</th>
-                            <th>Nombre</th>
-                            <th>Versión</th>
-                            <th>Condición</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    }
-    @if (Model.Revisores.Length > 2 || Model.Aprobadores.Length > 2)
-    {
-        <div class="row mb-2 mr-2">
-            <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-                <h2>Revisores y Aprobadores</h2>
-            </div>
-        </div>
-        <div class="row mb-2 mr-2 d-flex justify-content-center">
-            <div class="col-sm-12 col-md-12 col-lg-8 mb-2">
-                <input type="hidden" asp-for="Revisores" />
-                <table class="table" id="tabla_revisores">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Usuario</th>
-                            <th>Fecha de Revisión</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="row mb-2 mr-2 d-flex justify-content-center">
-            <div class="col-sm-12 col-md-12 col-lg-8 mb-2">
-                <input type="hidden" asp-for="Aprobadores" />
-                <table class="table" id="tabla_aprobadores">
-                    <thead class="thead-mcolor">
-                        <tr>
-                            <th>Usuario</th>
+                            <th>Documento</th>
+                            <th>Versión / Revisión</th>
                             <th>Fecha de Aprobación</th>
+                            <th>Condición</th>
+                            <th>Comentarios</th>
+                            <th>Fecha Tentativa de la Nueva Versión</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -337,35 +362,10 @@
                 </table>
             </div>
         </div>
-    }
-    <div class="row mb-2">
-        <div class="col-sm-12 col-md-12 col-lg-12 mb-2 text-center">
-            <h2>Versiones Anteriores</h2>
+        <div class="row mb-2 mr-2 d-flex justify-content-end">
+            <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGADocumentacion" asp-action="Resumen">Volver</a>
         </div>
-    </div>
-    <div class="row mb-2 align-items-center">
-        <div class="col-sm-12 col-md-12 col-lg-12">
-            <table class="table" id="tabla_documentos">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Código</th>
-                        <th>Documento</th>
-                        <th>Versión / Revisión</th>
-                        <th>Fecha de Aprobación</th>
-                        <th>Condición</th>
-                        <th>Comentarios</th>
-                        <th>Fecha Tentativa de la Nueva Versión</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mb-2 mr-2 d-flex justify-content-end">
-        <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGADocumentacion" asp-action="Resumen">Volver</a>
-    </div>
-</form>*@
+    </form>*@
 <!--Modal Revisión-->
 <!--<div class="modal fade" id="modal_revision" tabindex="-1" role="dialog" aria-labelledby="titulo_modal_revision"
      aria-hidden="true" style="display: none;">
@@ -419,7 +419,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
@@ -437,17 +437,39 @@
 </div>
 
 <!-- Modal Registrando-->
-<div class="modal fade" id="modal_registrando" tabindex="-1" role="dialog"
-     aria-hidden="true" style="display: none;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="d-flex justify-content-center">
-                    <div class="spinner-border text-info" role="status">
-                        <span class="sr-only">Loading...</span>
+<div class="modal fade mc-modal" id="modal_registrando" tabindex="-1" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered justify-content-center">
+        <div class="mc-modal-image-background col-12">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display:none" id="btnCerrarSettings"></button>
+                    <div class="col-12 d-flex justify-content-center">
+                        <div style="width: 150px; height: 35px" id="guardandoCambios">
+                            <div class="spinner">
+                                <div class="rect1"></div>
+                                <div class="rect2"></div>
+                                <div class="rect3"></div>
+                                <div class="rect4"></div>
+                                <div class="rect5"></div>
+                            </div>
+                        </div>
+                        <div id="cambiosGuardados" style="display:none">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                                 width="50" height="50"
+                                 viewBox="0 0 226 226"
+                                 style=" fill:#ffffff;">
+                                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,226v-226h226v226z" fill="none"></path><g fill="#ffffff"><path d="M204.67456,42.31063c-1.83417,0.05346 -3.57555,0.81861 -4.85547,2.13346l-122.13159,122.13159l-51.50659,-51.50659c-1.77141,-1.84495 -4.40181,-2.58812 -6.87677,-1.94291c-2.47496,0.64522 -4.40774,2.578 -5.05296,5.05296c-0.64522,2.47496 0.09796,5.10536 1.94291,6.87677l56.5,56.5c2.75812,2.75698 7.2287,2.75698 9.98682,0l127.125,-127.125c2.08533,-2.03093 2.71115,-5.13317 1.57629,-7.81372c-1.13486,-2.68055 -3.79796,-4.39036 -6.70764,-4.30656z"></path></g></g>
+                            </svg>
+                        </div>
                     </div>
-                    <br />
-                    <label>Guardando Información</label>
+                    <div class="col-12 d-flex justify-content-center mt-4">
+                        <label id="mensajeModalConfig" class="text-white">Guardando Información</label>
+                    </div>
+                </div>
+                <div class="modal-footer" id="btnAceptarSettings" style="display:none">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-mc-white m-0" type="button" data-bs-dismiss="modal" aria-label="Close">Aceptar</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -606,7 +628,8 @@
             EnviarRevision("Rechazar");
         });
         function EnviarRevision(Opcion) {
-            $("#modal_registrando").modal("show");
+                $("#Modal_Enviando_Correo").modal('show');
+                $("#mensajeModalConfig").text("Notificando a Responsables")
             $.ajax({
                 type: "GET",
                 url: "/SGADocumentacion/RevisarDocumento",
