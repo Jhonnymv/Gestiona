@@ -27,10 +27,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Componente_Ambiental.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach(var item in items)
             {
-                var outputItem = new Componente_Ambiental();
-                outputItem.Id_Componente_Ambiental = item.Id_Componente_Ambiental;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Componente_Ambiental
+                {
+                    Id_Componente_Ambiental = item.Id_Componente_Ambiental,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -42,10 +44,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Especie_Fauna.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Especie_Fauna();
-                outputItem.Id_Especie_Fauna = item.Id_Especie_Fauna;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Especie_Fauna
+                {
+                    Id_Especie_Fauna = item.Id_Especie_Fauna,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -57,10 +61,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Especie_Flora.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Especie_Flora();
-                outputItem.Id_Especie_Flora = item.Id_Especie_Flora;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Especie_Flora
+                {
+                    Id_Especie_Flora = item.Id_Especie_Flora,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -72,10 +78,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Estado_Equipo_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Estado_Equipo_Incidente();
-                outputItem.Id_Estado_Equipo_Incidente = item.Id_Estado_Equipo_Incidente;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Estado_Equipo_Incidente
+                {
+                    Id_Estado_Equipo_Incidente = item.Id_Estado_Equipo_Incidente,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -87,10 +95,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Lugar_Disposicion.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Lugar_Disposicion();
-                outputItem.Id_Lugar_Disposicion = item.Id_Lugar_Disposicion;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Lugar_Disposicion
+                {
+                    Id_Lugar_Disposicion = item.Id_Lugar_Disposicion,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -102,10 +112,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Nivel_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Nivel_Incidente();
-                outputItem.Id_Nivel_Incidente = item.Id_Nivel_Incidente;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Nivel_Incidente
+                {
+                    Id_Nivel_Incidente = item.Id_Nivel_Incidente,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -117,10 +129,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Producto_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Producto_Incidente();
-                outputItem.Id_Producto_Incidente = item.Id_Producto_Incidente;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Producto_Incidente
+                {
+                    Id_Producto_Incidente = item.Id_Producto_Incidente,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -132,10 +146,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Tipo_Agua.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Tipo_Agua();
-                outputItem.Id_Tipo_Agua = item.Id_Tipo_Agua;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Tipo_Agua
+                {
+                    Id_Tipo_Agua = item.Id_Tipo_Agua,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -147,10 +163,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Tipo_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Tipo_Incidente();
-                outputItem.Id_Tipo_Incidente = item.Id_Tipo_Incidente;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Tipo_Incidente
+                {
+                    Id_Tipo_Incidente = item.Id_Tipo_Incidente,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -162,10 +180,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Tipo_Producto_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Tipo_Producto_Incidente();
-                outputItem.Id_Tipo_Producto_Incidente = item.Id_Tipo_Producto_Incidente;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Tipo_Producto_Incidente
+                {
+                    Id_Tipo_Producto_Incidente = item.Id_Tipo_Producto_Incidente,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -177,10 +197,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Tipo_Suelo.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Tipo_Suelo();
-                outputItem.Id_Tipo_Suelo = item.Id_Tipo_Suelo;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Tipo_Suelo
+                {
+                    Id_Tipo_Suelo = item.Id_Tipo_Suelo,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -192,11 +214,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Unidad_Medida.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Unidad_Medida();
-                outputItem.Id_Unidad_Medida = item.Id_Unidad_Medida;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Tipo = item.Tipo;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Unidad_Medida
+                {
+                    Id_Unidad_Medida = item.Id_Unidad_Medida,
+                    Descripcion = item.Descripcion,
+                    Tipo = item.Tipo,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -207,10 +231,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Tipos_Condicion.ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new TipoCondicion();
-                outputItem.IdTipoCondicion = item.Id_Tipo_Condicion;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Grupo = item.Grupo;
+                var outputItem = new TipoCondicion
+                {
+                    IdTipoCondicion = item.Id_Tipo_Condicion,
+                    Descripcion = item.Descripcion,
+                    Grupo = item.Grupo
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -221,9 +247,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Gerencias.ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Gerencia();
-                outputItem.IdGerencia = item.Id_Gerencia;
-                outputItem.Descripcion = item.Descripcion;
+                var outputItem = new Gerencia
+                {
+                    IdGerencia = item.Id_Gerencia,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -234,13 +263,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Usuarios.Where(x=>x.Id_Rol.Equals((int)InspeccionRol.AsesorMAP) && x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Usuario();
-                outputItem.IdUsuario = item.Id_Usuario;
-                outputItem.Nombres = item.Nombres;
-                outputItem.Apellidos = item.Apellidos;
-                outputItem.Email = item.Email;
-                outputItem.IdRol = item.Id_Rol;
-                outputItem.UsuarioRed = item.usuario_red;
+                var outputItem = new Usuario
+                {
+                    IdUsuario = item.Id_Usuario,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Email = item.Email,
+                    IdRol = item.Id_Rol,
+                    UsuarioRed = item.usuario_red
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -251,13 +282,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Usuarios.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Usuario();
-                outputItem.IdUsuario = item.Id_Usuario;
-                outputItem.Nombres = item.Nombres;
-                outputItem.Apellidos = item.Apellidos;
-                outputItem.Email = item.Email;
-                outputItem.IdRol = item.Id_Rol;
-                outputItem.UsuarioRed = item.usuario_red;
+                var outputItem = new Usuario
+                {
+                    IdUsuario = item.Id_Usuario,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Email = item.Email,
+                    IdRol = item.Id_Rol,
+                    UsuarioRed = item.usuario_red
+                };
                 output.Add(outputItem);
             }
             return output;
@@ -269,11 +302,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var items = await _context.Factor_Causa_Incidente.Where(x => x.Estado.Equals("ACT")).ToListAsync();
             foreach (var item in items)
             {
-                var outputItem = new Factor_Causa_Incidente();
-                outputItem.Id_Factor_Causa_Incidente = item.Id_Factor_Causa_Incidente;
-                outputItem.Tipo_Factor = item.Tipo_Factor;
-                outputItem.Descripcion = item.Descripcion;
-                outputItem.Estado = item.Estado;
+                var outputItem = new Factor_Causa_Incidente
+                {
+                    Id_Factor_Causa_Incidente = item.Id_Factor_Causa_Incidente,
+                    Tipo_Factor = item.Tipo_Factor,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 output.Add(outputItem);
             }
             return output;

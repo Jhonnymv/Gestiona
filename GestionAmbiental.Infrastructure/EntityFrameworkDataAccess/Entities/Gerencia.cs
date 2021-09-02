@@ -15,5 +15,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Gerencia { get; set; }
         [Column(TypeName = "varchar(50)")]
         public string Descripcion { get; set; }
+        [Column(TypeName = "varchar(3)")]
+        public string Estado { get; set; }
     }
 }

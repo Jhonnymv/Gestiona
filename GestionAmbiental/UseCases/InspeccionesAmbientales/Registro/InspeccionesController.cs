@@ -250,7 +250,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
-                var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));                
 
                 var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
@@ -579,7 +579,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
-                var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();

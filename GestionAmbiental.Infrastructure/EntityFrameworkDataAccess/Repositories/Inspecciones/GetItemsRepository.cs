@@ -27,20 +27,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var empresas = await _context.Empresas.ToListAsync();
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
-            var gerenciasDomain = new List<Domain.ValueObjects.Gerencia>();
+            var gerenciasDomain = new List<Gerencia>();
             foreach(var gerencia in gerencias)
             {
-                gerenciasDomain.Add(new Domain.ValueObjects.Gerencia(gerencia.Id_Gerencia, gerencia.Descripcion));
+                gerenciasDomain.Add(new Gerencia
+                {
+                    IdGerencia = gerencia.Id_Gerencia,
+                    Descripcion = gerencia.Descripcion,
+                    Estado = gerencia.Estado
+                });
             }
-            var empresasContratistaDomain = new List<Domain.ValueObjects.Empresa>();
+            var empresasContratistaDomain = new List<Empresa>();
             foreach (var empresa in empresas)
             {
-                empresasContratistaDomain.Add(new Domain.ValueObjects.Empresa(empresa.Id_Empresa, empresa.Razon_Social,empresa.Estado));
+                empresasContratistaDomain.Add(new Empresa(empresa.Id_Empresa, empresa.Razon_Social,empresa.Estado));
             }
-            var tiposCondicionDomain = new List<Domain.ValueObjects.TipoCondicion>();
+            var tiposCondicionDomain = new List<TipoCondicion>();
             foreach (var tipo in tiposCondicion)
             {
-                tiposCondicionDomain.Add(new Domain.ValueObjects.TipoCondicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
+                tiposCondicionDomain.Add(new TipoCondicion(tipo.Id_Tipo_Condicion,tipo.Descripcion,tipo.Grupo));
             }
             items.GerenciaEjecutora = gerenciasDomain;
             items.EmpContratMarcobre = empresasContratistaDomain;
@@ -63,7 +68,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Gerencia>();
             foreach (var item in gerencias)
             {
-                output.Add(new Gerencia(item.Id_Gerencia,item.Descripcion));
+                output.Add(new Gerencia
+                {
+                    IdGerencia = item.Id_Gerencia,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
             }
             return output;
         }

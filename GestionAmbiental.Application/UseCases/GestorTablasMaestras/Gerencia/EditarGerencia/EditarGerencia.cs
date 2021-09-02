@@ -14,11 +14,14 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gerencia.Ed
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task Execute(int idGerencia, string Descripcion)
+        public async Task Execute(int idGerencia, string Descripcion,string Estado)
         {
-            var gerencia = new Domain.ValueObjects.Gerencia();
-            gerencia.IdGerencia = idGerencia;
-            gerencia.Descripcion = Descripcion;
+            var gerencia = new Domain.ValueObjects.Gerencia
+            {
+                IdGerencia = idGerencia,
+                Descripcion = Descripcion,
+                Estado = Estado
+            };
             await _gestorTablasMaestrasReadOnlyRepository.UpdateGerencia(gerencia);
         }
     }

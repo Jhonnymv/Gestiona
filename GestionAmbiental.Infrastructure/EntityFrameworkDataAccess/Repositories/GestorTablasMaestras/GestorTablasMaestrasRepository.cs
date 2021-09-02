@@ -79,7 +79,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var gerenciaEntity = new Entities.Gerencia
             {
-                Descripcion = gerencia.Descripcion
+                Descripcion = gerencia.Descripcion,
+                Estado = "ACT"
             };
             _context.Gerencias.Add(gerenciaEntity);
             await _context.SaveChangesAsync();
@@ -280,7 +281,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new Gerencia
             {
                 IdGerencia = gerencia.Id_Gerencia,
-                Descripcion = gerencia.Descripcion
+                Descripcion = gerencia.Descripcion,
+                Estado = gerencia.Estado
             };
             return output;
         }
@@ -290,7 +292,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerencias = await _context.Gerencias.Where(x => x.Descripcion.Contains(filtro == null ? x.Descripcion : filtro)).OrderBy(x=>x.Descripcion).ToListAsync();
             var output = new List<Gerencia>();
             foreach (var item in gerencias)
-                output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
+                output.Add(new Gerencia { 
+                    IdGerencia = item.Id_Gerencia,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
             return output;
         }
 
@@ -545,6 +551,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var gerenciaEntity = await _context.Gerencias.FirstOrDefaultAsync(x => x.Id_Gerencia.Equals(gerencia.IdGerencia));
             gerenciaEntity.Descripcion = gerencia.Descripcion;
+            gerenciaEntity.Estado = gerencia.Estado;
             _context.Gerencias.Update(gerenciaEntity);
             await _context.SaveChangesAsync();
         }

@@ -8,6 +8,7 @@ namespace GestionAmbiental.Domain.ValueObjects
     {
         public int IdGerencia { get; set; }
         public string Descripcion { get; set; }
+        public string Estado { get; set; }
 
         public Gerencia()
         {

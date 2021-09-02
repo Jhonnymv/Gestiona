@@ -239,6 +239,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     filasTabla += "<thead class=\"thead-mcolor\">";
                     filasTabla += "<tr>";
                     filasTabla += "<th>Gerencia</th>";
+                    filasTabla += "<th>Estado</th>";
                     filasTabla += "<th></th>";
                     filasTabla += "</tr>";
                     filasTabla += "</thead>";
@@ -251,6 +252,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                         {
                             filasTabla += "<tr>";
                             filasTabla += "<td>" + empresa.Descripcion + "</td>";
+                            filasTabla += "<td>" + empresa.Estado + "</td>";
                             filasTabla += "<td><a href=\"/GestorEGTC/DetalleGerencia?IdGerencia=" + empresa.IdGerencia + "\">Detalle</a></td>";
                             filasTabla += "</tr>";
                         }
@@ -305,6 +307,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                     var model = new GerenciaModel();
                     model.IdGerencia = data.IdGerencia;
                     model.Descripcion = data.Descripcion;
+                    model.Estado = data.Estado;
                     return View(model);
                 }
             }
@@ -323,7 +326,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
                 {
                     if (ModelState.IsValid)
                     {
-                        await _editarGerencia.Execute(model.IdGerencia, model.Descripcion);
+                        await _editarGerencia.Execute(model.IdGerencia, model.Descripcion, model.Estado);
                     }
                     return RedirectToAction("DetalleGerencia", new { IdGerencia = model.IdGerencia });
                 }

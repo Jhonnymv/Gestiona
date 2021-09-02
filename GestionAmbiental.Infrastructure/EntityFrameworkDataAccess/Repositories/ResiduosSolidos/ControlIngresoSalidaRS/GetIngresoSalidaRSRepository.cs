@@ -76,7 +76,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     residuo_solido_model.Estado);
                 outputItem.Cantidad = item.Cantidad;
                 outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Gerencia = new Domain.ValueObjects.Gerencia(gerencia_model.Id_Gerencia, gerencia_model.Descripcion);
+                outputItem.Gerencia = new Domain.ValueObjects.Gerencia { IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado };
                 outputItem.Comentario = item.Comentario;
                 outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
                 outputItem.Fecha_Registro = item.Fecha_Registro;
@@ -125,7 +125,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     residuo_solido_entity.Estado);
                 output.Cantidad = data.Cantidad;
                 output.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_entity.Id_Empresa, empresa_entity.Razon_Social);
-                output.Gerencia = new Domain.ValueObjects.Gerencia(gerencia.Id_Gerencia,gerencia.Descripcion);
+                output.Gerencia = new Domain.ValueObjects.Gerencia{ IdGerencia = gerencia.Id_Gerencia, Descripcion = gerencia.Descripcion, Estado = gerencia.Estado };
                 output.Comentario = data.Comentario;
                 output.Id_Registrado_Por = data.Id_Registrado_Por;
                 output.Fecha_Registro = data.Fecha_Registro;
@@ -180,7 +180,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     residuo_solido_model.Estado);
                 outputItem.Cantidad = item.Cantidad;
                 outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Gerencia = new Domain.ValueObjects.Gerencia(gerencia_model.Id_Gerencia, gerencia_model.Descripcion);
+                outputItem.Gerencia = new Domain.ValueObjects.Gerencia{ IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado };
                 outputItem.Comentario = item.Comentario;
                 outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
                 outputItem.Fecha_Registro = item.Fecha_Registro;

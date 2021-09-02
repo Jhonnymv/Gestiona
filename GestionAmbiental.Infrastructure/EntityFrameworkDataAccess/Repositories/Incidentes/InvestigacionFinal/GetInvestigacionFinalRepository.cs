@@ -92,7 +92,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     outputItem.Gerencia_Responsable = new Gerencia
                     {
                         IdGerencia = gerencia.Id_Gerencia,
-                        Descripcion = gerencia.Descripcion
+                        Descripcion = gerencia.Descripcion,
+                        Estado = gerencia.Estado
                     };
                 }
 
@@ -187,7 +188,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Gerencia_Responsable = new Gerencia
                 {
                     IdGerencia = gerencia.Id_Gerencia,
-                    Descripcion = gerencia.Descripcion
+                    Descripcion = gerencia.Descripcion,
+                    Estado = gerencia.Estado
                 };
             }
 

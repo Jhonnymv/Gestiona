@@ -210,7 +210,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
                 residuos_solidos_np.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var responsable_arc_cmrs = items.ItemsResponsableACR_CMRS.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.Id_Responsable_ACR_CRMS.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsable_arc_cmrs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion}).ToList();
+                var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion}).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 ViewBag.ACR_CMRS = acr_cmrs;

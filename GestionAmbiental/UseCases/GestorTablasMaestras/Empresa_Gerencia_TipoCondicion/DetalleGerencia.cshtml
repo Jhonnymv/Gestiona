@@ -13,13 +13,22 @@
             </div>
         </div>
         <div class="container pt-4 pb-4">
-            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorEGTC" asp-action="EditarEmpresa">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorEGTC" asp-action="EditarGerencia">
                 <input type="hidden" asp-for="IdGerencia">
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
                         <label asp-for="Descripcion">Gerencia</label>
                         <span class="text-danger" asp-validation-for="Descripcion"></span>
                         <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Estado">Estado</label>
+                        <span class="text-danger" asp-validation-for="Estado"></span>
+                        <select class="form-control" asp-for="Estado" disabled>
+                            <option value="">--SELECCIONE--</option>
+                            <option value="ACT">ACT</option>
+                            <option value="INA">INA</option>
+                        </select>
                     </div>
                     <div class="row input_container">
                         <div class="button-container">
@@ -33,7 +42,7 @@
                                 <button class="btn btn-mc-success" id="btnEditar">Editar</button>
                             </div>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </form>
         </div>
@@ -80,6 +89,7 @@
             $("#btnGuardar").prop('disabled', false);
             //Habilitar inputs
             $("#Descripcion").prop('disabled', false);
+            $("#Estado").prop('disabled', false);
         });
 
         $("#btnCancelar").on('click', function () {
@@ -91,6 +101,7 @@
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
             $("#Descripcion").prop('disabled', true);
+            $("#Estado").prop('disabled', true);
         });
     </script>
 }

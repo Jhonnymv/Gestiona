@@ -8,15 +8,17 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gerencia
     {
         public int IdGerencia { get; set; }
         public string Descripcion { get; set; }
+        public string Estado { get; set; }
 
         public GerenciaOutput()
         {
         }
 
-        public GerenciaOutput(GestionAmbiental.Domain.ValueObjects.Gerencia gerencia)
+        public GerenciaOutput(Domain.ValueObjects.Gerencia gerencia)
         {
             IdGerencia = gerencia.IdGerencia;
             Descripcion = gerencia.Descripcion;
+            Estado = gerencia.Estado;
         }
     }
 }

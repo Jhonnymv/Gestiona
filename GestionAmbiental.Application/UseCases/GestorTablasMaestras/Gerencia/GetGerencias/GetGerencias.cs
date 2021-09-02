@@ -18,14 +18,17 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gerencia.Ge
 
         public async Task<GerenciasOutput> Execute(string filtro, int pagina, int rpp)
         {
-            var empresas = await _gestorTablasMaestrasReadOnlyRepository.GetGerencias(filtro);
+            var gerencias = await _gestorTablasMaestrasReadOnlyRepository.GetGerencias(filtro);
 
             var gerenciaOutputs = new List<GerenciaOutput>();
-            foreach (var item in empresas)
+            foreach (var item in gerencias)
             {
-                var temp = new GerenciaOutput();
-                temp.IdGerencia = item.IdGerencia;
-                temp.Descripcion = item.Descripcion;
+                var temp = new GerenciaOutput
+                {
+                    IdGerencia = item.IdGerencia,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                };
                 gerenciaOutputs.Add(temp);
             }
             var output = new GerenciasOutput

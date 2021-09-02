@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gerencia.Ed
 {
     public interface IEditarGerencia
     {
-        Task Execute(int idGerencia, string Descripcion);
+        Task Execute(int idGerencia, string Descripcion,string Estado);
     }
 }

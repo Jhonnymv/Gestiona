@@ -23,7 +23,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Empresa>();
             foreach(var item in empresas)
             {
-                output.Add(new Empresa(item.Id_Empresa, item.Razon_Social, item.Estado));
+                output.Add(new Empresa {
+                    IdEmpresa = item.Id_Empresa, 
+                    RazonSocial = item.Razon_Social,
+                    Estado =item.Estado
+                });
             }
             return output;
         }
@@ -34,7 +38,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Gerencia>();
             foreach (var item in gerencias)
             {
-                output.Add(new Gerencia(item.Id_Gerencia, item.Descripcion));
+                output.Add(new Gerencia
+                {
+                    IdGerencia = item.Id_Gerencia,
+                    Descripcion = item.Descripcion,
+                    Estado = item.Estado
+                });
             }
             return output;
         }
@@ -45,7 +54,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<TipoCondicion>();
             foreach (var item in tipos)
             {
-                output.Add(new TipoCondicion(item.Id_Tipo_Condicion, item.Descripcion,item.Grupo));
+                output.Add(new TipoCondicion
+                {
+                    IdTipoCondicion = item.Id_Tipo_Condicion,
+                    Descripcion = item.Descripcion,
+                    Grupo = item.Grupo
+                });
             }
             return output;
         }
@@ -56,7 +70,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Usuario>();
             foreach (var item in usuarios)
             {
-                output.Add(new Usuario(item.Id_Usuario,item.Id_Rol,item.Nombres,item.Apellidos,item.Email));
+                output.Add(new Usuario
+                {
+                    IdUsuario = item.Id_Usuario,
+                    IdRol = item.Id_Rol,
+                    Nombres = item.Nombres,
+                    Apellidos = item.Apellidos,
+                    Email = item.Email
+                });
             }
             return output;
         }

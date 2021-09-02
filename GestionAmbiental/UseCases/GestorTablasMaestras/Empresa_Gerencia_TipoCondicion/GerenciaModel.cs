@@ -13,5 +13,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Empresa_Gerencia_TipoCo
         [DisplayName("Gerencia:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Descripcion { get; set; }
+        [DisplayName("Estado:")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
+        public string Estado { get; set; }
     }
 }
