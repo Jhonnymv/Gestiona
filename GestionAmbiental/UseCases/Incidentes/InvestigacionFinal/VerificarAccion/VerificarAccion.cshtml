@@ -88,113 +88,6 @@
         </div>
     </div>
 </div>
-@*<div class="container">
-        <div class="row mb-2">
-            <div class="col-12 titulo-pagina">
-                <h2>Verificar Acción</h2>
-            </div>
-        </div>
-        <form class="form-group" id="formVerificarAccion" asp-action="VerificarAccion" asp-controller="VerificarAccionInvestigacion" method="post" enctype="multipart/form-data" autocomplete="off">
-            <input type="hidden" asp-for="Id_Investigacion_Final" value="@Model.Id_Investigacion_Final" />
-            <input type="hidden" asp-for="Id_Encriptado" value="@Model.Id_Encriptado" />
-            <input type="hidden" asp-for="Id_Investigacion_Encriptado" value="@Model.Id_Investigacion_Encriptado" />
-            <input type="hidden" asp-for="Id_Accion_Incidente_Investigacion" value="@Model.Id_Accion_Incidente_Investigacion" />
-            <input type="hidden" asp-for="Estado" value="@Model.Estado" />
-            <input type="hidden" asp-for="Opcion" />
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Tipo_Accion"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Tipo_Accion"></span>
-                    <input type="text" class="form-control" asp-for="Tipo_Accion" disabled />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Accion_Inmediata"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Accion_Inmediata"></span>
-                    <input type="text" class="form-control" asp-for="Accion_Inmediata" disabled />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Responsable_Marcobre"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Responsable_Marcobre"></span>
-                    <input type="text" class="form-control" asp-for="Responsable_Marcobre" disabled />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Responsable_Contratista"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Responsable_Contratista"></span>
-                    <input type="text" class="form-control" asp-for="Responsable_Contratista" disabled />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Fecha"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Fecha"></span>
-                    <input type="date" class="form-control" asp-for="Fecha" disabled />
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Estatus"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Estatus"></span>
-                    <select class="form-control" asp-for="Estatus">
-                        <option value="">--SELECCIONE--</option>
-                        <option value="En Proceso">En Proceso</option>
-                        <option value="Cerrado">Cerrado</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Evidencias"></label>
-                </div>
-                <input type="hidden" asp-for="Evidencias" />
-                <div class="col-sm-12 col-md-4 col-lg-4" id="Evidencias_Lista">
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Comentarios_Implementacion"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Comentarios_Implementacion"></span>
-                    <textarea type="text" class="form-control" asp-for="Comentarios_Implementacion" maxlength="250" rows="3" disabled></textarea>
-                </div>
-            </div>
-
-            <div class="row mb-2">
-                <div class="col-sm-12 col-md-4 col-lg-4">
-                    <label asp-for="Comentarios_Verificacion"></label>
-                </div>
-                <div class="col-sm-12 col-md-8 col-lg-8">
-                    <span class="text-danger" asp-validation-for="Comentarios_Verificacion"></span>
-                    <textarea type="text" class="form-control" asp-for="Comentarios_Verificacion" maxlength="250" rows="3"></textarea>
-                </div>
-            </div>
-            <div class="row mb-2 justify-content-end">
-                <div class="col-sm-12 col-md-8 col-lg-5" style="text-align:end">
-                    <a id="boton_cancelar" class="btn btn-secondary" asp-controller="InvestigacionFinal" asp-action="DetalleInvestigacion" asp-route-IdInvestigacion="@Model.Id_Investigacion_Encriptado">Cancelar</a>
-                    <button id="boton_rechazar" type="button" class="btn btn-danger" onclick="Rechazar()">Rechazar</button>
-                    <button id="boton_aprobar" type="button" class="btn btn-primary" onclick="Aprobar()">Aprobar</button>
-                </div>
-            </div>
-        </form>
-    </div>*@
 <!-- Modal Enviando Correo-->
 <div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered justify-content-center">
@@ -221,6 +114,7 @@
         </div>
     </div>
 </div>
+@section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
             var evidencias = '@Model.Evidencias';

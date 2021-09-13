@@ -101,7 +101,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     filasTabla += "<tr>";
                     if (!fila.Estado.Equals(EstadosResiduosSolidos.Cerrado.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
-                        filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
+                        filasTabla += "<td><img class=\"icon\" src=\"/img/icons/bell.png\"/></td>";
                         filasTabla += "<td><a href=\"/CompletarManifiesto/CompletarManifiesto?IdManifiesto=" + id_encriptado + "\">" + fila.Item + "</a></td>";
                     }
                     else
@@ -415,7 +415,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                var Id_Decrypted = Convert.ToInt32(IdManifiesto);
+                var Id_Decrypted = Convert.ToInt32(_protector.Unprotect(IdManifiesto));
                 await _eliminarManifiestoRS.Execute(Id_Decrypted, userInfo.NombreUsuario);
                 response = new
                 {

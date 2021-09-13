@@ -236,13 +236,13 @@
                                 <a class="btn btn-mc-outline-danger" asp-controller="CompletarManifiesto" asp-action="Resumen">Cancelar</a>
                                 @if (Model.Estado.Equals("Registrado") && Model.PermisoAsesor)
                                 {
-                                    <a id="btnEliminar" class="btn btn-mc-danger" asp-controller="CompletarManifiesto" asp-action="EliminarManifiesto" asp-route-IdManifiesto="@Model.Id_Encriptado">Eliminar</a>
+                                    <button id="btnEliminar" type="button" class="btn btn-mc-danger">Eliminar</button>
                                     <button id="btnGuardar" type="button" class="btn btn-mc-outline-success">Guardar Estado</button>
                                     <button id="btnCompletar" type="button" class="btn btn-mc-success">Completar</button>
                                 }
                                 else if (Model.PermisoAdmin)
                                 {
-                                    <a id="btnEliminar" class="btn btn-mc-danger" asp-controller="CompletarManifiesto" asp-action="EliminarManifiesto" asp-route-IdManifiesto="@Model.Id_Encriptado">Eliminar</a>
+                                    <button id="btnEliminar" type="button" class="btn btn-mc-danger">Eliminar</button>
                                     <button id="btnGuardarCambios" type="button" class="btn btn-mc-success">Guardar Cambios</button>
                                 }
                             </div>
@@ -640,6 +640,26 @@
                     }
                 });
         }
-
+        $("#btnEliminar").click(function () {
+            if (confirm("¿Esta seguro que desea eliminar este manifiesto?")) {
+                var formData = new FormData();
+                formData.append("IdManifiesto", $("#Id_Encriptado").val());
+                $.ajax({
+                    url: "@Url.Action("EliminarManifiesto", "CompletarManifiesto")",
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = "/CompletarManifiesto/Resumen/";
+                        }
+                        else {
+                            console.log("Ocurrió un error: " + response.message)
+                        }
+                    }
+                });
+            }
+        });
     </script>
 }

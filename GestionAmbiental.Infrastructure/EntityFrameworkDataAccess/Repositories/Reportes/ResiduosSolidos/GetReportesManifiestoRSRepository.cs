@@ -382,7 +382,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 list_residuo_solido.Select(y => y.Id_Residuo_Solido).ToList().Contains(x.Id_Residuo_Solido.Value)).ToList();
 
             CultureInfo cul = CultureInfo.CurrentCulture;
-            var data = registros.Select(x => new { date = x.Fecha_Emision_Manifiesto.ToString("MM yyyy"), observacion = x.Observacion_Manifiesto, cantidad = x.Cantidad_RS_Evacuado, id = x.Id_Manifiesto_RS }).ToList();
+            var data = registros.Select(x => new { date = x.Fecha_Emision_Manifiesto.ToString("MM yyyy"), observacion = x.Observacion_Manifiesto, cantidad = x.Cantidad_RS_Dispuesto!=null?x.Cantidad_RS_Dispuesto:0, id = x.Id_Manifiesto_RS }).ToList();
             var frec = data.GroupBy(x => x.date).ToList();
 
             int nMeses;

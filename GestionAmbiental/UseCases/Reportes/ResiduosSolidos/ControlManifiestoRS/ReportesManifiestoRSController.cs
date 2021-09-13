@@ -50,13 +50,13 @@ namespace GestionAmbiental.UseCases.Reportes.ResiduosSolidos.ControlManifiestoRS
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var items = await _getSelectItems.Execute();
-                var residuo_solido = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();                
+                var residuo_solido = items.ItemsResiduoSolido.Where(x => x.Tipo_Residuo.Descripcion.Equals("Peligroso")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();                
                 residuo_solido.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var eors = items.ItemsEO_RS.OrderBy(x => x.Razon_Social).Select(g => new SelectListItem() { Value = g.Id_EO_RS.ToString(), Text = g.Razon_Social }).ToList();
                 eors.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var residuo_solido_mensual = items.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+                var residuo_solido_mensual = items.ItemsResiduoSolido.Where(x=>x.Tipo_Residuo.Descripcion.Equals("Peligroso")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
 
                 ViewBag.ResiduoSolido = residuo_solido;
                 ViewBag.ResiduoSolidoMensual = residuo_solido_mensual;
