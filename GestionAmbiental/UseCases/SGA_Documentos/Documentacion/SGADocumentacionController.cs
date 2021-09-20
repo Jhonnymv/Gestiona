@@ -33,7 +33,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
         private readonly IEditarRevisionDocumento _editarRevisionDocumento;
         private readonly IGetUsuario _getUsuario;
         private readonly IGetInfo_SGA _info_SGA;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         private readonly IDataProtector _protector;
 
@@ -46,7 +46,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             IEditarRevisionDocumento editarRevisionDocumento,
             IGetUsuario getUsuario,
             IDataProtectionProvider dataProtectionProvider,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetInfo_SGA info_SGA,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -62,7 +62,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             _hostingEnvironment = hostingEnvironment;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.DocumentosSGAIdRouteValue);
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try
@@ -551,7 +551,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 }
             }
         }
-        public async Task<IActionResult> DownloadPreviewFile(string path)
+        public IActionResult DownloadPreviewFile(string path)
         {
             var completePath = _hostingEnvironment.WebRootPath + "/" + path;
             FileStream stream = new FileStream(completePath, FileMode.Open);

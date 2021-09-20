@@ -21,14 +21,14 @@ namespace GestionAmbiental.UseCases.Notificaciones.ConsumoAgua
 {
     public class NotificacionesConsumoAguaController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetConsumoAgua _getConsumoAgua;
         private readonly IGetUsuariosNotificar _getUsuariosNotificar;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
 
         public NotificacionesConsumoAguaController(
-           IHostingEnvironment hostingEnvironment,
+           IWebHostEnvironment hostingEnvironment,
            IGetConsumoAgua getConsumoAgua,
            IGetUsuariosNotificar getUsuariosNotificar,
            IGetInfo_SGA getInfo_SGA,

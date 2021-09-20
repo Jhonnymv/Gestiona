@@ -22,7 +22,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
 {
     public class ConsumoAguaMarController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IGetConsumosAgua _getConsumosAgua;
         private readonly IGetConsumoAgua _getConsumoAgua;
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
@@ -33,7 +33,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
         private readonly IDataProtector _protector;
 
         public ConsumoAguaMarController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetConsumosAgua getConsumosAgua, 
             IGetConsumoAgua getConsumoAgua, 
             IRegistrarConsumoAgua registrarConsumoAgua,
@@ -56,7 +56,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaMar
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ConsumoAguaMarIdRouteValue);
         }
 
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try

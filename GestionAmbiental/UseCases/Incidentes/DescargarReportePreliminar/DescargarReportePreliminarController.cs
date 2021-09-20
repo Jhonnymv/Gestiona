@@ -28,7 +28,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
     public class DescargarReportePreliminarController : Controller
     {
         private readonly IGetInfo_SGA _info_SGA;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetReportePreliminar _getReportePreliminar;
 
         private readonly IGetInvolucradosIncidente _getInvolucradosIncidente;
@@ -36,8 +36,8 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
         private readonly IGetCausasIncidenteReporte _getCausasIncidenteReporte;
 
         public DescargarReportePreliminarController(
-            IGetInfo_SGA info_SGA, 
-            IHostingEnvironment hostingEnvironment,
+            IGetInfo_SGA info_SGA,
+            IWebHostEnvironment hostingEnvironment,
             IGetReportePreliminar getReportePreliminar, 
             IGetInvolucradosIncidente getInvolucradosIncidente, 
             IGetAccionesIncidente getAccionesIncidente, 

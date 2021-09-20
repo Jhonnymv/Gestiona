@@ -23,16 +23,16 @@ namespace GestionAmbiental.Controllers
     public class HomeController : Controller
     {
         private readonly IGetRolUsuario _getRolUsuario;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public HomeController(IGetRolUsuario getRolUsuario,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
             _getRolUsuario = getRolUsuario;
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             if (HttpContext.Session.GetString("SessionUser") != null)
             {
@@ -63,7 +63,7 @@ namespace GestionAmbiental.Controllers
             }
         }
 
-        public async Task<IActionResult> Modulos()
+        public IActionResult Modulos()
         {
             if (HttpContext.Session.GetString("SessionUser") != null)
             {

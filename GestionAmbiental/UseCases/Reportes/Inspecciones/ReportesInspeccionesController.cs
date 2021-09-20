@@ -255,7 +255,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
+        public IActionResult DetalleObservacionEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {

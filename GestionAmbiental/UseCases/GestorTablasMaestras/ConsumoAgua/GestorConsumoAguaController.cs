@@ -37,7 +37,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 {
     public class GestorConsumoAguaController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IAgregarFuenteAgua _agregarFuenteAgua;
         private readonly IEditarFuenteAgua _editarFuenteAgua;
         private readonly IGetFuenteAgua _getFuenteAgua;
@@ -59,8 +59,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         private readonly IGetUsuario _getUsuario;
         private readonly IGetUsuarios _getUsuariosCA;
 
-
-        private readonly IGetConsumosAgua _getConsumosAgua;
         private readonly IGetConsumosAguaDescarga _getConsumosAguaFechas;
 
         private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios _getUsuarios;
@@ -72,7 +70,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
         private readonly ISelectItems _selectItems;
 
         public GestorConsumoAguaController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IAgregarFuenteAgua agregarFuenteAgua, 
             IEditarFuenteAgua editarFuenteAgua,
             IGetFuenteAgua getFuenteAgua,
@@ -122,7 +120,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             _getUsuarios = getUsuarios;
         }
 
-        public async Task<IActionResult> Resumen()
+        public IActionResult Resumen()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -380,7 +378,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
                 return RedirectToAction("DetalleOrigenAgua", new { IdOrigenAgua = model.IdOrigenAgua });
             }
         }
-        public async Task<IActionResult> AgregarOrigenAgua()
+        public IActionResult AgregarOrigenAgua()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -915,7 +913,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
 
         //Mensajes Error
         [HttpPost]
-        public async Task<IActionResult> FiltrarMensajeError(string filtro)
+        public IActionResult FiltrarMensajeError(string filtro)
         {
             var textoMensajes = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "ConsumoAgua.json"), System.Text.Encoding.GetEncoding("iso-8859-1"));
             var mensajes = JsonConvert.DeserializeObject<Mensajes>(textoMensajes);
@@ -989,7 +987,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ConsumoAgua
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarMensajeError(MensajeErrorModel model)
+        public IActionResult EditarMensajeError(MensajeErrorModel model)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {

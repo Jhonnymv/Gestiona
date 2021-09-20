@@ -21,14 +21,14 @@ namespace GestionAmbiental.UseCases.Notificaciones.ResiduosSolidos
 {
     public class NotificacionesRSController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetManifiestoRSRegistrado _consultarManifiestoRSCierre;
         private readonly IGetUsuariosNotificar _getUsuariosNotificar;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
 
         public NotificacionesRSController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetManifiestoRSRegistrado consultarManifiestoRSCierre,
             IDataProtectionProvider dataProtectionProvider,
             IGetUsuariosNotificar getUsuariosNotificar,

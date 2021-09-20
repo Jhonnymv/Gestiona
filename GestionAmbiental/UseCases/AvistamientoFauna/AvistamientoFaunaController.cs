@@ -25,12 +25,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Renci.SshNet;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.AvistamientoFauna
 {
     public class AvistamientoFaunaController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         private readonly IGetItems _getItems;
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
@@ -48,7 +49,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public AvistamientoFaunaController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetItems getItems,
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetAvistamientoFauna getAvistamientoFauna,
@@ -77,7 +78,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public Task<IActionResult> PropiedadesModulo()
         {
             dynamic response;
             try
@@ -220,7 +221,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             };
             return Ok(response);
         }
-        public async Task<IActionResult> CatalogoFauna()
+        public IActionResult CatalogoFauna()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -822,7 +823,10 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     {
                         optimizer.LosslessCompress(stream);
                     }
-                    catch (Exception e) { }
+                    catch (Exception e) {
+                        Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                        Log.Error(e.Message);
+                    }
                     stream.Flush();
 
                     stream.Close();

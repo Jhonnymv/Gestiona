@@ -28,14 +28,14 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 {
     public class DescargarRACController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetRACDescarga _getRACDescarga;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
 
         public DescargarRACController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetRACDescarga getRACDescarga, 
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,

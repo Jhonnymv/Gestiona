@@ -181,7 +181,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleACR_CMRS", new { IdACR_CMRS = model.Id_ACR_CMRS });
             }
         }
-        public async Task<IActionResult> AgregarACR_CMRS()
+        public IActionResult AgregarACR_CMRS()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -301,7 +301,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleMotivo", new { IdMotivo = model.Id_Motivo });
             }
         }
-        public async Task<IActionResult> AgregarMotivo()
+        public IActionResult AgregarMotivo()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -425,7 +425,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleResiduosSolidos", new { IdResiduoSolido = model.Id_Residuo_Solido });
             }
         }
-        public async Task<IActionResult> AgregarResiduosSolidos()
+        public IActionResult AgregarResiduosSolidos()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -550,7 +550,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleResponsablesACR_CRMS", new { IdResponsable = model.Id_Responsable_ACR_CRMS });
             }
         }
-        public async Task<IActionResult> AgregarResponsablesACR_CRMS()
+        public IActionResult AgregarResponsablesACR_CRMS()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {

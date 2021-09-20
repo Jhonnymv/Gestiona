@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.Items;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEstadoReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportesPreliminares;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar;
@@ -41,7 +40,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
     public class ReportePreliminarController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         private readonly IRegistrarParte1 _registrarReporteParte1;
         private readonly IRegistrarParte2 _registrarReporteParte2;
@@ -72,7 +71,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
 
         public ReportePreliminarController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IRegistrarParte1 registrarReporteParte1,
             IRegistrarParte2 registrarReporteParte2,
             IGetReportesPreliminares getReportesPreliminares,
@@ -128,7 +127,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try

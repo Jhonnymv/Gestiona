@@ -15,11 +15,11 @@ namespace GestionAmbiental.UseCases.Configuracion
 {
     public class ConfiguracionController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IObtenerConfiguracion _obtenerConfiguracion;
         private readonly IEditarConfiguracion _editarConfiguracion;
 
-        public ConfiguracionController(IHostingEnvironment hostingEnvironment, IObtenerConfiguracion obtenerConfiguracion, IEditarConfiguracion editarConfiguracion)
+        public ConfiguracionController(IWebHostEnvironment hostingEnvironment, IObtenerConfiguracion obtenerConfiguracion, IEditarConfiguracion editarConfiguracion)
         {
             _hostingEnvironment = hostingEnvironment;
             _obtenerConfiguracion = obtenerConfiguracion;
@@ -124,7 +124,7 @@ namespace GestionAmbiental.UseCases.Configuracion
             return Ok(response);
         }       
         [HttpGet]
-        public async Task<IActionResult> ConsultarSlides()
+        public IActionResult ConsultarSlides()
         {
             dynamic response;
             try
@@ -174,7 +174,7 @@ namespace GestionAmbiental.UseCases.Configuracion
             }
         }
         [HttpPost]
-        public async Task<IActionResult> AgregarSlide(SlideModel model)
+        public IActionResult AgregarSlide(SlideModel model)
         {
             dynamic response;
             try
@@ -277,7 +277,7 @@ namespace GestionAmbiental.UseCases.Configuracion
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarSlide(SlideModel model)
+        public IActionResult EditarSlide(SlideModel model)
         {
             dynamic response;
             try
@@ -350,7 +350,7 @@ namespace GestionAmbiental.UseCases.Configuracion
         }
 
         [HttpPost]
-        public async Task<IActionResult> EliminarSlide(int Id)
+        public IActionResult EliminarSlide(int Id)
         {
             dynamic result;
             try
@@ -420,7 +420,7 @@ namespace GestionAmbiental.UseCases.Configuracion
             return Ok(result);
         }
         [HttpPost]
-        public async Task<IActionResult> GuardarColores(string json)
+        public IActionResult GuardarColores(string json)
         {
             dynamic response;
             try

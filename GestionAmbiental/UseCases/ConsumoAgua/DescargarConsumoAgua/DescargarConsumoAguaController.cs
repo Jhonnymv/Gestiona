@@ -20,13 +20,13 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
 
         private readonly IGetConsumosAguaDescarga _getConsumosAguaDescarga;
         private readonly ISelectItems _selectItems;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
 
         public DescargarConsumoAguaController(
             IGetConsumosAgua getConsumosAgua, 
             IGetConsumosAguaDescarga getConsumosAguaDescarga,
             ISelectItems selectItems,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
             _getConsumosAgua = getConsumosAgua;
             _getConsumosAguaDescarga = getConsumosAguaDescarga;

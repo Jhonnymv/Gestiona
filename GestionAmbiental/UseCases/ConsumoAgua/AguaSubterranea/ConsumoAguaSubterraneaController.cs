@@ -20,7 +20,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
 {
     public class ConsumoAguaSubterraneaController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IGetConsumosAgua _getConsumosAgua;
         private readonly IGetConsumoAgua _getConsumoAgua;
         private readonly IRegistrarConsumoAgua _registrarConsumoAgua;
@@ -30,7 +30,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.AguaSubterranea
         private readonly IDataProtector _protector;
 
         public ConsumoAguaSubterraneaController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetConsumosAgua getConsumosAgua,
             IGetConsumoAgua getConsumoAgua,
             IRegistrarConsumoAgua registrarConsumoAgua,

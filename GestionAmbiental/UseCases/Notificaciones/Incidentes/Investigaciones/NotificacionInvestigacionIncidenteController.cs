@@ -23,7 +23,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
 {
     public class NotificacionInvestigacionIncidenteController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
 
         private readonly IGetInvestigacionFinal _getInvestigacionFinal;
         private readonly IGetAccionesIncidenteInvestigacion _getAccionesIncidenteInvestigacion;
@@ -34,7 +34,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
         private readonly DescargarInvestigacionFinalController _descargarInvestigacionFinalController;
 
         public NotificacionInvestigacionIncidenteController(
-           IHostingEnvironment hostingEnvironment,
+           IWebHostEnvironment hostingEnvironment,
            IGetInvestigacionFinal getInvestigacionFinal,
            IGetAccionesIncidenteInvestigacion getAccionesIncidenteInvestigacion,
            IGetAccioIncidenteInvestigacion getAccioIncidenteInvestigacion,

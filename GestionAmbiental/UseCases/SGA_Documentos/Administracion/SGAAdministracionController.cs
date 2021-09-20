@@ -25,6 +25,7 @@ using GestionAmbiental.Application.UseCases.SGA_Documentos.FirmarDocumento;
 using Microsoft.AspNetCore.Hosting;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.AmpliarFechaRevision;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 {
@@ -41,7 +42,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
         private readonly IRegistrarDocumento _registrarDocumento;
         private readonly IFirmarDocumento _firmarDocumento;
         private readonly IAmpliarFechaRevision _ampliarFechaRevision;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
@@ -58,7 +59,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     IRegistrarDocumento registrarDocumento,
                     IAmpliarFechaRevision ampliarFechaRevision,
                     IFirmarDocumento firmarDocumento,
-                    IHostingEnvironment hostingEnvironment,
+                    IWebHostEnvironment hostingEnvironment,
                     IDataProtectionProvider dataProtectionProvider,
                     DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -1296,7 +1297,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
                         return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
-                    return RedirectToAction("EditarDocumentoSRevision", new { Error = "Ocurrió un error al cargar el archivo" });
                 }
                 else
                 {
@@ -1468,6 +1468,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 }
                 catch (Exception e)
                 {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message);
                     return "Error";
                 }
             }
@@ -1501,7 +1503,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     sftp.Dispose();
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e) {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
         }
         public async Task<IActionResult> DescargarPlantilla(int IdCategoriaTipo)
         {

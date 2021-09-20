@@ -30,7 +30,9 @@
     }
 </div>
 
-@Html.Partial("_Login.cshtml", new GestionAmbiental.UseCases.Autenticacion.SigninModel())
+@{
+    await Html.RenderPartialAsync("_Login", new GestionAmbiental.UseCases.Autenticacion.SigninModel());
+}
 
 @section Scripts{
     <script type="text/javascript">       

@@ -41,7 +41,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInspeccionCabecera _registrarInspeccionCabecera;
         private readonly IRegistrarInspeccionObservacion _registrarInspeccionObservacion;
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDetalle _consultarInspeccionDetalle;
         private readonly IEditarInspeccionCabecera _editarInspeccionCabecera;
         private readonly IEditarObservacion _editarObservacion;
@@ -55,7 +55,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
             IRegistrarInspeccionCabecera registrarInspeccionCabecera,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IRegistrarInspeccionObservacion registrarInspeccionObservacion,
             IConsultarInspeccionDetalle consultarInspeccionDetalle,
             IConsultarCabecera consultarCabecera,
@@ -83,7 +83,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try
@@ -900,7 +900,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 if (IdCabecera.Length != 0)
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
-                    var filaObservacion = "";
                     var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado, userInfo.NombreUsuario);
                     var cabecera = await _consultarCabecera.Execute(IdDesencriptado, userInfo.NombreUsuario);
                     if (cabecera != null)

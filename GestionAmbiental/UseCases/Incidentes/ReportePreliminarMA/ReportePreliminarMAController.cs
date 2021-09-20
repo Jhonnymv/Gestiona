@@ -10,7 +10,6 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCaus
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.RegistrarInvestigacionFinal;
 using GestionAmbiental.Application.UseCases.Incidentes.Items;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EditarReportePreliminar;
-using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetCausaIncidenteReporte;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEstadoReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.GetReportesPreliminares;

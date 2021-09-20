@@ -14,7 +14,6 @@ using GestionAmbiental.Application.UseCases.RAC.Registro;
 using GestionAmbiental.Application.UseCases.RAC.Registro.AmpliarFechaRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
-using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRACs;
 using GestionAmbiental.Application.UseCases.RAC.Registro.EditarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.EliminarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
@@ -33,7 +32,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
 {
     public class RegistroRACController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarRAC _registrarRAC;
@@ -46,7 +45,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public RegistroRACController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
             ISelectItems selectItems,
@@ -71,7 +70,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try

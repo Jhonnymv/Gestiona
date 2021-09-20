@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -36,7 +37,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
 
         private readonly ISelectItems _selectItems;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public GestorSGADocumentosController(
             IAgregarCategoriaTipo agregarCategoriaTipo,
@@ -48,7 +49,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
             IGetTipoDocumento getTipoDocumento,
             IGetTiposDocumento getTiposDocumento,
             ISelectItems selectItems,
-            IHostingEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment)
         {
             _agregarCategoriaTipo = agregarCategoriaTipo;
             _editarCategoriaTipo = editarCategoriaTipo;
@@ -62,7 +63,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> Resumen()
+        public IActionResult Resumen()
         {
 
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -194,7 +195,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 return RedirectToAction("DetalleTipoDocumento", new { IdTipoDocumento = model.IdSGATipoDocumento });
             }
         }
-        public async Task<IActionResult> AgregarTipoDocumento()
+        public IActionResult AgregarTipoDocumento()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -421,7 +422,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"}
             };
         }
-        public async Task<IActionResult> DescargarFormato(string path)
+        public IActionResult DescargarFormato(string path)
         {
             try
             {
@@ -430,6 +431,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.SGA_Documentos
                 return File(stream, GetContentType(path), Path.GetFileName(path.Replace("--", "\\")));
             }catch(Exception e)
             {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
                 return Ok();
             }
         }

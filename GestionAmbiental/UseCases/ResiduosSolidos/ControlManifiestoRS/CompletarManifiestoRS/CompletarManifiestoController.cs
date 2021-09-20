@@ -8,11 +8,13 @@ using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlManifiestoRS.
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using Renci.SshNet;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +28,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 {
     public class CompletarManifiestoController : Controller
     {
+
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetSelectItems _getSelectItems;
         private readonly IConsultarManifiestosRSCierre _consultarManifiestosRS;
         private readonly IConsultarManifiestoRSCierre _consultarManifiestoRS;
@@ -37,6 +41,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         private readonly IDataProtector _protector;
 
         public CompletarManifiestoController(
+            IWebHostEnvironment hostingEnvironment,
             IGetSelectItems getSelectItems,
             IConsultarManifiestosRSCierre consultarManifiestosRS,
             IConsultarManifiestoRSCierre consultarManifiestoRS, 
@@ -48,6 +53,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             IGetInfo_SGA info_SGA,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _hostingEnvironment = hostingEnvironment;
             _getSelectItems = getSelectItems;
             _consultarManifiestosRS = consultarManifiestosRS;
             _consultarManifiestoRS = consultarManifiestoRS;
@@ -273,7 +279,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 //Asesor
                 model.Cantidad_RS_Dispuesto = data.Cantidad_RS_Dispuesto != null ? data.Cantidad_RS_Dispuesto.Value : 0;
                 model.Fecha_Devolucion = data.Fecha_Devolucion != null ? data.Fecha_Devolucion.Value.ToString("yyyy-MM-dd") : null;
-                model.Id_Asesor = data.Id_Asesor_MAP != null ? data.Id_Asesor_MAP : 0;
+                model.Id_Asesor = data.Id_Asesor_MAP;
 
                 model.Certificado_Lleno = data.Certificado_Trat_Disp != null ? JsonConvert.SerializeObject(data.Certificado_Trat_Disp) : null;
                 model.Informe_Transporte_Lleno = data.Informe_Transporte != null ? JsonConvert.SerializeObject(data.Informe_Transporte) : null;
@@ -462,9 +468,9 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         {
             switch (tipo)
             {
-                case "cert": return "Ev_RS_Certi_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
-                case "inf": return "Ev_RS_Infor_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
-                default: return "Ev_RS_Manif_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                case "cert": return "Ev_RS_Certi_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
+                case "inf": return "Ev_RS_Infor_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
+                default: return "Ev_RS_Manif_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
             }
         }
         private string GetContentType(string path)
@@ -798,7 +804,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     sftp.Dispose();
                 }
             }
-            catch (Exception e) { }
+            catch (Exception e) {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
+            }
         }
     }
 }

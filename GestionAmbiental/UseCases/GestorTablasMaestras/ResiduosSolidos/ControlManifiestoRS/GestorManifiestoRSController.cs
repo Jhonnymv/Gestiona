@@ -195,7 +195,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleEO_RS", new { IdEO_RS = model.Id_EO_RS });
             }
         }
-        public async Task<IActionResult> AgregarEO_RS()
+        public IActionResult AgregarEO_RS()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -323,7 +323,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleConductor", new { IdConductor = model.Id_Conductor_RS });
             }
         }
-        public async Task<IActionResult> AgregarConductor()
+        public IActionResult AgregarConductor()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -450,7 +450,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
                 return RedirectToAction("DetalleVehiculo", new { IdVehiculo = model.Id_Vehiculo_RS });
             }
         }
-        public async Task<IActionResult> AgregarVehiculo()
+        public IActionResult AgregarVehiculo()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {

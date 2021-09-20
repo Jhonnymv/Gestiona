@@ -21,11 +21,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarRevisionDocumento;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.EditarRevisionDocumento;
+using Serilog;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GestionAmbiental.UseCases.SGA_Documentos
 {
     public class SGADocumentosController : Controller
     {
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly ISelectItems _selectItems;
         private readonly IConsultarDocumentos _consultarDocumentos;
         private readonly IConsultarDocumento _consultarDocumento;
@@ -40,6 +43,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         private readonly IDataProtector _protector;
 
         public SGADocumentosController(
+            IWebHostEnvironment hostingEnvironment,
             ISelectItems selectItems, 
             IConsultarDocumentos consultarDocumentos,
             IConsultarDocumento consultarDocumento,
@@ -53,6 +57,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _hostingEnvironment = hostingEnvironment;
             _selectItems = selectItems;
             _consultarDocumentos = consultarDocumentos;
             _consultarDocumento = consultarDocumento;
@@ -496,6 +501,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
                 }
                 catch(Exception e)
                 {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message);
                     return "Error";
                 }
             }

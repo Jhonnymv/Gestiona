@@ -379,7 +379,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleTipoSuelo", new { IdTipoSuelo = model.Id_Tipo_Suelo });
             }
         }
-        public async Task<IActionResult> AgregarTipoSuelo()
+        public IActionResult AgregarTipoSuelo()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -502,7 +502,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleEspecieFlora", new { IdEspecieFlora = model.Id_Especie_Flora });
             }
         }
-        public async Task<IActionResult> AgregarEspecieFlora()
+        public IActionResult AgregarEspecieFlora()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -625,7 +625,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleEspecieFauna", new { IdEspecieFauna = model.Id_Especie_Fauna });
             }
         }
-        public async Task<IActionResult> AgregarEspecieFauna()
+        public IActionResult AgregarEspecieFauna()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -748,7 +748,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleTipoAgua", new { IdTipoAgua = model.Id_Tipo_Agua });
             }
         }
-        public async Task<IActionResult> AgregarTipoAgua()
+        public IActionResult AgregarTipoAgua()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1055,7 +1055,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleFactorCausa", new { IdFactorCausa = model.Id_Factor_Causa_Incidente });
             }
         }
-        public async Task<IActionResult> AgregarFactorCausa()
+        public IActionResult AgregarFactorCausa()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1178,7 +1178,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleLugarDiposicion", new { IdLugarDiposicion = model.Id_Lugar_Disposicion });
             }
         }
-        public async Task<IActionResult> AgregarLugarDiposicion()
+        public IActionResult AgregarLugarDiposicion()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1301,7 +1301,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleComponenteAmbiental", new { IdComponenteAmbiental = model.Id_Componente_Ambiental });
             }
         }
-        public async Task<IActionResult> AgregarComponenteAmbiental()
+        public IActionResult AgregarComponenteAmbiental()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1424,7 +1424,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleEstadoEquipo", new { IdEstadoEquipo = model.Id_Estado_Equipo });
             }
         }
-        public async Task<IActionResult> AgregarEstadoEquipo()
+        public IActionResult AgregarEstadoEquipo()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1547,7 +1547,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleTipoProducto", new { IdTipoProducto = model.Id_Tipo_Producto_Incidente });
             }
         }
-        public async Task<IActionResult> AgregarTipoProducto()
+        public IActionResult AgregarTipoProducto()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1670,7 +1670,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleProductoIncidente", new { IdProductoIncidente = model.Id_Producto_Incidente });
             }
         }
-        public async Task<IActionResult> AgregarProductoIncidente()
+        public IActionResult AgregarProductoIncidente()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1793,7 +1793,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleNivelIncidente", new { IdNivelIncidente = model.Id_Nivel_Incidente });
             }
         }
-        public async Task<IActionResult> AgregarNivelIncidente()
+        public IActionResult AgregarNivelIncidente()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1916,7 +1916,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleTipoIncidente", new { IdTipoIncidente = model.Id_Tipo_Incidente });
             }
         }
-        public async Task<IActionResult> AgregarTipoIncidente()
+        public IActionResult AgregarTipoIncidente()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -2049,7 +2049,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Incidentes
                 return RedirectToAction("DetalleUnidadMedida", new { IdUnidadMedida = model.Id_Unidad_Medida });
             }
         }
-        public async Task<IActionResult> AgregarUnidadMedida()
+        public IActionResult AgregarUnidadMedida()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {

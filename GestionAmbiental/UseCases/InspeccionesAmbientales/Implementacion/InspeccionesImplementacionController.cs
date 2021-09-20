@@ -39,7 +39,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public InspeccionesImplementacionController(
             ISelectItems selectItems,
@@ -48,7 +48,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             IConsultarInspeccionDetalle consultarInspeccionDetalle,
             IConsultarDetalleImplementacion consultarDetalleImplementacion,
             IImplementarObservacion implementarObservacion,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA

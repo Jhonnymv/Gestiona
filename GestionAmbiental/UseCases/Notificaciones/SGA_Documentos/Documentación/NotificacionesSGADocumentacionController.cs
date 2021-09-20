@@ -23,11 +23,11 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Documentación
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IGetUsuario _getUsuario;
         private readonly IDataProtector _protector;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         public NotificacionesSGADocumentacionController(IConsultarDocumento consultarDocumento,
              IGetInfo_SGA info_SGA,
              IGetUsuario getUsuario,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {

@@ -13,22 +13,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.ObtenerConfiguracion;
 using GestionAmbiental.Application.UseCases.GestorTablasMaestras.Gestiona.EditarConfiguracion;
 using GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.Models;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
 {
     public class GestorContenidoController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IObtenerConfiguracion _obtenerConfiguracion;
         private readonly IEditarConfiguracion _editarConfiguracion;
 
-        public GestorContenidoController(IHostingEnvironment hostingEnvironment, IObtenerConfiguracion obtenerConfiguracion, IEditarConfiguracion editarConfiguracion)
+        public GestorContenidoController(IWebHostEnvironment hostingEnvironment, IObtenerConfiguracion obtenerConfiguracion, IEditarConfiguracion editarConfiguracion)
         {
             _hostingEnvironment = hostingEnvironment;
             _obtenerConfiguracion = obtenerConfiguracion;
             _editarConfiguracion = editarConfiguracion;
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try
@@ -82,7 +83,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         //        return View();
         //    }
         //} 
-        public async Task<IActionResult> ResumenTarjetas()
+        public IActionResult ResumenTarjetas()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -157,7 +158,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         //    return Ok(response);
         //}
         [HttpPost]
-        public async Task<IActionResult> FiltrarPropiedades(string filtro, int pagina, int rpp)
+        public IActionResult FiltrarPropiedades(string filtro, int pagina, int rpp)
         {
             var propiedadesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
             var propiedadesText = System.IO.File.ReadAllText(propiedadesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -230,7 +231,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             return Ok(response);
 
         }
-        public async Task<IActionResult> DetallePropiedades(string Modulo)
+        public IActionResult DetallePropiedades(string Modulo)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -387,7 +388,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
         }
         //Tarjetas
         [HttpPost]
-        public async Task<IActionResult> FiltrarTarjetas(string filtro,string filtro_fecha, int pagina, int rpp)
+        public IActionResult FiltrarTarjetas(string filtro,string filtro_fecha, int pagina, int rpp)
         {
             var cardsPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "tarjetas.json");
             var cardsText = System.IO.File.ReadAllText(cardsPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -469,7 +470,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             return Ok(response);
 
         }
-        public async Task<IActionResult> DetalleTarjeta(int IdTarjeta)
+        public IActionResult DetalleTarjeta(int IdTarjeta)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -579,7 +580,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
             return Ok(result);
         }
-        public async Task<IActionResult> AgregarTarjeta()
+        public IActionResult AgregarTarjeta()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -792,7 +793,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             return  "Tarjeta_" + idTarjeta.ToString() + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
         }
         //Colores
-        public async Task<IActionResult> FiltrarColores(string filtro, int pagina, int rpp)
+        public IActionResult FiltrarColores(string filtro, int pagina, int rpp)
         {
             var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
             var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -866,7 +867,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleColor(int Id,string message)
+        public IActionResult DetalleColor(int Id,string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -977,13 +978,15 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 System.IO.File.WriteAllText(cssPath, newCSS, System.Text.Encoding.GetEncoding("iso-8859-1"));
             }
             catch (Exception e)
-            { 
+            {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
             }
             
             return true;
         }
         //Fuentes
-        public async Task<IActionResult> FiltrarFuentes(string filtro, int pagina, int rpp)
+        public IActionResult FiltrarFuentes(string filtro, int pagina, int rpp)
         {
             var variablesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "variables-estilo.json");
             var variablesText = System.IO.File.ReadAllText(variablesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -1048,7 +1051,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             };
             return Ok(response);
         }
-        public async Task<IActionResult> DetalleFuente(int Id, string message)
+        public IActionResult DetalleFuente(int Id, string message)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1118,7 +1121,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                 return RedirectToAction("DetalleFuente", new { Id = model.Id });
             }
         }
-        public async Task<IActionResult> ObtenerFuentes()
+        public IActionResult ObtenerFuentes()
         {
             var fuentesPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "fuentes-texto.json");
             var fuentesText = System.IO.File.ReadAllText(fuentesPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
@@ -1166,6 +1169,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
             }
             catch (Exception e)
             {
+                Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                Log.Error(e.Message);
             }
 
             return true;

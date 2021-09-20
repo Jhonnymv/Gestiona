@@ -21,7 +21,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
 {
     public class NotificacionesInspeccionesController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetNuevaInspeccionInfo _getNuevaInspeccionInfo;
         private readonly IGetObservacionImplementada _getObservacionImplementada;
         private readonly IGetObservacionRechazada _getObservacionRechazada;
@@ -29,7 +29,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
         private readonly IGetInfo_SGA _info_SGA;
 
         public NotificacionesInspeccionesController(
-            IHostingEnvironment hostingEnvironment, 
+            IWebHostEnvironment hostingEnvironment, 
             IGetNuevaInspeccionInfo getNuevaInspeccionInfo, 
             IGetObservacionImplementada getObservacionImplementada,
             IGetObservacionRechazada getObservacionRechazada, 

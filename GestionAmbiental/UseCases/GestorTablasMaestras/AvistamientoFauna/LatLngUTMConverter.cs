@@ -293,15 +293,9 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             var y = UTMNorthing;
             var ZoneNumber = UTMZoneNumber;
             var ZoneLetter = UTMZoneLetter;
-            int NorthernHemisphere;
 
-            if ("N" == ZoneLetter)
+            if ("N" != ZoneLetter)
             {
-                NorthernHemisphere = 1;
-            }
-            else
-            {
-                NorthernHemisphere = 0;
                 y -= 10000000.0;
             }
 

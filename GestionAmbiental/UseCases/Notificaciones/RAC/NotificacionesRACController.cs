@@ -21,14 +21,14 @@ namespace GestionAmbiental.UseCases.Notificaciones.RAC
 {
     public class NotificacionesRACController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetNuevoRACInfo _getNuevoRACInfo;
         private readonly IGetImplementacionRACInfo _getImplementacionRACInfo;
         private readonly IGetRACRechazadoInfo _getRACRechazadoInfo;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public NotificacionesRACController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetNuevoRACInfo getNuevoRACInfo,
             IGetImplementacionRACInfo getImplementacionRACInfo,
             IGetRACRechazadoInfo getRACRechazadoInfo,

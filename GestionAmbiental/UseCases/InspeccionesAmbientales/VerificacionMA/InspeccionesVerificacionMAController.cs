@@ -31,7 +31,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
         private readonly IVerificarObservacionMA _verificarObservacion;
         private readonly IDataProtector _protector;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         public InspeccionesVerificacionMAController(
             ISelectItems selectItems,
             IConsultarCabecerasVerificacion consultarCabecerasVerificacion, 
@@ -39,7 +39,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.VerificacionMA
             IConsultarInspeccionDetalle consultarInspeccionDetalle, 
             IConsultarDetallesVerificacion consultarDetalleVerificacion,
             IVerificarObservacionMA verificarObservacion,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {

@@ -21,7 +21,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
     public class DescargarInvestigacionFinalController : Controller
     {
         private readonly IGetInfo_SGA _info_SGA;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetInvestigacionFinal _getInvestigacionFinal;
         private readonly IGetImpactoAmbiental _getImpactoAmbiental;
 
@@ -31,8 +31,8 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
         private readonly IGetAccionesIncidenteInvestigacion _getAccionesIncidenteInvestigacion;
 
         public DescargarInvestigacionFinalController(
-            IGetInfo_SGA info_SGA, 
-            IHostingEnvironment hostingEnvironment,
+            IGetInfo_SGA info_SGA,
+            IWebHostEnvironment hostingEnvironment,
             IGetInvestigacionFinal getInvestigacionFinal,
             IGetImpactoAmbiental getImpactoAmbiental, 
             IGetInvolucradosIncidente getInvolucradosIncidente,

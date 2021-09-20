@@ -30,14 +30,14 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
         private readonly IGetUsuario _getUsuario;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetInfo_SGA _info_SGA;
 
         public DescargarAvistamientoFaunaController(
             IGetAvistamientoFauna getAvistamientoFauna,
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetUsuario getUsuario,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetInfo_SGA info_SGA)
         {
             _getAvistamientoFauna = getAvistamientoFauna;

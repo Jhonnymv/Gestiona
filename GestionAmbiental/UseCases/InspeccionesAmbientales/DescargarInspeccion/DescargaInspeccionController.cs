@@ -29,12 +29,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
     public class DescargaInspeccionController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
         public DescargaInspeccionController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IConsultarInspeccionDescarga consultarInspeccionDescarga,
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,

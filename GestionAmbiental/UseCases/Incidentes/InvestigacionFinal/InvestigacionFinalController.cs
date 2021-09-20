@@ -55,7 +55,6 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IGetImpactoAmbiental _getImpactoAmbiental;
         private readonly IEditarInvestigacionFinal _editarInvestigacionFinal;
         private readonly IEditarAdminInvestigacion _editarAdminInvestigacion;
-        private readonly IGetRolUsuario _getRolUsuario;
         //involucrados
         private readonly IGetInvolucradosIncidente _getInvolucradosIncidente;
         private readonly IGetInvolucradoIncidente _getInvolucradoIncidente;
@@ -1435,7 +1434,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public async Task<IActionResult> EditarAdminInvestigacion(EditarInvestigacionModel model)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            if (userInfo.Rol.Equals(InspeccionRol.Admin) && model.Id_Supervisor!=null && model.Id_Supervisor!=0)
+            if (userInfo.Rol.Equals(InspeccionRol.Admin) && model.Id_Supervisor!=0)
             {
                 var papeles = new List<string>();
                 var personas = new List<string>();
@@ -1553,10 +1552,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             switch (tipo)
             {
-                case "papel": return "Ev_Inc_Inv_Papel_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
-                case "persona": return "Ev_Inc_Inv_Persona_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
-                case "posicion": return "Ev_Inc_Inv_Posicion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
-                default: return "Ev_Inc_Inv_Parte_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index; break;
+                case "papel": return "Ev_Inc_Inv_Papel_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
+                case "persona": return "Ev_Inc_Inv_Persona_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
+                case "posicion": return "Ev_Inc_Inv_Posicion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
+                default: return "Ev_Inc_Inv_Parte_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + index;
             }
         }
         private string GetContentType(string path)

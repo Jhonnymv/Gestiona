@@ -15,11 +15,11 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarManifiestoRS
 {
     public class DescargarManifiestoRSController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarManifiestoRSDescarga _consultarManifiestoRSDescarga;
         private readonly IGetInfo_SGA _info_SGA;
 
-        public DescargarManifiestoRSController(IHostingEnvironment hostingEnvironment, IConsultarManifiestoRSDescarga consultarManifiestoRSDescarga, IGetInfo_SGA info_SGA)
+        public DescargarManifiestoRSController(IWebHostEnvironment hostingEnvironment, IConsultarManifiestoRSDescarga consultarManifiestoRSDescarga, IGetInfo_SGA info_SGA)
         {
             _hostingEnvironment = hostingEnvironment;
             _consultarManifiestoRSDescarga = consultarManifiestoRSDescarga;

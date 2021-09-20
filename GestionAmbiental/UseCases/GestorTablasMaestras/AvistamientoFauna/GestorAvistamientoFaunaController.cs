@@ -81,7 +81,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
         private readonly IGetUsuarios _getUsuariosAF;
         private readonly Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios _getUsuarios;
 
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
 
         public GestorAvistamientoFaunaController(
             IAgregarNombreComun agregarNombreComun, 
@@ -114,7 +114,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             IGetUsuario getUsuario,
             IGetUsuarios getUsuariosAF,
             Application.UseCases.GestorTablasMaestras.Usuario.GetUsuarios.IGetUsuarios getUsuarios,
-        IHostingEnvironment hostingEnvironment)
+        IWebHostEnvironment hostingEnvironment)
         {
             _agregarNombreComun = agregarNombreComun;
             _editarNombreComun = editarNombreComun;
@@ -149,7 +149,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public async Task<IActionResult> Resumen()
+        public IActionResult Resumen()
         {
 
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -265,7 +265,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return RedirectToAction("DetalleTipoFauna", new { IdTipoFauna = model.IdTipoFauna });
             }
         }
-        public async Task<IActionResult> AgregarTipoFauna()
+        public IActionResult AgregarTipoFauna()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -590,7 +590,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return RedirectToAction("DetalleEstadoFauna", new { IdEstadoFauna = model.IdEstadoFauna });
             }
         }
-        public async Task<IActionResult> AgregarEstadoFauna()
+        public IActionResult AgregarEstadoFauna()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -727,7 +727,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return RedirectToAction("DetalleTipoAvistamiento", new { IdTipoAvistamiento = model.IdTipoAvistamiento });
             }
         }
-        public async Task<IActionResult> AgregarTipoAvistamiento()
+        public IActionResult AgregarTipoAvistamiento()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -870,7 +870,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return RedirectToAction("DetalleContactoEmergencia", new { IdContactoEmergencia = model.IdContactoEmergencia });
             }
         }
-        public async Task<IActionResult> AgregarContactoEmergencia()
+        public IActionResult AgregarContactoEmergencia()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -908,7 +908,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             }
         }
         //Mensaje Contacto Emergencia
-        public async Task<IActionResult> DetalleMensajeContactoEmergencia()
+        public IActionResult DetalleMensajeContactoEmergencia()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -931,7 +931,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             }
         }
         [HttpPost]
-        public async Task<IActionResult> EditarMensajeContactoEmergencia(MensajeEmergenciaModel model)
+        public IActionResult EditarMensajeContactoEmergencia(MensajeEmergenciaModel model)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1060,7 +1060,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 return RedirectToAction("DetalleLugarReferencia", new { IdLugarReferencia = model.IdLugarReferencia });
             }
         }
-        public async Task<IActionResult> AgregarLugarReferencia()
+        public IActionResult AgregarLugarReferencia()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -1099,7 +1099,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
         }
 
         [HttpPost]
-        public async Task<IActionResult> UTMToLatLon(double Easting, double Northing, int Zone, string Hemi)
+        public IActionResult UTMToLatLon(double Easting, double Northing, int Zone, string Hemi)
         {
             var converter = new LatLngUTMConverter("WGS 84");
             var data = converter.convertUtmToLatLng(Easting, Northing, Zone, Hemi);
@@ -1116,15 +1116,12 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> ToLatLon(double utmX, double utmY, string utmZone)
+        public IActionResult ToLatLon(double utmX, double utmY, string utmZone)
         {
             double latitude = 0;
             double longitude = 0;
 
             bool isNorthHemisphere = utmZone.Last() >= 'N';
-
-            var diflat = -0.00066286966871111111111111111111111111;
-            var diflon = -0.0003868060578;
 
             var zone = int.Parse(utmZone.Remove(utmZone.Length - 1));
             var c_sa = 6378137.000000;

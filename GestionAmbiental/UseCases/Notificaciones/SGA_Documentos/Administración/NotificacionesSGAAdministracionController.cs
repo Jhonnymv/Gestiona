@@ -30,12 +30,12 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administració
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IGetUsuario _getUsuario;
         private readonly IDataProtector _protector;
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         public NotificacionesSGAAdministracionController(IConsultarDocumento consultarDocumento,
             IGetUsuariosNotificar getUsuariosNotificar,
              IGetInfo_SGA info_SGA,
              IGetUsuario getUsuario,
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
@@ -332,6 +332,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.SGA_Documentos.Administració
                 }
                 catch (Exception e)
                 {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message);
                     return "Error";
                 }
             }

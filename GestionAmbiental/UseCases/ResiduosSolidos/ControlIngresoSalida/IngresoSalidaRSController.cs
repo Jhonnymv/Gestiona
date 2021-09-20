@@ -4,15 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRSs;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRS;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.ConsultarIngresoSalidaRSs;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EditarIngresoSalidaRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.RegistrarIngresoSalidaRS;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EditarIngresoSalidaRS;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.EliminarRegistroIngresoSalidaRS;
 using GestionAmbiental.Application.UseCases.ResiduosSolidos.GetSelectItems;
-using GestionAmbiental.Application.UseCases.ResiduosSolidos.ControlIngresoSalidaRS.RegistrarIngresoSalidaRS;
 using GestionAmbiental.Domain.Enum;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +21,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 {
     public class IngresoSalidaRSController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IGetSelectItems _getSelectItems;
         private readonly IConsultarIngresoSalidaRSs _consultarIngresoSalidaRSs;
         private readonly IRegistrarIngresoSalidaRS _registrarIngresoSalidaRS;
@@ -36,7 +31,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
 
         private readonly IDataProtector _protector;
         public IngresoSalidaRSController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetSelectItems getSelectItems,
             IConsultarIngresoSalidaRSs consultarIngresoSalidaRSs,
             IRegistrarIngresoSalidaRS registrarIngresoSalidaRS,
@@ -55,7 +50,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlIngresoSalida
             _eliminarRegistroIngresoSalidaRS = eliminarRegistroIngresoSalidaRS;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.IngresoSalidaRSIdRouteValue);
         }
-        public async Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try

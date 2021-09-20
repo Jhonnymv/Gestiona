@@ -23,7 +23,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
 {
     public class NotificacionesReporteIncidenteController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetReportePreliminar _getReportePreliminar;
         private readonly IGetUsuariosNotificarIncidente _getUsuariosNotificarIncidente;
         private readonly IGetInfo_SGA _info_SGA;
@@ -32,7 +32,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
 
 
         public NotificacionesReporteIncidenteController(
-            IHostingEnvironment hostingEnvironment,
+            IWebHostEnvironment hostingEnvironment,
             IGetReportePreliminar getReportePreliminar, 
             IGetUsuariosNotificarIncidente getUsuariosNotificarIncidente,
             IGetInfo_SGA getInfo_SGA, 

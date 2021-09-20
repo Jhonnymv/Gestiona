@@ -15,10 +15,10 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.DescargarIngresoSalida
 {
     public class DescargaIngresoSalidaController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarIngresoSalidaRSDescarga _consultarIngresoSalidaRSDescarga;
 
-        public DescargaIngresoSalidaController(IHostingEnvironment hostingEnvironment, IConsultarIngresoSalidaRSDescarga consultarIngresoSalidaRSDescarga)
+        public DescargaIngresoSalidaController(IWebHostEnvironment hostingEnvironment, IConsultarIngresoSalidaRSDescarga consultarIngresoSalidaRSDescarga)
         {
             _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
             _consultarIngresoSalidaRSDescarga = consultarIngresoSalidaRSDescarga ?? throw new ArgumentNullException(nameof(consultarIngresoSalidaRSDescarga));

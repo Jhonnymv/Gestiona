@@ -27,7 +27,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
 {
     public class NotificacionesAvistamientoFaunaController : Controller
     {
-        private IHostingEnvironment _hostingEnvironment;
+        private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetAvistamientoFauna _getAvistamientoFauna;
         private readonly IGetUsuariosNotificar _getUsuariosNotificar;
         private readonly IGetInfo_SGA _info_SGA;
@@ -35,7 +35,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.AvistamientoFauna
         private readonly DescargarAvistamientoFaunaController _descargarAvistamientoFaunaController;
 
         public NotificacionesAvistamientoFaunaController(
-           IHostingEnvironment hostingEnvironment,
+           IWebHostEnvironment hostingEnvironment,
            IGetAvistamientoFauna getAvistamientoFauna,
            IGetUsuariosNotificar getUsuariosNotificar,
            IGetInfo_SGA getInfo_SGA,
