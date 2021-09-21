@@ -114,17 +114,18 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                     ViewBag.Rol = userInfo.Rol.ToString();
 
                     var info = (Tipo_Info_SGA)Enum.ToObject(typeof(Tipo_Info_SGA), IdInfo);
-                    var data = await _getInfo_SGA.Execute(info);
+                    var data = await _getInfo_SGA.ExecuteLDAPConnection(info);
                     var infoJson = "";
-                    infoJson += "{";
-                    foreach (var item in data.Info)
-                    {
-                        infoJson += "\"" + item.Key + "\"";
-                        infoJson += ":\"" + item.Value + "\",";
+                    infoJson = JsonConvert.SerializeObject(data);
+                    //infoJson += "{";
+                    //foreach (var item in data.Info)
+                    //{
+                    //    infoJson += "\"" + item.Key + "\"";
+                    //    infoJson += ":\"" + item.Value + "\",";
 
-                    }
-                    infoJson = infoJson.Remove(infoJson.Length - 1);
-                    infoJson += "}";
+                    //}
+                    //infoJson = infoJson.Remove(infoJson.Length - 1);
+                    //infoJson += "}";
                     var model = new Info_SGAModel
                     {
                         IdInfo = data.IdInfo,

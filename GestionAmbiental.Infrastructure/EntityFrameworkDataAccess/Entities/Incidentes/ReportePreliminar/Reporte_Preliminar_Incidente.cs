@@ -61,5 +61,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Evidencia { get; set; }
         [Column(TypeName = "varchar(20)")]
         public string Estado { get; set; }
+        [Column(TypeName = "text")]
+        public string Nombres_Archivos { get; set; }
     }
 }

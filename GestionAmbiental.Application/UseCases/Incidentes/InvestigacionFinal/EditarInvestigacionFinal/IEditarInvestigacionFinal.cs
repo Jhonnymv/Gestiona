@@ -40,6 +40,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
             List<string> Evidencias_Persona,
             List<string> Evidencias_Posicion,
             List<string> Evidencias_Partes,
+            string Nombres_Archivos,
             //Impacto Ambiental
             int Id_Impacto_Ambiental_Incidente,
             int? Id_Tipo_Suelo,

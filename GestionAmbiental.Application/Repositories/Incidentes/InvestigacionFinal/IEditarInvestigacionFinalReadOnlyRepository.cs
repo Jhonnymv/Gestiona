@@ -17,6 +17,6 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFina
         Task<int> EditarInvestigacionFinal(Investigacion_Final_Incidente investigacion, Impacto_Ambiental_Incidente impacto);
         Task<int> EditarAdminInvestigacion(Investigacion_Final_Incidente investigacion);
         Task<int> AmpliarFechaAccion(Accion_Incidente_Investigacion accion);
-        Task EliminarEvidenciaInvestigacion(int IdInvestigacion, string Tipo, string NombreArchivo);
+        Task<bool> EliminarEvidenciaInvestigacion(int IdInvestigacion, string Tipo, string NombreArchivo);
     }
 }

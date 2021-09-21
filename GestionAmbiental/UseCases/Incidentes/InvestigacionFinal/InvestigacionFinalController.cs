@@ -42,11 +42,16 @@ using GestionAmbiental.Application.UseCases.GestorUsuarios.GetRolUsuario;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EliminarEvidenciaInvestigacion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciaInvestigacion;
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.EditarAdminInvestigacion;
+using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciasNombre;
+using Serilog;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
     public class InvestigacionFinalController : Controller
     {
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInvestigacionFinal _registrarInvestigacionFinal;
         private readonly IGetInvestigacionesFinales _getInvestigacionesFinales;
@@ -84,11 +89,14 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IEliminarEvidenciaInvestigacion _eliminarEvidenciaInvestigacion;
         private readonly IGetEvidenciaInvestigacion _getEvidenciaInvestigacion;
 
+        private readonly IGetEvidenciasNombre _getEvidenciasNombre;
+
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
 
         public InvestigacionFinalController(
-            ISelectItems selectItems,
+            IWebHostEnvironment hostingEnvironment,
+            ISelectItems selectItems, 
             IRegistrarInvestigacionFinal registrarInvestigacionFinal,
             IGetInvestigacionesFinales getInvestigacionesFinales,
             IGetInvestigacionFinal getInvestigacionFinal,
@@ -126,12 +134,15 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IEliminarEvidenciaInvestigacion eliminarEvidenciaInvestigacion,
             IGetEvidenciaInvestigacion getEvidenciaInvestigacion,
 
+            IGetEvidenciasNombre getEvidenciasNombre,
+
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
 
             IGetInfo_SGA info_SGA
             )
         {
+            _hostingEnvironment = hostingEnvironment;
             _selectItems = selectItems;
             _registrarInvestigacionFinal = registrarInvestigacionFinal;
             _getInvestigacionesFinales = getInvestigacionesFinales;
@@ -168,6 +179,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
             _eliminarEvidenciaInvestigacion = eliminarEvidenciaInvestigacion;
             _getEvidenciaInvestigacion = getEvidenciaInvestigacion;
+
+            _getEvidenciasNombre = getEvidenciasNombre;
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
             _info_SGA = info_SGA;
@@ -340,7 +353,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 causa_Incidente.AddRange(items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion, Group = grupoCondicion }).ToList());
                 causa_Incidente.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
@@ -414,6 +427,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
                 var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
+
+                var nombresEvidenciasJson = await _getEvidenciasNombre.Execute(IdDesencriptado);
+
                 if (investigacion.PermisoMA)
                 {
                     var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
@@ -454,6 +470,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     model.Evidencias_Completas_Persona = investigacion.Evidencia_Persona != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Persona) : null;
                     model.Evidencias_Completas_Posicion = investigacion.Evidencia_Posicion != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Posicion) : null;
                     model.Evidencias_Completas_Partes = investigacion.Evidencia_Parte != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Parte) : null;
+                    model.Evidencias_Nombres = nombresEvidenciasJson;
                     model.Estado = investigacion.Estado;
 
                     model.ImpactoAmbiental = new ImpactoAmbientalModel();
@@ -641,6 +658,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
                 var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
+                var nombresEvidenciasJson = await _getEvidenciasNombre.Execute(IdDesencriptado);
                 var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
                 ViewBag.PermisoAdmin = investigacion.PermisoAdmin;
@@ -681,6 +699,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 model.Evidencias_Completas_Persona = investigacion.Evidencia_Persona != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Persona) : null;
                 model.Evidencias_Completas_Posicion = investigacion.Evidencia_Posicion != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Posicion) : null;
                 model.Evidencias_Completas_Partes = investigacion.Evidencia_Parte != null ? JsonConvert.SerializeObject(investigacion.Evidencia_Parte) : null;
+                model.Evidencias_Nombres = nombresEvidenciasJson;
                 model.Estado = investigacion.Estado;
 
                 model.ImpactoAmbiental = new ImpactoAmbientalModel();
@@ -1066,12 +1085,12 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" href=\"/ImplementarAccionInvestigacion/ImplementarAccion?IdAccion=" + IdEncriptado + "\">Implementar</a></td>";
                         else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Implementado.ToString()))
                             filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/VerificarAccion?IdAccion=" + IdEncriptado + "\">Verificar</a></td>";
-                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                        else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
                             filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" style=\"color:white;text-decoration: none;\" onclick=AmpliarFecha(" + fila.Id_Accion_Correctiva_Incidente + ")>Ampliar Fecha</button></td>";
                         else if (fila.Estado.Equals(EstadosIncidentes.Aprobado.ToString()))
                             filas_acciones += "<td><a type=\"button\" class=\"btn btn-mc-outline\" style=\"color:#2e6793;text-decoration: none;\" href=\"/VerificarAccionInvestigacion/DetalleAccion?IdAccion=" + IdEncriptado + "\">Detalle</a></td>";
-                        else if (fila.Permiso_Verificacion && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
-                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar</button></td>";
+                        else if ((fila.Permiso_Verificacion || userInfo.Rol.Equals(InspeccionRol.Admin)) && fila.Estado.Equals(EstadosIncidentes.Vencido.ToString()))
+                            filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\"style=\"color:white;text-decoration: none;\" onclick=\"AmpliarFecha(" + IdEncriptado + ")\">Ampliar Fecha</button></td>";
                         else
                             filas_acciones += "<td></td>";
                         filas_acciones += "</tr>";
@@ -1231,15 +1250,35 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-                await _eliminarEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo, Evidencia, userInfo.NombreUsuario);
-                var nueva_evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo);
-                response = new
+                var eliminado = await _eliminarEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo, Evidencia, userInfo.NombreUsuario);
+                var nombresEvidencias = await _getEvidenciasNombre.Execute(IdInvestigacion);
+                var evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo);
+                try
                 {
-                    success = true,
-                    evidencia = nueva_evidencia,
-                    tipo = Tipo
-                };
-            }catch(Exception e)
+                    if(eliminado)
+                        await DeleteFTPFileAsync(Evidencia, Tipo);
+                }
+                catch(Exception e)
+                {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message + " - Archivo: "+ Evidencia, " - Tipo: "+Tipo);
+                }
+                if (eliminado)
+                    response = new
+                    {
+                        success = true,
+                        nombresEvidencias = nombresEvidencias,
+                        evidencia = evidencia,
+                        tipo = Tipo
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        message = "No se eliminó la evidencia"
+                    };
+            }
+            catch(Exception e)
             {
                 response = new
                 {
@@ -1255,13 +1294,49 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             if (ModelState.IsValid)
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var nombresEvidencias = await _getEvidenciasNombre.Execute(model.Id_Investigacion_Final);
+
+                var nombresArchivos = JsonConvert.DeserializeObject<List<EvidenciaCategoria>>(nombresEvidencias);
 
                 var papeles = new List<string>();
+                var papelesNombres = new List<NombreEvidencia>();
                 var personas = new List<string>();
+                var personasNombres = new List<NombreEvidencia>();
                 var posiciones = new List<string>();
+                var posicionesNombres = new List<NombreEvidencia>();
                 var partes = new List<string>();
+                var partesNombres = new List<NombreEvidencia>();
                 var max_file_size = 8388608;
                 //Papeles
+                if (model.Evidencias_Completas_Papel != null)
+                {
+                    papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria papel
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("papel")) != null)
+                    {
+                        //Buscar evidencias de papeles
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("papel")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de papeles
+                        temp = temp.Where(x => papeles.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria papel, agregar los existentes
+                        if (papeles != null)
+                        {
+                            temp = papeles.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    papelesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Papel != null)
                 {
                     for (int i = 0; i < model.Evidencias_Papel.Count; i++)
@@ -1274,16 +1349,49 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         {
                             var newfileName = CreateUniqueFileName(i+1,"papel") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Papel[i], newfileName, "papel");
-                            papeles.Add(filePath);
-                        }
+                            papeles.Add(filePath); 
+                            
+                            papelesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Papel[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Papel[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
+                        }                        
                     }
-                }
-                else if (model.Evidencias_Completas_Papel != null)
-                {
-                    papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
                 }
 
                 //Personas
+                if (model.Evidencias_Completas_Persona != null)
+                {
+                    personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria persona
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("persona")) != null)
+                    {
+                        //Buscar evidencias de personas
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("persona")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de personas
+                        temp = temp.Where(x => personas.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria persona, agregar los existentes
+                        if (personas != null)
+                        {
+                            temp = personas.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    personasNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Persona != null)
                 {
                     for (int i = 0; i < model.Evidencias_Persona.Count; i++)
@@ -1297,15 +1405,47 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             var newfileName = CreateUniqueFileName(i + 1, "persona") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Persona[i], newfileName, "persona");
                             personas.Add(filePath);
+                            personasNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Persona[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Persona[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
                 }
-                else if (model.Evidencias_Completas_Persona != null)
-                {
-                    personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
-                }
 
                 //Posicion
+                if (model.Evidencias_Completas_Posicion != null)
+                {
+                    posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria posicion
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("posicion")) != null)
+                    {
+                        //Buscar evidencias de posiciones
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("posicion")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de posiciones
+                        temp = temp.Where(x => posiciones.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria posicion, agregar los existentes
+                        if (posiciones != null)
+                        {
+                            temp = posiciones.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    posicionesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Posicion != null)
                 {
                     for (int i = 0; i < model.Evidencias_Posicion.Count; i++)
@@ -1319,15 +1459,47 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             var newfileName = CreateUniqueFileName(i + 1, "posicion") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Posicion[i], newfileName, "posicion");
                             posiciones.Add(filePath);
+                            posicionesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Posicion[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Posicion[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
                 }
-                else if (model.Evidencias_Completas_Posicion != null)
-                {
-                    posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
-                }
 
                 //Parte
+                if (model.Evidencias_Completas_Partes != null)
+                {
+                    partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria parte
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("parte")) != null)
+                    {
+                        //Buscar evidencias de partes
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("parte")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de partes
+                        temp = temp.Where(x => partes.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria parte, agregar los existentes
+                        if (partes != null)
+                        {
+                            temp = partes.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    partesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Partes != null)
                 {
                     for (int i = 0; i < model.Evidencias_Partes.Count; i++)
@@ -1341,13 +1513,22 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             var newfileName = CreateUniqueFileName(i + 1, "parte") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Partes[i], newfileName, "parte");
                             partes.Add(filePath);
+                            partesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Partes[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Partes[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
                 }
-                else if (model.Evidencias_Completas_Partes != null)
-                {
-                    partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
-                }
+
+                nombresArchivos.RemoveRange(0, nombresArchivos.Count);
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "papel", Evidencias = papelesNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "persona", Evidencias = personasNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "posicion", Evidencias = posicionesNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "parte", Evidencias = partesNombres });
 
                 await _editarInvestigacionFinal.Execute(
                     model.Id_Investigacion_Final,
@@ -1382,6 +1563,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     personas,
                     posiciones,
                     partes,
+                    JsonConvert.SerializeObject(nombresArchivos),
                     model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente,
                     model.ImpactoAmbiental.Id_Tipo_Suelo,
                     model.ImpactoAmbiental.Area_Suelo,
@@ -1436,12 +1618,49 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             if (userInfo.Rol.Equals(InspeccionRol.Admin) && model.Id_Supervisor!=0)
             {
+                var nombresEvidencias = await _getEvidenciasNombre.Execute(model.Id_Investigacion_Final);
+
+                var nombresArchivos = JsonConvert.DeserializeObject<List<EvidenciaCategoria>>(nombresEvidencias);
+
                 var papeles = new List<string>();
+                var papelesNombres = new List<NombreEvidencia>();
                 var personas = new List<string>();
+                var personasNombres = new List<NombreEvidencia>();
                 var posiciones = new List<string>();
+                var posicionesNombres = new List<NombreEvidencia>();
                 var partes = new List<string>();
+                var partesNombres = new List<NombreEvidencia>();
                 var max_file_size = 8388608;
                 //Papeles
+                if (model.Evidencias_Completas_Papel != null)
+                {
+                    papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria papel
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("papel")) != null)
+                    {
+                        //Buscar evidencias de papeles
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("papel")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de papeles
+                        temp = temp.Where(x => papeles.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria papel, agregar los existentes
+                        if (papeles != null)
+                        {
+                            temp = papeles.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    papelesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Papel != null)
                 {
                     for (int i = 0; i < model.Evidencias_Papel.Count; i++)
@@ -1455,17 +1674,48 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             var newfileName = CreateUniqueFileName(i + 1, "papel") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Papel[i], newfileName, "papel");
                             papeles.Add(filePath);
+
+                            papelesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Papel[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Papel[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
-                    if (model.Evidencias_Completas_Papel != null)
-                        papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
-                }
-                else if (model.Evidencias_Completas_Papel != null)
-                {
-                    papeles.AddRange(new List<string>(model.Evidencias_Completas_Papel.Split(',')));
                 }
 
                 //Personas
+                if (model.Evidencias_Completas_Persona != null)
+                {
+                    personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria persona
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("persona")) != null)
+                    {
+                        //Buscar evidencias de personas
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("persona")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de personas
+                        temp = temp.Where(x => personas.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria persona, agregar los existentes
+                        if (personas != null)
+                        {
+                            temp = personas.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    personasNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Persona != null)
                 {
                     for (int i = 0; i < model.Evidencias_Persona.Count; i++)
@@ -1478,18 +1728,48 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         {
                             var newfileName = CreateUniqueFileName(i + 1, "persona") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Persona[i], newfileName, "persona");
-                            personas.Add(filePath); 
+                            personas.Add(filePath);
+                            personasNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Persona[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Persona[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
-                    if (model.Evidencias_Completas_Persona != null)
-                        personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
-                }
-                else if (model.Evidencias_Completas_Persona != null)
-                {
-                    personas.AddRange(new List<string>(model.Evidencias_Completas_Persona.Split(',')));
                 }
 
                 //Posicion
+                if (model.Evidencias_Completas_Posicion != null)
+                {
+                    posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria posicion
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("posicion")) != null)
+                    {
+                        //Buscar evidencias de posiciones
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("posicion")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de posiciones
+                        temp = temp.Where(x => posiciones.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria posicion, agregar los existentes
+                        if (posiciones != null)
+                        {
+                            temp = posiciones.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    posicionesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Posicion != null)
                 {
                     for (int i = 0; i < model.Evidencias_Posicion.Count; i++)
@@ -1502,18 +1782,48 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         {
                             var newfileName = CreateUniqueFileName(i + 1, "posicion") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Posicion[i], newfileName, "posicion");
-                            posiciones.Add(filePath); 
+                            posiciones.Add(filePath);
+                            posicionesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Posicion[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Posicion[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
-                    if (model.Evidencias_Completas_Posicion != null)
-                        posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
-                }
-                else if (model.Evidencias_Completas_Posicion != null)
-                {
-                    posiciones.AddRange(new List<string>(model.Evidencias_Completas_Posicion.Split(',')));
                 }
 
                 //Parte
+                if (model.Evidencias_Completas_Partes != null)
+                {
+                    partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
+
+                    var temp = new List<NombreEvidencia>();
+                    //Validar nombres archivos tiene categoria parte
+                    if (nombresArchivos.FirstOrDefault(x => x.Categoria.Equals("parte")) != null)
+                    {
+                        //Buscar evidencias de partes
+                        temp = nombresArchivos.First(x => x.Categoria.Equals("parte")).Evidencias;
+                        //Eliminar las evidencias que no se encuentre en la lista de partes
+                        temp = temp.Where(x => partes.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene categoria parte, agregar los existentes
+                        if (partes != null)
+                        {
+                            temp = partes.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    partesNombres.AddRange(temp);
+                }
                 if (model.Evidencias_Partes != null)
                 {
                     for (int i = 0; i < model.Evidencias_Partes.Count; i++)
@@ -1527,15 +1837,23 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             var newfileName = CreateUniqueFileName(i + 1, "parte") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Partes[i], newfileName, "parte");
                             partes.Add(filePath);
+                            partesNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias_Partes[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias_Partes[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
-                    if (model.Evidencias_Completas_Partes != null)
-                        partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
                 }
-                else if (model.Evidencias_Completas_Partes != null)
-                {
-                    partes.AddRange(new List<string>(model.Evidencias_Completas_Partes.Split(',')));
-                }
+
+                nombresArchivos.RemoveRange(0, nombresArchivos.Count);
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "papel", Evidencias = papelesNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "persona", Evidencias = personasNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "posicion", Evidencias = posicionesNombres });
+                nombresArchivos.Add(new EvidenciaCategoria { Categoria = "parte", Evidencias = partesNombres });
+
 
                 await _editarAdminInvestigacion.Execute(
                     model.Id_Investigacion_Final,
@@ -1543,7 +1861,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     papeles,
                     personas,
                     posiciones,
-                    partes);
+                    partes,
+                    JsonConvert.SerializeObject(nombresArchivos));
             }
             return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(model.Id_Investigacion_Final.ToString()) });
         }
@@ -1856,6 +2175,45 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             cs.Close();
             fsCrypt.Close();
 
+        }
+        private async Task DeleteFTPFileAsync(string filename,string tipo)
+        {
+            Tipo_Info_SGA directorio;
+            switch (tipo.ToLower())
+            {
+                case "papel": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel; break;
+                case "persona": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona; break;
+                case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
+                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
+            }
+
+            var serverInfo = await _info_SGA.Execute(directorio);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+
+                sftp.DeleteFile(filename);
+
+                sftp.Dispose();
+            }
+        }
+        private class EvidenciaCategoria
+        {
+            public string Categoria { get; set; }
+            public List<NombreEvidencia> Evidencias { get; set; }
         }
     }
 }

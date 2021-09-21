@@ -12,6 +12,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
             List<string> Evidencias_Papel,
             List<string> Evidencias_Persona,
             List<string> Evidencias_Posicion,
-            List<string> Evidencias_Partes);
+            List<string> Evidencias_Partes,
+            string Nombres_Archivos);
     }
 }

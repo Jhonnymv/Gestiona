@@ -50,5 +50,6 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
         public string Estado { get; set; }       
         public int NAccionesAprobadas { get; set; }
         public int NAcciones { get; set; }
+        public string NombresArchivos { get; set; }
     }
 }

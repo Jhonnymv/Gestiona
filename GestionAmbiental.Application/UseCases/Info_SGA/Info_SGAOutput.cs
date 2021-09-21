@@ -22,7 +22,7 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
             Info = new Dictionary<string, string>();
             foreach (var item in data)
             {
-                Info.Add((string)item.Key,(string)item.Value);
+                Info.Add((string)item.Key,item.Value.ToString());
             }
             Tipo = info_SGA.Tipo;
         }

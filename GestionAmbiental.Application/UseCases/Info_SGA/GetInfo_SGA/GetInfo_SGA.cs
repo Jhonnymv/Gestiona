@@ -26,5 +26,12 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA
             var output = new Info_SGAOutput(info);
             return output;
         }
+        public async Task<LDAPConnectionOutput> ExecuteLDAPConnection(Tipo_Info_SGA tipo)
+        {
+            var info = await _info_SGAReadOnlyRepository.GetInfo_SGA(tipo.ToString());
+
+            var output = new LDAPConnectionOutput(info);
+            return output;
+        }
     }
 }

@@ -21,12 +21,14 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.El
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task Execute(int IdInvestigacion, string Tipo, string NombreArchivo,string usuario_red)
+        public async Task<bool> Execute(int IdInvestigacion, string Tipo, string NombreArchivo,string usuario_red)
         {
             var investigacion = await _getInvestigacionFinalReadOnlyRepository.GetInvestigacionFinal(IdInvestigacion);
             var usuario = await _getUsuario.Execute(usuario_red);
-            if(investigacion.Supervisor_MA.IdUsuario.Equals(usuario.IdUsuario) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
-                await _editarInvestigacionFinalReadOnlyRepository.EliminarEvidenciaInvestigacion(IdInvestigacion, Tipo, NombreArchivo);
+            if (investigacion.Supervisor_MA.IdUsuario.Equals(usuario.IdUsuario) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                return await _editarInvestigacionFinalReadOnlyRepository.EliminarEvidenciaInvestigacion(IdInvestigacion, Tipo, NombreArchivo);
+            else
+                return false;
         }
     }
 }

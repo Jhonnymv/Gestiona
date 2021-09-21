@@ -83,6 +83,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public string Evidencias_Completas_Persona { get; set; }
         public string Evidencias_Completas_Posicion { get; set; }
         public string Evidencias_Completas_Partes { get; set; }
+        public string Evidencias_Nombres { get; set; }
         public ImpactoAmbientalModel ImpactoAmbiental { get; set; }
         public int NInvolucrados { get; set; }
         public int NProductos { get; set; }

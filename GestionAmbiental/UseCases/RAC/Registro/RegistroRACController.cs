@@ -589,7 +589,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 }
             }
             else
-                return RedirectToAction("EditarRAC",new { IdRAC = _protector.Protect(model.Id_RAC.ToString()) } );
+                //return RedirectToAction("EditarRAC",new { IdRAC = _protector.Protect(model.Id_RAC.ToString()) } );
+                return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> AmpliarFecha(string idRAC, string fecha)

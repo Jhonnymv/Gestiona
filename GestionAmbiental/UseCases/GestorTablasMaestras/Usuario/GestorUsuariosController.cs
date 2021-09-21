@@ -185,25 +185,34 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
         [HttpPost]
         public async Task<IActionResult> ActualizarInformacion()
         {
-            var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-            string ldap_path = "", ldap_domain = "", user = "", password = "", groupName = "G_Users_Marcobre";
+            var info = await _info_SGA.ExecuteLDAPConnection(Tipo_Info_SGA.LDAPConnection);
+            string ldap_path = "", ldap_domain = "", user = "", password = "";
             var groupnames = new List<string>();
 
-            foreach (var item in info.Info)
-            {
-                switch (item.Key)
-                {
-                    case "ldap_path": ldap_path = item.Value; break;
-                    case "ldap_domain": ldap_domain = item.Value; break;
-                    case "user": user = item.Value;break;
-                    case "password": password = item.Value;break;
-                    case "group_name":groupName = item.Value;break;
-                }
-            }
-            groupnames.Add(groupName);
-            groupnames.Add("G_Users_Gestiona_Externos");
-            
-                DirectoryEntry adSearchRoot;
+            ldap_path = info.Path;
+            ldap_domain = info.Domain;
+            user = info.User;
+            password = info.Password;
+            groupnames = info.Groups;
+
+
+            //foreach (var item in info.Info)
+            //{
+            //    switch (item.Key)
+            //    {
+            //        case "ldap_path": ldap_path = item.Value; break;
+            //        case "ldap_domain": ldap_domain = item.Value; break;
+            //        case "user": user = item.Value;break;
+            //        case "password": password = item.Value;break;
+            //        case "groups": groupnames = JsonConvert.DeserializeObject<List<string>>(item.Value); break;
+            //    }
+            //}
+            //groupnames.Add(groupName);
+            //groupnames.Add("G_Users_Marcobre");
+            //groupnames.Add("G_Users_Gestiona_Externos");
+            //groupnames.Add("g_users_gestiona_minsur");
+
+            DirectoryEntry adSearchRoot;
             if (user != "" || password != "")
                 adSearchRoot = new DirectoryEntry(ldap_path, user, password);
             else

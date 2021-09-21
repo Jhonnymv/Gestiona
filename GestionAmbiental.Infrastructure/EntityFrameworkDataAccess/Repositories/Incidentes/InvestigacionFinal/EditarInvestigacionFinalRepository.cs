@@ -1,11 +1,12 @@
 ﻿using GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFinal;
-using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.Domain.Incidentes.InvestigacionFinal;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,10 +49,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Accion_Inmediata = accion.Accion_Inmediata;
             entity.Id_Usuario = accion.Id_Usuario;
             entity.Responsable = accion.Responsable;
-            entity.Fecha = accion.Fecha != null ? accion.Fecha : entity.Fecha;
-            entity.Estatus = accion.Estatus != null ? accion.Estatus : entity.Estatus;
-            entity.Fecha_Verificacion = accion.Fecha_Verificacion != null ? accion.Fecha_Verificacion : entity.Fecha_Verificacion;
-            entity.Comentarios_Verificacion = accion.Comentarios_Verificacion != null ? accion.Comentarios_Verificacion : entity.Comentarios_Verificacion;
+            entity.Fecha = accion.Fecha ?? entity.Fecha;
+            entity.Estatus = accion.Estatus ?? entity.Estatus;
+            entity.Fecha_Verificacion = accion.Fecha_Verificacion ?? entity.Fecha_Verificacion;
+            entity.Comentarios_Verificacion = accion.Comentarios_Verificacion ?? entity.Comentarios_Verificacion;
             entity.Estado = accion.Estado;
 
             _context.Accion_Incidente_Investigacion.Update(entity);
@@ -65,9 +66,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = await _context.Causa_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Causa_Incidente_Investigacion.Equals(causa.Id_Causa_Incidente_Investigacion));
             entity.Id_Acto_Condicion = causa.Id_Acto_Condicion;
-            entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion != null ? causa.Tipo_Acto_Condicion : entity.Tipo_Acto_Condicion;
+            entity.Tipo_Acto_Condicion = causa.Tipo_Acto_Condicion ?? entity.Tipo_Acto_Condicion;
             entity.Id_Factor_Causa_Incidente = causa.Id_Factor_Causa_Incidente;
-            entity.Descripcion = causa.Descripcion != null ? causa.Descripcion : entity.Descripcion;
+            entity.Descripcion = causa.Descripcion ?? entity.Descripcion;
             entity.Estado = causa.Estado;
 
             _context.Causa_Incidente_Investigacion.Update(entity);
@@ -80,17 +81,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> EditarInvolucradoInvestigacion(Involucrado_Incidente_Investigacion involucrado)
         {
             var entity = await _context.Involucrado_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Involucrado_Incidente_Investigacion.Equals(involucrado.Id_Involucrado_Incidente_Investigacion));
-            entity.Id_Usuario = involucrado.Id_Usuario != null ? involucrado.Id_Usuario : entity.Id_Usuario;
-            entity.Nombres = involucrado.Nombres != null ? involucrado.Nombres : entity.Nombres;
-            entity.Apellidos = involucrado.Apellidos != null ? involucrado.Apellidos : entity.Apellidos;
-            entity.Email = involucrado.Email != null ? involucrado.Email : entity.Email;
-            entity.Celular = involucrado.Celular != null ? involucrado.Celular : entity.Celular;
-            entity.Doc_Identidad = involucrado.Doc_Identidad != null ? involucrado.Doc_Identidad : entity.Doc_Identidad;
-            entity.Edad = involucrado.Edad != null ? involucrado.Edad : entity.Edad;
-            entity.Puesto_Trabajo = involucrado.Puesto_Trabajo != null ? involucrado.Puesto_Trabajo : entity.Puesto_Trabajo;
-            entity.Empresa = involucrado.Empresa != null ? involucrado.Empresa : entity.Empresa;
-            entity.Turno = involucrado.Turno != null ? involucrado.Turno : entity.Turno;
-            entity.Tipo_Involucrado = involucrado.Tipo_Involucrado != null ? involucrado.Tipo_Involucrado : entity.Tipo_Involucrado;
+            entity.Id_Usuario = involucrado.Id_Usuario ?? entity.Id_Usuario;
+            entity.Nombres = involucrado.Nombres ?? entity.Nombres;
+            entity.Apellidos = involucrado.Apellidos ?? entity.Apellidos;
+            entity.Email = involucrado.Email ?? entity.Email;
+            entity.Celular = involucrado.Celular ?? entity.Celular;
+            entity.Doc_Identidad = involucrado.Doc_Identidad ?? entity.Doc_Identidad;
+            entity.Edad = involucrado.Edad ?? entity.Edad;
+            entity.Puesto_Trabajo = involucrado.Puesto_Trabajo ?? entity.Puesto_Trabajo;
+            entity.Empresa = involucrado.Empresa ?? entity.Empresa;
+            entity.Turno = involucrado.Turno ?? entity.Turno;
+            entity.Tipo_Involucrado = involucrado.Tipo_Involucrado ?? entity.Tipo_Involucrado;
             entity.Estado = involucrado.Estado;
 
             _context.Involucrado_Incidente_Investigacion.Update(entity);
@@ -133,6 +134,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             investigacion_entity.Evidencia_Persona = investigacion.Evidencia_Persona;
             investigacion_entity.Evidencia_Posicion = investigacion.Evidencia_Posicion;
             investigacion_entity.Evidencia_Parte = investigacion.Evidencia_Parte;
+            investigacion_entity.Nombres_Archivos = investigacion.NombresArchivos;
             investigacion_entity.Estado = investigacion.Estado;
 
             impacto_entity.Id_Tipo_Suelo = impacto.Tipo_Suelo?.Id_Tipo_Suelo;
@@ -191,6 +193,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             investigacion_entity.Evidencia_Persona = investigacion.Evidencia_Persona;
             investigacion_entity.Evidencia_Posicion = investigacion.Evidencia_Posicion;
             investigacion_entity.Evidencia_Parte = investigacion.Evidencia_Parte;
+            investigacion_entity.Nombres_Archivos = investigacion.NombresArchivos;
             _context.Investigacion_Final_Incidente.Update(investigacion_entity); 
             await _context.SaveChangesAsync();
             return investigacion_entity.Id_Investigacion_Final;
@@ -236,39 +239,115 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Accion_Incidente_Investigacion;
         }
-        public async Task EliminarEvidenciaInvestigacion(int IdInvestigacion,string Tipo,string NombreArchivo)
+        public async Task<bool> EliminarEvidenciaInvestigacion(int IdInvestigacion,string Tipo,string NombreArchivo)
         {
             var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
             if (investigacion != null)
             {
-                JArray evidencias = new JArray();
+                List<string> evidencias = new List<string>();
 
                 switch (Tipo)
                 {
-                    case "Papel": evidencias = JArray.Parse(investigacion.Evidencia_Papel); break;
-                    case "Parte": evidencias = JArray.Parse(investigacion.Evidencia_Parte); break;
-                    case "Persona": evidencias = JArray.Parse(investigacion.Evidencia_Persona); break;
-                    case "Posicion": evidencias = JArray.Parse(investigacion.Evidencia_Posicion); break;
+                    case "Papel": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Papel); break;
+                    case "Parte": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Parte); break;
+                    case "Persona": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Persona); break;
+                    case "Posicion": evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Posicion); break;
                 }
-                
-                var temp = new List<string>();
-                foreach (var evidencia in evidencias)
+                if (evidencias.Remove(NombreArchivo))
                 {
-                    temp.Add((string)evidencia);
-                }
-                temp.Remove(NombreArchivo);
+                    switch (Tipo)
+                    {
+                        case "Papel": investigacion.Evidencia_Papel = JsonConvert.SerializeObject(evidencias); break;
+                        case "Parte": investigacion.Evidencia_Parte = JsonConvert.SerializeObject(evidencias); break;
+                        case "Persona": investigacion.Evidencia_Persona = JsonConvert.SerializeObject(evidencias); break;
+                        case "Posicion": investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(evidencias); break;
+                    }
 
-                switch (Tipo)
+                    if (investigacion.Nombres_Archivos != null)
+                    {
+                        var nombresArchivos = JsonConvert.DeserializeObject<List<EvidenciaCategoria>>(investigacion.Nombres_Archivos);
+                        var evidenciasArchivos = nombresArchivos.FirstOrDefault(x => x.Categoria.Equals(Tipo.ToLower()));
+                        if (evidenciasArchivos != null)
+                            evidenciasArchivos.Evidencias.Remove(evidenciasArchivos.Evidencias.FirstOrDefault(x => x.NombreCarga.Equals(NombreArchivo)));
+
+                        investigacion.Nombres_Archivos = JsonConvert.SerializeObject(nombresArchivos);
+                    }
+                    else
+                    {
+                        var nombresArchivos = new List<EvidenciaCategoria>
+                        {
+                            new EvidenciaCategoria {
+                                Categoria = "papel",
+                                Evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Papel).
+                                Select(x => new NombreEvidencia
+                                {
+                                    NombreOrigen = x,
+                                    NombreCarga = x,
+                                    ExtOrigen = Path.GetExtension(x),
+                                    ExtCarga = Path.GetExtension(x)
+                                }).ToList()
+                            },
+                            new EvidenciaCategoria {
+                                Categoria = "persona",
+                                Evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Persona).
+                                Select(x => new NombreEvidencia
+                                {
+                                    NombreOrigen = x,
+                                    NombreCarga = x,
+                                    ExtOrigen = Path.GetExtension(x),
+                                    ExtCarga = Path.GetExtension(x)
+                                }).ToList()
+                            },
+                            new EvidenciaCategoria {
+                                Categoria = "posicion",
+                                Evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Posicion).
+                                Select(x => new NombreEvidencia
+                                {
+                                    NombreOrigen = x,
+                                    NombreCarga = x,
+                                    ExtOrigen = Path.GetExtension(x),
+                                    ExtCarga = Path.GetExtension(x)
+                                }).ToList()
+                            },
+                            new EvidenciaCategoria {
+                                Categoria = "parte",
+                                Evidencias = JsonConvert.DeserializeObject<List<string>>(investigacion.Evidencia_Parte).
+                                Select(x => new NombreEvidencia
+                                {
+                                    NombreOrigen = x,
+                                    NombreCarga = x,
+                                    ExtOrigen = Path.GetExtension(x),
+                                    ExtCarga = Path.GetExtension(x)
+                                }).ToList()
+                            }
+                        };
+
+                        investigacion.Nombres_Archivos = JsonConvert.SerializeObject(nombresArchivos);
+                    }
+
+                    _context.Investigacion_Final_Incidente.Update(investigacion);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+                else
                 {
-                    case "Papel": investigacion.Evidencia_Papel = JsonConvert.SerializeObject(temp); break;
-                    case "Parte": investigacion.Evidencia_Parte = JsonConvert.SerializeObject(temp); break;
-                    case "Persona": investigacion.Evidencia_Persona = JsonConvert.SerializeObject(temp); break;
-                    case "Posicion": investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(temp); break;
+                    return false;
                 }
-
-                _context.Investigacion_Final_Incidente.Update(investigacion);
-                await _context.SaveChangesAsync();
             }
+            else
+                return false;
+        }
+        public class EvidenciaCategoria
+        {
+            public string Categoria { get; set; }
+            public List<NombreEvidencia> Evidencias { get; set; }
+        }
+        public class NombreEvidencia
+        {
+            public string NombreOrigen { get; set; }
+            public string NombreCarga { get; set; }
+            public string ExtOrigen { get; set; }
+            public string ExtCarga { get; set; }
         }
     }
 }

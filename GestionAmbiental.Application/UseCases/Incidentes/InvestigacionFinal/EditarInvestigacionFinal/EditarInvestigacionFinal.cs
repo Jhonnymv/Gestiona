@@ -52,6 +52,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
             List<string> Evidencias_Persona,
             List<string> Evidencias_Posicion,
             List<string> Evidencias_Partes,
+            string Nombres_Archivos,
             int Id_Impacto_Ambiental_Incidente,
             int? Id_Tipo_Suelo,
             double? Area_Suelo,
@@ -133,6 +134,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
                 input_investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(Evidencias_Posicion);
             if (Evidencias_Papel != null)
                 input_investigacion.Evidencia_Parte = JsonConvert.SerializeObject(Evidencias_Partes);
+            input_investigacion.NombresArchivos = Nombres_Archivos;
 
             switch (Opcion)
             {

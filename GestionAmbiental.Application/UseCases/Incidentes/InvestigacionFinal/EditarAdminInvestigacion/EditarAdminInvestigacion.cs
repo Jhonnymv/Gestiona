@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
             _editarInvestigacionFinalReadOnlyRepository = editarInvestigacionFinalReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarInvestigacionFinalReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int IdInvestigacion, int IdSupervisor, List<string> Evidencias_Papel, List<string> Evidencias_Persona, List<string> Evidencias_Posicion, List<string> Evidencias_Partes )
+        public async Task<int> Execute(int IdInvestigacion, int IdSupervisor, List<string> Evidencias_Papel, List<string> Evidencias_Persona, List<string> Evidencias_Posicion, List<string> Evidencias_Partes,string Nombres_Archivos)
         {
             var input_investigacion = new Investigacion_Final_Incidente();
             input_investigacion.Id_Investigacion_Final = IdInvestigacion;
@@ -26,6 +26,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ed
             input_investigacion.Evidencia_Persona = JsonConvert.SerializeObject(Evidencias_Persona);
             input_investigacion.Evidencia_Parte = JsonConvert.SerializeObject(Evidencias_Partes);
             input_investigacion.Evidencia_Posicion = JsonConvert.SerializeObject(Evidencias_Posicion);
+            input_investigacion.NombresArchivos = Nombres_Archivos;
 
             return await _editarInvestigacionFinalReadOnlyRepository.EditarAdminInvestigacion(input_investigacion);
         }

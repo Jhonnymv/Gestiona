@@ -212,6 +212,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Evidencia_Persona = investigacion.Evidencia_Persona;
             output.Evidencia_Posicion = investigacion.Evidencia_Posicion;
             output.Evidencia_Parte = investigacion.Evidencia_Parte;
+            output.NombresArchivos = investigacion.Nombres_Archivos;
 
             output.Estado = investigacion.Estado;
 
@@ -437,6 +438,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 case "Persona": return investigacion.Evidencia_Persona;
                 default: return investigacion.Evidencia_Posicion;
             }
+        }
+
+        public async Task<string> GetEvidenciasNombreInvestigacion(int IdInvestigacion)
+        {
+            var investigacion = await _context.Investigacion_Final_Incidente.FirstOrDefaultAsync(x => x.Id_Investigacion_Final.Equals(IdInvestigacion));
+            if (investigacion != null && investigacion.Nombres_Archivos != null)
+                return investigacion.Nombres_Archivos;
+            else
+                return "[]";
         }
     }
 }

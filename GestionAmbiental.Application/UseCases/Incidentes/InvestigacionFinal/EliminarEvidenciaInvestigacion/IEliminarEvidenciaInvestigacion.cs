@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.El
 {
     public interface IEliminarEvidenciaInvestigacion
     {
-        Task Execute(int IdInvestigacion, string Tipo, string NombreArchivo,string usuario_red);
+        Task<bool> Execute(int IdInvestigacion, string Tipo, string NombreArchivo,string usuario_red);
     }
 }

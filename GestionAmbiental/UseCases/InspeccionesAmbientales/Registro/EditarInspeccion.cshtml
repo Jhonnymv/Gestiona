@@ -728,6 +728,7 @@
         if ($("#DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
           if ($("#ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="ResponsableMarc"]').text("Debe seleccionar una opción"); }
         if ($("#ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="ResponsableCont"]').text("Debe completar este campo"); }
+        if ($("#CorreoCont").val() == "") { result = false; $('span[data-valmsg-for="CorreoCont"]').text("Debe completar este campo"); }
         if (document.getElementById("Evidencias").files.length == 0) { result = false; $("#danger_evidencia").text("Debe seleccionar un archivo"); }
         if ($("#CondicionIdentificada").val() != "Buenas Prácticas") {
             if ($("#TipoCondicion").val() == "") { result = false; $('span[data-valmsg-for="TipoCondicion"]').text("Debe seleccionar una opción"); }
@@ -1248,6 +1249,7 @@
         if ($("#E_DescripcionActoCondicion").val() == "") { result = false; $('span[data-valmsg-for="E_DescripcionActoCondicion"]').text("Debe ingresar una descripción"); }
         if ($("#E_ResponsableMarc").val() == "0") { result = false; $('span[data-valmsg-for="E_ResponsableMarc"]').text("Debe seleccionar una opción"); }
         if ($("#E_ResponsableCont").val() == "") { result = false; $('span[data-valmsg-for="E_ResponsableCont"]').text("Debe completar este campo"); }
+        if ($("#E_CorreoCont").val() == "") { result = false; $('span[data-valmsg-for="E_CorreoCont"]').text("Debe completar este campo"); }
         if ($("#E_CondicionIdentificada").val() != "Buenas Prácticas") {
             if ($("#E_TipoCondicion").val() == "") { result = false; $('span[data-valmsg-for="E_TipoCondicion"]').text("Debe seleccionar una opción"); }
             if ($("#E_FechaProgramada").val() == "") { result = false; $('span[data-valmsg-for="E_FechaProgramada"]').text("Debe ingresar una fecha"); }
