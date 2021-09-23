@@ -890,374 +890,11 @@
     </div>
 </div>
 
+<partial name="../InvestigacionFinal/Modales/_ModalInvolucrado.cshtml" />
+<partial name="../InvestigacionFinal/Modales/_ModalProducto.cshtml" />
+<partial name="../InvestigacionFinal/Modales/_ModalAccion.cshtml" />
+<partial name="../InvestigacionFinal/Modales/_ModalCausa.cshtml" />
 
-<!-- Modal Nuevo Involucrado-->
-<div class="modal fade" id="modal_involucrado" tabindex="-1" aria-labelledby="titulo_modal_involucrado" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-menu modal-incidentes">
-            <div class="modal-content">
-                <div class="incidentes">
-                    <div class="image-header-container">
-                        <div class="header-title incidentes-opacity-color">
-                            <h3> Agregar involucrado</h3>
-                            <img src="/img/logo-white.png" alt="Logo Marcobre">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-                <form>
-                    <div class="container pt-4 pb-4">
-                        <div class="custom-form w-100">
-                            <div class="detail-container col-12 mb-4">
-                                <div class="row mb-2">
-                                    <input type="hidden" id="Id_Involucrado" />
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <span class="text-danger" id="danger_involucrado"></span>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Tipo de Involucrado</label>
-                                        <select class="form-control" id="select_tipo_involucrado">
-                                            <option value="">--SELECCIONE--</option>
-                                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
-                                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
-                                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
-                                            <option value="Otro Involucrado">Otro Involucrado</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos</label>
-                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
-                                        <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
-                                        <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label id="label_doc_identidad" style="display:none">DNI/Pasaporte</label>
-                                        <input type="text" class="form-control" id="input_doc_identidad" style="display:none" maxlength="12" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label id="label_edad" style="display:none">Edad</label>
-                                        <input type="number" class="form-control" id="input_edad" min="0" max="99" style="display:none" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label id="label_puesto" style="display:none">Puesto de Trabajo</label>
-                                        <input type="text" class="form-control" id="input_puesto" style="display:none" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label id="label_empresa" style="display:none">Empresa:</label>
-                                        <input type="text" class="form-control" id="input_empresa" style="display:none" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="button-container">
-                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_involucrado">Guardar</button>
-                                        <button type="button" class="btn btn-mc-success" id="btn_editar_involucrado" style="display:none">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Nuevo Producto-->
-<div class="modal fade" id="modal_producto" tabindex="-1" aria-labelledby="titulo_modal_producto" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-menu modal-incidentes">
-            <div class="modal-content">
-                <div class="incidentes">
-                    <div class="image-header-container">
-                        <div class="header-title incidentes-opacity-color">
-                            <h3> Agregar Producto</h3>
-                            <img src="/img/logo-white.png" alt="Logo Marcobre">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-                <form>
-                    <div class="container pt-4 pb-4">
-                        <div class="custom-form w-100">
-                            <div class="detail-container col-12 mb-4">
-                                <div class="row mb-2">
-                                    <input type="hidden" id="Id_Producto" />
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <span class="text-danger" id="danger_productos"></span>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Producto</label>
-                                        <select class="form-control" id="select_producto" asp-items="@ViewBag.Productos">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Tipo de Producto</label>
-                                        <select class="form-control" id="select_tipo_producto" asp-items="@ViewBag.TiposProductos">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Estado del producto</label>
-                                        <select class="form-control" id="select_estado_producto">
-                                            <option value="">--SELECCIONE--</option>
-                                            <option value="Sólido">Sólido</option>
-                                            <option value="Líquido">Líquido</option>
-                                            <option value="Gaseoso">Gaseoso</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Cantidad derramada</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="number" class="form-control" id="input_cantidad_derramada" />
-                                    </div>
-                                    <div class="col-4">
-                                        <select class="form-control" id="select_cantidad_derramada" asp-items="@ViewBag.Unidad_Derramado">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Equipo(s) que originó u originaron el incidente</label>
-                                        <input type="text" class="form-control" id="input_equipo" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Estado del equipo después del incidente</label>
-                                        <select class="form-control" id="select_estado_equipo" asp-items="@ViewBag.EstadosEquipo">
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Cantidad producto recuperado</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="number" class="form-control" id="input_cantidad_recuperado" />
-                                    </div>
-                                    <div class="col-4">
-                                        <select class="form-control" id="select_cantidad_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                    </div>
-
-                                    <div class="col-12">
-                                        <label>Cantidad de producto no recuperado:</label>
-                                    </div>
-                                    <div class="col-8">
-                                        <input type="number" class="form-control" id="input_cantidad_no_recuperado" disabled />
-                                    </div>
-                                    <div class="col-4">
-                                        <select class="form-control" id="select_cantidad_no_recuperado" asp-items="@ViewBag.Unidad_Derramado" disabled>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="button-container">
-                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_producto">Guardar</button>
-                                        <button type="button" class="btn btn-mc-success" id="btn_editar_producto" style="display:none">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Nuevo Acciones Post Incidente-->
-<div class="modal fade" id="modal_accion" tabindex="-1" aria-labelledby="titulo_modal_accion" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-menu modal-incidentes">
-            <div class="modal-content">
-                <div class="incidentes">
-                    <div class="image-header-container">
-                        <div class="header-title incidentes-opacity-color">
-                            <h3>Agregar Acción Inmediata</h3>
-                            <img src="/img/logo-white.png" alt="Logo Marcobre">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-                <form>
-                    <div class="container pt-4 pb-4">
-                        <div class="custom-form w-100">
-                            <div class="detail-container col-12 mb-4">
-                                <div class="row mb-2">
-                                    <input type="hidden" id="Id_Accion" />
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <span class="text-danger" id="danger_accion"></span>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Tipo de Acción</label>
-                                        <select class="form-control" id="select_tipo_accion">
-                                            <option value="">--SELECCIONE--</option>
-                                            <option value="Acción Inmediata">Acción Inmediata</option>
-                                            <option value="Acción Correctiva">Acción Correctiva</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Descripción</label>
-                                        <textarea class="form-control" rows="2" id="input_descripcion_accion"></textarea>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Responsable Marcobre</label>
-                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Responsable Contratista</label>
-                                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Fecha</label>
-                                        <input type="date" class="form-control" id="input_fecha_accion" />
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Estatus</label>
-                                        <select class="form-control" id="select_estatus">
-                                            <option value="">--SELECCIONE--</option>
-                                            <option value="En Proceso">En Proceso</option>
-                                            <option value="Cerrado">Cerrado</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="button-container">
-                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_accion">Guardar</button>
-                                        <button type="button" class="btn btn-mc-success" id="btn_editar_accion" style="display:none">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Modal Nueva Causas-->
-<div class="modal fade" id="modal_causa" tabindex="-1" aria-labelledby="titulo_modal_causa" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-menu modal-incidentes">
-            <div class="modal-content">
-                <div class="incidentes">
-                    <div class="image-header-container">
-                        <div class="header-title incidentes-opacity-color">
-                            <h3> Agregar Causa del Incidente</h3>
-                            <img src="/img/logo-white.png" alt="Logo Marcobre">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-                <form>
-                    <div class="container pt-4 pb-4">
-                        <div class="custom-form w-100">
-                            <div class="detail-container col-12 mb-4">
-                                <div class="row mb-2">
-                                    <input type="hidden" id="Id_Causa" />
-                                    <div class="col-sm-12 col-md-12 col-lg-12">
-                                        <span class="text-danger" id="danger_causa"></span>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="col-12">
-                                        <label>Tipo de Causa del Incidente</label>
-                                        <select class="form-control" id="select_acto_condicion">
-                                            <option value="">--SELECCIONE--</option>
-                                            <optgroup label="Causas Inmediatas">
-                                                <option value="Acto">Acto Subestándar</option>
-                                                <option value="Condicion">Condición Subestándar</option>
-                                            </optgroup>
-                                            <optgroup label="Causas Básicas">
-                                                <option value="FactorP">Factor Personal</option>
-                                                <option value="FactorL">Factor Laboral</option>
-                                            </optgroup>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row input_container" id="actos_subestandar" style="display:none">
-                                    <div class="col-12">
-                                        <label>Acto Subestándar</label>
-                                        <select class="form-control" asp-items="@ViewBag.Actos" id="select_actos"></select>
-                                    </div>
-                                </div>
-                                <div class="row input_container" id="condiciones_subestandar" style="display:none">
-                                    <div class="col-12">
-                                        <label>Condición Subestándar</label>
-                                        <select class="form-control" asp-items="@ViewBag.Condiciones" id="select_condiciones"></select>
-                                    </div>
-                                </div>
-                                <div class="row input_container" id="factores_personales" style="display:none">
-                                    <div class="col-12">
-                                        <label>Factor Personal</label>
-                                        <select class="form-control" asp-items="@ViewBag.FactoresPersonales" id="select_factores_personales"></select>
-                                    </div>
-                                </div>
-                                <div class="row input_container" id="factores_laborales" style="display:none">
-                                    <div class="col-12">
-                                        <label>Factor Laboral</label>
-                                        <select class="form-control" asp-items="@ViewBag.FactoresLaborales" id="select_factores_laboral"></select>
-                                    </div>
-                                </div>
-                                <div class="row input_container" id="descripcion_causa" style="display:none">
-                                    <div class="col-12">
-                                        <label>Descripción</label>
-                                        <textarea type="text" class="form-control" id="input_descripcion_causa" maxlength="300" rows="3"></textarea>
-                                    </div>
-                                </div>
-                                <div class="row input_container">
-                                    <div class="button-container">
-                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_causa">Guardar</button>
-                                        <button type="button" class="btn btn-mc-success" id="btn_editar_causa" style="display:none">Aceptar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <!-- Modal Enviando Correo-->
 <div class="modal fade mc-modal" id="Modal_Enviando_Correo" tabindex="-1" aria-hidden="true" style="display: none;">
     <div class="modal-dialog modal-dialog-centered justify-content-center">
@@ -1312,12 +949,12 @@
 </div>
 @section Scripts{
     <script type="text/javascript">
-    var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
-    var nombresEvidencias = JSON.parse(nombresEvidenciasString);
-    var papeles = '@Html.Raw(Model.Evidencias_Completas_Papel)';
-    var personas = '@Html.Raw(Model.Evidencias_Completas_Persona)';
-    var posiciones = '@Html.Raw(Model.Evidencias_Completas_Posicion)';
-    var partes = '@Html.Raw(Model.Evidencias_Completas_Partes)';
+        var nombresEvidenciasString = '@Html.Raw(Model.Evidencias_Nombres)';
+        var nombresEvidencias = JSON.parse(nombresEvidenciasString);
+        var papeles = '@Html.Raw(Model.Evidencias_Completas_Papel)';
+        var personas = '@Html.Raw(Model.Evidencias_Completas_Persona)';
+        var posiciones = '@Html.Raw(Model.Evidencias_Completas_Posicion)';
+        var partes = '@Html.Raw(Model.Evidencias_Completas_Partes)';
         $(document).ready(function () {
 
             checkDataImpactoSuelo();
@@ -1332,106 +969,6 @@
             GetAcciones();
             let eliminar = $("#Estado").val() == "PendienteInvestigacion"
             CargarEvidencias(eliminar);
-            ////Papeles
-            //if (papeles.length > 0) {
-            //    var papeles_valores = JSON.parse(papeles.replace(/&quot;/g, '"'));
-            //    var html_papeles = "";
-            //    for (var i = 0; i < papeles_valores.length; i++) {
-            //        if ($("#Estado").val() == "PendienteInvestigacion")
-            //            html_papeles += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + papeles_valores[i] + "','Papel')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Papel " + (i + 1) + "</span></a></p>";
-            //        else
-            //            html_papeles += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + papeles_valores[i] + "&tipo=papel\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Papel " + (i + 1) + "</span></a></p>"
-            //    }
-            //    $("#Evidencias_Lista_Papel").html(html_papeles);
-            //    $("#Evidencias_Completas_Papel").val(papeles_valores);
-            //}
-            ////Personas
-            //if (personas.length > 0) {
-            //    var personas_valores = JSON.parse(personas.replace(/&quot;/g, '"'));
-            //    var html_personas = "";
-            //    for (var i = 0; i < personas_valores.length; i++)
-            //        if ($("#Estado").val() == "PendienteInvestigacion")
-            //            html_personas += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + personas_valores[i] + "','Persona')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Persona " + (i + 1) + "</span></a></p>";
-            //        else
-            //            html_personas += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + personas_valores[i] + "&tipo=persona\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Persona " + (i + 1) + "</span></a></p>";
-
-            //    $("#Evidencias_Lista_Persona").html(html_personas);
-            //    $("#Evidencias_Completas_Persona").val(personas_valores);
-            //}
-            ////Posiciones
-            //if (posiciones.length > 0) {
-            //    var posiciones_valores = JSON.parse(posiciones.replace(/&quot;/g, '"'));
-            //    var html_posiciones = "";
-            //    for (var i = 0; i < posiciones_valores.length; i++)
-            //        if ($("#Estado").val() == "PendienteInvestigacion")
-            //            html_posiciones += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + posiciones_valores[i] + "','Posicion')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Posición " + (i + 1) + "</span></a></p>";
-            //        else
-            //            html_posiciones += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + posiciones_valores[i] + "&tipo=posicion\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Posición " + (i + 1) + "</span></a></p>";
-
-            //    $("#Evidencias_Lista_Posicion").html(html_posiciones);
-            //    $("#Evidencias_Completas_Posicion").val(posiciones_valores);
-            //}
-            ////Partes
-            //if (partes.length > 0) {
-            //    var partes_valores = JSON.parse(partes.replace(/&quot;/g, '"'));
-            //    var html_partes = "";
-            //    for (var i = 0; i < partes_valores.length; i++)
-            //        if ($("#Estado").val() == "PendienteInvestigacion")
-            //            html_partes += "<p><img class=\"icon-btn\" src=\"../img/icons/cross.png\" onclick=EliminarEvidencia('" + partes_valores[i] + "','Parte')><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Parte " + (i + 1) + "</span></a></p>";
-            //        else
-            //            html_partes += "<p><a class=\"btn btn-mc-outline-success me-2\" href=\"/InvestigacionFinal/Download?fileName=" + partes_valores[i] + "&tipo=parte\"><svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "<path d=\"M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z\" fill=\"black\" />" +
-            //                "<path d=\"M14.3102 16.38L13.0002 17.64V12C13.0002 11.7348 12.8948 11.4804 12.7073 11.2929C12.5198 11.1054 12.2654 11 12.0002 11C11.735 11 11.4806 11.1054 11.2931 11.2929C11.1055 11.4804 11.0002 11.7348 11.0002 12V17.59L9.71019 16.29C9.61695 16.1968 9.50626 16.1228 9.38444 16.0723C9.26261 16.0219 9.13204 15.9959 9.00019 15.9959C8.86833 15.9959 8.73776 16.0219 8.61594 16.0723C8.49411 16.1228 8.38342 16.1968 8.29019 16.29C8.19695 16.3832 8.12299 16.4939 8.07253 16.6158C8.02207 16.7376 7.99609 16.8681 7.99609 17C7.99609 17.1319 8.02207 17.2624 8.07253 17.3842C8.12299 17.5061 8.19695 17.6168 8.29019 17.71L11.2902 20.71C11.3836 20.8027 11.4944 20.876 11.6163 20.9258C11.7381 20.9755 11.8686 21.0008 12.0002 21C12.2577 20.999 12.5048 20.8987 12.6902 20.72L15.6902 17.82C15.7963 17.7324 15.8832 17.6239 15.9455 17.5013C16.0077 17.3786 16.044 17.2444 16.052 17.107C16.0601 16.9697 16.0397 16.8322 15.9921 16.7031C15.9446 16.574 15.8709 16.4561 15.7757 16.3568C15.6805 16.2575 15.5659 16.1788 15.4389 16.1259C15.312 16.0729 15.1754 16.0466 15.0379 16.0488C14.9003 16.051 14.7647 16.0815 14.6395 16.1385C14.5143 16.1955 14.4022 16.2777 14.3102 16.38V16.38Z\" fill=\"black\" />" +
-            //                "</svg >" +
-            //                "<span>Descargar Evidencia Parte " + (i + 1) + "</span></a></p>";
-
-            //    $("#Evidencias_Lista_Partes").html(html_partes);
-            //    $("#Evidencias_Completas_Partes").val(partes_valores);
-            //}
         });
 
         function CargarEvidenciasSinNombre(tipo, evidencias, html, input, eliminar) {
@@ -1907,24 +1444,21 @@
         $("#ImpactoAmbiental_Cantidad_Residuo_Agua").on('change', function () {
             ActualizarResiduoSolido();
         });
-
         $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").on('change', function () {
             var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Flora").val();
             console.log(unidad);
             $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
-        })
-
+        });
         $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").on('change', function () {
             var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Fauna").val();
             console.log(unidad);
             $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
-        })
-
+        });
         $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").on('change', function () {
             var unidad = $("#ImpactoAmbiental_Id_Unidad_Residuo_Agua").val();
             console.log(unidad);
             $("#ImpactoAmbiental_Id_Unidad_Cantidad_RS").val(unidad);
-        })
+        });
         function ActualizarResiduoSolido() {
             var res_flora = $("#ImpactoAmbiental_Cantidad_Residuo_Flora").val();
             var res_fauna = $("#ImpactoAmbiental_Cantidad_Residuo_Fauna").val();
@@ -1936,7 +1470,6 @@
 
             $("#ImpactoAmbiental_Cantidad_RS").val(parseInt(res_flora) + parseInt(res_fauna) + parseInt(res_agua));
         }
-
         function checkDataImpactoSuelo() {
             var tipo = $("#ImpactoAmbiental_Id_Tipo_Suelo");
             var area = $("#ImpactoAmbiental_Area_Suelo")

@@ -34,5 +34,15 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
 
             return await _editarReportePreliminarReadOnlyRepository.EditarAccionCorrectivaReportePreliminar(accion);
         }
+
+        public async Task<int> Execute(int IdAccion, int IdReporte, string Estatus)
+        {
+            var accion = new Accion_Incidente_Reporte();
+            accion.Id_Accion_Incidente_Reporte = IdAccion;
+            accion.Id_Reporte_Preliminar = IdReporte;
+            accion.Estatus = Estatus;
+
+            return await _editarReportePreliminarReadOnlyRepository.EditarAccionCorrectivaReportePreliminar(accion);
+        }
     }
 }

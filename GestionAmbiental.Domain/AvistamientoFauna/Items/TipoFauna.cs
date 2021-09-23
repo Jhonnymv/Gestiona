@@ -8,6 +8,7 @@ namespace GestionAmbiental.Domain.AvistamientoFauna.Items
     {
         public int IdTipoFauna { get; set; }
         public string Descripcion { get; set; }
+        public string Foto { get; set; }
         public string Estado { get; set; }
     }
 }

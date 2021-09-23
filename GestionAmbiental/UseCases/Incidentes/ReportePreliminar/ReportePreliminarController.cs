@@ -35,6 +35,8 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.EliminarReportePreliminar;
+using GestionAmbiental.UseCases.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEvidenciasReporte;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 {
@@ -42,6 +44,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
 
+        private readonly IGetEvidenciasReporte _getEvidenciasReporte;
         private readonly IRegistrarParte1 _registrarReporteParte1;
         private readonly IRegistrarParte2 _registrarReporteParte2;
         private readonly IGetReportesPreliminares _getReportesPreliminares;
@@ -72,6 +75,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
 
         public ReportePreliminarController(
             IWebHostEnvironment hostingEnvironment,
+            IGetEvidenciasReporte getEvidenciasReporte,
             IRegistrarParte1 registrarReporteParte1,
             IRegistrarParte2 registrarReporteParte2,
             IGetReportesPreliminares getReportesPreliminares,
@@ -100,6 +104,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             IGetInfo_SGA info_SGA)
         {
             _hostingEnvironment = hostingEnvironment;
+            _getEvidenciasReporte = getEvidenciasReporte;
             _registrarReporteParte1 = registrarReporteParte1;
             _registrarReporteParte2 = registrarReporteParte2;
             _getReportesPreliminares = getReportesPreliminares;
@@ -611,26 +616,65 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         {
             if (ModelState.IsValid)
             {
-                var evidencias = new List<string>();
-                var max_file_size = 12000000;
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(model.Id_Reporte_Preliminar);
+                var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(nombresEvidencias);
 
+                var evidencias = new List<string>();
+                var evidenciasNombres = new List<NombreEvidencia>();
+                                
                 if (model.Evidencias != null)
                 {
                     for (int i = 0; i < model.Evidencias.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
+                        var max_file_size = 12000000;
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"};
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(i+1) + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1) + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                             evidencias.Add(filePath);
+
+                            evidenciasNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
                 }
-                await _registrarReporteParte2.Execute(model.Id_Reporte_Preliminar,model.Otra_Causa, model.Id_Gerencia_Responsable, evidencias, model.Comentario_Accion, model.Id_Supervisor, model.Opcion);
+                //var evidencias = new List<string>();
+                //var max_file_size = 12000000;
+
+                //if (model.Evidencias != null)
+                //{
+                //    for (int i = 0; i < model.Evidencias.Count; i++)
+                //    {
+                //        var extension = Path.GetExtension(model.Evidencias[i].FileName);
+
+                //        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"};
+
+                //        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                //        {
+                //            var newfileName = CreateUniqueFileName(i+1) + ".zip";
+                //            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
+                //            evidencias.Add(filePath);
+                //        }
+                //    }
+                //}
+                await _registrarReporteParte2.Execute(
+                    model.Id_Reporte_Preliminar,
+                    model.Otra_Causa,
+                    model.Id_Gerencia_Responsable,
+                    evidencias,
+                    JsonConvert.SerializeObject(evidenciasNombres),
+                    model.Comentario_Accion,
+                    model.Id_Supervisor,
+                    model.Opcion);
                 if (model.Opcion.Equals("Completar"))
                     return RedirectToAction("NotificarNuevoReporte", "NotificacionesReporteIncidente", new { IdReporte = model.Id_Reporte_Preliminar });
                 else
@@ -717,6 +761,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
 
                 var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
                 model.Id_Encriptado_Reporte_Preliminar = IdReporte;
                 model.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
@@ -745,6 +790,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 model.Comentario_Accion = reporte.Comentario_Accion;
                 model.Id_Supervisor = reporte.Id_Supervisor_MA;
                 model.Evidencias_Completas = reporte.Evidencia != null ? JsonConvert.SerializeObject(reporte.Evidencia) : null;
+                model.Evidencias_Nombres = nombresEvidencias;
                 model.Estado = reporte.Estado;
 
                 ViewBag.TieneInvestigacion = reporte.Investigacion;
@@ -756,29 +802,86 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         public async Task<IActionResult> EditarReportePreliminar(EditarReporteModel model) {
             if (ModelState.IsValid)
             {
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(model.Id_Reporte_Preliminar);
+                var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(nombresEvidencias);
+
                 var evidencias = new List<string>();
+                var evidenciasNombres = new List<NombreEvidencia>();
+
+                //Existen evidencias anteriores
+                if (model.Evidencias_Completas != null)
+                {
+                    var temp = new List<NombreEvidencia>();
+                    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+
+                    //Validar nombres archivos tiene categoria papel
+                    if (nombresArchivos.Count>0)
+                    {
+                        //Eliminar las evidencias que no se encuentre en la lista anterior
+                        temp = nombresArchivos.Where(x => evidencias.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene datos, agregar los existentes
+                        if (evidencias != null)
+                        {
+                            temp = evidencias.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    evidenciasNombres.AddRange(temp);
+                }
                 if (model.Evidencias != null)
-                {                       
+                {
                     for (int i = 0; i < model.Evidencias.Count; i++)
                     {
                         var extension = Path.GetExtension(model.Evidencias[i].FileName);
                         var max_file_size = 12000000;
 
-                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"};
+                        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG" };
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                         {
                             var newfileName = CreateUniqueFileName(i + 1) + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                             evidencias.Add(filePath);
+
+                            evidenciasNombres.Add(new NombreEvidencia
+                            {
+                                NombreOrigen = model.Evidencias[i].FileName,
+                                NombreCarga = filePath,
+                                ExtOrigen = Path.GetExtension(model.Evidencias[i].FileName),
+                                ExtCarga = Path.GetExtension(filePath)
+                            });
                         }
                     }
                 }
-                if(model.Evidencias_Completas != null)
-                {
-                    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
-                }
+                //if (model.Evidencias != null)
+                //{                       
+                //    for (int i = 0; i < model.Evidencias.Count; i++)
+                //    {
+                //        var extension = Path.GetExtension(model.Evidencias[i].FileName);
+                //        var max_file_size = 12000000;
 
+                //        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG"};
+
+                //        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                //        {
+                //            var newfileName = CreateUniqueFileName(i + 1) + ".zip";
+                //            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
+                //            evidencias.Add(filePath);
+                //        }
+                //    }
+                //}
+                //if(model.Evidencias_Completas != null)
+                //{
+                //    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+                //}
                 await _editarReportePreliminar.Execute(
                     model.Id_Reporte_Preliminar,
                     model.Num_Trabajadores,
@@ -803,6 +906,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     model.Otra_Causa_Incidente,
                     model.Id_Gerencia_Responsable,
                     evidencias,
+                    JsonConvert.SerializeObject(evidenciasNombres),
                     model.Comentario_Accion,
                     model.Id_Supervisor,
                     model.Opcion);

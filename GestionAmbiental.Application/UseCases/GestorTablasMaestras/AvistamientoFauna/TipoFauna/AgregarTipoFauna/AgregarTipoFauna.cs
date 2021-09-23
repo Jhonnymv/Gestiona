@@ -15,11 +15,12 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Avistamient
             _gestorTablasMaestrasReadOnlyRepository = gestorTablasMaestrasReadOnlyRepository ?? throw new ArgumentNullException(nameof(gestorTablasMaestrasReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string Descripcion)
+        public async Task<int> Execute(string Descripcion, string Foto)
         {
             var tipoFauna = new Domain.AvistamientoFauna.Items.TipoFauna()
             {
-                Descripcion = Descripcion
+                Descripcion = Descripcion,
+                Foto = Foto
             };
             return await _gestorTablasMaestrasReadOnlyRepository.AddTipoFauna(tipoFauna);
         }

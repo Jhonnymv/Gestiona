@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!-- Modal Nuevo Acciones Post Incidente-->
+<div class="modal fade" id="modal_accion" tabindex="-1" aria-labelledby="titulo_modal_accion" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-incidentes">
+            <div class="modal-content">
+                <div class="incidentes">
+                    <div class="image-header-container">
+                        <div class="header-title incidentes-opacity-color">
+                            <h3>Agregar Acción Inmediata</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row mb-2">
+                                    <input type="hidden" id="Id_Accion" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <span class="text-danger" id="danger_accion"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Tipo de Acción</label>
+                                        <select class="form-control" id="select_tipo_accion">
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="Acción Inmediata">Acción Inmediata</option>
+                                            <option value="Acción Correctiva">Acción Correctiva</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Descripción</label>
+                                        <textarea class="form-control" rows="2" maxlength="1000" id="input_descripcion_accion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Responsable Marcobre</label>
+                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios_accion"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Responsable Contratista</label>
+                                        <input type="text" class="form-control" id="input_contratista_accion" placeholder="Nombres y Apellidos" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Fecha</label>
+                                        <input type="date" class="form-control" id="input_fecha_accion" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Estatus</label>
+                                        <select class="form-control" id="select_estatus">
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="En Proceso">En Proceso</option>
+                                            <option value="Cerrado">Cerrado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_accion">Guardar</button>
+                                        <button type="button" class="btn btn-mc-success" id="btn_editar_accion" style="display:none">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

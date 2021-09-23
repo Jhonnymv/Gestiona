@@ -1279,6 +1279,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Add(new TipoFauna { 
                     IdTipoFauna = item.Id_Tipo_Fauna,
                     Descripcion = item.Descripcion, 
+                    Foto = item.Foto,
                     Estado = item.Estado 
                 });
             }
@@ -1292,6 +1293,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 IdTipoFauna = entity.Id_Tipo_Fauna,
                 Descripcion = entity.Descripcion,
+                Foto = entity.Foto,
                 Estado = entity.Estado
             };
             return output;
@@ -1301,6 +1303,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = new Entities.AvistamientoFauna.Tipo_Fauna
             {
                 Descripcion = tipoFauna.Descripcion,
+                Foto = tipoFauna.Foto,
                 Estado = "ACT"
             };
             _context.Tipos_Fauna.Add(entity);
@@ -1311,6 +1314,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = await _context.Tipos_Fauna.FirstOrDefaultAsync(x => x.Id_Tipo_Fauna.Equals(tipoFauna.IdTipoFauna));
             entity.Descripcion = tipoFauna.Descripcion;
+            entity.Foto = tipoFauna.Foto;
             entity.Estado = tipoFauna.Estado;
             _context.Tipos_Fauna.Update(entity);
             await _context.SaveChangesAsync();

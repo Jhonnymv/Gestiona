@@ -13,6 +13,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Avi
         public int Id_Tipo_Fauna { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Descripcion { get; set; }
+        [Column(TypeName = "text")]
+        public string Foto { get; set; }
         [Column(TypeName = "varchar(3)")]
         public string Estado { get; set; }
     }

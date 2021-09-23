@@ -156,7 +156,7 @@ $('#input_cantidad_recuperado').bind("keyup change", function () {
     var recuperado = $("#input_cantidad_recuperado").val();
     if (cantidad_derramada != "" && cantidad_derramada > 0)
         if (parseFloat(cantidad_derramada) - parseFloat(recuperado) >= 0)
-            $("#input_cantidad_no_recuperado").val(cantidad_derramada - recuperado)
+            $("#input_cantidad_no_recuperado").val((cantidad_derramada - recuperado).toFixed(recuperado.length >= 2 ? recuperado.length - 2 : 0))
         else {
             $("#input_cantidad_recuperado").val(0);
             $("#input_cantidad_no_recuperado").val(0);
@@ -172,7 +172,7 @@ $('#input_cantidad_derramada').bind("keyup change", function () {
             $("#input_cantidad_no_recuperado").val(0);
         }
         else {
-            $("#input_cantidad_no_recuperado").val(cantidad_derramada - recuperado)
+            $("#input_cantidad_no_recuperado").val((cantidad_derramada - recuperado).toFixed(recuperado.length>=2?recuperado.length-2:0))
         }
     }
 });

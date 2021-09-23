@@ -8,5 +8,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Acc
     public interface IEditarAccionIncidente
     {
         Task<int> Execute(int IdAccion, int IdReporte, string descripcion, int usuario, string contratista, string fecha, string estado);
+        Task<int> Execute(int IdAccion, int IdReporte, string Estatus);
     }
 }

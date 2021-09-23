@@ -15,7 +15,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public int? Id_Investigacion_Final { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Tipo_Accion { get; set; }
-        [Column(TypeName = "varchar(250)")]
+        [Column(TypeName = "varchar(1100)")]
         public string Accion_Inmediata { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Usuario { get; set; }

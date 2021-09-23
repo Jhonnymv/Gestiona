@@ -34,12 +34,20 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using Microsoft.AspNetCore.DataProtection;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.EliminarEvindenciaReportePreliminar;
 using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.GetEvidenciaReportePreliminar;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.GetEvidenciasReporte;
+using Serilog;
+using Microsoft.AspNetCore.Hosting;
+using GestionAmbiental.UseCases.Incidentes.InvestigacionFinal;
+using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.AgregarEvidenciaAccionReporte;
 
 namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
 {
     public class ReportePreliminarMAController : Controller
     {
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
         private readonly ISelectItems _selectItems;
+        private readonly IGetEvidenciasReporte _getEvidenciasReporte;
         private readonly IGetReportesPreliminaresMA _getReportesPreliminares;
         private readonly IGetReportePreliminar _getReportePreliminar;
         private readonly IGetEstadoReportePreliminar _getEstadoReportePreliminar;
@@ -62,11 +70,14 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         private readonly IRegistrarInvestigacionFinal _registrarInvestigacionFinal;
         private readonly IEliminarEvindenciaReportePreliminar _eliminarEvindenciaReportePreliminar;
         private readonly IGetEvidenciaReportePreliminar _getEvidenciaReportePreliminar;
+        private readonly IAgregarEvidenciaAccionReporte _agregarEvidenciaAccionReporte;
         private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IDataProtector _protector;
         public ReportePreliminarMAController(
-            ISelectItems selectItems,
+            IWebHostEnvironment hostingEnvironment,
+            ISelectItems selectItems, 
+            IGetEvidenciasReporte getEvidenciasReporte,
             IGetReportesPreliminaresMA getReportesPreliminares,
             IGetReportePreliminar getReportePreliminar,
             IGetEstadoReportePreliminar getEstadoReportePreliminar,
@@ -88,12 +99,15 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             IEditarReportePreliminar editarReportePreliminar,
             IRegistrarInvestigacionFinal registrarInvestigacionFinal,
             IEliminarEvindenciaReportePreliminar eliminarEvindenciaReportePreliminar,
-            IGetEvidenciaReportePreliminar getEvidenciaReportePreliminar,
+            IGetEvidenciaReportePreliminar getEvidenciaReportePreliminar, 
+            IAgregarEvidenciaAccionReporte agregarEvidenciaAccionReporte,
             IDataProtectionProvider dataProtectionProvider, 
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
+            _hostingEnvironment = hostingEnvironment;
             _selectItems = selectItems;
+            _getEvidenciasReporte = getEvidenciasReporte;
             _getReportesPreliminares = getReportesPreliminares;
             _getReportePreliminar = getReportePreliminar;
             _getEstadoReportePreliminar = getEstadoReportePreliminar;
@@ -116,6 +130,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             _registrarInvestigacionFinal = registrarInvestigacionFinal;
             _eliminarEvindenciaReportePreliminar = eliminarEvindenciaReportePreliminar;
             _getEvidenciaReportePreliminar = getEvidenciaReportePreliminar;
+            _agregarEvidenciaAccionReporte = agregarEvidenciaAccionReporte;
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.ReportePreliminarIdRouteValue);
         }
@@ -291,6 +306,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdReporte));
 
                 var reporte = await _getReportePreliminar.Execute(IdDesencriptado);
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(IdDesencriptado);
                 var model = new EditarReporteModel();
                 model.Id_Encriptado_Reporte_Preliminar = IdReporte;
                 model.Id_Reporte_Preliminar = reporte.Id_Reporte_Preliminar;
@@ -319,6 +335,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                 model.Comentario_Accion = reporte.Comentario_Accion;
                 model.Id_Supervisor = reporte.Id_Supervisor_MA;
                 model.Evidencias_Completas = reporte.Evidencia != null ? JsonConvert.SerializeObject(reporte.Evidencia) : null;
+                model.Evidencias_Nombres = nombresEvidencias;
                 model.Estado = reporte.Estado;
 
                 return View(model);
@@ -336,28 +353,87 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 if (ModelState.IsValid)
                 {
+                    var nombresEvidencias = await _getEvidenciasReporte.Execute(model.Id_Reporte_Preliminar);
+                    var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(nombresEvidencias);
+
                     var evidencias = new List<string>();
+                    var evidenciasNombres = new List<NombreEvidencia>();
+
+                    //Existen evidencias anteriores
+                    if (model.Evidencias_Completas != null)
+                    {
+                        var temp = new List<NombreEvidencia>();
+                        evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+
+                        //Validar nombres archivos tiene categoria papel
+                        if (nombresArchivos.Count > 0)
+                        {
+                            //Eliminar las evidencias que no se encuentre en la lista anterior
+                            temp = nombresArchivos.Where(x => evidencias.Contains(x.NombreCarga)).ToList();
+                        }
+                        else
+                        {
+                            //Nombres archivos no tiene datos, agregar los existentes
+                            if (evidencias != null)
+                            {
+                                temp = evidencias.Select(x => new NombreEvidencia
+                                {
+                                    NombreOrigen = x,
+                                    NombreCarga = x,
+                                    ExtOrigen = Path.GetExtension(x),
+                                    ExtCarga = Path.GetExtension(x)
+                                }).ToList();
+                            }
+                        }
+                        evidenciasNombres.AddRange(temp);
+                    }
                     if (model.Evidencias != null)
                     {
                         for (int i = 0; i < model.Evidencias.Count; i++)
                         {
                             var extension = Path.GetExtension(model.Evidencias[i].FileName);
-                            var max_file_size = 8388608;
+                            var max_file_size = 12000000;
 
-                            var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+                            var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG" };
 
                             if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
                             {
-                                var newfileName = CreateUniqueFileName(i+1) + ".zip";
+                                var newfileName = CreateUniqueFileName(i + 1) + ".zip";
                                 var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
                                 evidencias.Add(filePath);
+
+                                evidenciasNombres.Add(new NombreEvidencia
+                                {
+                                    NombreOrigen = model.Evidencias[i].FileName,
+                                    NombreCarga = filePath,
+                                    ExtOrigen = Path.GetExtension(model.Evidencias[i].FileName),
+                                    ExtCarga = Path.GetExtension(filePath)
+                                });
                             }
                         }
                     }
-                    if (model.Evidencias_Completas != null)
-                    {
-                        evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
-                    }
+                    //var evidencias = new List<string>();
+                    //if (model.Evidencias != null)
+                    //{
+                    //    for (int i = 0; i < model.Evidencias.Count; i++)
+                    //    {
+                    //        var extension = Path.GetExtension(model.Evidencias[i].FileName);
+                    //        var max_file_size = 8388608;
+
+                    //        var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG", ".xls", ".xlsx", ".doc", ".docx", ".pdf" };
+
+                    //        if (allowed_extensions.Contains(extension) && model.Evidencias[i].Length < max_file_size)
+                    //        {
+                    //            var newfileName = CreateUniqueFileName(i+1) + ".zip";
+                    //            var filePath = await UploadZipFileAsync(model.Evidencias[i], newfileName);
+                    //            evidencias.Add(filePath);
+                    //        }
+                    //    }
+                    //}
+                    //if (model.Evidencias_Completas != null)
+                    //{
+                    //    evidencias.AddRange(new List<string>(model.Evidencias_Completas.Split(',')));
+                    //}
                     await _editarReportePreliminar.Execute(
                         model.Id_Reporte_Preliminar,
                         model.Num_Trabajadores,
@@ -382,6 +458,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                         model.Otra_Causa_Incidente,
                         model.Id_Gerencia_Responsable,
                         evidencias,
+                        JsonConvert.SerializeObject(evidenciasNombres),
                         model.Comentario_Accion,
                         model.Id_Supervisor,
                         model.Opcion);
@@ -525,6 +602,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                 }
+                else if ((estadoReporte.Equals(EstadosIncidentes.Difundido.ToString()) || estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())) && fila.Estatus.Equals("En Proceso"))
+                {
+                    filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccionDifundido(" + fila.Id_Accion_Correctiva_Incidente + ",\'" + fila.Estatus + "\')\">Editar</button></td>";
+                }
                 filas_acciones += "</tr>";
             }
             dynamic response = new
@@ -563,6 +644,94 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         {
             await _editarAccionIncidente.Execute(IdAccion, IdReporte, descripcion, usuario, contratista, fecha, estado);
             return await ListarAcciones(IdReporte);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditarAccionDifundido(int IdAccion, int IdReporte, string Estatus, IFormFile Evidencia,string EvidenciasCompletas)
+        {
+            dynamic response;
+            try
+            {
+                await _editarAccionIncidente.Execute(IdAccion, IdReporte, Estatus);
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(IdReporte);
+                var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(nombresEvidencias);
+
+                var evidencias = new List<string>();
+                var evidenciasNombres = new List<NombreEvidencia>();
+
+                //Existen evidencias anteriores
+                if (EvidenciasCompletas != null)
+                {
+                    var temp = new List<NombreEvidencia>();
+                    evidencias.AddRange(new List<string>(EvidenciasCompletas.Split(',')));
+
+                    //Validar nombres archivos tiene categoria papel
+                    if (nombresArchivos.Count > 0)
+                    {
+                        //Eliminar las evidencias que no se encuentre en la lista anterior
+                        temp = nombresArchivos.Where(x => evidencias.Contains(x.NombreCarga)).ToList();
+                    }
+                    else
+                    {
+                        //Nombres archivos no tiene datos, agregar los existentes
+                        if (evidencias != null)
+                        {
+                            temp = evidencias.Select(x => new NombreEvidencia
+                            {
+                                NombreOrigen = x,
+                                NombreCarga = x,
+                                ExtOrigen = Path.GetExtension(x),
+                                ExtCarga = Path.GetExtension(x)
+                            }).ToList();
+                        }
+                    }
+                    evidenciasNombres.AddRange(temp);
+                }
+                if (Evidencia != null)
+                {
+                    var extension = Path.GetExtension(Evidencia.FileName);
+                    var max_file_size = 12582912;
+
+                    var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG" };
+
+                    if (allowed_extensions.Contains(extension) && Evidencia.Length < max_file_size)
+                    {
+                        var newfileName = CreateUniqueFileNameAccion() + ".zip";
+                        var filePath = await UploadZipFileAsync(Evidencia, newfileName);
+                        evidencias.Add(filePath);
+
+                        evidenciasNombres.Add(new NombreEvidencia
+                        {
+                            NombreOrigen = Evidencia.FileName,
+                            NombreCarga = filePath,
+                            ExtOrigen = Path.GetExtension(Evidencia.FileName),
+                            ExtCarga = Path.GetExtension(filePath)
+                        });
+                    }
+                }
+
+                var evidenciaAgregada = await _agregarEvidenciaAccionReporte.Execute(IdReporte, JsonConvert.SerializeObject(evidencias), JsonConvert.SerializeObject(evidenciasNombres));
+                if (evidenciaAgregada)
+                    response = new
+                    {
+                        success = true,
+                        nombresEvidencias = JsonConvert.SerializeObject(evidenciasNombres)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        message = "Error al agregar evidencia"
+                    };
+            }
+            catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = "Error al editar acción: "+e.Message
+                };
+            }
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> EliminarAccion(int IdAccion, int IdReporte)
@@ -632,12 +801,44 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         [HttpPost]
         public async Task<IActionResult> EliminarEvidencia(int IdReporte, string Evidencia)
         {
-            await _eliminarEvindenciaReportePreliminar.Execute(IdReporte,Evidencia);
-            var nueva_evidencia = await _getEvidenciaReportePreliminar.Execute(IdReporte);
-            dynamic response = new
+            dynamic response;
+            try
             {
-                evidencia = nueva_evidencia
-            };
+                var eliminado = await _eliminarEvindenciaReportePreliminar.Execute(IdReporte, Evidencia);
+                var nueva_evidencia = await _getEvidenciaReportePreliminar.Execute(IdReporte);
+                var nombresEvidencias = await _getEvidenciasReporte.Execute(IdReporte);
+                try
+                {
+                    if (eliminado)
+                        await DeleteFTPFileAsync(Evidencia);
+                }
+                catch (Exception e)
+                {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message + " - Archivo: " + Evidencia);
+                }
+                if (eliminado)
+                    response = new
+                    {
+                        success = true,
+                        nombresEvidencias = nombresEvidencias,
+                        evidencia = nueva_evidencia,
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        message = "No se eliminó la evidencia"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
             return Ok(response);
         }
 
@@ -645,6 +846,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
         private string CreateUniqueFileName(int index)
         {
             return "Ev_Inc_Rep_Pre" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")+"_"+index;
+        }
+        private string CreateUniqueFileNameAccion()
+        {
+            return "Ev_Inc_Rep_Pre_Accion_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss");
         }
         private string GetContentType(string path)
         {
@@ -931,6 +1136,33 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
             cs.Close();
             fsCrypt.Close();
 
+        }
+        private async Task DeleteFTPFileAsync(string filename)
+        {
+            Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncR;
+
+            var serverInfo = await _info_SGA.Execute(directorio);
+            string host = "", port = "", user = "", pass = "", dir = "";
+            foreach (var item in serverInfo.Info)
+            {
+                switch (item.Key)
+                {
+                    case "host": host = item.Value; break;
+                    case "port": port = item.Value; break;
+                    case "user": user = item.Value; break;
+                    case "password": pass = item.Value; break;
+                    case "directory": dir = item.Value; break;
+                }
+            }
+            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            {
+                sftp.Connect();
+                sftp.ChangeDirectory(dir);
+
+                sftp.DeleteFile(filename);
+
+                sftp.Dispose();
+            }
         }
     }
 }

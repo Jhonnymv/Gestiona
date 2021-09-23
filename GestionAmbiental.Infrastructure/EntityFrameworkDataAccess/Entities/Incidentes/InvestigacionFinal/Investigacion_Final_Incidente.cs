@@ -65,7 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public DateTime? Fecha_Inicio_Investigacion { get; set; }
         [Column(TypeName = "varchar(10)")]
         public string Turno { get; set; }
-        [Column(TypeName = "varchar(600)")]
+        [Column(TypeName = "varchar(1500)")]
         public string Descripcion_Incidente { get; set; }
         //Involucrados
         [Column(TypeName = "int")]

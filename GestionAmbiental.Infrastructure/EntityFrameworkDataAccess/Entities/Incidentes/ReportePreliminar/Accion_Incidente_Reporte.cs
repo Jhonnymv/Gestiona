@@ -13,7 +13,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public int Id_Accion_Incidente_Reporte { get; set; }
         [Column(TypeName = "int")]
         public int Id_Reporte_Preliminar { get; set; }
-        [Column(TypeName = "varchar(250)")]
+        [Column(TypeName = "varchar(1100)")]
         public string Accion_Inmediata { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Usuario { get; set; }

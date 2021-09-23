@@ -175,6 +175,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
             tabla += "<thead class=\"thead-mcolor\">";
             tabla += "<tr>";
             tabla += "<th>Descripción</th>";
+            tabla += "<th>Foto</th>";
             tabla += "<th>Estado</th>";
             tabla += "<th></th>";
             tabla += "</tr>";
@@ -191,6 +192,10 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                     //var IdEncriptado = _protector.Protect(fila.IdCabecera.ToString());
                     filasTabla += "<tr>";
                     filasTabla += "<td>" + fila.Descripcion + "</td>";
+                    if(fila.Foto!=null)
+                    filasTabla += "<td style=\"width:150px;\"><img src=\"" + Path.Combine(_hostingEnvironment.WebRootPath, fila.Foto) + "\" style =\"width:100%;height:auto\"/></td>";
+                    else
+                        filasTabla += "<td>Sin Imagen</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
                     filasTabla += "<td><a href=\"/GestorAvistamientoFauna/DetalleTipoFauna?IdTipoFauna=" + fila.IdTipoFauna + "\">Detalle</a></td>";
                     filasTabla += "</tr>";
@@ -243,6 +248,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 var model = new TipoFaunaModel();
                 model.IdTipoFauna = data.IdTipoFauna;
                 model.Descripcion = data.Descripcion;
+                model.RutaFoto = data.Foto;
                 model.Estado = data.Estado;
                 return View(model);
             }
@@ -261,7 +267,25 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 if (ModelState.IsValid)
-                    await _editarTipoFauna.Execute(model.IdTipoFauna, model.Descripcion, model.Estado);
+                    if (model.Foto != null && model.Foto.Length > 0)
+                    {
+                        if (model.RutaFoto != null)
+                        {
+                            var antiguaImagen = Path.Combine(_hostingEnvironment.WebRootPath, model.RutaFoto.Substring(1));
+                            if (System.IO.File.Exists(antiguaImagen))
+                            {
+                                System.IO.File.Delete(antiguaImagen);
+                            }
+                        }
+                        var extension = Path.GetExtension(model.Foto.FileName);
+
+                        var rutaNuevoArchivo = CargarImagen(model.Foto, model.Descripcion, model.Descripcion, extension).Result;
+                        await _editarTipoFauna.Execute(model.IdTipoFauna, model.Descripcion, rutaNuevoArchivo, model.Estado);
+                    }
+                    else
+                    {
+                        await _editarTipoFauna.Execute(model.IdTipoFauna, model.Descripcion, model.RutaFoto, model.Estado);
+                    }
                 return RedirectToAction("DetalleTipoFauna", new { IdTipoFauna = model.IdTipoFauna });
             }
         }
@@ -295,14 +319,21 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                 {
                     if (ModelState.IsValid)
                     {
-                        var idTipoFauna = await _agregarTipoFauna.Execute(model.Descripcion);
-                        return RedirectToAction("DetalleTipoFauna", new { IdTipoFauna = idTipoFauna });
+                        if (model.Foto != null && model.Foto.Length > 0)
+                        {
+                            var extension = Path.GetExtension(model.Foto.FileName);
+
+                            var rutaNuevoArchivo = CargarImagen(model.Foto, model.Descripcion, model.Descripcion, extension).Result;
+
+                            var idTipoFauna = await _agregarTipoFauna.Execute(model.Descripcion,rutaNuevoArchivo);
+
+                            return RedirectToAction("DetalleTipoFauna", new { IdTipoFauna = idTipoFauna });
+                        }
                     }
                     return RedirectToAction("AgregarTipoFauna");
                 }
             }
         }
-
         //Nombre Comun
         [HttpPost]
         public async Task<IActionResult> FiltrarNombreComun(string filtro, int pagina, int rpp)
@@ -483,6 +514,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.AvistamientoFauna
                             var rutaNuevoArchivo = CargarImagen(model.Foto, model.Descripcion, tipoFauna.Descripcion, extension).Result;
 
                             var idNombreComun = await _agregarNombreComun.Execute(model.Descripcion, model.IdTipoFauna, rutaNuevoArchivo);
+
                             return RedirectToAction("DetalleNombreComun", new { IdNombreComun = idNombreComun });
                         }
                     }

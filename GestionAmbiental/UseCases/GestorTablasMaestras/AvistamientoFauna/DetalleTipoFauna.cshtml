@@ -13,13 +13,30 @@
             </div>
         </div>
         <div class="container pt-4 pb-4">
-            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarTipoFauna">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorAvistamientoFauna" asp-action="EditarTipoFauna"method="post" enctype="multipart/form-data">
                 <input type="hidden" asp-for="IdTipoFauna" value="@Model.IdTipoFauna">
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
                         <label asp-for="Descripcion"></label>
                         <span class="text-danger" asp-validation-for="Descripcion"></span>
                         <input type="text" class="form-control" asp-for="Descripcion" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="RutaFoto"></label>
+                        <input type="hidden" asp-for="RutaFoto" value="@Model.RutaFoto" />
+                        <img src="@Model.RutaFoto" style="width:100%;height:auto" />
+                    </div>
+                    <div class="row input_container" id="seccion_foto" style="display:none;">
+                        <label asp-for="Foto"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <input type="file" class="form-control" asp-for="Foto" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                    </div>
+                    <div class="row input_container justify-content-center">
+                        <div class="col-lg-8 text-center">
+                            <img id="output_image" style="width:100%;height:auto" />
+                        </div>
                     </div>
                     <div class="row input_container">
                         <label asp-for="Estado"></label>
@@ -101,6 +118,7 @@
             $("#btnGuardar").prop('disabled', false);
             //Habilitar inputs
             $("#Descripcion").prop('disabled', false);
+            $("#seccion_foto").css('display', 'block');
             $("#Estado").prop('disabled', false);
         });
 
@@ -113,8 +131,17 @@
             $("#btnGuardar").prop('disabled', true);
             //Deshabilitar inputs
             $("#Descripcion").prop('disabled', true);
+            $("#seccion_foto").css('display', 'none');
             $("#Estado").prop('disabled', true);
         });
+        function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('output_image');
+                output.src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
     </script>
 }
 

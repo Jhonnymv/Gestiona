@@ -17,7 +17,15 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             _registrarReportePreliminarReadOnlyRepository = registrarReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarReportePreliminarReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int Id_Reporte_Preliminar,string Otra_Causa, int Id_Gerencia_Responsable, List<string> Evidencia, string Comentario_Accion, int Id_Supervisor_MA, string Opcion)
+        public async Task<int> Execute(
+            int Id_Reporte_Preliminar,
+            string Otra_Causa, 
+            int Id_Gerencia_Responsable, 
+            List<string> Evidencia,
+            string NombresEvidencias,
+            string Comentario_Accion,
+            int Id_Supervisor_MA, 
+            string Opcion)
         {
             var input = new Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente();
 
@@ -42,6 +50,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Reg
             }
 
             input.Evidencia = JsonConvert.SerializeObject(Evidencia);
+            input.NombresArchivos = NombresEvidencias;
             input.Comentario_Accion = Comentario_Accion;
 
             if(Id_Supervisor_MA != 0)

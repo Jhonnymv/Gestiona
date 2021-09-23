@@ -31,6 +31,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Edi
             string Otra_Causa_Incidente,
             int Id_Gerencia_Responsable,
             List<string> Evidencia,
+            string NombresEvidencias,
             string Comentario_Accion,
             int Id_Supervisor_MA,
             string Opcion);

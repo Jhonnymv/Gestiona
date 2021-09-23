@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if(reporte.Gerencia_Responsable != null)
                 entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable.IdGerencia;
             entity.Evidencia = reporte.Evidencia;
+            entity.Nombres_Archivos = reporte.NombresArchivos;
             entity.Comentario_Accion = reporte.Comentario_Accion;
             if(reporte.Supervisor_MA != null)
                 entity.Id_Supervisor_MA = reporte.Supervisor_MA.IdUsuario;
@@ -64,12 +66,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> EditarAccionCorrectivaReportePreliminar(Accion_Incidente_Reporte accion)
         {
             var entity = await _context.Accion_Incidente_Reporte.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Reporte.Equals(accion.Id_Accion_Incidente_Reporte));
-            entity.Accion_Inmediata = accion.Accion_Inmediata;
-            entity.Id_Usuario = accion.Id_Usuario;
-            entity.Responsable = accion.Responsable;
+            entity.Accion_Inmediata = accion.Accion_Inmediata != null ? accion.Accion_Inmediata : entity.Accion_Inmediata;
+            entity.Id_Usuario = accion.Id_Usuario != null ? accion.Id_Usuario : entity.Id_Usuario;
+            entity.Responsable = accion.Responsable != null ? accion.Responsable : entity.Responsable ;
             entity.Fecha = accion.Fecha != null ? accion.Fecha : entity.Fecha;
             entity.Estatus = accion.Estatus != null ? accion.Estatus : entity.Estatus;
-            entity.Estado = accion.Estado;
+            entity.Estado = accion.Estado != null ? accion.Estado : entity.Estado;
 
             _context.Accion_Incidente_Reporte.Update(entity);
 
@@ -109,7 +111,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Involucrado_Incidente_Reporte;
         }
-        public async Task EliminarEvidencia(int IdReportePreliminar, string NombreArchivo)
+        public async Task<bool> EliminarEvidencia(int IdReportePreliminar, string NombreArchivo)
         {
             var reporte = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(IdReportePreliminar));
             if (reporte != null && reporte.Evidencia!=null)
@@ -120,11 +122,35 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     temp.Add((string)evidencia);
                 }
-                temp.Remove(NombreArchivo);
-                reporte.Evidencia = JsonConvert.SerializeObject(temp);
+                if (temp.Remove(NombreArchivo))
+                {
+                    if (reporte.Nombres_Archivos != null)
+                    {
+                        var nombresArchivos = JsonConvert.DeserializeObject<List<NombreEvidencia>>(reporte.Nombres_Archivos);
+                        nombresArchivos.Remove(nombresArchivos.FirstOrDefault(x => x.NombreCarga.Equals(NombreArchivo)));
+                        reporte.Nombres_Archivos = JsonConvert.SerializeObject(nombresArchivos);
+                    }
+                    else
+                    {
+                        var nombresArchivos = temp.Select(x=> 
+                        new NombreEvidencia {
+                            NombreOrigen = x,
+                            NombreCarga = x,
+                            ExtOrigen = Path.GetExtension(x),
+                            ExtCarga = Path.GetExtension(x)
+                        });
+                    }
+                    reporte.Evidencia = JsonConvert.SerializeObject(temp);
+                }
+                else
+                    return false;
+
+
                 _context.Reporte_Preliminar_Incidente.Update(reporte);
                 await _context.SaveChangesAsync();
+                return true;
             }
+            return false;
         }
 
         public async Task<int> EliminarReportePreliminar(int IdReportePreliminar)
@@ -147,6 +173,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return entity.Id_Reporte_Preliminar;
+        }
+
+        public async Task<bool> EditarEvidenciasReporte(Reporte_Preliminar_Incidente input)
+        {
+            try
+            {
+                var entity = await _context.Reporte_Preliminar_Incidente.FirstOrDefaultAsync(x => x.Id_Reporte_Preliminar.Equals(input.Id_Reporte_Preliminar));
+                entity.Evidencia = input.Evidencia;
+                entity.Nombres_Archivos = input.NombresArchivos;
+
+                _context.Reporte_Preliminar_Incidente.Update(entity);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        public class NombreEvidencia
+        {
+            public string NombreOrigen { get; set; }
+            public string NombreCarga { get; set; }
+            public string ExtOrigen { get; set; }
+            public string ExtCarga { get; set; }
         }
     }
 }

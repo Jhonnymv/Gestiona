@@ -32,7 +32,7 @@
                         <input type="hidden" asp-for="RutaFoto" value="@Model.RutaFoto" />
                         <img src="@Model.RutaFoto" style="width:100%;height:auto" />
                     </div>
-                    <div class="row input_container">
+                    <div class="row input_container" id="seccion_foto" style="display:none;">
                         <label asp-for="Foto"></label>
                         <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
                             <span id="danger_evidencia" class=""></span>

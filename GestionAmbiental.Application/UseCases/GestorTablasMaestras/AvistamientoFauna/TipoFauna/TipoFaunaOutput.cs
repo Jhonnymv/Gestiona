@@ -8,12 +8,14 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Avistamient
     {
         public int IdTipoFauna { get; set; }
         public string Descripcion { get; set; }
+        public string Foto { get; set; }
         public string Estado { get; set; }
 
         public TipoFaunaOutput() { }
         public TipoFaunaOutput(Domain.AvistamientoFauna.Items.TipoFauna tipoFauna) {
             IdTipoFauna = tipoFauna.IdTipoFauna;
             Descripcion = tipoFauna.Descripcion;
+            Foto = tipoFauna.Foto;
             Estado = tipoFauna.Estado;
 
         }

@@ -566,7 +566,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var unidad_Volumen = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.Volumen.ToString()))
                     .Select(g => new SelectListItem() { Value = g.Id_Unidad_Medida.ToString(), Text = g.Descripcion }).ToList();
-                unidad_Peso.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                unidad_Volumen.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var unidad_Cantidad = items.ItemsUnidadMedida.Where(
                     x => x.Tipo.Equals(TiposUnidadMedida.Unidad.ToString()))
@@ -780,7 +780,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_involucrados += "<td>" + fila.Empresa + "</td>";
                     else
                         filas_involucrados += "<td>_</td>";
-                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
                         filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
@@ -847,7 +847,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
             var productos = await _getProductosDerramados.Execute(IdInvestigacion);
-            var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
+            var estadoInvestigacion = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_productos = "";
             if (productos.Count > 0)
             {
@@ -862,7 +862,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_productos += "<td>" + fila.Estado_Equipo_Responsable + "</td>";
                     filas_productos += "<td>" + fila.Cantidad_Recuperado + " " + fila.Unidad + "</td>";
                     filas_productos += "<td>" + fila.Cantidad_No_Recuperado + " " + fila.Unidad + "</td>";
-                    if (estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_productos += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Editar</button></td>";
                         filas_productos += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarProducto(" + fila.Id_Producto_Derramado_Incidente + ")\">Eliminar</button></td>";
@@ -962,7 +962,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_inmediatas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_inmediatas += "<td>_</td>";
-                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -979,7 +979,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_causas_basicas += "<td>" + fila.Descripcion + "</td>";
                     else
                         filas_causas_basicas += "<td>_</td>";
-                    if (estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP))
+                    if ((estadoInvestigacion.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                         filas_causas_basicas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
@@ -1114,10 +1114,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> ListarAcciones(int IdInvestigacion)
         {
-            var rolUsuario = "";
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-            rolUsuario = userInfo.Rol.ToString();
 
             var acciones = await _getAccionesIncidenteInvestigacion.Execute(IdInvestigacion);
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
@@ -1154,7 +1151,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_inmediatas += "<td>_</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_inmediatas += "<td>" + fila.Estatus + "</td>";
-                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(InspeccionRol.Admin.ToString()))
+                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_inmediatas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -1180,7 +1177,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_correctivas += "<td>_</td>";
                     filas_acciones_correctivas += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy") + "</td>";
                     filas_acciones_correctivas += "<td>" + fila.Estatus + "</td>";
-                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || rolUsuario.Equals(RSRoles.Admin.ToString()))
+                    if ((estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) && userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) || userInfo.Rol.Equals(InspeccionRol.Admin))
                     {
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                         filas_acciones_correctivas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -1261,7 +1258,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 catch(Exception e)
                 {
                     Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
-                    Log.Error(e.Message + " - Archivo: "+ Evidencia, " - Tipo: "+Tipo);
+                    Log.Error(e.Message + " - Archivo: "+ Evidencia + " - Tipo: "+Tipo);
                 }
                 if (eliminado)
                     response = new
@@ -1616,7 +1613,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         public async Task<IActionResult> EditarAdminInvestigacion(EditarInvestigacionModel model)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            if (userInfo.Rol.Equals(InspeccionRol.Admin) && model.Id_Supervisor!=0)
+            if (userInfo.Rol.Equals(InspeccionRol.Admin))
             {
                 var nombresEvidencias = await _getEvidenciasNombre.Execute(model.Id_Investigacion_Final);
 
@@ -1857,12 +1854,77 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 await _editarAdminInvestigacion.Execute(
                     model.Id_Investigacion_Final,
+                    model.Num_Trabajadores,
+                    model.Razon_Social_Contratista,
+                    model.RUC_Contratista,
+                    model.Actividad_Contratista,
+                    model.Domicilio_Contratista,
+                    model.Num_Trabajadores_Contratista,
+                    model.Razon_Social_SubContratista,
+                    model.RUC_SubContratista,
+                    model.Actividad_SubContratista,
+                    model.Domicilio_SubContratista,
+                    model.Num_Trabajadores_SubContratista,
+                    model.Id_Tipo_Incidente,
+                    model.Id_Nivel_Incidente,
+                    model.Lugar_Incidente,
+                    model.Coordenada_Este,
+                    model.Coordenada_Norte,
+                    model.Localidad,
+                    model.Distrito,
+                    model.Provincia,
+                    model.Departamento,
+                    model.Fecha_Incidente,
+                    model.Hora_Incidente,
+                    model.Fecha_Inicio_Investigacion,
+                    model.Turno,
+                    model.Descripcion_Incidente,
+                    model.Id_Gerencia_Responsable,
                     model.Id_Supervisor,
                     papeles,
                     personas,
                     posiciones,
                     partes,
-                    JsonConvert.SerializeObject(nombresArchivos));
+                    JsonConvert.SerializeObject(nombresArchivos),
+                    model.ImpactoAmbiental.Id_Impacto_Ambiental_Incidente,
+                    model.ImpactoAmbiental.Id_Tipo_Suelo,
+                    model.ImpactoAmbiental.Area_Suelo,
+                    model.ImpactoAmbiental.Id_Unidad_Area_Suelo,
+                    model.ImpactoAmbiental.Cantidad_Suelo,
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_Suelo,
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Suelo,
+
+                    model.ImpactoAmbiental.Id_Especie_Flora,
+                    model.ImpactoAmbiental.Unidad_Flora,
+                    model.ImpactoAmbiental.Id_Unidad_Flora,
+                    model.ImpactoAmbiental.Cantidad_Residuo_Flora,
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Flora,
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Flora,
+                    model.ImpactoAmbiental.Id_Especie_Fauna,
+                    model.ImpactoAmbiental.Unidad_Fauna,
+                    model.ImpactoAmbiental.Id_Unidad_Fauna,
+                    model.ImpactoAmbiental.Cantidad_Residuo_Fauna,
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Fauna,
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Fauna,
+
+                    model.ImpactoAmbiental.Id_Tipo_Agua,
+                    model.ImpactoAmbiental.Volumen_Agua,
+                    model.ImpactoAmbiental.Id_Unidad_Agua,
+                    model.ImpactoAmbiental.Cantidad_Residuo_Agua,
+                    model.ImpactoAmbiental.Id_Unidad_Residuo_Agua,
+                    model.ImpactoAmbiental.Id_Lugar_Disposicion_Agua,
+                    model.ImpactoAmbiental.Restos_Arq,
+                    model.ImpactoAmbiental.Nombre_Resto_Arq,
+                    model.ImpactoAmbiental.Cord_Este,
+                    model.ImpactoAmbiental.Cord_Norte,
+                    model.ImpactoAmbiental.Danio_Salud,
+                    model.ImpactoAmbiental.Personas_Afectadas,
+                    model.ImpactoAmbiental.Cantidad_RS,
+                    model.ImpactoAmbiental.Id_Unidad_Cantidad_RS,
+                    model.ImpactoAmbiental.Volumen_Rs,
+                    model.ImpactoAmbiental.Id_Unidad_Volumen_RS,
+                    model.ImpactoAmbiental.EO_RS
+                    );
             }
             return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(model.Id_Investigacion_Final.ToString()) });
         }

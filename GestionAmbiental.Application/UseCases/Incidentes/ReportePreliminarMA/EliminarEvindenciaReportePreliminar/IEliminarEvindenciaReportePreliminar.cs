@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.E
 {
     public interface IEliminarEvindenciaReportePreliminar
     {
-        Task Execute(int IdReporte, string NombreArchivo);
+        Task<bool> Execute(int IdReporte, string NombreArchivo);
     }
 }

@@ -78,7 +78,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             _info_SGA = info_SGA;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.AvistamientoFaunaIdRouteValue);
         }
-        public Task<IActionResult> PropiedadesModulo()
+        public IActionResult PropiedadesModulo()
         {
             dynamic response;
             try
@@ -249,8 +249,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             {
                 var tfDescripcion = tipoFauna.Descripcion.Replace(" ", String.Empty);
                 catalogo += "<a class='catalog-item' data-bs-toggle='modal' data-bs-target='#faunaModal" + tfDescripcion + "'>";
-                catalogo += "<div class='catalog-item-img'>";
-                catalogo += "<img src='/img/fauna" + tipoFauna.IdTipoFauna + ".png'>";
+                catalogo += "<div class='catalog-item-img' style='height : 100%;'>";
+                catalogo += "<img src='" + tipoFauna.Foto + "' alt='" + tipoFauna.Foto + "' style='height : 100%;'>";
                 catalogo += "</div>";
                 catalogo += "<div class='catalog-item-cover'>";
                 catalogo += "<span>" + tipoFauna.Descripcion + "</span>";
@@ -259,7 +259,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
 
                 catalogo += "<div class='modal fade' id='faunaModal" + tfDescripcion + "' tabindex='-1' aria-labelledby='faunaModal" + tfDescripcion + "' aria-hidden='true'>";
-                catalogo += "<div class='modal-dialog modal-lg modal-dialog-centered'>";
+                catalogo += "<div class='modal-dialog modal-xl modal-dialog-centered'>";
                 catalogo += "<div class='modal-menu modal-fauna'>";
                 catalogo += "<div class='modal-content'>";
                 catalogo += "<div class='fauna'>";
@@ -279,8 +279,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 foreach (var nombreComun in especiesPorTipo)
                 {
                     catalogo += "<a class='catalog-item'>";
-                    catalogo += "<div class='catalog-item-img'>";
-                    catalogo += "<img src='" + nombreComun.Foto + "' alt='" + nombreComun.Foto + "'>";
+                    catalogo += "<div class='catalog-item-img' style='height : 100%;'>";
+                    catalogo += "<img src='" + nombreComun.Foto + "' alt='" + nombreComun.Foto + "' style='height : 100%;' >";
                     catalogo += "</div>";
                     catalogo += "<div class='catalog-item-detail-cover'>";
                     catalogo += "<span>" + nombreComun.Descripcion + "</span>";
@@ -292,7 +292,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 catalogo += "</div>";
                 catalogo += "</div>";
                 catalogo += "<div class='modal-footer'>";
-                catalogo += "<button class='btn btn-mc' data-bs-dismiss='modal' aria-label='Close'>Cerrar</button>";
+                catalogo += "<button class='btn btn-mc-outline-danger' data-bs-dismiss='modal' aria-label='Close'>Cerrar</button>";
                 catalogo += "</div>";
                 catalogo += "</div>";
                 catalogo += "</div>";

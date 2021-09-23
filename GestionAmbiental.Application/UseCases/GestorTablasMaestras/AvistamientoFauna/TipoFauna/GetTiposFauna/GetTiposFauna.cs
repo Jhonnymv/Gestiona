@@ -26,6 +26,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Avistamient
                 var temp = new TipoFaunaOutput();
                 temp.IdTipoFauna = item.IdTipoFauna;
                 temp.Descripcion = item.Descripcion;
+                temp.Foto = item.Foto;
                 temp.Estado = item.Estado;
                 outputs.Add(temp);
             }
@@ -48,6 +49,7 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Avistamient
                 var temp = new TipoFaunaOutput();
                 temp.IdTipoFauna = item.IdTipoFauna;
                 temp.Descripcion = item.Descripcion;
+                temp.Foto = item.Foto;
                 temp.Estado = item.Estado;
                 outputs.Add(temp);
             }

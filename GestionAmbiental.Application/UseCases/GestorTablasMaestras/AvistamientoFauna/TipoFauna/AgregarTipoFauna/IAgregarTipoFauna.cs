@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.GestorTablasMaestras.Avistamient
 {
     public interface IAgregarTipoFauna
     {
-        Task<int> Execute(string Descripcion);
+        Task<int> Execute(string Descripcion,string Foto);
     }
 }

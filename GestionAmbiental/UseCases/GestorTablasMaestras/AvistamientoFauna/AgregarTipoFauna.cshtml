@@ -19,6 +19,18 @@
                         <span class="text-danger" asp-validation-for="Descripcion"></span>
                         <input type="text" class="form-control" asp-for="Descripcion">
                     </div>
+                    <div class="row input_container">
+                        <label asp-for="Foto"></label>
+                        <span class="text-danger field-validation-error" data-valmsg-for="Foto" data-valmsg-replace="true">
+                            <span id="danger_evidencia" class=""></span>
+                        </span>
+                        <input type="file" class="form-control" asp-for="Foto" accept=".jpg,.jpeg,.png" onchange="preview_image(event)">
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-lg-8">
+                            <img id="output_image" style="width:100%;height:auto" />
+                        </div>
+                    </div>
                     <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
                     <div class="row input_container">
                         <div class="button-container">
@@ -60,3 +72,14 @@
         </div>
     </div>*@
 
+
+<script type="text/javascript">
+    function preview_image(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('output_image');
+            output.src = reader.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

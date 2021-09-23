@@ -63,6 +63,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
         [DisplayName("Evidencias:")]
         public List<IFormFile> Evidencias { get; set; }
         public string Evidencias_Completas { get; set; }
+        public string Evidencias_Nombres { get; set; }
         public int NInvolucrados { get; set; }
         public int NAcciones { get; set; }
         public int NCausas { get; set; }

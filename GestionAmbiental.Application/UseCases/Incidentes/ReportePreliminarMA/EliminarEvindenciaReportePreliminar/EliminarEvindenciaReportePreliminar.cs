@@ -15,9 +15,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.E
             _editarReportePreliminarReadOnlyRepository = editarReportePreliminarReadOnlyRepository;
         }
 
-        public async Task Execute(int IdReporte, string NombreArchivo)
+        public async Task<bool> Execute(int IdReporte, string NombreArchivo)
         {
-            await _editarReportePreliminarReadOnlyRepository.EliminarEvidencia(IdReporte, NombreArchivo);
+            return await _editarReportePreliminarReadOnlyRepository.EliminarEvidencia(IdReporte, NombreArchivo);
         }
     }
 }

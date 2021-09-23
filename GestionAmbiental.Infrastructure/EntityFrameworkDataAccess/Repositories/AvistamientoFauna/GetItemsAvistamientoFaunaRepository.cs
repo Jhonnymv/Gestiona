@@ -156,6 +156,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     IdTipoFauna = item.Id_Tipo_Fauna,
                     Descripcion = item.Descripcion,
+                    Foto = item.Foto,
                     Estado = item.Estado
                 };
                 output.Add(outputItem);

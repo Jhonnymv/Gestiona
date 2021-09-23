@@ -1,0 +1,83 @@
+﻿<!-- Modal Nuevo Involucrado-->
+<div class="modal fade" id="modal_involucrado" tabindex="-1" aria-labelledby="titulo_modal_involucrado" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-menu modal-incidentes">
+            <div class="modal-content">
+                <div class="incidentes">
+                    <div class="image-header-container">
+                        <div class="header-title incidentes-opacity-color">
+                            <h3> Agregar involucrado</h3>
+                            <img src="/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form>
+                    <div class="container pt-4 pb-4">
+                        <div class="custom-form w-100">
+                            <div class="detail-container col-12 mb-4">
+                                <div class="row mb-2">
+                                    <input type="hidden" id="Id_Involucrado" />
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <span class="text-danger" id="danger_involucrado"></span>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label>Tipo de Involucrado</label>
+                                        <select class="form-control" id="select_tipo_involucrado">
+                                            <option value="">--SELECCIONE--</option>
+                                            <option value="Supervisor Inmediato (Titular Minero)">Supervisor Inmediato (Titular Minero)</option>
+                                            <option value="Supervisor Inmediato (Contratista)">Supervisor Inmediato (Contratista)</option>
+                                            <option value="Supervisor Marcobre">Supervisor Marcobre</option>
+                                            <option value="Otro Involucrado">Otro Involucrado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label id="label_nobmres_apellidos" style="display:none">Nombres y Apellidos</label>
+                                        <select class="form-control" asp-items="@ViewBag.Usuario" id="select_usuarios" style="display:none"></select>
+                                        <input type="text" class="form-control mb-2" id="input_nombres" style="display:none" placeholder="Nombres" />
+                                        <input type="text" class="form-control" id="input_apellidos" style="display:none" placeholder="Apellidos" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label id="label_doc_identidad" style="display:none">DNI/Pasaporte</label>
+                                        <input type="text" class="form-control" id="input_doc_identidad" style="display:none" maxlength="12" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label id="label_edad" style="display:none">Edad</label>
+                                        <input type="number" class="form-control" id="input_edad" min="0" max="99" style="display:none" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label id="label_puesto" style="display:none">Puesto de Trabajo</label>
+                                        <input type="text" class="form-control" id="input_puesto" style="display:none" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <label id="label_empresa" style="display:none">Empresa:</label>
+                                        <input type="text" class="form-control" id="input_empresa" style="display:none" />
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_involucrado">Guardar</button>
+                                        <button type="button" class="btn btn-mc-success" id="btn_editar_involucrado" style="display:none">Aceptar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -19,7 +19,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Tipo_Acto_Condicion { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Factor_Causa_Incidente { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "varchar(1100)")]
         public string Descripcion { get; set; }
         [Column(TypeName = "varchar(15)")]
         public string Estado { get; set; }

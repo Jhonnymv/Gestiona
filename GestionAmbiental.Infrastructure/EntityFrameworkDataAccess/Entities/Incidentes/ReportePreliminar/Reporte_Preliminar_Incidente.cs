@@ -47,7 +47,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public string Equipo_Involucrado { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Componente_Ambiental { get; set; }
-        [Column(TypeName = "varchar(600)")]
+        [Column(TypeName = "varchar(1500)")]
         public string Descripcion_Incidente { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Otra_Causa_Incidente { get; set; }

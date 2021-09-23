@@ -98,6 +98,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Id_Gerencia_Responsable = reporte.Gerencia_Responsable?.IdGerencia;
             entity.Otra_Causa_Incidente = reporte.Otra_Causa_Incidente;
             entity.Evidencia = reporte.Evidencia;
+            entity.Nombres_Archivos = reporte.NombresArchivos;
             entity.Comentario_Accion = reporte.Comentario_Accion;
             entity.Id_Supervisor_MA = reporte.Supervisor_MA?.IdUsuario;
             entity.Estado = reporte.Estado;

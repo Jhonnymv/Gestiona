@@ -1160,7 +1160,7 @@ input[type="file"]:hover::-webkit-file-upload-button {
 
 .catalog-item-img img{
     width: 100%;
-    object-fit: contain;
+    object-fit: fill;
 }
 
 .catalog-item-cover{

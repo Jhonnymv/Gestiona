@@ -45,6 +45,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Edi
             string Otra_Causa_Incidente,
             int Id_Gerencia_Responsable,
             List<string> Evidencia,
+            string NombresEvidencias,
             string Comentario_Accion,
             int Id_Supervisor_MA,
             string Opcion)
@@ -120,6 +121,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Edi
             }
 
             reporteDomain.Evidencia = JsonConvert.SerializeObject(Evidencia);
+            reporteDomain.NombresArchivos = NombresEvidencias;
             reporteDomain.Comentario_Accion = Comentario_Accion;
 
             if (Id_Supervisor_MA != 0)
