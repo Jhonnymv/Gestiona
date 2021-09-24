@@ -181,6 +181,18 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
             };
             return Ok(response);
         }
+        public IActionResult ImplementarRACNotificacion(int IdRAC)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdRAC=" + IdRAC });
+            }
+            else
+            {
+                return RedirectToAction("ImplementarRAC", new { IdRAC = _protector.Protect(IdRAC.ToString()) });
+            }
+        }
         public async Task<IActionResult> ImplementarRAC(string IdRAC)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

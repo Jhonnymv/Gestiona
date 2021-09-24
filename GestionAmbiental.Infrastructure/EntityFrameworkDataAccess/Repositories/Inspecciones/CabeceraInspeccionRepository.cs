@@ -51,9 +51,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 if (estadoFiltro.Count > 0)
                     observaciones = observaciones.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
             }
-            var cabecerasSinObs = cabeceras.Where(x =>!x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).OrderByDescending(x=>x.Fecha_Inspeccion).ToList();
+            //var cabecerasSinObs = cabeceras.Where(x =>!x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).OrderByDescending(x=>x.Fecha_Inspeccion).ToList();
             cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
-            cabeceras.InsertRange(0,cabecerasSinObs);
+           // cabeceras.InsertRange(0,cabecerasSinObs);
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();

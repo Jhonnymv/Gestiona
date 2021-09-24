@@ -525,6 +525,17 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 }
             }
         }
+        public IActionResult DetalleInvestigacionNotificacion(int IdInvestigacion)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdInvestigacion=" + IdInvestigacion });
+            }
+            else
+            {
+                return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = _protector.Protect(IdInvestigacion.ToString()) });
+            }
+        }
         public async Task<IActionResult> DetalleInvestigacion(string IdInvestigacion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

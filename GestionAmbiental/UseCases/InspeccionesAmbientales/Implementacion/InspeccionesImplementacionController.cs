@@ -170,6 +170,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
             };
             return Ok(response);
         }
+        public IActionResult ImplementarInspeccioNotificacion(int IdCabecera)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdCabecera=" + IdCabecera });
+            }
+            else
+            {
+                return RedirectToAction("ImplementarInspeccion", new { IdCabecera = _protector.Protect(IdCabecera.ToString()) });
+            }
+        }
         public async Task<IActionResult> ImplementarInspeccion(string IdCabecera)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

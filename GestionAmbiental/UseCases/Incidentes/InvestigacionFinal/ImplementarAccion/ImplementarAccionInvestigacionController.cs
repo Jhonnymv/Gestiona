@@ -38,7 +38,17 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
 
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InvestigacionIdRouteValue);
         }
-
+        public IActionResult ImplementarAccionNotificacion(int IdAccion)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAccion=" + IdAccion });
+            }
+            else
+            {
+                return RedirectToAction("ImplementarAccion", new { IdAccion = _protector.Protect(IdAccion.ToString()) });
+            }
+        }
         public async Task<IActionResult> ImplementarAccion(string IdAccion)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))

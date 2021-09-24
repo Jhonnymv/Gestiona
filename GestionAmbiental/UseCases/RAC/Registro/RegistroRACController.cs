@@ -344,6 +344,18 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
                 return RedirectToAction("NuevoRAC");
         }
+
+        public IActionResult DetalleRACNotificacion(int IdRAC)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdRAC=" + IdRAC });
+            }
+            else
+            {
+                return RedirectToAction("DetalleRAC", new { IdRAC = _protector.Protect(IdRAC.ToString()) });
+            }
+        }
         public async Task<IActionResult> DetalleRAC(string IdRAC)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
