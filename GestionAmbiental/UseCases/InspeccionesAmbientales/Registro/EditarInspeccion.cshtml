@@ -246,7 +246,7 @@
         var listObservaciones = [];
         var img_url = "";
         $(document).ready(function () {
-            if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()) || @(ViewBag.PermisosAdmin.ToString().ToLower())) {
+            if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower())) {
                 //disable inputs
                 $('#Id_Gerencia_Ejecutora').prop('disabled', false);
                 $('#Id_Empresa_Contratista').prop('disabled', false);
@@ -267,16 +267,17 @@
                 $("#Responsable_List_Group").show();
                 $("#Responsable_Text_Group").hide();
                 $("#Responsable_Inspeccion_List").val(JSON.parse(responsable_inspeccion));
-                if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()) || @(ViewBag.PermisosAdmin.ToString().ToLower())) 
-                    $('#Responsable_Inspeccion_List').prop('disabled', false);                            
+                if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
+                    $('#Responsable_Inspeccion_List').prop('disabled', false);
             }
             else {
                 $("#Responsable_List_Group").hide();
                 $("#Responsable_Text_Group").show();
                 $("#Responsable_Inspeccion_Text").val(responsable_inspeccion);
-                if ('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower()) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
+                if (('@Model.Estado' == "Pendiente" && @(ViewBag.Permiso.ToString().ToLower())) || @(ViewBag.PermisosAdmin.ToString().ToLower()))
                     $('#Responsable_Inspeccion_Text').prop('readonly', false);
             }
+            $('.selectpicker').selectpicker('refresh');
         });
         function isJson(str) {
             try {

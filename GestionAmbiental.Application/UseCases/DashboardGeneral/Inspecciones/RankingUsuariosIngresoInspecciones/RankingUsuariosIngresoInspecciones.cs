@@ -1,0 +1,24 @@
+﻿using GestionAmbiental.Application.Repositories.DashboardGeneral;
+using GestionAmbiental.Domain.DashboardGeneral.Inspecciones;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.RankingUsuariosIngresoInspecciones
+{
+    public class RankingUsuariosIngresoInspecciones : IRankingUsuariosIngresoInspecciones
+    {
+        private readonly IGetDataInspeccionesDashboardRepository _getDataDashboardRepository;
+
+        public RankingUsuariosIngresoInspecciones(IGetDataInspeccionesDashboardRepository getDataDashboardRepository)
+        {
+            _getDataDashboardRepository = getDataDashboardRepository ?? throw new ArgumentNullException(nameof(getDataDashboardRepository));
+        }
+
+        public async Task<InspeccionesMAPSSOOutput> Execute(int top)
+        {
+            return await _getDataDashboardRepository.RankingUsuariosIngresoInspecciones(top);
+        }
+    }
+}
