@@ -1,0 +1,382 @@
+﻿<div class="inspection mb-4">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title inspection-opacity-color">
+                <h3>Dashboard de Inspecciones</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <form autocomplete="off" class="custom-form w-100">
+                <div class="col-12 col-lg-9">
+                    <div class="col-12 mb-4">
+                        <div class="row">
+                            <h5 class="text-mc text-center">Filtros para Inspecciones</h5>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                            </div>
+                            <div class="col-12 col-md-6">
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                            </div>
+                            <div class="col-12 col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <h5 class="text-mc text-center">Filtro para Observaciones</h5>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                            </div>
+                            <div class="col-12 col-md-6">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 flex-column">
+                    <div class="row-center-center">
+                        <button type="button" class="btn btn-mc w-100" onclick="Filtrar()">Filtrar</button>
+                    </div>
+                    <div class="row-center-center">
+                        <button type="button" class="btn btn-mc-success w-100" onclick="DescargarObservaciones()">Descargar Observaciones</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Actos Subestándar - Condiciones Subestándar - Buenas Prácticas</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_acto_condicion_bp_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_acto_condicion_bp_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_acto_condicion_bp_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Condiciones Subestándar (Abierto - Cerrado -En Plazo)</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_condicion_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_condicion_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_condicion_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Top 10 Actos Subestándar Más Reportados</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_actos_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_top_actos_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_top_actos_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Top 10 Condición Subestándar Más Reportados</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_condicion_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_top_condicion_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_top_condicion_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Ranking De Gerencias que Ingresaron Inspecciones</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_ranking_ingreso_inspecciones_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_ingreso_inspecciones_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_ingreso_inspecciones_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Ranking De Gerencias que Tiene Observaciones Vencidas</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_ranking_obs_vencidas_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_obs_vencidas_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_obs_vencidas_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Ranking De Personas que Ingresaron Inspecciones</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_ranking_usuarios_ingreso_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_usuarios_ingreso_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_usuarios_ingreso_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Ranking De Personas con Observaciones Vencidas</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4" style="cursor: pointer">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">MAP</h6>
+                        </div>
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_ranking_usuarios_obs_vencido_map" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">SSO</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_usuarios_obs_vencido_sso" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="secondary-dashboard-item col-12 col-md-4 col-lg-4">
+                    <div class="secondary-content">
+                        <div>
+                            <h6 class="text-center">Todos</h6>
+                        </div>
+                        <div class="col-12">
+                            <canvas id="chart_ranking_usuarios_obs_vencido_todo" style="display: block; height: 350px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -2,8 +2,71 @@
     ViewData["Title"] = "Dashboard";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-@section Scripts{
-    <script type="text/javascript">
 
+
+<div class="mc_container">
+    <div class="menu_settings">
+        <ul class="nav nav-pills mb-3 div-scroll-horizontal justify-content-center" id="pills-tabs-configuration" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-inspections-tab" data-bs-toggle="pill" data-bs-target="#pills-inspections" type="button" role="tab" aria-controls="pills-inspections" aria-selected="true">Inspeccciones</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac" type="button" role="tab" aria-controls="pills-rac" aria-selected="false">Reporte de Acto y Condición Subestándar</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-residuos-tab" data-bs-toggle="pill" data-bs-target="#pills-residuos" type="button" role="tab" aria-controls="pills-residuos" aria-selected="false">Residuos Sólidos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-incidentes-tab" data-bs-toggle="pill" data-bs-target="#pills-incidentes" type="button" role="tab" aria-controls="pills-incidentes" aria-selected="false">Incidentes Ambientales</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-fauna-tab" data-bs-toggle="pill" data-bs-target="#pills-fauna" type="button" role="tab" aria-controls="pills-fauna" aria-selected="false">Avistamiento de Fauna</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-agua-tab" data-bs-toggle="pill" data-bs-target="#pills-agua" type="button" role="tab" aria-controls="pills-agua" aria-selected="false">Consumo de Agua</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-sga-tab" data-bs-toggle="pill" data-bs-target="#pills-sga" type="button" role="tab" aria-controls="pills-sga" aria-selected="false">SGA</button>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content container" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-inspections" role="tabpanel" aria-labelledby="pills-inspections-tab">
+            <partial name="../DashboardGeneral/VistasParciales/_InspeccionesDashboard.cshtml" />
+        </div>
+        <div class="tab-pane fade" id="pills-rac" role="tabpanel" aria-labelledby="pills-rac-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-residuos" role="tabpanel" aria-labelledby="pills-residuos-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-incidentes" role="tabpanel" aria-labelledby="pills-incidentes-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-fauna" role="tabpanel" aria-labelledby="pills-fauna-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-agua" role="tabpanel" aria-labelledby="pills-agua-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-sga" role="tabpanel" aria-labelledby="pills-sga-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-tablas" role="tabpanel" aria-labelledby="pills-tablas-tab">
+            <div class="content-settings">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralInspecciones.js"></script>
+    <script type="text/javascript">
+        $
     </script>
- }
+}

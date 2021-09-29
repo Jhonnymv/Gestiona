@@ -63,5 +63,85 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 return View();
             }
         }
+        [HttpPost]
+        public async Task<IActionResult> InspeccionesActoCondicionBP()
+        {
+            var data = await _inspeccionesActoCondicionBP.Execute();
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> InspeccionesEstadosCondicion()
+        {
+            var data = await _inspeccionesEstadosCondicion.Execute();
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RankingGerenciaObsVencidas()
+        {
+            var data = await _rankingGerenciaObsVencidas.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RankingGerenciaReportante()
+        {
+            var data = await _rankingGerenciaReportante.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RankingUsuariosIngresoInspecciones()
+        {
+            var data = await _rankingUsuariosIngresoInspecciones.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RankingUsuariosObsVencidas()
+        {
+            var data = await _rankingUsuariosObsVencidas.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> TopActosSubestandar()
+        {
+            var data = await _topActosSubestandar.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> TopCondicionesSubestandar()
+        {
+            var data = await _topCondicionesSubestandar.Execute(10);
+            dynamic response = new
+            {
+                data = data
+            };
+            return Ok(response);
+        }
     }
 }

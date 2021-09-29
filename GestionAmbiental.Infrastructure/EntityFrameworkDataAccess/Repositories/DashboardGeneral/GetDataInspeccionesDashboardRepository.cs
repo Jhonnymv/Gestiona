@@ -351,7 +351,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var inspeccionesMAP = inspeccionesAct
                 .Where(x => observacionesMAP.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .GroupBy(x=>x.Id_Gerencia)
-                .OrderBy(x=>x.Count())
+                .OrderByDescending(x=>x.Count())
                 .ToList();
 
             for (int i = 0; i < (topLimit < inspeccionesMAP.Count ? topLimit : inspeccionesMAP.Count); i++)
@@ -364,7 +364,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var inspeccionesSSO = inspeccionesAct
                 .Where(x => observacionesSSO.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
                 .GroupBy(x => x.Id_Gerencia)
-                .OrderBy(x => x.Count())
+                .OrderByDescending(x => x.Count())
                 .ToList();
 
             for (int i = 0; i < (topLimit < inspeccionesSSO.Count ? topLimit : inspeccionesSSO.Count); i++)
@@ -376,7 +376,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var outputTodos = new List<Dimension>();
             var inspeccionesTodos = inspeccionesAct
                 .GroupBy(x => x.Id_Gerencia)
-                .OrderBy(x => x.Count())
+                .OrderByDescending(x => x.Count())
                 .ToList();
 
             for (int i = 0; i < (topLimit < inspeccionesTodos.Count ? topLimit : inspeccionesTodos.Count); i++)
