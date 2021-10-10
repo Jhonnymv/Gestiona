@@ -425,7 +425,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     filas_involucrados += "<td>" + fila.Turno+ "</td>";
                 else
                     filas_involucrados += "<td>_</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()))
+                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                 {
                     filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Editar</button></td>";
                     filas_involucrados += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarInvolucrado(" + fila.Id_Involucrado_Incidente + ")\">Eliminar</button></td>";
@@ -502,7 +502,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                     filas_acciones += "<td>_</td>";
                 filas_acciones += "<td>" + fila.Fecha.Value.Date.ToString("dd/MM/yyyy")+ "</td>";
                 filas_acciones += "<td>" + fila.Estatus + "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()))
+                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                 {
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
@@ -566,7 +566,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 filas_causas += "<tr>";
                 filas_causas += "<td>" + fila.Tipo_Acto_Condicion + "</td>";
                 filas_causas += "<td>" + fila.Acto_Condicion + "</td>";
-                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()))
+                if (estadoReporte.Equals(EstadosIncidentes.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
                 {
                     filas_causas += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarCausa(" + fila.Id_Causa_Incidente + ")\">Editar</button></td>";
                     filas_causas += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarCausa(" + fila.Id_Causa_Incidente + ")\">Eliminar</button></td>";
