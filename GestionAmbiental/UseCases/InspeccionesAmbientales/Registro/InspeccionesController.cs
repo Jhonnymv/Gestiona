@@ -499,6 +499,22 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         //filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + observacion.IdInspeccionCabecera + "\">" + "Eliminar" + "</a></td>";
                         else
                             filaObservacion += "<td></td>";
+
+                        switch (observacion.Estado)
+                        {
+                            case "Aprobado": 
+                                filaObservacion += "<td><span class=\"badge bg-success\">Aprobado</span></td>"; break;
+                            case "Vencido":
+                                filaObservacion += "<td><span class=\"badge bg-danger\">Vencido</span></td>"; break;
+                            case "Implementado":
+                                filaObservacion += "<td><span class=\"badge bg-info\">Pendiente de<br/>Verificación</span></td>"; break;
+                            default:
+                            //case "Rechazado":
+                            //case "Ampliado": 
+                            //case "Registrado":
+                                filaObservacion += "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
+                        }
+
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
                         filaObservacion += "<td>" + observacion.AsesorMASeguridad + "</td>";
                         filaObservacion += "<td>" + observacion.DescripcionCondicion + "</td>";

@@ -223,13 +223,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                             (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()) && !observacion.DescripcionCondicion.Equals("Buenas Prácticas"))) &&
                             observacion.PermisosImplementar)                        
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"ImplementarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Implementar" + "</button></td>";
-                        
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
-                                observacion.PermisosImplementar)                        
-                            filaObservacion += "<td><span class=\"badge bg-warning\">Vencido</span></td>";        
-                        
                         else
-                            filaObservacion += "<td></td>";        
+                        {
+                            switch (observacion.Estado)
+                            {
+                                case "Aprobado":
+                                    filaObservacion += "<td><span class=\"badge bg-success\">Aprobado</span></td>"; break;
+                                case "Vencido":
+                                    filaObservacion += "<td><span class=\"badge bg-danger\">Vencido</span></td>"; break;
+                                case "Implementado":
+                                    filaObservacion += "<td><span class=\"badge bg-info\">Pendiente de<br/>Verificación</span></td>"; break;
+                                default:
+                                    //case "Rechazado":
+                                    //case "Ampliado": 
+                                    //case "Registrado":
+                                    filaObservacion += "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
+                            }
+                        }
+                        //else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
+                        //        observacion.PermisosImplementar)                        
+                        //    filaObservacion += "<td><span class=\"badge bg-danger\">Vencido</span></td>";        
+                        
+                        //else
+                        //    filaObservacion += "<td></td>";        
 
                         filaObservacion += "<td style=\"display: none; \">" + observacion.IdInspeccionDetalle + "</td>";
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
@@ -253,30 +269,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
-                        if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString())) &&
-                            observacion.PermisosAsesor)
-                        {
-                            filaObservacion += "<td><span class=\"badge bg-secondary\">Pendiente</span></td>";
-                        }
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&
-                            observacion.PermisosAsesor)
-                        {
-                            filaObservacion += "<td><span class=\"badge bg-warning\">Vencido</span></td>";
-                        }
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Aprobado.ToString()))
-                            filaObservacion += "<td><span class=\"badge bg-success\">Aprobado</span></td>";
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
-                        {
-                            filaObservacion += "<td><span class=\"badge bg-danger\">Rechazado</span></td>";
-                        }
-                        else if (observacion.Estado.Equals(EstadosInspeccion.Implementado.ToString()))
-                        {
-                            filaObservacion += "<td><span class=\"badge bg-info\">Implementado</span></td>";
-                        }
-                        else
-                        {
-                            filaObservacion += "<td><span class=\"badge bg-secondary\">Pendiente</span></td>";
-                        }
+                        
                         filaObservacion += "</tr>";
                     }
                     var jsonObservaciones = JsonConvert.SerializeObject(observaciones.Select(x => new
