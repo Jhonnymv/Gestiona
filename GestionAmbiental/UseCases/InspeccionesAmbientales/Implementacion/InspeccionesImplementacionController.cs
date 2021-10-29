@@ -237,7 +237,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                                     //case "Rechazado":
                                     //case "Ampliado": 
                                     //case "Registrado":
-                                    filaObservacion += "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
+                                    filaObservacion += observacion.DescripcionCondicion.Equals("Buenas Prácticas") ? "<td><span class=\"badge bg-danger\">Rechazado</span></td>" : "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
                             }
                         }
                         //else if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) &&

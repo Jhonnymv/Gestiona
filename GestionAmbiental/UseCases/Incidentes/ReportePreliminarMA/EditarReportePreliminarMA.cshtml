@@ -651,7 +651,7 @@
                                 <div class="row input_container">
                                     <div class="button-container">
                                         <button type="button" class="btn btn-mc-outline-danger me-2" data-bs-dismiss="modal">Cancelar</button>
-                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_editar_accion" onclick="EditarAccion()">Guardar</button>
+                                        <button type="button" class="btn btn-mc me-2" id="btn_guardar_editar_accion" onclick="EditarAccionPostDifusion()">Guardar</button>
                                     </div>
                                 </div>
                             </div>
@@ -1103,7 +1103,7 @@
             $("#select_editar_estatus").val(Status);
             $("#modal_editar_accion").modal("show");
         }
-        function EditarAccion() {
+        function EditarAccionPostDifusion() {
             //Agregar Validación y msgs
             var idAccion = $("#id_editar_accion").val();
             var estatus = $("#select_editar_estatus").val();
@@ -1163,7 +1163,6 @@
                         case 'jpg':
                         case 'jpeg':
                         case 'png':
-                            filesName += archivos[i].name + "<br/>";
                             break;
                         default:
                             this.value = '';

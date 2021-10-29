@@ -22,5 +22,9 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
         public int IdAsesor { get; set; }
         [DisplayName("Responsable de Marcobre para levantar Obs.:")]
         public int IdRespLev { get; set; }
+        [DisplayName("Gerencia Inspeccionada:")]
+        public int IdGerenciaInspeccionada { get; set; }
+        [DisplayName("Estado:")]
+        public string Estado { get; set; }
     }
 }

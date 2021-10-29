@@ -22,6 +22,8 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
             string Responsable_Contratista,
             string Correo_Contratista,
             string Fecha_Programada,
-            string usuario_red);
+            string usuario_red,
+            bool Cambio_Fecha_Vencida
+            );
     }
 }

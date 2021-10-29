@@ -114,25 +114,51 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                     ViewBag.Rol = userInfo.Rol.ToString();
 
                     var info = (Tipo_Info_SGA)Enum.ToObject(typeof(Tipo_Info_SGA), IdInfo);
-                    var data = await _getInfo_SGA.ExecuteLDAPConnection(info);
-                    var infoJson = "";
-                    infoJson = JsonConvert.SerializeObject(data);
-                    //infoJson += "{";
-                    //foreach (var item in data.Info)
-                    //{
-                    //    infoJson += "\"" + item.Key + "\"";
-                    //    infoJson += ":\"" + item.Value + "\",";
-
-                    //}
-                    //infoJson = infoJson.Remove(infoJson.Length - 1);
-                    //infoJson += "}";
-                    var model = new Info_SGAModel
+                    if (info.Equals(Tipo_Info_SGA.LDAPConnection))
                     {
-                        IdInfo = data.IdInfo,
-                        Info = infoJson,
-                        Tipo = data.Tipo
-                    };
-                    return View(model);
+                        var data = await _getInfo_SGA.ExecuteLDAPConnection(info);
+                        var infoJson = "";
+                        infoJson = JsonConvert.SerializeObject(data);
+                        //infoJson += "{";
+                        //foreach (var item in data.Info)
+                        //{
+                        //    infoJson += "\"" + item.Key + "\"";
+                        //    infoJson += ":\"" + item.Value + "\",";
+
+                        //}
+                        //infoJson = infoJson.Remove(infoJson.Length - 1);
+                        //infoJson += "}";
+                        var model = new Info_SGAModel
+                        {
+                            IdInfo = data.IdInfo,
+                            Info = infoJson,
+                            Tipo = data.Tipo
+                        };
+                        return View(model);
+                    }
+                    else
+                    {
+                        var data = await _getInfo_SGA.Execute(info);
+                        var infoJson = "";
+                        infoJson = JsonConvert.SerializeObject(data);
+                        //infoJson += "{";
+                        //foreach (var item in data.Info)
+                        //{
+                        //    infoJson += "\"" + item.Key + "\"";
+                        //    infoJson += ":\"" + item.Value + "\",";
+
+                        //}
+                        //infoJson = infoJson.Remove(infoJson.Length - 1);
+                        //infoJson += "}";
+                        var model = new Info_SGAModel
+                        {
+                            IdInfo = data.IdInfo,
+                            Info = infoJson,
+                            Tipo = data.Tipo
+                        };
+                        return View(model);
+
+                    }
                 }
             }
         }

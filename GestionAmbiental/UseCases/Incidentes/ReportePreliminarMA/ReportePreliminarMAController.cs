@@ -602,9 +602,9 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminarMA
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Editar</button></td>";
                     filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc-danger\" onclick=\"EliminarAccion(" + fila.Id_Accion_Correctiva_Incidente + ")\">Eliminar</button></td>";
                 }
-                else if ((estadoReporte.Equals(EstadosIncidentes.Difundido.ToString()) || estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())) && fila.Estatus.Equals("En Proceso"))
+                if ((estadoReporte.Equals(EstadosIncidentes.Difundido.ToString()) || estadoReporte.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())) && fila.Estatus.Equals("En Proceso"))
                 {
-                    filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccionDifundido(" + fila.Id_Accion_Correctiva_Incidente + ",\'" + fila.Estatus + "\')\">Editar</button></td>";
+                    filas_acciones += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarAccionDifundido(" + fila.Id_Accion_Correctiva_Incidente + ",\'" + fila.Estatus + "\')\">Cerrar Acción</button></td>";
                 }
                 filas_acciones += "</tr>";
             }

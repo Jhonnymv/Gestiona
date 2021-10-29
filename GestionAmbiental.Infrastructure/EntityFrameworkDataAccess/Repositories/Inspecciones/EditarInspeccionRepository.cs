@@ -70,7 +70,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Responsable_Contratista = detalleEntity.Responsable_Contratista == detalle.ResponsableContratista ? detalleEntity.Responsable_Contratista : detalle.ResponsableContratista;
             detalleEntity.Correo_Contratista = detalleEntity.Correo_Contratista == detalle.CorreoContratista ? detalleEntity.Correo_Contratista : detalle.CorreoContratista;
             detalleEntity.Fecha_Programada = detalle.FechaProgramada;
-            detalleEntity.Estado = detalle.Estado;
+            detalleEntity.Estado = detalle.Estado ?? detalleEntity.Estado;
 
             _context.Inspecciones_Detalle.Update(detalleEntity);
             await _context.SaveChangesAsync();

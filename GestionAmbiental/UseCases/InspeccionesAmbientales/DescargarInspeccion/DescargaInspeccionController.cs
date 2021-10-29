@@ -225,7 +225,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }
-        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin)
+        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin,string estado, int idGerenciaInspeccionada)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -236,7 +236,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin);
+                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin,estado,idGerenciaInspeccionada);
                 var observaciones = new List<ObservacionReporte>();
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
                 string sFileName = @"DescargaObservacionesInspección.xlsx";
@@ -280,27 +280,27 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 foreach (var inspeccion in inspecciones)
                     foreach (var observacion in inspeccion.Observaciones)
                     {
-                        var estado = "";
+                        var estadoObs = "";
                         switch (observacion.Estado)
                         {
                             case "Registrado":
                             case "Ampliado":
-                                estado = "Pendiente de Implementación";
+                                estadoObs = "Pendiente de Implementación";
                                 break;
                             case "Implementado":
-                                estado = "Pendiente de Verificación";
+                                estadoObs = "Pendiente de Verificación";
                                 break;
                             case "Vencido":
-                                estado = "Vencido";
+                                estadoObs = "Vencido";
                                 break;
                             case "Aprobado":
-                                estado = "Aprobado";
+                                estadoObs = "Aprobado";
                                 break;
                             case "Rechazado":
                                 if (observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
-                                    estado = "Rechazado";
+                                    estadoObs = "Rechazado";
                                 else
-                                    estado = "Pendiente de Implementación";
+                                    estadoObs = "Pendiente de Implementación";
                                 break;
                         }
                         observaciones.Add(new ObservacionReporte
@@ -316,7 +316,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "No Aplica",
                             EvidenciaImplementacion = observacion.EvidenciaImplementacion,
                             FechaCierre = observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "No Aplica",
-                            Estado = estado,
+                            Estado = estadoObs,
                             ResponsableInspeccion = inspeccion.ResponsableInspeccion,
                             FechaInspeccion = inspeccion.FechaInspeccion.ToString("dd/MM/yyyy"),
                             RiesgoFatalidad = "",

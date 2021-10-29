@@ -10,6 +10,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
     {
         Task<List<InspeccionDetalle>> GetInspeccionDetalles(int idCabecera);
         Task<InspeccionDetalle> GetInspeccionDetalle(int idDetalle);
-        Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin);
+        Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada);
     }
 }

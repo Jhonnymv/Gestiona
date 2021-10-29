@@ -119,10 +119,20 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
                 filtroAsesor.AddRange(itemsFiltro.AsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoSSO }).ToList());
                 filtroAsesor.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var filtroEstados = new List<SelectListItem> {
+                    new SelectListItem("--SELECCIONE--", "", true),
+                    new SelectListItem("Pendiente de Implementación", "Pendiente", false),
+                    new SelectListItem("Pendiente de Verificación", "Verificacion", false),
+                    new SelectListItem("Vencido", "Vencido", false),
+                    new SelectListItem("Aprobado", "Aprobado", false),
+                    new SelectListItem("Rechazado (Buenas Prácticas)", "Rechazado", false)
+                };
+
                 ViewBag.FiltroEmpresas = filtroEmpresas;
                 ViewBag.FiltroGerencias = filtroGerencias;
                 ViewBag.FiltroRespLevObs = filtroRespLevObs;
                 ViewBag.FiltroAsesor = filtroAsesor;
+                ViewBag.FiltroEstados = filtroEstados;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -277,7 +287,7 @@ namespace GestionAmbiental.UseCases.Reportes.Inspecciones
             }
         }
         [HttpPost]
-         public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp)
+        public async Task<IActionResult> GetTablaObservacionesxEstado(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado,int pag,int rpp)
         {
             var data = await _getDetalleObsxEstado.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado);
             data = data.OrderByDescending(x => x.Codigo).ToList();

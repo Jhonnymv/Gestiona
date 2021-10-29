@@ -45,5 +45,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public string E_CorreoCont { get; set; }
         [DisplayName("Fecha Programada para levantar Obs.")]
         public string E_FechaProgramada { get; set; }
+        public string E_Estado { get; set; }
+        public bool E_CambioFechaVencida { get; set; }
     }
 }

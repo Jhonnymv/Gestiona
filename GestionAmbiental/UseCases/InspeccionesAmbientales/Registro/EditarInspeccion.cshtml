@@ -792,6 +792,8 @@
         ReiniciarModalEditarObs();
         if (data != null) {
             $("#E_IdObservacion").val(data.IdObservacion);
+            $("#E_Estado").val(data.Estado);
+            $("#E_CambioFechaVencida").val(false);
             $("#E_TipoInspeccion").val(data.TipoInspeccion);
             $("#E_DescripcionActoCondicion").val(data.DescripcionActoCondicion);
             $(".E_Vacio").hide();
@@ -868,6 +870,9 @@
             ActualizarColorNivelRiesgo();
         }
     }
+
+    
+
     function EliminarObservacion(IdObservacion, IdCabecera) {
         if (confirm("¿Está seguro que desea eliminar la observación?")) {
             $.ajax({
@@ -1018,6 +1023,12 @@
             default: $("#E_NivelRiesgo").css("background-color", "white"); $("#E_NivelRiesgo").css("color", "black"); break;
         }
         $("#E_NivelRiesgo option").css("color", "black")
+    });
+    $('#E_FechaProgramada').on('change', function () {
+        if ($("#E_Estado").val() == 'Vencido') {
+            console.log("CAMBIO DE FECHA VENCIDA")
+            $("#E_CambioFechaVencida").val(true);
+        }
     });
     function ReiniciarCondicionesIndentificadasEditar() {
         $(".E_Vacio").hide();
@@ -1211,6 +1222,7 @@
             formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
             formData.append("E_CorreoCont", $("#E_CorreoCont").val());
             formData.append("E_Evidencia", $("#E_Evidencia").val());
+            formData.append("E_CambioFechaVencida", $("#E_CambioFechaVencida").val());
             $.ajax({
                 url: "@Url.Action("EditarObservacion", "Inspecciones")",
                 method: "post",
