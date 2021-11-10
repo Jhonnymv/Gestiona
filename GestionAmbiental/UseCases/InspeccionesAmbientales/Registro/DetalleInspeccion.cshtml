@@ -652,6 +652,8 @@
             ReiniciarModalEditarObs();
             if (data != null) {
                 $("#E_IdObservacion").val(data.IdObservacion);
+                $("#E_Estado").val(data.Estado);
+                $("#E_CambioFechaVencida").val(false);
                 $("#E_TipoInspeccion").val(data.TipoInspeccion);
                 $(".E_Vacio").hide();
                 $(".E_Vacio").prop('disabled', true);
@@ -741,6 +743,12 @@
         }
         $("#E_NivelRiesgo").on('change', function () {
             ActualizarColorNivelRiesgo();
+        });
+        $('#E_FechaProgramada').on('change', function () {
+            if ($("#E_Estado").val() == 'Vencido') {
+                console.log("CAMBIO DE FECHA VENCIDA")
+                $("#E_CambioFechaVencida").val(true);
+            }
         });
         function ReiniciarModalEditarObs() {
             $(".E_AsesorMedioAmbiente").hide();
@@ -1029,6 +1037,7 @@
                 formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
                 formData.append("E_CorreoCont", $("#E_CorreoCont").val());
                 formData.append("E_Evidencia", $("#E_Evidencia").val());
+                formData.append("E_CambioFechaVencida", $("#E_CambioFechaVencida").val());
                 $.ajax({
                     url: "@Url.Action("EditarObservacion", "Inspecciones")",
                     method: "post",

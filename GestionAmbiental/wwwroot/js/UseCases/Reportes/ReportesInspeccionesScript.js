@@ -106,17 +106,17 @@ function ActualizarContadorInsXEst(pend, reg, tot) {
     $("#InsEncont").html(reg);
 }
 //Para contador de inspecciones x fecha
-$("#sel_frec_insp_fecha").on('change', function () {
-    ActualizarInspeccionesXFecha();
-    ActualizaMAPvsSSO();
-    ActualizarDatosGraficoMAP_SSO_Estado();
-    ActualizaBPMAPvsSSO();
-    ActualizarDatosGraficoBPMAP_SSO_Estado();
-    ActualizarDatosGraficoMA_NR();
-    ActualizarDatosGraficoSSO_NR();
-    ActualizarDatosGraficoMA_Clas();
-    ActualizarDatosGraficoSSO_Clas();
-});
+//$("#sel_frec_insp_fecha").on('change', function () {
+//    ActualizarInspeccionesXFecha();
+//    ActualizaMAPvsSSO();
+//    ActualizarDatosGraficoMAP_SSO_Estado();
+//    ActualizaBPMAPvsSSO();
+//    ActualizarDatosGraficoBPMAP_SSO_Estado();
+//    ActualizarDatosGraficoMA_NR();
+//    ActualizarDatosGraficoSSO_NR();
+//    ActualizarDatosGraficoMA_Clas();
+//    ActualizarDatosGraficoSSO_Clas();
+//});
 function ActualizarInspeccionesXFecha() {
     $.ajax({
         type: "POST",
@@ -128,7 +128,9 @@ function ActualizarInspeccionesXFecha() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "frecuencia": $("#sel_frec_insp_fecha").val()
+            "frecuencia": $("#sel_frec_insp_fecha").val(),
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -205,18 +207,18 @@ function CrearGraficaInspeccionesFecha(labels, data, stepSize) {
         });
 }
 //Para contador de observaciones x fecha
-$("#sel_frec_obs_estado").on('change', function () {
-    ActualizarContadorOxFecha();
-    GetDataContadorOxE();
-    ActualizaMAPvsSSO();
-    ActualizarDatosGraficoMAP_SSO_Estado();
-    ActualizaBPMAPvsSSO();
-    ActualizarDatosGraficoBPMAP_SSO_Estado();
-    ActualizarDatosGraficoMA_NR();
-    ActualizarDatosGraficoSSO_NR();
-    ActualizarDatosGraficoMA_Clas();
-    ActualizarDatosGraficoSSO_Clas();
-});
+//$("#sel_frec_obs_estado").on('change', function () {
+//    ActualizarContadorOxFecha();
+//    GetDataContadorOxE();
+//    ActualizaMAPvsSSO();
+//    ActualizarDatosGraficoMAP_SSO_Estado();
+//    ActualizaBPMAPvsSSO();
+//    ActualizarDatosGraficoBPMAP_SSO_Estado();
+//    ActualizarDatosGraficoMA_NR();
+//    ActualizarDatosGraficoSSO_NR();
+//    ActualizarDatosGraficoMA_Clas();
+//    ActualizarDatosGraficoSSO_Clas();
+//});
 function ActualizarContadorOxFecha() {
     $.ajax({
         type: "POST",
@@ -229,7 +231,9 @@ function ActualizarContadorOxFecha() {
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
             "frecuencia": $("#sel_frec_insp_fecha").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
+
         },
         traditional: true,
         success: (response) => {
@@ -273,8 +277,8 @@ function ActualizarContadorOxFecha() {
                 //Crear gráfica
                 CrearGraficaContardorOxFecha(labels, dataObs, dataBP, Math.max(dataObs) / 10);
             }
-            ActualizaMAPvsSSO();
-            ActualizaBPMAPvsSSO();
+            //ActualizaMAPvsSSO();
+            //ActualizaBPMAPvsSSO();
         }
     });
 }
@@ -340,7 +344,8 @@ function GetDataContadorOxE() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         success: (response) => {
             var nObs = response.nObservaciones;
@@ -388,7 +393,8 @@ function ActualizaMAPvsSSO() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -477,7 +483,8 @@ function ActualizarDatosGraficoMAP_SSO_Estado() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -531,23 +538,13 @@ function CrearGraficoMAP_SSO_Estado(labels, dataset1, dataset2) {
                     {
                         "label": "# Observaciones MAP",
                         "data": dataset1,
-                        "backgroundColor": [
-                            '#2e6793',
-                            '#2e6793',
-                            '#2e6793',
-                            '#2e6793'
-                        ],
+                        "backgroundColor":'#2e6793',
                         "lineTension": 0.1
                     },
                     {
                         "label": "# Observaciones SSO",
                         "data": dataset2,
-                        "backgroundColor": [
-                            '#1cc88a',
-                            '#1cc88a',
-                            '#1cc88a',
-                            '#1cc88a'
-                        ],
+                        "backgroundColor": '#1cc88a',
                         "lineTension": 0.1
                     }
                 ]
@@ -561,8 +558,9 @@ function CrearGraficoMAP_SSO_Estado(labels, dataset1, dataset2) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'white',                        
-                        defaultFontSize: 15
+                        color: '#242424',
+                        defaultFontSize: 15,
+                        anchor:'end'
                     }
                 }
             }
@@ -581,7 +579,8 @@ function ActualizaBPMAPvsSSO() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -670,7 +669,8 @@ function ActualizarDatosGraficoBPMAP_SSO_Estado() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -754,8 +754,9 @@ function CrearGraficoBPMAP_SSO_Estado(labels, dataset1, dataset2) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'white',                        
-                        defaultFontSize: 15
+                        color: '#242424',
+                        defaultFontSize: 15,
+                        anchor: 'end'
                     }
                 }
             }
@@ -775,7 +776,8 @@ function ActualizarDatosGraficoMA_NR() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -836,7 +838,7 @@ function CrearGraficoMA_NR(labels, data) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'black',
+                        color: 'white',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
@@ -865,7 +867,8 @@ function ActualizarDatosGraficoSSO_NR() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -926,7 +929,7 @@ function CrearGraficoSSO_NR(labels, data) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'black',
+                        color: 'white',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
@@ -955,7 +958,8 @@ function ActualizarDatosGraficoMA_Clas() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -1016,7 +1020,7 @@ function CrearGraficoMA_Clas(labels, data) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'black',
+                        color: 'white',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
@@ -1045,7 +1049,8 @@ function ActualizarDatosGraficoSSO_Clas() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -1106,7 +1111,7 @@ function CrearGraficoSSO_Clas(labels, data) {
                 },
                 "plugins": {
                     datalabels: {
-                        color: 'black',
+                        color: 'white',
                         formatter: (value, ctx) => {
                             let sum = 0;
                             let dataArr = ctx.chart.data.datasets[0].data;
@@ -1136,7 +1141,8 @@ function ActualizarDatosGraficoMA_NR_Tipo() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {
@@ -1392,7 +1398,8 @@ function ActualizarDatosGraficoSSO_NR_Tipo() {
             "respLevObs": $("#IdRespLev").val(),
             "FechaInicio": $("#FInicio").val(),
             "FechaFin": $("#FFin").val(),
-            "estado": $("#sel_frec_obs_estado").val()
+            "estado": $("#Estado").val(),
+            "idGerenciaInspeccionada": $("#IdGerenciaInspeccionada").val()
         },
         traditional: true,
         success: (response) => {

@@ -61,26 +61,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var gerencia_model = gerencias.Find(x => x.Id_Gerencia.Equals(item.Id_Gerencia));
                 var responsable = responsables_arc_cmrs.Find(x => x.Id_Responsable_ARC_CRMS.Equals(item.Id_Responsable_ARC_CRMS));
 
-                var outputItem = new Ingreso_Salida_RS();
-                outputItem.Item = item.Item;
-                outputItem.Id_Ingreso_Salida_RS = item.Id_Ingreso_Salida_RS;
-                outputItem.ACR_CMRS = new Domain.ValueObjects.ACR_CMRS(acr_cmrs_model.Id_ACR_CMRS, acr_cmrs_model.Descripcion, acr_cmrs_model.Estado);
-                outputItem.Responsable_ACR_CMRS = new Domain.ValueObjects.Responsable_ARC_CRMS(responsable.Id_Responsable_ARC_CRMS, responsable.Nombres, responsable.Apellidos, responsable.Estado);
-                outputItem.Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_model.Id_Ingreso_Salida, ing_sal_model.Descripcion, ing_sal_model.Estado);
-                outputItem.Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_model.Id_Motivo, motivo_model.Descripcion, motivo_model.Estado);
-                outputItem.Fecha_Ingreso_Salida = item.Fecha_Ingreso_Salida;
-                outputItem.Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
+                var outputItem = new Ingreso_Salida_RS
+                {
+                    Item = item.Item,
+                    Id_Ingreso_Salida_RS = item.Id_Ingreso_Salida_RS,
+                    ACR_CMRS = new Domain.ValueObjects.ACR_CMRS(acr_cmrs_model.Id_ACR_CMRS, acr_cmrs_model.Descripcion, acr_cmrs_model.Estado),
+                    Responsable_ACR_CMRS = new Domain.ValueObjects.Responsable_ARC_CRMS(responsable.Id_Responsable_ARC_CRMS, responsable.Nombres, responsable.Apellidos, responsable.Estado),
+                    Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_model.Id_Ingreso_Salida, ing_sal_model.Descripcion, ing_sal_model.Estado),
+                    Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_model.Id_Motivo, motivo_model.Descripcion, motivo_model.Estado),
+                    Fecha_Ingreso_Salida = item.Fecha_Ingreso_Salida,
+                    Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
                     residuo_solido_model.Id_Tipo_Residuo,
                     new Domain.ValueObjects.Tipo_Residuo(tipo_residuo_model.Id_Tipo_Residuo, tipo_residuo_model.Descripcion, tipo_residuo_model.Estado),
                     residuo_solido_model.Descripcion,
-                    residuo_solido_model.Estado);
-                outputItem.Cantidad = item.Cantidad;
-                outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Gerencia = new Domain.ValueObjects.Gerencia { IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado };
-                outputItem.Comentario = item.Comentario;
-                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
-                outputItem.Fecha_Registro = item.Fecha_Registro;
-                outputItem.Estado = item.Estado;
+                    residuo_solido_model.Estado),
+                    Cantidad = item.Cantidad,
+                    Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social),
+                    Gerencia = new Domain.ValueObjects.Gerencia { IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado },
+                    Comentario = item.Comentario,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
+                    Fecha_Registro = item.Fecha_Registro,
+                    Estado = item.Estado
+                };
 
                 if (outputItem.Item == "TBD")
                     tbd.Add(outputItem);
@@ -165,26 +167,28 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var gerencia_model = gerencias.Find(x => x.Id_Gerencia.Equals(item.Id_Gerencia));
                 var responsable = responsables_arc_cmrs.Find(x => x.Id_Responsable_ARC_CRMS.Equals(item.Id_Responsable_ARC_CRMS));
 
-                var outputItem = new Ingreso_Salida_RS();
-                outputItem.Item = item.Item;
-                outputItem.Id_Ingreso_Salida_RS = item.Id_Ingreso_Salida_RS;
-                outputItem.ACR_CMRS = new Domain.ValueObjects.ACR_CMRS(acr_cmrs_model.Id_ACR_CMRS, acr_cmrs_model.Descripcion, acr_cmrs_model.Estado);
-                outputItem.Responsable_ACR_CMRS = new Domain.ValueObjects.Responsable_ARC_CRMS(responsable.Id_Responsable_ARC_CRMS, responsable.Nombres, responsable.Apellidos, responsable.Estado);
-                outputItem.Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_model.Id_Ingreso_Salida, ing_sal_model.Descripcion, ing_sal_model.Estado);
-                outputItem.Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_model.Id_Motivo, motivo_model.Descripcion, motivo_model.Estado);
-                outputItem.Fecha_Ingreso_Salida = item.Fecha_Ingreso_Salida;
-                outputItem.Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
+                var outputItem = new Ingreso_Salida_RS
+                {
+                    Item = item.Item,
+                    Id_Ingreso_Salida_RS = item.Id_Ingreso_Salida_RS,
+                    ACR_CMRS = new Domain.ValueObjects.ACR_CMRS(acr_cmrs_model.Id_ACR_CMRS, acr_cmrs_model.Descripcion, acr_cmrs_model.Estado),
+                    Responsable_ACR_CMRS = new Domain.ValueObjects.Responsable_ARC_CRMS(responsable.Id_Responsable_ARC_CRMS, responsable.Nombres, responsable.Apellidos, responsable.Estado),
+                    Ingreso_Salida = new Domain.ValueObjects.Ingreso_Salida(ing_sal_model.Id_Ingreso_Salida, ing_sal_model.Descripcion, ing_sal_model.Estado),
+                    Motivo = new Domain.ValueObjects.Motivo_Ingreso_Salida(motivo_model.Id_Motivo, motivo_model.Descripcion, motivo_model.Estado),
+                    Fecha_Ingreso_Salida = item.Fecha_Ingreso_Salida,
+                    Residuo_Solido = new Domain.ValueObjects.Residuo_Solido(
                     residuo_solido_model.Id_Tipo_Residuo,
                     new Domain.ValueObjects.Tipo_Residuo(tipo_residuo_model.Id_Tipo_Residuo, tipo_residuo_model.Descripcion, tipo_residuo_model.Estado),
                     residuo_solido_model.Descripcion,
-                    residuo_solido_model.Estado);
-                outputItem.Cantidad = item.Cantidad;
-                outputItem.Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social);
-                outputItem.Gerencia = new Domain.ValueObjects.Gerencia{ IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado };
-                outputItem.Comentario = item.Comentario;
-                outputItem.Id_Registrado_Por = item.Id_Registrado_Por;
-                outputItem.Fecha_Registro = item.Fecha_Registro;
-                outputItem.Estado = item.Estado;
+                    residuo_solido_model.Estado),
+                    Cantidad = item.Cantidad,
+                    Empresa_RS = new Domain.ValueObjects.Empresa(empresa_model.Id_Empresa, empresa_model.Razon_Social),
+                    Gerencia = new Domain.ValueObjects.Gerencia { IdGerencia = gerencia_model.Id_Gerencia, Descripcion = gerencia_model.Descripcion, Estado = gerencia_model.Estado },
+                    Comentario = item.Comentario,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
+                    Fecha_Registro = item.Fecha_Registro,
+                    Estado = item.Estado
+                };
 
                 output.Add(outputItem);
             }

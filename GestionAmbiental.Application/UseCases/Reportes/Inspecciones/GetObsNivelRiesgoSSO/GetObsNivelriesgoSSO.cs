@@ -14,7 +14,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsNive
         {
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
-        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado)
+        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -28,16 +28,16 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsNive
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            EstadosInspeccion? enum_estado = null;
-            switch (estado)
-            {
-                case "Reg": enum_estado = EstadosInspeccion.Registrado; break;
-                case "Imp": enum_estado = EstadosInspeccion.Implementado; break;
-                case "Ven": enum_estado = EstadosInspeccion.Vencido; break;
-                case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
-                case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
-            }
-            var data = await _getReportesInspeccionesReadOnlyRepository.GetObsNivelRiesgoSSO(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, enum_estado);
+            //EstadosInspeccion? enum_estado = null;
+            //switch (estado)
+            //{
+            //    case "Reg": enum_estado = EstadosInspeccion.Registrado; break;
+            //    case "Imp": enum_estado = EstadosInspeccion.Implementado; break;
+            //    case "Ven": enum_estado = EstadosInspeccion.Vencido; break;
+            //    case "Apr": enum_estado = EstadosInspeccion.Aprobado; break;
+            //    case "Rec": enum_estado = EstadosInspeccion.Rechazado; break;
+            //}
+            var data = await _getReportesInspeccionesReadOnlyRepository.GetObsNivelRiesgoSSO(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, estado,idGerenciaInspeccionada);
 
             var output = new List<DimensionOutput>();
             foreach (var item in data)

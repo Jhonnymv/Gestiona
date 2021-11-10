@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetObsMAPv
 {
     public interface IGetObsMAPvsSSO
     {
-        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado);
+        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada);
     }
 }

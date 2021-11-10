@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspecc
             _getReportesInspeccionesReadOnlyRepository = getReportesInspeccionesReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportesInspeccionesReadOnlyRepository));
         }
 
-        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia)
+        public async Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin, string frecuencia, string estado, int idGerenciaInspeccionada)
         {
             //Dar formato a fechas
             DateTime fInicio, fFinal;
@@ -29,7 +29,7 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspecc
             else
                 fFinal = DateTime.MaxValue;
             //Obtener valores
-            var data = await _getReportesInspeccionesReadOnlyRepository.GetInspeccionesXFecha(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, frecuencia);
+            var data = await _getReportesInspeccionesReadOnlyRepository.GetInspeccionesXFecha(empresa, gerencia, respLevObs, Asesor, fInicio, fFinal, frecuencia,estado,idGerenciaInspeccionada);
 
             var output = new List<DimensionOutput>();
             foreach (var item in data)

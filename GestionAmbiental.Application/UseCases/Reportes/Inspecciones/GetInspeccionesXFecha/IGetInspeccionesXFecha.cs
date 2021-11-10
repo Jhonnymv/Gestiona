@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetInspecc
 {
     public interface IGetInspeccionesXFecha
     {
-        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin,string frecuencia);
+        Task<List<DimensionOutput>> Execute(int empresa, int gerencia, int respLevObs, int Asesor, string FechaInicio, string FechaFin,string frecuencia, string estado, int idGerenciaInspeccionada);
     }
 }

@@ -494,7 +494,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             filaObservacion += "<td><button class=\"btn btn-mc\" type=\"button\" onclick=\"EditarObservacion('" + observacion.IdInspeccionDetalle + "')\">" + "Editar" + "</button></td>";
                         else
                             filaObservacion += "<td></td>";
-                        if (cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && (cabecera.Permiso||cabecera.PermisoAdmin))
+                        if ((cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) && cabecera.Permiso) || cabecera.PermisoAdmin)
                             filaObservacion += "<td><button class=\"btn btn-mc-danger\" type=\"button\" onclick=\"EliminarObservacion('" + IdObsEncriptado + "','" + observacion.IdInspeccionCabecera + "')\">" + "Eliminar" + "</button></td>";
                         //filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + observacion.IdInspeccionCabecera + "\">" + "Eliminar" + "</a></td>";
                         else
