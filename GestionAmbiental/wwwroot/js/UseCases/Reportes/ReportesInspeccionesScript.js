@@ -106,17 +106,9 @@ function ActualizarContadorInsXEst(pend, reg, tot) {
     $("#InsEncont").html(reg);
 }
 //Para contador de inspecciones x fecha
-//$("#sel_frec_insp_fecha").on('change', function () {
-//    ActualizarInspeccionesXFecha();
-//    ActualizaMAPvsSSO();
-//    ActualizarDatosGraficoMAP_SSO_Estado();
-//    ActualizaBPMAPvsSSO();
-//    ActualizarDatosGraficoBPMAP_SSO_Estado();
-//    ActualizarDatosGraficoMA_NR();
-//    ActualizarDatosGraficoSSO_NR();
-//    ActualizarDatosGraficoMA_Clas();
-//    ActualizarDatosGraficoSSO_Clas();
-//});
+$("#sel_frec_insp_fecha").on('change', function () {
+    ActualizarInspeccionesXFecha();
+});
 function ActualizarInspeccionesXFecha() {
     $.ajax({
         type: "POST",
