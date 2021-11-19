@@ -11,11 +11,11 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
     {
         private class TempLDAP
         {
-            public string ldap_path { get; set; }
-            public string ldap_domain { get; set; }
-            public string user { get; set; }
-            public string password { get; set; }
-            public List<string> groups { get; set; }
+            public string Path { get; set; }
+            public string Domain { get; set; }
+            public string User { get; set; }
+            public string Password { get; set; }
+            public List<string> Groups { get; set; }
         }
         private readonly string Key = @"MarcobreSGA";
         public int IdInfo { get; set; }
@@ -32,11 +32,11 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA
 
             var desencriptado = Cipher.Decrypt(info_SGA.Info, Key);
             var data = JsonConvert.DeserializeObject<TempLDAP>(desencriptado);
-            Path = data.ldap_path;
-            Domain = data.ldap_domain;
-            User = data.user;
-            Password = data.password;
-            Groups = data.groups;
+            Path = data.Path;
+            Domain = data.Domain;
+            User = data.User;
+            Password = data.Password;
+            Groups = data.Groups;
         }
 
         public string GetEncryptedInfo(string infoToEncrypt)

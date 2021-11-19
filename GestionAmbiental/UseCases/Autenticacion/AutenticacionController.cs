@@ -46,8 +46,8 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 //{
                 //    switch (item.Key)
                 //    {
-                //        case "ldap_path": ldap_path = item.Value; break;
-                //        case "ldap_domain": ldap_domain = item.Value; break;
+                //        case "Path": ldap_path = item.Value; break;
+                //        case "Domain": ldap_domain = item.Value; break;
                 //    }
                 //}
                 //// Validate credentials

@@ -176,11 +176,72 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                 {
                     if (ModelState.IsValid)
                     {
-                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, model.Info);
+                        var objSFTPInfo = JsonConvert.DeserializeObject<NewSFTPInfoObject>(model.Info);
+                        var objNotificationInfo = JsonConvert.DeserializeObject<NewNotificationInfoObject>(model.Info);
+                        var objLDAPInfo = JsonConvert.DeserializeObject<NewLDAPInfoObject>(model.Info);
+                        var objEncriptionInfo = JsonConvert.DeserializeObject<NewEncriptionInfoObject>(model.Info);
+
+                        if (objSFTPInfo.Info!= null && objSFTPInfo.Info.host!=null)
+                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objSFTPInfo.Info));
+                        if(objSFTPInfo.Info != null && objNotificationInfo.Info.smtp != null)
+                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objNotificationInfo.Info));
+                        if(objLDAPInfo.Path != null)
+                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objLDAPInfo));
+                        if(objSFTPInfo.Info != null && objEncriptionInfo.Info.iv != null)
+                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objEncriptionInfo.Info));
                     }
                     return RedirectToAction("DetalleInfo_SGA", new { IdInfo = model.IdInfo });
                 }
             }
+        }
+        private class NewSFTPInfoObject
+        {
+            public int IdInfo { get; set; }
+            public NewSFTPInfo Info { get; set; }
+            public string Tipo { get; set; }
+        }
+        private class NewSFTPInfo
+        {
+            public string host { get; set; }
+            public string port { get; set; }
+            public string directory { get; set; }
+            public string user { get; set; }
+            public string password { get; set; }
+        }
+        private class NewNotificationInfoObject
+        {
+            public int IdInfo { get; set; }
+            public NewNotificationInfo Info { get; set; }
+            public string Tipo { get; set; }
+        }
+        private class NewNotificationInfo
+        {
+            public string smtp { get; set; }
+            public string port { get; set; }
+            public string ntwkuser { get; set; }
+            public string ntwkpassword { get; set; }
+            public string mailfrom { get; set; }
+        }
+        private class NewEncriptionInfoObject
+        {
+            public int IdInfo { get; set; }
+            public NewNEncriptionInfo Info { get; set; }
+            public string Tipo { get; set; }
+        }
+        private class NewNEncriptionInfo
+        {
+            public string key { get; set; }
+            public string iv { get; set; }
+        }
+        private class NewLDAPInfoObject
+        {
+            public int IdInfo { get; set; }
+            public string Path { get; set; }
+            public string Domain { get; set; }
+            public string User { get; set; }
+            public string Password { get; set; }
+            public string[] Groups { get; set; }
+            public string Tipo { get; set; }
         }
     }
 }

@@ -21,7 +21,7 @@ namespace GestionAmbiental.Application.UseCases.Info_SGA.EditarInfo_SGA
             var info_SGA = new Domain.ValueObjects.Info_SGA();
             info_SGA.Id_Info = idInfo;
             info_SGA.Tipo = tipo;
-            info_SGA.Info = encrypter.GetEncryptedInfo(info);
+            info_SGA.Info = encrypter.GetEncryptedInfo(info.Replace("\\\"","\""));
 
             await _info_SGAReadOnlyRepository.UpdateInfo_SGA(info_SGA);
         }

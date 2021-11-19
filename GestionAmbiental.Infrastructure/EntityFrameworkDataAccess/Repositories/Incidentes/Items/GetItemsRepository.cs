@@ -270,7 +270,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Apellidos = item.Apellidos,
                     Email = item.Email,
                     IdRol = item.Id_Rol,
-                    UsuarioRed = item.usuario_red
+                    UsuarioRed = item.usuario_red,
+                    Estado = item.Estado                    
                 };
                 output.Add(outputItem);
             }
@@ -289,7 +290,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Apellidos = item.Apellidos,
                     Email = item.Email,
                     IdRol = item.Id_Rol,
-                    UsuarioRed = item.usuario_red
+                    UsuarioRed = item.usuario_red,
+                    Estado = item.Estado
                 };
                 output.Add(outputItem);
             }
