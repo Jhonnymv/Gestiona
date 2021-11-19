@@ -29,17 +29,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x=>x.Codigo).ToListAsync();
             
-            //if(gerencia.Length > 0)
-
-
             var reportesFiltro = reportes;
 
             if(fechaInicio.HasValue)
                 reportesFiltro = reportesFiltro.Where(x =>x.Fecha_Incidente.HasValue &&
-                x.Fecha_Incidente.Value.Date> fechaInicio.Value.Date).ToList();
+                x.Fecha_Incidente.Value.Date>= fechaInicio.Value.Date).ToList();
             if(fechaFin.HasValue)
                 reportesFiltro = reportesFiltro.Where(x =>x.Fecha_Incidente.HasValue &&
-                x.Fecha_Incidente.Value.Date< fechaFin.Value.Date).ToList();
+                x.Fecha_Incidente.Value.Date<= fechaFin.Value.Date).ToList();
             if(gerencia.Length>0)
                 reportesFiltro = reportesFiltro.Where(x => x.Id_Gerencia_Responsable.HasValue &&
                 gerencia.Contains(x.Id_Gerencia_Responsable.Value)).ToList();
@@ -319,28 +316,57 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output.Estado;
         }
 
-        public async Task<List<Reporte_Preliminar_Incidente>> GetReportesMA(DateTime? fecha, int id_Asesor, int id_Gerencia,int id_Usuario)
+        public async Task<List<Reporte_Preliminar_Incidente>> GetReportesMA(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int titular, List<string> estado, int[] responsable, int[] asesor, string codigo)
         {
             var reportes_titulares_minero = await _context.Involucrado_Incidente_Reporte.Where(x =>
             x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
-            x.Id_Usuario.Equals(id_Usuario != 0 ? id_Usuario : x.Id_Usuario)).Select(x => x.Id_Reporte_Preliminar).ToListAsync();
+            x.Id_Usuario.Equals(titular != 0 ? titular : x.Id_Usuario)).Select(x => x.Id_Reporte_Preliminar).ToListAsync();
 
             var reportes = await _context.Reporte_Preliminar_Incidente.OrderByDescending(x => x.Codigo).ToListAsync();
 
             var reportesFiltro = reportes.Where(x =>
-            x.Id_Supervisor_MA.Equals(id_Asesor != 0 ? id_Asesor : x.Id_Supervisor_MA) &&
-            x.Id_Gerencia_Responsable.Equals(id_Gerencia != 0 ? id_Gerencia : x.Id_Gerencia_Responsable) &&
             (x.Estado.Equals(EstadosIncidentes.Registrado.ToString()) ||
              x.Estado.Equals(EstadosIncidentes.Difundido.ToString()) ||
-             x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()) ))
+             x.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString())))
                 .ToList();
 
-            if (fecha.HasValue)
+            if (fechaInicio.HasValue)
                 reportesFiltro = reportesFiltro.Where(x => x.Fecha_Incidente.HasValue &&
-                x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
+                x.Fecha_Incidente.Value.Date >= fechaInicio.Value.Date).ToList();
+            if (fechaFin.HasValue)
+                reportesFiltro = reportesFiltro.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date <= fechaFin.Value.Date).ToList();
+            if (gerencia.Length > 0)
+                reportesFiltro = reportesFiltro.Where(x => x.Id_Gerencia_Responsable.HasValue &&
+                gerencia.Contains(x.Id_Gerencia_Responsable.Value)).ToList();
+            if (asesor.Length > 0)
+                reportesFiltro = reportesFiltro.Where(x => x.Id_Supervisor_MA.HasValue &&
+                asesor.Contains(x.Id_Supervisor_MA.Value)).ToList();
+            if (codigo != null && codigo.Length > 0)
+                reportesFiltro = reportesFiltro.Where(x => x.Codigo.Contains(codigo)).ToList();
+            if (responsable.Length > 0 || estado.Count > 0)
+            {
+                var acciones = await _context.Accion_Incidente_Reporte.ToListAsync();
+                if (responsable.Length > 0)
+                {
+                    acciones = acciones.Where(x => x.Id_Usuario.HasValue &&
+                    responsable.Contains(x.Id_Usuario.Value)).ToList();
 
-            if (reportes_titulares_minero.Count > 0 && id_Usuario != 0)
-            reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
+                    reportesFiltro = reportesFiltro.Where(x =>
+                    acciones.Select(x => x.Id_Reporte_Preliminar).Contains(x.Id_Reporte_Preliminar)).ToList();
+                }
+                if (estado.Count > 0)
+                {
+                    acciones = acciones.Where(x =>
+                        estado.Contains(x.Estatus)).ToList();
+
+                    reportesFiltro = reportesFiltro.Where(x =>
+                    acciones.Select(x => x.Id_Reporte_Preliminar).Contains(x.Id_Reporte_Preliminar)).ToList();
+                }
+            }
+
+            if (reportes_titulares_minero.Count > 0)
+                reportesFiltro = reportesFiltro.Where(x => reportes_titulares_minero.Contains(x.Id_Reporte_Preliminar)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
             var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();
@@ -435,12 +461,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 if (item.Id_Gerencia_Responsable != null)
                 {
-                    var gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
+                    var gerenciaDomain = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
                     outputItem.Gerencia_Responsable = new Gerencia
                     {
-                        IdGerencia = gerencia.Id_Gerencia,
-                        Descripcion = gerencia.Descripcion,
-                        Estado = gerencia.Estado
+                        IdGerencia = gerenciaDomain.Id_Gerencia,
+                        Descripcion = gerenciaDomain.Descripcion,
+                        Estado = gerenciaDomain.Estado
                     };
                 }
 

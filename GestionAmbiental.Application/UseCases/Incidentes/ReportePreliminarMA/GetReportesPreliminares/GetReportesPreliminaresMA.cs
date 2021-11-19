@@ -16,12 +16,25 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.G
             _getReportePreliminarReadOnlyRepository = getReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportePreliminarReadOnlyRepository));
         }
 
-        public async Task<ReportesPreliminaresOutput> Execute(string fecha,int id_Asesor, int id_Usuario, int id_Gerencia, int pagina, int rpp)
+        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
         {
-            DateTime? fechaFiltro = null;
-            if (fecha != null)
-                fechaFiltro = Convert.ToDateTime(fecha);
-            var data = await _getReportePreliminarReadOnlyRepository.GetReportesMA(fechaFiltro,id_Asesor, id_Gerencia, id_Usuario);
+            DateTime? fechaInicioFiltro = null;
+            DateTime? fechaFinFiltro = null;
+
+            if (fecha_inicio != null)
+                fechaInicioFiltro = Convert.ToDateTime(fecha_inicio);
+            if (fecha_fin != null)
+                fechaFinFiltro = Convert.ToDateTime(fecha_fin);
+
+            var estados = new List<string>();
+            if (estado.Length > 0)
+            {
+                if (estado.Contains("EnProceso"))
+                    estados.Add("En Proceso");
+                if (estado.Contains("Cerrado"))
+                    estados.Add("Cerrado");
+            }
+            var data = await _getReportePreliminarReadOnlyRepository.GetReportesMA(fechaInicioFiltro, fechaFinFiltro, gerencia, titular, estados, responsable, asesor, codigo);
 
             var output = new ReportesPreliminaresOutput();
             output.Reportes = new List<ReportePreliminarOutput>();

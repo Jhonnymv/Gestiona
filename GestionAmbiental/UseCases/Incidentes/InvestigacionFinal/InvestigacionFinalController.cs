@@ -201,26 +201,24 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 var items = await _selectItems.GetSelectItems();
 
-                var asesores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
-                asesores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var asesores = items.ItemsUsuarioMA.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
 
-                var usuarios = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).OrderBy(x => x.Text).ToList();
-                usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var usuarios = items.ItemsUsuario.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).OrderBy(x => x.Text).ToList();
 
-                var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                var gerencias = items.ItemsGerencia.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
 
                 ViewBag.Asesores = asesores;
                 ViewBag.Gerencias = gerencias;
                 ViewBag.Usuarios = usuarios;
 
+
                 return View();
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int id_asesor, int id_usuario, int id_gerencia, int rpp, int pagina,string usuario_red)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha_inicio, string fecha_fin, int[] gerencia, int titular, string[] estado, int[] responsable, int[] asesor, string codigo, int rpp, int pagina, string usuario_red)
         {
-            var datosTabla = await _getInvestigacionesFinales.Execute(fecha, id_usuario, id_gerencia, id_asesor, pagina, rpp,usuario_red);
+            var datosTabla = await _getInvestigacionesFinales.Execute(fecha_inicio, fecha_fin, gerencia, titular, estado, responsable, asesor, codigo, pagina, rpp, usuario_red);
 
             var filasTabla = "";
             var paginador = "";

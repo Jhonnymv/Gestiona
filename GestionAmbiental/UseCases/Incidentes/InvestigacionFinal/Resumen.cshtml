@@ -4,6 +4,9 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+}
 
 <div class="incidentes">
     <div class="primary-content col-12">
@@ -14,39 +17,63 @@
             </div>
         </div>
         <div class="content-header container">
-            @*<div class="action-container incidentes-color">
-                <div class="w-100 row-center-center">
-                    <a class="btn btn-special-action-outline incidentes-color">NUEVO REGISTRO</a>
-                </div>
-            </div>*@
-            <form autocomplete="off" class="custom-form w-100">
+            <form autocomplete="off" class="custom-form w-100" id="form_filtro">
                 <div class="col-12 col-lg-9">
                     <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label for="">Fecha de Incidente</label>
-                            <input type="date" class="form-control" id="filtro_fecha">
+                        <div class="col-12 col-md-4">
+                            <label>Fecha de Inicio</label>
+                            <input id="fecha_inicio_filtro" type="date" class="form-control">
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label for="">Supervisor MA</label>
-                            <select id="filtro_asesores" asp-items="ViewBag.Asesores" class="form-control">
+                        <div class="col-12 col-md-4">
+                            <label>Fecha de Fin</label>
+                            <input id="fecha_fin_filtro" type="date" class="form-control">
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Gerencia Involucrada</label>
+                            <select id="gerencia_filtro" asp-items="@ViewBag.Gerencias" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label for="">Gerencia Involucrada</label>
-                            <select id="filtro_gerencia" asp-items="ViewBag.Gerencias" class="form-control">
+                        <div class="col-12 col-md-4">
+                            <label>Supervisor Inmediato (Titular Minero)</label>
+                            <select id="titular_filtro" asp-items="ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción">
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label for="">Supervisor Inmediato (Titular Minero)</label>
-                            <select id="filtro_usuarios" asp-items="ViewBag.Usuarios" class="form-control">
+                        <div class="col-12 col-md-4">
+                            <label>Responsable de Acción Inmediata</label>
+                            <select id="responsable_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Estado</label>
+                            <select id="estado_filtro" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                                <option data-tokens="Pendiente" value="Pendiente">Pendiente de Implementación</option>
+                                <option data-tokens="Verificar" value="Verificar">Pendiente de Verificación</option>
+                                <option data-tokens="Vencido" value="Vencido">Vencido</option>
+                                <option data-tokens="Aprobado" value="Aprobado">Aprobado</option>
                             </select>
                         </div>
                     </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Supervisor MAP</label>
+                            <select id="asesor_filtro" asp-items="@ViewBag.Asesores" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <label>Código</label>
+                            <input id="codigo_filtro" type="text" class="form-control">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 col-lg-3 row-center-center">
-                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                <div class="col-12 col-lg-3">
+                    <div class="row ms-1 me-1">
+                        <button id="btn_filtrar" type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                    </div>
+                    <div class="row ms-1 me-1">
+                        <button id="btn_reset" type="button" class="btn btn-mc-outline">Limpiar Filtros</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -80,6 +107,8 @@
 </div>
 
 @section scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             filtrar(1);
@@ -110,10 +139,14 @@
                 data: {
                     "pagina": pag,
                     "rpp": 10,
-                    "fecha": $("#filtro_fecha").val(),
-                    "id_asesor": $("#filtro_asesores").val(),
-                    "id_usuario": $("#filtro_usuarios").val(),
-                    "id_gerencia": $("#filtro_gerencia").val(),
+                    "fecha_inicio": $("#fecha_inicio_filtro").val(),
+                    "fecha_fin": $("#fecha_fin_filtro").val(),
+                    "gerencia": $("#gerencia_filtro").val(),
+                    "titular": $("#titular_filtro").val(),
+                    "estado": $("#estado_filtro").val(),
+                    "responsable": $("#responsable_filtro").val(),
+                    "asesor": $("#asesor_filtro").val(),
+                    "codigo": $("#codigo_filtro").val(),
                     "usuario_red": '@ViewBag.Usuario'
                 },
                 traditional: true,

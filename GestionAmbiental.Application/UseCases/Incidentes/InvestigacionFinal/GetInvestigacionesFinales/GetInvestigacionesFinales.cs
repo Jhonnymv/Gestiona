@@ -20,12 +20,40 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
             _getRolUsuario = getRolUsuario;
         }
 
-        public async Task<InvestigacionesFinalesOutput> Execute(string fecha, int id_Usuario, int id_Gerencia, int id_Asesor, int pagina, int rpp,string usuarioRed)
+        public async Task<InvestigacionesFinalesOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuarioRed)
         {
-            DateTime? fechaFiltro = null;
-            if (fecha != null)
-                fechaFiltro = Convert.ToDateTime(fecha);
-            var data = await _getInvestigacionFinalReadOnlyRepository.GetInvestigacionesFinales(fechaFiltro, id_Usuario, id_Asesor, id_Gerencia);
+            DateTime? fechaInicioFiltro = null;
+            DateTime? fechaFinFiltro = null;
+
+            if (fecha_inicio != null)
+                fechaInicioFiltro = Convert.ToDateTime(fecha_inicio);
+            if (fecha_fin != null)
+                fechaFinFiltro = Convert.ToDateTime(fecha_fin);
+
+            var estados = new List<string>();
+            if (estado.Length > 0)
+            {
+                if (estado.Contains("Pendiente"))
+                {
+                    estados.Add(EstadosIncidentes.Registrado.ToString());
+                    estados.Add(EstadosIncidentes.Ampliado.ToString());
+                    estados.Add(EstadosIncidentes.Rechazado.ToString());
+                }
+                if (estado.Contains("Verificar"))
+                {
+                    estados.Add(EstadosIncidentes.Implementado.ToString());
+                }
+                if (estado.Contains("Vencido"))
+                {
+                    estados.Add(EstadosIncidentes.Vencido.ToString());
+                }
+                if (estado.Contains("Aprobado"))
+                {
+                    estados.Add(EstadosIncidentes.Aprobado.ToString());
+                }
+            }
+
+            var data = await _getInvestigacionFinalReadOnlyRepository.GetInvestigacionesFinales(fechaInicioFiltro, fechaFinFiltro, gerencia, titular, estados, responsable, asesor, codigo);
 
             var output = new InvestigacionesFinalesOutput();
 
