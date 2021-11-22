@@ -31,7 +31,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarI
             {
                 var outputItem = new InspeccionDetalleOutput(item);
                 //Implementar
-                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario))
+                if (usuario.IdUsuario.Equals(item.ResponsableMarcobre.IdUsuario)|| usuario.IdUsuario.Equals(item.ResponsableMarcobre2.IdUsuario))
                     outputItem.PermisosImplementar = true;
                 else
                     outputItem.PermisosImplementar = false;

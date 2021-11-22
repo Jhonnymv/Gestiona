@@ -90,20 +90,27 @@
                                         <span class="text-danger" asp-validation-for="ResponsableMarc"></span>
                                         <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc"></select>
                                     </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                        <label asp-for="ResponsableMarc2"></label>
+                                        <span class="text-danger" asp-validation-for="ResponsableMarc2"></span>
+                                        <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="ResponsableMarc2"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="ResponsableCont"></label>
                                         <span class="text-danger" asp-validation-for="ResponsableCont"></span>
                                         <input type="text" class="form-control" asp-for="ResponsableCont" />
                                         <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="CorreoCont"></label>
                                         <span class="text-danger" asp-validation-for="CorreoCont"></span>
                                         <input type="email" class="form-control" asp-for="CorreoCont" maxlength="100" />
                                         <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                                     </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="Evidencias"></label>
                                         <span class="text-danger field-validation-error" data-valmsg-for="Evidencias" data-valmsg-replace="true">

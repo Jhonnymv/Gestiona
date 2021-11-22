@@ -19,6 +19,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
             string Nivel_Riesgo_Ambiental, 
             string Descripcion_Accion,
             int Id_Responsable_Marcobre, 
+            int? Id_Responsable_Marcobre2, 
             string Responsable_Contratista,
             string Correo_Contratista,
             string Fecha_Programada,

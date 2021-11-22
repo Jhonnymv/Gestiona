@@ -67,6 +67,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             detalleEntity.Nivel_Riesgo = detalle.NivelRiesgo;
             detalleEntity.Descripcion_Accion = detalle.DescripcionAccion;
             detalleEntity.Id_Responsable_Marcobre = detalle.IdResponsableMarcobre == detalleEntity.Id_Responsable_Marcobre ? detalleEntity.Id_Responsable_Marcobre : detalle.IdResponsableMarcobre;
+            detalleEntity.Id_Responsable_Marcobre2 = detalle.IdResponsableMarcobre2 == detalleEntity.Id_Responsable_Marcobre2 ? detalleEntity.Id_Responsable_Marcobre2 : detalle.IdResponsableMarcobre2;
             detalleEntity.Responsable_Contratista = detalleEntity.Responsable_Contratista == detalle.ResponsableContratista ? detalleEntity.Responsable_Contratista : detalle.ResponsableContratista;
             detalleEntity.Correo_Contratista = detalleEntity.Correo_Contratista == detalle.CorreoContratista ? detalleEntity.Correo_Contratista : detalle.CorreoContratista;
             detalleEntity.Fecha_Programada = detalle.FechaProgramada;

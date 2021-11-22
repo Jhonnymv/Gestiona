@@ -30,6 +30,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Ins
         public string Descripcion_Accion { get; set; }
         [Column(TypeName = "int")]
         public int Id_Responsable_Marcobre { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Responsable_Marcobre2 { get; set; }
         [Column(TypeName = "varchar(250)")]
         public string Responsable_Contratista { get; set; }
         [Column(TypeName = "varchar(100)")]

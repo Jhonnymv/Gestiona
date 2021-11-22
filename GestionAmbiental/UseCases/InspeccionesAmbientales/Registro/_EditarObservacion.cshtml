@@ -95,19 +95,26 @@
                                         <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="E_ResponsableMarc"></select>
                                     </div>
                                     <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="E_ResponsableMarc2"></label>
+                                        <span class="text-danger" asp-validation-for="E_ResponsableMarc2"></span>
+                                        <select class="form-control" asp-items="@ViewBag.Responsables" asp-for="E_ResponsableMarc2"></select>
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_ResponsableCont"></label>
                                         <span class="text-danger" asp-validation-for="E_ResponsableCont"></span>
                                         <input type="text" class="form-control" asp-for="E_ResponsableCont" />
                                         <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_CorreoCont"></label>
                                         <span class="text-danger" asp-validation-for="E_CorreoCont"></span>
                                         <input type="email" class="form-control" asp-for="E_CorreoCont" maxlength="100" />
                                         <small class="form-text text-muted">En caso que la empresa observada sea Marcobre, ingresar "No Aplica".</small>
                                     </div>
+                                </div>
+                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_Evidencia"></label>
                                         <input type="hidden" asp-for="E_Evidencia" />
@@ -121,8 +128,6 @@
                                             <span>Descargar Evidencia</span>
                                         </button>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="E_Nueva_Evidencia"></label>
                                         <span class="text-danger field-validation-error" data-valmsg-for="E_Nueva_Evidencia" data-valmsg-replace="true">
