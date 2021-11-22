@@ -21,25 +21,56 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fecha, int id_Usuario, int id_Asesor, int id_Gerencia)
+        public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int titular, List<string> estado, int[] responsable, int[] asesor, string codigo)
         {
+            //valida titular
             var investigaciones_titulares_minero = await _context.Involucrado_Incidente_Investigacion.Where(x =>
             x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
-            x.Id_Usuario.Equals(id_Usuario != 0 ? id_Usuario : x.Id_Usuario))
+            x.Id_Usuario.Equals(titular != 0 ? titular : x.Id_Usuario))
                 .Select(x => x.Id_Investigacion_Final).ToListAsync();
 
             var investigaciones = await _context.Investigacion_Final_Incidente.ToListAsync();
-            var filtrado = investigaciones.Where(x =>
-            x.Id_Supervisor_MA.Equals(id_Asesor != 0 ? id_Asesor : x.Id_Supervisor_MA) &&
-            x.Id_Gerencia_Responsable.Equals(id_Gerencia != 0 ? id_Gerencia : x.Id_Gerencia_Responsable))
+            var filtrado = investigaciones
                 .OrderByDescending(x=>x.Codigo)
                 .ToList();
 
-            if (fecha.HasValue)
+            if (fechaInicio.HasValue)
                 filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
-                x.Fecha_Incidente.Value.Date.Equals(fecha.Value.Date)).ToList();
+                x.Fecha_Incidente.Value.Date >= fechaInicio.Value.Date).ToList();
+            if (fechaFin.HasValue)
+                filtrado = filtrado.Where(x => x.Fecha_Incidente.HasValue &&
+                x.Fecha_Incidente.Value.Date <= fechaFin.Value.Date).ToList();
+            if (gerencia.Length > 0)
+                filtrado = filtrado.Where(x => x.Id_Gerencia_Responsable.HasValue &&
+                gerencia.Contains(x.Id_Gerencia_Responsable.Value)).ToList();
+            if (asesor.Length > 0)
+                filtrado = filtrado.Where(x => x.Id_Supervisor_MA.HasValue &&
+                asesor.Contains(x.Id_Supervisor_MA.Value)).ToList();
+            if (codigo != null && codigo.Length > 0)
+                filtrado = filtrado.Where(x => x.Codigo.Contains(codigo)).ToList();
+            if (responsable.Length > 0 || estado.Count > 0)
+            {
+                var acciones = await _context.Accion_Incidente_Investigacion.ToListAsync();
+                if (responsable.Length > 0)
+                {
+                    acciones = acciones.Where(x => x.Id_Usuario.HasValue &&
+                    responsable.Contains(x.Id_Usuario.Value)).ToList();
 
-            if (investigaciones_titulares_minero.Count > 0 && id_Usuario != 0)
+                    filtrado = filtrado.Where(x =>
+                    acciones.Select(x => x.Id_Investigacion_Final).Contains(x.Id_Investigacion_Final)).ToList();
+                }
+                if (estado.Count > 0)
+                {
+                    acciones = acciones.Where(x =>
+                        estado.Contains(x.Estado)).ToList();
+
+                    filtrado = filtrado.Where(x =>
+                    acciones.Select(x => x.Id_Investigacion_Final).Contains(x.Id_Investigacion_Final)).ToList();
+                }
+            }
+
+
+            if (investigaciones_titulares_minero.Count > 0)
                 filtrado = filtrado.Where(x => investigaciones_titulares_minero.Contains(x.Id_Investigacion_Final)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
@@ -88,12 +119,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                 if (item.Id_Gerencia_Responsable != null)
                 {
-                    var gerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
+                    var gerenciaDomain = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Responsable));
                     outputItem.Gerencia_Responsable = new Gerencia
                     {
-                        IdGerencia = gerencia.Id_Gerencia,
-                        Descripcion = gerencia.Descripcion,
-                        Estado = gerencia.Estado
+                        IdGerencia = gerenciaDomain.Id_Gerencia,
+                        Descripcion = gerenciaDomain.Descripcion,
+                        Estado = gerenciaDomain.Estado
                     };
                 }
 

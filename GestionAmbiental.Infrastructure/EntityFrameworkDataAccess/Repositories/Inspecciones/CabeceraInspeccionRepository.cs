@@ -42,8 +42,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 cabeceras = cabeceras.Where(x => registradoPorFiltro.Contains(x.Id_Registrado_Por)).ToList();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
-            if (responsableFiltro.Length>0 || asesorFiltro.Length > 0||estadoFiltro.Count>0)
+            var cabecerasSinObs = cabeceras.Where(x => !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).OrderByDescending(x => x.Fecha_Inspeccion).ToList();
+            observaciones = observaciones.Where(x => !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())).ToList();
+            if (responsableFiltro.Length > 0 || asesorFiltro.Length > 0 || estadoFiltro.Count > 0)
             {
+                cabecerasSinObs = new List<Entities.Inspecciones.Inspeccion_Cabecera>();
                 if (responsableFiltro.Length > 0)
                     observaciones = observaciones.Where(x => responsableFiltro.Contains(x.Id_Responsable_Marcobre)).ToList();
                 if (asesorFiltro.Length > 0)
@@ -51,9 +54,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 if (estadoFiltro.Count > 0)
                     observaciones = observaciones.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
             }
-            //var cabecerasSinObs = cabeceras.Where(x =>!x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).OrderByDescending(x=>x.Fecha_Inspeccion).ToList();
-            cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList();
-           // cabeceras.InsertRange(0,cabecerasSinObs);
+            cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList(); 
+            cabeceras.InsertRange(0, cabecerasSinObs);
+            //else
+            //{
+            //    var cabecerasSinObs = cabeceras.Where(x => !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).OrderByDescending(x => x.Fecha_Inspeccion).ToList(); 
+            //    cabeceras.InsertRange(0, cabecerasSinObs);
+            //}
 
             var gerencias = await _context.Gerencias.ToListAsync();
             var empresas = await _context.Empresas.ToListAsync();
