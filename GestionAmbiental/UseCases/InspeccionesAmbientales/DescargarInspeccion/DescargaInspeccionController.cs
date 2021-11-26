@@ -97,7 +97,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 sheet.GetRow(17).GetCell(7).SetCellValue(cabecera.Objetivo);
 
                 //->Fila observaciones en el formato
-                int fila = 23;
+                int fila = 25;
                 //->Cell Style
                 XSSFCellStyle customCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
                 customCellStyle.WrapText = true;
@@ -131,8 +131,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //Acto/Condición subestándar identificada
                     sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 3, 8));
                     //Fotografía de la condición subestándar
-                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 9, 13));
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 9, 10));
                     //Tipo de Condición/Acto Subestándar
+                    sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 11, 13));
+                    //Descripción de Condición/Acto Subestándar
                     sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 14, 16));
                     //Acción preventiva/correctiva
                     sheet.AddMergedRegion(new CellRangeAddress(fila, fila, 18, 22));
@@ -197,13 +199,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Acto/Condición Subestándar Identificada
                     row.GetCell(3).SetCellValue(observacion.DescripcionCondicion);
                     //->Tipo de Condición / Acto Subestándar
-                    row.GetCell(14).SetCellValue(observacion.TipoCondicion?.Descripcion);
+                    row.GetCell(11).SetCellValue(observacion.TipoCondicion?.Descripcion);
+                    //->Descripción de Condición / Acto Subestándar
+                    row.GetCell(14).SetCellValue(observacion.DescripcionActoCondicion);
                     //->Nivel de Riesgo
                     row.GetCell(17).SetCellValue(observacion.NivelRiesgo);
                     //->Acción Preventiva / Correctiva Tomada
                     row.GetCell(18).SetCellValue(observacion.DescripcionAccion);
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
-                    row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
+                    row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre2!=null? (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos):observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
                     //->Fecha Programada
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
 
@@ -313,7 +317,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             TipoCondicion = observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
                             NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
                             Accion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
-                            ResponsableLevantamiento = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                            ResponsableLevantamiento = observacion.ResponsableMarcobre2!=null?
+                                                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : 
+                                                        observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
                             FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "No Aplica",
                             EvidenciaImplementacion = observacion.EvidenciaImplementacion,
                             FechaCierre = observacion.FechaCierre.HasValue ? observacion.FechaCierre.Value.ToString("dd/MM/yyyy") : "No Aplica",
@@ -496,7 +502,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 if (tipoEvidencia == "condicion")
                 {
                     if (!reporte)
-                        imgNCol = 5;
+                        imgNCol = 2;
                     serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
                     foreach (var item in serverInfo.Info)
                     {

@@ -68,15 +68,21 @@
                                         <input type="text" class="form-control" asp-for="ResponsableMarc" readonly />
                                     </div>
                                     <div class="col-12 col-sm-6 col-lg-6 ">
-                                        <label asp-for="ResponsableCont"></label>
-                                        <input type="text" class="form-control" asp-for="ResponsableCont" readonly />
+                                        <label asp-for="ResponsableMarc2"></label>
+                                        <input type="text" class="form-control" asp-for="ResponsableMarc2" readonly />
                                     </div>
                                 </div>
                                 <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
-                                        <label asp-for="CorreoCont"></label>
-                                        <input type="email" class="form-control" asp-for="CorreoCont" readonly/>
+                                        <label asp-for="ResponsableCont"></label>
+                                        <input type="text" class="form-control" asp-for="ResponsableCont" readonly />
                                     </div>
+                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                        <label asp-for="CorreoCont"></label>
+                                        <input type="email" class="form-control" asp-for="CorreoCont" readonly />
+                                    </div>
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="Evidencia"></label>
                                         @*<input type="hidden" asp-for="Evidencia" value="@Model.Evidencia[0]" />*@
@@ -92,8 +98,6 @@
                                             <span>Descargar Evidencia</span>
                                         </button>
                                     </div>
-                                </div>
-                                <div class="row input_container w-100 align-items-start">
                                     <div class="col-12 col-sm-6 col-lg-6 ">
                                         <label asp-for="EvidenciasInspeccion"></label>
                                         <span class="text-danger field-validation-error" data-valmsg-for="EvidenciasInspeccion" data-valmsg-replace="true">
@@ -101,7 +105,9 @@
                                         </span>
                                         <input type="file" asp-for="EvidenciasInspeccion" class="form-control" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.xls,.xlsx" data-max-size="8971520" multiple>
                                     </div>
-                                    <div class="col-12 col-sm-6 col-lg-6 ">
+                                </div>
+                                <div class="row input_container w-100 align-items-start">
+                                    <div class="col-12 col-sm-12 col-lg-12 ">
                                         <label asp-for="Comentario"></label><span class="text-danger" asp-validation-for="Comentario"></span>
                                         <textarea class="form-control" asp-for="Comentario" rows="3"></textarea>
                                     </div>

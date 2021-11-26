@@ -266,6 +266,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         }
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
+                        filaObservacion += "<td>" + observacion.ResponsableMarcobre2 + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
@@ -284,6 +285,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
                         NivelRiesgo = x.NivelRiesgo,
                         Accion = x.DescripcionAccion,
                         ResponsableMarc = x.ResponsableMarcobre,
+                        ResponsableMarc2 = x.ResponsableMarcobre2,
                         ResponsableCont = x.ResponsableContratista,
                         FechaProgramada = x.FechaProgramada.HasValue ? x.FechaProgramada.Value.ToString("yyyy-MM-dd") : "",
                         Estado = x.Estado,

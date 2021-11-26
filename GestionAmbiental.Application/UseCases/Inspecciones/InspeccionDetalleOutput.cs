@@ -114,8 +114,12 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
             if (detalle.ResponsableMarcobre2 != null)
             {
-                ResponsableMarcobre = detalle.ResponsableMarcobre2.Nombres + " " + detalle.ResponsableMarcobre2.Apellidos;
-                IdResponsableMarcobre = detalle.ResponsableMarcobre2.IdUsuario;
+                ResponsableMarcobre2 = detalle.ResponsableMarcobre2.Nombres + " " + detalle.ResponsableMarcobre2.Apellidos;
+                IdResponsableMarcobre2 = detalle.ResponsableMarcobre2.IdUsuario;
+            }
+            else{
+                ResponsableMarcobre2 = "No Aplica";
+                IdResponsableMarcobre2 = 0;
             }
             ResponsableContratista = detalle.ResponsableContratista;
             CorreoContratista = detalle.CorreoContratista;

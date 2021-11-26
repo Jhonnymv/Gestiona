@@ -534,6 +534,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         }
                         filaObservacion += "<td>" + observacion.DescripcionAccion + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
+                        filaObservacion += "<td>" + observacion.ResponsableMarcobre2 + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
                         filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue?observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";                                             

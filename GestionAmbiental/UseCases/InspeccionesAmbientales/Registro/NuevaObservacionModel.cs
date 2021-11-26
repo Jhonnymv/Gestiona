@@ -32,10 +32,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public string NiveRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva")]
         public string AccionTomada { get; set; }
-        [DisplayName("Resp. Marcobre levantar Obs.")]
+        [DisplayName("Resp. Marcobre levantar Obs. 1")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opcción")]
         public int ResponsableMarc { get; set; }
-        [DisplayName("Resp. SEcundario Marcobre levantar Obs")]
+        [DisplayName("Resp. Marcobre levantar Obs. 2")]
         public int? ResponsableMarc2 { get; set; }
         [DisplayName("Responsable Contratista")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]

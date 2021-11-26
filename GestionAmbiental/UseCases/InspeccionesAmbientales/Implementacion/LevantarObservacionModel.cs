@@ -30,8 +30,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
         public string NivelRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada")]
         public string AccionTomada { get; set; }
-        [DisplayName("Responsable de Marcobre para levantar Obs.")]
+        [DisplayName("Responsable de Marcobre para levantar Obs. 1")]
         public string ResponsableMarc { get; set; }
+        [DisplayName("Responsable de Marcobre para levantar Obs. 2")]
+        public string ResponsableMarc2 { get; set; }
         [DisplayName("Responsable Contratista")]
         public string ResponsableCont { get; set; }
         [DisplayName("Correo Electrónico de Responsable Contratista")]

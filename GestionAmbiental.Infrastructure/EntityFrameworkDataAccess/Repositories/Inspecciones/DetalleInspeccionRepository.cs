@@ -74,11 +74,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var inspeccionDetalle = await _context.Inspecciones_Detalle.FirstOrDefaultAsync(x => x.Id_Inspeccion_Detalle.Equals(idDetalle));
             var tipoCondicion = await _context.Tipos_Condicion.FirstOrDefaultAsync(x => x.Id_Tipo_Condicion.Equals(inspeccionDetalle.Id_Tipo_Condicion));
-            var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo);
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario,responsableMarcobre.Id_Rol,responsableMarcobre.Nombres,responsableMarcobre.Apellidos,responsableMarcobre.Email);
             var responsableMarcobre2 = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre2));
-            var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
             var responsableMA = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
             var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
 
@@ -88,12 +86,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 TipoObservacion = inspeccionDetalle.Tipo_Observacion,
                 DescripcionActoCondicion = inspeccionDetalle.Descripcion_Acto_Condicion,
                 DescripcionCondicion = inspeccionDetalle.Descripcion_Condicion,
-                TipoCondicion = tipoCondicion_Domain,
                 EvidenciaCondicion = inspeccionDetalle.Evidencia_Condicion,
                 NivelRiesgo = inspeccionDetalle.Nivel_Riesgo,
                 DescripcionAccion = inspeccionDetalle.Descripcion_Accion,
                 ResponsableMarcobre = responsableMarcobre_Domain,
-                ResponsableMarcobre2 = responsableMarcobre2_Domain,
                 ResponsableContratista = inspeccionDetalle.Responsable_Contratista,
                 CorreoContratista = inspeccionDetalle.Correo_Contratista,
                 FechaProgramada = inspeccionDetalle.Fecha_Programada,
@@ -105,6 +101,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 ComentarioVerificacion = inspeccionDetalle.Comentario_Verificacion,
                 Estado = inspeccionDetalle.Estado
                 };
+            if (tipoCondicion != null)
+            {
+                var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
+                detalle.TipoCondicion = tipoCondicion_Domain;
+            }
+            if (responsableMarcobre2 != null)
+            {
+                var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
+                detalle.ResponsableMarcobre2 = responsableMarcobre2_Domain;
+            }
             return detalle;
         }
         public async Task<List<InspeccionCabecera>> GetInspeccionesYObservaciones(int empresa, int gerencia, int respLevObs, int asesor, DateTime FechaInicio, DateTime FechaFin, string estado, int idGerenciaInspeccionada)
@@ -206,7 +212,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var responsableMarcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
                     var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
                     var responsableMarcobre2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre2));
-                    var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
                     var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor));
                     var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
 
@@ -220,8 +225,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         EvidenciaCondicion = item.Evidencia_Condicion,
                         NivelRiesgo = item.Nivel_Riesgo,
                         DescripcionAccion = item.Descripcion_Accion,
-                        ResponsableMarcobre = responsableMarcobre_Domain,
-                        ResponsableMarcobre2 = responsableMarcobre2_Domain,
+                        ResponsableMarcobre = responsableMarcobre_Domain,                        
                         ResponsableContratista = item.Responsable_Contratista,
                         CorreoContratista = item.Correo_Contratista,
                         FechaProgramada = item.Fecha_Programada,
@@ -238,6 +242,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     {
                         var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
                         obs.TipoCondicion = tipoCondicion_Domain;
+                    }
+                    if (responsableMarcobre2 != null)
+                    {
+                        var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
+                        obs.ResponsableMarcobre2 = responsableMarcobre2_Domain;
                     }
                     obsDomain.Add(obs);
                 }

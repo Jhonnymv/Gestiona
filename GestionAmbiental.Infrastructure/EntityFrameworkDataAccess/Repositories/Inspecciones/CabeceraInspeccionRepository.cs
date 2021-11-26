@@ -370,6 +370,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     NivelRiesgo = observacion.Nivel_Riesgo,
                     DescripcionAccion = observacion.Descripcion_Accion,
                     ResponsableMarcobre = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(observacion.Id_Responsable_Marcobre)),
+                    ResponsableMarcobre2 = usuarios_domain.FirstOrDefault(x => x.IdUsuario.Equals(observacion.Id_Responsable_Marcobre2)),
                     ResponsableContratista = observacion.Responsable_Contratista,
                     CorreoContratista = observacion.Correo_Contratista,
                     FechaProgramada = observacion.Fecha_Programada,
