@@ -57,6 +57,8 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionImplem
             output.NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica"; 
             output.DescripcionAccion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica";
             output.ResponsableMarcobre = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos;
+            if(observacion.ResponsableMarcobre2!=null)
+            output.ResponsableMarcobre2 = observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos;
             output.ResponsableContratista = observacion.ResponsableContratista;
             output.FechaProgramada = observacion.FechaProgramada;
             output.Estado = observacion.Estado;

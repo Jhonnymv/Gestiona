@@ -28,7 +28,9 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.NuevaObservacion
         public string NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
         public string ResponsableMarcobre { get; set; }
+        public string ResponsableMarcobre2 { get; set; }
         public string EmailResponsableMarcobre { get; set; }
+        public string EmailResponsableMarcobre2 { get; set; }
         public string ResponsableContratista { get; set; }
         public DateTime? FechaProgramada { get; set; }
         public string Estado { get; set; }

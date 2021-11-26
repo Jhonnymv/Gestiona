@@ -42,7 +42,7 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechaz
             output.Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos;
             output.DescripcionCondicion = observacion.DescripcionCondicion;
             output.DescripcionActoCondicion = observacion.DescripcionActoCondicion;
-            output.TipoCondicion = observacion.TipoCondicion!=null? observacion.TipoCondicion.Descripcion:"No Aplica";
+            output.TipoCondicion = observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica";
             output.DescripcionAccion = observacion.DescripcionAccion;
             if (observacion.EvidenciaCondicion != null)
             {
@@ -54,9 +54,14 @@ namespace GestionAmbiental.Application.UseCases.Notificaciones.ObservacionRechaz
                 }
                 output.EvidenciaCondicion = listEvidencias_condicion;
             }
-            output.NivelRiesgo = observacion.NivelRiesgo!=null? observacion.NivelRiesgo: "No Aplica";
+            output.NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica";
             output.DescripcionAccion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica";
             output.ResponsableMarcobre = observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos;
+            if (observacion.ResponsableMarcobre2 != null)
+            {
+                output.ResponsableMarcobre2 = observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos;
+                output.EmailResponsableMarcobre2 = observacion.ResponsableMarcobre2.Email;
+            }
             output.ResponsableContratista = observacion.ResponsableContratista;
             output.FechaProgramada = observacion.FechaProgramada;
             output.Estado = observacion.Estado;

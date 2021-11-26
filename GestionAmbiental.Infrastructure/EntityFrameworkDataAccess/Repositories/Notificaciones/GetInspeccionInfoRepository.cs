@@ -67,6 +67,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(observacion.Id_Tipo_Condicion));
                 var responsableMarcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre));
+                var responsableMarcobre2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Responsable_Marcobre2));
                 var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
                 var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(observacion.Id_Asesor));
                 var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
@@ -88,6 +89,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
                     detalle.TipoCondicion = tipoCondicion_Domain;
+                }
+                if (responsableMarcobre2 != null)
+                {
+                    var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
+                    detalle.ResponsableMarcobre2 = responsableMarcobre2_Domain;
                 }
 
                 output.Observaciones.Add(detalle);

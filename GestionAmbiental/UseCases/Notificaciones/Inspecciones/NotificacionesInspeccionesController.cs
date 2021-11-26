@@ -104,7 +104,9 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.DescripcionActoCondicion,
                         observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
                         observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
-                        observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                        observacion.ResponsableMarcobre2!=null? 
+                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - "+observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : 
+                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos),
                         observacion.ResponsableContratista,
                         (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
                         _protector.Protect(IdCabecera.ToString())
@@ -131,8 +133,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
                         observacion.DescripcionActoCondicion,
                         observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
-                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
-                        observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
+                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica", 
+                        observacion.ResponsableMarcobre2 != null ?
+                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) :
+                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos),
                         observacion.ResponsableContratista,
                         (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
                         "No Aplica", //Comentario Implementacion
@@ -160,8 +164,12 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 mail.UseDefaultCredentials = false;
                 NetworkCredential credential = new NetworkCredential(user, pass);
                 mail.Credentials = credential;
-                if(!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
+                {
                     msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                    if (observacion.ResponsableMarcobre2 != null)
+                        msg.To.Add(new MailAddress(observacion.ResponsableMarcobre2.Email));
+                }
                 else
                     msg.To.Add(new MailAddress(observacion.Asesor.Email));
                 msg.Subject = "Nueva Observacion Asignada";
@@ -228,7 +236,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.TipoCondicion,
                 info.NivelRiesgo,
                 info.DescripcionAccion,
-                info.ResponsableMarcobre,
+                info.ResponsableMarcobre2!=null? (info.ResponsableMarcobre + " -  "+info.ResponsableMarcobre2): info.ResponsableMarcobre,
                 info.ResponsableContratista,
                 info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",     
                 info.ComentarioImplementacion,
@@ -318,7 +326,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.DescripcionActoCondicion,
                 info.NivelRiesgo,
                 info.DescripcionAccion,
-                info.ResponsableMarcobre,
+                info.ResponsableMarcobre2 != null ? info.ResponsableMarcobre + " -  " + info.ResponsableMarcobre2 : info.ResponsableMarcobre,
                 info.ResponsableContratista,
                 info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
                 info.ComentarioImplementacion,
@@ -348,6 +356,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
             msg.To.Add(new MailAddress(info.EmailResponsableMarcobre));
+            if (info.EmailResponsableMarcobre2 != null)
+                msg.To.Add(new MailAddress(info.EmailResponsableMarcobre2));
             msg.Subject = "Observación Rechazada";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;

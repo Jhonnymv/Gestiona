@@ -114,7 +114,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                     info.Supervisor_MA,
                     accion.Tipo_Accion,
                     accion.Accion_Inmediata,
-                    accion.Responsable_Marcobre,
+                    accion.Responsable_Marcobre2 != null ? accion.Responsable_Marcobre + " - " + accion.Responsable_Marcobre2 : accion.Responsable_Marcobre,
                     accion.Responsable_Contratista,
                     accion.Fecha.Value.ToString("dd/MM/yyyy"),
                     IdEncriptado
@@ -130,6 +130,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                 mail.Credentials = credential;
 
                 msg.To.Add(new MailAddress(accion.Responsable_Marcobre_Email));
+                if (accion.Responsable_Marcobre2 != null)
+                    msg.To.Add(new MailAddress(accion.Responsable_Marcobre2_Email));
 
                 msg.Subject = "Nueva Acción de Incidente";
                 msg.SubjectEncoding = Encoding.UTF8;
@@ -307,7 +309,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                 info.Supervisor_MA,
                 accion.Tipo_Accion,
                 accion.Accion_Inmediata,
-                accion.Responsable_Marcobre,
+                accion.Responsable_Marcobre2 != null ? accion.Responsable_Marcobre + " - " + accion.Responsable_Marcobre2 : accion.Responsable_Marcobre,
                 accion.Responsable_Contratista,
                 accion.Fecha.Value.ToString("dd/MM/yyyy"),
                 accion.Comentarios_Implementacion,
@@ -397,7 +399,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                 info.Supervisor_MA,
                 accion.Tipo_Accion,
                 accion.Accion_Inmediata,
-                accion.Responsable_Marcobre,
+                accion.Responsable_Marcobre2 != null ? accion.Responsable_Marcobre + " - " + accion.Responsable_Marcobre2 : accion.Responsable_Marcobre,
                 accion.Responsable_Contratista,
                 accion.Fecha.Value.ToString("dd/MM/yyyy"),
                 accion.Comentarios_Implementacion,
@@ -415,6 +417,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             mail.Credentials = credential;
 
             msg.To.Add(new MailAddress(accion.Responsable_Marcobre_Email));
+            if (accion.Responsable_Marcobre2 != null)
+                msg.To.Add(new MailAddress(accion.Responsable_Marcobre2_Email));
 
             msg.Subject = "Acción de Incidente Rechazada";
             msg.SubjectEncoding = Encoding.UTF8;

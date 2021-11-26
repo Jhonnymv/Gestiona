@@ -40,13 +40,13 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
                 if (outputItem.Id_Usuario.HasValue)
                 {
                     var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario.Value);
-                    outputItem.Responsable_Marcobre = usuario.Nombres + " " + usuario.Apellidos;
+                    outputItem.Responsable_Marcobre = usuario.Nombres.ToUpper() + " " + usuario.Apellidos.ToUpper();
                     outputItem.Responsable_Marcobre_Email = usuario.Email;
                 }
                 if (outputItem.Id_Usuario2.HasValue)
                 {
                     var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario2.Value);
-                    outputItem.Responsable_Marcobre2 = usuario.Nombres + " " + usuario.Apellidos;
+                    outputItem.Responsable_Marcobre2 = usuario.Nombres.ToUpper() + " " + usuario.Apellidos.ToUpper();
                     outputItem.Responsable_Marcobre2_Email = usuario.Email;
                 }
 
@@ -84,12 +84,12 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
                     if (outputItem.Id_Usuario.HasValue)
                     {
                         var usuario = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario.Value);
-                        outputItem.Responsable_Marcobre = usuario.Nombres + " " + usuario.Apellidos;
+                        outputItem.Responsable_Marcobre = usuario.Nombres.ToUpper() + " " + usuario.Apellidos.ToUpper();
                     }
                     if (outputItem.Id_Usuario2.HasValue)
                     {
                         var usuario2 = await _gestorTablasMaestrasReadOnlyRepository.GetUsuario(outputItem.Id_Usuario2.Value);
-                        outputItem.Responsable_Marcobre2 = usuario2.Nombres + " " + usuario2.Apellidos;
+                        outputItem.Responsable_Marcobre2 = usuario2.Nombres.ToUpper() + " " + usuario2.Apellidos.ToUpper();
                     }
 
                     if (item.Id_Usuario.Equals(info_usuario.IdUsuario) || item.Id_Usuario2.Equals(info_usuario.IdUsuario))
