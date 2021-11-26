@@ -354,10 +354,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 supervisores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -596,10 +596,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var gerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 supervisores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -772,7 +772,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 {
                     filas_involucrados += "<tr>";
                     filas_involucrados += "<td>" + fila.Tipo_Involucrado + "</td>";
-                    filas_involucrados += "<td>" + fila.Nombres + " " + fila.Apellidos + "</td>";
+                    filas_involucrados += "<td>" + fila.Nombres.ToUpper() + " " + fila.Apellidos.ToUpper() + "</td>";
                     if (fila.DocIdentidad != null)
                         filas_involucrados += "<td>" + fila.DocIdentidad + "</td>";
                     else
@@ -825,8 +825,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 idInvolucrado = involucrado.Id_Involucrado_Incidente,
                 tipo = involucrado.Tipo_Involucrado,
                 idUsuario = involucrado.Id_Usuario,
-                nombres = involucrado.Nombres,
-                apellidos = involucrado.Apellidos,
+                nombres = involucrado.Nombres.ToUpper(),
+                apellidos = involucrado.Apellidos.ToUpper(),
                 docIdentidad = involucrado.DocIdentidad,
                 edad = involucrado.Edad,
                 email = involucrado.Email,
@@ -1072,6 +1072,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                             filas_acciones += "<td>" + fila.Responsable_Marcobre + "</td>";
                         else
                             filas_acciones += "<td>_</td>";
+                        if (fila.Responsable_Marcobre2 != null)
+                            filas_acciones += "<td>" + fila.Responsable_Marcobre2 + "</td>";
+                        else
+                            filas_acciones += "<td>_</td>";
                         if (fila.Responsable_Contratista != null)
                             filas_acciones += "<td>" + fila.Responsable_Contratista + "</td>";
                         else
@@ -1154,6 +1158,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_inmediatas += "<td>" + fila.Responsable_Marcobre + "</td>";
                     else
                         filas_acciones_inmediatas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre2 != null)
+                        filas_acciones_inmediatas += "<td>" + fila.Responsable_Marcobre2 + "</td>";
+                    else
+                        filas_acciones_inmediatas += "<td>_</td>";
                     if (fila.Responsable_Contratista != null)
                         filas_acciones_inmediatas += "<td>" + fila.Responsable_Contratista + "</td>";
                     else
@@ -1178,6 +1186,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filas_acciones_correctivas += "<td>_</td>";
                     if (fila.Responsable_Marcobre != null)
                         filas_acciones_correctivas += "<td>" + fila.Responsable_Marcobre + "</td>";
+                    else
+                        filas_acciones_correctivas += "<td>_</td>";
+                    if (fila.Responsable_Marcobre2 != null)
+                        filas_acciones_correctivas += "<td>" + fila.Responsable_Marcobre2 + "</td>";
                     else
                         filas_acciones_correctivas += "<td>_</td>";
                     if (fila.Responsable_Contratista != null)
@@ -1206,9 +1218,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaAccion(int IdInvestigacion,string tipoAccion, string accion, int usuario, string contratista, string fecha, string estado)
+        public async Task<IActionResult> NuevaAccion(int IdInvestigacion,string tipoAccion, string accion, int usuario, int usuario2, string contratista, string fecha, string estado)
         {
-            await _registrarAccionCorrectivaIncidenteInvestigacion.Execute(IdInvestigacion,tipoAccion, accion, usuario, contratista, fecha, estado);
+            await _registrarAccionCorrectivaIncidenteInvestigacion.Execute(IdInvestigacion,tipoAccion, accion, usuario, usuario2, contratista, fecha, estado);
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpGet]
@@ -1223,6 +1235,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 tipo = accion.Tipo_Accion,
                 idUsuario = accion.Id_Usuario,
                 responsableMarc = accion.Responsable_Marcobre,
+                idUsuario2 = accion.Id_Usuario2,
+                responsableMarc2 = accion.Responsable_Marcobre2,
                 accion = accion.Accion_Inmediata,
                 responsableCon = accion.Responsable_Contratista,
                 fecha = accion.Fecha != null ? accion.Fecha.Value.ToString("yyyy-MM-dd") : "",
@@ -1231,9 +1245,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> EditarAccion(int IdAccion, int IdInvestigacion,string tipoAccion, int usuario,string accion, string contratista, string fecha, string estado)
+        public async Task<IActionResult> EditarAccion(int IdAccion, int IdInvestigacion,string tipoAccion, int usuario, int usuario2,string accion, string contratista, string fecha, string estado)
         {
-            await _editarAccionIncidenteInvestigacion.Execute(IdAccion, IdInvestigacion,tipoAccion, usuario, accion,fecha, contratista, estado);
+            await _editarAccionIncidenteInvestigacion.Execute(IdAccion, IdInvestigacion,tipoAccion, usuario, usuario2, accion,fecha, contratista, estado);
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpPost]

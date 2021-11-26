@@ -53,8 +53,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var acciones = await _context.Accion_Incidente_Investigacion.ToListAsync();
                 if (responsable.Length > 0)
                 {
-                    acciones = acciones.Where(x => x.Id_Usuario.HasValue &&
-                    responsable.Contains(x.Id_Usuario.Value)).ToList();
+                    acciones = acciones.Where(x => (x.Id_Usuario.HasValue &&
+                    responsable.Contains(x.Id_Usuario.Value))|| (x.Id_Usuario2.HasValue &&
+                    responsable.Contains(x.Id_Usuario2.Value))).ToList();
 
                     filtrado = filtrado.Where(x =>
                     acciones.Select(x => x.Id_Investigacion_Final).Contains(x.Id_Investigacion_Final)).ToList();

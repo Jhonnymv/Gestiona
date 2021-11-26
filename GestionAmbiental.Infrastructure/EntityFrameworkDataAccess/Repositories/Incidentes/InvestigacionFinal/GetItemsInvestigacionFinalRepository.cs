@@ -186,6 +186,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 outputItem.Tipo_Accion = item.Tipo_Accion;
                 outputItem.Accion_Inmediata = item.Accion_Inmediata;
                 outputItem.Id_Usuario = item.Id_Usuario;
+                outputItem.Id_Usuario2 = item.Id_Usuario2;
                 outputItem.Responsable = item.Responsable;
                 outputItem.Fecha = item.Fecha;
                 outputItem.Estatus = item.Estatus;
@@ -207,6 +208,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             output.Accion_Inmediata = entity.Accion_Inmediata;
             output.Tipo_Accion = entity.Tipo_Accion;
             output.Id_Usuario = entity.Id_Usuario;
+            output.Id_Usuario2 = entity.Id_Usuario2;
             output.Responsable = entity.Responsable;
             output.Fecha = entity.Fecha;
             output.Estatus = entity.Estatus;

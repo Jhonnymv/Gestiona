@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             _editarInvestigacionFinalReadOnlyRepository = editarInvestigacionFinalReadOnlyRepository ?? throw new ArgumentNullException(nameof(editarInvestigacionFinalReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int IdAccion, int IdInvestigacion,string tipoAccion, int IdUsuario, string AccionInmediata, string Fecha, string Responsable, string Estatus)
+        public async Task<int> Execute(int IdAccion, int IdInvestigacion,string tipoAccion, int IdUsuario, int IdUsuario2, string AccionInmediata, string Fecha, string Responsable, string Estatus)
         {
             var fechaAccion = Convert.ToDateTime(Fecha);
 
@@ -28,6 +28,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             accion.Accion_Inmediata = AccionInmediata;
             if (IdUsuario != 0)
                 accion.Id_Usuario = IdUsuario;
+            if (IdUsuario2 != 0)
+                accion.Id_Usuario2 = IdUsuario2;
             accion.Responsable = Responsable;
             accion.Fecha = fechaAccion;
             accion.Estatus = Estatus;

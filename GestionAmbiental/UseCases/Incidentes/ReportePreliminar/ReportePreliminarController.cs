@@ -369,10 +369,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 supervisores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
@@ -407,7 +407,7 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
             {
                 filas_involucrados += "<tr>";
                 filas_involucrados += "<td>" + fila.Tipo_Involucrado + "</td>";
-                filas_involucrados += "<td>" + fila.Nombres + " " + fila.Apellidos + "</td>";
+                filas_involucrados += "<td>" + fila.Nombres.ToUpper() + " " + fila.Apellidos.ToUpper() + "</td>";
                 if(fila.Email != null)
                     filas_involucrados += "<td>" + fila.Email + "</td>";
                 else
@@ -453,8 +453,8 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 idInvolucrado = involucrado.Id_Involucrado_Incidente,
                 tipo = involucrado.Tipo_Involucrado,
                 idUsuario = involucrado.Id_Usuario,
-                nombres = involucrado.Nombres,
-                apellidos = involucrado.Apellidos,
+                nombres = involucrado.Nombres.ToUpper(),
+                apellidos = involucrado.Apellidos.ToUpper(),
                 email = involucrado.Email,
                 celular = involucrado.Celular,
                 puesto = involucrado.Puesto_Trabajo,
@@ -733,10 +733,10 @@ namespace GestionAmbiental.UseCases.Incidentes.ReportePreliminar
                 var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 supervisores.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var usuario = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
                 usuario.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var actos = items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();

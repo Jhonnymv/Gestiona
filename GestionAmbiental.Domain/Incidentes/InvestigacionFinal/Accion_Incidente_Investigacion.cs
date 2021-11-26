@@ -11,6 +11,7 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
         public string Tipo_Accion { get; set; }
         public string Accion_Inmediata { get; set; }
         public int? Id_Usuario { get; set; }
+        public int? Id_Usuario2 { get; set; }
         public string Responsable { get; set; }
         public DateTime? Fecha { get; set; }
         public string Evidencia { get; set; }

@@ -89,7 +89,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
             customCellStyle.BorderRight = BorderStyle.Thin;
             customCellStyle.SetFont(hFont);
 
-            var rowHeight = sheet.GetRow(7).Height;
+            var rowHeight = sheet.GetRow(36).Height;
 
             sheet.GetRow(7).GetCell(24).SetCellValue(investigacion.Num_Trabajadores);
 
@@ -147,7 +147,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 }
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(involucrado.Tipo_Involucrado);
-                row.GetCell(2).SetCellValue(involucrado.Nombres + " " + involucrado.Apellidos);
+                row.GetCell(2).SetCellValue(involucrado.Nombres.ToUpper() + " " + involucrado.Apellidos.ToUpper());
                 row.GetCell(16).SetCellValue(involucrado.DocIdentidad);
                 row.GetCell(21).SetCellValue(involucrado.Edad != null ? involucrado.Edad.ToString() : "");
                 row.GetCell(23).SetCellValue(involucrado.Puesto_Trabajo);
@@ -323,7 +323,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(accion.Accion_Inmediata);
                 row.GetCell(17).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
-                row.GetCell(21).SetCellValue(accion.Responsable_Marcobre);
+                row.GetCell(21).SetCellValue((accion.Id_Usuario!=null? accion.Responsable_Marcobre.ToUpper() : "")+ (accion.Id_Usuario2 != null ? (accion.Id_Usuario!=null?" - ":"") + accion.Responsable_Marcobre2.ToUpper() : ""));
                 row.GetCell(25).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
                 row.GetCell(29).SetCellValue(accion.Estatus);
                 //Unir las celdas
@@ -356,7 +356,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarInvestigacionFinal
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(accion.Accion_Inmediata);
                 row.GetCell(17).SetCellValue(accion.Fecha != null ? accion.Fecha.Value.ToString("dd/MM/yyyy") : "");
-                row.GetCell(21).SetCellValue(accion.Responsable_Marcobre);
+                row.GetCell(21).SetCellValue((accion.Id_Usuario != null ? accion.Responsable_Marcobre.ToUpper() : "") + (accion.Id_Usuario2 != null ? (accion.Id_Usuario != null ? " - " : "") + accion.Responsable_Marcobre2.ToUpper() : ""));
                 row.GetCell(25).SetCellValue(accion.Responsable_Contratista != null ? accion.Responsable_Contratista : "No Aplica");
                 row.GetCell(29).SetCellValue(accion.Estatus);
                 //Unir las celdas

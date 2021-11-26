@@ -163,6 +163,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Tipo_Accion = accion.Tipo_Accion;
             entity.Accion_Inmediata = accion.Accion_Inmediata;
             entity.Id_Usuario = accion.Id_Usuario;
+            entity.Id_Usuario2 = accion.Id_Usuario2;
             entity.Responsable = accion.Responsable;
             entity.Fecha = accion.Fecha;
             entity.Comentarios_Verificacion = accion.Comentarios_Verificacion;

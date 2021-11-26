@@ -18,8 +18,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.ImplementarAcc
         public string Tipo_Accion { get; set; }
         [DisplayName("Acción Inmediata:")]
         public string Accion_Inmediata { get; set; }
-        [DisplayName("Responsable Marcobre:")]
+        [DisplayName("Responsable Marcobre 1:")]
         public string Responsable_Marcobre { get; set; }
+        [DisplayName("Responsable Marcobre 2:")]
+        public string Responsable_Marcobre2 { get; set; }
         [DisplayName("Responsable Contratista:")]
         public string Responsable_Contratista { get; set; }
         [DisplayName("Fecha:")]

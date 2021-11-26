@@ -13,6 +13,9 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
         public int? Id_Usuario { get; set; }
         public string Responsable_Marcobre { get; set; }
         public string Responsable_Marcobre_Email { get; set; }
+        public int? Id_Usuario2 { get; set; }
+        public string Responsable_Marcobre2 { get; set; }
+        public string Responsable_Marcobre2_Email { get; set; }
         public string Responsable_Contratista { get; set; }
         public string Evidencia { get; set; }
         public DateTime? Fecha { get; set; }

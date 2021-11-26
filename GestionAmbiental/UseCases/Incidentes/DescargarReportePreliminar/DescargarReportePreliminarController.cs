@@ -159,7 +159,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 }
                 //Completar la informacion
                 row.GetCell(1).SetCellValue(involucrado.Tipo_Involucrado);
-                row.GetCell(5).SetCellValue(involucrado.Nombres + " " + involucrado.Apellidos);
+                row.GetCell(5).SetCellValue(involucrado.Nombres.ToUpper() + " " + involucrado.Apellidos.ToUpper());
                 row.GetCell(12).SetCellValue(involucrado.Email);
                 row.GetCell(15).SetCellValue(involucrado.Celular);
                 row.GetCell(20).SetCellValue(involucrado.Puesto_Trabajo);

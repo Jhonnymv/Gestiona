@@ -48,6 +48,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entity.Tipo_Accion = accion.Tipo_Accion;
             entity.Accion_Inmediata = accion.Accion_Inmediata;
             entity.Id_Usuario = accion.Id_Usuario;
+            entity.Id_Usuario2 = accion.Id_Usuario2;
             entity.Responsable = accion.Responsable;
             entity.Fecha = accion.Fecha ?? entity.Fecha;
             entity.Estatus = accion.Estatus ?? entity.Estatus;
@@ -283,7 +284,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return entity.Id_Accion_Incidente_Investigacion;
         }
-
         public async Task<int> VerificarAccionCorrectivaInvestigacion(Accion_Incidente_Investigacion accion)
         {
             var entity = await _context.Accion_Incidente_Investigacion.FirstOrDefaultAsync(x => x.Id_Accion_Incidente_Investigacion.Equals(accion.Id_Accion_Incidente_Investigacion));

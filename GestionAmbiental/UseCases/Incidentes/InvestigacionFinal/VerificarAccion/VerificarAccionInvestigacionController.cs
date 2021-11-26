@@ -53,6 +53,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal.VerificarAccio
                     model.Tipo_Accion = accion.Tipo_Accion;
                     model.Accion_Inmediata = accion.Accion_Inmediata;
                     model.Responsable_Marcobre = accion.Responsable_Marcobre;
+                    model.Responsable_Marcobre2 = accion.Responsable_Marcobre2;
                     model.Responsable_Contratista = accion.Responsable_Contratista;
                     model.Fecha = accion.Fecha;
                     model.Evidencias = accion.Evidencia;

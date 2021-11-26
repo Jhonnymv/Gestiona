@@ -17,7 +17,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             _registrarInvestigacionFinalReadOnlyRepository = registrarInvestigacionFinalReadOnlyRepository ?? throw new ArgumentNullException(nameof(registrarInvestigacionFinalReadOnlyRepository));
         }
 
-        public async Task<int> Execute(int IdInvestigacion,string tipoAccion, string AccionInmediata, int IdUsuario, string Responsable, string Fecha, string Estatus)
+        public async Task<int> Execute(int IdInvestigacion,string tipoAccion, string AccionInmediata, int IdUsuario, int IdUsuario2, string Responsable, string Fecha, string Estatus)
         {
             var fechaAccion = Convert.ToDateTime(Fecha);
 
@@ -27,6 +27,8 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ac
             accion.Tipo_Accion = tipoAccion;
             if (IdUsuario != 0)
                 accion.Id_Usuario = IdUsuario;
+            if (IdUsuario2 != 0)
+                accion.Id_Usuario2 = IdUsuario2;
             accion.Responsable = Responsable;
             accion.Fecha = fechaAccion;
             accion.Estatus = Estatus;

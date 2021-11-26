@@ -9,6 +9,7 @@ function ResetInputsAccion() {
     $('#input_descripcion_accion').val("");
     $('#select_tipo_accion').val("");
     $('#select_usuarios_accion').val(0);
+    $('#select_usuarios_accion2').val(0);
     $('#input_contratista_accion').val("");
     $('#input_fecha_accion').val("");
     $('#select_estatus').val("");
@@ -20,7 +21,7 @@ function ValidateInputsAccion() {
         $('#input_fecha_accion').val() == "" ||
         $('#select_estatus').val() == "")
         result = false;
-    if ($('#select_usuarios_accion').val() == 0 &&
+    if (($('#select_usuarios_accion').val() == 0 ||$('#select_usuarios_accion2').val() == 0) &&
         $('#input_contratista_accion').val() == "")
         result = false;
     return result;
@@ -43,6 +44,7 @@ function EditarAccion(idAccion) {
             $("#select_tipo_accion").val(response.tipo),
             $("#input_descripcion_accion").val(response.accion);
             $("#select_usuarios_accion").val(response.idUsuario);
+            $("#select_usuarios_accion2").val(response.idUsuario2);
             $("#input_contratista_accion").val(response.responsableCon);
             $("#input_fecha_accion").val(response.fecha);
             $("#select_estatus").val(response.estatus);
@@ -80,6 +82,7 @@ $("#btn_guardar_accion").on("click", function () {
                 tipoAccion: $("#select_tipo_accion").val(),
                 accion: $("#input_descripcion_accion").val(),
                 usuario: $('#select_usuarios_accion').val(),
+                usuario2: $('#select_usuarios_accion2').val(),
                 contratista: $('#input_contratista_accion').val(),
                 fecha: $('#input_fecha_accion').val(),
                 estado: $('#select_estatus').val()
@@ -110,6 +113,7 @@ $("#btn_editar_accion").on("click", function () {
                 IdInvestigacion: $("#Id_Investigacion_Final").val(),
                 accion: $("#input_descripcion_accion").val(),
                 usuario: $('#select_usuarios_accion').val(),
+                usuario2: $('#select_usuarios_accion2').val(),
                 contratista: $('#input_contratista_accion').val(),
                 fecha: $('#input_fecha_accion').val(),
                 estado: $('#select_estatus').val()
