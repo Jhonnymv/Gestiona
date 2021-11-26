@@ -32,6 +32,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 .OrderByDescending(x=>x.Codigo)
                 .ToList();
 
+            var usuarios = await _context.Usuarios.ToListAsync();
+
             if (gerenciaFiltro.Length > 0)                
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.HasValue && gerenciaFiltro.Contains(x.Id_Gerencia_Inspeccionada.Value)).ToList();
             
@@ -72,6 +74,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var TablaResumen = new List<InspeccionCabecera>();
             foreach (var item in cabeceras)
             {
+                var registradoPor = usuarios.FirstOrDefault(g => g.Id_Usuario.Equals(item.Id_Registrado_Por));
                 var gerEjectMar = gerencias.FirstOrDefault(g => g.Id_Gerencia.Equals(item.Id_Gerencia));
                 var gerInspec = gerencias.FirstOrDefault(g => item.Id_Gerencia_Inspeccionada.HasValue && g.Id_Gerencia.Equals(item.Id_Gerencia_Inspeccionada));
                 var empContMar = empresas.FirstOrDefault(e => e.Id_Empresa.Equals(item.Id_Empresa));
@@ -85,6 +88,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var cabecera = new InspeccionCabecera
                 {
                     IdCabecera = item.Id_Inspeccion_Cabecera,
+                    RegistradoPor = registradoPor.Nombres.ToUpper()+" "+registradoPor.Apellidos.ToUpper(),
                     Codigo = item.Codigo,
                     Gerencia = gerEjectMar.Descripcion,
                     GerenciaInspeccionada = gerInspec?.Descripcion,

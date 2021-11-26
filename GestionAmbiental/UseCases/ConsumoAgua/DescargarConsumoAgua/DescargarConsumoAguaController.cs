@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.SS.UserModel;
+using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 
 namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
@@ -46,7 +47,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 var resolucionData = items.ItemsResoluciones.FirstOrDefault(x => x.IdResolucionConsumoAgua.Equals(resolucion));
 
                 var consumosDiario = await _getConsumosAguaDescarga.ExecuteFechas(FInicio, FFin, resolucion);
-                var consumosMensual = await _getConsumosAguaDescarga.ExecuteMensual(resolucion,anio);
+                var consumosMensualAcumulado = await _getConsumosAguaDescarga.ExecuteMensual(resolucion,anio);
 
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "ConsumoAgua");
                 string sFileName = @"FORMATO REPORTE DE CONSUMO DE AGUA.xlsx";
@@ -58,6 +59,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
 
                 // Load the sheet you are going to use as a template into NPOI
                 ISheet sheetDiario = templateWorkbook.GetSheet("REPORTE CONSUMO DIARIO");
+                ISheet sheetAcumulado = templateWorkbook.GetSheet("REPORTE ACUMULADO");
                 ISheet sheetMensual = templateWorkbook.GetSheet("REPORTE MENSUAL");
 
                 //->Cell Style
@@ -69,7 +71,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 customCellStyle.BorderLeft = BorderStyle.Thin;
                 customCellStyle.BorderRight = BorderStyle.Thin;
                 customCellStyle.Alignment = HorizontalAlignment.Center;
-            //Reporte Consumo Mensual
+                //Reporte Consumo Mensual
 
                 //Año
                 sheetMensual.GetRow(7).GetCell(2).SetCellValue(anio);
@@ -87,15 +89,61 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 sheetMensual.GetRow(14).GetCell(2).SetCellValue(resolucionData.VolumenOtorgado.ToString() + " (m3/año)");
                 //Fecha Reporte
                 sheetMensual.GetRow(15).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
-                                
+
+
                 int filaMensual = 18;
-                int mes = filaMensual - 17;
-                if (consumosMensual.Count > 0)
+
+                for (int i = 0; i < consumosDiario.Count; i++)
+                {
+                    IRow row = sheetMensual.CreateRow(filaMensual);
+
+                    row.CreateCell(0).SetCellValue(consumosDiario[i].Fecha.ToString("dd/MM/yyyy"));
+                    row.GetCell(0).CellStyle = customCellStyle;
+                    row.CreateCell(1).CellStyle = customCellStyle;
+                    sheetMensual.AddMergedRegion(new CellRangeAddress(row.RowNum, row.RowNum, 0, 1));
+
+                    row.CreateCell(2).SetCellValue(consumosDiario[i].TiempoBombeo);
+                    row.GetCell(2).CellStyle = customCellStyle;
+                    row.CreateCell(3).CellStyle = customCellStyle;
+                    sheetMensual.AddMergedRegion(new CellRangeAddress(row.RowNum, row.RowNum, 2, 3));
+
+                    row.CreateCell(4).SetCellValue(consumosDiario[i].CaudalPromedio);
+                    row.GetCell(4).CellStyle = customCellStyle;
+                    row.CreateCell(5).CellStyle = customCellStyle;
+                    sheetMensual.AddMergedRegion(new CellRangeAddress(row.RowNum, row.RowNum, 4, 5));
+
+                    row.CreateCell(6).SetCellValue(consumosDiario[i].VolumenBombeado);
+                    row.GetCell(6).CellStyle = customCellStyle;
+
+                    filaMensual++;
+                }
+                //Reporte Consumo Acumulado
+
+                //Año
+                sheetAcumulado.GetRow(7).GetCell(2).SetCellValue(anio);
+                //Clase Derecho
+                sheetAcumulado.GetRow(9).GetCell(2).SetCellValue(resolucionData.ClaseDerecho);
+                //Resolucion
+                sheetAcumulado.GetRow(10).GetCell(2).SetCellValue(resolucionData.Resolucion);
+                //Origen
+                sheetAcumulado.GetRow(11).GetCell(2).SetCellValue(resolucionData.FuenteAgua.OrigenAgua.Descripcion);
+                //Fuente
+                sheetAcumulado.GetRow(12).GetCell(2).SetCellValue(resolucionData.FuenteAgua.Descripcion);
+                //Tipo Uso
+                sheetAcumulado.GetRow(13).GetCell(2).SetCellValue(resolucionData.TipoUso);
+                //Volumen Otorgado
+                sheetAcumulado.GetRow(14).GetCell(2).SetCellValue(resolucionData.VolumenOtorgado.ToString() + " (m3/año)");
+                //Fecha Reporte
+                sheetAcumulado.GetRow(15).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
+                                
+                int filaAcumulado = 18;
+                int mes = filaAcumulado - 17;
+                if (consumosMensualAcumulado.Count > 0)
                 {
                     //LLenar con 0 si los datos no empuezan en Enero
-                    for (int i = 0; i < consumosMensual[0].Mes - 1; i++)
+                    for (int i = 0; i < consumosMensualAcumulado[0].Mes - 1; i++)
                     {
-                        IRow row = sheetMensual.GetRow(filaMensual);
+                        IRow row = sheetAcumulado.GetRow(filaAcumulado);
 
                         row.GetCell(2).SetCellValue(0);
                         row.GetCell(2).CellStyle = customCellStyle;
@@ -109,27 +157,27 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                         row.GetCell(5).SetCellValue(0);
                         row.GetCell(5).CellStyle = customCellStyle;
 
-                        filaMensual++; 
-                        mes = filaMensual - 17;
+                        filaAcumulado++; 
+                        mes = filaAcumulado - 17;
                     }
                     
-                    for (int i = 0; i < consumosMensual.Count; i++)
+                    for (int i = 0; i < consumosMensualAcumulado.Count; i++)
                     {
-                        IRow row = sheetMensual.GetRow(filaMensual);
+                        IRow row = sheetAcumulado.GetRow(filaAcumulado);
                         
-                        row.GetCell(2).SetCellValue(consumosMensual[i].TiempoOperacion);
+                        row.GetCell(2).SetCellValue(consumosMensualAcumulado[i].TiempoOperacion);
                         row.GetCell(2).CellStyle = customCellStyle;
                         
-                        row.GetCell(3).SetCellValue(consumosMensual[i].Caudal);
+                        row.GetCell(3).SetCellValue(consumosMensualAcumulado[i].Caudal);
                         row.GetCell(3).CellStyle = customCellStyle;
                         
-                        row.GetCell(4).SetCellValue(consumosMensual[i].VolumenMensual);
+                        row.GetCell(4).SetCellValue(consumosMensualAcumulado[i].VolumenMensual);
                         row.GetCell(4).CellStyle = customCellStyle;
                         
-                        row.GetCell(5).SetCellValue(consumosMensual[i].VolumenAcumulado);
+                        row.GetCell(5).SetCellValue(consumosMensualAcumulado[i].VolumenAcumulado);
                         row.GetCell(5).CellStyle = customCellStyle;
                         
-                        filaMensual++;                        
+                        filaAcumulado++;                        
                     }
                 }
 
@@ -169,7 +217,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 }
                 // Force formulas to update with new data we added
                 sheetDiario.ForceFormulaRecalculation = true;
-                sheetMensual.ForceFormulaRecalculation = true;
+                sheetAcumulado.ForceFormulaRecalculation = true;
                 // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
                 MemoryStream ms = new MemoryStream();
                 templateWorkbook.Write(ms);

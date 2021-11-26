@@ -154,6 +154,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.Gerencias = filtroGerencias;
                 ViewBag.Usuarios = filtroUsuarios;
                 ViewBag.Asesores = asesores;
+                ViewBag.PermisoAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
 
                 return View();
            }
@@ -188,6 +189,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    if(userInfo.Rol.Equals(InspeccionRol.Admin))
+                        filasTabla += "<td>" + fila.RegistradoPor + "</td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
                     filasTabla += "<td>" + fila.GerenciaInspeccionada + "</td>";

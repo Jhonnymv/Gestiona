@@ -92,6 +92,10 @@
                 <thead class="">
                     <tr>
                         <th>Código</th>
+                        @if (ViewBag.PermisoAdmin)
+                        {
+                            <th>Registrado Por</th>
+                        }
                         <th>Área Ejecutora de la Inspección</th>
                         <th>Empresa Inspeccionada</th>
                         <th>Gerencia Inspeccionada</th>

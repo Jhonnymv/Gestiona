@@ -10,6 +10,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public int IdCabecera { get; set; }
         public string Codigo { get; set; }
         public int IdRegistradoPor {get;set;}
+        public string RegistradoPor {get;set;}
         public string Objetivo { get; set; }
         public int IdGerencia { get; set; }
         public string Gerencia { get; set; }
