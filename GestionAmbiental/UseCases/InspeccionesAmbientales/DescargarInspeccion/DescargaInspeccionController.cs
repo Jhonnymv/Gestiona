@@ -309,6 +309,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             SSO_MA = observacion.TipoObservacion,
                             ActoCondicion = observacion.DescripcionCondicion,
                             EvidenciaCondicion = observacion.EvidenciaCondicion,
+                            DescripcionActoCondicion = observacion.DescripcionActoCondicion,
                             TipoCondicion = observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
                             NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
                             Accion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
@@ -320,7 +321,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             ResponsableInspeccion = inspeccion.ResponsableInspeccion,
                             FechaInspeccion = inspeccion.FechaInspeccion.ToString("dd/MM/yyyy"),
                             RiesgoFatalidad = "",
-                            GerenciaLevantamiento = "",
+                            GerenciaLevantamiento = inspeccion.GerenciaInspeccionada,
                             GerenciaInspeccion = inspeccion.Gerencia,
                             Codigo = inspeccion.Codigo
                         });
@@ -338,7 +339,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     IRow row = sheet.CreateRow(fila);
 
                     //Aplicar cell style a una fila de observación
-                    for (int i = 1; i <= 18; i++)
+                    for (int i = 1; i <= 19; i++)
                     {
                         row.CreateCell(i);
                         row.GetCell(i).CellStyle = estiloNormal;
@@ -358,7 +359,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
-                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 10, rowHeight, imageIndex, "inspeccion", true);
+                        evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
                         rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                         imageIndex++;
                     }
@@ -400,41 +401,43 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 1).SetCellValue(observacion.SSO_MA);
                     //->Acto/Condición Subestándar Identificada
                     row.GetCell(startIndex + 2).SetCellValue(observacion.ActoCondicion);
+                    //->Descripción de Condición / Acto Subestándar
+                    row.GetCell(startIndex + 4).SetCellValue(observacion.DescripcionActoCondicion);
                     //->Tipo de Condición / Acto Subestándar
-                    row.GetCell(startIndex + 4).SetCellValue(observacion.TipoCondicion);
+                    row.GetCell(startIndex + 5).SetCellValue(observacion.TipoCondicion);
                     //->Nivel de Riesgo
-                    row.GetCell(startIndex + 5).SetCellValue(observacion.NivelRiesgo);
+                    row.GetCell(startIndex + 6).SetCellValue(observacion.NivelRiesgo);
                     //->Acción Preventiva / Correctiva Tomada
-                    row.GetCell(startIndex + 6).SetCellValue(observacion.Accion);
+                    row.GetCell(startIndex + 7).SetCellValue(observacion.Accion);
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
-                    row.GetCell(startIndex + 7).SetCellValue(observacion.ResponsableLevantamiento);
+                    row.GetCell(startIndex + 8).SetCellValue(observacion.ResponsableLevantamiento);
                     //->Fecha Programada
-                    row.GetCell(startIndex + 8).SetCellValue(observacion.FechaProgramada);
+                    row.GetCell(startIndex + 9).SetCellValue(observacion.FechaProgramada);
                     //->Fecha Cierre
-                    row.GetCell(startIndex + 10).SetCellValue(observacion.FechaCierre);
+                    row.GetCell(startIndex + 11).SetCellValue(observacion.FechaCierre);
                     //-> Estado
-                    row.GetCell(startIndex + 11).SetCellValue(observacion.Estado);
+                    row.GetCell(startIndex + 12).SetCellValue(observacion.Estado);
                     var estilo = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado));
                     if(estilo!=null)
-                        row.GetCell(startIndex + 11).CellStyle = estilo.EstiloCelda;
+                        row.GetCell(startIndex + 12).CellStyle = estilo.EstiloCelda;
                     //-> Responsable Inspección
-                    row.GetCell(startIndex + 12).SetCellValue(observacion.ResponsableInspeccion);
+                    row.GetCell(startIndex + 13).SetCellValue(observacion.ResponsableInspeccion);
                     //-> Fecha Inspección
-                    row.GetCell(startIndex + 13).SetCellValue(observacion.FechaInspeccion);
+                    row.GetCell(startIndex + 14).SetCellValue(observacion.FechaInspeccion);
                     //-> Riesgo de Fatalidad
-                    row.GetCell(startIndex + 14).SetCellValue(observacion.RiesgoFatalidad);
+                    row.GetCell(startIndex + 15).SetCellValue(observacion.RiesgoFatalidad);
                     //-> Gerencia Responsable Levantamiento
-                    row.GetCell(startIndex + 15).SetCellValue(observacion.GerenciaLevantamiento);
-                    //-> Gerencia Responsable Levantamiento
-                    row.GetCell(startIndex + 16).SetCellValue(observacion.GerenciaInspeccion);
+                    row.GetCell(startIndex + 16).SetCellValue(observacion.GerenciaLevantamiento);
+                    //-> Gerencia Responsable de la Inspección
+                    row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaInspeccion);
                     //-> N° Inspección GESTIONA
-                    row.GetCell(startIndex + 17).SetCellValue(observacion.Codigo);
-                    //XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
-                    //{
-                    //    //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
-                    //    Address = "https://localhost:44387/Inspecciones/DetalleInspeccion?IdCabecera=" + (_protector.Protect(observacion.IdInspeccion))
-                    //};
-                    //row.GetCell(startIndex + 17).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(startIndex + 18).SetCellValue(observacion.Codigo);
+                    XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
+                    {
+                        //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
+                        Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccionNotificacion?IdCabecera=" + observacion.IdInspeccion
+                    };
+                    row.GetCell(startIndex + 18).Hyperlink = (UrlLinkLugReg);
 
                     obsIndex++;
                     fila++;
@@ -700,6 +703,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
         {
             public string IdInspeccion { get; set; }
             public string SSO_MA { get; set; }
+            public string DescripcionActoCondicion { get; set; }
             public string ActoCondicion { get; set; }
             public string EvidenciaCondicion { get; set; }
             public string TipoCondicion { get; set; }

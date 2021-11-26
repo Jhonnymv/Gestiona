@@ -170,6 +170,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     IdEmpresa = empresas.FirstOrDefault(x => x.Id_Empresa.Equals(cabecera.Id_Empresa)).Id_Empresa,
                     IdGerencia = gerencias.FirstOrDefault(x => x.Id_Gerencia.Equals(cabecera.Id_Gerencia)).Id_Gerencia,
                     IdGerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada.Value))?.Id_Gerencia,
+                    GerenciaInspeccionada = gerencias.FirstOrDefault(x => cabecera.Id_Gerencia_Inspeccionada.HasValue && x.Id_Gerencia.Equals(cabecera.Id_Gerencia_Inspeccionada.Value))?.Descripcion,
                     Objetivo = cabecera.Objetivo,
                     Participantes = cabecera.Participantes,
                     ResponsableArea = new Usuario { 

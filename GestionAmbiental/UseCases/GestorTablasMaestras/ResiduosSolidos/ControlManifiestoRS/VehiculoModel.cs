@@ -14,7 +14,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.ResiduosSolidos.Control
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string Placa { get; set; }
         [DisplayName("Capacidad del Vehículo (TN):")]
-        [Range(1, 99, ErrorMessage = "Debe seleccionar una opción")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Debe completar este campo")]
         public double Capacidad { get; set; }
         [DisplayName("Estado:")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
