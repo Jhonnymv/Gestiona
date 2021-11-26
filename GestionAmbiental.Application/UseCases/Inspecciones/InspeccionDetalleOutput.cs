@@ -22,8 +22,10 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
         public List<string> EvidenciaCondicion { get; set; }
         public string NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
-        public string ResponsableMarcobre { get; set; }
         public int IdResponsableMarcobre { get; set; }
+        public string ResponsableMarcobre { get; set; }
+        public int IdResponsableMarcobre2 { get; set; }
+        public string ResponsableMarcobre2 { get; set; }
         public string ResponsableContratista { get; set; }
         public string CorreoContratista { get; set; }
         public DateTime? FechaProgramada { get; set; }
@@ -98,7 +100,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
                 TipoCondicion = detalle.TipoCondicion.Descripcion;
                 IdTipoCondicion = detalle.TipoCondicion.IdTipoCondicion;
             }
-                IdAsesor = detalle.Asesor.IdUsuario;
+            IdAsesor = detalle.Asesor.IdUsuario;
             var evidencias = JArray.Parse(detalle.EvidenciaCondicion);
             var listEvidencias = new List<string>();
             foreach (var evidencia in evidencias)
@@ -110,6 +112,11 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones
             DescripcionAccion = detalle.DescripcionAccion;
             ResponsableMarcobre = detalle.ResponsableMarcobre.Nombres + " " + detalle.ResponsableMarcobre.Apellidos;
             IdResponsableMarcobre = detalle.ResponsableMarcobre.IdUsuario;
+            if (detalle.ResponsableMarcobre2 != null)
+            {
+                ResponsableMarcobre = detalle.ResponsableMarcobre2.Nombres + " " + detalle.ResponsableMarcobre2.Apellidos;
+                IdResponsableMarcobre = detalle.ResponsableMarcobre2.IdUsuario;
+            }
             ResponsableContratista = detalle.ResponsableContratista;
             CorreoContratista = detalle.CorreoContratista;
             FechaProgramada = detalle.FechaProgramada;

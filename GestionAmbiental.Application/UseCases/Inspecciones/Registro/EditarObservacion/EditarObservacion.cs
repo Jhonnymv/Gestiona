@@ -23,7 +23,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
 
         public async Task Execute(int Id_Inspeccion_Cabecera,int Id_Observacion, string Tipo_Inspeccion, int Asesor_MA_Seguridad, string Descripcion_Acto_Condicion, string Descripcion_Condicion,
             int? Id_Tipo_Condicion, List<string> Evidencia_Condicion, string Nivel_Riesgo_Ambiental, string Descripcion_Accion, 
-            int Id_Responsable_Marcobre, string Responsable_Contratista, string Correo_Contratista, string Fecha_Programada, string usuario_red,
+            int Id_Responsable_Marcobre, int? Id_Responsable_Marcobre2, string Responsable_Contratista, string Correo_Contratista, string Fecha_Programada, string usuario_red,
             bool Cambio_Fecha_Vencida)
         {
             var evidencia = JsonConvert.SerializeObject(Evidencia_Condicion);
@@ -41,6 +41,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.Registro.EditarObse
                 EvidenciaCondicion = evidencia,
                 DescripcionAccion = Descripcion_Accion,
                 IdResponsableMarcobre = Id_Responsable_Marcobre,
+                IdResponsableMarcobre2 = Id_Responsable_Marcobre2,
                 ResponsableContratista = Responsable_Contratista,
                 CorreoContratista = Correo_Contratista,
                 //Estado = EstadosInspeccion.Registrado.ToString()                

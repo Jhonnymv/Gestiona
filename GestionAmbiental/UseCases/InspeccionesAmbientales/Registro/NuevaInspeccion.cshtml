@@ -634,6 +634,7 @@
             formData.append("NiveRiesgo", $("#NiveRiesgo").val());
             formData.append("AccionTomada", $("#AccionTomada").val());
             formData.append("ResponsableMarc", $("#ResponsableMarc").val());
+            formData.append("ResponsableMarc2", $("#ResponsableMarc2").val());
             formData.append("ResponsableCont", $("#ResponsableCont").val());
             formData.append("CorreoCont", $("#CorreoCont").val());
             $.ajax({
@@ -685,6 +686,7 @@
         $("#NiveRiesgo").css("color", "black");
         $("#AccionTomada").val('');
         $("#ResponsableMarc").val('0');
+        $("#ResponsableMarc2").val('0');
         $("#ResponsableCont").val('');
         $("#CorreoCont").val('');
         $("#Evidencias").val('');
@@ -844,6 +846,7 @@
             $("#E_FechaProgramada").val(data.FechaProgramada);
             $("#E_AccionTomada").val(data.Accion);
             $("#E_ResponsableMarc").val(data.ResponsableMarc);
+            $("#E_ResponsableMarc2").val(data.ResponsableMarc2);
             $("#E_ResponsableCont").val(data.ResponsableCont);
             $("#E_CorreoCont").val(data.CorreoCont);
             $("#E_Evidencia").val(JSON.parse(data.EvidenciasCondicion)[0]);
@@ -1192,6 +1195,7 @@
             formData.append("E_NivelRiesgo", $("#E_NivelRiesgo").val());
             formData.append("E_AccionTomada", $("#E_AccionTomada").val());
             formData.append("E_ResponsableMarc", $("#E_ResponsableMarc").val());
+            formData.append("E_ResponsableMarc2", $("#E_ResponsableMarc2").val());
             formData.append("E_ResponsableCont", $("#E_ResponsableCont").val());
             formData.append("E_CorreoCont", $("#E_CorreoCont").val());
             formData.append("E_Evidencia", $("#E_Evidencia").val());

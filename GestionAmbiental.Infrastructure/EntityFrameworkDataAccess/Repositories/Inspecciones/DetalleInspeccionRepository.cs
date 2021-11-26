@@ -32,6 +32,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach (var item in inspeccionesDetalle)
             {
                 var responsableMarc = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
+                var responsableMarc2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre2));
+
                 var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor));
                 var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
                 var detalle = new InspeccionDetalle
@@ -56,6 +58,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Estado = item.Estado,
                     DescripcionActoCondicion = item.Descripcion_Acto_Condicion
                 };
+                if (responsableMarc2 != null)
+                {
+                    detalle.ResponsableMarcobre2 = new Domain.ValueObjects.Usuario(responsableMarc2.Id_Usuario, responsableMarc2.Id_Rol, responsableMarc2.Nombres, responsableMarc2.Apellidos, responsableMarc2.Email);
+                }
                 if (tipoCondicion != null)
                     detalle.TipoCondicion = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion, tipoCondicion.Grupo);
 
@@ -71,6 +77,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var tipoCondicion_Domain = new TipoCondicion(tipoCondicion.Id_Tipo_Condicion, tipoCondicion.Descripcion,tipoCondicion.Grupo);
             var responsableMarcobre = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre));
             var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario,responsableMarcobre.Id_Rol,responsableMarcobre.Nombres,responsableMarcobre.Apellidos,responsableMarcobre.Email);
+            var responsableMarcobre2 = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Responsable_Marcobre2));
+            var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
             var responsableMA = await _context.Usuarios.FirstOrDefaultAsync(x => x.Id_Usuario.Equals(inspeccionDetalle.Id_Asesor));
             var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
 
@@ -85,6 +93,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 NivelRiesgo = inspeccionDetalle.Nivel_Riesgo,
                 DescripcionAccion = inspeccionDetalle.Descripcion_Accion,
                 ResponsableMarcobre = responsableMarcobre_Domain,
+                ResponsableMarcobre2 = responsableMarcobre2_Domain,
                 ResponsableContratista = inspeccionDetalle.Responsable_Contratista,
                 CorreoContratista = inspeccionDetalle.Correo_Contratista,
                 FechaProgramada = inspeccionDetalle.Fecha_Programada,
@@ -118,7 +127,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 cabeceras.Select(y => y.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
             observaciones = observaciones.Where(x =>
-                respLevObs != 0 ? x.Id_Responsable_Marcobre.Equals(respLevObs) : x.Id_Responsable_Marcobre.Equals(x.Id_Responsable_Marcobre) &&
+                (respLevObs != 0 ? x.Id_Responsable_Marcobre.Equals(respLevObs) : x.Id_Responsable_Marcobre.Equals(x.Id_Responsable_Marcobre) ||
+                respLevObs != 0 ? x.Id_Responsable_Marcobre2.Equals(respLevObs) : x.Id_Responsable_Marcobre2.Equals(x.Id_Responsable_Marcobre2)) && 
                 asesor != 0 ? x.Id_Asesor.Equals(asesor) : x.Id_Asesor.Equals(x.Id_Asesor)
             ).ToList();
 
@@ -195,6 +205,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var tipoCondicion = tiposCondicion.FirstOrDefault(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
                     var responsableMarcobre = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre));
                     var responsableMarcobre_Domain = new Usuario(responsableMarcobre.Id_Usuario, responsableMarcobre.Id_Rol, responsableMarcobre.Nombres, responsableMarcobre.Apellidos, responsableMarcobre.Email);
+                    var responsableMarcobre2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Responsable_Marcobre2));
+                    var responsableMarcobre2_Domain = new Usuario(responsableMarcobre2.Id_Usuario, responsableMarcobre2.Id_Rol, responsableMarcobre2.Nombres, responsableMarcobre2.Apellidos, responsableMarcobre2.Email);
                     var responsableMA = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(item.Id_Asesor));
                     var responsableMA_Domain = new Usuario(responsableMA.Id_Usuario, responsableMA.Id_Rol, responsableMA.Nombres, responsableMA.Apellidos, responsableMA.Email);
 
@@ -209,6 +221,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         NivelRiesgo = item.Nivel_Riesgo,
                         DescripcionAccion = item.Descripcion_Accion,
                         ResponsableMarcobre = responsableMarcobre_Domain,
+                        ResponsableMarcobre2 = responsableMarcobre2_Domain,
                         ResponsableContratista = item.Responsable_Contratista,
                         CorreoContratista = item.Correo_Contratista,
                         FechaProgramada = item.Fecha_Programada,

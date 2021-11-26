@@ -72,6 +72,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Nivel_Riesgo = detalle.NivelRiesgo,
                     Descripcion_Accion = detalle.DescripcionAccion,
                     Id_Responsable_Marcobre = detalle.IdResponsableMarcobre,
+                    Id_Responsable_Marcobre2 = detalle.IdResponsableMarcobre2,
                     Responsable_Contratista = detalle.ResponsableContratista,
                     Correo_Contratista = detalle.CorreoContratista,
                     Fecha_Programada = detalle.FechaProgramada,

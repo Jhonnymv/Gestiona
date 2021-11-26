@@ -35,6 +35,7 @@ namespace GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObserva
                 DescripcionCondicion = data_obs.DescripcionCondicion,
                 EvidenciaCondicion = data_obs.EvidenciaCondicion,
                 IdResponsableMarcobre = data_obs.ResponsableMarcobre.IdUsuario,
+                IdResponsableMarcobre2 = data_obs.ResponsableMarcobre2.IdUsuario,
                 ResponsableContratista = data_obs.ResponsableContratista,
                 CorreoContratista = data_obs.CorreoContratista,
                 Estado = EstadosInspeccion.Ampliado.ToString()

@@ -34,9 +34,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public string E_NivelRiesgo { get; set; }
         [DisplayName("Acción Preventiva / Correctiva Tomada")]
         public string E_AccionTomada { get; set; }
-        [DisplayName("Resp. Marcobre levantar Obs. / Buenas Prácticas")]
+        [DisplayName("Resp. Marcobre levantar Obs.")]
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int E_ResponsableMarc { get; set; }
+        [DisplayName("Resp. Secundario Marcobre levantar Obs.")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        public int? E_ResponsableMarc2 { get; set; }
         [DisplayName("Responsable Contratista")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
         public string E_ResponsableCont { get; set; }

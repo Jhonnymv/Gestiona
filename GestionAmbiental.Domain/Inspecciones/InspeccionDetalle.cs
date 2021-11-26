@@ -16,6 +16,7 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string NivelRiesgo { get; set; }
         public string DescripcionAccion { get; set; }
         public Usuario ResponsableMarcobre { get; set; }
+        public Usuario? ResponsableMarcobre2 { get; set; }
         public string ResponsableContratista { get; set; }
         public string CorreoContratista { get; set; }
         public DateTime? FechaProgramada { get; set; }
