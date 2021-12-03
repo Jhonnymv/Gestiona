@@ -20,7 +20,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Ge
             _getRolUsuario = getRolUsuario;
         }
 
-        public async Task<InvestigacionesFinalesOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuarioRed)
+        public async Task<InvestigacionesFinalesOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp, string usuarioRed)
         {
             DateTime? fechaInicioFiltro = null;
             DateTime? fechaFinFiltro = null;

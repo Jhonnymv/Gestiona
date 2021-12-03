@@ -8,7 +8,7 @@ namespace GestionAmbiental.Application.Repositories.Incidentes.InvestigacionFina
 {
     public interface IGetInvestigacionFinalReadOnlyRepository
     {
-        Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int titular, List<string> estado, int[] responsable, int[] asesor, string codigo);
+        Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int[] titular, List<string> estado, int[] responsable, int[] asesor, string codigo);
         Task<Investigacion_Final_Incidente> GetInvestigacionFinal(int IdInvestigacion);
         Task<Impacto_Ambiental_Incidente> GetImpactoAmbiental(int IdInvestigacion);
         Task<string> GetEstadoInvestigacion(int IdInvestigacion);

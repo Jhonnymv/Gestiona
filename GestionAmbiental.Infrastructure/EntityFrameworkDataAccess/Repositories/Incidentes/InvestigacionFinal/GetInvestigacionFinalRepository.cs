@@ -21,14 +21,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int titular, List<string> estado, int[] responsable, int[] asesor, string codigo)
+        public async Task<List<Investigacion_Final_Incidente>> GetInvestigacionesFinales(DateTime? fechaInicio, DateTime? fechaFin, int[] gerencia, int[] titular, List<string> estado, int[] responsable, int[] asesor, string codigo)
         {
-            //valida titular
-            var investigaciones_titulares_minero = await _context.Involucrado_Incidente_Investigacion.Where(x =>
-            x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
-            x.Id_Usuario.Equals(titular != 0 ? titular : x.Id_Usuario))
-                .Select(x => x.Id_Investigacion_Final).ToListAsync();
-
             var investigaciones = await _context.Investigacion_Final_Incidente.ToListAsync();
             var filtrado = investigaciones
                 .OrderByDescending(x=>x.Codigo)
@@ -43,6 +37,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             if (gerencia.Length > 0)
                 filtrado = filtrado.Where(x => x.Id_Gerencia_Responsable.HasValue &&
                 gerencia.Contains(x.Id_Gerencia_Responsable.Value)).ToList();
+            if (titular.Length > 0)
+            {
+                var investigaciones_titulares_minero = await _context.Involucrado_Incidente_Investigacion.Where(x =>
+                x.Tipo_Involucrado.Equals("Supervisor Inmediato (Titular Minero)") &&
+                x.Id_Usuario.HasValue &&
+                titular.Contains(x.Id_Usuario.Value))
+                    .Select(x => x.Id_Investigacion_Final).ToListAsync();
+
+                filtrado = filtrado.Where(x => investigaciones_titulares_minero.Contains(x.Id_Investigacion_Final)).ToList();
+            }
             if (asesor.Length > 0)
                 filtrado = filtrado.Where(x => x.Id_Supervisor_MA.HasValue &&
                 asesor.Contains(x.Id_Supervisor_MA.Value)).ToList();
@@ -69,10 +73,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     acciones.Select(x => x.Id_Investigacion_Final).Contains(x.Id_Investigacion_Final)).ToList();
                 }
             }
-
-
-            if (investigaciones_titulares_minero.Count > 0)
-                filtrado = filtrado.Where(x => investigaciones_titulares_minero.Contains(x.Id_Investigacion_Final)).ToList();
 
             var tiposIncidente = await _context.Tipo_Incidente.ToListAsync();
             var nivelesIncidente = await _context.Nivel_Incidente.ToListAsync();

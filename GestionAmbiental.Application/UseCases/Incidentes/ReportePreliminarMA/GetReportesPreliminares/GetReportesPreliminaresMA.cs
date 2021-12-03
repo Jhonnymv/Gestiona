@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminarMA.G
             _getReportePreliminarReadOnlyRepository = getReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportePreliminarReadOnlyRepository));
         }
 
-        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
+        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
         {
             DateTime? fechaInicioFiltro = null;
             DateTime? fechaFinFiltro = null;

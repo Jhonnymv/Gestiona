@@ -35,7 +35,7 @@
                     <div class="row input_container">
                         <div class="col-12 col-md-4">
                             <label>Supervisor Inmediato (Titular Minero)</label>
-                            <select id="titular_filtro" asp-items="ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción">
+                            <select id="titular_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
                         <div class="col-12 col-md-4">

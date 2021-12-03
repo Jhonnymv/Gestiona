@@ -40,7 +40,7 @@
                     <div class="row input_container">
                         <div class="col-12 col-md-4">
                             <label>Supervisor Inmediato (Titular Minero)</label>
-                            <select id="titular_filtro" asp-items="ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción">
+                            <select id="titular_filtro" asp-items="@ViewBag.Usuarios" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
                             </select>
                         </div>
                         <div class="col-12 col-md-4">
@@ -112,6 +112,15 @@
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+
+            console.log("fecha_inicio", $("#fecha_inicio_filtro").val())
+            console.log("fecha_fin", $("#fecha_fin_filtro").val())
+            console.log("gerencia", $("#gerencia_filtro").val())
+            console.log("titular", $("#titular_filtro").val())
+            console.log("estado", $("#estado_filtro").val())
+            console.log("responsable", $("#responsable_filtro").val())
+            console.log("asesor", $("#asesor_filtro").val())
+            console.log("codigo", $("#codigo_filtro").val())
             filtrar(1);
         });
         function dataModulo() {
@@ -134,6 +143,14 @@
             });
         }
         function filtrar(pag) {
+            console.log("fecha_inicio", $("#fecha_inicio_filtro").val())
+            console.log("fecha_fin", $("#fecha_fin_filtro").val())
+            console.log("gerencia", $("#gerencia_filtro").val())
+            console.log("titular",$("#titular_filtro").val())
+            console.log("estado", $("#estado_filtro").val())
+            console.log("responsable", $("#responsable_filtro").val())
+            console.log("asesor", $("#asesor_filtro").val())
+            console.log("codigo", $("#codigo_filtro").val())
             $.ajax({
                 type: "POST",
                 url: "/ReportePreliminar/GetTablaResumenFiltrada",

@@ -280,7 +280,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<List<Usuario>> GetListUsuarios()
         {
             var output = new List<Usuario>();
-            var items = await _context.Usuarios.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            var items = await _context.Usuarios.Where(x => x.Estado.Equals("ACT") && x.Nombres!="" && x.Apellidos!= "").ToListAsync();
             foreach (var item in items)
             {
                 var outputItem = new Usuario
