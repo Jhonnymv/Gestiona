@@ -61,7 +61,7 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 ISheet sheetDiario = templateWorkbook.GetSheet("REPORTE CONSUMO DIARIO");
                 ISheet sheetAcumulado = templateWorkbook.GetSheet("REPORTE ACUMULADO");
                 ISheet sheetMensual = templateWorkbook.GetSheet("REPORTE MENSUAL");
-
+                
                 //->Cell Style
                 XSSFCellStyle customCellStyle = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
                 customCellStyle.WrapText = true;
@@ -71,24 +71,23 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
                 customCellStyle.BorderLeft = BorderStyle.Thin;
                 customCellStyle.BorderRight = BorderStyle.Thin;
                 customCellStyle.Alignment = HorizontalAlignment.Center;
+                //->Cell Style Signature
+                XSSFCellStyle customCellStyleSignature = (XSSFCellStyle)templateWorkbook.CreateCellStyle();
+                customCellStyleSignature.BorderBottom = BorderStyle.Thin;
+
                 //Reporte Consumo Mensual
 
-                //Año
-                sheetMensual.GetRow(7).GetCell(2).SetCellValue(anio);
-                //Clase Derecho
-                sheetMensual.GetRow(9).GetCell(2).SetCellValue(resolucionData.ClaseDerecho);
-                //Resolucion
-                sheetMensual.GetRow(10).GetCell(2).SetCellValue(resolucionData.Resolucion);
-                //Origen
-                sheetMensual.GetRow(11).GetCell(2).SetCellValue(resolucionData.FuenteAgua.OrigenAgua.Descripcion);
-                //Fuente
-                sheetMensual.GetRow(12).GetCell(2).SetCellValue(resolucionData.FuenteAgua.Descripcion);
                 //Tipo Uso
-                sheetMensual.GetRow(13).GetCell(2).SetCellValue(resolucionData.TipoUso);
-                //Volumen Otorgado
-                sheetMensual.GetRow(14).GetCell(2).SetCellValue(resolucionData.VolumenOtorgado.ToString() + " (m3/año)");
+                sheetMensual.GetRow(9).GetCell(2).SetCellValue(resolucionData.TipoUso);
+                //Resolucion
+                sheetMensual.GetRow(11).GetCell(2).SetCellValue(resolucionData.Resolucion);
+                //Origen
+                sheetMensual.GetRow(12).GetCell(2).SetCellValue(resolucionData.FuenteAgua.Descripcion);
+                //Código de Usuario
+                //Agua Mar -> 1  / Agua Subterranea -> 2
+                sheetMensual.GetRow(13).GetCell(2).SetCellValue(resolucionData.FuenteAgua.OrigenAgua.IdOrigenAgua==1? "P-1": "Pozo - IRHS-04.03.02-238");
                 //Fecha Reporte
-                sheetMensual.GetRow(15).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
+                sheetMensual.GetRow(14).GetCell(2).SetCellValue(DateTime.Now.Date.ToString("dd-MMMM-yyyy"));
 
 
                 int filaMensual = 18;
@@ -117,6 +116,52 @@ namespace GestionAmbiental.UseCases.ConsumoAgua.DescargarConsumoAgua
 
                     filaMensual++;
                 }
+
+                //Total
+                IRow totalRow = sheetMensual.CreateRow(filaMensual);
+                
+                totalRow.CreateCell(0).SetCellValue("TOTAL");
+                totalRow.GetCell(0).CellStyle = customCellStyle;
+                totalRow.CreateCell(1).CellStyle = customCellStyle;
+                sheetMensual.AddMergedRegion(new CellRangeAddress(totalRow.RowNum, totalRow.RowNum, 0, 1));
+
+                totalRow.CreateCell(2).SetCellValue(consumosDiario.Sum(x=>x.TiempoBombeo));
+                totalRow.GetCell(2).CellStyle = customCellStyle;
+                totalRow.CreateCell(3).CellStyle = customCellStyle;
+                sheetMensual.AddMergedRegion(new CellRangeAddress(totalRow.RowNum, totalRow.RowNum, 2, 3));
+
+                totalRow.CreateCell(4).SetCellValue(consumosDiario.Sum(x => x.CaudalPromedio));
+                totalRow.GetCell(4).CellStyle = customCellStyle;
+                totalRow.CreateCell(5).CellStyle = customCellStyle;
+                sheetMensual.AddMergedRegion(new CellRangeAddress(totalRow.RowNum, totalRow.RowNum, 4, 5));
+
+                totalRow.CreateCell(6).SetCellValue(consumosDiario.Sum(x => x.VolumenBombeado));
+                totalRow.GetCell(6).CellStyle = customCellStyle;
+
+                filaMensual +=5;
+
+                //Firma
+                IRow firmaRow = sheetMensual.CreateRow(filaMensual);
+                firmaRow.CreateCell(4).CellStyle = customCellStyleSignature;
+                firmaRow.CreateCell(5).CellStyle = customCellStyleSignature;
+                firmaRow.CreateCell(6).CellStyle = customCellStyleSignature;
+
+                filaMensual += 5;
+
+                //Indications
+                IRow rowIndication1 = sheetMensual.CreateRow(filaMensual);
+                rowIndication1.CreateCell(0).SetCellValue("(1) Indicar la fecha la fecha de registro de los datos de caudal y tiempo de operación");
+                filaMensual++;
+                IRow rowIndication2 = sheetMensual.CreateRow(filaMensual);
+                rowIndication2.CreateCell(0).SetCellValue("(2) Tiempo de operación, viene a ser el total de horas que ha captado el agua durante el día (volumen utilizado)");
+                filaMensual++;
+                IRow rowIndication3 = sheetMensual.CreateRow(filaMensual);
+                rowIndication3.CreateCell(0).SetCellValue("(3) Anotar el caudal que pasa por la sección del canal de derivación del agua");
+                filaMensual++;
+                IRow rowIndication4 = sheetMensual.CreateRow(filaMensual);
+                rowIndication4.CreateCell(0).SetCellValue("(4) Volumen de agua, es el resultado de multiplicar el caudal y tiempo de operación");
+
+
                 //Reporte Consumo Acumulado
 
                 //Año

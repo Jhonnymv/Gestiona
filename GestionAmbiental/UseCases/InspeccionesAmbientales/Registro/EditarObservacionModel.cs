@@ -38,7 +38,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int E_ResponsableMarc { get; set; }
         [DisplayName("Resp. Marcobre levantar Obs. 2")]
-        [Range(1, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
+        [Range(0, Int32.MaxValue, ErrorMessage = "Debe seleccionar una opción")]
         public int? E_ResponsableMarc2 { get; set; }
         [DisplayName("Responsable Contratista")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Debe completar este campo")]
