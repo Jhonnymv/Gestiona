@@ -1,0 +1,127 @@
+﻿@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>TEST - Resumen</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="content-header container">
+            <div class="action-container fauna-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="NuevoRegistro" asp-controller="Test">NUEVO REGISTRO</a>
+                </div>
+                @*<div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="CatalogoFauna" asp-controller="AvistamientoFauna">CATÁLOGO</a>
+                </div>*@
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    @*<div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Tipo de Fauna</label>
+                            <select id="filtro_tipo_fauna" asp-items="ViewBag.TipoFauna" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Estado de Fauna</label>
+                            <select id="filtro_estado_fauna" asp-items="ViewBag.EstadoFauna" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Lugar de Referencia</label>
+                            <select id="filtro_lugar_referencia" asp-items="ViewBag.LugarReferencia" class="form-control">
+                            </select>
+                        </div>
+                    </div>*@
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    @*<button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>*@
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive fauna-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th>Id</th>
+                        <th>Nombre</th>
+                        <th>Numero</th>
+                        <th>Evidencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container fauna-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script type="text/javascript">
+        var r;
+        var g;
+        var b;
+        var img_url = "";
+
+        $(document).ready(function () {
+            filtrar(1);
+        });
+
+        //Obtener diseño del módulo
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/AvistamientoFauna/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        r = data.r;
+                        g = data.g;
+                        b = data.b;
+                        img_url = data.img_url;
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+
+        function filtrar(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/Test/Listar",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10                    
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen tbody').empty();
+                    $('#tabla_resumen tbody').html(response.data);
+                    $('#paginado').html(response.paginador);
+                    faunaStyle(r,g,b);
+                }
+            });
+        }
+</script>
+}
+

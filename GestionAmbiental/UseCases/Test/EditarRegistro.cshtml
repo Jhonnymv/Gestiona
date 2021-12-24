@@ -1,0 +1,67 @@
+﻿@model GestionAmbiental.UseCases.Test.TestModel
+
+@{
+    ViewData["Title"] = "Test Nuevo Registro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Editar Registro Test</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="Test" asp-action="EditarRegistro" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Nombre"></label>
+                        <span class="text-danger" asp-validation-for="Nombre"></span>
+                        <input type="text" class="form-control" asp-for="Nombre">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Numero"></label>
+                        <span class="text-danger" asp-validation-for="Numero"></span>
+                        <input type="number" class="form-control" asp-for="Numero">
+                    </div>
+                    <div class="row input_container">
+                        <label asp-for="Evidencia"></label>
+                        <span class="text-danger" asp-validation-for="Evidencia"></span>
+                        <input type="file" class="form-control" asp-for="Evidencia" accept=".jpg,.jpeg,.png" data-max-size="12000000" multiple>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="Test" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>
+                                <button type="submit" class="btn btn-mc-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ 
+<script type="text/javascript">
+    $('#eliminar').on('click', function () {
+        $.ajax({
+            type: "POST",
+            url: "/Test/ElimnarRegistro",
+            traditional: true,
+            data: {
+                "id": $('#Id').val()
+            },
+            success: (response) => {
+            }
+        });
+    });
+
+</script>
+}

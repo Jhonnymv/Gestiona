@@ -8,6 +8,7 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inspecc
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA_Documentos;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Test;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
@@ -99,6 +100,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Usuario_Notificar_SGA> Usuarios_Notificar_SGA { get; set; }
 
         public DbSet<Archivo_Configuracion> Archivos_Configuracion { get; set; }
+
+        public DbSet<Test> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -261,6 +264,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<Archivo_Configuracion>()
                .ToTable("Tb_Archivo_Configuracion");
+
+            modelBuilder.Entity<Test>()
+               .ToTable("Tb_Test");
         }
     }
 }
