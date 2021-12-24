@@ -281,7 +281,7 @@
         }
         function DarFormatoHora(date) {
             var d = new Date(date),
-                hour = '' + (d.getHours() + 1),
+                hour = '' + (d.getHours()),
                 minute = '' + d.getMinutes()
 
             if (hour.length < 2)
