@@ -1617,3 +1617,24 @@ input[type="file"]:hover::-webkit-file-upload-button {
     /*    justify-content: center;*/
     /*}*/
 }
+
+.mc-txt-color-1 {
+    color: #2D649B;
+    border-color: #2D649B;
+}
+.mc-txt-color-2 {
+    color: #CD3728;
+    border-color: #CD3728;
+}
+.mc-txt-color-3 {
+    color: #C1D82F;
+    border-color: #C1D82F;
+}
+.mc-txt-color-4 {
+    color: #00BCE4;
+    border-color: #00BCE4;
+}
+.mc-txt-color-5 {
+    color: #E6298D;
+    border-color: #E6298D;
+}

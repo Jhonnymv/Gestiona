@@ -98,6 +98,7 @@
     <None Include="wwwroot\bootstrap\js\bootstrap.js.map" />
     <None Include="wwwroot\bootstrap\js\bootstrap.min.js" />
     <None Include="wwwroot\bootstrap\js\bootstrap.min.js.map" />
+    <None Include="wwwroot\lib\css-circle\sass\circle.scss" />
     <None Include="wwwroot\lib\pickr\pickr.es5.min.js" />
     <None Include="wwwroot\lib\pickr\pickr.es5.min.js.map" />
     <None Include="wwwroot\lib\pickr\pickr.min.js" />

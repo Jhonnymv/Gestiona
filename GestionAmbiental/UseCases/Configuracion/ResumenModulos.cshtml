@@ -30,6 +30,12 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-tablas-tab" data-bs-toggle="pill" data-bs-target="#pills-tablas" type="button" role="tab" aria-controls="pills-tablas" aria-selected="false">Gestor de Tablas Maestras</button>
             </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#pills-dashboard" type="button" role="tab" aria-controls="pills-dashboard" aria-selected="false">Dashboard</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-compromisos-tab" data-bs-toggle="pill" data-bs-target="#pills-compromisos" type="button" role="tab" aria-controls="pills-compromisos" aria-selected="false">Compromisos MCB</button>
+            </li>
         </ul>
         <form id="form_propiedades" autocomplete="off" method="post" enctype="multipart/form-data">
             <div class="d-flex justify-content-center">
@@ -1768,6 +1774,438 @@
                         </div>
                     </div>
                 </div>
+                <div class="tab-pane fade" id="pills-dashboard" role="tabpanel" aria-labelledby="pills-dashboard-tab">
+                    <div class="content-settings">
+                        <input type="hidden" id="dashboard-r" />
+                        <input type="hidden" id="dashboard-g" />
+                        <input type="hidden" id="dashboard-b" />
+                        <div class="first-div-content-settings col-12 col-xl-3">
+                            <div class="pick-color-content-settings">
+                                <span>Color</span>
+                                <div class="div-separator"></div>
+                                <div class="section-color">
+                                    <input type="color" id="dashboard-colorPicker" class="mc_color_picker">
+                                    <span id="dashboardColorPicked"></span>
+                                </div>
+                            </div>
+                            <div class="header-image-content-settings">
+                                <span class="text-mc">Imagen</span>
+                                <div class="div-separator"></div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <input type="file" class="form-control" id="dashboard-nueva-img" accept=".jpg,.jpeg,.png" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prev-content-settings">
+                                <span>Previsualizar</span>
+                                <div class="div-separator"></div>
+                            </div>
+                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <button class="nav-link active" id="dashboard-pills-cabeceras-tab" data-bs-toggle="pill" data-bs-target="#dashboard-pills-cabeceras" type="button" role="tab" aria-controls="dashboard-pills-cabeceras" aria-selected="true">Cabeceras</button>
+                                <button class="nav-link" id="dashboard-pills-dashboard-tab" data-bs-toggle="pill" data-bs-target="#dashboard-pills-dashboard" type="button" role="tab" aria-controls="dashboard-pills-dashboard" aria-selected="false">dashboard</button>
+                                <button class="nav-link" id="dashboard-pills-notificaciones-tab" data-bs-toggle="pill" data-bs-target="#dashboard-pills-notificaciones" type="button" role="tab" aria-controls="dashboard-pills-notificaciones" aria-selected="false">Notificaciones</button>
+                            </div>
+                        </div>
+                        <div class="tab-content first-div-tab-content col-12 col-xl-9" id="dashboard-pills-tabContent">
+                            <div class="tab-pane fade show active" id="dashboard-pills-cabeceras" role="tabpanel" aria-labelledby="dashboard-pills-cabeceras-tab">
+                                <div class="dashboard align-items-center-mc">
+                                    <div class="primary-content col-12">
+                                        <div class="image-header-container dashboard-image-header-container">
+                                            <div class="header-title dashboard-opacity-color">
+                                                <h3>Dashboard</h3>
+                                                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                                            </div>
+                                        </div>
+                                        <div class="content-header">
+                                            <div class="action-container configuration col-12 col-xl-4 dashboard-color">
+                                                <div class="row-center-center w-100">
+                                                    <button class="btn btn-special-action-outline dashboard-color">EJEMPLO</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-8 custom-form configuration">
+                                                <div class="col-12 col-xl-9">
+                                                    <div class="row input_container">
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row input_container">
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-3 row-center-center">
+                                                    <button type="button" class="btn btn-mc">Filtrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="dashboard-pills-dashboard" role="tabpanel" aria-labelledby="dashboard-pills-dashboard-tab">
+                                <div class="dashboard">
+                                    <div class="secondary-content col-12">
+                                        <div class="table-responsive dashboard-color">
+                                            <table class="table">
+                                                <thead class="">
+                                                    <tr>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr class="table_row_radius">
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="pagination-container dashboard-color">
+                                            <ul class="pagination pagination-sm">
+                                                <li class="page-item disabled"><a class="page-link" tabindex="-1"> < </a></li>
+                                                <li class="page-item"><a class="page-link">1</a></li>
+                                                <li class="page-item active"><a class="page-link">2</a></li>
+                                                <li class="page-item"><a class="page-link">3</a></li>
+                                                <li class="page-item"><a class="page-link"> > </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="dashboard-pills-notificaciones" role="tabpanel" aria-labelledby="dashboard-pills-notificaciones-tab">
+                                <div class="container col-12 d-flex justify-content-center">
+                                    <div class="dashboard notification">
+                                        <div class="tertiary-content div-notification">
+                                            <div class="image-header-container dashboard-image-header-container">
+                                                <div class="notification-header dashboard-opacity-color">
+                                                    <div class="marcobre-logo-notifications">
+                                                        <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                                                    </div>
+                                                    <div class="text-title-notificacions">
+                                                        <h3>Notificación de dashboard</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="notification-content">
+                                                <div class="notification-section">
+                                                    <div class="notification-section-title">
+                                                        <h5>Título de Ejemplo</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-success bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-success bold">Texto de Success de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notification-section">
+                                                    <div class="notification-section-title">
+                                                        <h5>Título de Ejemplo</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-mc bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-mc bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-center-center">
+                                                    <div class="col-8">
+                                                        <button class="btn btn-special-action dashboard-color">MÁS DETALLES</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="pills-compromisos" role="tabpanel" aria-labelledby="pills-compromisos-tab">
+                    <div class="content-settings">
+                        <input type="hidden" id="compromisos-r" />
+                        <input type="hidden" id="compromisos-g" />
+                        <input type="hidden" id="compromisos-b" />
+                        <div class="first-div-content-settings col-12 col-xl-3">
+                            <div class="pick-color-content-settings">
+                                <span>Color</span>
+                                <div class="div-separator"></div>
+                                <div class="section-color">
+                                    <input type="color" id="compromisos-colorPicker" class="mc_color_picker">
+                                    <span id="compromisosColorPicked"></span>
+                                </div>
+                            </div>
+                            <div class="header-image-content-settings">
+                                <span class="text-mc">Imagen</span>
+                                <div class="div-separator"></div>
+                                <div class="row input_container">
+                                    <div class="col-12">
+                                        <input type="file" class="form-control" id="compromisos-nueva-img" accept=".jpg,.jpeg,.png" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="prev-content-settings">
+                                <span>Previsualizar</span>
+                                <div class="div-separator"></div>
+                            </div>
+                            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <button class="nav-link active" id="compromisos-pills-cabeceras-tab" data-bs-toggle="pill" data-bs-target="#compromisos-pills-cabeceras" type="button" role="tab" aria-controls="compromisos-pills-cabeceras" aria-selected="true">Cabeceras</button>
+                                <button class="nav-link" id="compromisos-pills-compromisos-tab" data-bs-toggle="pill" data-bs-target="#compromisos-pills-compromisos" type="button" role="tab" aria-controls="compromisos-pills-compromisos" aria-selected="false">compromisos</button>
+                                <button class="nav-link" id="compromisos-pills-notificaciones-tab" data-bs-toggle="pill" data-bs-target="#compromisos-pills-notificaciones" type="button" role="tab" aria-controls="compromisos-pills-notificaciones" aria-selected="false">Notificaciones</button>
+                            </div>
+                        </div>
+                        <div class="tab-content first-div-tab-content col-12 col-xl-9" id="compromisos-pills-tabContent">
+                            <div class="tab-pane fade show active" id="compromisos-pills-cabeceras" role="tabpanel" aria-labelledby="compromisos-pills-cabeceras-tab">
+                                <div class="compromisos align-items-center-mc">
+                                    <div class="primary-content col-12">
+                                        <div class="image-header-container compromisos-image-header-container">
+                                            <div class="header-title compromisos-opacity-color">
+                                                <h3>Compromisos</h3>
+                                                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                                            </div>
+                                        </div>
+                                        <div class="content-header">
+                                            <div class="action-container configuration col-12 col-xl-4 compromisos-color">
+                                                <div class="row-center-center w-100">
+                                                    <button class="btn btn-special-action-outline compromisos-color">EJEMPLO</button>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-xl-8 custom-form configuration">
+                                                <div class="col-12 col-xl-9">
+                                                    <div class="row input_container">
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                    <div class="row input_container">
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                        <div class="col-12 col-xl-6">
+                                                            <label>Texto de Ejemplo</label>
+                                                            <input type="text" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-xl-3 row-center-center">
+                                                    <button type="button" class="btn btn-mc">Filtrar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="compromisos-pills-compromisos" role="tabpanel" aria-labelledby="compromisos-pills-compromisos-tab">
+                                <div class="compromisos">
+                                    <div class="secondary-content col-12">
+                                        <div class="table-responsive compromisos-color">
+                                            <table class="table">
+                                                <thead class="">
+                                                    <tr>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                        <th scope="col">Cabecera</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr class="table_row_radius">
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                        <td>Ejemplo</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                        <div class="pagination-container compromisos-color">
+                                            <ul class="pagination pagination-sm">
+                                                <li class="page-item disabled"><a class="page-link" tabindex="-1"> < </a></li>
+                                                <li class="page-item"><a class="page-link">1</a></li>
+                                                <li class="page-item active"><a class="page-link">2</a></li>
+                                                <li class="page-item"><a class="page-link">3</a></li>
+                                                <li class="page-item"><a class="page-link"> > </a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="compromisos-pills-notificaciones" role="tabpanel" aria-labelledby="compromisos-pills-notificaciones-tab">
+                                <div class="container col-12 d-flex justify-content-center">
+                                    <div class="compromisos notification">
+                                        <div class="tertiary-content div-notification">
+                                            <div class="image-header-container compromisos-image-header-container">
+                                                <div class="notification-header compromisos-opacity-color">
+                                                    <div class="marcobre-logo-notifications">
+                                                        <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                                                    </div>
+                                                    <div class="text-title-notificacions">
+                                                        <h3>Notificación de Compromisos</h3>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="notification-content">
+                                                <div class="notification-section">
+                                                    <div class="notification-section-title">
+                                                        <h5>Título de Ejemplo</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-success bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-success bold">Texto de Success de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="notification-section">
+                                                    <div class="notification-section-title">
+                                                        <h5>Título de Ejemplo</h5>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-mc bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-6 div-notification-text-right">
+                                                            <span class="text-right text-mc">Texto de Ejemplo</span>
+                                                        </div>
+                                                        <div class="col-6 div-notification-text-left">
+                                                            <span class="text-left text-mc bold">Datos de Notificación de Ejemplo</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row-center-center">
+                                                    <div class="col-8">
+                                                        <button class="btn btn-special-action compromisos-color">MÁS DETALLES</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -1894,6 +2332,8 @@
                 formData.append("AguaFile", document.getElementById("agua-nueva-img").files[0]);
                 formData.append("SGAFile", document.getElementById("sga-nueva-img").files[0]);
                 formData.append("TablasFile", document.getElementById("tablas-nueva-img").files[0]);
+                formData.append("DashboardFile", document.getElementById("dashboard-nueva-img").files[0]);
+                formData.append("CompromisosFile", document.getElementById("compromisos-nueva-img").files[0]);
             };
             formData.append("Json", JSON.stringify(propiedades));
             console.log("nuevo propiedades: ", propiedades)
@@ -2244,5 +2684,81 @@
             }
         });
         /*END TABLAS*/
+
+        /*DASHBOARD*/
+        $('#pills-dashboard-tab').click(function () {
+            activo = "dashboard";
+        });
+
+        $("#dashboard-colorPicker").change(function () {
+            var hex = $(this).val();
+            const hexToRgb = hex =>
+                hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
+                    , (m, r, g, b) => '#' + r + r + g + g + b + b)
+                    .substring(1).match(/.{2}/g)
+                    .map(x => parseInt(x, 16));
+
+            let r = hexToRgb(hex)[0];
+            let g = hexToRgb(hex)[1];
+            let b = hexToRgb(hex)[2];
+            $("#dashboard-colorPicker").html('rgb (' + r + ', ' + g + ', ' + b + ')')
+            dashboardStyle(r, g, b);
+            $('#dashboard-r').val(r);
+            $('#dashboard-g').val(g);
+            $('#dashboard-b').val(b);
+            if ($('#dashboard-nueva-img').val() !== "") {
+                readURL('.dashboard-image-header-container', $('#dashboard-nueva-img').get()[0]);
+            }
+        });
+
+        $('#dashboard-nueva-img').change(function () {
+            if ($('#dashboard-nueva-img').val() === "") {
+                $('.dashboard-image-header-container').css('background-image', 'none');
+                $(this).css('border', '2px solid #FF4D4D');
+            }
+            else if ($('#dashboard-nueva-img').val() !== "") {
+                readURL('.dashboard-image-header-container', this);
+                $(this).css('border', '2px solid #27C767');
+            }
+        });
+        /*END DASHBOARD*/
+
+        /*COMPROMISOS*/
+        $('#pills-compromisos-tab').click(function () {
+            activo = "compromisos";
+        });
+
+        $("#compromisos-colorPicker").change(function () {
+            var hex = $(this).val();
+            const hexToRgb = hex =>
+                hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
+                    , (m, r, g, b) => '#' + r + r + g + g + b + b)
+                    .substring(1).match(/.{2}/g)
+                    .map(x => parseInt(x, 16));
+
+            let r = hexToRgb(hex)[0];
+            let g = hexToRgb(hex)[1];
+            let b = hexToRgb(hex)[2];
+            $("#compromisos-colorPicker").html('rgb (' + r + ', ' + g + ', ' + b + ')')
+            compromisosStyle(r, g, b);
+            $('#compromisos-r').val(r);
+            $('#compromisos-g').val(g);
+            $('#compromisos-b').val(b);
+            if ($('#compromisos-nueva-img').val() !== "") {
+                readURL('.compromisos-image-header-container', $('#compromisos-nueva-img').get()[0]);
+            }
+        });
+
+        $('#compromisos-nueva-img').change(function () {
+            if ($('#compromisos-nueva-img').val() === "") {
+                $('.compromisos-image-header-container').css('background-image', 'none');
+                $(this).css('border', '2px solid #FF4D4D');
+            }
+            else if ($('#compromisos-nueva-img').val() !== "") {
+                readURL('.compromisos-image-header-container', this);
+                $(this).css('border', '2px solid #27C767');
+            }
+        });
+        /*END COMPROMISOS*/
     </script>
 }

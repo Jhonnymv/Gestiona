@@ -15,6 +15,7 @@ $(document).ready(function () {
     $('.modal-menu-sga .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_SGA20210817205037.jpg")');
     $('.modal-menu-tablas .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Tablas20210701221654.jpg")');
     $('.modal-menu-dashboard .modal-content .modal-image-header-container').css('background-image', 'url("/img/back-inspection.png")');
+    $('.modal-menu-compromisos .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Compromisos20211227175905.jpg")');
 
     $('.modal-menu-marcobre .modal-content .modal-image-header-container').css('background-image', 'url("/img/landing-page-img.png")');
 
@@ -104,6 +105,15 @@ $(document).ready(function () {
     $("#dashboard-ColorPicked").html('rgb (' + r9 + ', ' + g9 + ', ' + b9 + ')');
     let dashboardColor = rgbToHex(r9, g9, b9);
     $("#dashboard-colorPicker").val(dashboardColor);
+
+    //COMPROMISOS
+    let r10 = 0;
+    let g10 = 188;
+    let b10 = 228;
+    compromisosStyle(r10, g10, b10);
+    $("#compromisos-ColorPicked").html('rgb (' + r10 + ', ' + g10 + ', ' + b10 + ')');
+    let compromisosColor = rgbToHex(r10, g10, b10);
+    $("#compromisos-colorPicker").val(compromisosColor);
 });
 
 const rgbToHex = (r, g, b) => '#' + [r, g, b].map(x => {
@@ -468,3 +478,46 @@ function dashboardStyle(r, g, b) {
     $('.modal-menu-dashboard .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
 }
 
+function compromisosStyle(r, g, b) {
+    $('.compromisos-opacity-color').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
+    $('.table-responsive.compromisos-color table tbody tr td').css({ "color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)' });
+    $('.action-container.compromisos-color').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.compromisos .image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Compromisos20211227175905.jpg")');
+
+    //DIV SEPARATORS
+    $('.compromisos .mc-separator-top-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.compromisos .mc-separator-top-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.compromisos .mc-separator-bottom-right').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.compromisos .mc-separator-bottom-left').css("border-color", 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
+    //PROGRESS BAR
+    $('.compromisos .progress-mc .progress-bar').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.table-responsive.compromisos-color table tbody .progress').css('background-color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+    $('.table-responsive.compromisos-color table tbody .progress .percent').css('color', 'rgb(' + r + ', ' + g + ', ' + b + ')');
+
+    //PAGINATION STYLE
+    $('.pagination-container.compromisos-color .pagination .page-item .page-link').attr('style', 'color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.compromisos-color .pagination .page-item.active .page-link').attr('style', 'border-color : rgb(' + r + ', ' + g + ', ' + b + ') !important');
+    $('.pagination-container.compromisos-color .pagination .page-item.active .page-link').attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important');
+
+
+    //MAIN BUTTON
+    $('.btn-special-action.compromisos-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "background-color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action.compromisos-color').mouseenter(function () {
+        $(this).attr('style', 'box-shadow: 0px 4px 20px rgba(' + r + ', ' + g + ', ' + b + ', 0.75) !important; border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-color: rgb(' + r + ', ' + g + ', ' + b + '); background-color:rgb(' + r + ', ' + g + ', ' + b + '); color: #ffffff');
+        });
+    });
+
+    $('.btn-special-action-outline.compromisos-color').css({ "border-color": 'rgb(' + r + ', ' + g + ', ' + b + ')', "color": 'rgb(' + r + ', ' + g + ', ' + b + ')' });
+    $('.btn-special-action-outline.compromisos-color').mouseenter(function () {
+        $(this).attr('style', 'background-color: rgb(' + r + ', ' + g + ', ' + b + ') !important; color: #ffffff !important');
+        $(this).mouseleave(function () {
+            $(this).attr('style', 'background-color: transparent; color: rgb(' + r + ', ' + g + ', ' + b + '); border-color: rgb(' + r + ', ' + g + ', ' + b + ')');
+        });
+    });
+
+    //MENU MODAL
+    $('.modal-menu-compromisos .modal-content .modal-image-header-container .modal-header').css('background-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.7)');
+}

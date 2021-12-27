@@ -17,5 +17,7 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona.Models
         public IFormFile AguaFile { get; set; }
         public IFormFile SGAFile { get; set; }
         public IFormFile TablasFile { get; set; }
+        public IFormFile DashboardFile { get; set; }
+        public IFormFile CompromisosFile { get; set; }
     }
 }

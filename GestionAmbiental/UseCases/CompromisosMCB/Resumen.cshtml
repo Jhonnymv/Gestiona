@@ -5,38 +5,21 @@
 
 @section styles {
     <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+    <link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
 }
 
-<div class="sga">
+<div class="compromisos">
     <div class="primary-content col-12">
         <div class="image-header-container">
-            <div class="header-title sga-opacity-color">
+            <div class="header-title compromisos-opacity-color">
                 <h3><span id="titulo_pagina">Compromisos MCB</span></h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
 
         <div class="tabs-mc container">
-            @*<ul class="nav nav-pills mt-3 div-scroll-horizontal" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-docsga-tab" data-bs-toggle="pill" data-bs-target="#pills-docsga" type="button" role="tab" aria-controls="pills-docsga" aria-selected="true">ISO</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docsig-tab" data-bs-toggle="pill" data-bs-target="#pills-docsig" type="button" role="tab" aria-controls="pills-docsig" aria-selected="false">IGA</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">IFC</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">PE</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">ICMM</button>
-                </li>
-            </ul>*@
-
             <div class="tab-content mt-4" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-docsga" role="tabpanel" aria-labelledby="pills-docsga-tab">
+                <div class="tab-pane fade show active" id="pills-doccompromisos" role="tabpanel" aria-labelledby="pills-doccompromisos-tab">
                     <div class="filter-mc-content d-flex justify-content-center">
                         <div class="div-scroll-horizontal">
                             <a class="filter-mc-item" onclick="FiltrarTipo([1])">
@@ -159,19 +142,103 @@
     </div>
     <div class="secondary-content filters-mc col-12" id="btn_certificaciones">
         <div class="row row-center-center">
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">ISO 14001</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p25 mc-color-1">
+                            <span>25%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">IGA</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p100 mc-color-2">
+                            <span>100%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">IFC</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p75 mc-color-3">
+                            <span>75%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill mc-color-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">PE</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p30 mc-color-4">
+                            <span>30%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">ICMM</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p50 mc-color-5">
+                            <span>50%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="secondary-content filters-mc col-12" id="btn_certificaciones">
+        <div class="row row-center-center">
             <div class="col-12 col-md-2 col-lg-2">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">COMPONENTES</button>
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">COMPONENTES</button>
             </div>
-            <div class="col-12 col-md-2 offset-md-4 col-lg-2 offset-lg-4">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">CARGAR OBLIGACIONES</button>
+            <div class="col-12 col-md-3 offset-md-4 col-lg-2 offset-lg-6">
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">CARGAR OBLIGACIONES</button>
             </div>
-            <div class="col12 col-md-3 col-lg-3 ml-1">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">DESCARGAR COMPROMISOS</button>
+            <div class="col12 col-md-3 col-lg-2 ml-1">
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">DESCARGAR COMPROMISOS</button>
             </div>
         </div>
     </div>
     <div class="secondary-content col-12">
-        <div class="table-responsive sga-color">
+        <div class="table-responsive compromisos-color">
             <table class="table" id="tabla_documentos">
                 <thead class="">
                     <tr>
@@ -193,19 +260,19 @@
             </table>
 
         </div>
-        <div class="pagination-container sga-color" id="paginado" aria-label="pagination">
+        <div class="pagination-container compromisos-color" id="paginado" aria-label="pagination">
         </div>
     </div>
 </div>
 
 <!--Modal Docs Tipo-->
-<div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+<div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-menu modal-sga">
+        <div class="modal-menu modal-compromisos">
             <div class="modal-content">
-                <div class="sga">
+                <div class="compromisos">
                     <div class="image-header-container">
-                        <div class="header-title sga-opacity-color">
+                        <div class="header-title compromisos-opacity-color">
                             <h3>Documentos Filtrados</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -214,9 +281,9 @@
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="sga">
+                    <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
-                            <div class="table-responsive sga-color">
+                            <div class="table-responsive compromisos-color">
                                 <input type="hidden" id="tipoDocModal" />
                                 <table class="table" id="tabla_documentos_tipo">
                                     <thead class="">
@@ -235,7 +302,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="pagination-container sga-color" id="paginado_documentos_tipo" aria-label="pagination">
+                            <div class="pagination-container compromisos-color" id="paginado_documentos_tipo" aria-label="pagination">
 
                             </div>
                         </div>
@@ -246,13 +313,13 @@
     </div>
 </div>
 <!--Modal Preview PDF-->
-<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-menu modal-sga">
+        <div class="modal-menu modal-compromisos">
             <div class="modal-content">
-                <div class="sga">
+                <div class="compromisos">
                     <div class="image-header-container">
-                        <div class="header-title sga-opacity-color">
+                        <div class="header-title compromisos-opacity-color">
                             <h3>Previsualización</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -283,7 +350,7 @@
         function dataModulo() {
             $.ajax({
                 type: "POST",
-                url: "/SGADocumentacion/PropiedadesModulo",
+                url: "/compromisosDocumentacion/PropiedadesModulo",
                 traditional: true,
                 success: (response) => {
                     if (response.success) {
@@ -292,7 +359,7 @@
                         let g = data.g;
                         let b = data.b;
                         let img_url = data.img_url;
-                        sgaStyle(r, g, b);
+                        compromisosStyle(r, g, b);
                     } else {
                         console.log("Ocurrió un problema: " + response.msg);
                     }
@@ -302,7 +369,7 @@
         function filtrar(pag) {
             $.ajax({
                 type: "POST",
-                url: "/SGADocumentacion/GetTablaResumenFiltrada",
+                url: "/compromisosDocumentacion/GetTablaResumenFiltrada",
                 data: {
                     "pagina": pag,
                     "rpp": 10,
@@ -324,7 +391,7 @@
         function filtrarModal(pag) {
             $.ajax({
                 type: "POST",
-                url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
+                url: "/compromisosDocumentacion/GetTablaModalResumenFiltrada",
                 data: {
                     "pagina": pag,
                     "rpp": 5,
@@ -344,15 +411,15 @@
                 }
             });
         }
-        $("#pills-docsga-tab").on('click', function () {
-            $("#opciones_sga").show();
+        $("#pills-doccompromisos-tab").on('click', function () {
+            $("#opciones_compromisos").show();
             $("#opciones_sig").hide();
             $("#opciones_externo").hide();
             //Botones adicionales
             $("#btn_certificaciones").show();
 
-            $("#titulo_pagina").text("Documentos SGA");
-            localStorage.setItem('activeDocSGACategoria',"1")
+            $("#titulo_pagina").text("Documentos compromisos");
+            localStorage.setItem('activeDoccompromisosCategoria',"1")
             categoria = 1;
             filtrar(1);
         });
@@ -367,7 +434,7 @@
             if (PDFObject.supportsPDFs) {
                 $.ajax({
                     type: "POST",
-                    url: "/SGADocumentacion/PreviewFile",
+                    url: "/compromisosDocumentacion/PreviewFile",
                     data: {
                         "fileName": ruta,
                     },

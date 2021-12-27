@@ -101,6 +101,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
         public DbSet<Archivo_Configuracion> Archivos_Configuracion { get; set; }
 
+        public DbSet<Test_Lista> Test_Listas { get; set; }
         public DbSet<Test> Tests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -267,6 +268,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<Test>()
                .ToTable("Tb_Test");
+
+            modelBuilder.Entity<Test_Lista>()
+                .ToTable("Tb_Test_Lista");
         }
     }
 }

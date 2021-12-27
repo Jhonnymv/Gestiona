@@ -321,6 +321,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Gestiona
                             case "Agua": nuevaImagen = model.AguaFile; break;
                             case "SGA": nuevaImagen = model.SGAFile; break;
                             case "Tablas": nuevaImagen = model.TablasFile; break;
+                            case "Dashboard": nuevaImagen = model.DashboardFile; break;
+                            case "Compromisos": nuevaImagen = model.CompromisosFile; break;
                             default: nuevaImagen = null; break;
                         }
                         //Si la imagen cambio

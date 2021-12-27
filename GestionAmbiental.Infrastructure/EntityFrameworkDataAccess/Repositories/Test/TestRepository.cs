@@ -17,6 +17,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
+
         //return ID nuevo registro
         public async Task<int> RegistrarTest(Domain.Test.Test input)
         {
@@ -30,7 +31,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.Tests.AddAsync(entity);
             await _context.SaveChangesAsync();
 
-            return 0;
+            return entity.Id;
         }
         //Sin return
         public async Task EditarTest(Domain.Test.Test input)
