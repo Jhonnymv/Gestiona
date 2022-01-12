@@ -89,6 +89,8 @@ function ActualizarVolumenFecha() {
                     //Actualizar gráfica
                     graph_vol_fechas.destroy();
                     CrearGraficaVolumenFecha(labels, data, limite, valMax, Math.max(data) / 10);
+                    //Suma volumen fechas
+                    $('#suma_volumen_fechas').text(new Intl.NumberFormat().format(data.reduce((a, b) => a + b, 0)));
 
                 } else {
                     //Actualizar contador

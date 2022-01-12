@@ -12,6 +12,11 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/menu_styles.css">
+    <style id="antiClickjack">
+        body {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <div class="indicator floating" id="indicator" style="display: none;">
@@ -66,7 +71,14 @@
     <!-- Custom JS -->
     <script src="~/js/template_script.js"></script>
     <script src="~/js/main_menu_script.js"></script>
-
+    <script type="text/javascript">
+        if (self === top) {
+            var antiClickjack = document.getElementById("antiClickjack");
+            antiClickjack.parentNode.removeChild(antiClickjack);
+        } else {
+            top.location = self.location;
+        }
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

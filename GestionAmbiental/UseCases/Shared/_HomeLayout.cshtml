@@ -12,6 +12,11 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/home_styles.css">
     <link rel="stylesheet" href="~/css/articles_styles.css">
+    <style id="antiClickjack">
+    body {
+        display: none !important;
+    }
+    </style>
 </head>
 <body>
 
@@ -112,7 +117,14 @@
     <!-- Custom JS -->
     <script type="text/javascript" src="~/js/template_script.js"></script>
     <script type="text/javascript" charset="ISO-8859-1" src="~/js/home.js"></script>
-
+    <script type="text/javascript">
+        if (self === top) {
+            var antiClickjack = document.getElementById("antiClickjack");
+            antiClickjack.parentNode.removeChild(antiClickjack);
+        } else {
+            top.location = self.location;
+        }
+    </script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>

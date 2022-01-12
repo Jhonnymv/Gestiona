@@ -221,66 +221,77 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             var rst = new List<ADUserModel>();
 
             dynamic response;
-
-            foreach (var item in groupnames)
+            try
             {
-                DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
-                adSearcher.Filter = "(&(objectClass=group)(cn=" + item + "))";
-
-                SearchResult searchResult = adSearcher.FindOne();
-
-                if (searchResult != null)
+                foreach (var item in groupnames)
                 {
-                    DirectoryEntry deGroup;
-                    if (user != "" || password != "")
-                        deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
-                    else
-                        deGroup = new DirectoryEntry(searchResult.Path);
+                    DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
+                    adSearcher.Filter = "(&(objectClass=group)(cn=" + item + "))";
 
-                    // Get the group's property collection.
-                    System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties;
+                    SearchResult searchResult = adSearcher.FindOne();
 
-                    int propertyCount = propertyCollection["member"].Count;
-                    for (int j = 0; j < propertyCount; j++)
+                    if (searchResult != null)
                     {
-                        DirectoryEntry deUser;
+                        DirectoryEntry deGroup;
                         if (user != "" || password != "")
-                            deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                            deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
                         else
-                            deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString());
+                            deGroup = new DirectoryEntry(searchResult.Path);
 
-                        var info_usuario = new ADUserModel();
-                        info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
-                        info_usuario.Email = GetValidProperty(deUser, "mail");
-                        info_usuario.Nombres = GetValidProperty(deUser, "givenName");
-                        info_usuario.Apellidos = GetValidProperty(deUser, "sn");
-                        info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
-                        info_usuario.Puesto = GetValidProperty(deUser, "title");
-                        info_usuario.Jefe = GetValidProperty(deUser, "manager");
-                        info_usuario.Area = GetValidProperty(deUser, "department");
-                        info_usuario.Empresa = GetValidProperty(deUser, "company");
-                        info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+                        // Get the group's property collection.
+                        System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties;
 
-                        /*
-                        info_usuario.Company = GetValidProperty(deUser, "company");
-                        info_usuario.Deparment = GetValidProperty(deUser, "department");
-                        info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
-                        info_usuario.Mobile = GetValidProperty(deUser, "mobile");
-                        info_usuario.JobTitle = GetValidProperty(deUser, "title");*/
-                        rst.Add(info_usuario);
+                        int propertyCount = propertyCollection["member"].Count;
+                        for (int j = 0; j < propertyCount; j++)
+                        {
+                            DirectoryEntry deUser;
+                            if (user != "" || password != "")
+                                deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                            else
+                                deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString());
 
-                        deUser.Close();
+                            var info_usuario = new ADUserModel();
+                            info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
+                            info_usuario.Email = GetValidProperty(deUser, "mail");
+                            info_usuario.Nombres = GetValidProperty(deUser, "givenName");
+                            info_usuario.Apellidos = GetValidProperty(deUser, "sn");
+                            info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
+                            info_usuario.Puesto = GetValidProperty(deUser, "title");
+                            info_usuario.Jefe = GetValidProperty(deUser, "manager");
+                            info_usuario.Area = GetValidProperty(deUser, "department");
+                            info_usuario.Empresa = GetValidProperty(deUser, "company");
+                            info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+
+                            /*
+                            info_usuario.Company = GetValidProperty(deUser, "company");
+                            info_usuario.Deparment = GetValidProperty(deUser, "department");
+                            info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
+                            info_usuario.Mobile = GetValidProperty(deUser, "mobile");
+                            info_usuario.JobTitle = GetValidProperty(deUser, "title");*/
+                            rst.Add(info_usuario);
+
+                            deUser.Close();
+                        }
+                        deGroup.Close();
+                        adSearchRoot.Close();
+                        rst = rst.OrderBy(x => x.UsuarioRed).ToList();
                     }
-                    deGroup.Close();
-                    adSearchRoot.Close();
-                    rst = rst.OrderBy(x => x.UsuarioRed).ToList();
+
+                    adSearcher.Dispose();
+                    adSearchRoot.Dispose();
+                    await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
+
+
                 }
-
-                adSearcher.Dispose();
-                adSearchRoot.Dispose();
-                await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
-
-                
+            }
+            catch(Exception e)
+            {
+                response = new
+                {
+                    Mensaje = e.Message,
+                    Success = false
+                };
+                return Ok(response);
             }
             if (rst.Count > 0)
             {
