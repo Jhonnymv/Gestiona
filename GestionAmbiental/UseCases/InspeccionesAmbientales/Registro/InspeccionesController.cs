@@ -12,6 +12,7 @@ using System.Web;
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.Inspecciones.AmpliarFechaObservacion;
+using GestionAmbiental.Application.UseCases.Inspecciones.EliminarVencidos;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarCabeceras;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.ConsultarObservacion;
@@ -50,6 +51,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IEliminarObservacion _eliminarObservacion;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
+        private readonly IEliminarVencidos _eliminarVencidos;
 
         public InspeccionesController(
             IConsultarCabeceras consultarCabeceras,
@@ -64,6 +66,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             IEliminarObservacion eliminarObservacion,
             IAmpliarFechaObservacion ampliarFechaObservacion,
             IConsultarObservacion consultarObservacion,
+            IEliminarVencidos eliminarVencidos,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -80,6 +83,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             _eliminarObservacion = eliminarObservacion;
             _consultarObservacion = consultarObservacion;
             _ampliarFechaObservacion = ampliarFechaObservacion;
+            _eliminarVencidos = eliminarVencidos;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -238,6 +242,29 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 Paginador = paginador
             };
             return Ok(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EliminarVencidos(string fechaInicioFiltro, string fechaFinFiltro)
+        {
+            dynamic response;
+            try
+            {
+                await _eliminarVencidos.Execute(fechaInicioFiltro, fechaFinFiltro);
+                response = new
+                {
+                    success = true,
+                    message = "Exito"
+                };
+            }
+            catch(Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok();
         }
         public async Task<IActionResult> NuevaInspeccion()
         {

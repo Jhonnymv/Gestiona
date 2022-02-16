@@ -18,6 +18,12 @@
                 <div class="w-100 row-center-center">
                     <a class="btn btn-special-action-outline inspection-color" asp-action="NuevaInspeccion" asp-controller="Inspecciones">NUEVA INSPECCIÓN</a>
                 </div>
+                @if (ViewBag.PermisoAdmin)
+                {
+                    <div class="w-100 row-center-center">
+                        <button type="button" class="btn btn-special-action-outline inspection-color" onclick="EliminarVencidos()">ELIMINAR INSPECCIONES VENCIDOS</button>
+                    </div>
+                }
             </div>
             <form autocomplete="off" class="custom-form" id="form_filtro">
                 <div class="col-12 col-lg-9">
@@ -162,6 +168,24 @@
                     $('#tabla_resumen_inspecciones tbody').html(response.data);
                     $('#paginado').html(response.paginador);
                     dataModulo();
+                }
+            });
+        }
+        function EliminarVencidos() {
+            $.ajax({
+                type: "POST",
+                url: "/Inspecciones/EliminarVencidos",
+                data: {
+                    "fechaInicioFiltro": $('#fecha_inicio_filtro').val(),
+                    "fechaFinFiltro": $('#fecha_fin_filtro').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        console.log(response.message);
+                    } else {
+                        console.log(response.message);
+                    }
                 }
             });
         }

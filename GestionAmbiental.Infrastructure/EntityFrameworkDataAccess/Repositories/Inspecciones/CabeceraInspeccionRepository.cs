@@ -389,7 +389,70 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 output.Observaciones.Add(obs);
             }
             return output;
-        }        
+        }
+        public async Task EliminarVencidos(DateTime fechaInicio, DateTime fechaFin)
+        {
+            //Eliminar obs vencidas
+            var observacionesVencidas = await _context.Inspecciones_Detalle.ToListAsync();
+            observacionesVencidas = observacionesVencidas.Where(x => x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+
+            observacionesVencidas = observacionesVencidas.Where(x=>x.Fecha_Programada.Value >= fechaInicio && x.Fecha_Programada.Value<=fechaFin).Select(x => { x.Estado = EstadosInspeccion.Eliminado.ToString();return x; }).ToList();
+
+            _context.Inspecciones_Detalle.UpdateRange(observacionesVencidas);
+            await _context.SaveChangesAsync();
+            //Listar observaciones eliminadas
+            var observacionesEliminadas = await _context.Inspecciones_Detalle.ToListAsync();
+            observacionesEliminadas = observacionesEliminadas.Where(x => x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())).ToList();
+            //Listar observaciones no eliminadas
+            var observacionesNoEliminadas = await _context.Inspecciones_Detalle.Where(x => !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString())).ToListAsync();
+            //Buscar las inspecciones con observaciones eliminadas
+            var inspeccionesConObsEliminadas = await _context.Inspecciones_Cabecera.ToListAsync();
+            inspeccionesConObsEliminadas = inspeccionesConObsEliminadas.Where(x => observacionesEliminadas.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)).ToList();
+            //Eliminar las inspecciones con 0 observaciones no eliminadas
+            var inspeccionesEliminables = new List<Entities.Inspecciones.Inspeccion_Cabecera>();
+            foreach(var item in inspeccionesConObsEliminadas)
+            {
+                if (observacionesEliminadas.Select(x => x.Id_Inspeccion_Cabecera).Contains(item.Id_Inspeccion_Cabecera) && !observacionesNoEliminadas.Select(x => x.Id_Inspeccion_Cabecera).Contains(item.Id_Inspeccion_Cabecera))
+                {
+                    inspeccionesEliminables.Add(item);
+                }
+            }
+
+            inspeccionesEliminables = inspeccionesEliminables.Select(x => { x.Estado = EstadosInspeccion.Eliminado.ToString(); x.Codigo = "TBD"; return x; }).ToList();
+            var noTBD = inspeccionesEliminables.Where(x => !x.Codigo.Equals("TBD")).ToList();
+
+            _context.Inspecciones_Cabecera.UpdateRange(inspeccionesEliminables);
+            await _context.SaveChangesAsync();
+
+            //Reasignar codigos
+            var inspeccionesSinVencidos = await _context.Inspecciones_Cabecera.Where(x=>!x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) && !x.Codigo.Equals("TBD")).ToListAsync();
+
+            var codigos = new List<InspeccionCodigos>();
+            foreach(var inspeccion in inspeccionesSinVencidos)
+            {
+                codigos.Add(new InspeccionCodigos
+                {
+                    IdInspeccion = inspeccion.Id_Inspeccion_Cabecera,
+                    CodigoActual = inspeccion.Codigo
+                });
+            }
+
+            codigos = codigos.OrderBy(x => x.CodigoActual).ToList();
+
+            for(int i = 0; i < codigos.Count; i++)
+            {
+                codigos[i].CodigoNuevo = "IP-" + (i + 1).ToString().PadLeft(5, '0'); ;
+            }
+
+            foreach(var inspeccion in inspeccionesSinVencidos)
+            {
+                var codigoNuevo = codigos.FirstOrDefault(x => x.IdInspeccion.Equals(inspeccion.Id_Inspeccion_Cabecera));
+                if (codigoNuevo != null)
+                    inspeccion.Codigo = codigoNuevo.CodigoNuevo;
+            }
+            _context.Inspecciones_Cabecera.UpdateRange(inspeccionesSinVencidos);
+            await _context.SaveChangesAsync();
+        }
         private static bool IsValidJson(string strInput)
         {
             if (string.IsNullOrWhiteSpace(strInput)) { return false; }
@@ -430,6 +493,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             nuevo_texto = nuevo_texto.Remove(nuevo_texto.Length - 2);
             return nuevo_texto;
+        }
+        private class InspeccionCodigos
+        {
+            public int IdInspeccion { get; set; }
+            public string CodigoActual { get; set; }
+            public string CodigoNuevo { get; set; }
+
         }
     }
 }

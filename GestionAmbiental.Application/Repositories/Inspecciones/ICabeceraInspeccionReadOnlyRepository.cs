@@ -15,5 +15,6 @@ namespace GestionAmbiental.Application.Repositories.Inspecciones
         Task<List<InspeccionCabecera>> GetInspeccionCabeceraVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigo);
         Task<InspeccionCabecera> GetInspeccionCabeceraVerificacion(int idCabecera);
         Task<InspeccionCabecera> GetInspeccionCabeceraDescarga(int idCabecera);
+        Task EliminarVencidos(DateTime fechaInicio, DateTime fechaFin);
     }
 }

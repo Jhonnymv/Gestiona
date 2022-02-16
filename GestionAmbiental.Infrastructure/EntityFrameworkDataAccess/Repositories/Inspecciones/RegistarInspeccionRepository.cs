@@ -59,31 +59,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return cabeceraEntity.Id_Inspeccion_Cabecera;
         }
 
-        public async Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle,int Id_Usuario)
+        public async Task<int> RegistrarInspeccionDetalle(NuevaInspeccionDetalle detalle, int Id_Usuario)
         {
-           var detalleEntity = new Inspeccion_Detalle
-                {
-                    Id_Inspeccion_Cabecera = detalle.IdInspeccionCabecera,
-                    Tipo_Observacion = detalle.TipoInspeccion,
-                    Id_Asesor = detalle.IdAsesorMASeguridad,
-                    Descripcion_Acto_Condicion = detalle.DescripcionActoCondicion,
-                    Descripcion_Condicion = detalle.DescripcionCondicion,
-                    Id_Tipo_Condicion = detalle.IdTipoCondicion,
-                    Nivel_Riesgo = detalle.NivelRiesgo,
-                    Descripcion_Accion = detalle.DescripcionAccion,
-                    Id_Responsable_Marcobre = detalle.IdResponsableMarcobre,
-                    Id_Responsable_Marcobre2 = detalle.IdResponsableMarcobre2,
-                    Responsable_Contratista = detalle.ResponsableContratista,
-                    Correo_Contratista = detalle.CorreoContratista,
-                    Fecha_Programada = detalle.FechaProgramada,
-                    Evidencia_Condicion = detalle.EvidenciaCondicion,
-                    Estado = "Registrado",
+            var detalleEntity = new Inspeccion_Detalle
+            {
+                Id_Inspeccion_Cabecera = detalle.IdInspeccionCabecera,
+                Tipo_Observacion = detalle.TipoInspeccion,
+                Id_Asesor = detalle.IdAsesorMASeguridad,
+                Descripcion_Acto_Condicion = detalle.DescripcionActoCondicion,
+                Descripcion_Condicion = detalle.DescripcionCondicion,
+                Id_Tipo_Condicion = detalle.IdTipoCondicion,
+                Nivel_Riesgo = detalle.NivelRiesgo,
+                Descripcion_Accion = detalle.DescripcionAccion,
+                Id_Responsable_Marcobre = detalle.IdResponsableMarcobre,
+                Id_Responsable_Marcobre2 = detalle.IdResponsableMarcobre2 == 0 ? null : detalle.IdResponsableMarcobre2,
+                Responsable_Contratista = detalle.ResponsableContratista,
+                Correo_Contratista = detalle.CorreoContratista,
+                Fecha_Programada = detalle.FechaProgramada,
+                Evidencia_Condicion = detalle.EvidenciaCondicion,
+                Estado = "Registrado",
 
-                    Fecha_Cierre = null,
-                    Fecha_Verificacion = null,
-                };
-                _context.Inspecciones_Detalle.Add(detalleEntity);
-                await _context.SaveChangesAsync();
+                Fecha_Cierre = null,
+                Fecha_Verificacion = null,
+            };
+            _context.Inspecciones_Detalle.Add(detalleEntity);
+            await _context.SaveChangesAsync();
 
             var log = new Log_Inspeccion();
             var bkp = JsonConvert.SerializeObject(detalleEntity);
@@ -97,6 +97,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             await _context.SaveChangesAsync();
 
             return detalleEntity.Id_Inspeccion_Detalle;
-        }        
+        }     
     }
 }

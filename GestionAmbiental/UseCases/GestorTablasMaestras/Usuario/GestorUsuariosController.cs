@@ -195,23 +195,6 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             password = info.Password;
             groupnames = info.Groups;
 
-
-            //foreach (var item in info.Info)
-            //{
-            //    switch (item.Key)
-            //    {
-            //        case "ldap_path": ldap_path = item.Value; break;
-            //        case "ldap_domain": ldap_domain = item.Value; break;
-            //        case "user": user = item.Value;break;
-            //        case "password": password = item.Value;break;
-            //        case "groups": groupnames = JsonConvert.DeserializeObject<List<string>>(item.Value); break;
-            //    }
-            //}
-            //groupnames.Add(groupName);
-            //groupnames.Add("G_Users_Marcobre");
-            //groupnames.Add("G_Users_Gestiona_Externos");
-            //groupnames.Add("g_users_gestiona_minsur");
-
             DirectoryEntry adSearchRoot;
             if (user != "" || password != "")
                 adSearchRoot = new DirectoryEntry(ldap_path, user, password);
@@ -221,34 +204,108 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
             var rst = new List<ADUserModel>();
 
             dynamic response;
+            var linePerLine = new List<string>();
             try
             {
+                var counter = 0;
+                linePerLine.Add("211 - inicio for");
                 foreach (var item in groupnames)
                 {
+                    counter++;
+                    linePerLine.Add("iteración "+ counter.ToString());
                     DirectorySearcher adSearcher = new DirectorySearcher(adSearchRoot);
+                    linePerLine.Add("214 - declara adSearcher");
+
                     adSearcher.Filter = "(&(objectClass=group)(cn=" + item + "))";
+                    linePerLine.Add("214 - declara adSearcher.Filter");
 
                     SearchResult searchResult = adSearcher.FindOne();
+                    linePerLine.Add("214 - adSearcher.FindOne()");
 
                     if (searchResult != null)
                     {
+                        linePerLine.Add("searchResult != null");
                         DirectoryEntry deGroup;
                         if (user != "" || password != "")
+                        {
+                            linePerLine.Add("user != \"\" || password != \"\"");
                             deGroup = new DirectoryEntry(searchResult.Path, user, password, AuthenticationTypes.Secure);
+                            linePerLine.Add("deGroup");
+                        }
                         else
+                        {
+                            linePerLine.Add("user pass vacio");
                             deGroup = new DirectoryEntry(searchResult.Path);
+                            linePerLine.Add("deGroup");
+                        }
 
                         // Get the group's property collection.
                         System.DirectoryServices.PropertyCollection propertyCollection = deGroup.Properties;
 
                         int propertyCount = propertyCollection["member"].Count;
+                        linePerLine.Add("declara propertyCount");
                         for (int j = 0; j < propertyCount; j++)
                         {
+                            linePerLine.Add("segundo for iteración "+j.ToString());
                             DirectoryEntry deUser;
                             if (user != "" || password != "")
-                                deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                            {
+                                linePerLine.Add("user != \"\" || password != \"\"");
+                                try
+                                {
+                                    deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString(), user, password, AuthenticationTypes.Secure);
+                                    var info_usuario = new ADUserModel();
+                                    info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
+                                    info_usuario.Email = GetValidProperty(deUser, "mail");
+                                    info_usuario.Nombres = GetValidProperty(deUser, "givenName");
+                                    info_usuario.Apellidos = GetValidProperty(deUser, "sn");
+                                    info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
+                                    info_usuario.Puesto = GetValidProperty(deUser, "title");
+                                    info_usuario.Jefe = GetValidProperty(deUser, "manager");
+                                    info_usuario.Area = GetValidProperty(deUser, "department");
+                                    info_usuario.Empresa = GetValidProperty(deUser, "company");
+                                    info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+                                    linePerLine.Add("info_usuario: " + JsonConvert.SerializeObject(info_usuario));
+
+                                    /*
+                                    info_usuario.Company = GetValidProperty(deUser, "company");
+                                    info_usuario.Deparment = GetValidProperty(deUser, "department");
+                                    info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
+                                    info_usuario.Mobile = GetValidProperty(deUser, "mobile");
+                                    info_usuario.JobTitle = GetValidProperty(deUser, "title");*/
+                                    rst.Add(info_usuario);
+
+                                    deUser.Close();
+                                    //linePerLine.Add("deUser: "+JsonConvert.SerializeObject(deUser));
+                                }
+                                catch (Exception e)
+                                {
+                                    linePerLine.Add("no encontró: " + e.Message);
+                                }
+                            }
                             else
+                            {
+                                linePerLine.Add("user pass vacio");
                                 deUser = new DirectoryEntry(@"LDAP://" + ldap_domain + "/" + propertyCollection["member"][j].ToString());
+                                //linePerLine.Add("deUser: " + JsonConvert.SerializeObject(deUser));
+                                var info_usuario = new ADUserModel();
+                                info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
+                                info_usuario.Email = GetValidProperty(deUser, "mail");
+                                info_usuario.Nombres = GetValidProperty(deUser, "givenName");
+                                info_usuario.Apellidos = GetValidProperty(deUser, "sn");
+                                info_usuario.Celular = GetValidProperty(deUser, "mobilePhone");
+                                info_usuario.Puesto = GetValidProperty(deUser, "title");
+                                info_usuario.Jefe = GetValidProperty(deUser, "manager");
+                                info_usuario.Area = GetValidProperty(deUser, "department");
+                                info_usuario.Empresa = GetValidProperty(deUser, "company");
+                                info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
+                                linePerLine.Add("info_usuario: " + JsonConvert.SerializeObject(info_usuario));
+
+                                rst.Add(info_usuario);
+
+                                deUser.Close();
+                            }
+                            /*
 
                             var info_usuario = new ADUserModel();
                             info_usuario.UsuarioRed = GetValidProperty(deUser, "samaccountname");
@@ -261,34 +318,27 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Usuario
                             info_usuario.Area = GetValidProperty(deUser, "department");
                             info_usuario.Empresa = GetValidProperty(deUser, "company");
                             info_usuario.DNI = GetValidProperty(deUser, "facsimileTelephoneNumber");
-
-                            /*
-                            info_usuario.Company = GetValidProperty(deUser, "company");
-                            info_usuario.Deparment = GetValidProperty(deUser, "department");
-                            info_usuario.Phone = GetValidProperty(deUser, "telephoneNumber");
-                            info_usuario.Mobile = GetValidProperty(deUser, "mobile");
-                            info_usuario.JobTitle = GetValidProperty(deUser, "title");*/
+                            linePerLine.Add("info_usuario: " + JsonConvert.SerializeObject(info_usuario));
+                            
                             rst.Add(info_usuario);
-
-                            deUser.Close();
+                           
+                            deUser.Close(); */
                         }
                         deGroup.Close();
+                        deGroup.Dispose();
                         adSearchRoot.Close();
                         rst = rst.OrderBy(x => x.UsuarioRed).ToList();
                     }
-
                     adSearcher.Dispose();
                     adSearchRoot.Dispose();
                     await _updateUsuarios.Execute(JsonConvert.SerializeObject(rst));
-
-
                 }
             }
             catch(Exception e)
             {
                 response = new
                 {
-                    Mensaje = e.Message,
+                    Mensaje = JsonConvert.SerializeObject(linePerLine).ToString(),
                     Success = false
                 };
                 return Ok(response);

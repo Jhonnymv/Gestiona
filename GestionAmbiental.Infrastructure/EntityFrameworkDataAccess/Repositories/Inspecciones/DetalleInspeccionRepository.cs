@@ -119,12 +119,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(x =>
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) &&
-                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
-                empresa != 0 ? x.Id_Empresa.Equals(empresa) : x.Id_Empresa.Equals(x.Id_Empresa) &&
-                gerencia != 0 ? x.Id_Gerencia_Inspeccionada.Equals(gerencia) : x.Id_Gerencia_Inspeccionada.Equals(x.Id_Gerencia_Inspeccionada) &&
-                x.Fecha_Inspeccion>=FechaInicio &&
-                x.Fecha_Inspeccion<=FechaFin
+                !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) 
             ).ToList();
+
+            cabeceras = cabeceras.Where(x =>
+                x.Fecha_Inspeccion >= FechaInicio &&
+                x.Fecha_Inspeccion <= FechaFin
+            ).ToList();
+
+            cabeceras = cabeceras.Where(x =>
+                empresa != 0 ? x.Id_Empresa.Equals(empresa) : x.Id_Empresa.Equals(x.Id_Empresa) &&
+                gerencia != 0 ? x.Id_Gerencia.Equals(gerencia) : x.Id_Gerencia.Equals(x.Id_Gerencia)
+            ).ToList();
+
             if (idGerenciaInspeccionada != 0)
                 cabeceras = cabeceras.Where(x => x.Id_Gerencia_Inspeccionada.Equals(idGerenciaInspeccionada)).ToList();
 
