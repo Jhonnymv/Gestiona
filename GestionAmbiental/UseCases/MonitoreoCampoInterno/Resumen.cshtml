@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+    <link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
+}
+<div class="compromisos">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title compromisos-opacity-color">
+                <h3><span id="titulo_pagina">Monitoreo de Campo Interno</span></h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc container">
+            <div class="tab-content mt-4" id="pills-tabContent">
+                <div class="tab-pane fade show active" id="pills-doccompromisos" role="tabpanel" aria-labelledby="pills-doccompromisos-tab">
+                    <div class="filter-mc-content d-flex justify-content-center">
+                        <div class="div-scroll-horizontal">
+                           <img src="~/img/mantenimiento.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
