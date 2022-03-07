@@ -219,7 +219,7 @@ namespace GestionAmbiental.UseCases.RAC.Verificacion
                     Comentario_Verificacion = reporte.Comentario_Verificacion,
                     Estado = reporte.Estado
                 };
-                ViewBag.Permiso = reporte.Permiso;
+                ViewBag.Permiso = reporte.PermisoAdmin;
                 ViewBag.Codigo = reporte.Codigo;
                 return View(model);
             }

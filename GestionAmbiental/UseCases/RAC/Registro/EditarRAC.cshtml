@@ -25,7 +25,7 @@
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label asp-for="Nombres_Apellidos">Nombres y Apellidos</label>
                                 <span class="text-danger" asp-validation-for="Nombres_Apellidos"></span>
-                                <input type="text" class="form-control" asp-for="Nombres_Apellidos" value="@ViewBag.NombreUsuario">
+                                <input type="text" class="form-control" asp-for="Nombres_Apellidos">
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label asp-for="Id_Gerencia">Área de Marcobre</label>
@@ -257,7 +257,10 @@
                             {
                                 <button type="button" class="btn btn-mc" onclick="ampliarInspeccion()">Ampliar Fecha</button>
                             }
+                            @if (ViewBag.PermisoAdmin)
+                            {
                             <a class="btn btn-mc-danger" asp-controller="RegistroRAC" asp-action="EliminarRAC" asp-route-IdRAC="@Model.IdEncriptado">Eliminar</a>
+                            }
                             <a class="btn btn-mc-success" asp-controller="DescargarRAC" asp-action="DescargaRAC" asp-route-IdRAC="@Model.IdEncriptado">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M21.9 11.0001C21.9 10.8901 21.84 10.7801 21.81 10.6701C21.7637 10.4761 21.7036 10.2856 21.63 10.1001C21.58 9.98012 21.51 9.86012 21.45 9.73012C21.39 9.60012 21.3 9.43012 21.21 9.29012C21.12 9.15012 21 9.08012 21 9.00012C21 8.92012 20.8 8.75012 20.69 8.63012C20.58 8.51012 20.48 8.43012 20.37 8.33012L20 8.00012L19.64 7.76012C19.4987 7.67363 19.3517 7.59679 19.2 7.53012L18.81 7.35012C18.6467 7.28962 18.4797 7.23952 18.31 7.20012C18.1756 7.16058 18.0386 7.13051 17.9 7.11012H17.72C17.3348 5.90938 16.5811 4.86052 15.5659 4.1125C14.5507 3.36448 13.3257 2.95533 12.0647 2.94315C10.8038 2.93097 9.57103 3.31639 8.54158 4.04466C7.51213 4.77293 6.73831 5.80704 6.33 7.00012H6.15C6.0114 7.02051 5.8744 7.05058 5.74 7.09012C5.57034 7.12952 5.40334 7.17962 5.24 7.24012L4.85 7.42012C4.69832 7.48679 4.55132 7.56363 4.41 7.65012L4.05 8.00012L3.68 8.31012C3.57 8.41012 3.46 8.50012 3.36 8.61012C3.26 8.72012 3.15 8.86012 3.05 8.98012C2.95 9.10012 2.87 9.21012 2.79 9.34012C2.71 9.47012 2.63 9.63012 2.55 9.78012C2.47 9.93012 2.42 10.0301 2.37 10.1501C2.29644 10.3356 2.23629 10.5261 2.19 10.7201C2.19 10.8301 2.12 10.9401 2.1 11.0501C2.03776 11.3631 2.00428 11.6811 2 12.0001C2.00469 12.3054 2.03479 12.6098 2.09 12.9101C2.09 13.0101 2.14 13.1001 2.16 13.2001C2.20943 13.3966 2.26952 13.5902 2.34 13.7801L2.46 14.0701C2.54803 14.263 2.64823 14.45 2.76 14.6301L2.9 14.8501C2.91439 14.8781 2.93111 14.9049 2.95 14.9301L3 15.0001C3.46574 15.6211 4.06966 16.1251 4.76393 16.4723C5.45821 16.8194 6.22377 17.0001 7 17.0001C7.00223 16.4705 7.21441 15.9635 7.59 15.5901C7.96335 15.2145 8.47042 15.0023 9 15.0001C9.35177 14.9968 9.6977 15.0902 10 15.2701V12.0001C10 11.4697 10.2107 10.961 10.5858 10.5859C10.9609 10.2108 11.4696 10.0001 12 10.0001C12.5304 10.0001 13.0391 10.2108 13.4142 10.5859C13.7893 10.961 14 11.4697 14 12.0001V15.3701C14.3038 15.1939 14.6487 15.1007 15 15.1001C15.5417 15.1052 16.0595 15.3245 16.44 15.7101C16.7767 16.0581 16.9757 16.5165 17 17.0001C17.7762 17.0001 18.5418 16.8194 19.2361 16.4723C19.9303 16.1251 20.5343 15.6211 21 15.0001L21.05 14.9501C21.0689 14.9249 21.0856 14.8981 21.1 14.8701L21.24 14.6501C21.3518 14.47 21.452 14.283 21.54 14.0901L21.66 13.8001C21.7305 13.6102 21.7906 13.4166 21.84 13.2201C21.84 13.1201 21.89 13.0301 21.91 12.9301C21.9663 12.6232 21.9964 12.3121 22 12.0001C21.9988 11.6643 21.9654 11.3295 21.9 11.0001V11.0001Z" fill="black" />
@@ -267,7 +270,7 @@
                                 </svg>
                                 <span>Descargar Excel</span>
                             </a>
-                            <button type="submit" class="btn btn-mc">Guardar Cambios</button>
+                            <button type="button" class="btn btn-mc" onclick="EditarRAC()">Guardar Cambios</button>
                         </div>
                     </div>
                 </div>
@@ -320,6 +323,76 @@
         var data = JSON.parse('@Html.Raw(ViewBag.ModelJSON)');
         $(document).ready(function () {
             CargarOpcionesSSOMA();
+            if (@(ViewBag.PermisoAdmin.ToString().ToLower())) {
+                $('#Nombres_Apellidos').prop('disabled', false);
+                $('#Id_Gerencia').prop('disabled', false);
+                $('#Id_Empresa').prop('disabled', false);
+                $('#Id_Empresa_Obs').prop('disabled', false);
+                $('#Id_Gerencia_Obs').prop('disabled', false);
+                $('#Ubicacion').prop('disabled', false);
+                $('#Hora').prop('disabled', false);
+                $('#Fecha').prop('disabled', false);
+                $('#SSO_MA').prop('disabled', false);
+                $('#Clasificacion').prop('disabled', false);
+                $('#NivelRiesgo').prop('disabled', false);
+                $('#Id_Tipo_Condicion').prop('disabled', false);
+                $('#Descripcion_Acto_Cond').prop('disabled', false);
+                $('#Medida_Control').prop('disabled', false);
+                $('#PAC').prop('disabled', false);
+                $('#Id_Responsable_Cierre').prop('disabled', false);
+                $('#Fecha_Cierre').prop('disabled', false);
+                $("#Id_Supervisor:not(:disabled)").prop('disabled', false);
+            }
+            else if (@(ViewBag.PermisoAsesor.ToString().ToLower())) {
+                $('#Nombres_Apellidos').prop('disabled', true);
+                $('#Id_Gerencia').prop('disabled', true);
+                $('#Id_Empresa').prop('disabled', true);
+                $('#Id_Empresa_Obs').prop('disabled', true);
+                $('#Id_Gerencia_Obs').prop('disabled', true);
+                $('#Ubicacion').prop('disabled', true);
+                $('#Hora').prop('disabled', true);
+                $('#Fecha').prop('disabled', true);
+                $('#SSO_MA').prop('disabled', true);
+                $('#Clasificacion').prop('disabled', true);
+                $('#NivelRiesgo').prop('disabled', true);
+                $('#Id_Tipo_Condicion').prop('disabled', true);
+                $('#Descripcion_Acto_Cond').prop('disabled', true);
+                $('#Medida_Control').prop('disabled', true);
+                $('#PAC').prop('disabled', true);
+                $('#Id_Responsable_Cierre').prop('disabled', false);
+                $('#Fecha_Cierre').prop('disabled', false);
+                $("#Id_Supervisor:not(:disabled)").prop('disabled', true);
+                $(".Vacio").prop('disabled', true);
+                $(".MA-Acto").prop('disabled', true);
+                $(".MA-Condicion").prop('disabled', true);
+                $(".SEG-Acto").prop('disabled', true);
+                $(".SEG-Condicion").prop('disabled', true);
+            }
+            else {
+                $('#Nombres_Apellidos').prop('disabled', true);
+                $('#Id_Gerencia').prop('disabled', true);
+                $('#Id_Empresa').prop('disabled', true);
+                $('#Id_Empresa_Obs').prop('disabled', true);
+                $('#Id_Gerencia_Obs').prop('disabled', true);
+                $('#Ubicacion').prop('disabled', true);
+                $('#Hora').prop('disabled', true);
+                $('#Fecha').prop('disabled', true);
+                $('#SSO_MA').prop('disabled', true);
+                $('#Clasificacion').prop('disabled', true);
+                $('#NivelRiesgo').prop('disabled', true);
+                $('#Id_Tipo_Condicion').prop('disabled', true);
+                $('#Descripcion_Acto_Cond').prop('disabled', true);
+                $('#Medida_Control').prop('disabled', true);
+                $('#PAC').prop('disabled', true);
+                $('#Id_Responsable_Cierre').prop('disabled', true);
+                $('#Fecha_Cierre').prop('disabled', true);
+                $("#Id_Supervisor:not(:disabled)").prop('disabled', true);
+                $(".Vacio").prop('disabled', true);
+                $(".MA-Acto").prop('disabled', true);
+                $(".MA-Condicion").prop('disabled', true);
+                $(".SEG-Acto").prop('disabled', true);
+                $(".SEG-Condicion").prop('disabled', true);
+            }
         });
         $("#Evidencia_Obs").change(function () {
             $("#danger_evidencia_obs").html("");
@@ -723,5 +796,137 @@
         $(".SEG-Condicion").on('change', function () {
             $("#Id_Tipo_Condicion").val($(".SEG-Condicion").val())
         });
+        function EditarRAC() {
+            if (ValidarRAC()) {
+                $('#Nombres_Apellidos').prop('disabled', false);
+                $('#Id_Gerencia').prop('disabled', false);
+                $('#Id_Empresa').prop('disabled', false);
+                $('#Id_Empresa_Obs').prop('disabled', false);
+                $('#Id_Gerencia_Obs').prop('disabled', false);
+                $('#Ubicacion').prop('disabled', false);
+                $('#Hora').prop('disabled', false);
+                $('#Fecha').prop('disabled', false);
+                $('#SSO_MA').prop('disabled', false);
+                $('#Clasificacion').prop('disabled', false);
+                $('#NivelRiesgo').prop('disabled', false);
+                $('#Id_Tipo_Condicion').prop('disabled', false);
+                $('#Descripcion_Acto_Cond').prop('disabled', false);
+                $('#Medida_Control').prop('disabled', false);
+                $('#PAC').prop('disabled', false);
+                $('#Id_Responsable_Cierre').prop('disabled', false);
+                $('#Fecha_Cierre').prop('disabled', false);
+                $("#Id_Supervisor:not(:disabled)").prop('disabled', true);
+                if ($("#SSO_MA").val() == "MA") {
+                    //Ocultar Temporal
+                    $(".AsesorTemporal").hide();
+                    $(".AsesorTemporal").prop('disabled', 'disabled')
+                    //Mostrar asesores
+                    $(".AsesorMedioAmbiente").show();
+                    $(".AsesorMedioAmbiente").prop('disabled', false);
+                    $(".AsesorSeguridad").hide();
+                    $(".AsesorSeguridad").prop('disabled', 'disabled');
+                }
+                else {
+                    //Ocultar Temporal
+                    $(".AsesorTemporal").hide();
+                    $(".AsesorTemporal").prop('disabled', 'disabled')
+                    //Mostrar asesores seguridad
+                    $(".AsesorMedioAmbiente").hide();
+                    $(".AsesorMedioAmbiente").prop('disabled', 'disabled');
+                    $(".AsesorSeguridad").show();
+                    $(".AsesorSeguridad").prop('disabled', false);
+                }
+                $('#form_editarRAC').submit();
+                @*var formData = new FormData();
+                var files = document.getElementById("Evidencia_Obs").files;
+                for (var i = 0; i != files.length; i++) {
+                    formData.append("Evidencia_Obs", files[i]);
+                }
+                formData.append("Id_RAC", $("#Id_RAC").val());
+                formData.append("Nombres_Apellidos", $("#Nombres_Apellidos").val());
+                formData.append("Id_Gerencia", $("#Id_Gerencia").val());
+                formData.append("Id_Empresa", $("#Id_Empresa").val());
+                formData.append("Otra_Empresa", $("#Otra_Empresa").val());
+                formData.append("Id_Empresa_Obs", $("#Id_Empresa_Obs").val());
+                formData.append("Id_Gerencia_Obs", $("#Id_Gerencia_Obs").val());
+                formData.append("Ubicacion", $("#Ubicacion").val());
+                formData.append("Hora", $("#Hora").val());
+                formData.append("Fecha", $("#Fecha").val());
+                formData.append("SSO_MA", $("#SSO_MA").val());
+                formData.append("Clasificacion", $("#Clasificacion").val());
+                formData.append("NivelRiesgo", $("#NivelRiesgo").val());
+                formData.append("Id_Tipo_Condicion", $("#Id_Tipo_Condicion").val());
+                formData.append("Descripcion_Acto_Cond", $("#Descripcion_Acto_Cond").val());
+                formData.append("Medida_Control", $("#Medida_Control").val());
+                formData.append("PAC", $("#PAC").val());
+                formData.append("Id_Responsable_Cierre", $("#Id_Responsable_Cierre").val());
+                formData.append("Fecha_Cierre", $("#Fecha_Cierre").val());
+                formData.append("Id_Supervisor", $("#Id_Supervisor:not(:disabled)").val());
+                formData.append("Evidencia_Obs_Llena", $("#Evidencia_Obs_Llena").val());
+                $.ajax({
+                    url: "@Url.Action("EditarRAC", "RegistroRAC")",
+                    method: "post",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            //$('#modalEditarObservacion').modal('toggle');
+                            //ConsultarObservaciones();
+                            //ReiniciarModalEditarObs();
+                        }
+                        else {
+                            alert("Ocurrió un error al editar el RAC")
+                        }
+                    }
+                });*@
+            }
+        }
+        function ReiniciarMsgsValidacionRAC() {
+            $('span[data-valmsg-for="Nombres_Apellidos"]').text("");
+            $('span[data-valmsg-for="Id_Gerencia"]').text("");
+            $('span[data-valmsg-for="Id_Empresa"]').text("");
+            $('span[data-valmsg-for="Otra_Empresa"]').text("");
+            $('span[data-valmsg-for="Id_Empresa_Obs"]').text("");
+            $('span[data-valmsg-for="Id_Gerencia_Obs"]').text("");
+            $('span[data-valmsg-for="Ubicacion"]').text("");
+            $('span[data-valmsg-for="Hora"]').text("");
+            $('span[data-valmsg-for="Fecha"]').text("");
+            $('span[data-valmsg-for="SSO_MA"]').text("");
+            $('span[data-valmsg-for="Clasificacion"]').text("");
+            $('span[data-valmsg-for="NivelRiesgo"]').text("");
+            $('span[data-valmsg-for="Id_Tipo_Condicion"]').text("");
+            $('span[data-valmsg-for="Descripcion_Acto_Cond"]').text("");
+            $('span[data-valmsg-for="Medida_Control"]').text("");
+            $('span[data-valmsg-for="PAC"]').text("");
+            $('span[data-valmsg-for="Id_Responsable_Cierre"]').text("");
+            $('span[data-valmsg-for="Fecha_Cierre"]').text("");
+            $('span[data-valmsg-for="Id_Supervisor"]').text("");
+        }
+        function ValidarRAC() {
+            var result = true;
+            ReiniciarMsgsValidacionRAC();
+            if ($("#Nombres_Apellidos").val() == "0") { result = false; $('span[data-valmsg-for="Nombres_Apellidos"]').text("Debe completar este campo"); $("#Nombres_Apellidos").focus(); }
+            if ($("#Id_Gerencia").val() == "0") { result = false; $('span[data-valmsg-for="Id_Gerencia"]').text("Debe seleccionar una opción"); $("#Id_Gerencia").focus(); }
+            if ($("#Id_Empresa").val() == "0") { result = false; $('span[data-valmsg-for="Id_Empresa"]').text("Debe seleccionar una opción"); $("#Id_Gerencia").focus(); }
+            if ($("#Id_Empresa option:selected").text().toLowerCase().includes("otro") && $("#Otra_Empresa").val() == "") { result = false; $('span[data-valmsg-for="Otra_Empresa"]').text("Debe completar este campo"); $("#Id_Gerencia").focus();}
+            if ($("#Id_Empresa_Obs").val() == "0") { result = false; $('span[data-valmsg-for="Id_Empresa_Obs"]').text("Debe seleccionar una opción"); }
+            if ($("#Id_Gerencia_Obs").val() == "0") { result = false; $('span[data-valmsg-for="Id_Gerencia_Obs"]').text("Debe seleccionar una opción"); }
+            if ($("#Ubicacion").val() == "") { result = false; $('span[data-valmsg-for="Ubicacion"]').text("Debe completar este campo"); }
+            if ($("#Hora").val() == "") { result = false; $('span[data-valmsg-for="Hora"]').text("Debe completar este campo"); }
+            if ($("#Fecha").val() == "") { result = false; $('span[data-valmsg-for="Fecha"]').text("Debe completar este campo"); }
+            if ($("#SSO_MA").val() == "0") { result = false; $('span[data-valmsg-for="SSO_MA"]').text("Debe seleccionar una opción"); }
+            if ($("#Clasificacion").val() == "0") { result = false; $('span[data-valmsg-for="Clasificacion"]').text("Debe seleccionar una opción"); }
+            if ($("#NivelRiesgo").val() == "0") { result = false; $('span[data-valmsg-for="NivelRiesgo"]').text("Debe seleccionar una opción"); }
+            if ($("#Id_Tipo_Condicion").val() == "0") { result = false; $('span[data-valmsg-for="Id_Tipo_Condicion"]').text("Debe seleccionar una opción"); }
+            if ($("#Descripcion_Acto_Cond").val() == "") { result = false; $('span[data-valmsg-for="Descripcion_Acto_Cond"]').text("Debe completar este campo"); }
+            if ($("#Medida_Control").val() == "") { result = false; $('span[data-valmsg-for="Medida_Control"]').text("Debe completar este campo"); }
+            if ($("#PAC").val() == "") { result = false; $('span[data-valmsg-for="PAC"]').text("Debe seleccionar una opción"); }
+            if ($("#Id_Responsable_Cierre").val() == "") { result = false; $('span[data-valmsg-for="Id_Responsable_Cierre"]').text("Debe seleccionar una opción"); }
+            if ($("#Fecha_Cierre").val() == "") { result = false; $('span[data-valmsg-for="Fecha_Cierre"]').text("Debe completar este campo"); }
+            if ($("#Id_Supervisor:not(:disabled)").val() == "") { result = false; $('span[data-valmsg-for="Id_Supervisor"]').text("Debe seleccionar una opción"); }
+            //if ($("#Evidencia_Obs").val() == "") { result = false; $('span[data-valmsg-for="Evidencia_Obs"]').text("Debe seleccionar una opción"); }
+            return result;
+        }
     </script>
 }

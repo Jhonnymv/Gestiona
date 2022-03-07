@@ -319,5 +319,49 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task EliminarVencidos(DateTime fechaInicio, DateTime fechaFin)
+        {
+            var racs = await _context.RACs.ToListAsync();
+
+            var racsEliminables = racs.Where(x => x.Estado.Equals(EstadosRAC.Vencido.ToString()) && x.Fecha_Cierre.Date >= fechaInicio && x.Fecha_Cierre.Date <= fechaFin).ToList();
+            racsEliminables = racsEliminables.Select(x => { x.Estado = EstadosRAC.Eliminado.ToString(); x.Codigo = "TBD"; return x; }).ToList();
+
+            _context.RACs.UpdateRange(racsEliminables);
+            await _context.SaveChangesAsync();
+
+            var racsNoVencidos = await _context.RACs.Where(x => !x.Estado.Equals(EstadosRAC.Eliminado.ToString()) && !x.Codigo.Equals("TBD")).ToListAsync();
+            var codigos = new List<RACCodigos>();
+            foreach (var rac in racsNoVencidos)
+            {
+                codigos.Add(new RACCodigos
+                {
+                    IdRAC = rac.Id_RAC,
+                    CodigoActual = rac.Codigo
+                });
+            }
+
+            codigos = codigos.OrderBy(x => x.CodigoActual).ToList();
+
+            for (int i = 0; i < codigos.Count; i++)
+            {
+                codigos[i].CodigoNuevo = "RAC-" + (i + 1).ToString().PadLeft(5, '0'); ;
+            }
+
+            foreach (var rac in racsNoVencidos)
+            {
+                var codigoNuevo = codigos.FirstOrDefault(x => x.IdRAC.Equals(rac.Id_RAC));
+                if (codigoNuevo != null)
+                    rac.Codigo = codigoNuevo.CodigoNuevo;
+            }
+            _context.RACs.UpdateRange(racsNoVencidos);
+            await _context.SaveChangesAsync();
+        }
+        private class RACCodigos
+        {
+            public int IdRAC { get; set; }
+            public string CodigoActual { get; set; }
+            public string CodigoNuevo { get; set; }
+
+        }
     }
 }

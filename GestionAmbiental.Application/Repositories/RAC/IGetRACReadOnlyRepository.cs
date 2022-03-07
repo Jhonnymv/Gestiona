@@ -11,5 +11,6 @@ namespace GestionAmbiental.Application.Repositories.RAC
         Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro);
         Task<Domain.RAC.RAC> GetRAC(int Id_RAC);
         Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro);
+        Task EliminarVencidos(DateTime fechaInicio, DateTime fechaFin);
     }
 }

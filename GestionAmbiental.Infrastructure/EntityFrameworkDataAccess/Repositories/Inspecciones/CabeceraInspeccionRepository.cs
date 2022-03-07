@@ -54,7 +54,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 if (asesorFiltro.Length > 0)
                     observaciones = observaciones.Where(x => asesorFiltro.Contains(x.Id_Asesor)).ToList();
                 if (estadoFiltro.Count > 0)
+                {
                     observaciones = observaciones.Where(x => estadoFiltro.Contains(x.Estado)).ToList();
+                    var BPRechazadas = new List<int>();
+                    foreach(var observacion in observaciones)
+                    {
+                        if (observacion.Descripcion_Condicion == "Buenas Prácticas" && observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
+                            BPRechazadas.Add(observacion.Id_Inspeccion_Detalle);                            
+                    }
+                    observaciones = observaciones.Where(x => !BPRechazadas.Contains(x.Id_Inspeccion_Detalle)).ToList();
+                }
             }
             cabeceras = cabeceras.Where(x => observaciones.GroupBy(y => y.Id_Inspeccion_Cabecera).Select(z => z.Key).Contains(x.Id_Inspeccion_Cabecera)).ToList(); 
             cabeceras.InsertRange(0, cabecerasSinObs);
@@ -139,9 +148,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var obsPendImp = await _context.Inspecciones_Detalle
                  .Where(x =>
                  x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                 x.Estado.Equals(EstadosInspeccion.Vencido.ToString()) ||
                  x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
                  x.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
                  .ToListAsync();
+
+            var BPRechazados = new List<Entities.Inspecciones.Inspeccion_Detalle>();
+            foreach(var item in obsPendImp)
+            {
+                if (item.Descripcion_Condicion.Equals("Buenas Prácticas") && item.Estado.Equals(EstadosInspeccion.Rechazado.ToString()))
+                    BPRechazados.Add(item);
+            }
+            obsPendImp = obsPendImp.Where(x => !BPRechazados.Contains(x)).ToList();
+
             var cabeceras = await _context.Inspecciones_Cabecera.ToListAsync();
             cabeceras = cabeceras.Where(c =>
                 c.Codigo.Contains(codigo ?? c.Codigo) &&

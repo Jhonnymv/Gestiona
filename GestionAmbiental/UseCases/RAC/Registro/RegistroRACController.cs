@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.RAC.EliminarVencidos;
 using GestionAmbiental.Application.UseCases.RAC.Registro;
 using GestionAmbiental.Application.UseCases.RAC.Registro.AmpliarFechaRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.ConsultarRAC;
@@ -41,7 +42,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IGetUsuario _getUsuario;
         private readonly IAmpliarFechaRAC _ampliarFechaRAC;
         private readonly IEliminarRAC _eliminarRAC;
-
+        private readonly IEliminarVencidos _eliminarVencidos;
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public RegistroRACController(
@@ -54,6 +55,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             IGetUsuario getUsuario,
             IAmpliarFechaRAC ampliarFechaRAC,
             IEliminarRAC eliminarRAC,
+            IEliminarVencidos eliminarVencidos,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -67,6 +69,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             _getUsuario = getUsuario;
             _ampliarFechaRAC = ampliarFechaRAC;
             _eliminarRAC = eliminarRAC;
+            _eliminarVencidos = eliminarVencidos;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.RACIdRouteValue);
             _info_SGA = info_SGA;
         }
@@ -141,6 +144,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Gerencias = filtroGerencias;
                 ViewBag.Usuarios = filtroUsuarios;
                 ViewBag.Asesores = asesores;
+                ViewBag.PermisoAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
                 return View();
             }
         }
@@ -166,13 +170,14 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 foreach (var fila in datosTabla.Registros)
                 {
                     var IdEncriptado = _protector.Protect(fila.Id_RAC.ToString());
+                    var usuario = await _getUsuario.Execute(userInfo.NombreUsuario);
                     filasTabla += "<tr>";
                     if (fila.Estado != EstadosRAC.Eliminado.ToString())
                     {
-                        if(!userInfo.Rol.Equals(InspeccionRol.Admin))
-                            filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
-                        else
+                        if(userInfo.Rol.Equals(InspeccionRol.Admin) || ((userInfo.Rol.Equals(InspeccionRol.AsesorSSO) || userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) && usuario.IdUsuario.Equals(fila.Id_Supervisor)))
                             filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/EditarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
+                        else
+                            filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
                     }
                     else
                         filasTabla += "<td><label style=\"width:80px;\">" + fila.Codigo + "</label></td>";
@@ -344,7 +349,29 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
                 return RedirectToAction("NuevoRAC");
         }
-
+        [HttpPost]
+        public async Task<IActionResult> EliminarVencidos(string fechaInicioFiltro, string fechaFinFiltro)
+        {
+            dynamic response;
+            try
+            {
+                await _eliminarVencidos.Execute(fechaInicioFiltro, fechaFinFiltro);
+                response = new
+                {
+                    success = true,
+                    message = "Exito"
+                };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    message = e.Message
+                };
+            }
+            return Ok();
+        }
         public IActionResult DetalleRACNotificacion(int IdRAC)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -399,7 +426,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Comentario_Verificacion = reporte.Comentario_Verificacion,
                     Estado = reporte.Estado
                 };
-                ViewBag.Permiso = reporte.Permiso;
+                ViewBag.Permiso = reporte.PermisoAdmin;
                 ViewBag.Codigo = reporte.Codigo;
 
                 return View(model);
@@ -519,7 +546,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Estado = reporte.Estado
                 };
 
-                ViewBag.Permiso = reporte.Permiso;
+                ViewBag.PermisoAdmin = reporte.PermisoAdmin;
+                ViewBag.PermisoAsesor = reporte.PermisoAsesor;
                 ViewBag.Codigo = reporte.Codigo;                
                 ViewBag.ModelJSON = JsonConvert.SerializeObject(toJson);
                 return View(model);
@@ -537,7 +565,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 else
                 {
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                    if (userInfo.Rol == InspeccionRol.Admin)
+                    if (userInfo.Rol == InspeccionRol.Admin|| userInfo.Rol == InspeccionRol.AsesorSSO|| userInfo.Rol == InspeccionRol.AsesorMAP)
                     {
                         var filePathObs = "";
                         var filePathCierre = "";

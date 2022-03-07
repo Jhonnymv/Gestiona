@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.RAC.Implementacion.ConsultarRAC
             var reporte = await _getRACReadOnlyRepository.GetRAC(Id_RAC);
             var usuario = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario_red);
             var output = new RACOutput(reporte);
-            output.Permiso = usuario.IdUsuario.Equals(output.Id_Responsable_Cierre);
+            output.PermisoAdmin = usuario.IdUsuario.Equals(output.Id_Responsable_Cierre);
             return output;
         }
     }

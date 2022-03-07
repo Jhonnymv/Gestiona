@@ -234,7 +234,7 @@ namespace GestionAmbiental.UseCases.RAC.Implementacion
                     Comentario_Cierre = reporte.Comentario_Cierre,
                     Estado = reporte.Estado
                 };
-                ViewBag.Permiso = reporte.Permiso;
+                ViewBag.Permiso = reporte.PermisoAdmin;
                 ViewBag.Codigo = reporte.Codigo;
                 return View(model);
             }

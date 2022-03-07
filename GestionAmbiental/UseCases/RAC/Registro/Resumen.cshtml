@@ -20,6 +20,12 @@
                 <div class="w-100 row-center-center">
                     <a class="btn btn-special-action-outline rac-color" asp-action="NuevoRAC" asp-controller="RegistroRAC">NUEVO REPORTE</a>
                 </div>
+                @if (ViewBag.PermisoAdmin)
+                {
+                    <div class="w-100 row-center-center">
+                        <button type="button" class="btn btn-special-action-outline rac-color" onclick="EliminarVencidos()">ELIMINAR INSPECCIONES VENCIDOS</button>
+                    </div>
+                }
             </div>
             <form autocomplete="off" class="custom-form" id="form_filtro">
                 <div class="col-12 col-lg-9">
@@ -163,6 +169,24 @@
                     $('#tabla_resumen_inspecciones tbody').html(response.data)
                     $('#paginado').html(response.paginador)
                     dataModulo();
+                }
+            });
+        }
+        function EliminarVencidos() {
+            $.ajax({
+                type: "POST",
+                url: "/RegistroRAC/EliminarVencidos",
+                data: {
+                    "fechaInicioFiltro": $('#fecha_inicio_filtro').val(),
+                    "fechaFinFiltro": $('#fecha_fin_filtro').val()
+                },
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        console.log(response.message);
+                    } else {
+                        console.log(response.message);
+                    }
                 }
             });
         }

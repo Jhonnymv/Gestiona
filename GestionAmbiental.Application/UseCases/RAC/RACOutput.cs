@@ -39,7 +39,8 @@ namespace GestionAmbiental.Application.UseCases.RAC
         public string Comentario_Cierre { get; set; }
         public string Comentario_Verificacion { get; set; }
         public string Estado { get; set; }
-        public bool Permiso { get; set; }
+        public bool PermisoAdmin { get; set; }
+        public bool PermisoAsesor { get; set; }
         public RACOutput(Domain.RAC.RAC rac)
         {
             Id_RAC = rac.Id_RAC;
