@@ -3,7 +3,7 @@ $(document).ready(function () {
     $('div.modal .login-image-background').css('background-image', 'url("/img/landing-page-img.png")');
 
     //MENU PAGE
-    $('.menu_img_bg').css('background-image', 'url("/img/uploads/Home/Modulo_Modulos20210817213357.png")');
+    $('.menu_img_bg').css('background-image', 'url("/img/uploads/Home/Modulo_Modulos20220222231041.png")');
 
     //MENU MODALS
     $('.modal-menu-inspection .modal-content .modal-image-header-container').css('background-image', 'url("/img/uploads/Home/Modulo_Inspection20210817204730.jpg")');
