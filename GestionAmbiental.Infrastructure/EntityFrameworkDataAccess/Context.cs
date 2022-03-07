@@ -1,5 +1,6 @@
 ﻿using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.CompromisosMCB;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ConsumoAgua;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.InvestigacionFinal;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Incidentes.Items;
@@ -103,6 +104,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
         public DbSet<Test_Lista> Test_Listas { get; set; }
         public DbSet<Test> Tests { get; set; }
+        public DbSet<AreaCMCB> AreaCMCB { get; set; }
+        public DbSet<AspectoCMCB> AspectoCMCB { get; set; }
+        public DbSet<AutoridadCMCB> AutoridadCMCB { get; set; }
+        public DbSet<ComponenteCMCB> ComponenteCMCB { get; set; }
+        public DbSet<CompromisoCMCB> CompromisoCMCB { get; set; }
+        public DbSet<CriterioCMCB> CriterioCMCB { get; set; }
+        public DbSet<EtapaCMCB> EtapaCMCB { get; set; }
+        public DbSet<GerenciaUsuarioCMCB> Gerencia_UsuarioCMCB { get; set; }
+        public DbSet<GerenciaCMCB> GerenciaCMCB { get; set; }
+        public DbSet<MedioVerificacionCMCB> MedioVerificacionCMCB { get; set; }
+        public DbSet<OrigenCMCB> OrigenCMCB { get; set; }
+        public DbSet<SustentoCMCB> SustentoCMCB { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -271,6 +284,44 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<Test_Lista>()
                 .ToTable("Tb_Test_Lista");
+
+            modelBuilder.Entity<AreaCMCB>()
+                .ToTable("Tb_Areas_CMCB");
+
+            modelBuilder.Entity<AspectoCMCB>()
+                .ToTable("Tb_Areas_CMCB");
+
+            modelBuilder.Entity<AutoridadCMCB>()
+                .ToTable("Tb_Autoridades_CMCB");
+
+            modelBuilder.Entity<ComponenteCMCB>()
+                .ToTable("Tb_Componentes_CMCB");
+
+            modelBuilder.Entity<CompromisoCMCB>()
+                .ToTable("Tb_Compromisos_CMCB");
+
+            modelBuilder.Entity<CriterioCMCB>()
+                .ToTable("Tb_Criterios_CMCB");
+
+            modelBuilder.Entity<EtapaCMCB>()
+                .ToTable("Tb_Etapas_CMCB");
+
+            modelBuilder.Entity<GerenciaCMCB>()
+                .ToTable("Tb_Gerencias_CMCB");
+
+            modelBuilder.Entity<GerenciaUsuarioCMCB>()
+                .ToTable("Tb_Gerencia_Usaurio_CMCB");
+
+            modelBuilder.Entity<MedioVerificacionCMCB>()
+                .ToTable("Tb_Medios_Verificacion_CMCB");
+
+            modelBuilder.Entity<OrigenCMCB>()
+                .ToTable("Tb_Origeness_CMCB");
+            modelBuilder.Entity<SustentoCMCB>()
+                .ToTable("Tb_Sustentos_CMCB");
+
+
+
         }
     }
 }
