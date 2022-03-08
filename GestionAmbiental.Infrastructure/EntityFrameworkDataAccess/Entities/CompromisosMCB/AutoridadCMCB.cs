@@ -11,7 +11,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
     {
         [Key]
         public int Id { get; set; }
-        [Column(TypeName ="varchar(255)")]
+        [Column(TypeName ="Varchar(255)")]
         public string Autoridad { get; set; }
     }
 }
