@@ -318,7 +318,7 @@ body::-webkit-scrollbar-track {
 }
 
 .project-name {
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-weight: bold;
     font-size: 17px;
     padding: 0 10px;
