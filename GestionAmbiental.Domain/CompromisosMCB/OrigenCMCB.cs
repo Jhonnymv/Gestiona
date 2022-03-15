@@ -8,6 +8,11 @@ namespace GestionAmbiental.Domain.CompromisosMCB
     {
         public int Id { get; set; }
         public string Origen { get; set; }
+        public OrigenCMCB()
+        {
+
+        }
+
 
     }
 }

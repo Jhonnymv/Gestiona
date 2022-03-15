@@ -10,5 +10,9 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public string Tipo { get; set; }
         public string Componente { get; set; }
         public string Servicio { get; set; }
+        public ComponenteCMCB()
+        {
+
+        }
     }
 }

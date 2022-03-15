@@ -42,7 +42,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<Conductor_RS> Condutores_RS { get; set; }
         public DbSet<Vehiculo_RS> Vehiculos_RS { get; set; }
         public DbSet<Log_Ingreso_Salida_RS> Log_Ingreso_Salida_RSs { get; set; }
-        public DbSet<Log_Manifiesto_RS>Log_Manifiesto_RS { get; set; }
+        public DbSet<Log_Manifiesto_RS> Log_Manifiesto_RS { get; set; }
         public DbSet<Usuario_Notificar_RS> Usuarios_Notificar_RS { get; set; }
 
         public DbSet<Componente_Ambiental> Componente_Ambiental { get; set; }
@@ -89,7 +89,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<OrigenAgua> Origenes_Agua { get; set; }
         public DbSet<FuenteAgua> Fuentes_Agua { get; set; }
         public DbSet<Usuarios_Notificar_Consumo_Agua> Usuarios_Notificar_Consumo_Agua { get; set; }
-        
+
         public DbSet<Tipo_Documento> SGA_Tipos_Documento { get; set; }
         public DbSet<Categoria_Documento> SGA_Categoria_Documento { get; set; }
         public DbSet<Categoria_Tipo> SGA_Categoria_Tipo { get; set; }
@@ -104,6 +104,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
         public DbSet<Test_Lista> Test_Listas { get; set; }
         public DbSet<Test> Tests { get; set; }
+
         public DbSet<AreaCMCB> AreaCMCB { get; set; }
         public DbSet<AspectoCMCB> AspectoCMCB { get; set; }
         public DbSet<AutoridadCMCB> AutoridadCMCB { get; set; }
@@ -221,7 +222,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Involucrado_Incidente_Reporte");
             modelBuilder.Entity<Usuario_Notificar_Incidente>()
                 .ToTable("Tb_Usuarios_Notificar_Incidente");
-                       
+
             modelBuilder.Entity<Tipo_Fauna>()
                 .ToTable("Tb_Tipo_Fauna");
             modelBuilder.Entity<Nombre_Comun_Fauna>()
@@ -289,7 +290,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Areas_CMCB");
 
             modelBuilder.Entity<AspectoCMCB>()
-                .ToTable("Tb_Areas_CMCB");
+                .ToTable("Tb_Aspectos_CMCB");
 
             modelBuilder.Entity<AutoridadCMCB>()
                 .ToTable("Tb_Autoridades_CMCB");
@@ -305,7 +306,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<EtapaCMCB>()
                 .ToTable("Tb_Etapas_CMCB");
-
             modelBuilder.Entity<GerenciaCMCB>()
                 .ToTable("Tb_Gerencias_CMCB");
 
@@ -316,12 +316,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Medios_Verificacion_CMCB");
 
             modelBuilder.Entity<OrigenCMCB>()
-                .ToTable("Tb_Origeness_CMCB");
+                .ToTable("Tb_Origenes_CMCB");
+
             modelBuilder.Entity<SustentoCMCB>()
                 .ToTable("Tb_Sustentos_CMCB");
-
-
-
         }
     }
 }

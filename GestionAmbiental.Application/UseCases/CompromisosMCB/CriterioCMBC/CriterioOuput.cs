@@ -9,5 +9,12 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CriterioCMBC
         public int Id { get; set; }
         public string Criterio { get; set; }
         public string Detalle { get; set; }
+
+        //public  CriterioOuput(Domain.CompromisosMCB.CriterioCMCB criterio)
+        //{
+        //    Id= criterio.Id;
+        //    Criterio= criterio.Criterio;
+        //    Detalle= criterio.Detalle;
+        //}
     }
 }

@@ -21,6 +21,11 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public string? Evidencia { get; set; }
         public string? Comentario_verificacion { get; set; }
         public string? Medio_verificacion { get; set; }
+        public SustentoCMCB()
+        {
+
+        }
+
 
     }
 }

@@ -9,6 +9,9 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public int Id { get; set; }
         public string   Gerencia { get; set; }
         public string Descripcion { get; set; }
+        public GerenciaCMCB()
+        {
 
+        }
     }
 }

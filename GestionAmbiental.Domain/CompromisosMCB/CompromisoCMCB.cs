@@ -9,7 +9,7 @@ namespace GestionAmbiental.Domain.CompromisosMCB
     {
         public int Id { get; set; }
         public string Codigo { get; set; }
-        public CriterioCMCB? CriterioCMCB { get; set; }
+        public CriterioCMCB CriterioCMCB { get; set; }
         public string? Detalle_compromiso { get; set; }
         public EtapaCMCB? EtapaCMCB { get; set; }
         public string? Texto_compromiso { get; set; }
@@ -35,6 +35,10 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public string? Estado { get; set; }
         public Usuario Aprueba { get; set; }
         public string? Medio_verificacion { get; set; }
+        public CompromisoCMCB()
+        {
+
+        }
 
     }
 }

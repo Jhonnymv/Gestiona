@@ -11,5 +11,7 @@ namespace GestionAmbiental.Application.Repositories.Test
         Task EditarTest(Domain.Test.Test input);
         Task<List<Domain.Test.Test>> ListarTest();
         Task EliminarTest(int IdElimnado);
+
+
     }
 }

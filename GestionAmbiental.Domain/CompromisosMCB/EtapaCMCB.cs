@@ -9,5 +9,9 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public int Id { get; set; }
       
         public string Etapa { get; set; }
+        public EtapaCMCB()
+        {
+
+        }
     }
 }

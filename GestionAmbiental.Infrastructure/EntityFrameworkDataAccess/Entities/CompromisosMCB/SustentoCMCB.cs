@@ -16,13 +16,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Compromiso { get; set; }
 
         [Column(TypeName = "Date")]
-        public int? Fecha_limite { get; set; }
+        public DateTime? Fecha_limite { get; set; }
 
         [Column(TypeName = "Date")]
-        public int? Fecha_entrega { get; set; }
+        public DateTime? Fecha_entrega { get; set; }
     
         [Column(TypeName = "Date")]
-        public int? Fecha_validacion { get; set; }
+        public DateTime? Fecha_validacion { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Responsable1 { get; set; }
@@ -34,25 +34,25 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Asesor { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public int? Estado { get; set; }
+        public string? Estado { get; set; }
 
         [Column(TypeName = "Text")]
-        public int? Sustento_cumplimiento{ get; set; }
+        public string? Sustento_cumplimiento{ get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public int? Evidencia { get; set; }
+        public string? Evidencia { get; set; }
 
 
         [Column(TypeName = "Text")]
-        public int? Comentario_imcumplimiento { get; set; }
+        public string? Comentario_imcumplimiento { get; set; }
 
 
         [Column(TypeName = "Text")]
-        public int? Comentario_verificacion { get; set; }
+        public string? Comentario_verificacion { get; set; }
 
 
         [Column(TypeName = "varchar(255)")]
-        public int? Medio_verificacion { get; set; }
+        public string? Medio_verificacion { get; set; }
 
     }
 }

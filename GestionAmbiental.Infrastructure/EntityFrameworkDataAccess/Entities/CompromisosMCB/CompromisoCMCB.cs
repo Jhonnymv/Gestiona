@@ -18,13 +18,13 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Criterio { get; set; }
 
         [Column(TypeName = "Text")]
-        public string detalle_compromiso { get; set; }
+        public string Detalle_compromiso { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Etapa { get; set; }
 
         [Column(TypeName = "Text")]
-        public string texto_compromiso { get; set; }
+        public string Texto_compromiso { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Origen { get; set; }
@@ -47,7 +47,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "int")]
         public int? Id_Autoridad { get; set; }
 
-        [Column(TypeName = "Date")]
+        [Column(TypeName = "datetime")]
         public DateTime Fecha { get; set; }
 
         [Column(TypeName = "int")]
@@ -72,7 +72,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Entidad { get; set; }
 
         [Column(TypeName = "int")]
-        public int? Id_Responsable1{ get; set; }
+        public int? Id_Responsable1 { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Responsable2 { get; set; }
@@ -83,8 +83,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "Varchar(255)")]
         public string? Sustentos { get; set; }
 
+        [Column(TypeName = "Varchar(255)")]
+        public string? Estado { get; set; }
+
         [Column(TypeName = "int")]
-        public string? Id_Aprueba { get; set; }
+        public int? Id_Aprueba { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
         public string? Medio_verificacion { get; set; }

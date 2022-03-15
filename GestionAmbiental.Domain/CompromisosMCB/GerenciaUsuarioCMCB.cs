@@ -11,6 +11,11 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public GerenciaCMCB Gerencia { get; set; }
 
         public Usuario Usuario { get; set; }
+        public string? Estado { get; set; }
 
+        public GerenciaUsuarioCMCB()
+        {
+
+        }
     }
 }
