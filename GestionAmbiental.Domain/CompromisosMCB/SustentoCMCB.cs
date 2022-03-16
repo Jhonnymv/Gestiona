@@ -17,15 +17,15 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public Usuario? Asesor { get; set; }
         public string? Estado { get; set; }
         public string? Sustento_cumplimiento { get; set; }
+        public string? Detalle_compromiso { get; set; }
         public string? Detalle_cumplimiento { get; set; }
         public string? Evidencia { get; set; }
+        public string? Comentario_implementacion { get; set; }
         public string? Comentario_verificacion { get; set; }
         public string? Medio_verificacion { get; set; }
         public SustentoCMCB()
         {
 
         }
-
-
     }
 }

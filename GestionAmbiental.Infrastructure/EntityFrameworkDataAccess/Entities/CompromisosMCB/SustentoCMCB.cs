@@ -42,9 +42,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "Varchar(255)")]
         public string? Evidencia { get; set; }
 
+        [Column(TypeName = "Text")]
+        public string? Detalle_compromiso { get; set; }
 
         [Column(TypeName = "Text")]
-        public string? Comentario_imcumplimiento { get; set; }
+        public string? Comentario_implementacion { get; set; }
 
 
         [Column(TypeName = "Text")]

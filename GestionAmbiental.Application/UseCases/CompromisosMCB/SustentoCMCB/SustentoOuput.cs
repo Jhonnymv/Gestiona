@@ -21,5 +21,27 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB
         public string? Comentario_implementacion { get; set; }
         public string? Comentario_verificacion { get; set; }
         public string? Medio_verificacion { get; set; }
+
+        public SustentoOuput()
+        {
+        }
+        public SustentoOuput(Domain.CompromisosMCB.SustentoCMCB sustentoCMCB)
+        {
+            Id = sustentoCMCB.Id;
+            IdCompromiso = sustentoCMCB.CompromisoCMCB.Id;
+            Fecha_limite = sustentoCMCB.Fecha_limite;
+            Fecha_entrega = sustentoCMCB.Fecha_entrega;
+            Fecha_validacion = sustentoCMCB.Fecha_validacion;
+            IdResponsable1 = sustentoCMCB.Responsable1.IdUsuario;
+            IdResponsable2 = sustentoCMCB.Responsable2.IdUsuario;
+            IdAsesor = sustentoCMCB.Asesor.IdUsuario;
+            Estado = sustentoCMCB.Estado;
+            Sustento_cumplimiento = sustentoCMCB.Sustento_cumplimiento;
+            Detalle_compromiso = sustentoCMCB.Detalle_compromiso;
+            Evidencia = sustentoCMCB.Evidencia;
+            Comentario_implementacion = sustentoCMCB.Comentario_implementacion;
+            Comentario_verificacion = sustentoCMCB.Comentario_verificacion;
+            Medio_verificacion = sustentoCMCB.Medio_verificacion;
+        }
     }
 }
