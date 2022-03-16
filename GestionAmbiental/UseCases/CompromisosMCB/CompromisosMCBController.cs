@@ -16,19 +16,22 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
     {
         private readonly INuevoRegistro _nuevoRegistro;
         private readonly ISelectItems _selectItems;
-        private readonly IListarRegistros _listarRegistros;
+        private readonly IListarRegistros _listarCompromisos;
+        private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
 
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
-            IListarRegistros listarRegistros
+            IListarRegistros listarCompromisos,
+            Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos
             )
         {
             _nuevoRegistro = nuevoRegistro;
             _selectItems = selectItems;
-            _listarRegistros = listarRegistros;
+            _listarCompromisos = listarCompromisos;
+            _listarSustentos = listarSustentos;
         }
-        public async Task<IActionResult> Resumen()
+        public async Task<IActionResult> ResumenCompromisos()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -38,11 +41,169 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
+                var items = await _selectItems.Execute();
+
+                var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
+                areasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
+                criteriosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
+                etapasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
+                origenesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
+                autoridadesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
+                aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+                componentesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
+                GerenciasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
+                UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+
+                ViewBag.Areas = areasItems;
+                ViewBag.Criterios = criteriosItems;
+                ViewBag.Etapas = etapasItems;
+                ViewBag.Origenes = origenesItems;
+                ViewBag.Autoridades = autoridadesItems;
+                ViewBag.Aspectos = aspectosItems;
+                ViewBag.Componentes = componentesItems;
+                ViewBag.Gerencias = GerenciasItems;
+                ViewBag.Usuarios = UsuariosItems;
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 return View();
             }
+        }
+        public async Task<IActionResult> ResumenSustentos()
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var items = await _selectItems.Execute();
+
+                var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
+                areasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
+                criteriosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
+                etapasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
+                origenesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
+                autoridadesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
+                aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+                componentesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
+                GerenciasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
+                UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                
+                var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
+                EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+
+                ViewBag.Areas = areasItems;
+                ViewBag.Criterios = criteriosItems;
+                ViewBag.Etapas = etapasItems;
+                ViewBag.Origenes = origenesItems;
+                ViewBag.Autoridades = autoridadesItems;
+                ViewBag.Aspectos = aspectosItems;
+                ViewBag.Componentes = componentesItems;
+                ViewBag.Gerencias = GerenciasItems;
+                ViewBag.Usuarios = UsuariosItems;
+                ViewBag.Estados = EstadosItems;
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+
+                return View();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> ListarSustentos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
+        {
+            var datosTabla = await _listarSustentos.Execute(pagina,rpp,gerencias,areas,criterios,estados);
+            var filasTabla = "";
+            var paginador = "";
+            int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
+
+            if (datosTabla.NRegistros > 0)
+            {
+                //Contenido de la tabla
+                foreach (var fila in datosTabla.Registros)
+                {
+                    filasTabla += "<tr>";
+                    filasTabla += "<td><a href=\"#\"></a><button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button> </td>";
+                    filasTabla += "<td>" + fila.IdCompromiso + "</td>";
+                    filasTabla += "<td>" + fila.IdResponsable1 + "</td>";
+                    filasTabla += "<td>" + fila.IdResponsable2 + "</td>";
+                    filasTabla += "<td>" + fila.IdAsesor + "</td>";
+                    filasTabla += "<td>" + fila.Medio_verificacion + "</td>";
+                    filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
+                    filasTabla += "<td>" + fila.Sustento_cumplimiento + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "</tr>";
+                }
+                //Paginador
+                paginador += "<ul class=\"pagination pagination-sm\">";
+                if (pagina >= 4 && nPaginas > 5)
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + 1 + ")\" aria-label=\"Inicio\"><span aria-hidden=\"true\">&laquo;</span><span class=\"sr-only\">Inicio</span></a></li>";
+
+                for (int i = pagina - 2; i <= pagina + 2; i++)
+                {
+                    if (i > 0 && i <= nPaginas)
+                    {
+                        if (i == pagina)
+                            paginador += "<li class=\"page-item active\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                        else
+                            paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + i + ")\">" + i + "</a></li>";
+                    }
+                }
+                if (pagina <= nPaginas - 4 && nPaginas > 5)
+                    paginador += "<li class=\"page-item\"><a class=\"page-link\" onclick=\"filtrar(" + nPaginas + ")\" aria-label=\"Final\"><span aria-hidden=\"true\">&raquo;</span><span class=\"sr-only\">Final</span></a></li>";
+                paginador += "</ul>";
+
+            }
+            else
+            {
+                filasTabla += "<tr>";
+                filasTabla += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
+                filasTabla += "</tr>";
+            }
+            dynamic response = new
+            {
+                Data = filasTabla,
+                Paginador = paginador
+            };
+            return Ok(response);
         }
         public async Task<IActionResult> NuevoRegistro()
         {
@@ -75,6 +236,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
             UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
+            var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
+            EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
             ViewBag.Areas = areasItems;
             ViewBag.Criterios = criteriosItems;
@@ -85,6 +248,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             ViewBag.Componentes = componentesItems;
             ViewBag.Gerencias = GerenciasItems;
             ViewBag.Usuarios = UsuariosItems;
+            ViewBag.Estados = EstadosItems;
 
             return View();
         }
@@ -106,7 +270,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         [HttpPost]
         public async Task<IActionResult> Listar(int pagina, int rpp)
         {
-            var datosTabla = await _listarRegistros.Execute(pagina, rpp);
+            var datosTabla = await _listarCompromisos.Execute(pagina, rpp);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -173,7 +337,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public async Task<IActionResult> GetCompromiso(int idCompromiso)
         {
 
-            var datos = await _listarRegistros.BuscarPorID(idCompromiso);
+            var datos = await _listarCompromisos.BuscarPorID(idCompromiso);
             dynamic response =new { Data = datos };
             
             return Ok(response);

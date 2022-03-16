@@ -1,42 +1,25 @@
-﻿@{
+@{
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
 @section styles {
-    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+<link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+<link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
 }
 
-<div class="sga">
+<div class="compromisos">
     <div class="primary-content col-12">
         <div class="image-header-container">
-            <div class="header-title sga-opacity-color">
+            <div class="header-title compromisos-opacity-color">
                 <h3><span id="titulo_pagina">Compromisos MCB</span></h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
 
         <div class="tabs-mc container">
-            @*<ul class="nav nav-pills mt-3 div-scroll-horizontal" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-docsga-tab" data-bs-toggle="pill" data-bs-target="#pills-docsga" type="button" role="tab" aria-controls="pills-docsga" aria-selected="true">ISO</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docsig-tab" data-bs-toggle="pill" data-bs-target="#pills-docsig" type="button" role="tab" aria-controls="pills-docsig" aria-selected="false">IGA</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">IFC</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">PE</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-docext-tab" data-bs-toggle="pill" data-bs-target="#pills-docext" type="button" role="tab" aria-controls="pills-ext" aria-selected="false">ICMM</button>
-                </li>
-            </ul>*@
-
             <div class="tab-content mt-4" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-docsga" role="tabpanel" aria-labelledby="pills-docsga-tab">
+                <div class="tab-pane fade show active" id="pills-doccompromisos" role="tabpanel" aria-labelledby="pills-doccompromisos-tab">
                     <div class="filter-mc-content d-flex justify-content-center">
                         <div class="div-scroll-horizontal">
                             <a class="filter-mc-item" onclick="FiltrarTipo([1])">
@@ -113,36 +96,36 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_nombre">Gerencia</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" asp-items="@ViewBag.Gerencias" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_codigo">Área</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" asp-items="@ViewBag.Areas" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Criterio</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_criterio" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_criterio" asp-items="@ViewBag.Criterios" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Estado</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_estado" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_estado" asp-items="@ViewBag.Estados" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de IGA</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" asp-items="@ViewBag.Etapas" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Etapa del Proyecto</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_etapa" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_etapa" asp-items="@ViewBag.Etapas" multiple>
                                 </select>
                             </div>
                         </div>
@@ -152,38 +135,125 @@
                             </div>
                         </div>
                     </div>
-                
                 </form>
             </div>
         </div>
     </div>
     <div class="secondary-content filters-mc col-12" id="btn_certificaciones">
         <div class="row row-center-center">
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">ISO 14001</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p25 mc-color-1">
+                            <span>25%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">IGA</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p100 mc-color-2">
+                            <span>100%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">IFC</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p75 mc-color-3">
+                            <span>75%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill mc-color-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">PE</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p30 mc-color-4">
+                            <span>30%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 col-lg-2 text-center">
+                <div class="row">
+                    <h3 class="mc-txt-color-1">ICMM</h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="clearfix" style="width:fit-content;height:fit-content;">
+                        <div class="c100 p50 mc-color-5">
+                            <span>50%</span>
+                            <div class="slice">
+                                <div class="bar"></div>
+                                <div class="fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="secondary-content filters-mc col-12" id="btn_certificaciones">
+        <div class="row row-center-center">
             <div class="col-12 col-md-2 col-lg-2">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">COMPONENTES</button>
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">COMPONENTES</button>
             </div>
-            <div class="col-12 col-md-2 offset-md-4 col-lg-2 offset-lg-4">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">CARGAR OBLIGACIONES</button>
+            <div class="col-12 col-md-3 offset-md-4 col-lg-2 offset-lg-6">
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">CARGAR OBLIGACIONES</button>
             </div>
-            <div class="col12 col-md-3 col-lg-3 ml-1">
-                <button type="button" class="btn btn-special-action-outline sga-color" onclick="">DESCARGAR COMPROMISOS</button>
+            <div class="col12 col-md-3 col-lg-2 ml-1">
+                <button type="button" class="btn btn-special-action-outline compromisos-color" onclick="">DESCARGAR COMPROMISOS</button>
             </div>
         </div>
     </div>
     <div class="secondary-content col-12">
-        <div class="table-responsive sga-color">
-            <table class="table" id="tabla_documentos">
+        <div class="table-responsive compromisos-color">
+            <table class="table" id="tabla_compromisos_gen">
                 <thead class="">
                     <tr>
+                        <th>Id</th>
                         <th>Código</th>
-                        <th>Origen</th>
-                        <th>Detalle del Cumplimiento</th>
+                        <th>Criterio</th>
+                        <th>Detalle Cumplimiento </th>
+                        <th>Etapa </th>
+                        <th>Aspecto</th>
                         <th>Componente</th>
                         <th>Gerencia</th>
-                        <th>Área</th>
-                        <th>Frecuencia de Reporte a la Autoridad</th>
-                        <th>Entidad Reportable</th>
-                        <th>Medida de Verificación</th>
+                        <th>Area</th>
+                        <th>Frecuencia</th>
+                        <th>Resp. Reportabilidad</th>
+                        <th>Frecuencia Rep.</th>
+                        <th>Sustentos</th>
                         <th>Estado</th>
                     </tr>
                 </thead>
@@ -193,51 +263,94 @@
             </table>
 
         </div>
-        <div class="pagination-container sga-color" id="paginado" aria-label="pagination">
+        <div class="pagination-container compromisos-color" id="paginado" aria-label="pagination">
         </div>
     </div>
 </div>
 
 <!--Modal Docs Tipo-->
-<div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+<div class="modal fade" id="modal_docs_tipo" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-menu modal-sga">
+        <div class="modal-menu modal-compromisos">
             <div class="modal-content">
-                <div class="sga">
+                <div class="compromisos">
                     <div class="image-header-container">
-                        <div class="header-title sga-opacity-color">
+                        <div class="header-title compromisos-opacity-color">
                             <h3>Documentos Filtrados</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                      aria-label="Close"></button>
+                                    aria-label="Close"></button>
                         </div>
                     </div>
                 </div>
                 <div class="modal-body">
-                    <div class="sga">
+                    <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
-                            <div class="table-responsive sga-color">
-                                <input type="hidden" id="tipoDocModal" />
-                                <table class="table" id="tabla_documentos_tipo">
-                                    <thead class="">
-                                        <tr>
-                                            <th>Código</th>
-                                            <th>Documento</th>
-                                            <th>Versión</th>
-                                            <th>Fecha de Aprobación</th>
-                                            <th>Condición</th>
-                                            <th>Comentarios</th>
-                                            <th>Fecha Tentativa de la Nueva Versión</th>
-                                            <th>Previsualización</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="pagination-container sga-color" id="paginado_documentos_tipo" aria-label="pagination">
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Texto Compromiso</label>
+                                    <textarea class="form-control" id="Texto_original_compromiso" readonly></textarea>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Origen</label>
+                                    <input type="text" class="form-control" id="Origen" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Tomo</label>
+                                    <input type="text" class="form-control" id="Tomo" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Capítulo</label>
+                                    <input type="text" class="form-control" id="Capitulo" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Sección</label>
+                                    <input type="text" class="form-control" id="Seccion" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Página</label>
+                                    <input type="text" class="form-control" id="Pagina" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Resolución</label>
+                                    <input type="text" class="form-control" id="Resolucion" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Autoridad</label>
+                                    <input type="text" class="form-control" id="Autoridad" readonly>
+                                </div>
+                                <div class="col-12 col-sm-3">
+                                    <label>Fecha</label>
+                                    <input type="text" class="form-control" id="Fecha" readonly>
+                                </div>
 
                             </div>
+
+                            @* <form id="form_utento">
+                                <div class="row form-group">
+                                <div class="col-12 col-sm-6">
+                                <label for="sustento_fecha_limite">Fecha Límite</label>
+                                <input type="date" id="fecha_limite_sustento" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                <label for="sustento_cumplimiento">Fecha Límite</label>
+                                <input type="text" id="sustento_cumplimiento" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                <label for="sustento_detalle_compromiso">Fecha Límite</label>
+                                <input type="text" id="sustento_detalle_compromiso" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                <label for="sustento_evidencia">Fecha Límite</label>
+                                <input type="file" id="sustento_evidencia" class="form-control"/>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                <label for="sustento_comentario_implementacion">Fecha Límite</label>
+                                <input type="text" id="sustento_detalle_compromiso" class="form-control"/>
+                                </div>
+
+                                </div>
+                                </form>*@
                         </div>
                     </div>
                 </div>
@@ -246,13 +359,13 @@
     </div>
 </div>
 <!--Modal Preview PDF-->
-<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="sgaModal" aria-hidden="true">
+<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-menu modal-sga">
+        <div class="modal-menu modal-compromisos">
             <div class="modal-content">
-                <div class="sga">
+                <div class="compromisos">
                     <div class="image-header-container">
-                        <div class="header-title sga-opacity-color">
+                        <div class="header-title compromisos-opacity-color">
                             <h3>Previsualización</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -276,122 +389,150 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
-    <script type="text/javascript">
-       
-        $(document).ready(function () {
-        });
-        function dataModulo() {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/PropiedadesModulo",
-                traditional: true,
-                success: (response) => {
-                    if (response.success) {
-                        let data = JSON.parse(response.data);
-                        let r = data.r;
-                        let g = data.g;
-                        let b = data.b;
-                        let img_url = data.img_url;
-                        sgaStyle(r, g, b);
-                    } else {
-                        console.log("Ocurrió un problema: " + response.msg);
-                    }
-                }
-            });
-        }
-        function filtrar(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/GetTablaResumenFiltrada",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "nombre": $('#filtro_nombre').val(),
-                    "categoria": categoria,
-                    "tipos": $('#filtro_tipoDoc').val(),
-                    "condicion": $('#filtro_condicion').val(),
-                    "codigo": $("#filtro_codigo").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_documentos tbody').empty()
-                    $('#tabla_documentos tbody').html(response.data)
-                    $('#paginado').html(response.paginador)
-                    dataModulo();
-                }
-            });
-        }
-        function filtrarModal(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
-                data: {
-                    "pagina": pag,
-                    "rpp": 5,
-                    "nombre": $('#filtro_nombre').val(),
-                    "categoria": categoria,
-                    "tipos": $("#filtro_tipoDoc").val(),
-                    "condicion": $('#filtro_condicion').val(),
-                    "codigo": $("#filtro_codigo").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_documentos_tipo tbody').empty()
-                    $('#tabla_documentos_tipo tbody').html(response.data)
-                    $('#paginado_documentos_tipo').html(response.paginador)
-                    $("#filtro_tipoDoc").val([]);
-                    dataModulo();
-                }
-            });
-        }
-        $("#pills-docsga-tab").on('click', function () {
-            $("#opciones_sga").show();
-            $("#opciones_sig").hide();
-            $("#opciones_externo").hide();
-            //Botones adicionales
-            $("#btn_certificaciones").show();
+<script type="text/javascript">
 
-            $("#titulo_pagina").text("Documentos SGA");
-            localStorage.setItem('activeDocSGACategoria',"1")
-            categoria = 1;
-            filtrar(1);
-        });
-        function FiltrarTipo(tipos) {
-            $("#filtro_tipoDoc").val([]);
-            $('#filtro_tipoDoc').val(tipos);
-            $('#modal_docs_tipo').modal('show');
-            $("#tipoDocModal").val(tipos)
-            filtrarModal(1);
-        }
-        function PreviewPDF(ruta) {
-            if (PDFObject.supportsPDFs) {
+            $(document).ready(function () {
+                filtrar(1)
+            });
+            function OpenModal(compromiso_id){
                 $.ajax({
                     type: "POST",
-                    url: "/SGADocumentacion/PreviewFile",
+                    url: "/CompromisosMCB/GetCompromiso",
                     data: {
-                        "fileName": ruta,
+                        "idCompromiso": compromiso_id,
                     },
                     traditional: true,
                     success: (response) => {
-                        if (response.result == "Ok") {
-                            PDFObject.embed(response.path, "#viewPDF");
-                            rutaArchivo = response.path
-                            $("#modal_preview_pdf").modal("show");
-                            if (response.extension == ".pdf")
-                                $("#viewPDF").css("height", "800px");
-                            else {
-                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
-                            }
-
-                        } else {
-                            alert("No se pudo visualizar el archivo: " + response.message);
-                            $("#modal_preview_pdf").modal("show");
-                        }
+                        console.log(response.data)
+                        let date = new Date(response.data.fecha);
+                        $("#Texto_original_compromiso").text(response.data.texto_compromiso)
+                        $("#Origen").val(response.data.nomOrigen)
+                        $("#Tomo").val(response.data.tomo)
+                        $("#Capitulo").val(response.data.capitulo)
+                        $("#Seccion").val(response.data.seccion)
+                        $("#Pagina").val(response.data.pagina)
+                        $("#Resolucion").val(response.data.resolucion)
+                        $("#Autoridad").val(response.data.nombreAutoridad)
+                        $("#Fecha").val(date.toLocaleDateString())
+                        //dataModulo();
                     }
                 });
-            } else {
-                alert("El navegador no es compatible con la previsualización del documento")
+                $('#modal_docs_tipo').modal('show')
+
             }
-        }
-    </script>
+            //function dataModulo() {
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "/compromisosDocumentacion/PropiedadesModulo",
+            //        traditional: true,
+            //        success: (response) => {
+            //            if (response.success) {
+            //                let data = JSON.parse(response.data);
+            //                let r = data.r;
+            //                let g = data.g;
+            //                let b = data.b;
+            //                let img_url = data.img_url;
+            //                compromisosStyle(r, g, b);
+            //            } else {
+            //                console.log("Ocurrió un problema: " + response.msg);
+            //            }
+            //        }
+            //    });
+            //}
+            function filtrar(pag) {
+                $.ajax({
+                    type: "POST",
+                    url: "/CompromisosMCB/Listar",
+                    data: {
+                        "pagina": pag,
+                        "rpp": 10,
+                        //"nombre": $('#filtro_nombre').val(),
+                        //"categoria": categoria,
+                        //"tipos": $('#filtro_tipoDoc').val(),
+                        //"condicion": $('#filtro_condicion').val(),
+                        //"codigo": $("#filtro_codigo").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        $('#tabla_compromisos_gen tbody').empty()
+                        $('#tabla_compromisos_gen tbody').html(response.data)
+                        $('#paginado').html(response.paginador)
+                        console.log(response.data)
+                        //dataModulo();
+                    }
+                });
+            }
+            //function filtrarModal(pag) {
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "/compromisosDocumentacion/GetTablaModalResumenFiltrada",
+            //        data: {
+            //            "pagina": pag,
+            //            "rpp": 5,
+            //            "nombre": $('#filtro_nombre').val(),
+            //            "categoria": categoria,
+            //            "tipos": $("#filtro_tipoDoc").val(),
+            //            "condicion": $('#filtro_condicion').val(),
+            //            "codigo": $("#filtro_codigo").val()
+            //        },
+            //        traditional: true,
+            //        success: (response) => {
+            //            $('#tabla_documentos_tipo tbody').empty()
+            //            $('#tabla_documentos_tipo tbody').html(response.data)
+            //            $('#paginado_documentos_tipo').html(response.paginador)
+            //            $("#filtro_tipoDoc").val([]);
+            //            dataModulo();
+            //        }
+            //    });
+            //}
+            //$("#pills-doccompromisos-tab").on('click', function () {
+            //    $("#opciones_compromisos").show();
+            //    $("#opciones_sig").hide();
+            //    $("#opciones_externo").hide();
+            //    //Botones adicionales
+            //    $("#btn_certificaciones").show();
+
+            //    $("#titulo_pagina").text("Documentos compromisos");
+            //    localStorage.setItem('activeDoccompromisosCategoria',"1")
+            //    categoria = 1;
+            //    filtrar(1);
+            //});
+            //function FiltrarTipo(tipos) {
+            //    $("#filtro_tipoDoc").val([]);
+            //    $('#filtro_tipoDoc').val(tipos);
+            //    $('#modal_docs_tipo').modal('show');
+            //    $("#tipoDocModal").val(tipos)
+            //    filtrarModal(1);
+            //}
+            //function PreviewPDF(ruta) {
+            //    if (PDFObject.supportsPDFs) {
+            //        $.ajax({
+            //            type: "POST",
+            //            url: "/compromisosDocumentacion/PreviewFile",
+            //            data: {
+            //                "fileName": ruta,
+            //            },
+            //            traditional: true,
+            //            success: (response) => {
+            //                if (response.result == "Ok") {
+            //                    PDFObject.embed(response.path, "#viewPDF");
+            //                    rutaArchivo = response.path
+            //                    $("#modal_preview_pdf").modal("show");
+            //                    if (response.extension == ".pdf")
+            //                        $("#viewPDF").css("height", "800px");
+            //                    else {
+            //                        $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+            //                    }
+
+            //                } else {
+            //                    alert("No se pudo visualizar el archivo: " + response.message);
+            //                    $("#modal_preview_pdf").modal("show");
+            //                }
+            //            }
+            //        });
+            //    } else {
+            //        alert("El navegador no es compatible con la previsualización del documento")
+            //    }
+            //}
+</script>
 }
