@@ -122,10 +122,15 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     filasTabla += "<td>" + fila.NomCriterio + "</td>";
                     filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
                     filasTabla += "<td>" + fila.NomEtapa + "</td>";
-                    //filasTabla += "<td>" + fila.NomAspecto + "</td>";
-                    //filasTabla += "<td>" + fila.NomComponente + "</td>";
-                    //filasTabla += "<td>" + fila.NomGerencia + "</td>";
-                    //filasTabla += "<td>" + fila.NomArea + "</td>";
+                    filasTabla += "<td>" + fila.NomAspecto + "</td>";
+                    filasTabla += "<td>" + fila.NomComponente + "</td>";
+                    filasTabla += "<td>" + fila.NomGerencia + "</td>";
+                    filasTabla += "<td>" + fila.NomArea + "</td>";
+                    filasTabla += "<td>" + fila.Frecuencia + "</td>";
+                    filasTabla += "<td>" + fila.NomResponsable1 + "</td>";
+                    filasTabla += "<td>" + fila.Frecuencia_reporte + "</td>";
+                    filasTabla += "<td>" + fila.Sustentos + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
                     //filasTabla += "<td>" + fila.Texto_compromiso + "</td>";
                     filasTabla += "</tr>";
                 }

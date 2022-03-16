@@ -26,29 +26,62 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
             output.Registros = new List<CompromisoOuput>();
 
             //Mapear registros en nueva lista
-            foreach(var item in registros)
+            foreach (var item in registros)
             {
-                
 
-                output.Registros.Add(new CompromisoOuput
+                var compItem = new CompromisoOuput();
+                compItem.Id = item.Id;
+                compItem.Codigo = item.Codigo;
+
+                compItem.Detalle_compromiso = item.Detalle_compromiso;
+
+
+                if (item.ComponenteCMCB != null)
                 {
-                    Id = item.Id,
-                    Codigo = item.Codigo,
-                    IdCriterio= item.CriterioCMCB.Id,
-                    NomCriterio = item.CriterioCMCB.Criterio,
-                    Detalle_compromiso=item.Detalle_compromiso,
-                    IdEtapa=item.EtapaCMCB.Id,
-                    NomEtapa=item.EtapaCMCB.Etapa,
-                    //IdAspecto=item.AspectoCMCB.Id,
-                    //NomAspecto=item.AspectoCMCB.Aspecto,
-                    //IdComponente=item.ComponenteCMCB.Id,
-                    //NomComponente=item.ComponenteCMCB.Componente,
-                    //IdGerencia=item.GerenciaCMCB.Id,
-                    //NomGerencia=item.GerenciaCMCB.Gerencia,
-                    //IdArea=item.AreaCMCB.Id,
-                    //NomArea=item.AreaCMCB.Area
-                    //Texto_compromiso= item.Texto_compromiso,
-                }) ;
+                    compItem.IdComponente = item.ComponenteCMCB.Id;
+                    compItem.NomComponente = item.ComponenteCMCB.Componente;
+                }
+                if (item.AspectoCMCB != null)
+                {
+                    compItem.IdAspecto = item.AspectoCMCB.Id;
+                    compItem.NomAspecto = item.AspectoCMCB.Aspecto;
+                }
+                if (item.EtapaCMCB != null)
+                {
+                    compItem.IdEtapa = item.EtapaCMCB.Id;
+                    compItem.NomEtapa = item.EtapaCMCB.Etapa;
+                }
+                if (item.CriterioCMCB != null)
+                {
+                    compItem.IdCriterio = item.CriterioCMCB.Id;
+                    compItem.NomCriterio = item.CriterioCMCB.Criterio;
+                }
+                if (item.GerenciaCMCB != null)
+                {
+                    compItem.IdGerencia = item.GerenciaCMCB.Id;
+                    compItem.NomGerencia = item.GerenciaCMCB.Gerencia;
+                };
+                if (item.AreaCMCB != null)
+                {
+                    compItem.IdArea = item.AreaCMCB.Id;
+                    compItem.NomArea = item.AreaCMCB.Area;
+                };
+                compItem.Frecuencia = item.Frecuencia;
+                if (item.Responsable1 != null)
+                {
+                    compItem.IdResponsable1 = item.Responsable1.IdUsuario;
+                    compItem.NomResponsable1 = item.Responsable1.Nombres+" - "+item.Responsable1.DNI;
+                };
+                if (item.Responsable2 != null)
+                {
+                    compItem.IdResponsable2 = item.Responsable2.IdUsuario;
+                    compItem.NomResponsable2 = item.Responsable2.Nombres+" - "+item.Responsable2.DNI;
+                };
+                compItem.Frecuencia_reporte=item.Frecuencia_reporte;
+                compItem.Sustentos=item.Sustentos;
+                compItem.Estado=item.Estado;
+
+                output.Registros.Add(compItem);
             }
             //Contar registros
             output.NRegistros = output.Registros.Count;
@@ -60,14 +93,29 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
         public async Task<CompromisoOuput> BuscarPorID(int idCompromiso)
         {
             var compromiso = await _compromisoReadOnlyRepository.BuscarPorID(idCompromiso);
-            var ouput=new CompromisoOuput();
-            ouput.Id= compromiso.Id;
-            ouput.Codigo= compromiso.Codigo;
-            //ouput.IdCriterio=compromiso.CriterioCMCB.Id;
-            ouput.Detalle_compromiso=compromiso.Detalle_compromiso;
-            //ouput.IdEtapa=compromiso.EtapaCMCB.Id;
+            var ouput = new CompromisoOuput();
+            ouput.Id = compromiso.Id;
+            ouput.Codigo = compromiso.Codigo;
             ouput.Texto_compromiso = compromiso.Texto_compromiso;
-            //ouput.IdOrigen = compromiso.OrigenCMCB.Id;
+
+            if (compromiso.OrigenCMCB != null)
+            {
+                ouput.IdOrigen= compromiso.OrigenCMCB.Id;
+                ouput.NomOrigen = compromiso.OrigenCMCB.Origen;
+            };
+            ouput.Tomo=compromiso.Tomo;
+            ouput.Capitulo= compromiso.Capitulo;
+            ouput.Seccion= compromiso.Seccion;
+            ouput.Pagina=compromiso.Pagina;
+            ouput.Resolucion= compromiso.Resolucion;
+            if (compromiso.AutoridadCMCB != null)
+            {
+                ouput.IdAutoridad = compromiso.AutoridadCMCB.Id;
+                ouput.NomAutoridad = compromiso.AutoridadCMCB.Autoridad;
+            };
+            ouput.Fecha= compromiso.Fecha;
+
+
             return ouput;
         }
     }

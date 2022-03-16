@@ -37,7 +37,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB
         public string? Frecuencia { get; set; }
         public int? IdEntidad { get; set; }
         public int? IdResponsable1 { get; set; }
+        public string? NomResponsable1 { get; set; }
         public int? IdResponsable2 { get; set; }
+        public string? NomResponsable2 { get; set; }
         public string? Frecuencia_reporte { get; set; }
         public string? Sustentos { get; set; }
         public string? Estado { get; set; }
