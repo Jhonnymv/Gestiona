@@ -96,36 +96,36 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_nombre">Gerencia</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" asp-items="@ViewBag.Gerencias" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_codigo">Área</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" asp-items="@ViewBag.Areas" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Criterio</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_criterio" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" asp-items="@ViewBag.Criterios" id="filtro_criterio" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Estado</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_estado" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" asp-items="@ViewBag.Estados" id="filtro_estado" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de IGA</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
+                               <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Etapa del Proyecto</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_etapa" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" asp-items="@ViewBag.Etapas" id="filtro_etapa" multiple>
                                 </select>
                             </div>
                         </div>
@@ -242,14 +242,24 @@
             <table class="table" id="tabla_sustentos_gen">
                 <thead class="">
                     <tr>
-                        <th>Id Compromiso</th>
+                        <th>Código</th>
+                        <th>Detalle Sustento</th>
+                        <th>Origen</th>
+                        <th>Detalle del cumplimiento</th>
+                        <th>Etapa del proyecto</th>
+                        <th>Componente</th>
+                        <th>Gerencia</th>
+                        <th>Área</th>
+                        <th>Periodicidad</th>
+                        <th>Frecuencia de reporte automático</th>
+                        <th>Entidad responsable</th>
+                        <th>Medio de verificación</th>
+                        <th>Estado</th>
                         <th>Responsable 1</th>
                         <th>Responsable 2</th>
                         <th>Asesor</th>
-                        <th>Medio de Verificación</th>
                         <th>Detalle de Compromiso</th>
                         <th>Sustento de Cumplimiento</th>
-                        <th>Estado</th>
                     </tr>
                 </thead>
 

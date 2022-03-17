@@ -7,7 +7,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
 {
     public interface IListarRegistros
     {
-        Task<CompromisosOuput> Execute(int pagina, int rpp);
+        Task<CompromisosOuput> Execute(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas);
         Task<CompromisoOuput> BuscarPorID(int idCompromiso);
     }
 }

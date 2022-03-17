@@ -8,7 +8,7 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMC
     public interface ICompromisoReadOnlyRepository
     {
         //Listar
-        Task<List<Domain.CompromisosMCB.CompromisoCMCB>> ListarCompromisos();
+        Task<List<Domain.CompromisosMCB.CompromisoCMCB>> ListarCompromisos(int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas);
         ////Buscar por ID
         Task<Domain.CompromisosMCB.CompromisoCMCB> BuscarPorID(int Id);
         //Registrar

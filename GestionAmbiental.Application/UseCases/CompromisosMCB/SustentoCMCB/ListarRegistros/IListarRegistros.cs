@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
 {
     public interface IListarRegistros
     {
-        Task<SustentosOuput> Execute(int pagina, int fpp, int[] gerencias, int [] areas, int [] criterios, string [] estados);
+        Task<SustentosOuput> Execute(int pagina, int fpp, int[] gerencias, int [] areas, int [] criterios, string [] estados, int[] etapas);
     }
 }

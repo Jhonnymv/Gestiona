@@ -47,32 +47,24 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var items = await _selectItems.Execute();
 
                 var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
-                areasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+               
                 var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
-                criteriosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+                
                 var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
-                etapasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+                
                 var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
-                origenesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+               
                 var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
-                autoridadesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+               
                 var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
-                aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+               
                 var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
-                componentesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+               
                 var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
-                GerenciasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+              
                 var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
-                UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
+                var EstadosItems = items.EstadosCompromiso.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
 
                 ViewBag.Areas = areasItems;
                 ViewBag.Criterios = criteriosItems;
@@ -83,6 +75,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 ViewBag.Componentes = componentesItems;
                 ViewBag.Gerencias = GerenciasItems;
                 ViewBag.Usuarios = UsuariosItems;
+                ViewBag.Estados = EstadosItems;
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -103,35 +96,25 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var items = await _selectItems.Execute();
 
                 var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
-                areasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
-                criteriosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
-                etapasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
-                origenesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
-                autoridadesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
-                aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
-                componentesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
-                GerenciasItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
-                var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
-                UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
                 
-                //var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-                //EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
-
+                var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
+                
+                var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
+               
+                var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
+                
+                var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
+                
+                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
+                
+                var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+               
+                var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
+               
+                var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
+                
+                var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
+               
 
                 ViewBag.Areas = areasItems;
                 ViewBag.Criterios = criteriosItems;
@@ -142,7 +125,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 ViewBag.Componentes = componentesItems;
                 ViewBag.Gerencias = GerenciasItems;
                 ViewBag.Usuarios = UsuariosItems;
-                //ViewBag.Estados = EstadosItems;
+                ViewBag.Estados = EstadosItems;
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -155,7 +138,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         [HttpPost]
         public async Task<IActionResult> ListarSustentos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
-            var datosTabla = await _listarSustentos.Execute(pagina,rpp,gerencias,areas,criterios,estados);
+            var datosTabla = await _listarSustentos.Execute(pagina,rpp,gerencias,areas,criterios,estados,etapas);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -165,16 +148,25 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 //Contenido de la tabla
                 foreach (var fila in datosTabla.Registros)
                 {
-                    filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"#\"></a><button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button> </td>";
+                    filasTabla += "<tr>"; 
                     filasTabla += "<td>" + fila.IdCompromiso + "</td>";
-                    filasTabla += "<td>" + fila.IdResponsable1 + "</td>";
-                    filasTabla += "<td>" + fila.IdResponsable2 + "</td>";
-                    filasTabla += "<td>" + fila.IdAsesor + "</td>";
+                    filasTabla += "<td><a href=\"#\"></a><button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button> </td>";
+                    filasTabla += "<td>" + fila.Criterio + "</td>";
+                    filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
+                    filasTabla += "<td>" + fila.Etapa + "</td>";
+                    filasTabla += "<td>" + fila.Componente + "</td>";
+                    filasTabla += "<td>" + fila.Gerencia + "</td>";
+                    filasTabla += "<td>" + fila.Area + "</td>";
+                    filasTabla += "<td>" + fila.Periodicidad + "</td>";
+                    filasTabla += "<td>" + fila.Frecuencia_Reporte + "</td>";
+                    filasTabla += "<td>" + fila.Entidad_Responsable + "</td>";
                     filasTabla += "<td>" + fila.Medio_verificacion + "</td>";
+                    filasTabla += "<td>" + fila.Estado + "</td>";
+                    filasTabla += "<td>" + fila.Responsable1 + "</td>";
+                    filasTabla += "<td>" + fila.Responsable2 + "</td>";
+                    filasTabla += "<td>" + fila.Asesor + "</td>";
                     filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
                     filasTabla += "<td>" + fila.Sustento_cumplimiento + "</td>";
-                    filasTabla += "<td>" + fila.Estado + "</td>";
                     filasTabla += "</tr>";
                 }
                 //Paginador
@@ -271,11 +263,10 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             }
             return View();
         }
-
         [HttpPost]
-        public async Task<IActionResult> Listar(int pagina, int rpp)
+        public async Task<IActionResult> ListarCompromisos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
-            var datosTabla = await _listarCompromisos.Execute(pagina, rpp);
+            var datosTabla = await _listarCompromisos.Execute(pagina, rpp, gerencias, areas, criterios, estados,etapas);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -336,8 +327,6 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             };
             return Ok(response);
         }
-
-
         [HttpPost]
         public async Task<IActionResult> GetCompromiso(int idCompromiso)
         {
@@ -380,7 +369,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
 
-            var registros = await _listarCompromisos.Execute(1, 100);
+            var registros = await _listarCompromisos.Execute(1, 100, new int[0], new int[0], new int[0], new string[0], new int[0]);
 
             var registroEncontrado = registros.Registros.Find(x => x.Id.Equals(id));
 

@@ -16,10 +16,10 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
             _compromisoReadOnlyRepository = compromisoReadOnlyRepository ?? throw new ArgumentNullException(nameof(compromisoReadOnlyRepository));
         }
 
-        public async Task<CompromisosOuput> Execute(int pagina, int rpp)
+        public async Task<CompromisosOuput> Execute(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
             //Consultar registros de BD
-            var registros = await _compromisoReadOnlyRepository.ListarCompromisos();
+            var registros = await _compromisoReadOnlyRepository.ListarCompromisos(gerencias, areas, criterios, estados,etapas);
 
             //Nueva lista en blanco
             var output = new CompromisosOuput();

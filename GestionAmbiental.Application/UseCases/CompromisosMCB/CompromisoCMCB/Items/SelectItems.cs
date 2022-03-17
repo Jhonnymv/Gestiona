@@ -40,7 +40,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.It
             output.ItemsGerencia = gerencias;
             output.ItemsUsuario = usuarios;
             output.EstadosSustento = Enum.GetNames(typeof(EstadosSustento)).ToList();
-            output.EstadosCompromiso = Enum.GetNames(typeof(EstadosSustento)).ToList();
+            output.EstadosCompromiso = Enum.GetNames(typeof(EstadosCompromiso)).ToList();
 
             return output;
         }

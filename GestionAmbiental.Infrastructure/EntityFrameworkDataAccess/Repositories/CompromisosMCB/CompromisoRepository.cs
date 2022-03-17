@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Domain.CompromisosMCB;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.CompromisosMCB
 {
@@ -83,17 +84,38 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
 
         //Return lista de registros filtrados
-        public async Task<List<Domain.CompromisosMCB.CompromisoCMCB>> ListarCompromisos()
+        public async Task<List<Domain.CompromisosMCB.CompromisoCMCB>> ListarCompromisos(int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
             //Consultar registros
-            var filtrados = await _context.CompromisoCMCB.ToListAsync();
+            var compromisos = await _context.CompromisoCMCB.ToListAsync();
 
+            if (gerencias.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Gerencia != null && gerencias.Contains(x.Id_Gerencia.Value)).ToList();
+            }
+            if (areas.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Area != null && areas.Contains(x.Id_Area.Value)).ToList();
+            }
+            if (criterios.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Criterio != null && criterios.Contains(x.Id_Criterio.Value)).ToList();
+            }
+            if (etapas.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Etapa != null && etapas.Contains(x.Id_Etapa.Value)).ToList();
+            }
+            if (estados.Length > 0)
+            {
+                compromisos = compromisos.Where(x => estados.Contains(x.Estado)).ToList();
+            }
+            
             //Nueva lista en blanco
             var output = new List<Domain.CompromisosMCB.CompromisoCMCB>();
 
-            var criterios = await _context.CriterioCMCB.ToListAsync();
+            //var criterios = await _context.CriterioCMCB.ToListAsync();
             //Mapear registros en nueva lista
-            foreach (var item in filtrados)
+            foreach (var item in compromisos)
             {
                 var dataCriterio = await _context.CriterioCMCB.FindAsync(item.Id_Criterio);
                 var dataEtapa = await _context.EtapaCMCB.FindAsync(item.Id_Etapa);

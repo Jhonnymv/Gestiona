@@ -16,9 +16,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
             _sustentoReadOnlyRepository = sustentoReadOnlyRepository ?? throw new ArgumentNullException(nameof(sustentoReadOnlyRepository));
         }
 
-        public async Task<SustentosOuput> Execute(int pagina, int fpp, int[] gerencias, int[] areas, int[] criterios, string[] estados)
+        public async Task<SustentosOuput> Execute(int pagina, int fpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
-            var data = await _sustentoReadOnlyRepository.ListarSustentos(gerencias,areas,criterios,estados);
+            var data = await _sustentoReadOnlyRepository.ListarSustentos(gerencias,areas,criterios,estados,etapas);
             var output = new SustentosOuput();
 
             var sustentos = new List<SustentoOuput>();

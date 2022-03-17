@@ -141,29 +141,91 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
+        public async Task<List<Domain.CompromisosMCB.CompromisoCMCB>> ListarCompromisos()
+        {
+            //Consultar registros
+            var filtrados = await _context.CompromisoCMCB.ToListAsync();
 
-        public async Task<List<SustentoCMCB>> ListarSustentos(int[] gerencias, int[] areas, int[] criterios, string[] estados)
+            //Nueva lista en blanco
+            var output = new List<Domain.CompromisosMCB.CompromisoCMCB>();
+
+            var criterios = await _context.CriterioCMCB.ToListAsync();
+            //Mapear registros en nueva lista
+            foreach (var item in filtrados)
+            {
+                var dataCriterio = await _context.CriterioCMCB.FindAsync(item.Id_Criterio);
+                var dataEtapa = await _context.EtapaCMCB.FindAsync(item.Id_Etapa);
+                var dataOrigen = await _context.OrigenCMCB.FindAsync(item.Id_Origen);
+                var dataAutoridad = await _context.AutoridadCMCB.FindAsync(item.Id_Autoridad);
+
+                var dataAspecto = await _context.AspectoCMCB.FindAsync(item.Id_Aspecto);
+                var dataComponente = await _context.ComponenteCMCB.FindAsync(item.Id_Componente);
+                var dataGerencia = await _context.GerenciaCMCB.FindAsync(item.Id_Gerencia);
+                var dataArea = await _context.AreaCMCB.FindAsync(item.Id_Area);
+                var dataResp1 = await _context.Usuarios.FindAsync(item.Id_Responsable1);
+                var dataResp2 = await _context.Usuarios.FindAsync(item.Id_Responsable2);
+                var dataAprueba = await _context.Usuarios.FindAsync(item.Id_Aprueba);
+
+
+                output.Add(new Domain.CompromisosMCB.CompromisoCMCB
+                {
+                    Id = item.Id,
+                    Codigo = item.Codigo,
+                    CriterioCMCB = item.Id_Criterio != null ? new Domain.CompromisosMCB.CriterioCMCB { Id = (int)item.Id_Criterio, Criterio = dataCriterio.Criterio, Detalle = dataCriterio.Detalle } : null,
+                    Detalle_compromiso = item.Detalle_compromiso,
+                    EtapaCMCB = item.Id_Etapa != null ? new Domain.CompromisosMCB.EtapaCMCB { Id = (int)item.Id_Etapa, Etapa = dataEtapa.Etapa } : null,
+                    Texto_compromiso = item.Texto_compromiso,
+                    OrigenCMCB = item.Id_Origen != null ? new Domain.CompromisosMCB.OrigenCMCB { Id = (int)item.Id_Origen, Origen = dataOrigen.Origen } : null,
+                    Tomo = item.Tomo,
+                    Capitulo = item.Capitulo,
+                    Seccion = item.Seccion,
+                    Pagina = item.Pagina,
+                    Resolucion = item.Resolucion,
+                    AutoridadCMCB = item.Id_Autoridad != null ? new Domain.CompromisosMCB.AutoridadCMCB { Id = (int)item.Id_Autoridad, Autoridad = dataAutoridad.Autoridad } : null,
+                    Fecha = item.Fecha,
+
+                    AspectoCMCB = item.Id_Aspecto != null ? new Domain.CompromisosMCB.AspectoCMCB { Id = (int)item.Id_Aspecto, Aspecto = dataAspecto.Aspecto } : null,
+                    ComponenteCMCB = item.Id_Componente != null ? new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)item.Id_Componente, Componente = dataComponente.Componente } : null,
+                    GerenciaCMCB = item.Id_Gerencia != null ? new Domain.CompromisosMCB.GerenciaCMCB { Id = (int)item.Id_Gerencia, Gerencia = dataGerencia.Gerencia, Descripcion = dataGerencia.Descripcion } : null,
+                    AreaCMCB = item.Id_Area != null ? new Domain.CompromisosMCB.AreaCMCB { Id = (int)item.Id_Area, Area = dataArea.Area } : null,
+                    Frecuencia = item.Frecuencia,
+                    Responsable1 = item.Id_Responsable1 != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)item.Id_Responsable1, Nombres = dataResp1.Nombres, DNI = dataResp1.DNI } : null,
+                    Responsable2 = item.Id_Responsable2 != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)item.Id_Responsable2, Nombres = dataResp2.Nombres, DNI = dataResp2.DNI } : null,
+                    Frecuencia_reporte = item.Frecuencia_reporte,
+                    Sustentos = item.Sustentos,
+                    Estado = item.Estado,
+                    Aprueba = item.Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)item.Id_Responsable2, Nombres = dataAprueba.Nombres, DNI = dataAprueba.DNI } : null,
+                    Medio_verificacion = item.Medio_verificacion
+                });
+            }
+            //retornar nueva lista
+            return output;
+        }
+        public async Task<List<SustentoCMCB>> ListarSustentos(int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
             var sustentos = await _context.SustentoCMCB.ToListAsync();
-            var compromisos = await _context.CompromisoCMCB.ToListAsync();
+            var compromisos = await ListarCompromisos();
 
             if (gerencias.Length > 0)
             {
-                compromisos = compromisos.Where(x => x.Id_Gerencia.HasValue && gerencias.Contains(x.Id_Gerencia.Value)).ToList();
+                compromisos = compromisos.Where(x => x.GerenciaCMCB!=null && gerencias.Contains(x.GerenciaCMCB.Id)).ToList();
             }
             if (areas.Length > 0)
             {
-                compromisos = compromisos.Where(x => x.Id_Area.HasValue && areas.Contains(x.Id_Area.Value)).ToList();
+                compromisos = compromisos.Where(x => x.AreaCMCB != null && areas.Contains(x.AreaCMCB.Id)).ToList();
             }
             if (criterios.Length > 0)
             {
-                compromisos = compromisos.Where(x => x.Id_Criterio.HasValue && criterios.Contains(x.Id_Criterio.Value)).ToList();
+                compromisos = compromisos.Where(x => x.CriterioCMCB != null && criterios.Contains(x.CriterioCMCB.Id)).ToList();
             }
-            if (gerencias.Length > 0|| areas.Length > 0|| criterios.Length > 0)
+            if (etapas.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.EtapaCMCB != null && etapas.Contains(x.EtapaCMCB.Id)).ToList();
+            }
+            if (gerencias.Length > 0|| areas.Length > 0|| criterios.Length > 0 || etapas.Length > 0)
             {
                 sustentos = sustentos.Where(x => compromisos.Select(y => y.Id).Contains(x.Id_Compromiso.Value)).ToList();
             }
-            estados = estados.Where(x => x != null).ToArray();
             if (estados.Length > 0)
             {
                 sustentos = sustentos.Where(x => estados.Contains(x.Estado)).ToList();
@@ -173,12 +235,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             foreach(var sustento in sustentos)
             {
 
-                var compromiso = await _context.CompromisoCMCB.FindAsync(sustento.Id_Compromiso);
-                var compromisoDomain = new CompromisoCMCB
-                {
-                    Id = compromiso.Id,
-                    Detalle_compromiso = compromiso.Detalle_compromiso,
-                };
+                var compromisoDomain = compromisos.FirstOrDefault(x=>x.Id.Equals(sustento.Id_Compromiso));                
                 var usuarios = await _context.Usuarios.ToListAsync();
                 var responsable1 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(sustento.Id_Responsable1));
                 var responsable2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(sustento.Id_Responsable2));
@@ -221,16 +278,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     var responsable2Domain = new Domain.ValueObjects.Usuario
                     {
-                        IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos,
-                        DNI = responsable1.DNI,
-                        UsuarioRed = responsable1.usuario_red,
-                        Puesto = responsable1.Puesto,
-                        Celular = responsable1.Celular,
-                        Email = responsable1.Email,
-                        IdRol = responsable1.Id_Rol,
-                        Estado = responsable1.Estado
+                        IdUsuario = responsable2.Id_Usuario,
+                        Nombres = responsable2.Nombres,
+                        Apellidos = responsable2.Apellidos,
+                        DNI = responsable2.DNI,
+                        UsuarioRed = responsable2.usuario_red,
+                        Puesto = responsable2.Puesto,
+                        Celular = responsable2.Celular,
+                        Email = responsable2.Email,
+                        IdRol = responsable2.Id_Rol,
+                        Estado = responsable2.Estado
                     };
                     outputItem.Responsable2 = responsable2Domain;
                 }
@@ -238,16 +295,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 {
                     var asesorDomain = new Domain.ValueObjects.Usuario
                     {
-                        IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos,
-                        DNI = responsable1.DNI,
-                        UsuarioRed = responsable1.usuario_red,
-                        Puesto = responsable1.Puesto,
-                        Celular = responsable1.Celular,
-                        Email = responsable1.Email,
-                        IdRol = responsable1.Id_Rol,
-                        Estado = responsable1.Estado
+                        IdUsuario = asesor.Id_Usuario,
+                        Nombres = asesor.Nombres,
+                        Apellidos = asesor.Apellidos,
+                        DNI = asesor.DNI,
+                        UsuarioRed = asesor.usuario_red,
+                        Puesto = asesor.Puesto,
+                        Celular = asesor.Celular,
+                        Email = asesor.Email,
+                        IdRol = asesor.Id_Rol,
+                        Estado = asesor.Estado
                     };
                     outputItem.Asesor = asesorDomain;
                 }

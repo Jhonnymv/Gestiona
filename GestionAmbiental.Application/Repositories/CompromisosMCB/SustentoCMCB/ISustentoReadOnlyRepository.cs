@@ -16,6 +16,6 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.SustentoCMCB
         //Eliminar
         Task EliminarSustento(int Id);
         //Listar
-        Task<List<Domain.CompromisosMCB.SustentoCMCB>> ListarSustentos(int[] gerencias, int[] areas, int[] criterios, string[] estados);
+        Task<List<Domain.CompromisosMCB.SustentoCMCB>> ListarSustentos(int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas);
     }
 }
