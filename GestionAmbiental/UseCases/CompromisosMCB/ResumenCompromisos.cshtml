@@ -96,36 +96,36 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_nombre">Gerencia</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_gerencia" asp-items="@ViewBag.Gerencias" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="filtro_codigo">Área</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_area" asp-items="@ViewBag.Areas" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Criterio</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_criterio" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_criterio" asp-items="@ViewBag.Criterios" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Estado</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_estado" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_estado" asp-items="@ViewBag.Estados" multiple>
                                 </select>
                             </div>
                         </div>
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de IGA</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" asp-items="@ViewBag.Etapas" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Etapa del Proyecto</label>
-                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_etapa" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_etapa" asp-items="@ViewBag.Etapas" multiple>
                                 </select>
                             </div>
                         </div>
@@ -138,7 +138,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
@@ -364,9 +363,9 @@
 </div>
 
 @section scripts{
- @*   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/selectpicker/js/bootstrap-select.js"></script>
-    <script src="~/lib/pdfobject/pdfobject.min.js"></script>*@
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
