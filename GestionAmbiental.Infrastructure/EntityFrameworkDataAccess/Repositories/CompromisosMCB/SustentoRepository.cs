@@ -142,10 +142,33 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             return output;
         }
 
-        public async Task<List<SustentoCMCB>> ListarSustentos()
+        public async Task<List<SustentoCMCB>> ListarSustentos(int[] gerencias, int[] areas, int[] criterios, string[] estados)
         {
             var sustentos = await _context.SustentoCMCB.ToListAsync();
             var compromisos = await _context.CompromisoCMCB.ToListAsync();
+
+            if (gerencias.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Gerencia.HasValue && gerencias.Contains(x.Id_Gerencia.Value)).ToList();
+            }
+            if (areas.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Area.HasValue && areas.Contains(x.Id_Area.Value)).ToList();
+            }
+            if (criterios.Length > 0)
+            {
+                compromisos = compromisos.Where(x => x.Id_Criterio.HasValue && criterios.Contains(x.Id_Criterio.Value)).ToList();
+            }
+            if (gerencias.Length > 0|| areas.Length > 0|| criterios.Length > 0)
+            {
+                sustentos = sustentos.Where(x => compromisos.Select(y => y.Id).Contains(x.Id_Compromiso.Value)).ToList();
+            }
+            estados = estados.Where(x => x != null).ToArray();
+            if (estados.Length > 0)
+            {
+                sustentos = sustentos.Where(x => estados.Contains(x.Estado)).ToList();
+            }
+
             var output = new List<SustentoCMCB>();
             foreach(var sustento in sustentos)
             {

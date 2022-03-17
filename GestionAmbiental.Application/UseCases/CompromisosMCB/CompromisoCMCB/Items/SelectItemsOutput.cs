@@ -18,5 +18,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.It
         public List<Domain.CompromisosMCB.OrigenCMCB> ItemsOrigen { get; set; }
 
         public List<Domain.ValueObjects.Usuario> ItemsUsuario { get; set; }
+        public List<string> EstadosCompromiso { get; set; }
+        public List<string> EstadosSustento { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
 
         public async Task<SustentosOuput> Execute(int pagina, int fpp, int[] gerencias, int[] areas, int[] criterios, string[] estados)
         {
-            var data = await _sustentoReadOnlyRepository.ListarSustentos();
+            var data = await _sustentoReadOnlyRepository.ListarSustentos(gerencias,areas,criterios,estados);
             var output = new SustentosOuput();
 
             var sustentos = new List<SustentoOuput>();
