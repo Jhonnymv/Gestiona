@@ -44,6 +44,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB
         public string? Sustentos { get; set; }
         public string? Estado { get; set; }
         public int? Aprueba { get; set; }
+        public string? NomAprueba { get; set; }
         public string? Medio_verificacion { get; set; }
 
         //public CompromisoOuput(Domain.CompromisosMCB.CompromisoCMCB compromiso)

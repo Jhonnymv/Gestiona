@@ -32,29 +32,43 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
                 var compItem = new CompromisoOuput();
                 compItem.Id = item.Id;
                 compItem.Codigo = item.Codigo;
-
+                if (item.CriterioCMCB != null)
+                {
+                    compItem.IdCriterio = item.CriterioCMCB.Id;
+                    compItem.NomCriterio = item.CriterioCMCB.Criterio;
+                }
                 compItem.Detalle_compromiso = item.Detalle_compromiso;
-
-
-                if (item.ComponenteCMCB != null)
-                {
-                    compItem.IdComponente = item.ComponenteCMCB.Id;
-                    compItem.NomComponente = item.ComponenteCMCB.Componente;
-                }
-                if (item.AspectoCMCB != null)
-                {
-                    compItem.IdAspecto = item.AspectoCMCB.Id;
-                    compItem.NomAspecto = item.AspectoCMCB.Aspecto;
-                }
                 if (item.EtapaCMCB != null)
                 {
                     compItem.IdEtapa = item.EtapaCMCB.Id;
                     compItem.NomEtapa = item.EtapaCMCB.Etapa;
                 }
-                if (item.CriterioCMCB != null)
+                compItem.Texto_compromiso = item.Texto_compromiso;
+                if (item.OrigenCMCB != null)
                 {
-                    compItem.IdCriterio = item.CriterioCMCB.Id;
-                    compItem.NomCriterio = item.CriterioCMCB.Criterio;
+                    compItem.IdOrigen = item.OrigenCMCB.Id;
+                    compItem.NomOrigen = item.OrigenCMCB.Origen;
+                };
+                compItem.Tomo = item.Tomo;
+                compItem.Capitulo = item.Capitulo;
+                compItem.Seccion = item.Seccion;
+                compItem.Pagina = item.Pagina;
+                compItem.Resolucion = item.Resolucion;
+                if (item.AutoridadCMCB != null)
+                {
+                    compItem.IdAutoridad = item.AutoridadCMCB.Id;
+                    compItem.NomAutoridad = item.AutoridadCMCB.Autoridad;
+                };
+                compItem.Fecha = item.Fecha;
+                if (item.AspectoCMCB != null)
+                {
+                    compItem.IdAspecto = item.AspectoCMCB.Id;
+                    compItem.NomAspecto = item.AspectoCMCB.Aspecto;
+                }
+                if (item.ComponenteCMCB != null)
+                {
+                    compItem.IdComponente = item.ComponenteCMCB.Id;
+                    compItem.NomComponente = item.ComponenteCMCB.Componente;
                 }
                 if (item.GerenciaCMCB != null)
                 {
@@ -67,19 +81,25 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
                     compItem.NomArea = item.AreaCMCB.Area;
                 };
                 compItem.Frecuencia = item.Frecuencia;
+    
                 if (item.Responsable1 != null)
                 {
                     compItem.IdResponsable1 = item.Responsable1.IdUsuario;
-                    compItem.NomResponsable1 = item.Responsable1.Nombres+" - "+item.Responsable1.DNI;
+                    compItem.NomResponsable1 = item.Responsable1.Nombres + " - " + item.Responsable1.DNI;
                 };
                 if (item.Responsable2 != null)
                 {
                     compItem.IdResponsable2 = item.Responsable2.IdUsuario;
-                    compItem.NomResponsable2 = item.Responsable2.Nombres+" - "+item.Responsable2.DNI;
+                    compItem.NomResponsable2 = item.Responsable2.Nombres + " - " + item.Responsable2.DNI;
                 };
-                compItem.Frecuencia_reporte=item.Frecuencia_reporte;
-                compItem.Sustentos=item.Sustentos;
-                compItem.Estado=item.Estado;
+                if (item.Aprueba != null)
+                {
+                    compItem.Aprueba = item.Aprueba.IdUsuario;
+                    compItem.NomAprueba = item.Aprueba.Nombres + " - " + item.Responsable2.DNI;
+                };
+                compItem.Frecuencia_reporte = item.Frecuencia_reporte;
+                compItem.Sustentos = item.Sustentos;
+                compItem.Estado = item.Estado;
 
                 output.Registros.Add(compItem);
             }
@@ -100,20 +120,20 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
 
             if (compromiso.OrigenCMCB != null)
             {
-                ouput.IdOrigen= compromiso.OrigenCMCB.Id;
+                ouput.IdOrigen = compromiso.OrigenCMCB.Id;
                 ouput.NomOrigen = compromiso.OrigenCMCB.Origen;
             };
-            ouput.Tomo=compromiso.Tomo;
-            ouput.Capitulo= compromiso.Capitulo;
-            ouput.Seccion= compromiso.Seccion;
-            ouput.Pagina=compromiso.Pagina;
-            ouput.Resolucion= compromiso.Resolucion;
+            ouput.Tomo = compromiso.Tomo;
+            ouput.Capitulo = compromiso.Capitulo;
+            ouput.Seccion = compromiso.Seccion;
+            ouput.Pagina = compromiso.Pagina;
+            ouput.Resolucion = compromiso.Resolucion;
             if (compromiso.AutoridadCMCB != null)
             {
                 ouput.IdAutoridad = compromiso.AutoridadCMCB.Id;
                 ouput.NomAutoridad = compromiso.AutoridadCMCB.Autoridad;
             };
-            ouput.Fecha= compromiso.Fecha;
+            ouput.Fecha = compromiso.Fecha;
 
 
             return ouput;

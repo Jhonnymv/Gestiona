@@ -14,7 +14,9 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMC
         //Registrar
         Task<int> RegistrarCompromiso(Domain.CompromisosMCB.CompromisoCMCB input);
         ////Editar
-        //Task EditarCompromiso(Domain.CompromisosMCB.CompromisoCMCB input);
+        Task EditarCompromiso(Domain.CompromisosMCB.CompromisoCMCB input);
+        //Buscar por ID
+        Task<Domain.CompromisosMCB.CompromisoCMCB> ObtenerCompromiso(int Id);
         ////Eliminar
         //Task EliminarCompromiso(int IdEliminado);
     }

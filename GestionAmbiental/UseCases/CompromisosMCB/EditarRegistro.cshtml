@@ -1,0 +1,192 @@
+﻿@model GestionAmbiental.UseCases.CompromisosMCB.CompromisoModel
+
+@{
+    ViewData["Title"] = "Editar Compromiso";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Editar Registro Test</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="CompromisosMCB" asp-action="EditarRegistro" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Id" />
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Fecha"></label>
+                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                            <input type="date" class="form-control" asp-for="Fecha">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Codigo"></label>
+                            <span class="text-danger" asp-validation-for="Codigo"></span>
+                            <input type="text" class="form-control" asp-for="Codigo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Criterio">Criterio</label>
+                            <span class="text-danger" asp-validation-for="Id_Criterio"></span>
+                            <select class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Detalle_compromiso"></label>
+                            <span class="text-danger" asp-validation-for="Detalle_compromiso"></span>
+                            <textarea class="form-control" asp-for="Detalle_compromiso"></textarea>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Etapa">Etapa</label>
+                            <span class="text-danger" asp-validation-for="Id_Etapa"></span>
+                            <select class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Texto_compromiso"></label>
+                            <span class="text-danger" asp-validation-for="Texto_compromiso"></span>
+                            <textarea class="form-control" asp-for="Texto_compromiso"></textarea>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Origen">Origen</label>
+                            <span class="text-danger" asp-validation-for="Id_Origen"></span>
+                            <select class="form-control" asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Tomo"></label>
+                            <span class="text-danger" asp-validation-for="Tomo"></span>
+                            <input type="text" class="form-control" asp-for="Tomo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Capitulo"></label>
+                            <span class="text-danger" asp-validation-for="Capitulo"></span>
+                            <input type="text" class="form-control" asp-for="Capitulo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Seccion"></label>
+                            <span class="text-danger" asp-validation-for="Seccion"></span>
+                            <input type="text" class="form-control" asp-for="Seccion">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Pagina"></label>
+                            <span class="text-danger" asp-validation-for="Pagina"></span>
+                            <input type="text" class="form-control" asp-for="Pagina">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Resolucion">Resolución</label>
+                            <span class="text-danger" asp-validation-for="Resolucion"></span>
+                            <input type="text" class="form-control" asp-for="Resolucion">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Autoridad">Autoridad</label>
+                            <span class="text-danger" asp-validation-for="Id_Autoridad"></span>
+                            <select class="form-control" asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Aspecto">Aspecto</label>
+                            <span class="text-danger" asp-validation-for="Id_Aspecto"></span>
+                            <select class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Componente">Aspecto</label>
+                            <span class="text-danger" asp-validation-for="Id_Componente"></span>
+                            <select class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Gerencia">Gerencia</label>
+                            <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
+                            <select class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Area">Area</label>
+                            <span class="text-danger" asp-validation-for="Id_Area"></span>
+                            <select class="form-control" asp-for="Id_Area" asp-items="@ViewBag.Gerencias"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Frecuencia">Frecuencia</label>
+                            <span class="text-danger" asp-validation-for="Frecuencia"></span>
+                            <select class="form-control" asp-for="Frecuencia">
+                                <option value="">--Seleccione--</option>
+                                <option value="Diario">Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                                <option value="Trimestral">Trimestral</option>
+                                <option value="Semestral">Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Responsable1">Responsable 2</label>
+                            <span class="text-danger" asp-validation-for="Id_Responsable1"></span>
+                            <select class="form-control" asp-for="Id_Responsable1" asp-items="@ViewBag.usuarios"></select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Responsable2">Responsable 1</label>
+                            <span class="text-danger" asp-validation-for="Id_Responsable2"></span>
+                            <select class="form-control" asp-for="Id_Responsable2" asp-items="@ViewBag.usuarios"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Frecuencia_reporte">Frecuencia Reporte</label>
+                            <span class="text-danger" asp-validation-for="Frecuencia_reporte"></span>
+                            <select class="form-control" asp-for="Frecuencia_reporte">
+                                <option value="">--Seleccione--</option>
+                                <option value="Diario">Diario</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                                <option value="Trimestral">Trimestral</option>
+                                <option value="Semestral">Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Sustentos"></label>
+                            <span class="text-danger" asp-validation-for="Sustentos"></span>
+                            <textarea class="form-control" asp-for="Sustentos"></textarea>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Estado">Estado</label>
+                            <span class="text-danger" asp-validation-for="Estado"></span>
+                            <select class="form-control" asp-for="Estado">
+                                <option value="">--Seleccione--</option>
+                                <option value="No Vigente">No vigente</option>
+                                <option value="En Proceso">En proceso</option>
+                                <option value="Registrado">Registrado</option>
+                                <option value="Vencido">Vencido</option>
+                            </select>
+                        </div>
+                        <div class="row input_container">
+                            <div class="button-container">
+                                <div></div>
+                                <div id="bntsDetalle">
+                                    <a asp-controller="CompromisosMCB" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                    @*<button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>*@
+                                    <button type="submit" class="btn btn-mc-success">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script type="text/javascript">
+    //$('#eliminar').on('click', function () {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: "/Test/ElimnarRegistro",
+    //        traditional: true,
+    //        data: {
+    //            "id": $('#Id').val()
+    //        },
+    //        success: (response) => {
+    //        }
+    //    });
+    //});
+
+</script>
+}

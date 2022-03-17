@@ -12,9 +12,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public string Codigo { get; set; }
 
         [DisplayName("Criterio:")]
-        public int Id_Criterio { get; set; }
+        public int? Id_Criterio { get; set; }
         [DisplayName("Detalle:")]
-        public string Detalle_compromiso { get; set; }
+        public string? Detalle_compromiso { get; set; }
         [DisplayName("Etapa:")]
         public int? Id_Etapa { get; set; }
         [DisplayName("Texto:")]
