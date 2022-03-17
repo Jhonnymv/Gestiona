@@ -7,8 +7,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Ed
 {
     public interface IEditarRegistro
     {
-        Task Execute(
-            int Id,
+        Task Execute(int Id,
             string Codigo,
             int? Id_Criterio,
             string? Detalle_compromiso,

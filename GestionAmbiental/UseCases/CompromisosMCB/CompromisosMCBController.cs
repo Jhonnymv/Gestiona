@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.NuevoRegistro;
-using GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros;
+//using GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros;
 using GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.EditarRegistro;
 using GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Items;
 using System.Linq;
@@ -17,17 +17,15 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
     {
         private readonly INuevoRegistro _nuevoRegistro;
         private readonly ISelectItems _selectItems;
-        private readonly IListarRegistros _listarRegistros;
         private readonly IEditarRegistro _editarRegistro;
-        private readonly IListarRegistros _listarCompromisos;
+        private readonly Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros _listarCompromisos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
 
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
-            IListarRegistros listarRegistros,
-            IEditarRegistro editarRegistro
-            IListarRegistros listarCompromisos,
+            IEditarRegistro editarRegistro,
+            Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros listarCompromisos,
             Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos
             )
         {
@@ -131,8 +129,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
                 UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
                 
-                var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-                EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                //var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
+                //EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
 
                 ViewBag.Areas = areasItems;
@@ -144,7 +142,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 ViewBag.Componentes = componentesItems;
                 ViewBag.Gerencias = GerenciasItems;
                 ViewBag.Usuarios = UsuariosItems;
-                ViewBag.Estados = EstadosItems;
+                //ViewBag.Estados = EstadosItems;
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -243,8 +241,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
             UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
-            var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-            EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+            //var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
+            //EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
             ViewBag.Areas = areasItems;
             ViewBag.Criterios = criteriosItems;
@@ -255,7 +253,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             ViewBag.Componentes = componentesItems;
             ViewBag.Gerencias = GerenciasItems;
             ViewBag.Usuarios = UsuariosItems;
-            ViewBag.Estados = EstadosItems;
+            //ViewBag.Estados = EstadosItems;
 
             return View();
         }
@@ -382,7 +380,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
 
-            var registros = await _listarRegistros.Execute(1, 100);
+            var registros = await _listarCompromisos.Execute(1, 100);
 
             var registroEncontrado = registros.Registros.Find(x => x.Id.Equals(id));
 
@@ -436,10 +434,35 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         {
             if (ModelState.IsValid)
             {
-                await _editarRegistro.Execute(model.Id, model.Codigo, (int)model.Id_Criterio, model.Detalle_compromiso, model.Id_Etapa, model.Texto_compromiso, model.Id_Origen, model.Tomo,
-                    model.Capitulo, model.Seccion, model.Pagina, model.Resolucion, model.Id_Autoridad, model.Fecha, model.Id_Compromiso, model.Id_Aspecto, model.Id_Componente, model.Id_Gerencia, model.Id_Area,
-                    model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos, model.Estado, model.Id_Aprueba,
-                    model.Medio_verificacion);
+                await _editarRegistro.Execute(model.Id, 
+                    model.Codigo, 
+                    model.Id_Criterio, 
+                    model.Detalle_compromiso, 
+                    model.Id_Etapa, 
+                    model.Texto_compromiso, 
+                    model.Id_Origen, 
+                    model.Tomo, 
+                    model.Capitulo, 
+                    model.Seccion, 
+                    model.Pagina, 
+                    model.Resolucion, 
+                    model.Id_Autoridad, 
+                    model.Fecha, 
+                    model.Id_Compromiso, 
+                    model.Id_Aspecto, 
+                    model.Id_Componente, 
+                    model.Id_Gerencia, 
+                    model.Id_Area, 
+                    model.Frecuencia, 
+                    model.Id_Entidad, 
+                    model.Id_Responsable1, 
+                    model.Id_Responsable2,
+                    model.Frecuencia_reporte,
+                    model.Sustentos, 
+                    model.Estado, 
+                    model.Id_Aprueba,
+                    model.Medio_verificacion
+                    );
 
                 return RedirectToAction("EditarRegistro", new { id = model.Id });
             }
