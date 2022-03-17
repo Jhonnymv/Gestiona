@@ -16,6 +16,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "int")]
         public int? Id_Usuario { get; set; }
         [Column(TypeName ="varchar(255)")]
-        public string? Estado { get; set; }
+        public string Estado { get; set; }
     }
 }

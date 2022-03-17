@@ -66,7 +66,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Area { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Frecuencia { get; set; }
+        public string Frecuencia { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Entidad { get; set; }
@@ -78,18 +78,18 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Responsable2 { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Frecuencia_reporte { get; set; }
+        public string Frecuencia_reporte { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Sustentos { get; set; }
+        public string Sustentos { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Estado { get; set; }
+        public string Estado { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Aprueba { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Medio_verificacion { get; set; }
+        public string Medio_verificacion { get; set; }
     }
 }

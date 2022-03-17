@@ -34,27 +34,27 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int? Id_Asesor { get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Estado { get; set; }
+        public string Estado { get; set; }
 
         [Column(TypeName = "Text")]
-        public string? Sustento_cumplimiento{ get; set; }
+        public string Sustento_cumplimiento{ get; set; }
 
         [Column(TypeName = "Varchar(255)")]
-        public string? Evidencia { get; set; }
+        public string Evidencia { get; set; }
 
         [Column(TypeName = "Text")]
-        public string? Detalle_compromiso { get; set; }
+        public string Detalle_compromiso { get; set; }
 
         [Column(TypeName = "Text")]
-        public string? Comentario_implementacion { get; set; }
+        public string Comentario_implementacion { get; set; }
 
 
         [Column(TypeName = "Text")]
-        public string? Comentario_verificacion { get; set; }
+        public string Comentario_verificacion { get; set; }
 
 
         [Column(TypeName = "varchar(255)")]
-        public string? Medio_verificacion { get; set; }
+        public string Medio_verificacion { get; set; }
 
     }
 }

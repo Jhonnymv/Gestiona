@@ -14,7 +14,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "varchar(255)")]
         public string Criterio { get; set; }
         [Column(TypeName = "text")]
-        public string? Detalle { get; set; }
+        public string Detalle { get; set; }
 
     }
 }

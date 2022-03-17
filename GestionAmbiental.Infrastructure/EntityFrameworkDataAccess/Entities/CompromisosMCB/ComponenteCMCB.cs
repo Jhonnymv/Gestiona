@@ -16,6 +16,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "varchar(255)")]
         public string Componente { get; set; }
         [Column(TypeName = "varchar(255)")]
-        public string? Servicio { get; set; }
+        public string Servicio { get; set; }
     }
 }
