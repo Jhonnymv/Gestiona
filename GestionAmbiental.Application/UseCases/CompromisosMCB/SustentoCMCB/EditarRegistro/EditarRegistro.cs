@@ -87,6 +87,27 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
                 input.Fecha_validacion = Convert.ToDateTime(Fecha_validacion);
 
             await _sustentoReadOnlyRepository.EditarSustento(input);
+
+            //Crear siguiente sustento
+            var inputNuevoSustento = new Domain.CompromisosMCB.SustentoCMCB
+            {
+                CompromisoCMCB = input.CompromisoCMCB,
+                Responsable1 = input.Responsable1,
+                Responsable2 = input.Responsable2,
+                Detalle_compromiso = input.Detalle_compromiso,
+                Medio_verificacion = input.Medio_verificacion,
+                Estado = EstadosSustento.Registrado.ToString()
+            };
+            switch (input.CompromisoCMCB.Frecuencia_reporte)
+            {
+                case "Diario": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddDays(1); break;
+                case "Semanal": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddDays(7); break;
+                case "Mensual": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddMonths(1); break;
+                case "Trimestral": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddMonths(3); break;
+                case "Semestral": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddMonths(6); break;
+                case "Anual": inputNuevoSustento.Fecha_limite = input.Fecha_limite.Value.AddYears(1); break;
+            }
+            await _sustentoReadOnlyRepository.RegistrarSustento(inputNuevoSustento);
         }
     }
 }

@@ -43,7 +43,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB
             Criterio = sustentoCMCB.CompromisoCMCB.CriterioCMCB.Criterio;
             Etapa = sustentoCMCB.CompromisoCMCB.EtapaCMCB.Etapa;
             Componente = sustentoCMCB.CompromisoCMCB.ComponenteCMCB.Componente;
-            Gerencia = sustentoCMCB.CompromisoCMCB.GerenciaCMCB.Gerencia!=null?sustentoCMCB.CompromisoCMCB.GerenciaCMCB.Gerencia:null;
+            Gerencia = sustentoCMCB.CompromisoCMCB.GerenciaCMCB.Gerencia ?? null;
             Area = sustentoCMCB.CompromisoCMCB.AreaCMCB.Area;
             Periodicidad = sustentoCMCB.CompromisoCMCB.Frecuencia;
             Frecuencia_Reporte = sustentoCMCB.CompromisoCMCB.Frecuencia_reporte;
@@ -51,12 +51,12 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB
             Fecha_limite = sustentoCMCB.Fecha_limite;
             Fecha_entrega = sustentoCMCB.Fecha_entrega;
             Fecha_validacion = sustentoCMCB.Fecha_validacion;
-            IdResponsable1 = sustentoCMCB.Responsable1.IdUsuario;
-            Responsable1 = sustentoCMCB.Responsable1.Nombres+" "+sustentoCMCB.Responsable1.Apellidos;
-            IdResponsable2 = sustentoCMCB.Responsable2.IdUsuario;
-            Responsable2 = sustentoCMCB.Responsable2.Nombres + " " + sustentoCMCB.Responsable2.Apellidos;
-            IdAsesor = sustentoCMCB.Asesor.IdUsuario;
-            Asesor = sustentoCMCB.Asesor.Nombres + " " + sustentoCMCB.Asesor.Apellidos;
+            IdResponsable1 = sustentoCMCB.Responsable1?.IdUsuario;
+            Responsable1 = sustentoCMCB.Responsable1?.Nombres+" "+sustentoCMCB.Responsable1?.Apellidos;
+            IdResponsable2 = sustentoCMCB.Responsable2?.IdUsuario;
+            Responsable2 = sustentoCMCB.Responsable2?.Nombres + " " + sustentoCMCB.Responsable2?.Apellidos;
+            IdAsesor = sustentoCMCB.Asesor?.IdUsuario;
+            Asesor = sustentoCMCB.Asesor?.Nombres + " " + sustentoCMCB.Asesor?.Apellidos;
             Estado = sustentoCMCB.Estado;
             Sustento_cumplimiento = sustentoCMCB.Sustento_cumplimiento;
             Detalle_compromiso = sustentoCMCB.Detalle_compromiso;

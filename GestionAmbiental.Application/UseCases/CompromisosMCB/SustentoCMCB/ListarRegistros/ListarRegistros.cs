@@ -41,9 +41,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
             ouput.Fecha_limite= sustemto.Fecha_limite;
             ouput.Fecha_entrega= sustemto.Fecha_entrega;
             ouput.Fecha_validacion= sustemto.Fecha_validacion;
-            ouput.IdResponsable1 = sustemto.Responsable1.IdUsuario;
-            ouput.IdResponsable2 = sustemto.Responsable2.IdUsuario;
-            ouput.IdAsesor = sustemto.Asesor.IdUsuario;
+            ouput.IdResponsable1 = sustemto.Responsable1?.IdUsuario;
+            ouput.IdResponsable2 = sustemto.Responsable2?.IdUsuario;
+            ouput.IdAsesor = sustemto.Asesor?.IdUsuario;
             ouput.Estado = sustemto.Estado;
             ouput.Sustento_cumplimiento= sustemto.Sustento_cumplimiento;
             ouput.Detalle_compromiso= sustemto.Detalle_compromiso;
