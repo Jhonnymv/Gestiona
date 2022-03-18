@@ -15,6 +15,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
 {
     public class CompromisosMCBController : Controller
     {
+        private ExcelLecturaEscritura _excelLecturaEscritura;
         private readonly INuevoRegistro _nuevoRegistro;
         private readonly ISelectItems _selectItems;
         private readonly IEditarRegistro _editarRegistro;
@@ -481,6 +482,61 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public async Task<IActionResult> saveValidar()
         {
             return RedirectToAction("ResumenSustentos");
+        }
+        [HttpPost]
+        public async Task<IActionResult> CargaDataExcel(CargaExcelModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                var stream = model.Excel.OpenReadStream();
+                _excelLecturaEscritura = new ExcelLecturaEscritura(stream, model.Pagina, model.FilaInicio, model.ColumnaInicio);
+
+                if (!_excelLecturaEscritura.ValidarExistenciaPagina())
+                    return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: No se encontró la hoja en el archivo Excel", result = "Error" });
+
+                var data = _excelLecturaEscritura.ObtenerDatos();
+                var agregados = 0;
+                foreach (var item in data)
+                {
+                    var id = await _nuevoRegistro.Execute(item.Codigo, (int)item.Id_Criterio, item.Detalle_compromiso, item.Id_Etapa, item.Texto_compromiso, item.Id_Origen, item.Tomo,
+                   item.Capitulo, item.Seccion, item.Pagina, item.Resolucion, item.Id_Autoridad, item.Fecha, item.Id_Compromiso, item.Id_Aspecto, item.Id_Componente, item.Id_Gerencia, item.Id_Area,
+                   item.Frecuencia, item.Id_Entidad, item.Id_Responsable1, item.Id_Responsable2, item.Frecuencia_reporte, item.Sustentos, item.Estado, item.Id_Aprueba,
+                   item.Medio_verificacion);
+                    agregados++;
+                }
+                /*
+                var dataFechas = await _getConsumosAguaFechas.ExecuteFechas(data.First().Fecha.ToString(), data.Last().Fecha.ToString(), model.IdResolucion);
+
+                var validacion = await ValidarDatosExcel(data, dataFechas, model.IdResolucion, model.FilaInicio);
+                if (validacion.Length == 0)
+                {
+                    var input = new List<Application.UseCases.ConsumoAgua.ConsumoAguaInput>();
+
+                    foreach (var consumo in data)
+                    {
+                        if ((consumo.TiempoBombeo != 0) || (consumo.TiempoBombeo == 0 && consumo.LecturaInicial == consumo.LecturaFinal))
+                            input.Add(new Application.UseCases.ConsumoAgua.ConsumoAguaInput
+                            {
+                                IdResolucionConsumoAgua = model.IdResolucion,
+                                Fecha = consumo.Fecha,
+                                TiempoBombeo = consumo.TiempoBombeo,
+                                LecturaInicial = consumo.LecturaInicial,
+                                LecturaFinal = consumo.LecturaFinal,
+                                VolumenBombeado = consumo.LecturaFinal - consumo.LecturaInicial,
+                                CaudalPromedio = consumo.TiempoBombeo != 0 ? (consumo.LecturaFinal - consumo.LecturaInicial) / (consumo.TiempoBombeo * 3600) : 0
+                            });
+                    }
+                    var agregados = await _registrarConsumoAguaMasivo.Execute(input, userInfo.NombreUsuario);
+                
+                    return RedirectToAction("CargaDataExcel", new { message = "Se agregaron " + agregados + " registros", result = "Success" });
+                }
+                else
+                {
+                    return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: \n" + validacion, result = "Error" });
+                }*/
+            }
+            return RedirectToAction("CargaDataExcel", new { message = "" });
         }
     }
 }
