@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace GestionAmbiental.UseCases.CompromisosMCB
 {
@@ -280,7 +281,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable2, (int)model.Id_Gerencia, "1");
                 }
 
-                return RedirectToAction("Resumen");
+                return RedirectToAction("ResumenCompromisos");
             }
             return View();
         }
@@ -486,13 +487,44 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             return Json(response);
         }
         [HttpPost]
-        public async Task<IActionResult> saveImplementar()
+        public async Task<IActionResult> saveImplementar(ImplementarSustentoModel model)
         {
+            var tempPath = Path.GetTempPath();
+
+            var CMCBTempPath = tempPath + "Compromisos-Marcobre-v2/";
+            if (!Directory.Exists(CMCBTempPath))
+            {
+                Directory.CreateDirectory(CMCBTempPath);
+            }
+            var filePath = CMCBTempPath + "SustentosCompromisos" + model.Id + "/";
+            Directory.CreateDirectory(CMCBTempPath);
+
+            var fileName = filePath;
+
+            if (model.Evidencia.Length > 0)
+            {
+                var stream = new FileStream(fileName, FileMode.Create);
+                model.Evidencia.CopyTo(stream);
+
+                stream.Flush();
+
+                stream.Close();
+            }
+            var newFilePath = CMCBTempPath + "SustentosCompromisos/" + model.Id + "/" + model.Fecha_entrega.ToString();
+            await _editarSustento.ExecuteImplementar(model.Id, 
+                model.Fecha_entrega.ToLongDateString(), 
+                model.Sustento_cumpliento,
+                newFilePath,
+                model.Comentario_implementacion
+                );
             return RedirectToAction("ResumenSustentos");
         }
         [HttpPost]
-        public async Task<IActionResult> saveValidar()
+        public async Task<IActionResult> saveValidar(int id,DateTime fechaValidar, string ComentarioVerificacion)
         {
+            var fecha=fechaValidar.Year+"-"+ Convert.ToString(fechaValidar.Month).PadLeft(2, '0') + "-"+fechaValidar.Day;
+            
+            await _editarSustento.ExecuteVerificar(id, 1, fecha, ComentarioVerificacion, "medio");
             return RedirectToAction("ResumenSustentos");
         }
     }

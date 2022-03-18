@@ -74,7 +74,12 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
             await _sustentoReadOnlyRepository.EditarSustento(input);
         }
 
-        public async Task ExecuteVerificar(int Id, int Id_Asesor, string Fecha_validacion, string Comentario_verificacion, string Medio_verificacion)
+        public async Task ExecuteVerificar(int Id, 
+            int Id_Asesor, 
+            string Fecha_validacion, 
+            string Comentario_verificacion,
+            string Medio_verificacion
+            )
         {
             var input = await _sustentoReadOnlyRepository.ObtenerSustento(Id);
 

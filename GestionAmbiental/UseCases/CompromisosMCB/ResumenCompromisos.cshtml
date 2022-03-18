@@ -398,25 +398,25 @@
         $('#modal_docs_tipo').modal('show')
 
     }
-    //function dataModulo() {
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/compromisosDocumentacion/PropiedadesModulo",
-    //        traditional: true,
-    //        success: (response) => {
-    //            if (response.success) {
-    //                let data = JSON.parse(response.data);
-    //                let r = data.r;
-    //                let g = data.g;
-    //                let b = data.b;
-    //                let img_url = data.img_url;
-    //                compromisosStyle(r, g, b);
-    //            } else {
-    //                console.log("Ocurrió un problema: " + response.msg);
-    //            }
-    //        }
-    //    });
-    //}
+    function dataModulo() {
+        $.ajax({
+            type: "POST",
+            url: "/SGADocumentacion/PropiedadesModulo",
+            traditional: true,
+            success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        sgaStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+    }
     function filtrar(pag) {
         $.ajax({
             type: "POST",

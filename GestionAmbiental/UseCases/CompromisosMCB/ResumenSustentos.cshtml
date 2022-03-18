@@ -1,3 +1,4 @@
+@model GestionAmbiental.UseCases.CompromisosMCB.ImplementarSustentoModel
 @{
     ViewData["Title"] = "Resumen";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
@@ -355,24 +356,37 @@
                 <div class="modal-body">
                     <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
-                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveImplementar" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
-                                <input id="idImplementacion" type="hidden"/>
+                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveImplementar" method="post" enctype="multipart/form-data" autocomplete="off">
+                                <input id="idImplementacion" type="hidden" asp-for="Id" />
                                 <div class="row">
                                     <div class="col-12 col-sm-4">
-                                        <label for="fechaRegistro">Fecha Registro</label>
-                                        <input id="fechaRegistro" type="date" class="form-control" />
+                                        <label asp-for="Fecha_entrega">Fecha Registro</label>
+                                        <span class="text-danger" asp-validation-for="Fecha_entrega"></span>
+                                        <input id="fechaRegistro" type="date" class="form-control" asp-for="Fecha_entrega" />
                                     </div>
                                     <div class="col-12 col-sm-8">
-                                        <label for="evidencia">Evidencia</label>
-                                        <input id="evidencia" type="file" class="form-control" />
+                                        <label asp-for="Evidencia">Evidencia</label>
+                                        <span class="text-danger" asp-validation-for="Evidencia"></span>
+                                        <input id="evidencia" type="file" class="form-control" asp-for="Evidencia" />
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <label for="SustentoCumplimiento">Sustento Cumplimiento</label>
-                                        <textarea id="SustentoCumplimiento" class="form-control"></textarea>
+                                        <label asp-for="Sustento_cumpliento">Sustento Cumplimiento</label>
+                                        <span class="text-danger" asp-validation-for="Sustento_cumpliento"></span>
+                                        <textarea id="SustentoCumplimiento" class="form-control" asp-for="Sustento_cumpliento"></textarea>
                                     </div>
                                     <div class="col-12 col-sm-6">
-                                        <label for="ComentarioImplementacion">Comentario Implementacion</label>
-                                        <textarea id="ComentarioImplementacion" class="form-control"></textarea>
+                                        <label asp-for="Comentario_implementacion">Comentario Implementacion</label>
+                                        <span class="text-danger" asp-validation-for="Comentario_implementacion"></span>
+                                        <textarea id="ComentarioImplementacion" class="form-control" asp-for="Comentario_implementacion"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row input_container">
+                                    <div class="button-container">
+                                        <div></div>
+                                        <div id="bntsDetalle">
+                                           @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
+                                            <button type="submit" class="btn btn-mc-success">Guardar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -402,15 +416,24 @@
                     <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
                             <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveValidar" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
-                                <input id="idValidar" type="hidden"/>
+                                <input id="idValidar" type="hidden" name="id"/>
                                 <div class="row">
-                                    <div class="col-12 col-sm-4">
+                                    <div class="col-12 ">
                                         <label for="fechaValidar">Fecha Registro</label>
-                                        <input id="fechaValidar" type="date" class="form-control" />
+                                        <input id="fechaValidar" name="fechaValidar" type="date" class="form-control" />
                                     </div>
-                                    <div class="col-12 col-sm-8">
+                                    <div class="col-12 ">
                                         <label for="ComentarioVerificacion">Comentario Verificación</label>
-                                        <textarea id="ComentarioVerificacion" class="form-control"></textarea>
+                                        <textarea id="ComentarioVerificacion" name="ComentarioVerificacion" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                                 <div class="row input_container">
+                                    <div class="button-container">
+                                        <div></div>
+                                        <div id="bntsDetalle">
+                                           @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
+                                            <button type="submit" class="btn btn-mc-success">Guardar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </form>
@@ -492,7 +515,7 @@
             },
             traditional:true,
             success:(response)=>{
-                $("#idImplementacion").val(data.id)
+                $("#idImplementacion").val(response.data.id)
                 $("#fechaRegistro").val(fechaOutput)
             }
         });
@@ -509,7 +532,8 @@
             },
             traditional:true,
             success:(response)=>{
-                $("#idValidar").val(data.id)
+                console.log(response.data)
+                $("#idValidar").val(response.data.id)
                 $("#fechaValidar").val(fechaOutput)
             }
         });
