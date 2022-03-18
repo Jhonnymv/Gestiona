@@ -3,16 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMCB;
+using GestionAmbiental.Application.Repositories.CompromisosMCB.SustentoCMCB;
+using GestionAmbiental.Domain.Enum;
 
 namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.NuevoRegistro
 {
     public class NuevoRegistro : INuevoRegistro
     {
         private readonly ICompromisoReadOnlyRepository _compromisoReadOnlyRepository;
-        public NuevoRegistro(ICompromisoReadOnlyRepository compromisoReadOnlyRepository)
+        private readonly ISustentoReadOnlyRepository _sustentoReadOnlyRepository;
+
+        public NuevoRegistro(ICompromisoReadOnlyRepository compromisoReadOnlyRepository, ISustentoReadOnlyRepository sustentoReadOnlyRepository)
         {
             _compromisoReadOnlyRepository = compromisoReadOnlyRepository ?? throw new ArgumentNullException(nameof(compromisoReadOnlyRepository));
+            _sustentoReadOnlyRepository = sustentoReadOnlyRepository ?? throw new ArgumentNullException(nameof(sustentoReadOnlyRepository));
         }
+
         public async Task<int> Execute(string Codigo, int Id_Criterio, string? Detalle_compromiso, int? Id_Etapa, string? Texto_compromiso, int? Id_Origen, string? Tomo, string? Capitulo,
             string? Seccion, string? Pagina, string? Resolucion, int? Id_Autoridad, DateTime? Fecha, int? Id_Compromiso, int? Id_Aspecto, int? Id_Componente, int? Id_Gerencia, int? Id_Area,
             string? Frecuencia, int? Id_Entidad, int? Id_Responsable1, int? Id_Responsable2, string? Frecuencia_reporte, string? Sustentos, string? Estado, int? Id_Aprueba, string? Medio_verificacion)
@@ -74,7 +80,28 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
             input.Sustentos = Sustentos;
             input.Estado = Estado;
 
-            return await _compromisoReadOnlyRepository.RegistrarCompromiso(input);
+            var idCompromiso = await _compromisoReadOnlyRepository.RegistrarCompromiso(input);
+            
+            var inputSustento = new Domain.CompromisosMCB.SustentoCMCB
+            {
+                CompromisoCMCB = new Domain.CompromisosMCB.CompromisoCMCB { Id = idCompromiso },
+                Fecha_limite = Convert.ToDateTime(Fecha),
+                Detalle_compromiso = Detalle_compromiso,
+                Medio_verificacion = Medio_verificacion,
+                Estado = EstadosSustento.Registrado.ToString()
+            };
+            if (Id_Responsable1 != null)
+            {
+                inputSustento.Responsable1 = new Domain.ValueObjects.Usuario { IdUsuario = (int)Id_Responsable1 };
+            };
+            if (Id_Responsable2 != null)
+            {
+                inputSustento.Responsable2 = new Domain.ValueObjects.Usuario { IdUsuario = (int)Id_Responsable2 };
+            };
+
+            await _sustentoReadOnlyRepository.RegistrarSustento(inputSustento);
+
+            return idCompromiso;
         }
     }
 }

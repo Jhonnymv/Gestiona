@@ -267,7 +267,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos, model.Estado, model.Id_Aprueba,
                     model.Medio_verificacion);
 
-                return RedirectToAction("Resumen");
+                return RedirectToAction("ResumenCompromisos");
             }
             return View();
         }
