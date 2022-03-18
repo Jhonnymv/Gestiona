@@ -21,6 +21,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros _listarCompromisos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro _editarSustento;
+        private readonly Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerenciaUsuario;
 
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
@@ -28,7 +29,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             IEditarRegistro editarRegistro,
             Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros listarCompromisos,
             Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos,
-            Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento
+            Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento,
+            Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerenciaUsuario
             )
         {
             _nuevoRegistro = nuevoRegistro;
@@ -37,6 +39,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             _listarCompromisos = listarCompromisos;
             _listarSustentos = listarSustentos;
             _editarSustento = editarSustento;
+            _nuevoRegistroGerenciaUsuario = nuevoRegistroGerenciaUsuario;
         }
         public async Task<IActionResult> ResumenCompromisos()
         {
@@ -266,6 +269,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     model.Capitulo, model.Seccion, model.Pagina, model.Resolucion, model.Id_Autoridad, model.Fecha, model.Id_Compromiso, model.Id_Aspecto, model.Id_Componente, model.Id_Gerencia, model.Id_Area,
                     model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos, model.Estado, model.Id_Aprueba,
                     model.Medio_verificacion);
+
+
+                if (model.Id_Responsable1!=null && model.Id_Gerencia!=null)
+                {
+                    var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable1, (int)model.Id_Gerencia, "1");
+                }
+                if(model.Id_Responsable2 != null && model.Id_Gerencia != null)
+                {
+                    var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable2, (int)model.Id_Gerencia, "1");
+                }
 
                 return RedirectToAction("Resumen");
             }

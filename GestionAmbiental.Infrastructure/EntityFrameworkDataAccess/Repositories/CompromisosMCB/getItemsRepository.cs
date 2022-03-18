@@ -120,7 +120,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<List<GerenciaUsuarioCMCB>> GetGerenciasUsuario()
         {
-            var GerenciaUsuarioEntity = await _context.Gerencia_UsuarioCMCB.ToListAsync();
+            var GerenciaUsuarioEntity = await _context.GerenciaUsuarioCMCB.ToListAsync();
             var ouput = new List<GerenciaUsuarioCMCB>();
             foreach (var item in GerenciaUsuarioEntity)
             {
