@@ -112,7 +112,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<CompromisoCMCB> CompromisoCMCB { get; set; }
         public DbSet<CriterioCMCB> CriterioCMCB { get; set; }
         public DbSet<EtapaCMCB> EtapaCMCB { get; set; }
-        public DbSet<GerenciaUsuarioCMCB> Gerencia_UsuarioCMCB { get; set; }
+        public DbSet<GerenciaUsuarioCMCB> GerenciaUsuarioCMCB { get; set; }
         public DbSet<GerenciaCMCB> GerenciaCMCB { get; set; }
         public DbSet<MedioVerificacionCMCB> MedioVerificacionCMCB { get; set; }
         public DbSet<OrigenCMCB> OrigenCMCB { get; set; }
@@ -310,7 +310,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
                 .ToTable("Tb_Gerencias_CMCB");
 
             modelBuilder.Entity<GerenciaUsuarioCMCB>()
-                .ToTable("Tb_Gerencia_Usaurio_CMCB");
+                .ToTable("Tb_Gerencia_Usuario_CMCB");
 
             modelBuilder.Entity<MedioVerificacionCMCB>()
                 .ToTable("Tb_Medios_Verificacion_CMCB");

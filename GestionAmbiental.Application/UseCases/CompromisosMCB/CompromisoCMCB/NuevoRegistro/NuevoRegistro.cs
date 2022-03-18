@@ -12,7 +12,6 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
     {
         private readonly ICompromisoReadOnlyRepository _compromisoReadOnlyRepository;
         private readonly ISustentoReadOnlyRepository _sustentoReadOnlyRepository;
-
         public NuevoRegistro(ICompromisoReadOnlyRepository compromisoReadOnlyRepository, ISustentoReadOnlyRepository sustentoReadOnlyRepository)
         {
             _compromisoReadOnlyRepository = compromisoReadOnlyRepository ?? throw new ArgumentNullException(nameof(compromisoReadOnlyRepository));

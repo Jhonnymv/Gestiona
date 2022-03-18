@@ -28,9 +28,10 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
         ,string Evidencia
         ,string Comentario_implementacion);
         Task ExecuteVerificar(int Id
-        ,int Id_Asesor
-        ,string Fecha_validacion
+        , int Id_Asesor
+        , string Fecha_validacion
         ,string Comentario_verificacion
-        ,string Medio_verificacion);
+        , string Medio_verificacion
+            );
     }
 }

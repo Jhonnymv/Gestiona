@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System;
+using System.IO;
 
 namespace GestionAmbiental.UseCases.CompromisosMCB
 {
@@ -22,6 +23,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros _listarCompromisos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro _editarSustento;
+        private readonly Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerenciaUsuario;
 
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
@@ -29,7 +31,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             IEditarRegistro editarRegistro,
             Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros listarCompromisos,
             Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos,
-            Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento
+            Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento,
+            Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerenciaUsuario
             )
         {
             _nuevoRegistro = nuevoRegistro;
@@ -38,6 +41,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             _listarCompromisos = listarCompromisos;
             _listarSustentos = listarSustentos;
             _editarSustento = editarSustento;
+            _nuevoRegistroGerenciaUsuario = nuevoRegistroGerenciaUsuario;
         }
         public async Task<IActionResult> ResumenCompromisos()
         {
@@ -268,6 +272,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos, model.Estado, model.Id_Aprueba,
                     model.Medio_verificacion);
 
+
+                if (model.Id_Responsable1!=null && model.Id_Gerencia!=null)
+                {
+                    var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable1, (int)model.Id_Gerencia, "1");
+                }
+                if(model.Id_Responsable2 != null && model.Id_Gerencia != null)
+                {
+                    var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable2, (int)model.Id_Gerencia, "1");
+                }
+
                 return RedirectToAction("ResumenCompromisos");
             }
             return View();
@@ -474,13 +488,44 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             return Json(response);
         }
         [HttpPost]
-        public async Task<IActionResult> saveImplementar()
+        public async Task<IActionResult> saveImplementar(ImplementarSustentoModel model)
         {
+            var tempPath = Path.GetTempPath();
+
+            var CMCBTempPath = tempPath + "Compromisos-Marcobre-v2/";
+            if (!Directory.Exists(CMCBTempPath))
+            {
+                Directory.CreateDirectory(CMCBTempPath);
+            }
+            var filePath = CMCBTempPath + "SustentosCompromisos" + model.Id + "/";
+            Directory.CreateDirectory(CMCBTempPath);
+
+            var fileName = filePath;
+
+            if (model.Evidencia.Length > 0)
+            {
+                var stream = new FileStream(fileName, FileMode.Create);
+                model.Evidencia.CopyTo(stream);
+
+                stream.Flush();
+
+                stream.Close();
+            }
+            var newFilePath = CMCBTempPath + "SustentosCompromisos/" + model.Id + "/" + model.Fecha_entrega.ToString();
+            await _editarSustento.ExecuteImplementar(model.Id, 
+                model.Fecha_entrega.ToLongDateString(), 
+                model.Sustento_cumpliento,
+                newFilePath,
+                model.Comentario_implementacion
+                );
             return RedirectToAction("ResumenSustentos");
         }
         [HttpPost]
-        public async Task<IActionResult> saveValidar()
+        public async Task<IActionResult> saveValidar(int id,DateTime fechaValidar, string ComentarioVerificacion)
         {
+            var fecha=fechaValidar.Year+"-"+ Convert.ToString(fechaValidar.Month).PadLeft(2, '0') + "-"+fechaValidar.Day;
+            
+            await _editarSustento.ExecuteVerificar(id, 1, fecha, ComentarioVerificacion, "medio");
             return RedirectToAction("ResumenSustentos");
         }
         [HttpPost]
