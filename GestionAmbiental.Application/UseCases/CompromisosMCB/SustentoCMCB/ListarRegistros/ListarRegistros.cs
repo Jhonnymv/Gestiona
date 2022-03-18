@@ -32,5 +32,27 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
 
             return output;
         }
+        public async Task<SustentoOuput> ObtenerSustento(int Id)
+        {
+            var sustemto= await _sustentoReadOnlyRepository.ObtenerSustento(Id);
+            var ouput = new SustentoOuput();
+            ouput.Id = sustemto.Id;
+            ouput.IdCompromiso = sustemto.CompromisoCMCB.Id;
+            ouput.Fecha_limite= sustemto.Fecha_limite;
+            ouput.Fecha_entrega= sustemto.Fecha_entrega;
+            ouput.Fecha_validacion= sustemto.Fecha_validacion;
+            ouput.IdResponsable1 = sustemto.Responsable1.IdUsuario;
+            ouput.IdResponsable2 = sustemto.Responsable2.IdUsuario;
+            ouput.IdAsesor = sustemto.Asesor.IdUsuario;
+            ouput.Estado = sustemto.Estado;
+            ouput.Sustento_cumplimiento= sustemto.Sustento_cumplimiento;
+            ouput.Detalle_compromiso= sustemto.Detalle_compromiso;
+            ouput.Evidencia= sustemto.Evidencia;
+            ouput.Comentario_implementacion= sustemto.Comentario_implementacion;
+            ouput.Comentario_verificacion= sustemto.Comentario_verificacion;
+            ouput.Medio_verificacion= sustemto.Medio_verificacion;
+
+            return ouput;
+        }
     }
 }

@@ -120,7 +120,7 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de IGA</label>
-                               <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
@@ -337,6 +337,90 @@
         </div>
     </div>
 </div>
+<!--Modal Implementación-->
+<div class="modal fade" id="modal_implementacion_sustento" tabindex="-1" aria-labelledby="compromisoModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Reporte de sustento</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="compromisos">
+                        <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
+                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveImplementar" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
+                                <input id="idImplementacion" type="hidden"/>
+                                <div class="row">
+                                    <div class="col-12 col-sm-4">
+                                        <label for="fechaRegistro">Fecha Registro</label>
+                                        <input id="fechaRegistro" type="date" class="form-control" />
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <label for="evidencia">Evidencia</label>
+                                        <input id="evidencia" type="file" class="form-control" />
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label for="SustentoCumplimiento">Sustento Cumplimiento</label>
+                                        <textarea id="SustentoCumplimiento" class="form-control"></textarea>
+                                    </div>
+                                    <div class="col-12 col-sm-6">
+                                        <label for="ComentarioImplementacion">Comentario Implementacion</label>
+                                        <textarea id="ComentarioImplementacion" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--Modal Implementación-->
+<div class="modal fade" id="modal_validar_sustento" tabindex="-1" aria-labelledby="compromisoModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Validar sustento</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="compromisos">
+                        <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
+                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveValidar" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
+                                <input id="idValidar" type="hidden"/>
+                                <div class="row">
+                                    <div class="col-12 col-sm-4">
+                                        <label for="fechaValidar">Fecha Registro</label>
+                                        <input id="fechaValidar" type="date" class="form-control" />
+                                    </div>
+                                    <div class="col-12 col-sm-8">
+                                        <label for="ComentarioVerificacion">Comentario Verificación</label>
+                                        <textarea id="ComentarioVerificacion" class="form-control"></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <!--Modal Preview PDF-->
 <div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -382,7 +466,6 @@
             },
             traditional: true,
             success: (response) => {
-                console.log(response.data)
                 let date = new Date(response.data.fecha);
                 $("#Texto_original_compromiso").text(response.data.texto_compromiso)
                 $("#Origen").val(response.data.nomOrigen)
@@ -397,14 +480,47 @@
             }
         });
         $('#modal_docs_tipo').modal('show')
-
     }
-       function dataModulo() {
-            $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/PropiedadesModulo",
-                traditional: true,
-                success: (response) => {
+    function Implementar(sustentoId){
+        var date= new Date();
+        let fechaOutput = String(date.getFullYear()  + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getDate()).padStart(2, '0')  ;
+        $.ajax({
+            type:"POST",
+            url:"/CompromisosMCB/GetSustento",
+            data:{
+                "id":sustentoId,
+            },
+            traditional:true,
+            success:(response)=>{
+                $("#idImplementacion").val(data.id)
+                $("#fechaRegistro").val(fechaOutput)
+            }
+        });
+        $('#modal_implementacion_sustento').modal('show')
+    }
+    function Validar(sustentoId){
+        var date= new Date();
+        let fechaOutput = String(date.getFullYear()  + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getDate()).padStart(2, '0')  ;
+        $.ajax({
+            type:"POST",
+            url:"/CompromisosMCB/GetSustento",
+            data:{
+                "id":sustentoId,
+            },
+            traditional:true,
+            success:(response)=>{
+                $("#idValidar").val(data.id)
+                $("#fechaValidar").val(fechaOutput)
+            }
+        });
+        $('#modal_validar_sustento').modal('show')
+    }
+    function dataModulo() {
+        $.ajax({
+            type: "POST",
+            url: "/SGADocumentacion/PropiedadesModulo",
+            traditional: true,
+            success: (response) => {
                     if (response.success) {
                         let data = JSON.parse(response.data);
                         let r = data.r;
@@ -417,7 +533,7 @@
                     }
                 }
             });
-        }
+    }
     function filtrar(pag) {
         $.ajax({
             type: "POST",

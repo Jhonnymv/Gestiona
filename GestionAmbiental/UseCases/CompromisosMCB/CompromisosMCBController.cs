@@ -20,19 +20,23 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly IEditarRegistro _editarRegistro;
         private readonly Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros _listarCompromisos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
+        private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro _editarSustento;
 
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
             IEditarRegistro editarRegistro,
             Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros listarCompromisos,
-            Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos
+            Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos,
+            Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento
             )
         {
             _nuevoRegistro = nuevoRegistro;
             _selectItems = selectItems;
+            _editarRegistro = editarRegistro;
             _listarCompromisos = listarCompromisos;
             _listarSustentos = listarSustentos;
+            _editarSustento = editarSustento;
         }
         public async Task<IActionResult> ResumenCompromisos()
         {
@@ -150,7 +154,11 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 {
                     filasTabla += "<tr>"; 
                     filasTabla += "<td>" + fila.IdCompromiso + "</td>";
-                    filasTabla += "<td><a href=\"#\"></a><button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button> </td>";
+                    filasTabla += "<td><a href=\"#\"></a>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Implementar(" + fila.Id + ")\">Implementar</button>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Validar(" + fila.Id + ")\">Validar</button>" +
+                        " </td>";
                     filasTabla += "<td>" + fila.Criterio + "</td>";
                     filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
                     filasTabla += "<td>" + fila.Etapa + "</td>";
@@ -456,6 +464,23 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 return RedirectToAction("EditarRegistro", new { id = model.Id });
             }
             return RedirectToAction("EditarRegistro", new { id = model.Id });
+        }
+
+        public async Task<IActionResult> GetSustento(int id)
+        {
+            var datos = await _listarSustentos.ObtenerSustento(id);
+            dynamic response = new { Data = datos };
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> saveImplementar()
+        {
+            return RedirectToAction("ResumenSustentos");
+        }
+        [HttpPost]
+        public async Task<IActionResult> saveValidar()
+        {
+            return RedirectToAction("ResumenSustentos");
         }
     }
 }
