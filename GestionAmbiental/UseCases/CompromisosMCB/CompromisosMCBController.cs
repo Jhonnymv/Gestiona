@@ -310,7 +310,12 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 foreach (var fila in datosTabla.Registros)
                 {
                     filasTabla += "<tr>";
-                    filasTabla += "<td><a href=\"/CompromisosMCB/EditarRegistro?id=" + fila.Id + "\">" + fila.Id + "</a>  <button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button> </td>";
+                    filasTabla += "<td><span>" + fila.Id + "</span></br>" +
+                        "<a href=\"/CompromisosMCB/EditarRegistro?id=" + fila.Id + "\">" +
+                        "<button type =\"button\" class=\"btn btn-mc\">Editar</button>" +
+                        "</a>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button>" +
+                        "</td>";
                     filasTabla += "<td>" + fila.Codigo + "</td>";
                     filasTabla += "<td>" + fila.NomCriterio + "</td>";
                     filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
@@ -322,7 +327,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     filasTabla += "<td>" + fila.Frecuencia + "</td>";
                     filasTabla += "<td>" + fila.NomResponsable1 + "</td>";
                     filasTabla += "<td>" + fila.Frecuencia_reporte + "</td>";
-                    filasTabla += "<td>" + fila.Sustentos + "</td>";
+                    filasTabla += "<td>" + "<a href=\"/CompromisosMCB/EditarRegistro?id=" + fila.Id + "\">Sustentos</a>" + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
                     //filasTabla += "<td>" + fila.Texto_compromiso + "</td>";
                     filasTabla += "</tr>";
