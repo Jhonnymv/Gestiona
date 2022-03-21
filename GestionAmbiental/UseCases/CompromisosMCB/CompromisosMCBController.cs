@@ -11,6 +11,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System;
 using System.IO;
+using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Domain.Enum;
+using Renci.SshNet;
+using Serilog;
+using Microsoft.AspNetCore.Hosting;
 
 namespace GestionAmbiental.UseCases.CompromisosMCB
 {
@@ -23,7 +28,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros _listarSustentos;
         private readonly Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro _editarSustento;
         private readonly Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerenciaUsuario;
-
+        private readonly IGetInfo_SGA _info_SGA;
+        private readonly IWebHostEnvironment _hostingEnvironment;
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
@@ -31,7 +37,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             Application.UseCases.CompromisosMCB.CompromisoCMCB.ListarRegistros.IListarRegistros listarCompromisos,
             Application.UseCases.CompromisosMCB.SustentoCMCB.ListarRegistros.IListarRegistros listarSustentos,
             Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento,
-            Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerenciaUsuario
+            Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerenciaUsuario,
+            IGetInfo_SGA info_SGA,
+            IWebHostEnvironment hostingEnvironment
             )
         {
             _nuevoRegistro = nuevoRegistro;
@@ -41,6 +49,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             _listarSustentos = listarSustentos;
             _editarSustento = editarSustento;
             _nuevoRegistroGerenciaUsuario = nuevoRegistroGerenciaUsuario;
+            _info_SGA = info_SGA;
+            _hostingEnvironment = hostingEnvironment;
         }
         public async Task<IActionResult> ResumenCompromisos()
         {
@@ -55,21 +65,21 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var items = await _selectItems.Execute();
 
                 var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
-               
+
                 var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
-                
+
                 var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
-                
+
                 var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
-               
+
                 var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
-               
+
                 var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
-               
+
                 var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
-               
+
                 var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
-              
+
                 var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
 
                 var EstadosItems = items.EstadosCompromiso.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
@@ -104,25 +114,25 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var items = await _selectItems.Execute();
 
                 var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
-                
+
                 var criteriosItems = items.ItemsCriterio.OrderBy(x => x.Criterio).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Criterio }).ToList();
-                
+
                 var etapasItems = items.ItemsEtapa.OrderBy(x => x.Etapa).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Etapa }).ToList();
-               
+
                 var origenesItems = items.ItemsOrigen.OrderBy(x => x.Origen).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Origen }).ToList();
-                
+
                 var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
-                
+
                 var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
-                
+
                 var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
-               
+
                 var GerenciasItems = items.ItemsGerencia.OrderBy(x => x.Gerencia).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Gerencia }).ToList();
-               
+
                 var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
-                
+
                 var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
-               
+
 
                 ViewBag.Areas = areasItems;
                 ViewBag.Criterios = criteriosItems;
@@ -146,7 +156,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         [HttpPost]
         public async Task<IActionResult> ListarSustentos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
-            var datosTabla = await _listarSustentos.Execute(pagina,rpp,gerencias,areas,criterios,estados,etapas);
+            var datosTabla = await _listarSustentos.Execute(pagina, rpp, gerencias, areas, criterios, estados, etapas);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -156,10 +166,10 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 //Contenido de la tabla
                 foreach (var fila in datosTabla.Registros)
                 {
-                    filasTabla += "<tr>"; 
+                    filasTabla += "<tr>";
                     filasTabla += "<td>" + fila.IdCompromiso + "</td>";
                     filasTabla += "<td><a href=\"#\"></a>" +
-                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.IdCompromiso + ")\">Detalle</button>" +
                         "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Implementar(" + fila.Id + ")\">Implementar</button>" +
                         "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Validar(" + fila.Id + ")\">Validar</button>" +
                         " </td>";
@@ -272,11 +282,11 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     model.Medio_verificacion);
 
 
-                if (model.Id_Responsable1!=null && model.Id_Gerencia!=null)
+                if (model.Id_Responsable1 != null && model.Id_Gerencia != null)
                 {
                     var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable1, (int)model.Id_Gerencia, "1");
                 }
-                if(model.Id_Responsable2 != null && model.Id_Gerencia != null)
+                if (model.Id_Responsable2 != null && model.Id_Gerencia != null)
                 {
                     var idGerenciaUsuario = await _nuevoRegistroGerenciaUsuario.Execute((int)model.Id_Responsable2, (int)model.Id_Gerencia, "1");
                 }
@@ -288,7 +298,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         [HttpPost]
         public async Task<IActionResult> ListarCompromisos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
-            var datosTabla = await _listarCompromisos.Execute(pagina, rpp, gerencias, areas, criterios, estados,etapas);
+            var datosTabla = await _listarCompromisos.Execute(pagina, rpp, gerencias, areas, criterios, estados, etapas);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -354,8 +364,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         {
 
             var datos = await _listarCompromisos.BuscarPorID(idCompromiso);
-            dynamic response =new { Data = datos };
-            
+            dynamic response = new { Data = datos };
+
             return Ok(response);
 
         }
@@ -445,32 +455,32 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         {
             if (ModelState.IsValid)
             {
-                await _editarRegistro.Execute(model.Id, 
-                    model.Codigo, 
-                    model.Id_Criterio, 
-                    model.Detalle_compromiso, 
-                    model.Id_Etapa, 
-                    model.Texto_compromiso, 
-                    model.Id_Origen, 
-                    model.Tomo, 
-                    model.Capitulo, 
-                    model.Seccion, 
-                    model.Pagina, 
-                    model.Resolucion, 
-                    model.Id_Autoridad, 
-                    model.Fecha, 
-                    model.Id_Compromiso, 
-                    model.Id_Aspecto, 
-                    model.Id_Componente, 
-                    model.Id_Gerencia, 
-                    model.Id_Area, 
-                    model.Frecuencia, 
-                    model.Id_Entidad, 
-                    model.Id_Responsable1, 
+                await _editarRegistro.Execute(model.Id,
+                    model.Codigo,
+                    model.Id_Criterio,
+                    model.Detalle_compromiso,
+                    model.Id_Etapa,
+                    model.Texto_compromiso,
+                    model.Id_Origen,
+                    model.Tomo,
+                    model.Capitulo,
+                    model.Seccion,
+                    model.Pagina,
+                    model.Resolucion,
+                    model.Id_Autoridad,
+                    model.Fecha,
+                    model.Id_Compromiso,
+                    model.Id_Aspecto,
+                    model.Id_Componente,
+                    model.Id_Gerencia,
+                    model.Id_Area,
+                    model.Frecuencia,
+                    model.Id_Entidad,
+                    model.Id_Responsable1,
                     model.Id_Responsable2,
                     model.Frecuencia_reporte,
-                    model.Sustentos, 
-                    model.Estado, 
+                    model.Sustentos,
+                    model.Estado,
                     model.Id_Aprueba,
                     model.Medio_verificacion
                     );
@@ -482,50 +492,155 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
 
         public async Task<IActionResult> GetSustento(int id)
         {
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath + "SGA-Marcobre-v2/";
+
             var datos = await _listarSustentos.ObtenerSustento(id);
-            dynamic response = new { Data = datos };
+            var datosCompromiso = await _listarCompromisos.BuscarPorID(datos.IdCompromiso);
+            dynamic response = new { Data = datos, DataCompromiso = datosCompromiso };
             return Json(response);
         }
         [HttpPost]
         public async Task<IActionResult> saveImplementar(ImplementarSustentoModel model)
         {
-            var tempPath = Path.GetTempPath();
-
-            var CMCBTempPath = tempPath + "Compromisos-Marcobre-v2/";
-            if (!Directory.Exists(CMCBTempPath))
+            if (ModelState.IsValid)
             {
-                Directory.CreateDirectory(CMCBTempPath);
+                var nombreEvidencia = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_EvidenciaImplementacionCMCB" + Path.GetExtension(model.Evidencia.FileName);
+                var newFilePath = await CargarDocumento(model.Evidencia, nombreEvidencia);
+                await _editarSustento.ExecuteImplementar(model.Id,
+                    model.Fecha_entrega.ToLongDateString(),
+                    model.Sustento_cumpliento,
+                    newFilePath,
+                    model.Comentario_implementacion
+                    );
+                return RedirectToAction("ResumenSustentos");
             }
-            var filePath = CMCBTempPath + "SustentosCompromisos" + model.Id + "/";
-            Directory.CreateDirectory(CMCBTempPath);
-
-            var fileName = filePath;
-
-            if (model.Evidencia.Length > 0)
-            {
-                var stream = new FileStream(fileName, FileMode.Create);
-                model.Evidencia.CopyTo(stream);
-
-                stream.Flush();
-
-                stream.Close();
-            }
-            var newFilePath = CMCBTempPath + "SustentosCompromisos/" + model.Id + "/" + model.Fecha_entrega.ToString();
-            await _editarSustento.ExecuteImplementar(model.Id, 
-                model.Fecha_entrega.ToLongDateString(), 
-                model.Sustento_cumpliento,
-                newFilePath,
-                model.Comentario_implementacion
-                );
             return RedirectToAction("ResumenSustentos");
+
         }
         [HttpPost]
-        public async Task<IActionResult> saveValidar(int id,DateTime fechaValidar, string ComentarioVerificacion)
+        public async Task<IActionResult> saveValidar(int id, DateTime fechaValidar, string ComentarioVerificacion)
         {
-            var fecha=fechaValidar.Year+"-"+ Convert.ToString(fechaValidar.Month).PadLeft(2, '0') + "-"+fechaValidar.Day;
-            
+            var fecha = fechaValidar.Year + "-" + Convert.ToString(fechaValidar.Month).PadLeft(2, '0') + "-" + fechaValidar.Day;
+
             await _editarSustento.ExecuteVerificar(id, 1, fecha, ComentarioVerificacion, "medio");
             return RedirectToAction("ResumenSustentos");
+        }
+        private string GetContentType(string path)
+        {
+            var types = GetMimeTypes();
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
+        }
+        private Dictionary<string, string> GetMimeTypes()
+        {
+            return new Dictionary<string, string>
+            {
+                {".txt", "text/plain"},
+                {".pdf", "application/pdf"},
+                {".doc", "application/vnd.ms-word"},
+                {".docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"},
+                {".xls", "application/vnd.ms-excel"},
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
+                {".ppt", "application/vnd.ms-powerpoint"},
+                {".pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation"},
+                {".png", "image/png"},
+                {".jpg", "image/jpeg"},
+                {".jpeg", "image/jpeg"},
+                {".csv", "text/csv"}
+            };
+        }
+        private async Task<string> CargarDocumento(IFormFile file, string newFileName)
+        {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                var fileName = filePath + newFileName;
+                if (file.Length > 0)
+                {
+                    var stream = new FileStream(fileName, FileMode.Create);
+                    file.CopyTo(stream);
+
+                    stream.Flush();
+
+                    stream.Close();
+                }
+                var newFilePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/" + newFileName;
+                //await EncryptFileAsync(fileName, encryptedArchiveFile);
+
+                return await UploadFTPFileAsync(newFilePath, newFileName);
+            }
+            else
+                return "Error";
+        }
+        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
+        {
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                try
+                {
+                    var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionCMCBImp);
+                    string host = "", port = "", user = "", pass = "", dir = "";
+                    foreach (var item in serverInfo.Info)
+                    {
+                        switch (item.Key)
+                        {
+                            case "host": host = item.Value; break;
+                            case "port": port = item.Value; break;
+                            case "user": user = item.Value; break;
+                            case "password": pass = item.Value; break;
+                            case "directory": dir = item.Value; break;
+                        }
+                    }
+
+                    using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                    {
+                        sftp.Connect();
+                        if (!sftp.Exists(dir))
+                            sftp.CreateDirectory(dir);
+
+                        sftp.ChangeDirectory(dir);
+                        using (FileStream fs = System.IO.File.OpenRead(path))
+                        {
+                            sftp.UploadFile(fs, newFileName, true);
+                        }
+                        sftp.Dispose();
+                    }
+                    return newFileName;
+                }
+                catch (Exception e)
+                {
+                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
+                    Log.Error(e.Message);
+                    return "Error";
+                }
+            }
+            else
+                return "Error";
         }
     }
 }

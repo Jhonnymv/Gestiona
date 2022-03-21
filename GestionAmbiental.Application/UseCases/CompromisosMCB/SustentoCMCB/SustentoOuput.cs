@@ -24,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB
         public int? IdResponsable2 { get; set; }
         public string Responsable2 { get; set; }
         public int? IdAsesor { get; set; }
-        public string Asesor { get; set; }
+        public string? Asesor { get; set; }
         public string? Estado { get; set; }
         public string? Sustento_cumplimiento { get; set; }
         public string? Detalle_compromiso { get; set; }

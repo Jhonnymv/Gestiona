@@ -1,4 +1,5 @@
 ﻿using GestionAmbiental.Application.Repositories.CompromisosMCB.SustentoCMCB;
+using GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMCB;
 using GestionAmbiental.Domain.Enum;
 using System;
 using System.Collections.Generic;
@@ -10,10 +11,12 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
     public class EditarRegistro : IEditarRegistro
     {
         private readonly ISustentoReadOnlyRepository _sustentoReadOnlyRepository;
+        private readonly ICompromisoReadOnlyRepository _compromisoReadOnlyRepository;
 
-        public EditarRegistro(ISustentoReadOnlyRepository sustentoReadOnlyRepository)
+        public EditarRegistro(ISustentoReadOnlyRepository sustentoReadOnlyRepository, ICompromisoReadOnlyRepository compromisoReadOnlyRepository)
         {
             _sustentoReadOnlyRepository = sustentoReadOnlyRepository ?? throw new ArgumentNullException(nameof(sustentoReadOnlyRepository));
+            _compromisoReadOnlyRepository= compromisoReadOnlyRepository ?? throw new ArgumentNullException(nameof(compromisoReadOnlyRepository));
         }
         /*
          ,int Id_Compromiso
@@ -33,7 +36,8 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
          */
         public async Task Execute(int Id, int Id_Compromiso, string Fecha_limite, string Fecha_entrega, string Fecha_validacion, int Id_Responsable1, int Id_Responsable2, int Id_Asesor, string Estado, string Sustento_cumplimiento, string Detalle_compromiso, string Evidencia, string Comentario_implementacion, string Comentario_verificacion, string Medio_verificacion)
         {
-            var input = await _sustentoReadOnlyRepository.ObtenerSustento(Id);
+            var input = new Domain.CompromisosMCB.SustentoCMCB();
+            input.Id = Id;
 
             input.CompromisoCMCB = new Domain.CompromisosMCB.CompromisoCMCB { Id = Id_Compromiso};
             input.Responsable1 = new Domain.ValueObjects.Usuario { IdUsuario = Id_Responsable1};
@@ -60,9 +64,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
         }
 
         public async Task ExecuteImplementar(int Id, string Fecha_entrega, string Sustento_cumplimiento, string Evidencia, string Comentario_implementacion)
-        {
-            var input = await _sustentoReadOnlyRepository.ObtenerSustento(Id);
-
+        {           
+            var input = new Domain.CompromisosMCB.SustentoCMCB();
+            input.Id = Id;
             input.Sustento_cumplimiento = Sustento_cumplimiento;
             input.Evidencia = Evidencia;
             input.Comentario_implementacion = Comentario_implementacion;
@@ -74,21 +78,26 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
             await _sustentoReadOnlyRepository.EditarSustento(input);
         }
 
-        public async Task ExecuteVerificar(int Id, 
+        public async Task ExecuteVerificar(int Id,
             int Id_Asesor, 
             string Fecha_validacion, 
             string Comentario_verificacion,
             string Medio_verificacion
             )
         {
-            var input = await _sustentoReadOnlyRepository.ObtenerSustento(Id);
+            var datSustento = await _sustentoReadOnlyRepository.ObtenerSustento(Id);
+
+            var input = new Domain.CompromisosMCB.SustentoCMCB();
+            input.Id = Id;
+            input.Fecha_limite = Convert.ToDateTime(datSustento.Fecha_limite);
 
             input.Asesor = new Domain.ValueObjects.Usuario { IdUsuario = Id_Asesor };
+            input.CompromisoCMCB = await _compromisoReadOnlyRepository.ObtenerCompromiso(datSustento.CompromisoCMCB.Id);
             input.Comentario_verificacion = Comentario_verificacion;
             input.Medio_verificacion = Medio_verificacion;
             input.Estado = EstadosSustento.Verificado.ToString();
 
-            if (Fecha_validacion == null && Fecha_validacion.Length > 0)
+            if (Fecha_validacion != null && Fecha_validacion.Length > 0)
                 input.Fecha_validacion = Convert.ToDateTime(Fecha_validacion);
 
             await _sustentoReadOnlyRepository.EditarSustento(input);
@@ -97,10 +106,10 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.Edit
             var inputNuevoSustento = new Domain.CompromisosMCB.SustentoCMCB
             {
                 CompromisoCMCB = input.CompromisoCMCB,
-                Responsable1 = input.Responsable1,
-                Responsable2 = input.Responsable2,
-                Detalle_compromiso = input.Detalle_compromiso,
-                Medio_verificacion = input.Medio_verificacion,
+                Responsable1 = input.CompromisoCMCB.Responsable1,
+                Responsable2 = input.CompromisoCMCB.Responsable2,
+                Detalle_compromiso = input.CompromisoCMCB.Detalle_compromiso,
+                Medio_verificacion = input.CompromisoCMCB.Medio_verificacion,
                 Estado = EstadosSustento.Registrado.ToString()
             };
             switch (input.CompromisoCMCB.Frecuencia_reporte)

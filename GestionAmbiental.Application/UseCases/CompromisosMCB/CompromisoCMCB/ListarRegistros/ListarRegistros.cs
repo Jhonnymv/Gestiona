@@ -115,9 +115,38 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
             var compromiso = await _compromisoReadOnlyRepository.BuscarPorID(idCompromiso);
             var ouput = new CompromisoOuput();
             ouput.Id = compromiso.Id;
-            ouput.Codigo = compromiso.Codigo;
-            ouput.Texto_compromiso = compromiso.Texto_compromiso;
+            //ouput.Codigo = compromiso.Codigo;
+            //ouput.Texto_compromiso = compromiso.Texto_compromiso;
 
+            //if (compromiso.OrigenCMCB != null)
+            //{
+            //    ouput.IdOrigen = compromiso.OrigenCMCB.Id;
+            //    ouput.NomOrigen = compromiso.OrigenCMCB.Origen;
+            //};
+            //ouput.Tomo = compromiso.Tomo;
+            //ouput.Capitulo = compromiso.Capitulo;
+            //ouput.Seccion = compromiso.Seccion;
+            //ouput.Pagina = compromiso.Pagina;
+            //ouput.Resolucion = compromiso.Resolucion;
+            //if (compromiso.AutoridadCMCB != null)
+            //{
+            //    ouput.IdAutoridad = compromiso.AutoridadCMCB.Id;
+            //    ouput.NomAutoridad = compromiso.AutoridadCMCB.Autoridad;
+            //};
+            //ouput.Fecha = compromiso.Fecha;
+            ouput.Codigo = compromiso.Codigo;
+            if (compromiso.CriterioCMCB != null)
+            {
+                ouput.IdCriterio = compromiso.CriterioCMCB.Id;
+                ouput.NomCriterio = compromiso.CriterioCMCB.Criterio;
+            }
+            ouput.Detalle_compromiso = compromiso.Detalle_compromiso;
+            if (compromiso.EtapaCMCB != null)
+            {
+                ouput.IdEtapa = compromiso.EtapaCMCB.Id;
+                ouput.NomEtapa = compromiso.EtapaCMCB.Etapa;
+            }
+            ouput.Texto_compromiso = compromiso.Texto_compromiso;
             if (compromiso.OrigenCMCB != null)
             {
                 ouput.IdOrigen = compromiso.OrigenCMCB.Id;
@@ -134,6 +163,46 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
                 ouput.NomAutoridad = compromiso.AutoridadCMCB.Autoridad;
             };
             ouput.Fecha = compromiso.Fecha;
+            if (compromiso.AspectoCMCB != null)
+            {
+                ouput.IdAspecto = compromiso.AspectoCMCB.Id;
+                ouput.NomAspecto = compromiso.AspectoCMCB.Aspecto;
+            }
+            if (compromiso.ComponenteCMCB != null)
+            {
+                ouput.IdComponente = compromiso.ComponenteCMCB.Id;
+                ouput.NomComponente = compromiso.ComponenteCMCB.Componente;
+            }
+            if (compromiso.GerenciaCMCB != null)
+            {
+                ouput.IdGerencia = compromiso.GerenciaCMCB.Id;
+                ouput.NomGerencia = compromiso.GerenciaCMCB.Gerencia;
+            };
+            if (compromiso.AreaCMCB != null)
+            {
+                ouput.IdArea = compromiso.AreaCMCB.Id;
+                ouput.NomArea = compromiso.AreaCMCB.Area;
+            };
+            ouput.Frecuencia = compromiso.Frecuencia;
+
+            if (compromiso.Responsable1 != null)
+            {
+                ouput.IdResponsable1 = compromiso.Responsable1.IdUsuario;
+                ouput.NomResponsable1 = compromiso.Responsable1.Nombres + " - " + compromiso.Responsable1.DNI;
+            };
+            if (compromiso.Responsable2 != null)
+            {
+                ouput.IdResponsable2 = compromiso.Responsable2.IdUsuario;
+                ouput.NomResponsable2 = compromiso.Responsable2.Nombres + " - " + compromiso.Responsable2.DNI;
+            };
+            if (compromiso.Aprueba != null)
+            {
+                ouput.Aprueba = compromiso.Aprueba.IdUsuario;
+                ouput.NomAprueba = compromiso.Aprueba.Nombres + " - " + compromiso.Responsable2.DNI;
+            };
+            ouput.Frecuencia_reporte = compromiso.Frecuencia_reporte;
+            ouput.Sustentos = compromiso.Sustentos;
+            ouput.Estado = compromiso.Estado;
 
 
             return ouput;

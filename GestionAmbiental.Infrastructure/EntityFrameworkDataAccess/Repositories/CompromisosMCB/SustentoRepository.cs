@@ -38,22 +38,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task EditarSustento(SustentoCMCB sustentoCMCB)
         {
-            var entity = new Entities.CompromisosMCB.SustentoCMCB {                
-                Id_Compromiso = sustentoCMCB.CompromisoCMCB.Id,
-                Fecha_limite = sustentoCMCB.Fecha_limite,
-                Id_Responsable1 = sustentoCMCB.Responsable1.IdUsuario,
-                Id_Responsable2 = sustentoCMCB.Responsable2.IdUsuario,
-                Id_Asesor = sustentoCMCB.Asesor.IdUsuario,
-                Detalle_compromiso = sustentoCMCB.Detalle_compromiso,
-                Medio_verificacion = sustentoCMCB.Medio_verificacion,
-                Estado = sustentoCMCB.Estado,
-                Comentario_implementacion = sustentoCMCB.Comentario_implementacion,
-                Comentario_verificacion = sustentoCMCB.Comentario_verificacion,
-                Evidencia = sustentoCMCB.Evidencia,
-                Sustento_cumplimiento = sustentoCMCB.Sustento_cumplimiento,
-                Fecha_validacion = sustentoCMCB.Fecha_validacion,
-                Fecha_entrega = sustentoCMCB.Fecha_entrega                
-            };
+            var entity = await _context.SustentoCMCB.FindAsync(sustentoCMCB.Id);
+
+            entity.Id_Compromiso = sustentoCMCB.CompromisoCMCB != null ? sustentoCMCB.CompromisoCMCB.Id : entity.Id_Compromiso;
+            entity.Fecha_limite = sustentoCMCB.Fecha_limite != null ? sustentoCMCB.Fecha_limite:entity.Fecha_limite;
+            entity.Id_Responsable1 = sustentoCMCB.Responsable1 != null ? sustentoCMCB.Responsable1.IdUsuario : entity.Id_Responsable1;
+            entity.Id_Responsable2 = sustentoCMCB.Responsable2 != null ? sustentoCMCB.Responsable2.IdUsuario : entity.Id_Responsable2;
+            entity.Id_Asesor = sustentoCMCB.Asesor != null ? sustentoCMCB.Asesor.IdUsuario : entity.Id_Asesor;
+            entity.Detalle_compromiso = sustentoCMCB.Detalle_compromiso != null ? sustentoCMCB.Detalle_compromiso: entity.Detalle_compromiso;
+            entity.Medio_verificacion = sustentoCMCB.Medio_verificacion != null ? sustentoCMCB.Medio_verificacion : entity.Medio_verificacion;
+            entity.Estado = sustentoCMCB.Estado != null ? sustentoCMCB.Estado : entity.Estado;
+            entity.Comentario_implementacion = sustentoCMCB.Comentario_implementacion != null ? sustentoCMCB.Comentario_implementacion : entity.Comentario_implementacion;
+            entity.Comentario_verificacion = sustentoCMCB.Comentario_verificacion != null ? sustentoCMCB.Comentario_verificacion : entity.Comentario_verificacion;
+            entity.Evidencia = sustentoCMCB.Evidencia != null ? sustentoCMCB.Evidencia : entity.Evidencia;
+            entity.Sustento_cumplimiento = sustentoCMCB.Sustento_cumplimiento != null ? sustentoCMCB.Sustento_cumplimiento : entity.Sustento_cumplimiento;
+            entity.Fecha_validacion = sustentoCMCB.Fecha_validacion != null ? sustentoCMCB.Fecha_validacion : entity.Fecha_validacion;
+            entity.Fecha_entrega = sustentoCMCB.Fecha_entrega != null ? sustentoCMCB.Fecha_entrega : entity.Fecha_entrega;
+
 
             _context.SustentoCMCB.Update(entity);
             await _context.SaveChangesAsync();

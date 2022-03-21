@@ -47,13 +47,55 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB
         public string? NomAprueba { get; set; }
         public string? Medio_verificacion { get; set; }
 
-        //public CompromisoOuput(Domain.CompromisosMCB.CompromisoCMCB compromiso)
-        //{
-        //    Id = compromiso.Id;
-        //    Codigo = compromiso.Codigo;
-        //    IdCriterio = compromiso.CriterioCMCB.Id;
-        //    NomCriterio = compromiso.CriterioCMCB.Criterio;
+        public CompromisoOuput()
+        {
 
-        //}
+        }
+
+        public CompromisoOuput(Domain.CompromisosMCB.CompromisoCMCB compromiso)
+        {
+            Id = compromiso.Id;
+            Codigo = compromiso.Codigo;
+            IdCriterio = compromiso.CriterioCMCB.Id;
+            NomCriterio = compromiso.CriterioCMCB.Criterio;
+            Detalle_compromiso = compromiso.Detalle_compromiso;
+            IdEtapa=compromiso.EtapaCMCB.Id;
+            NomEtapa=compromiso.EtapaCMCB.Etapa;
+            Texto_compromiso= compromiso.Texto_compromiso;
+            IdOrigen=compromiso.OrigenCMCB.Id;
+            NomOrigen = compromiso.OrigenCMCB.Origen;
+            Tomo = compromiso.Tomo;
+            Capitulo=compromiso.Capitulo;
+            Seccion=compromiso.Seccion;
+            Pagina =compromiso.Pagina;
+            Resolucion =compromiso.Resolucion;
+            IdAutoridad = compromiso.AutoridadCMCB.Id;
+            NomAutoridad = compromiso.AutoridadCMCB.Autoridad;
+            Fecha = compromiso.Fecha;
+            IdCompromiso = compromiso.Compromiso.Id;
+            NomCompromiso = compromiso.Compromiso.Codigo;
+            IdAspecto = compromiso.AspectoCMCB.Id;
+            NomAspecto = compromiso.AspectoCMCB.Aspecto;
+            IdCompromiso = compromiso.ComponenteCMCB.Id;
+            NomComponente = compromiso.ComponenteCMCB.Componente;
+            IdGerencia = compromiso.GerenciaCMCB.Id;
+            NomGerencia = compromiso.GerenciaCMCB.Gerencia;
+            IdArea = compromiso.AreaCMCB.Id;
+            NomArea = compromiso.AreaCMCB.Area;
+            Frecuencia = compromiso.Frecuencia;
+
+            IdResponsable1 = compromiso.Responsable1?.IdUsuario;
+            NomResponsable1 = compromiso.Responsable1?.Nombres + " " + compromiso.Responsable1?.Apellidos;
+            IdResponsable2 = compromiso.Responsable2?.IdUsuario;
+            NomResponsable2 = compromiso.Responsable2?.Nombres + " " + compromiso.Responsable2?.Apellidos;
+            Frecuencia_reporte = compromiso.Frecuencia_reporte;
+            Sustentos= compromiso.Sustentos;
+            Estado = compromiso.Estado;
+            Aprueba = compromiso.Aprueba.IdUsuario;
+            NomAprueba = compromiso.Aprueba?.Nombres + " " + compromiso.Aprueba?.Apellidos;
+            Medio_verificacion = compromiso.Medio_verificacion;
+
+
+        }
     }
 }

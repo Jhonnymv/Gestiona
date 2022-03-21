@@ -109,7 +109,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             {
                 compromisos = compromisos.Where(x => estados.Contains(x.Estado)).ToList();
             }
-            
+
             //Nueva lista en blanco
             var output = new List<Domain.CompromisosMCB.CompromisoCMCB>();
 
@@ -138,9 +138,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     CriterioCMCB = item.Id_Criterio != null ? new Domain.CompromisosMCB.CriterioCMCB { Id = (int)item.Id_Criterio, Criterio = dataCriterio.Criterio, Detalle = dataCriterio.Detalle } : null,
                     Detalle_compromiso = item.Detalle_compromiso,
                     EtapaCMCB = item.Id_Etapa != null ? new Domain.CompromisosMCB.EtapaCMCB { Id = (int)item.Id_Etapa, Etapa = dataEtapa.Etapa } : null,
-                    Texto_compromiso=item.Texto_compromiso,
-                    OrigenCMCB= item.Id_Origen != null ? new Domain.CompromisosMCB.OrigenCMCB { Id = (int)item.Id_Origen, Origen = dataOrigen.Origen } : null,
-                    Tomo=item.Tomo,
+                    Texto_compromiso = item.Texto_compromiso,
+                    OrigenCMCB = item.Id_Origen != null ? new Domain.CompromisosMCB.OrigenCMCB { Id = (int)item.Id_Origen, Origen = dataOrigen.Origen } : null,
+                    Tomo = item.Tomo,
                     Capitulo = item.Capitulo,
                     Seccion = item.Seccion,
                     Pagina = item.Pagina,
@@ -159,7 +159,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Sustentos = item.Sustentos,
                     Estado = item.Estado,
                     Aprueba = item.Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)item.Id_Responsable2, Nombres = dataAprueba.Nombres, DNI = dataAprueba.DNI } : null,
-                    Medio_verificacion=item.Medio_verificacion
+                    Medio_verificacion = item.Medio_verificacion
                 });
             }
             //retornar nueva lista
@@ -169,14 +169,41 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             //Consultar registros
             var data = await _context.CompromisoCMCB.FindAsync(Id);
+
+            var dataCriterio = await _context.CriterioCMCB.FindAsync(data.Id_Criterio);
+            var dataEtapa = await _context.EtapaCMCB.FindAsync(data.Id_Etapa);
             var dataOrigen = await _context.OrigenCMCB.FindAsync(data.Id_Origen);
             var dataAutoridad = await _context.AutoridadCMCB.FindAsync(data.Id_Autoridad);
+
+            var dataAspecto = await _context.AspectoCMCB.FindAsync(data.Id_Aspecto);
+            var dataComponente = await _context.ComponenteCMCB.FindAsync(data.Id_Componente);
+            var dataGerencia = await _context.GerenciaCMCB.FindAsync(data.Id_Gerencia);
+            var dataArea = await _context.AreaCMCB.FindAsync(data.Id_Area);
+            var dataResp1 = await _context.Usuarios.FindAsync(data.Id_Responsable1);
+            var dataResp2 = await _context.Usuarios.FindAsync(data.Id_Responsable2);
+            var dataAprueba = await _context.Usuarios.FindAsync(data.Id_Aprueba);
+
             //Nueva lista en blanco
             var output = new Domain.CompromisosMCB.CompromisoCMCB
             {
                 Id = Id,
+                //Codigo = data.Codigo,
+                //Detalle_compromiso = data.Detalle_compromiso,
+                //Texto_compromiso = data.Texto_compromiso,
+                //OrigenCMCB = data.Id_Origen != null ? new Domain.CompromisosMCB.OrigenCMCB { Id = (int)data.Id_Origen, Origen = dataOrigen.Origen } : null,
+                //Tomo = data.Tomo,
+                //Capitulo = data.Capitulo,
+                //Seccion = data.Seccion,
+                //Pagina = data.Pagina,
+                //Resolucion = data.Resolucion,
+                //AutoridadCMCB = data.Id_Autoridad != null ? new Domain.CompromisosMCB.AutoridadCMCB { Id = (int)data.Id_Autoridad, Autoridad = dataAutoridad.Autoridad } : null,
+                //Fecha = data.Fecha,
+                //Estado=data.Estado,
+                //OrigenCMCB = new Domain.CompromisosMCB.OrigenCMCB { Id = (int)data.Id_Origen },
                 Codigo = data.Codigo,
+                CriterioCMCB = data.Id_Criterio != null ? new Domain.CompromisosMCB.CriterioCMCB { Id = (int)data.Id_Criterio, Criterio = dataCriterio.Criterio, Detalle = dataCriterio.Detalle } : null,
                 Detalle_compromiso = data.Detalle_compromiso,
+                EtapaCMCB = data.Id_Etapa != null ? new Domain.CompromisosMCB.EtapaCMCB { Id = (int)data.Id_Etapa, Etapa = dataEtapa.Etapa } : null,
                 Texto_compromiso = data.Texto_compromiso,
                 OrigenCMCB = data.Id_Origen != null ? new Domain.CompromisosMCB.OrigenCMCB { Id = (int)data.Id_Origen, Origen = dataOrigen.Origen } : null,
                 Tomo = data.Tomo,
@@ -186,7 +213,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Resolucion = data.Resolucion,
                 AutoridadCMCB = data.Id_Autoridad != null ? new Domain.CompromisosMCB.AutoridadCMCB { Id = (int)data.Id_Autoridad, Autoridad = dataAutoridad.Autoridad } : null,
                 Fecha = data.Fecha,
-                //OrigenCMCB = new Domain.CompromisosMCB.OrigenCMCB { Id = (int)data.Id_Origen },
+
+                AspectoCMCB = data.Id_Aspecto != null ? new Domain.CompromisosMCB.AspectoCMCB { Id = (int)data.Id_Aspecto, Aspecto = dataAspecto.Aspecto } : null,
+                ComponenteCMCB = data.Id_Componente != null ? new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)data.Id_Componente, Componente = dataComponente.Componente } : null,
+                GerenciaCMCB = data.Id_Gerencia != null ? new Domain.CompromisosMCB.GerenciaCMCB { Id = (int)data.Id_Gerencia, Gerencia = dataGerencia.Gerencia, Descripcion = dataGerencia.Descripcion } : null,
+                AreaCMCB = data.Id_Area != null ? new Domain.CompromisosMCB.AreaCMCB { Id = (int)data.Id_Area, Area = dataArea.Area } : null,
+                Frecuencia = data.Frecuencia,
+                Responsable1 = data.Id_Responsable1 != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)data.Id_Responsable1, Nombres = dataResp1.Nombres, DNI = dataResp1.DNI } : null,
+                Responsable2 = data.Id_Responsable2 != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)data.Id_Responsable2, Nombres = dataResp2.Nombres, DNI = dataResp2.DNI } : null,
+                Frecuencia_reporte = data.Frecuencia_reporte,
+                Sustentos = data.Sustentos,
+                Estado = data.Estado,
+                Aprueba = data.Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)data.Id_Responsable2, Nombres = dataAprueba.Nombres, DNI = dataAprueba.DNI } : null,
+                Medio_verificacion = data.Medio_verificacion
             };
             //retornar nueva lista
             return output;
@@ -211,7 +250,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 entity.Sustentos = input.Sustentos;
                 entity.Estado = input.Estado;
             }
-            
+
             if (input.CriterioCMCB != null)
             {
                 entity.Id_Criterio = input.CriterioCMCB.Id;
@@ -295,7 +334,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 GerenciaCMCB = data.Id_Gerencia != null ? new Domain.CompromisosMCB.GerenciaCMCB { Id = (int)data.Id_Gerencia, Gerencia = dataGerencia.Gerencia, Descripcion = dataGerencia.Descripcion } : null,
                 AreaCMCB = data.Id_Area != null ? new Domain.CompromisosMCB.AreaCMCB { Id = (int)data.Id_Area, Area = dataArea.Area } : null,
                 Frecuencia = data.Frecuencia,
-                Responsable1 = data.Id_Responsable1 != null ? new Domain.ValueObjects.Usuario {
+                Responsable1 = data.Id_Responsable1 != null ? new Domain.ValueObjects.Usuario
+                {
                     IdUsuario = dataResponsable1.Id_Usuario,
                     Nombres = dataResponsable1.Nombres,
                     Apellidos = dataResponsable1.Apellidos,

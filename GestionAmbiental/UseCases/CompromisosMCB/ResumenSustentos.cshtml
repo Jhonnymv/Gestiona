@@ -362,7 +362,7 @@
                                     <div class="col-12 col-sm-4">
                                         <label asp-for="Fecha_entrega">Fecha Registro</label>
                                         <span class="text-danger" asp-validation-for="Fecha_entrega"></span>
-                                        <input id="fechaRegistro" type="date" class="form-control" asp-for="Fecha_entrega" />
+                                        <input id="fechaRegistro" type="date" class="form-control" asp-for="Fecha_entrega" readonly />
                                     </div>
                                     <div class="col-12 col-sm-8">
                                         <label asp-for="Evidencia">Evidencia</label>
@@ -384,7 +384,7 @@
                                     <div class="button-container">
                                         <div></div>
                                         <div id="bntsDetalle">
-                                           @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
+                                            @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
                                             <button type="submit" class="btn btn-mc-success">Guardar</button>
                                         </div>
                                     </div>
@@ -397,15 +397,16 @@
         </div>
     </div>
 </div>
-<!--Modal Implementación-->
-<div class="modal fade" id="modal_validar_sustento" tabindex="-1" aria-labelledby="compromisoModal" aria-hidden="true">
+<!--Modal Validar-->
+
+<div class="modal fade" id="modal_validar_sustento" tabindex="-1" aria-labelledby="validarModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-menu modal-compromisos">
             <div class="modal-content">
                 <div class="compromisos">
                     <div class="image-header-container">
                         <div class="header-title compromisos-opacity-color">
-                            <h3>Validar sustento</h3>
+                            <h3>Reporte de sustento</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -413,25 +414,43 @@
                     </div>
                 </div>
                 <div class="modal-body">
+
                     <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
-                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveValidar" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
-                                <input id="idValidar" type="hidden" name="id"/>
+                            <form class="custom-form details-container w-100" asp-controller="CompromisosMCB" asp-action="SaveValidar" method="post" enctype="multipart/form-data" autocomplete="off">
                                 <div class="row">
-                                    <div class="col-12 ">
-                                        <label for="fechaValidar">Fecha Registro</label>
-                                        <input id="fechaValidar" name="fechaValidar" type="date" class="form-control" />
+                                    <input id="idValidar" type="hidden" name="id" />
+                                    <input id="idCompromisoValidar" type="hidden" name="Id_Compromiso" />
+                                    <div class="col-12">
+                                        <iframe id="iframeVerificacion" height="100%" width="100%"></iframe>
                                     </div>
-                                    <div class="col-12 ">
+                                    <div class="col-12">
+                                        <label for="textoCompromiso_validar">Texto del Compromiso</label>
+                                        <textarea id="textoCompromiso_validar" class="form-control" readonly></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="sustentoCumplimiento_validar">Sustento de cumplimiento</label>
+                                        <textarea id="sustentoCumplimiento_validar" class="form-control" readonly></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="comentarioCumplimiento_validar">Comentario Cumplimiento</label>
+                                        <textarea id="comentarioCumplimiento_validar" class="form-control" readonly></textarea>
+                                    </div>
+                                    <hr />
+                                    <div class="col-12 col-sm-4">
+                                        <label for="fechaValidar">Fecha Registro</label>
+                                        <input id="fechaValidar" name="fechaValidar" type="date" class="form-control" readonly />
+                                    </div>
+                                    <div class="col-12 col-sm-8">
                                         <label for="ComentarioVerificacion">Comentario Verificación</label>
                                         <textarea id="ComentarioVerificacion" name="ComentarioVerificacion" class="form-control"></textarea>
                                     </div>
                                 </div>
-                                 <div class="row input_container">
+                                <div class="row input_container">
                                     <div class="button-container">
                                         <div></div>
                                         <div id="bntsDetalle">
-                                           @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
+                                            @* <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>*@
                                             <button type="submit" class="btn btn-mc-success">Guardar</button>
                                         </div>
                                     </div>
@@ -517,6 +536,7 @@
             success:(response)=>{
                 $("#idImplementacion").val(response.data.id)
                 $("#fechaRegistro").val(fechaOutput)
+                
             }
         });
         $('#modal_implementacion_sustento').modal('show')
@@ -532,9 +552,14 @@
             },
             traditional:true,
             success:(response)=>{
-                console.log(response.data)
+                console.log(response)
                 $("#idValidar").val(response.data.id)
                 $("#fechaValidar").val(fechaOutput)
+                $("#idCompromisoValidar").val(response.data.idCompromiso)
+                //$("#iframeVerificacion").prop('src',"D:\\VSMarCobre\\electrodata\\CompromisosMCB\\Implementacion\\" +response.data.evidencia)
+                $("#comentarioCumplimiento_validar").html(response.data.comentario_implementacion)
+                $("#sustentoCumplimiento_validar").html(response.data.sustento_cumplimiento)
+                $("#textoCompromiso_validar").html(response.dataCompromiso.texto_compromiso)
             }
         });
         $('#modal_validar_sustento').modal('show')
