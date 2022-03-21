@@ -494,6 +494,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public async Task<IActionResult> GetSustento(int id)
         {
             var datos = await _listarSustentos.ObtenerSustento(id);
+            //var previewFile = await PreviewFile(datos.Evidencia);
             var datosCompromiso = await _listarCompromisos.BuscarPorID(datos.IdCompromiso);
             dynamic response = new { Data = datos, DataCompromiso = datosCompromiso };
             return Json(response);
@@ -639,6 +640,128 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             }
             else
                 return "Error";
+        }
+        public async Task<IActionResult> PreviewFile(string fileName)
+        {
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                dynamic response;
+                try
+                {
+                    var nombreDoc = fileName;
+
+                    var downloadedFile = await DownloadFTPFileAsync(fileName, nombreDoc);
+
+                    var docsDownloadedPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Temp\DownloadedDocs");
+                    if (Directory.Exists(docsDownloadedPath))
+                    {
+                        Directory.Delete(docsDownloadedPath, true);
+                        Directory.CreateDirectory(Path.Combine(docsDownloadedPath, userInfo.NombreUsuario));
+                    }
+                    var fileStreamDownloaded = new FileStream(downloadedFile, FileMode.Open);
+                    var docPath = Path.Combine(docsDownloadedPath, userInfo.NombreUsuario, nombreDoc);
+
+                    using (var fileStream = new FileStream(docPath, FileMode.Create))
+                    {
+                        await fileStreamDownloaded.CopyToAsync(fileStream);
+                        fileStream.Close();
+                    }
+                    fileStreamDownloaded.Close();
+                    response = new
+                    {
+                        result = "Ok",
+                        path = "/Temp/DownloadedDocs/" + userInfo.NombreUsuario + "/" + nombreDoc,
+                        extension = Path.GetExtension(nombreDoc)
+                    };
+                    return Ok(response);
+                }
+                catch (Exception e)
+                {
+                    response = new
+                    {
+                        result = "Error",
+                        message = "No se encontró el archivo: " + e.Message
+                    };
+                    return Ok(response);
+                }
+            }
+        }
+        public IActionResult DownloadPreviewFile(string path)
+        {
+            var completePath = _hostingEnvironment.WebRootPath + "/" + path;
+            FileStream stream = new FileStream(completePath, FileMode.Open);
+            return File(stream, GetContentType(path), Path.GetFileName(path));
+        }
+        public async Task<string> DownloadFTPFileAsync(string fileName, string nombreDoc)
+        {
+            try
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionCMCBImp);
+                string host = "", port = "", user = "", pass = "", dir = "";
+                foreach (var item in serverInfo.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
+                    }
+                }
+                /* Save file in application server to decrypt */
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre/";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
+                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                if (Directory.Exists(archivePath))
+                {
+                    Directory.Delete(archivePath, true);
+                }
+
+                Directory.CreateDirectory(filePath);
+                Directory.CreateDirectory(archivePath);
+
+                /*New file downloaded name*/
+                var downloadedFilePath = archivePath + fileName;
+                /*Copy data to new temp file*/
+                var fileStream = System.IO.File.Create(downloadedFilePath);
+                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                {
+                    sftp.Connect();
+                    sftp.ChangeDirectory(dir);
+
+                    //Descargar archivo de sftp a nuevo archivo temporal creado
+                    sftp.DownloadFile(nombreDoc, fileStream);
+
+                    sftp.Dispose();
+                }
+                fileStream.Close();
+
+                return downloadedFilePath;
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
         }
         [HttpPost]
         public async Task<IActionResult> CargaDataExcel(CargaExcelModel model)
