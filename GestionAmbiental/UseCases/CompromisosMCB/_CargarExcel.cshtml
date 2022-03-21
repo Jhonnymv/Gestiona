@@ -1,0 +1,113 @@
+﻿@model GestionAmbiental.UseCases.CompromisosMCB.CargaExcelModel
+<div class="modal fade" tabindex="-1" id="modalCargarExcel" aria-labelledby="modalCargarExcel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-menu modal-inspecciones">
+			<div class="modal-content">
+				<div class="inspection">
+					<div class="image-header-container"
+						 style="background-image: url(&quot;/img/back-inspection.png&quot;);">
+						<div class="header-title inspection-opacity-color">
+							<h3>Cargar Datos desde Excel</h3><img src="/img/logo-white.png" alt="Logo Marcobre">
+						</div><button type="button" class="btn-close" data-bs-dismiss="modal"
+									  aria-label="Close"></button>
+					</div>
+				</div>
+				<div class="modal-body">
+					<form class="custom-form w-100" id="form_cargar_excel" asp-action="CargaDataExcel" asp-controller="CompromisosMCB" method="post" enctype="multipart/form-data" autocomplete="off">
+						<div class="col-12 col-xl-8">
+							<div class="row input_container">
+								<div class="col-12 col-sm-6 col-lg-6">
+									<label asp-for="ColumnaInicio">Número de la columna de códigos</label>
+									<span class="text-danger" asp-validation-for="ColumnaInicio"></span>
+									<input type="number" class="form-control" asp-for="ColumnaInicio" value="1" />
+								</div>
+								<div class="col-12 col-sm-6 col-lg-6">
+									<label asp-for="FilaInicio">Número de la primera fila de los datos</label>
+									<span class="text-danger" asp-validation-for="FilaInicio"></span>
+									<input type="number" class="form-control" asp-for="FilaInicio" value="3" />
+								</div>
+							</div>
+							<div class="row input_container">
+								<div class="col-12 col-sm-6 col-lg-6">
+									<label asp-for="FilaInicio">Nombre de la página en la que se encuentran los datos Excel</label>
+									<span class="text-danger" asp-validation-for="Pagina"></span>
+									<input type="text" class="form-control" asp-for="Pagina" value="Sheet1" />
+								</div>
+								<div class="col-12 col-sm-6 col-lg-6">
+									<label asp-for="Excel">Archivo Excel</label>
+									<span class="text-danger field-validation-error" data-valmsg-for="Excel" data-valmsg-replace="true">
+										<span id="danger_excel" class="" asp-validation-for="Excel"></span>
+									</span>
+									<input type="file" class="form-control" asp-for="Excel" accept=".xls, .xlsx">
+								</div>
+							</div>
+							@* <div class="row">
+								<div class="col-12 col-sm-12 col-lg-12">
+								@if (ViewBag.Result != null)
+								{
+								@if (ViewBag.Result == "Success")
+								{
+								<div class="alert alert-success" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Message)</div>
+								}
+								else
+								{
+								<div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Message.Replace("\n", "<br/>"))</div>
+								}
+								}
+								</div>
+								</div>*@
+
+							<div class="row">
+								<div class="button-container">
+									<div>
+									</div>
+									<div>
+										<button class="btn btn-mc-success" type="button" onclick="CargarExcel()">Registrar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@*@section Scripts{
+	<script type="text/javascript">
+	var resolucionesAct = JSON.parse('@Html.Raw(ViewBag.ResolucionesAct)');
+	$("#Excel").change(function () {
+	$("#danger_excel").html("");
+	//Validacion del tamaño del archivo
+	var archivos = $("#Excel").get(0).files;
+
+	if (archivos.length > 0) {
+	var filesName = "";
+	for (var i = 0; i < archivos.length; i++) {
+	switch (this.value.match(/\.([^\.]+)$/)[1]) {
+	case 'xls':
+	case 'xlsx':
+	filesName += archivos[i].name + "<br/>";
+	break;
+	default:
+	this.value = '';
+	var filesname = this.files.length + " Archivos";
+	$("#files_name").text(filesname);
+	$("#danger_excel").html("No se admiten este tipo de archivos<br/>");
+	return;
+	}
+	}
+	filesName.length > 0 ? $("#files_name").html(filesName) : null;
+	}
+	});
+	$("#IdResolucion").on('change', function () {
+	var resol = $("#IdResolucion").val();
+	for (var i = 0; i < resolucionesAct.length; i++) {
+	if (resolucionesAct[i].IdResolucionConsumoAgua == resol) {
+	$("#Resolucion").val(resolucionesAct[i].Resolucion);
+	return;
+	}
+	}
+	});
+	</script>
+	}*@
