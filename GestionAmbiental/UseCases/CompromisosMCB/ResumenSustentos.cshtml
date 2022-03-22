@@ -423,6 +423,7 @@
                                     <input id="idCompromisoValidar" type="hidden" name="Id_Compromiso" />
                                     <div class="col-12">
                                         <div id="viewPDF"></div>
+                                        <img id="viewImage">
                                     </div>
                                     <div class="col-12">
                                         <label for="textoCompromiso_validar">Texto del Compromiso</label>
@@ -578,15 +579,18 @@
             success:(response)=>{
                 if (response.result == "Ok") {
                             rutaArchivo = response.path
-                            //$("#modal_preview_pdf").modal("show");
-                            if (response.extension == ".pdf" || response.extension == ".jpg"|| response.extension == ".png"|| response.extension == ".jpeg"){ 
+                            if (response.extension == ".pdf" ){ 
                                 PDFObject.embed(response.path, "#viewPDF");
                                 $("#viewPDF").css("height", "500px");
-                                $("#viewPDF > img" ).css("width", "100%");
+                                $("#viewImage").hide();
+                                $("#viewPDF").show();
                             }
-                            //else if (response.extension == ".jpg"){
-                            //    $("#iframeVerificacion").attr("src", response.path);
-                            //}
+                            else if (response.extension == ".jpg"|| response.extension == ".png"|| response.extension == ".jpeg"){
+                                $("#viewImage").attr("src", response.path);
+                                $("#viewImage").css("width", "100%");
+                                $("#viewImage").show();
+                                $("#viewPDF").hide();
+                            }
                             else {
                                 $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
                             }
@@ -594,7 +598,6 @@
                         } else {
                             alert("No se pudo visualizar la evidencia");
                             alert("No se pudo visualizar la evidencia: " + response.message);
-                            //$("#modal_preview_pdf").modal("show");
                         }
             }
         });
