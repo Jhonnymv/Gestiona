@@ -57,5 +57,20 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
 
             return ouput;
         }
+        public async Task<SustentosOuput> GetSustentosByCompromiso(int IdCompromiso)
+        {
+            var data = await _sustentoReadOnlyRepository.ListarSustentosByCompromiso(IdCompromiso);
+            var output = new SustentosOuput();
+
+            var sustentos = new List<SustentoOuput>();
+            foreach (var item in data)
+            {
+                sustentos.Add(new SustentoOuput(item));
+            }
+            output.Registros = sustentos;
+            output.NRegistros = sustentos.Count;
+
+            return output;
+        }
     }
 }

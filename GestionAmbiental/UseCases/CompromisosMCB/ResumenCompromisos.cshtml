@@ -123,7 +123,7 @@
                         <div class="row input_container">
                             <div class="col-12 col-md-6 col-lg-6">
                                 <label for="">Tipo de IGA</label>
-                               <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
+                                <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_iga" multiple>
                                 </select>
                             </div>
                             <div class="col-12 col-md-6 col-lg-6">
@@ -366,11 +366,60 @@
     </div>
 </div>
 <!--Modal Cargar Excel-->
+<!--Modal sustentos por compromiso-->
+<div id="modal_sustentos_by_compromiso" class="modal fade" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Previsualización</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th>Código Compromiso</th>
+                                <th>Detalle Sustento</th>
+                                <th>Origen</th>
+                                <th>Detalle del cumplimiento</th>
+                                <th>Etapa del proyecto</th>
+                                <th>Componente</th>
+                                <th>Gerencia</th>
+                                <th>Área</th>
+                                <th>Periodicidad</th>
+                                <th>Frecuencia de reporte automático</th>
+                                <th>Entidad responsable</th>
+                                <th>Medio de verificación</th>
+                                <th>Estado</th>
+                                <th>Responsable 1</th>
+                                <th>Responsable 2</th>
+                                <th>Asesor</th>
+                                <th>Detalle de Compromiso</th>
+                                <th>Sustento de Cumplimiento</th>
+                            </tr>
+                            </thead>
+                            <tbody id="dataSustentos">
 
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal sustentos por compromiso-->
 @section scripts{
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/selectpicker/js/bootstrap-select.js"></script>
-    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/selectpicker/js/bootstrap-select.js"></script>
+<script src="~/lib/pdfobject/pdfobject.min.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -402,6 +451,57 @@
         $('#modal_docs_tipo').modal('show')
 
     }
+    function GetSustentosByCompromiso(compromiso_id){
+        $.ajax({
+            type: "POST",
+            url: "/CompromisosMCB/GetSustentosByCompromiso",
+            data: {
+                "idCompromiso": compromiso_id,
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+
+                response.data.registros.forEach(item=>{
+                    var template="<tr>"+
+                    "<td>"+response.data_Compromiso.codigo+"</td>"+
+                    "<td>"+item.comentario_implementacion+"</td>"+
+                    "<td>"+response.data_Compromiso.nomOrigen+"</td>"+
+                    "<td>"+item.detalle_compromiso+"</td>"+
+                    "<td>"+item.etapa+"</td>"+
+                    "<td>"+item.componente+"</td>"+
+                    "<td>"+item.gerencia+"</td>"+
+                    "<td>"+item.area+"</td>"+
+                    "<td>"+item.periodicidad+"</td>"+
+                    "<td>"+item.frecuencia_Reporte+"</td>"+
+                    "<td>"+item.entidad_Responsable+"</td>"+
+                    "<td>"+item.medio_verificacion+"</td>"+
+                    "<td>"+item.estado+"</td>"+
+                    "<td>"+item.responsable1+"</td>"+
+                    "<td>"+item.responsable2+"</td>"+
+                    "<td>"+item.asesor+"</td>"+
+                    "<td>"+response.data_Compromiso.detalle_compromiso+"</td>"+
+                    "<td>"+item.sustento_cumplimiento+"</td>"+
+                    "</tr>"
+                    $("#dataSustentos").append(template);
+                });
+
+                //let date = new Date(response.data.fecha);
+                //$("#Texto_original_compromiso").text(response.data.texto_compromiso)
+                //$("#Origen").val(response.data.nomOrigen)
+                //$("#Tomo").val(response.data.tomo)
+                //$("#Capitulo").val(response.data.capitulo)
+                //$("#Seccion").val(response.data.seccion)
+                //$("#Pagina").val(response.data.pagina)
+                //$("#Resolucion").val(response.data.resolucion)
+                //$("#Autoridad").val(response.data.nombreAutoridad)
+                //$("#Fecha").val(date.toLocaleDateString())
+                //dataModulo();
+                $('#modal_sustentos_by_compromiso').modal('show')
+            }
+        });
+    }
+
     function AbrirModalCargaExcel(){
         $('#modalCargarExcel').modal('show')
     }

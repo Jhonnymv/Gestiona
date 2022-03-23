@@ -18,7 +18,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CriterioCMBC.List
         public async Task<CriteriosOuput> Execute()
         {
             //Consultar registros de BD
-            var registros = await _creiterioReadOnlyRepository.ListrarCriterios();
+            var registros = await _creiterioReadOnlyRepository.ListarCriterios();
 
             //Nueva lista en blanco
             var output = new CriteriosOuput();

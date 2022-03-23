@@ -321,5 +321,94 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.SustentoCMCB.Update(entity);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<SustentoCMCB>> ListarSustentosByCompromiso(int IdCompromiso)
+        {
+            var sustentos = await _context.SustentoCMCB.ToListAsync();
+            var compromisos = await ListarCompromisos();
+
+            sustentos = sustentos.Where(x => x.Id_Compromiso.Equals(IdCompromiso)).ToList();
+
+
+            var output = new List<SustentoCMCB>();
+            foreach (var sustento in sustentos)
+            {
+
+                var compromisoDomain = compromisos.FirstOrDefault(x => x.Id.Equals(IdCompromiso));
+                var usuarios = await _context.Usuarios.ToListAsync();
+                var responsable1 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(sustento.Id_Responsable1));
+                var responsable2 = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(sustento.Id_Responsable2));
+                var asesor = usuarios.FirstOrDefault(x => x.Id_Usuario.Equals(sustento.Id_Asesor));
+
+                var outputItem = new SustentoCMCB
+                {
+                    Id = sustento.Id,
+                    CompromisoCMCB = compromisoDomain,
+                    Fecha_limite = sustento.Fecha_limite,
+                    Fecha_entrega = sustento.Fecha_entrega,
+                    Fecha_validacion = sustento.Fecha_validacion,
+                    Estado = sustento.Estado,
+                    Sustento_cumplimiento = sustento.Sustento_cumplimiento,
+                    Detalle_compromiso = sustento.Detalle_compromiso,
+                    Evidencia = sustento.Evidencia,
+                    Comentario_implementacion = sustento.Comentario_implementacion,
+                    Comentario_verificacion = sustento.Comentario_verificacion,
+                    Medio_verificacion = sustento.Medio_verificacion
+                };
+
+                if (responsable1 != null)
+                {
+                    var responsable1Domain = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = responsable1.Id_Usuario,
+                        Nombres = responsable1.Nombres,
+                        Apellidos = responsable1.Apellidos,
+                        DNI = responsable1.DNI,
+                        UsuarioRed = responsable1.usuario_red,
+                        Puesto = responsable1.Puesto,
+                        Celular = responsable1.Celular,
+                        Email = responsable1.Email,
+                        IdRol = responsable1.Id_Rol,
+                        Estado = responsable1.Estado
+                    };
+                    outputItem.Responsable1 = responsable1Domain;
+                }
+                if (responsable2 != null)
+                {
+                    var responsable2Domain = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = responsable2.Id_Usuario,
+                        Nombres = responsable2.Nombres,
+                        Apellidos = responsable2.Apellidos,
+                        DNI = responsable2.DNI,
+                        UsuarioRed = responsable2.usuario_red,
+                        Puesto = responsable2.Puesto,
+                        Celular = responsable2.Celular,
+                        Email = responsable2.Email,
+                        IdRol = responsable2.Id_Rol,
+                        Estado = responsable2.Estado
+                    };
+                    outputItem.Responsable2 = responsable2Domain;
+                }
+                if (asesor != null)
+                {
+                    var asesorDomain = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = asesor.Id_Usuario,
+                        Nombres = asesor.Nombres,
+                        Apellidos = asesor.Apellidos,
+                        DNI = asesor.DNI,
+                        UsuarioRed = asesor.usuario_red,
+                        Puesto = asesor.Puesto,
+                        Celular = asesor.Celular,
+                        Email = asesor.Email,
+                        IdRol = asesor.Id_Rol,
+                        Estado = asesor.Estado
+                    };
+                    outputItem.Asesor = asesorDomain;
+                }
+                output.Add(outputItem);
+            }
+            return output;
+        }
     }
 }

@@ -31,6 +31,7 @@
                             <label asp-for="Id_Criterio">Criterio</label>
                             <span class="text-danger" asp-validation-for="Id_Criterio"></span>
                             <select class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                            @*<button type="button" class="btn btn-info" id="addCriterio">+</button>*@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Detalle_compromiso"></label>

@@ -327,7 +327,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     filasTabla += "<td>" + fila.Frecuencia + "</td>";
                     filasTabla += "<td>" + fila.NomResponsable1 + "</td>";
                     filasTabla += "<td>" + fila.Frecuencia_reporte + "</td>";
-                    filasTabla += "<td>" + "<a href=\"/CompromisosMCB/EditarRegistro?id=" + fila.Id + "\">Sustentos</a>" + "</td>";
+                    filasTabla += "<td>" + "<a style=\" cursor:pointer\" onclick=\"GetSustentosByCompromiso(" + fila.Id + ")\">Sustentos</a>" + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
                     //filasTabla += "<td>" + fila.Texto_compromiso + "</td>";
                     filasTabla += "</tr>";
@@ -504,6 +504,17 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             dynamic response = new { Data = datos, DataCompromiso = datosCompromiso };
             return Json(response);
         }
+        public async Task<IActionResult> GetSustentosByCompromiso(int IdCompromiso)
+        {
+            var datos = await _listarSustentos.GetSustentosByCompromiso(IdCompromiso);
+            ////var previewFile = await PreviewFile(datos.Evidencia);
+            var datosCompromiso = await _listarCompromisos.BuscarPorID(IdCompromiso);
+            dynamic response = new { Data = datos, Data_Compromiso=datosCompromiso };
+            return Json(response);
+        }
+
+
+
         [HttpPost]
         public async Task<IActionResult> saveImplementar(ImplementarSustentoModel model)
         {
