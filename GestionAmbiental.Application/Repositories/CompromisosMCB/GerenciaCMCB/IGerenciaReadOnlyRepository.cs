@@ -8,5 +8,10 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.GerenciaCMCB
     public interface IGerenciaReadOnlyRepository
     {
         Task<List<Domain.CompromisosMCB.GerenciaCMCB>> ListarGerencias();
+        //Registrar
+        Task<int> RegistrarGerencia(Domain.CompromisosMCB.GerenciaCMCB gerenciaCMCB);
+
+        //Editar
+        Task EditarGerencia(Domain.CompromisosMCB.GerenciaCMCB gerenciaCMCB);
     }
 }

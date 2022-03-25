@@ -31,6 +31,15 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerenciaUsuario;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IWebHostEnvironment _hostingEnvironment;
+
+        private readonly Application.UseCases.CompromisosMCB.CriterioCMBC.NuevoRegistro.INuevoRegistro _nuevoRegistroCriterio;
+        private readonly Application.UseCases.CompromisosMCB.EtapaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroEtapa;
+        private readonly Application.UseCases.CompromisosMCB.OrigenCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroOrigen;
+        private readonly Application.UseCases.CompromisosMCB.AutoridadCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroAutoridad;
+        private readonly Application.UseCases.CompromisosMCB.AspectoCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroAspecto;
+        private readonly Application.UseCases.CompromisosMCB.ComponentesCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroComponente;
+        private readonly Application.UseCases.CompromisosMCB.GerenciaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerencia;
+        private readonly Application.UseCases.CompromisosMCB.AreaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroArea;
         public CompromisosMCBController(
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
@@ -40,7 +49,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             Application.UseCases.CompromisosMCB.SustentoCMCB.EditarRegistro.IEditarRegistro editarSustento,
             Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerenciaUsuario,
             IGetInfo_SGA info_SGA,
-            IWebHostEnvironment hostingEnvironment
+            IWebHostEnvironment hostingEnvironment,
+
+            Application.UseCases.CompromisosMCB.CriterioCMBC.NuevoRegistro.INuevoRegistro nuevoRegistroCriterio,
+            Application.UseCases.CompromisosMCB.EtapaCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroEtapa,
+            Application.UseCases.CompromisosMCB.OrigenCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroOrigen,
+            Application.UseCases.CompromisosMCB.AutoridadCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroAutoridad,
+            Application.UseCases.CompromisosMCB.AspectoCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroAspecto,
+            Application.UseCases.CompromisosMCB.ComponentesCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroComponente,
+            Application.UseCases.CompromisosMCB.GerenciaCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroGerencia,
+            Application.UseCases.CompromisosMCB.AreaCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroArea
             )
         {
             _nuevoRegistro = nuevoRegistro;
@@ -52,6 +70,15 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             _nuevoRegistroGerenciaUsuario = nuevoRegistroGerenciaUsuario;
             _info_SGA = info_SGA;
             _hostingEnvironment = hostingEnvironment;
+
+            _nuevoRegistroCriterio = nuevoRegistroCriterio;
+            _nuevoRegistroEtapa = nuevoRegistroEtapa;
+            _nuevoRegistroOrigen = nuevoRegistroOrigen;
+            _nuevoRegistroAutoridad = nuevoRegistroAutoridad;
+            _nuevoRegistroAspecto = nuevoRegistroAspecto;
+            _nuevoRegistroComponente = nuevoRegistroComponente;
+            _nuevoRegistroGerencia = nuevoRegistroGerencia;
+            _nuevoRegistroArea = nuevoRegistroArea;
         }
         public async Task<IActionResult> ResumenCompromisos()
         {
@@ -509,12 +536,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             var datos = await _listarSustentos.GetSustentosByCompromiso(IdCompromiso);
             ////var previewFile = await PreviewFile(datos.Evidencia);
             var datosCompromiso = await _listarCompromisos.BuscarPorID(IdCompromiso);
-            dynamic response = new { Data = datos, Data_Compromiso=datosCompromiso };
+            dynamic response = new { Data = datos, Data_Compromiso = datosCompromiso };
             return Json(response);
         }
-
-
-
         [HttpPost]
         public async Task<IActionResult> saveImplementar(ImplementarSustentoModel model)
         {
@@ -834,5 +858,95 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             }
             return RedirectToAction("CargaDataExcel", new { message = "" });
         }
+
+        public async Task<IActionResult> saveCriterio(string nameCriterio, string crieterioDetalle)
+        {
+            var id = 0;
+            if (nameCriterio.Length != null)
+            {
+                id = await _nuevoRegistroCriterio.Execute(nameCriterio, crieterioDetalle);
+
+            }
+            dynamic response = new { id = id, value = nameCriterio };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveEtapa(string nameEtapa)
+        {
+            var id = 0;
+            if (nameEtapa.Length != null)
+            {
+                id = await _nuevoRegistroEtapa.Execute(nameEtapa);
+
+            }
+            dynamic response = new { id = id, value = nameEtapa };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveOrigen(string nameOrigen)
+        {
+            var id = 0;
+            if (nameOrigen.Length != null)
+            {
+                id = await _nuevoRegistroOrigen.Execute(nameOrigen);
+
+            }
+            dynamic response = new { id = id, value = nameOrigen };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveAutoridad(string nameAutoridad)
+        {
+            var id = 0;
+            if (nameAutoridad.Length != null)
+            {
+                id = await _nuevoRegistroAutoridad.Execute(nameAutoridad);
+
+            }
+            dynamic response = new { id = id, value = nameAutoridad };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveAspecto(string nameAspecto)
+        {
+            var id = 0;
+            if (nameAspecto.Length != null)
+            {
+                id = await _nuevoRegistroAspecto.Execute(nameAspecto);
+
+            }
+            dynamic response = new { id = id, value = nameAspecto };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveComponente(string tipoComponente, string nameComponente, string servicioComponente)
+        {
+            var id = 0;
+            if (nameComponente.Length != null && tipoComponente.Length!=null)
+            {
+                id = await _nuevoRegistroComponente.Execute(tipoComponente,nameComponente,servicioComponente);
+
+            }
+            dynamic response = new { id = id, value = nameComponente };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveGerencia(string nameGerencia, string descripcionGerencia)
+        {
+            var id = 0;
+            if (nameGerencia.Length != null)
+            {
+                id = await _nuevoRegistroGerencia.Execute(nameGerencia,descripcionGerencia);
+
+            }
+            dynamic response = new { id = id, value = nameGerencia };
+            return Json(response);
+        }
+        public async Task<IActionResult> saveArea(string nameArea)
+        {
+            var id = 0;
+            if (nameArea.Length != null)
+            {
+                id = await _nuevoRegistroArea.Execute(nameArea);
+
+            }
+            dynamic response = new { id = id, value = nameArea };
+            return Json(response);
+        }
+        
     }
 }

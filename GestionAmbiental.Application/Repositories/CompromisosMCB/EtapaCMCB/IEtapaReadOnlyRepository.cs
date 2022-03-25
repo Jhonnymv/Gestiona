@@ -5,8 +5,14 @@ using System.Threading.Tasks;
 
 namespace GestionAmbiental.Application.Repositories.CompromisosMCB.EtapaCMCB
 {
-    public interface ICriterioReadOnlyRepository
+    public interface IEtapaReadOnlyRepository
     {
         Task<List<Domain.CompromisosMCB.EtapaCMCB>> ListarEtapas();
+
+        //Registrar
+        Task<int> RegistrarEtapa(Domain.CompromisosMCB.EtapaCMCB etapaCMCB);
+
+        //Editar
+        Task EditarEtapa(Domain.CompromisosMCB.EtapaCMCB etapaCMCB);
     }
 }

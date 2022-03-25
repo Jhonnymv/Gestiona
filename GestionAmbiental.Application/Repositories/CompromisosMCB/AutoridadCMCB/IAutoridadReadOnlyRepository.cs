@@ -8,5 +8,10 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.AutoridadCMCB
     public interface IAutoridadReadOnlyRepository
     {
         Task<List<Domain.CompromisosMCB.AutoridadCMCB>> ListarAutoridades();
+        //Registrar
+        Task<int> RegistrarAutoridad(Domain.CompromisosMCB.AutoridadCMCB autoridadCMCB);
+
+        //Editar
+        Task EditarAutoridad(Domain.CompromisosMCB.AutoridadCMCB autoridadCMCB);
     }
 }

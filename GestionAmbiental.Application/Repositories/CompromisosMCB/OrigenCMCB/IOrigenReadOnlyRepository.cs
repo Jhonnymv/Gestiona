@@ -9,5 +9,11 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.OrigenCMCB
     {
         //Listar
         Task<List<Domain.CompromisosMCB.OrigenCMCB>> ListarOrigenes();
+
+        //Registrar
+        Task<int> RegistrarOrigen(Domain.CompromisosMCB.OrigenCMCB origenCMCB);
+
+        //Editar
+        Task EditarOrigen(Domain.CompromisosMCB.OrigenCMCB origenCMCB);
     }
 }

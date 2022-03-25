@@ -8,5 +8,10 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.AspectoCMCB
     public interface IAspectoReadOnlyRepository
     {
         Task<List<Domain.CompromisosMCB.AspectoCMCB>> ListarAspectos();
+        //Registrar
+        Task<int> RegistrarAspecto(Domain.CompromisosMCB.AspectoCMCB aspectoCMCB);
+
+        //Editar
+        Task EditarAspecto(Domain.CompromisosMCB.AspectoCMCB aspectoCMCB);
     }
 }

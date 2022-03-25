@@ -28,8 +28,15 @@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Criterio">Criterio</label>
-                            <span class="text-danger" asp-validation-for="Id_Criterio"></span>
-                            <select class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                            @*<span class="text-danger" asp-validation-for="Id_Criterio"></span>*@
+                           @* <select id="select_Criterio" class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></sele*@ct>
+                            @*<button type="button" class="btn btn-info" id="btnAddCriterio">+</button>*@
+                            <div class="input-group">
+                                <select class="form-control form-control-sm" id="select_Criterio" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary" type="button" id="btnAddCriterio">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Detalle_compromiso"></label>
@@ -39,7 +46,8 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Etapa">Etapa</label>
                             <span class="text-danger" asp-validation-for="Id_Etapa"></span>
-                            <select class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                            <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                            <button type="button" class="btn btn-info" id="btnAddEtapa">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Texto_compromiso"></label>
@@ -49,7 +57,8 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Origen">Origen</label>
                             <span class="text-danger" asp-validation-for="Id_Origen"></span>
-                            <select class="form-control"  asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
+                            <select id="select_Origen" class="form-control" asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
+                            <button type="button" class="btn btn-info" id="btnAddOrigen">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Tomo"></label>
@@ -79,32 +88,37 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Autoridad">Autoridad</label>
                             <span class="text-danger" asp-validation-for="Id_Autoridad"></span>
-                            <select class="form-control"  asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
+                            <select id="select_Autoridad" class="form-control" asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
+                            <button type="button" class="btn btn-info" id="btnAddAutoridad">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Aspecto">Aspecto</label>
                             <span class="text-danger" asp-validation-for="Id_Aspecto"></span>
-                            <select class="form-control"  asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
+                            <select id="select_Aspecto" class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
+                            <button type="button" class="btn btn-info" id="btnAddAspecto">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Componente">Aspecto</label>
+                            <label asp-for="Id_Componente">Componente</label>
                             <span class="text-danger" asp-validation-for="Id_Componente"></span>
-                            <select class="form-control"  asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                            <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                            <button type="button" class="btn btn-info" id="btnAddComponente">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Gerencia">Gerencia</label>
                             <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
-                            <select class="form-control"  asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
+                            <select id="select_Gerencia" class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
+                            <button type="button" class="btn btn-info" id="btnAddGerencia">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Area">Area</label>
                             <span class="text-danger" asp-validation-for="Id_Area"></span>
-                            <select class="form-control"  asp-for="Id_Area" asp-items="@ViewBag.Areas"></select>
+                            <select id="select_Area" class="form-control" asp-for="Id_Area" asp-items="@ViewBag.Areas"></select>
+                            <button type="button" class="btn btn-info" id="btnAddArea">+</button>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Frecuencia">Frecuencia</label>
                             <span class="text-danger" asp-validation-for="Frecuencia"></span>
-                            <select class="form-control"  asp-for="Frecuencia">
+                            <select class="form-control" asp-for="Frecuencia">
                                 <option value="">--Seleccione--</option>
                                 <option value="Diario">Diario</option>
                                 <option value="Semanal">Semanal</option>
@@ -114,22 +128,22 @@
                                 <option value="Anual">Anual</option>
                             </select>
                         </div>
-                        
+
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Responsable1">Responsable 2</label>
                             <span class="text-danger" asp-validation-for="Id_Responsable1"></span>
-                            <select class="form-control"  asp-for="Id_Responsable1" asp-items="@ViewBag.usuarios"></select>
+                            <select class="form-control" asp-for="Id_Responsable1" asp-items="@ViewBag.usuarios"></select>
                         </div>
-                        
+
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Responsable2">Responsable 1</label>
                             <span class="text-danger" asp-validation-for="Id_Responsable2"></span>
-                            <select class="form-control"  asp-for="Id_Responsable2" asp-items="@ViewBag.usuarios"></select>
+                            <select class="form-control" asp-for="Id_Responsable2" asp-items="@ViewBag.usuarios"></select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Frecuencia_reporte">Frecuencia Reporte</label>
                             <span class="text-danger" asp-validation-for="Frecuencia_reporte"></span>
-                            <select class="form-control"  asp-for="Frecuencia_reporte">
+                            <select class="form-control" asp-for="Frecuencia_reporte">
                                 <option value="">--Seleccione--</option>
                                 <option value="Diario">Diario</option>
                                 <option value="Semanal">Semanal</option>
@@ -147,7 +161,7 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Estado">Estado</label>
                             <span class="text-danger" asp-validation-for="Estado"></span>
-                            <select class="form-control"  asp-for="Estado">
+                            <select class="form-control" asp-for="Estado">
                                 <option value="">--Seleccione--</option>
                                 <option value="No Vigente">No vigente</option>
                                 <option value="En Proceso">En proceso</option>
@@ -170,3 +184,455 @@
         </div>
     </div>
 </div>
+@*modal criterio*@
+<div id="modal_add_criterio" class="modal fade" tabindex="-1" aria-labelledby="AddCriterioModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Criterio</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formCriterio">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameCriterio">Criterio</label>
+                                <input type="text" id="nameCriterioAdd" name="nameCriterio" class="form-control" />
+                            </did>
+                            <did class="col-12">
+                                <label for="crieterioDetalleAdd">Descripción del Criterio</label>
+                                <textarea id="crieterioDetalleAdd" name="crieterioDetalle" class="form-control"></textarea>
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveCriterio">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal etapa*@
+<div id="modal_add_Etapa" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Etapa</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formEtapa">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameEtapaAdd">Etapa</label>
+                                <input type="text" id="nameEtapaAdd" name="nameEtapa" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveEtapa">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal origen*@
+<div id="modal_add_Origen" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Origen</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formOrigen">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameOrigenAdd">Origen</label>
+                                <input type="text" id="nameOrigenAdd" name="nameOrigen" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveOrigen">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal Autoridad*@
+<div id="modal_add_Autoridad" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Autoridad</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formAutoridad">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameAutoridadAdd">Autoridad</label>
+                                <input type="text" id="nameAutoridadAdd" name="nameAutoridad" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveAutoridad">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal Aspecto*@
+<div id="modal_add_Aspecto" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Aspecto</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formAspecto">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameAspectoAdd">Aspecto</label>
+                                <input type="text" id="nameAspectoAdd" name="nameAspecto" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveAspecto">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal Componente*@
+<div id="modal_add_Componente" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Componente</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formComponente">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="tipoComponenteAdd">Tipo Componente</label>
+                                <input type="text" id="tipoComponenteAdd" name="tipoComponente" class="form-control" />
+                            </did>
+                            <did class="col-12">
+                                <label for="nameComponenteAdd">Componente</label>
+                                <input type="text" id="nameComponenteAdd" name="nameComponente" class="form-control" />
+                            </did>
+                            <did class="col-12">
+                                <label for="servicioComponenteAdd">Servicio</label>
+                                <input type="text" id="servicioComponenteAdd" name="servicioComponente" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveComponente">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal Gerencia*@
+<div id="modal_add_Gerencia" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Gerencia</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formGerencia">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameGerenciaAdd">Gerencia</label>
+                                <input type="text" id="nameGerenciaAdd" name="nameGerencia" class="form-control" />
+                            </did>
+                            <did class="col-12">
+                                <label for="descripcionGerenciaAdd">Descripción Gerencia</label>
+                                <textarea id="descripcionGerenciaAdd" name="descripcionGerencia" class="form-control"></textarea>
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveGerencia">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal Area*@
+<div id="modal_add_Area" class="modal fade" tabindex="-1" aria-labelledby="AddEtapaModal" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Agregar Area</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <form id="formArea">
+                    <div class="modal-body">
+                        <div class="row">
+                            <did class="col-12">
+                                <label for="nameAreaAdd">Area</label>
+                                <input type="text" id="nameAreaAdd" name="nameArea" class="form-control" />
+                            </did>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+                        <button type="button" class="btn btn-primary" id="btn_saveArea">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/selectpicker/js/bootstrap-select.js"></script>
+<script src="~/lib/pdfobject/pdfobject.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnAddCriterio").on("click",function(){
+            $("#modal_add_criterio").modal("show")
+        })
+        $("#btn_saveCriterio").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveCriterio",
+                method:"GET",
+                 data: {
+                "nameCriterio": $("#nameCriterioAdd").val(),
+                "crieterioDetalle": $("#crieterioDetalleAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Criterio").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameCriterioAdd").val('')
+                $("#crieterioDetalleAdd").val('')
+                $("#modal_add_criterio").modal("hide")
+            }
+            })
+        })
+
+
+        $("#btnAddEtapa").on("click",function(){
+            $("#modal_add_Etapa").modal("show")
+        })
+        $("#btn_saveEtapa").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveEtapa",
+                method:"GET",
+                 data: {
+                "nameEtapa": $("#nameEtapaAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Etapa").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameEtapaAdd").val('')
+                $("#modal_add_Etapa").modal("hide")
+            }
+            })
+        })
+
+        $("#btnAddOrigen").on("click",function(){
+            $("#modal_add_Origen").modal("show")
+        })
+        $("#btn_saveOrigen").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveOrigen",
+                method:"GET",
+                 data: {
+                "nameOrigen": $("#nameOrigenAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Origen").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameOrigenAdd").val('')
+                $("#modal_add_Origen").modal("hide")
+            }
+            })
+        })
+
+        $("#btnAddAutoridad").on("click",function(){
+            $("#modal_add_Autoridad").modal("show")
+        })
+        $("#btn_saveAutoridad").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveAutoridad",
+                method:"GET",
+                 data: {
+                "nameAutoridad": $("#nameAutoridadAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Autoridad").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameAutoridadAdd").val('')
+                $("#modal_add_Autoridad").modal("hide")
+            }
+            })
+        })
+
+        $("#btnAddAspecto").on("click",function(){
+            $("#modal_add_Aspecto").modal("show")
+        })
+        $("#btn_saveAspecto").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveAspecto",
+                method:"GET",
+                 data: {
+                "nameAspecto": $("#nameAspectoAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Aspecto").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameAspectoAdd").val(''),
+                $("#modal_add_Aspecto").modal("hide")
+            }
+            })
+        })
+
+        $("#btnAddComponente").on("click",function(){
+            $("#modal_add_Componente").modal("show")
+        })
+        $("#btn_saveComponente").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveComponente",
+                method:"GET",
+                 data: {
+                "tipoComponente": $("#tipoComponenteAdd").val(),
+                "nameComponente": $("#nameComponenteAdd").val(),
+                "servicioComponente": $("#servicioComponenteAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Componente").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#tipoComponenteAdd").val('')
+                $("#nameComponenteAdd").val('')
+                $("#servicioComponenteAdd").val('')
+                $("#modal_add_Componente").modal("hide")
+            }
+            })
+        })
+        $("#btnAddGerencia").on("click",function(){
+            $("#modal_add_Gerencia").modal("show")
+        })
+        $("#btn_saveGerencia").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveGerencia",
+                method:"GET",
+                 data: {
+                "nameGerencia": $("#nameGerenciaAdd").val(),
+                "descripcionGerencia": $("#descripcionGerenciaAdd").val()
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Gerencia").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameGerenciaAdd").val('')
+                $("#descripcionGerenciaAdd").val('')
+                $("#modal_add_Gerencia").modal("hide")
+            }
+            })
+        })
+
+        $("#btnAddArea").on("click",function(){
+            $("#modal_add_Area").modal("show")
+        })
+        $("#btn_saveArea").on('click',function(){
+            $.ajax({
+                url:"/CompromisosMCB/saveArea",
+                method:"GET",
+                 data: {
+                "nameArea": $("#nameAreaAdd").val()
+
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#select_Area").append("<option value='"+response.id+"'>"+response.value+"</option>")
+                $("#nameAreaAdd").val('')
+                $("#modal_add_Area").modal("hide")
+            }
+            })
+        })
+
+
+
+    });
+</script>
+}

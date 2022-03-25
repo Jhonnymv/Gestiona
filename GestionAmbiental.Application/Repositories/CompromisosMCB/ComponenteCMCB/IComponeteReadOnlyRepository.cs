@@ -8,5 +8,11 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.ComponenteCMC
     public interface IComponeteReadOnlyRepository
     {
         Task<List<Domain.CompromisosMCB.ComponenteCMCB>> ListarComponentes();
+
+        //Registrar
+        Task<int> RegistrarComponente(Domain.CompromisosMCB.ComponenteCMCB componenteCMCB);
+
+        //Editar
+        Task EditarComponente(Domain.CompromisosMCB.ComponenteCMCB componenteCMCB);
     }
 }

@@ -11,5 +11,8 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.CriterioCMCB
 
         //Registrar
         Task<int> RegistrarCriterio(Domain.CompromisosMCB.CriterioCMCB criterioCMCB);
+
+        //Editar
+        Task EditarCriterio(Domain.CompromisosMCB.CriterioCMCB criterioCMCB);
     }
 }
