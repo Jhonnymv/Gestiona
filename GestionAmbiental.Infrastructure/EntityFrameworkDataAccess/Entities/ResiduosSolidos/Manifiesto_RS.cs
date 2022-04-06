@@ -21,7 +21,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Observacion_Manifiesto { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Residuo_Solido { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double? Cantidad_RS_Evacuado { get; set; }
         [Column(TypeName = "int")]
         public int? Id_EO_RS_Salida { get; set; }
@@ -39,7 +39,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Num_Licencia_Condutor { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Vehiculo_RS { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double? Capacidad_Vehiculo { get; set; }
         [Column(TypeName = "int")]
         public int? Id_EO_RS_Llegada { get; set; }
@@ -53,7 +53,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public string Num_Autorizacion_Municipal_Llegada { get; set; }
         [Column(TypeName = "text")]
         public string Certificado_Trat_Disp { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double? Cantidad_RS_Dispuesto { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime? Fecha_Devolucion { get; set; }
