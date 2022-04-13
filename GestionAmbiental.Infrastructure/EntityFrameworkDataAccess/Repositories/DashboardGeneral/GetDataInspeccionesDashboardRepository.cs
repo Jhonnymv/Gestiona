@@ -20,21 +20,67 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context = context;
         }
 
-        public async Task<InspeccionesMAPSSOOutput> InspeccionesActoCondicionBP()
+        public async Task<InspeccionesMAPSSOOutput> InspeccionesActoCondicionBP(int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
-                .Where(x =>
+                .Where(x =>                
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x => 
+            x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FInicioInsp &&
+                x.Fecha_Inspeccion <= FFinInsp)
+                .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
             //Obtener lista de observaciones de las inspecciones activas
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             //Agregar mas filtros si es necesario
             observaciones = observaciones
                 .Where(x =>
-                inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
+                inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera)&&
+                x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+                x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
                 .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
 
             //Agrupar por campo de BD solicitado para MAP
             var filtradoMAP = observaciones
@@ -79,7 +125,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> InspeccionesEstadosCondicion()
+        public async Task<InspeccionesMAPSSOOutput> InspeccionesEstadosCondicion(int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -87,14 +133,59 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x =>
+            x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FInicioInsp &&
+                x.Fecha_Inspeccion <= FFinInsp)
+                .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
             //Obtener lista de observaciones de las inspecciones activas
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             //Agregar mas filtros si es necesario
             observaciones = observaciones
-                .Where(x =>
-                inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
-                .ToList();
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
 
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
             //Agrupar por campo de BD solicitado para MAP
             var filtradoMAP = observaciones
                 .Where(x => x.Tipo_Observacion.Equals("MAP") &&
@@ -178,7 +269,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> TopActosSubestandar(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> TopActosSubestandar(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -186,6 +277,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x =>
+            x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FInicioInsp &&
+                x.Fecha_Inspeccion <= FFinInsp)
+                .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
 
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
@@ -193,9 +293,46 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             //Agregar mas filtros si es necesario
             observaciones = observaciones
-                .Where(x =>
-                inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
-                .ToList();
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
 
             //Agrupar por campo de BD solicitado para MAP
             var filtradoMAP = observaciones
@@ -255,7 +392,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> TopCondicionesSubestandar(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> TopCondicionesSubestandar(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -263,6 +400,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x =>
+            x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+                x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FInicioInsp &&
+                x.Fecha_Inspeccion <= FFinInsp)
+                .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
 
             var tiposCondicion = await _context.Tipos_Condicion.ToListAsync();
 
@@ -270,9 +416,46 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
             //Agregar mas filtros si es necesario
             observaciones = observaciones
-                .Where(x =>
-                inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera))
-                .ToList();
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
 
             //Agrupar por campo de BD solicitado para MAP
             var filtradoMAP = observaciones
@@ -332,7 +515,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> RankingGerenciaReportante(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> RankingGerenciaReportante(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -341,9 +524,62 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
 
+            inspeccionesAct = inspeccionesAct.Where(x =>
+            x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+                //x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+                x.Fecha_Inspeccion >= FInicioInsp &&
+                x.Fecha_Inspeccion <= FFinInsp)
+                .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
+
             var gerencias = await _context.Gerencias.ToListAsync();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+            observaciones = observaciones
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
+
             var observacionesMAP = observaciones.Where(x => x.Tipo_Observacion.Equals("MAP")).ToList();
             var observacionesSSO = observaciones.Where(x => x.Tipo_Observacion.Equals("SSO")).ToList();
 
@@ -394,7 +630,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> RankingGerenciaObsVencidas(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> RankingGerenciaObsVencidas(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -402,10 +638,62 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x =>
+           x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+               //x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+               x.Fecha_Inspeccion >= FInicioInsp &&
+               x.Fecha_Inspeccion <= FFinInsp)
+               .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
 
             var gerencias = await _context.Gerencias.ToListAsync();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+
+            observaciones = observaciones
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
+
             var observacionesVencidas = observaciones.Where(x=> x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
             var observacionesMAP = observacionesVencidas.Where(x => x.Tipo_Observacion.Equals("MAP")).GroupBy(x=>x.Id_Inspeccion_Cabecera).ToList();
             var observacionesSSO = observacionesVencidas.Where(x => x.Tipo_Observacion.Equals("SSO")).GroupBy(x => x.Id_Inspeccion_Cabecera).ToList();
@@ -466,7 +754,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> RankingUsuariosIngresoInspecciones(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> RankingUsuariosIngresoInspecciones(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -474,12 +762,61 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            
+            inspeccionesAct = inspeccionesAct.Where(x =>
+              x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+              x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+              x.Fecha_Inspeccion >= FInicioInsp &&
+              x.Fecha_Inspeccion <= FFinInsp)
+              .ToList();
 
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
             var usuarios = await _context.Usuarios.ToListAsync();
 
             //Obtener lista de observaciones de las inspecciones activas
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
-            
+            observaciones = observaciones
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
             //Agrupar por campo de BD solicitado para MAP
             var observacionesMAP = observaciones
                 .Where(x => x.Tipo_Observacion.Equals("MAP"))
@@ -547,7 +884,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<InspeccionesMAPSSOOutput> RankingUsuariosObsVencidas(int topLimit)
+        public async Task<InspeccionesMAPSSOOutput> RankingUsuariosObsVencidas(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp)
         {
             //Obtener lista de inspecciones con código (activas)
             var inspeccionesAct = await _context.Inspecciones_Cabecera
@@ -555,10 +892,60 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosInspeccion.Eliminado.ToString()) &&
                 !x.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                 .ToListAsync();
+            inspeccionesAct = inspeccionesAct.Where(x =>
+             x.Id_Empresa.Equals(IdEmpresaInsp > 0 ? IdEmpresaInsp : x.Id_Empresa) &&
+             x.Id_Gerencia.Equals(IdGerenciaInsp > 0 ? IdGerenciaInsp : x.Id_Gerencia) &&
+             x.Fecha_Inspeccion >= FInicioInsp &&
+             x.Fecha_Inspeccion <= FFinInsp)
+             .ToList();
+
+            if (IdGerenciaInspeccionadaInsp != 0)
+                inspeccionesAct = inspeccionesAct.Where(x => x.Id_Gerencia_Inspeccionada.Equals(IdGerenciaInspeccionadaInsp)).ToList();
 
             var usuarios = await _context.Usuarios.ToListAsync();
 
             var observaciones = await _context.Inspecciones_Detalle.ToListAsync();
+            observaciones = observaciones
+               .Where(x =>
+               inspeccionesAct.Select(x => x.Id_Inspeccion_Cabecera).Contains(x.Id_Inspeccion_Cabecera) &&
+               x.Id_Responsable_Marcobre.Equals(IdRespLevInsp > 0 ? IdRespLevInsp : x.Id_Responsable_Marcobre) &&
+               x.Id_Asesor.Equals(IdAsesorInsp > 0 ? IdAsesorInsp : x.Id_Asesor))
+               .ToList();
+            if (EstadoInsp != null && EstadoInsp != "")
+            {
+
+                /*"Pendiente de Implementación", "Pendiente"
+                  "Pendiente de Verificación", "Verificacion"
+                  "Vencido", "Vencido"
+                  "Aprobado", "Aprobado"*/
+                switch (EstadoInsp)
+                {
+                    case "Pendiente":
+                        observaciones = observaciones.Where(x =>
+                        !x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) ||
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                    case "Verificacion":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Implementado.ToString())).ToList();
+                        break;
+                    case "Vencido":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
+                        break;
+                    case "Aprobado":
+                        observaciones = observaciones.Where(x =>
+                        x.Estado.Equals(EstadosInspeccion.Aprobado.ToString())).ToList();
+                        break;
+                    case "Rechazado":
+                        observaciones = observaciones.Where(x =>
+                        x.Descripcion_Condicion.Equals("Buenas Prácticas") &&
+                        x.Estado.Equals(EstadosInspeccion.Rechazado.ToString())).ToList();
+                        break;
+                }
+            }
             var observacionesVencidas = observaciones.Where(x => x.Estado.Equals(EstadosInspeccion.Vencido.ToString())).ToList();
             var observacionesMAP = observacionesVencidas.Where(x => x.Tipo_Observacion.Equals("MAP")).ToList();
             var observacionesSSO = observacionesVencidas.Where(x => x.Tipo_Observacion.Equals("SSO")).ToList();
