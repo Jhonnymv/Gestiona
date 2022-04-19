@@ -9,6 +9,7 @@ namespace GestionAmbiental.Application.Repositories.Reportes
 {
     public interface IGetReportesRACReadOnlyRepository
     {
+        Task<List<Domain.RAC.RAC>> GetRACs(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin);
         Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin);
         Task<List<Domain.RAC.RAC>> GetDetalleReportesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin, EstadosRAC estado);
         Task<List<Dimension>> GetNReportesEntreFechas(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin);

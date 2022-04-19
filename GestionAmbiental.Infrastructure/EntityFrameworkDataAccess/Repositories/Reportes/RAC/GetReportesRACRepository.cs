@@ -19,7 +19,111 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
-        public async Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin)
+        public async Task<List<Domain.RAC.RAC>> GetRACs(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin)
+        {
+            var reportes = await _context.RACs
+                .Where(x=>
+                x.Id_Gerencia.Equals(IdGerencia>0?IdGerencia:x.Id_Gerencia)&&
+                x.Id_Empresa.Equals(IdEmpresa>0?IdEmpresa:x.Id_Empresa)&&
+                x.Id_Responsable_Cierre.Equals(IdUsuario>0?IdUsuario:x.Id_Responsable_Cierre) &&
+                x.Fecha >= FechaInicio &&
+                x.Fecha <= FechaFin)
+                .ToListAsync();
+            var empresas = await _context.Empresas.ToListAsync();
+            var gerencias = await _context.Gerencias.ToListAsync();
+            var usuarios = await _context.Usuarios.ToListAsync();
+            var tipoActoCondicion = await _context.Tipos_Condicion.ToListAsync();
+
+            var output = new List<Domain.RAC.RAC>();
+
+            foreach (var item in reportes)
+            {
+                var empresaDomain = empresas.Find(x => x.Id_Empresa.Equals(item.Id_Empresa));
+                var empresaObDomain = empresas.Find(x => x.Id_Empresa.Equals(item.Id_Empresa_Obs));
+                var gerenciaDomain = gerencias.Find(x => x.Id_Gerencia.Equals(item.Id_Gerencia));
+                var gerenciaObDomain = gerencias.Find(x => x.Id_Gerencia.Equals(item.Id_Gerencia_Obs));
+                var registradoPorDomain = usuarios.Find(x => x.Id_Usuario.Equals(item.Id_Registrado_Por));
+                var responsableDomain = usuarios.Find(x => x.Id_Usuario.Equals(item.Id_Responsable_Cierre));
+                var supervisorDomain = usuarios.Find(x => x.Id_Usuario.Equals(item.Id_Supervisor));
+                var tipoActoCondicionDomain = tipoActoCondicion.Find(x => x.Id_Tipo_Condicion.Equals(item.Id_Tipo_Condicion));
+
+                output.Add(new Domain.RAC.RAC
+                {
+                    Clasificacion = item.Clasificacion,
+                    Codigo = item.Codigo,
+                    Comentario_Cierre = item.Comentario_Cierre,
+                    Comentario_Verificacion = item.Comentario_Verificacion,
+                    Descripcion_Acto_Cond = item.Descripcion_Acto_Cond,
+                    Empresa = new Empresa
+                    {
+                        IdEmpresa = empresaDomain.Id_Empresa,
+                        RazonSocial = empresaDomain.Razon_Social,
+                        Estado = empresaDomain.Estado,
+                    },
+                    Empresa_Ob = new Empresa
+                    {
+                        IdEmpresa = empresaObDomain.Id_Empresa,
+                        RazonSocial = empresaObDomain.Razon_Social,
+                        Estado = empresaObDomain.Estado,
+                    },
+                    Fecha_Cierre = item.Fecha_Cierre,
+                    Fecha = item.Fecha,
+                    Estado = item.Estado,
+                    Evidencia_Obs = item.Evidencia_Obs,
+                    Evidencia_Cierre = item.Evidencia_Cierre,
+                    Gerencia = new Gerencia
+                    {
+                        IdGerencia = gerenciaDomain.Id_Gerencia,
+                        Descripcion = gerenciaDomain.Descripcion,
+                        Estado = gerenciaDomain.Estado
+                    },
+                    Gerencia_Obs = new Gerencia
+                    {
+                        IdGerencia = gerenciaObDomain.Id_Gerencia,
+                        Descripcion = gerenciaObDomain.Descripcion,
+                        Estado = gerenciaObDomain.Estado
+                    },
+                    Id_RAC = item.Id_RAC,
+                    Id_Registrado_Por = item.Id_Registrado_Por,
+                    NivelRiesgo = item.NivelRiesgo,
+                    Medida_Control = item.Medida_Control,
+                    TipoCondicion = new TipoCondicion
+                    {
+                        IdTipoCondicion = tipoActoCondicionDomain.Id_Tipo_Condicion,
+                        Descripcion = tipoActoCondicionDomain.Descripcion,
+                        Grupo = tipoActoCondicionDomain.Grupo
+                    },
+                    Nombres_Apellidos = item.Nombres_Apellidos,
+                    Otra_Empresa = item.Otra_Empresa,
+                    PAC = item.PAC,
+                    Responsable_Cierre = new Usuario
+                    {
+                        Nombres = responsableDomain.Nombres,
+                        Apellidos = responsableDomain.Apellidos,
+                        DNI = responsableDomain.DNI,
+                        Puesto = responsableDomain.Puesto,
+                        Email = responsableDomain.Email,
+                        Celular = responsableDomain.Celular,
+                        Estado = responsableDomain.Estado,
+                        UsuarioRed = responsableDomain.usuario_red
+                    },
+                    Supervisor = new Usuario
+                    {
+                        Nombres = supervisorDomain.Nombres,
+                        Apellidos = supervisorDomain.Apellidos,
+                        DNI = supervisorDomain.DNI,
+                        Puesto = supervisorDomain.Puesto,
+                        Email = supervisorDomain.Email,
+                        Celular = supervisorDomain.Celular,
+                        Estado = supervisorDomain.Estado,
+                        UsuarioRed = supervisorDomain.usuario_red
+                    },
+                    SSO_MA = item.SSO_MA,
+                    Ubicacion = item.Ubicacion                    
+                });
+            }
+            return output;
+        } public async Task<List<Dimension>> GetObservacionesXEstado(int IdGerencia, int IdEmpresa, int IdUsuario, DateTime FechaInicio, DateTime FechaFin)
         {
             var reportes = await _context.RACs
                 .Where(x=>
