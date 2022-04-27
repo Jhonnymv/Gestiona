@@ -13,7 +13,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public int Id_Vehiculo_RS { get; set; }
         [Column(TypeName ="varchar(7)")]
         public string Placa { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double Capacidad { get; set; }
         [Column(TypeName = "varchar(3)")]
         public string Estado { get; set; }

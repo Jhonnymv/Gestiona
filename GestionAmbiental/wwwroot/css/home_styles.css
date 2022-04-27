@@ -382,7 +382,7 @@ body::-webkit-scrollbar-track {
 }
 
 .project-name {
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
     font-weight: bold;
     font-size: 17px;
     padding: 0 10px;
@@ -393,44 +393,42 @@ body::-webkit-scrollbar-track {
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (min-width: 640px) {
+    @media (min-width: 640px) {
 
-    .modal-body {
-        padding: 5em 5em;
+        .modal-body {
+            padding: 5em 5em;
+        }
     }
 
-}
 
-
-@media (min-width: 768px) {
-
-}
-
-@media (min-width: 900px) {
-    .navbar ul {
-        position: relative;
-        top: 8px;
+    @media (min-width: 768px) {
     }
 
-    .navbar ul li{
-        margin: 0px 35px;
+    @media (min-width: 900px) {
+        .navbar ul {
+            position: relative;
+            top: 8px;
+        }
+
+            .navbar ul li {
+                margin: 0px 35px;
+            }
+
+                .navbar ul li a {
+                    height: 60px;
+                    width: 100%;
+                }
+
+        .navbar .navbar-brand.login-btn span {
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0px 10px;
+        }
     }
 
-    .navbar ul li a{
-        height: 60px;
-        width: 100%;
+    @media (min-width: 992px) {
+        .navbar .navbar-brand.login-btn {
+            display: block;
+        }
     }
-
-    .navbar .navbar-brand.login-btn span{
-        font-size: 15px;
-        font-weight: bold;
-        color: #ffffff;
-        margin: 0px 10px;
-    }
-}
-
-@media (min-width: 992px) {
-    .navbar .navbar-brand.login-btn {
-        display: block;
-    }
-}

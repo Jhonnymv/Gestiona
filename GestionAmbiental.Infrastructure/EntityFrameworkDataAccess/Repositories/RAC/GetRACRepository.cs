@@ -77,7 +77,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACs(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, List<string> estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
@@ -90,6 +90,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             if (gerenciaFiltro.Length > 0)
                 registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
+
+            if (areasFiltro.Length > 0)
+                registros = registros.Where(x => x.Id_Gerencia.HasValue && areasFiltro.Contains(x.Id_Gerencia.Value)).ToList();
 
             if (empresaFiltro.Length > 0)
                 registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();
@@ -161,7 +164,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACsImplementacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
@@ -178,6 +181,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             if (gerenciaFiltro.Length > 0)
                 registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
+
+            if (areasFiltro.Length > 0)
+                registros = registros.Where(x => x.Id_Gerencia.HasValue && areasFiltro.Contains(x.Id_Gerencia.Value)).ToList();
 
             if (empresaFiltro.Length > 0)
                 registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();
@@ -242,7 +248,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return output;
         }
-        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
+        public async Task<List<Domain.RAC.RAC>> GetRACsVerificacion(DateTime fechaInicio, DateTime fechaFin, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro)
         {
             var registros = await _context.RACs.ToListAsync();
             registros = registros.Where(c =>
@@ -255,6 +261,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             if (gerenciaFiltro.Length > 0)
                 registros = registros.Where(x => gerenciaFiltro.Contains(x.Id_Gerencia_Obs)).ToList();
+
+            if (areasFiltro.Length > 0)
+                registros = registros.Where(x => x.Id_Gerencia.HasValue && areasFiltro.Contains(x.Id_Gerencia.Value)).ToList();
 
             if (empresaFiltro.Length > 0)
                 registros = registros.Where(x => empresaFiltro.Contains(x.Id_Empresa_Obs)).ToList();

@@ -123,6 +123,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 var filtroEmpresas = items.ItemsEmpresa.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 var filtroGerencias = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 var filtroUsuarios = items.ItemsUsuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                var filtroAreas = items.ItemsGerencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
 
                 var usuariosAgrupados = items.ItemsUsuarios.GroupBy(x => x.IdRol).ToList();
                 var asesores = new List<SelectListItem>();
@@ -144,11 +145,12 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Gerencias = filtroGerencias;
                 ViewBag.Usuarios = filtroUsuarios;
                 ViewBag.Asesores = asesores;
+                ViewBag.Areas = filtroAreas;
                 ViewBag.PermisoAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigoFiltro, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigoFiltro, int pagina, int rpp)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -161,7 +163,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 fechaFin = Convert.ToDateTime(fechaFinFiltro);
             else
                 fechaFin = DateTime.Now;
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro,codigoFiltro);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, areasFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro,codigoFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;

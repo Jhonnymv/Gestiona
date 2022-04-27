@@ -317,8 +317,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             TipoCondicion = observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
                             NivelRiesgo = observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
                             Accion = observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
-                            ResponsableLevantamiento = observacion.ResponsableMarcobre2!=null?
-                                                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : 
+                            ResponsableLevantamiento = observacion.ResponsableMarcobre2 != null ?
+                                                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) :
                                                         observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos,
                             FechaProgramada = observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "No Aplica",
                             EvidenciaImplementacion = observacion.EvidenciaImplementacion,
@@ -329,6 +329,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                             RiesgoFatalidad = "",
                             GerenciaLevantamiento = inspeccion.GerenciaInspeccionada,
                             GerenciaInspeccion = inspeccion.Gerencia,
+                            ParticipantesInspeccion = inspeccion.Participantes,
+                            Asesor = observacion.Asesor.Nombres + " " + observacion.Asesor.Apellidos,
                             Codigo = inspeccion.Codigo
                         });
                     }
@@ -345,7 +347,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     IRow row = sheet.CreateRow(fila);
 
                     //Aplicar cell style a una fila de observación
-                    for (int i = 1; i <= 19; i++)
+                    for (int i = 1; i <= 21; i++)
                     {
                         row.CreateCell(i);
                         row.GetCell(i).CellStyle = estiloNormal;
@@ -436,14 +438,18 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     row.GetCell(startIndex + 16).SetCellValue(observacion.GerenciaLevantamiento);
                     //-> Gerencia Responsable de la Inspección
                     row.GetCell(startIndex + 17).SetCellValue(observacion.GerenciaInspeccion);
+                    //-> Gerencia Responsable de la Inspección
+                    row.GetCell(startIndex + 18).SetCellValue(observacion.ParticipantesInspeccion);
+                    //-> Gerencia Responsable de la Inspección
+                    row.GetCell(startIndex + 19).SetCellValue(observacion.Asesor);
                     //-> N° Inspección GESTIONA
-                    row.GetCell(startIndex + 18).SetCellValue(observacion.Codigo);
+                    row.GetCell(startIndex + 20).SetCellValue(observacion.Codigo);
                     XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
                     {
                         //Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccion?IdCabecera="+(_protector.Protect(observacion.IdInspeccion))
                         Address = "https://gestiona.marcobre.com:9190/Inspecciones/DetalleInspeccionNotificacion?IdCabecera=" + observacion.IdInspeccion
                     };
-                    row.GetCell(startIndex + 18).Hyperlink = (UrlLinkLugReg);
+                    row.GetCell(startIndex + 20).Hyperlink = (UrlLinkLugReg);
 
                     obsIndex++;
                     fila++;
@@ -726,6 +732,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string RiesgoFatalidad { get; set; }
             public string GerenciaLevantamiento { get; set; }
             public string GerenciaInspeccion { get; set; }
+            public string ParticipantesInspeccion { get; set; }
+            public string Asesor { get; set; }
             public string Codigo { get; set; }
         }
         private class Estilo{

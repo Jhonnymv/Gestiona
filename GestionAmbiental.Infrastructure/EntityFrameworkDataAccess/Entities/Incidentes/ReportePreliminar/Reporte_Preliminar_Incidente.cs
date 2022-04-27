@@ -33,11 +33,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Inc
         public DateTime? Fecha_Incidente { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Producto_Derramado { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double? Cantidad_Derramado { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Cantidad_Derramado { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double? Area_Afectada { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Unidad_Area_Afectada { get; set; }

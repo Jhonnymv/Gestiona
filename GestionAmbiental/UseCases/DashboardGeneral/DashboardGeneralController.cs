@@ -6,8 +6,10 @@ using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.Rankin
 using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.RankingUsuariosObsVencidas;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.TopActosSubestandar;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.TopCondicionesSubestandar;
+using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,6 +29,9 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
         private readonly ITopActosSubestandar _topActosSubestandar;
         private readonly ITopCondicionesSubestandar _topCondicionesSubestandar;
 
+
+        private readonly IGetItemsFiltro _getItemsFiltroInspecciones;
+
         public DashboardGeneralController(
             IInspeccionesActoCondicionBP inspeccionesActoCondicionBP, 
             IInspeccionesEstadosCondicion inspeccionesEstadosCondicion,
@@ -35,7 +40,8 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             IRankingUsuariosIngresoInspecciones rankingUsuariosIngresoInspecciones,
             IRankingUsuariosObsVencidas rankingUsuariosObsVencidas,
             ITopActosSubestandar topActosSubestandar,
-            ITopCondicionesSubestandar topCondicionesSubestandar)
+            ITopCondicionesSubestandar topCondicionesSubestandar,
+            IGetItemsFiltro getItemsFiltroInspecciones)
         {
             _inspeccionesActoCondicionBP = inspeccionesActoCondicionBP;
             _inspeccionesEstadosCondicion = inspeccionesEstadosCondicion;
@@ -45,6 +51,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             _rankingUsuariosObsVencidas = rankingUsuariosObsVencidas;
             _topActosSubestandar = topActosSubestandar;
             _topCondicionesSubestandar = topCondicionesSubestandar;
+            _getItemsFiltroInspecciones = getItemsFiltroInspecciones;
         }
 
         public async Task<IActionResult> Test()
@@ -60,88 +67,44 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                var itemsFiltro = await _getItemsFiltroInspecciones.Execute();
+
+                var filtroEmpresas = itemsFiltro.Empresas.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var filtroGerencias = itemsFiltro.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var filtroRespLevObs = itemsFiltro.RespLevObs.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+                filtroRespLevObs.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var grupoMA = new SelectListGroup() { Name = "Asesores MA", Disabled = false };
+                var grupoSSO = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
+
+                var filtroAsesor = itemsFiltro.AsesoresMAP.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoMA }).ToList();
+                filtroAsesor.AddRange(itemsFiltro.AsesoresSSO.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos, Group = grupoSSO }).ToList());
+                filtroAsesor.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+
+                var filtroEstados = new List<SelectListItem> {
+                    new SelectListItem("--SELECCIONE--", "", true),
+                    new SelectListItem("Pendiente de Implementación", "Pendiente", false),
+                    new SelectListItem("Pendiente de Verificación", "Verificacion", false),
+                    new SelectListItem("Vencido", "Vencido", false),
+                    new SelectListItem("Aprobado", "Aprobado", false),
+                    new SelectListItem("Rechazado (Buenas Prácticas)", "Rechazado", false)
+                };
+
+                ViewBag.FiltroEmpresas = filtroEmpresas;
+                ViewBag.FiltroGerencias = filtroGerencias;
+                ViewBag.FiltroRespLevObs = filtroRespLevObs;
+                ViewBag.FiltroAsesor = filtroAsesor;
+                ViewBag.FiltroEstados = filtroEstados;
+                ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
+                ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+
                 return View();
             }
         }
-        [HttpPost]
-        public async Task<IActionResult> InspeccionesActoCondicionBP()
-        {
-            var data = await _inspeccionesActoCondicionBP.Execute();
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> InspeccionesEstadosCondicion()
-        {
-            var data = await _inspeccionesEstadosCondicion.Execute();
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> RankingGerenciaObsVencidas()
-        {
-            var data = await _rankingGerenciaObsVencidas.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> RankingGerenciaReportante()
-        {
-            var data = await _rankingGerenciaReportante.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> RankingUsuariosIngresoInspecciones()
-        {
-            var data = await _rankingUsuariosIngresoInspecciones.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> RankingUsuariosObsVencidas()
-        {
-            var data = await _rankingUsuariosObsVencidas.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> TopActosSubestandar()
-        {
-            var data = await _topActosSubestandar.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
-        [HttpPost]
-        public async Task<IActionResult> TopCondicionesSubestandar()
-        {
-            var data = await _topCondicionesSubestandar.Execute(10);
-            dynamic response = new
-            {
-                data = data
-            };
-            return Ok(response);
-        }
+        
     }
 }

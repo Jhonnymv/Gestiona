@@ -69,6 +69,17 @@
                             <input id="codigo_filtro" type="text" class="form-control">
                         </div>
                     </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-4">
+                            <label>Área Ejecutora</label>
+                            <select id="area_filtro" asp-items="@ViewBag.Areas" class="selectpicker form-control" data-live-search="true" title="No se ha seleccionado ninguna opción" multiple>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-4">
+                        </div>
+                        <div class="col-12 col-md-4">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-12 col-lg-3">
                     <div class="row ms-1 me-1">
@@ -144,6 +155,7 @@
                     "rpp": 10,
                     "fechaInicioFiltro": $('#fecha_inicio_filtro').val(),
                     "fechaFinFiltro": $('#fecha_fin_filtro').val(),
+                    "areasFiltro": $('#area_filtro').val(),
                     "gerenciaFiltro": $('#gerencia_filtro').val(),
                     "empresaFiltro": $('#empresa_filtro').val(),
                     "registradoPorFiltro": $('#registrado_por_filtro').val(),
