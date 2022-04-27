@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.Ra
 {
     public interface IRankingUsuariosObsVencidas
     {
-        Task<InspeccionesMAPSSOOutput> Execute(int top);
+        Task<InspeccionesMAPSSOOutput> Execute(int top, int IdGerenciaInsp, int IdEmpresaInsp, string FInicioInsp, string FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
     }
 }

@@ -65,7 +65,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task<string> GetUltimoCodigo()
         {
-            var codigo = await _context.RACs.OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
+            var codigo = await _context.RACs.Where(x => !x.Estado.Equals(EstadosRAC.Eliminado.ToString())).OrderBy(x => x.Codigo).Select(x => x.Codigo).LastOrDefaultAsync();
             return codigo;
         }
     }

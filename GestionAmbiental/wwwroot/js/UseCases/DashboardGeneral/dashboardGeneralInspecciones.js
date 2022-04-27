@@ -1,123 +1,140 @@
 ﻿$(document).ready(function () {
-    ActualizarDatosGraficoActoCondicionBP();
-    ActualizarDatosGraficoCondicion();
-    ActualizarDatosGraficoTopActos();
-    ActualizarDatosGraficoTopCondicion();
-    ActualizarDatosGraficoRankingGerenciaIngresoInsp();
-    ActualizarDatosGraficoRankingGerenciaObsVencidas();
-    ActualizarDatosGraficoRankingUsuarioIngresoInsp();
-    ActualizarDatosGraficoRankingUsuarioObsVencidas();
+    ActualizarInspeccionDatosGraficoActoCondicionBP();
+    ActualizarInspeccionDatosGraficoCondicion();
+    ActualizarInspeccionDatosGraficoTopActos();
+    ActualizarInspeccionDatosGraficoTopCondicion();
+    ActualizarInspeccionDatosGraficoRankingGerenciaIngresoInsp();
+    ActualizarInspeccionDatosGraficoRankingGerenciaObsVencidas();
+    ActualizarInspeccionDatosGraficoRankingUsuarioIngresoInsp();
+    ActualizarInspeccionDatosGraficoRankingUsuarioObsVencidas();
 });
+function FiltrarInspecciones() {
+    ActualizarInspeccionDatosGraficoActoCondicionBP();
+    ActualizarInspeccionDatosGraficoCondicion();
+    ActualizarInspeccionDatosGraficoTopActos();
+    ActualizarInspeccionDatosGraficoTopCondicion();
+    ActualizarInspeccionDatosGraficoRankingGerenciaIngresoInsp();
+    ActualizarInspeccionDatosGraficoRankingGerenciaObsVencidas();
+    ActualizarInspeccionDatosGraficoRankingUsuarioIngresoInsp();
+    ActualizarInspeccionDatosGraficoRankingUsuarioObsVencidas();
+}
 //Actos Subestándar - Condiciones Subestándar - Buenas Prácticas
-//Variables gráficos chart_acto_condicion_bp
-var data_acto_condicion_bp_map = [];
-var graph_acto_condicion_bp_map;
+//Variables gráficos chart_inspeccion_acto_condicion_bp
+var data_acto_condicion_bp_map_inspeccion = [];
+var graph_acto_condicion_bp_map_inspeccion;
 
-var data_acto_condicion_bp_sso = [];
-var graph_acto_condicion_bp_sso;
+var data_acto_condicion_bp_sso_inspeccion = [];
+var graph_acto_condicion_bp_sso_inspeccion;
 
-var data_acto_condicion_bp_todo = [];
-var graph_acto_condicion_bp_todo;
-//Para gráficos chart_acto_condicion_bp
-function ActualizarDatosGraficoActoCondicionBP() {
+var data_acto_condicion_bp_todo_inspeccion = [];
+var graph_acto_condicion_bp_todo_inspeccion;
+//Para gráficos chart_inspeccion_acto_condicion_bp
+function ActualizarInspeccionDatosGraficoActoCondicionBP() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/InspeccionesActoCondicionBP",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/InspeccionesActoCondicionBP",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_acto_condicion_bp_map.length > 0) {
+            if (data_acto_condicion_bp_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_acto_condicion_bp_map = response.data.resultadosMAP;
+                data_acto_condicion_bp_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_map.length; i++) {
-                    labels.push(data_acto_condicion_bp_map[i].nombre);
-                    data.push(data_acto_condicion_bp_map[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_map_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_map_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_acto_condicion_bp_map.data.labels = labels;
-                graph_acto_condicion_bp_map.data.datasets[0].data = data;
-                graph_acto_condicion_bp_map.update();
+                graph_acto_condicion_bp_map_inspeccion.data.labels = labels;
+                graph_acto_condicion_bp_map_inspeccion.data.datasets[0].data = data;
+                graph_acto_condicion_bp_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_acto_condicion_bp_map = response.data.resultadosMAP;
+                data_acto_condicion_bp_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_map.length; i++) {
-                    labels.push(data_acto_condicion_bp_map[i].nombre);
-                    data.push(data_acto_condicion_bp_map[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_map_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_map_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoActoCondicionBPMAP(labels, data);
+                CrearGraficoInspeccionesActoCondicionBPMAP(labels, data);
             }
             //SSO
-            if (data_acto_condicion_bp_sso.length > 0) {
+            if (data_acto_condicion_bp_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_acto_condicion_bp_sso = response.data.resultadosSSO;
+                data_acto_condicion_bp_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_sso.length; i++) {
-                    labels.push(data_acto_condicion_bp_sso[i].nombre);
-                    data.push(data_acto_condicion_bp_sso[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_sso_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_sso_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_acto_condicion_bp_sso.data.labels = labels;
-                graph_acto_condicion_bp_sso.data.datasets[0].data = data;
-                graph_acto_condicion_bp_sso.update();
+                graph_acto_condicion_bp_sso_inspeccion.data.labels = labels;
+                graph_acto_condicion_bp_sso_inspeccion.data.datasets[0].data = data;
+                graph_acto_condicion_bp_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_acto_condicion_bp_sso = response.data.resultadosSSO;
+                data_acto_condicion_bp_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_sso.length; i++) {
-                    labels.push(data_acto_condicion_bp_sso[i].nombre);
-                    data.push(data_acto_condicion_bp_sso[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_sso_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_sso_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoActoCondicionBPSSO(labels, data);
+                CrearGraficoInspeccionesActoCondicionBPSSO(labels, data);
             }
             //Todo
-            if (data_acto_condicion_bp_todo.length > 0) {
+            if (data_acto_condicion_bp_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_acto_condicion_bp_todo = response.data.resultadosTodos;
+                data_acto_condicion_bp_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_todo.length; i++) {
-                    labels.push(data_acto_condicion_bp_todo[i].nombre);
-                    data.push(data_acto_condicion_bp_todo[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_todo_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_todo_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_acto_condicion_bp_todo.data.labels = labels;
-                graph_acto_condicion_bp_todo.data.datasets[0].data = data;
-                graph_acto_condicion_bp_todo.update();
+                graph_acto_condicion_bp_todo_inspeccion.data.labels = labels;
+                graph_acto_condicion_bp_todo_inspeccion.data.datasets[0].data = data;
+                graph_acto_condicion_bp_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_acto_condicion_bp_todo = response.data.resultadosTodos;
+                data_acto_condicion_bp_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_acto_condicion_bp_todo.length; i++) {
-                    labels.push(data_acto_condicion_bp_todo[i].nombre);
-                    data.push(data_acto_condicion_bp_todo[i].valor);
+                for (var i = 0; i < data_acto_condicion_bp_todo_inspeccion.length; i++) {
+                    labels.push(data_acto_condicion_bp_todo_inspeccion[i].nombre);
+                    data.push(data_acto_condicion_bp_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoActoCondicionBPTodo(labels, data);
+                CrearGraficoInspeccionesActoCondicionBPTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoActoCondicionBPMAP(labels, data) {
-    graph_acto_condicion_bp_map = new Chart(
-        document.getElementById("chart_acto_condicion_bp_map"),
+function CrearGraficoInspeccionesActoCondicionBPMAP(labels, data) {
+    graph_acto_condicion_bp_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_acto_condicion_bp_map"),
         {
             "type": "doughnut",
             "data": {
@@ -158,9 +175,9 @@ function CrearGraficoActoCondicionBPMAP(labels, data) {
         }
     );
 }
-function CrearGraficoActoCondicionBPSSO(labels, data) {
-    graph_acto_condicion_bp_sso = new Chart(
-        document.getElementById("chart_acto_condicion_bp_sso"),
+function CrearGraficoInspeccionesActoCondicionBPSSO(labels, data) {
+    graph_acto_condicion_bp_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_acto_condicion_bp_sso"),
         {
             "type": "doughnut",
             "data": {
@@ -201,9 +218,9 @@ function CrearGraficoActoCondicionBPSSO(labels, data) {
         }
     );
 }
-function CrearGraficoActoCondicionBPTodo(labels, data) {
-    graph_acto_condicion_bp_todo = new Chart(
-        document.getElementById("chart_acto_condicion_bp_todo"),
+function CrearGraficoInspeccionesActoCondicionBPTodo(labels, data) {
+    graph_acto_condicion_bp_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_acto_condicion_bp_todo"),
         {
             "type": "doughnut",
             "data": {
@@ -246,116 +263,123 @@ function CrearGraficoActoCondicionBPTodo(labels, data) {
 }
 
 //Condiciones Subestándar (Abierto - Cerrado -En Plazo)
-//Variables gráficos chart_condicion_bp
-var data_condicion_map = [];
-var graph_condicion_map;
+//Variables gráficos chart_inspeccion_condicion_bp
+var data_condicion_map_inspeccion = [];
+var graph_condicion_map_inspeccion;
 
-var data_condicion_sso = [];
-var graph_condicion_sso;
+var data_condicion_sso_inspeccion = [];
+var graph_condicion_sso_inspeccion;
 
-var data_condicion_todo = [];
-var graph_condicion_todo;
-//Para gráficos chart_condicion_bp
+var data_condicion_todo_inspeccion = [];
+var graph_condicion_todo_inspeccion;
+//Para gráficos chart_inspeccion_condicion_bp
 
-function ActualizarDatosGraficoCondicion() {
+function ActualizarInspeccionDatosGraficoCondicion() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/InspeccionesEstadosCondicion",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/InspeccionesEstadosCondicion",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_condicion_map.length > 0) {
+            if (data_condicion_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_condicion_map = response.data.resultadosMAP;
+                data_condicion_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_map.length; i++) {
-                    labels.push(data_condicion_map[i].nombre);
-                    data.push(data_condicion_map[i].valor);
+                for (var i = 0; i < data_condicion_map_inspeccion.length; i++) {
+                    labels.push(data_condicion_map_inspeccion[i].nombre);
+                    data.push(data_condicion_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_condicion_map.data.labels = labels;
-                graph_condicion_map.data.datasets[0].data = data;
-                graph_condicion_map.update();
+                graph_condicion_map_inspeccion.data.labels = labels;
+                graph_condicion_map_inspeccion.data.datasets[0].data = data;
+                graph_condicion_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_condicion_map = response.data.resultadosMAP;
+                data_condicion_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_map.length; i++) {
-                    labels.push(data_condicion_map[i].nombre);
-                    data.push(data_condicion_map[i].valor);
+                for (var i = 0; i < data_condicion_map_inspeccion.length; i++) {
+                    labels.push(data_condicion_map_inspeccion[i].nombre);
+                    data.push(data_condicion_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoCondicionMAP(labels, data);
+                CrearGraficoInspeccionesCondicionMAP(labels, data);
             }
             //SSO
-            if (data_condicion_sso.length > 0) {
+            if (data_condicion_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_condicion_sso = response.data.resultadosSSO;
+                data_condicion_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_sso.length; i++) {
-                    labels.push(data_condicion_sso[i].nombre);
-                    data.push(data_condicion_sso[i].valor);
+                for (var i = 0; i < data_condicion_sso_inspeccion.length; i++) {
+                    labels.push(data_condicion_sso_inspeccion[i].nombre);
+                    data.push(data_condicion_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_condicion_sso.data.labels = labels;
-                graph_condicion_sso.data.datasets[0].data = data;
-                graph_condicion_sso.update();
+                graph_condicion_sso_inspeccion.data.labels = labels;
+                graph_condicion_sso_inspeccion.data.datasets[0].data = data;
+                graph_condicion_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_condicion_sso = response.data.resultadosSSO;
+                data_condicion_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_sso.length; i++) {
-                    labels.push(data_condicion_sso[i].nombre);
-                    data.push(data_condicion_sso[i].valor);
+                for (var i = 0; i < data_condicion_sso_inspeccion.length; i++) {
+                    labels.push(data_condicion_sso_inspeccion[i].nombre);
+                    data.push(data_condicion_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoCondicionSSO(labels, data);
+                CrearGraficoInspeccionesCondicionSSO(labels, data);
             }
             //Todo
-            if (data_condicion_todo.length > 0) {
+            if (data_condicion_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_condicion_todo = response.data.resultadosTodos;
+                data_condicion_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_todo.length; i++) {
-                    labels.push(data_condicion_todo[i].nombre);
-                    data.push(data_condicion_todo[i].valor);
+                for (var i = 0; i < data_condicion_todo_inspeccion.length; i++) {
+                    labels.push(data_condicion_todo_inspeccion[i].nombre);
+                    data.push(data_condicion_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_condicion_todo.data.labels = labels;
-                graph_condicion_todo.data.datasets[0].data = data;
-                graph_condicion_todo.update();
+                graph_condicion_todo_inspeccion.data.labels = labels;
+                graph_condicion_todo_inspeccion.data.datasets[0].data = data;
+                graph_condicion_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_condicion_todo = response.data.resultadosTodos;
+                data_condicion_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_condicion_todo.length; i++) {
-                    labels.push(data_condicion_todo[i].nombre);
-                    data.push(data_condicion_todo[i].valor);
+                for (var i = 0; i < data_condicion_todo_inspeccion.length; i++) {
+                    labels.push(data_condicion_todo_inspeccion[i].nombre);
+                    data.push(data_condicion_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoCondicionTodo(labels, data);
+                CrearGraficoInspeccionesCondicionTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoCondicionMAP(labels, data) {
-    graph_condicion_map = new Chart(
-        document.getElementById("chart_condicion_map"),
+function CrearGraficoInspeccionesCondicionMAP(labels, data) {
+    graph_condicion_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_condicion_map"),
         {
             "type": "doughnut",
             "data": {
@@ -396,9 +420,9 @@ function CrearGraficoCondicionMAP(labels, data) {
         }
     );
 }
-function CrearGraficoCondicionSSO(labels, data) {
-    graph_condicion_sso = new Chart(
-        document.getElementById("chart_condicion_sso"),
+function CrearGraficoInspeccionesCondicionSSO(labels, data) {
+    graph_condicion_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_condicion_sso"),
         {
             "type": "doughnut",
             "data": {
@@ -439,9 +463,9 @@ function CrearGraficoCondicionSSO(labels, data) {
         }
     );
 }
-function CrearGraficoCondicionTodo(labels, data) {
-    graph_condicion_todo = new Chart(
-        document.getElementById("chart_condicion_todo"),
+function CrearGraficoInspeccionesCondicionTodo(labels, data) {
+    graph_condicion_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_condicion_todo"),
         {
             "type": "doughnut",
             "data": {
@@ -484,115 +508,122 @@ function CrearGraficoCondicionTodo(labels, data) {
 }
 
 //Top 10 Actos Subestándar Más Reportados
-//Variables gráficos chart_top_actos
-var data_top_actos_map = [];
-var graph_top_actos_map;
+//Variables gráficos chart_inspeccion_top_actos
+var data_top_actos_map_inspeccion = [];
+var graph_top_actos_map_inspeccion;
 
-var data_top_actos_sso = [];
-var graph_top_actos_sso;
+var data_top_actos_sso_inspeccion = [];
+var graph_top_actos_sso_inspeccion;
 
-var data_top_actos_todo = [];
-var graph_top_actos_todo;
-//Para gráficos chart_top_actos
-function ActualizarDatosGraficoTopActos() {
+var data_top_actos_todo_inspeccion = [];
+var graph_top_actos_todo_inspeccion;
+//Para gráficos chart_inspeccion_top_actos
+function ActualizarInspeccionDatosGraficoTopActos() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/TopActosSubestandar",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/TopActosSubestandar",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_top_actos_map.length > 0) {
+            if (data_top_actos_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_actos_map = response.data.resultadosMAP;
+                data_top_actos_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_map.length; i++) {
-                    labels.push(data_top_actos_map[i].nombre);
-                    data.push(data_top_actos_map[i].valor);
+                for (var i = 0; i < data_top_actos_map_inspeccion.length; i++) {
+                    labels.push(data_top_actos_map_inspeccion[i].nombre);
+                    data.push(data_top_actos_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_actos_map.data.labels = labels;
-                graph_top_actos_map.data.datasets[0].data = data;
-                graph_top_actos_map.update();
+                graph_top_actos_map_inspeccion.data.labels = labels;
+                graph_top_actos_map_inspeccion.data.datasets[0].data = data;
+                graph_top_actos_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_actos_map = response.data.resultadosMAP;
+                data_top_actos_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_map.length; i++) {
-                    labels.push(data_top_actos_map[i].nombre);
-                    data.push(data_top_actos_map[i].valor);
+                for (var i = 0; i < data_top_actos_map_inspeccion.length; i++) {
+                    labels.push(data_top_actos_map_inspeccion[i].nombre);
+                    data.push(data_top_actos_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopActosMAP(labels, data);
+                CrearGraficoInspeccionTopActosMAP(labels, data);
             }
             //SSO
-            if (data_top_actos_sso.length > 0) {
+            if (data_top_actos_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_actos_sso = response.data.resultadosSSO;
+                data_top_actos_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_sso.length; i++) {
-                    labels.push(data_top_actos_sso[i].nombre);
-                    data.push(data_top_actos_sso[i].valor);
+                for (var i = 0; i < data_top_actos_sso_inspeccion.length; i++) {
+                    labels.push(data_top_actos_sso_inspeccion[i].nombre);
+                    data.push(data_top_actos_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_actos_sso.data.labels = labels;
-                graph_top_actos_sso.data.datasets[0].data = data;
-                graph_top_actos_sso.update();
+                graph_top_actos_sso_inspeccion.data.labels = labels;
+                graph_top_actos_sso_inspeccion.data.datasets[0].data = data;
+                graph_top_actos_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_actos_sso = response.data.resultadosSSO;
+                data_top_actos_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_sso.length; i++) {
-                    labels.push(data_top_actos_sso[i].nombre);
-                    data.push(data_top_actos_sso[i].valor);
+                for (var i = 0; i < data_top_actos_sso_inspeccion.length; i++) {
+                    labels.push(data_top_actos_sso_inspeccion[i].nombre);
+                    data.push(data_top_actos_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopActosSSO(labels, data);
+                CrearGraficoInspeccionTopActosSSO(labels, data);
             }
             //Todo
-            if (data_top_actos_todo.length > 0) {
+            if (data_top_actos_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_actos_todo = response.data.resultadosTodos;
+                data_top_actos_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_todo.length; i++) {
-                    labels.push(data_top_actos_todo[i].nombre);
-                    data.push(data_top_actos_todo[i].valor);
+                for (var i = 0; i < data_top_actos_todo_inspeccion.length; i++) {
+                    labels.push(data_top_actos_todo_inspeccion[i].nombre);
+                    data.push(data_top_actos_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_actos_todo.data.labels = labels;
-                graph_top_actos_todo.data.datasets[0].data = data;
-                graph_top_actos_todo.update();
+                graph_top_actos_todo_inspeccion.data.labels = labels;
+                graph_top_actos_todo_inspeccion.data.datasets[0].data = data;
+                graph_top_actos_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_actos_todo = response.data.resultadosTodos;
+                data_top_actos_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_actos_todo.length; i++) {
-                    labels.push(data_top_actos_todo[i].nombre);
-                    data.push(data_top_actos_todo[i].valor);
+                for (var i = 0; i < data_top_actos_todo_inspeccion.length; i++) {
+                    labels.push(data_top_actos_todo_inspeccion[i].nombre);
+                    data.push(data_top_actos_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopActosTodo(labels, data);
+                CrearGraficoInspeccionTopActosTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoTopActosMAP(labels, data) {
-    graph_top_actos_map = new Chart(
-        document.getElementById("chart_top_actos_map"),
+function CrearGraficoInspeccionTopActosMAP(labels, data) {
+    graph_top_actos_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_actos_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -636,9 +667,9 @@ function CrearGraficoTopActosMAP(labels, data) {
         }
     );
 }
-function CrearGraficoTopActosSSO(labels, data) {
-    graph_top_actos_sso = new Chart(
-        document.getElementById("chart_top_actos_sso"),
+function CrearGraficoInspeccionTopActosSSO(labels, data) {
+    graph_top_actos_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_actos_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -682,9 +713,9 @@ function CrearGraficoTopActosSSO(labels, data) {
         }
     );
 }
-function CrearGraficoTopActosTodo(labels, data) {
-    graph_top_actos_todo = new Chart(
-        document.getElementById("chart_top_actos_todo"),
+function CrearGraficoInspeccionTopActosTodo(labels, data) {
+    graph_top_actos_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_actos_todo"),
         {
             "type": "horizontalBar",
             "data": {
@@ -730,115 +761,122 @@ function CrearGraficoTopActosTodo(labels, data) {
 }
 
 //Top 10 Condición Subestándar Más Reportados
-//Variables gráficos chart_top_condicion
-var data_top_condicion_map = [];
-var graph_top_condicion_map;
+//Variables gráficos chart_inspeccion_top_condicion
+var data_top_condicion_map_inspeccion = [];
+var graph_top_condicion_map_inspeccion;
 
-var data_top_condicion_sso = [];
-var graph_top_condicion_sso;
+var data_top_condicion_sso_inspeccion = [];
+var graph_top_condicion_sso_inspeccion;
 
-var data_top_condicion_todo = [];
-var graph_top_condicion_todo;
-//Para gráficos chart_top_condicion
-function ActualizarDatosGraficoTopCondicion() {
+var data_top_condicion_todo_inspeccion = [];
+var graph_top_condicion_todo_inspeccion;
+//Para gráficos chart_inspeccion_top_condicion
+function ActualizarInspeccionDatosGraficoTopCondicion() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/TopCondicionesSubestandar",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/TopCondicionesSubestandar",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_top_condicion_map.length > 0) {
+            if (data_top_condicion_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_condicion_map = response.data.resultadosMAP;
+                data_top_condicion_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_map.length; i++) {
-                    labels.push(data_top_condicion_map[i].nombre);
-                    data.push(data_top_condicion_map[i].valor);
+                for (var i = 0; i < data_top_condicion_map_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_map_inspeccion[i].nombre);
+                    data.push(data_top_condicion_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_condicion_map.data.labels = labels;
-                graph_top_condicion_map.data.datasets[0].data = data;
-                graph_top_condicion_map.update();
+                graph_top_condicion_map_inspeccion.data.labels = labels;
+                graph_top_condicion_map_inspeccion.data.datasets[0].data = data;
+                graph_top_condicion_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_condicion_map = response.data.resultadosMAP;
+                data_top_condicion_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_map.length; i++) {
-                    labels.push(data_top_condicion_map[i].nombre);
-                    data.push(data_top_condicion_map[i].valor);
+                for (var i = 0; i < data_top_condicion_map_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_map_inspeccion[i].nombre);
+                    data.push(data_top_condicion_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopCondicionMAP(labels, data);
+                CrearGraficoInspeccionTopCondicionMAP(labels, data);
             }
             //SSO
-            if (data_top_condicion_sso.length > 0) {
+            if (data_top_condicion_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_condicion_sso = response.data.resultadosSSO;
+                data_top_condicion_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_sso.length; i++) {
-                    labels.push(data_top_condicion_sso[i].nombre);
-                    data.push(data_top_condicion_sso[i].valor);
+                for (var i = 0; i < data_top_condicion_sso_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_sso_inspeccion[i].nombre);
+                    data.push(data_top_condicion_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_condicion_sso.data.labels = labels;
-                graph_top_condicion_sso.data.datasets[0].data = data;
-                graph_top_condicion_sso.update();
+                graph_top_condicion_sso_inspeccion.data.labels = labels;
+                graph_top_condicion_sso_inspeccion.data.datasets[0].data = data;
+                graph_top_condicion_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_condicion_sso = response.data.resultadosSSO;
+                data_top_condicion_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_sso.length; i++) {
-                    labels.push(data_top_condicion_sso[i].nombre);
-                    data.push(data_top_condicion_sso[i].valor);
+                for (var i = 0; i < data_top_condicion_sso_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_sso_inspeccion[i].nombre);
+                    data.push(data_top_condicion_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopCondicionSSO(labels, data);
+                CrearGraficoInspeccionTopCondicionSSO(labels, data);
             }
             //Todo
-            if (data_top_condicion_todo.length > 0) {
+            if (data_top_condicion_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_top_condicion_todo = response.data.resultadosTodos;
+                data_top_condicion_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_todo.length; i++) {
-                    labels.push(data_top_condicion_todo[i].nombre);
-                    data.push(data_top_condicion_todo[i].valor);
+                for (var i = 0; i < data_top_condicion_todo_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_todo_inspeccion[i].nombre);
+                    data.push(data_top_condicion_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_top_condicion_todo.data.labels = labels;
-                graph_top_condicion_todo.data.datasets[0].data = data;
-                graph_top_condicion_todo.update();
+                graph_top_condicion_todo_inspeccion.data.labels = labels;
+                graph_top_condicion_todo_inspeccion.data.datasets[0].data = data;
+                graph_top_condicion_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_top_condicion_todo = response.data.resultadosTodos;
+                data_top_condicion_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_top_condicion_todo.length; i++) {
-                    labels.push(data_top_condicion_todo[i].nombre);
-                    data.push(data_top_condicion_todo[i].valor);
+                for (var i = 0; i < data_top_condicion_todo_inspeccion.length; i++) {
+                    labels.push(data_top_condicion_todo_inspeccion[i].nombre);
+                    data.push(data_top_condicion_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoTopCondicionTodo(labels, data);
+                CrearGraficoInspeccionTopCondicionTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoTopCondicionMAP(labels, data) {
-    graph_top_condicion_map = new Chart(
-        document.getElementById("chart_top_condicion_map"),
+function CrearGraficoInspeccionTopCondicionMAP(labels, data) {
+    graph_top_condicion_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_condicion_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -882,9 +920,9 @@ function CrearGraficoTopCondicionMAP(labels, data) {
         }
     );
 }
-function CrearGraficoTopCondicionSSO(labels, data) {
-    graph_top_condicion_sso = new Chart(
-        document.getElementById("chart_top_condicion_sso"),
+function CrearGraficoInspeccionTopCondicionSSO(labels, data) {
+    graph_top_condicion_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_condicion_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -928,9 +966,9 @@ function CrearGraficoTopCondicionSSO(labels, data) {
         }
     );
 }
-function CrearGraficoTopCondicionTodo(labels, data) {
-    graph_top_condicion_todo = new Chart(
-        document.getElementById("chart_top_condicion_todo"),
+function CrearGraficoInspeccionTopCondicionTodo(labels, data) {
+    graph_top_condicion_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_top_condicion_todo"),
         {
             "type": "horizontalBar",
             "data": {
@@ -976,115 +1014,122 @@ function CrearGraficoTopCondicionTodo(labels, data) {
 }
 
 //Ranking De Gerencias que Ingresaron Inspecciones
-//Variables gráficos chart_ranking_ingreso_inspecciones
-var data_ranking_ingreso_inspecciones_map = [];
-var graph_ranking_ingreso_inspecciones_map;
+//Variables gráficos chart_inspeccion_ranking_ingreso_inspecciones
+var data_ranking_ingreso_map_inspeccion = [];
+var graph_ranking_ingreso_map_inspeccion;
 
-var data_ranking_ingreso_inspecciones_sso = [];
-var graph_ranking_ingreso_inspecciones_sso;
+var data_ranking_ingreso_sso_inspeccion = [];
+var graph_ranking_ingreso_sso_inspeccion;
 
-var data_ranking_ingreso_inspecciones_todo = [];
-var graph_ranking_ingreso_inspecciones_todo;
-//Para gráficos chart_ranking_ingreso_inspecciones
-function ActualizarDatosGraficoRankingGerenciaIngresoInsp() {
+var data_ranking_ingreso_todo_inspeccion = [];
+var graph_ranking_ingreso_todo_inspeccion;
+//Para gráficos chart_inspeccion_ranking_ingreso_inspecciones
+function ActualizarInspeccionDatosGraficoRankingGerenciaIngresoInsp() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/RankingGerenciaReportante",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/RankingGerenciaReportante",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_ranking_ingreso_inspecciones_map.length > 0) {
+            if (data_ranking_ingreso_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_map = response.data.resultadosMAP;
+                data_ranking_ingreso_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_map.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_map[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_map[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_map_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_ingreso_inspecciones_map.data.labels = labels;
-                graph_ranking_ingreso_inspecciones_map.data.datasets[0].data = data;
-                graph_ranking_ingreso_inspecciones_map.update();
+                graph_ranking_ingreso_map_inspeccion.data.labels = labels;
+                graph_ranking_ingreso_map_inspeccion.data.datasets[0].data = data;
+                graph_ranking_ingreso_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_map = response.data.resultadosMAP;
+                data_ranking_ingreso_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_map.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_map[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_map[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_map_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaIngresoInspMAP(labels, data);
+                CrearGraficoInspeccionRankingGerenciaIngresoInspMAP(labels, data);
             }
             //SSO
-            if (data_ranking_ingreso_inspecciones_sso.length > 0) {
+            if (data_ranking_ingreso_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_sso = response.data.resultadosSSO;
+                data_ranking_ingreso_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_sso.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_sso[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_sso[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_ingreso_inspecciones_sso.data.labels = labels;
-                graph_ranking_ingreso_inspecciones_sso.data.datasets[0].data = data;
-                graph_ranking_ingreso_inspecciones_sso.update();
+                graph_ranking_ingreso_sso_inspeccion.data.labels = labels;
+                graph_ranking_ingreso_sso_inspeccion.data.datasets[0].data = data;
+                graph_ranking_ingreso_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_sso = response.data.resultadosSSO;
+                data_ranking_ingreso_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_sso.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_sso[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_sso[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaIngresoInspSSO(labels, data);
+                CrearGraficoInspeccionRankingGerenciaIngresoInspSSO(labels, data);
             }
             //Todo
-            if (data_ranking_ingreso_inspecciones_todo.length > 0) {
+            if (data_ranking_ingreso_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_todo = response.data.resultadosTodos;
+                data_ranking_ingreso_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_todo.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_todo[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_todo[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_ingreso_inspecciones_todo.data.labels = labels;
-                graph_ranking_ingreso_inspecciones_todo.data.datasets[0].data = data;
-                graph_ranking_ingreso_inspecciones_todo.update();
+                graph_ranking_ingreso_todo_inspeccion.data.labels = labels;
+                graph_ranking_ingreso_todo_inspeccion.data.datasets[0].data = data;
+                graph_ranking_ingreso_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_ingreso_inspecciones_todo = response.data.resultadosTodos;
+                data_ranking_ingreso_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_ingreso_inspecciones_todo.length; i++) {
-                    labels.push(data_ranking_ingreso_inspecciones_todo[i].nombre);
-                    data.push(data_ranking_ingreso_inspecciones_todo[i].valor);
+                for (var i = 0; i < data_ranking_ingreso_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_ingreso_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_ingreso_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaIngresoInspTodo(labels, data);
+                CrearGraficoInspeccionRankingGerenciaIngresoInspTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoRankingGerenciaIngresoInspMAP(labels, data) {
-    graph_ranking_ingreso_inspecciones_map = new Chart(
-        document.getElementById("chart_ranking_ingreso_inspecciones_map"),
+function CrearGraficoInspeccionRankingGerenciaIngresoInspMAP(labels, data) {
+    graph_ranking_ingreso_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_ingreso_inspecciones_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1128,9 +1173,9 @@ function CrearGraficoRankingGerenciaIngresoInspMAP(labels, data) {
         }
     );
 }
-function CrearGraficoRankingGerenciaIngresoInspSSO(labels, data) {
-    graph_ranking_ingreso_inspecciones_sso = new Chart(
-        document.getElementById("chart_ranking_ingreso_inspecciones_sso"),
+function CrearGraficoInspeccionRankingGerenciaIngresoInspSSO(labels, data) {
+    graph_ranking_ingreso_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_ingreso_inspecciones_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1174,9 +1219,9 @@ function CrearGraficoRankingGerenciaIngresoInspSSO(labels, data) {
         }
     );
 }
-function CrearGraficoRankingGerenciaIngresoInspTodo(labels, data) {
-    graph_ranking_ingreso_inspecciones_todo = new Chart(
-        document.getElementById("chart_ranking_ingreso_inspecciones_todo"),
+function CrearGraficoInspeccionRankingGerenciaIngresoInspTodo(labels, data) {
+    graph_ranking_ingreso_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_ingreso_inspecciones_todo"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1222,115 +1267,122 @@ function CrearGraficoRankingGerenciaIngresoInspTodo(labels, data) {
 }
 
 //Ranking De Gerencias que Tiene Observaciones Vencidas
-//Variables gráficos chart_ranking_obs_vencidas
-var data_ranking_obs_vencidas_map = [];
-var graph_ranking_obs_vencidas_map;
+//Variables gráficos chart_inspeccion_ranking_obs_vencidas
+var data_ranking_obs_vencidas_map_inspeccion = [];
+var graph_ranking_obs_vencidas_map_inspeccion;
 
-var data_ranking_obs_vencidas_sso = [];
-var graph_ranking_obs_vencidas_sso;
+var data_ranking_obs_vencidas_sso_inspeccion = [];
+var graph_ranking_obs_vencidas_sso_inspeccion;
 
-var data_ranking_obs_vencidas_todo = [];
-var graph_ranking_obs_vencidas_todo;
-//Para gráficos chart_ranking_ingreso_inspecciones
-function ActualizarDatosGraficoRankingGerenciaObsVencidas() {
+var data_ranking_obs_vencidas_todo_inspeccion = [];
+var graph_ranking_obs_vencidas_todo_inspeccion;
+//Para gráficos chart_inspeccion_ranking_ingreso_inspecciones
+function ActualizarInspeccionDatosGraficoRankingGerenciaObsVencidas() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/RankingGerenciaObsVencidas",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/RankingGerenciaObsVencidas",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_ranking_obs_vencidas_map.length > 0) {
+            if (data_ranking_obs_vencidas_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_obs_vencidas_map = response.data.resultadosMAP;
+                data_ranking_obs_vencidas_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_map.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_map[i].nombre);
-                    data.push(data_ranking_obs_vencidas_map[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_map_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_obs_vencidas_map.data.labels = labels;
-                graph_ranking_obs_vencidas_map.data.datasets[0].data = data;
-                graph_ranking_obs_vencidas_map.update();
+                graph_ranking_obs_vencidas_map_inspeccion.data.labels = labels;
+                graph_ranking_obs_vencidas_map_inspeccion.data.datasets[0].data = data;
+                graph_ranking_obs_vencidas_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_obs_vencidas_map = response.data.resultadosMAP;
+                data_ranking_obs_vencidas_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_map.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_map[i].nombre);
-                    data.push(data_ranking_obs_vencidas_map[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_map_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaObsVencidasMAP(labels, data);
+                CrearGraficoInspeccionRankingGerenciaObsVencidasMAP(labels, data);
             }
             //SSO
-            if (data_ranking_obs_vencidas_sso.length > 0) {
+            if (data_ranking_obs_vencidas_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_obs_vencidas_sso = response.data.resultadosSSO;
+                data_ranking_obs_vencidas_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_sso.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_sso[i].nombre);
-                    data.push(data_ranking_obs_vencidas_sso[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_obs_vencidas_sso.data.labels = labels;
-                graph_ranking_obs_vencidas_sso.data.datasets[0].data = data;
-                graph_ranking_obs_vencidas_sso.update();
+                graph_ranking_obs_vencidas_sso_inspeccion.data.labels = labels;
+                graph_ranking_obs_vencidas_sso_inspeccion.data.datasets[0].data = data;
+                graph_ranking_obs_vencidas_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_obs_vencidas_sso = response.data.resultadosSSO;
+                data_ranking_obs_vencidas_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_sso.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_sso[i].nombre);
-                    data.push(data_ranking_obs_vencidas_sso[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaObsVencidasSSO(labels, data);
+                CrearGraficoInspeccionRankingGerenciaObsVencidasSSO(labels, data);
             }
             //Todo
-            if (data_ranking_obs_vencidas_todo.length > 0) {
+            if (data_ranking_obs_vencidas_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_obs_vencidas_todo = response.data.resultadosTodos;
+                data_ranking_obs_vencidas_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_todo.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_todo[i].nombre);
-                    data.push(data_ranking_obs_vencidas_todo[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_obs_vencidas_todo.data.labels = labels;
-                graph_ranking_obs_vencidas_todo.data.datasets[0].data = data;
-                graph_ranking_obs_vencidas_todo.update();
+                graph_ranking_obs_vencidas_todo_inspeccion.data.labels = labels;
+                graph_ranking_obs_vencidas_todo_inspeccion.data.datasets[0].data = data;
+                graph_ranking_obs_vencidas_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_obs_vencidas_todo = response.data.resultadosTodos;
+                data_ranking_obs_vencidas_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_obs_vencidas_todo.length; i++) {
-                    labels.push(data_ranking_obs_vencidas_todo[i].nombre);
-                    data.push(data_ranking_obs_vencidas_todo[i].valor);
+                for (var i = 0; i < data_ranking_obs_vencidas_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_obs_vencidas_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_obs_vencidas_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingGerenciaObsVencidasTodo(labels, data);
+                CrearGraficoInspeccionRankingGerenciaObsVencidasTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoRankingGerenciaObsVencidasMAP(labels, data) {
-    graph_ranking_obs_vencidas_map = new Chart(
-        document.getElementById("chart_ranking_obs_vencidas_map"),
+function CrearGraficoInspeccionRankingGerenciaObsVencidasMAP(labels, data) {
+    graph_ranking_obs_vencidas_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_obs_vencidas_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1374,9 +1426,9 @@ function CrearGraficoRankingGerenciaObsVencidasMAP(labels, data) {
         }
     );
 }
-function CrearGraficoRankingGerenciaObsVencidasSSO(labels, data) {
-    graph_ranking_obs_vencidas_sso = new Chart(
-        document.getElementById("chart_ranking_obs_vencidas_sso"),
+function CrearGraficoInspeccionRankingGerenciaObsVencidasSSO(labels, data) {
+    graph_ranking_obs_vencidas_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_obs_vencidas_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1420,9 +1472,9 @@ function CrearGraficoRankingGerenciaObsVencidasSSO(labels, data) {
         }
     );
 }
-function CrearGraficoRankingGerenciaObsVencidasTodo(labels, data) {
-    graph_ranking_obs_vencidas_todo = new Chart(
-        document.getElementById("chart_ranking_obs_vencidas_todo"),
+function CrearGraficoInspeccionRankingGerenciaObsVencidasTodo(labels, data) {
+    graph_ranking_obs_vencidas_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_obs_vencidas_todo"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1466,118 +1518,124 @@ function CrearGraficoRankingGerenciaObsVencidasTodo(labels, data) {
         }
     );
 }
-
 
 //Ranking De Personas que Ingresaron Inspecciones
-//Variables gráficos chart_ranking_usuarios_ingreso
-var data_ranking_usuarios_ingreso_inspecciones_map = [];
-var graph_ranking_usuarios_ingreso_inspecciones_map;
+//Variables gráficos chart_inspeccion_ranking_usuarios_ingreso
+var data_ranking_usuarios_ingreso_map_inspeccion = [];
+var graph_ranking_usuarios_ingreso_map_inspeccion;
 
-var data_ranking_usuarios_ingreso_inspecciones_sso = [];
-var graph_ranking_usuarios_ingreso_inspecciones_sso;
+var data_ranking_usuarios_ingreso_sso_inspeccion = [];
+var graph_ranking_usuarios_ingreso_sso_inspeccion;
 
-var data_ranking_usuarios_ingreso_inspecciones_todo = [];
-var graph_ranking_usuarios_ingreso_inspecciones_todo;
-//Para gráficos chart_ranking_usuarios_usuarios_ingreso
-function ActualizarDatosGraficoRankingUsuarioIngresoInsp() {
+var data_ranking_usuarios_ingreso_todo_inspeccion = [];
+var graph_ranking_usuarios_ingreso_todo_inspeccion;
+//Para gráficos chart_inspeccion_ranking_usuarios_usuarios_ingreso
+function ActualizarInspeccionDatosGraficoRankingUsuarioIngresoInsp() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/RankingUsuariosIngresoInspecciones",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/RankingUsuariosIngresoInspecciones",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_ranking_usuarios_ingreso_inspecciones_map.length > 0) {
+            if (data_ranking_usuarios_ingreso_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_map = response.data.resultadosMAP;
+                data_ranking_usuarios_ingreso_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_map.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_map[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_map[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_map_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_ingreso_inspecciones_map.data.labels = labels;
-                graph_ranking_usuarios_ingreso_inspecciones_map.data.datasets[0].data = data;
-                graph_ranking_usuarios_ingreso_inspecciones_map.update();
+                graph_ranking_usuarios_ingreso_map_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_ingreso_map_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_ingreso_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_map = response.data.resultadosMAP;
+                data_ranking_usuarios_ingreso_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_map.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_map[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_map[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_map_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioIngresoInspMAP(labels, data);
+                CrearGraficoInspeccionRankingUsuarioIngresoInspMAP(labels, data);
             }
             //SSO
-            if (data_ranking_usuarios_ingreso_inspecciones_sso.length > 0) {
+            if (data_ranking_usuarios_ingreso_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_sso = response.data.resultadosSSO;
+                data_ranking_usuarios_ingreso_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_sso.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_sso[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_sso[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_ingreso_inspecciones_sso.data.labels = labels;
-                graph_ranking_usuarios_ingreso_inspecciones_sso.data.datasets[0].data = data;
-                graph_ranking_usuarios_ingreso_inspecciones_sso.update();
+                graph_ranking_usuarios_ingreso_sso_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_ingreso_sso_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_ingreso_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_sso = response.data.resultadosSSO;
+                data_ranking_usuarios_ingreso_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_sso.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_sso[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_sso[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioIngresoInspSSO(labels, data);
+                CrearGraficoInspeccionRankingUsuarioIngresoInspSSO(labels, data);
             }
             //Todo
-            if (data_ranking_usuarios_ingreso_inspecciones_todo.length > 0) {
+            if (data_ranking_usuarios_ingreso_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_todo = response.data.resultadosTodos;
+                data_ranking_usuarios_ingreso_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_todo.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_todo[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_todo[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_ingreso_inspecciones_todo.data.labels = labels;
-                graph_ranking_usuarios_ingreso_inspecciones_todo.data.datasets[0].data = data;
-                graph_ranking_usuarios_ingreso_inspecciones_todo.update();
+                graph_ranking_usuarios_ingreso_todo_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_ingreso_todo_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_ingreso_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_ingreso_inspecciones_todo = response.data.resultadosTodos;
+                data_ranking_usuarios_ingreso_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_ingreso_inspecciones_todo.length; i++) {
-                    labels.push(data_ranking_usuarios_ingreso_inspecciones_todo[i].nombre);
-                    data.push(data_ranking_usuarios_ingreso_inspecciones_todo[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_ingreso_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_ingreso_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_ingreso_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioIngresoInspTodo(labels, data);
+                CrearGraficoInspeccionRankingUsuarioIngresoInspTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoRankingUsuarioIngresoInspMAP(labels, data) {
-    graph_ranking_usuarios_ingreso_inspecciones_map = new Chart(
-        document.getElementById("chart_ranking_usuarios_ingreso_map"),
+function CrearGraficoInspeccionRankingUsuarioIngresoInspMAP(labels, data) {
+    graph_ranking_usuarios_ingreso_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_ingreso_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1621,9 +1679,9 @@ function CrearGraficoRankingUsuarioIngresoInspMAP(labels, data) {
         }
     );
 }
-function CrearGraficoRankingUsuarioIngresoInspSSO(labels, data) {
-    graph_ranking_usuarios_ingreso_inspecciones_sso = new Chart(
-        document.getElementById("chart_ranking_usuarios_ingreso_sso"),
+function CrearGraficoInspeccionRankingUsuarioIngresoInspSSO(labels, data) {
+    graph_ranking_usuarios_ingreso_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_ingreso_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1667,9 +1725,9 @@ function CrearGraficoRankingUsuarioIngresoInspSSO(labels, data) {
         }
     );
 }
-function CrearGraficoRankingUsuarioIngresoInspTodo(labels, data) {
-    graph_ranking_usuarios_ingreso_inspecciones_todo = new Chart(
-        document.getElementById("chart_ranking_usuarios_ingreso_todo"),
+function CrearGraficoInspeccionRankingUsuarioIngresoInspTodo(labels, data) {
+    graph_ranking_usuarios_ingreso_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_ingreso_todo"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1715,115 +1773,122 @@ function CrearGraficoRankingUsuarioIngresoInspTodo(labels, data) {
 }
 
 //Ranking De Gerencias que Tiene Observaciones Vencidas
-//Variables gráficos chart_ranking_usuarios_obs_vencidas
-var data_ranking_usuarios_obs_vencidas_map = [];
-var graph_ranking_usuarios_obs_vencidas_map;
+//Variables gráficos chart_inspeccion_ranking_usuarios_obs_vencidas
+var data_ranking_usuarios_obs_vencidas_map_inspeccion = [];
+var graph_ranking_usuarios_obs_vencidas_map_inspeccion;
 
-var data_ranking_usuarios_obs_vencidas_sso = [];
-var graph_ranking_usuarios_obs_vencidas_sso;
+var data_ranking_usuarios_obs_vencidas_sso_inspeccion = [];
+var graph_ranking_usuarios_obs_vencidas_sso_inspeccion;
 
-var data_ranking_usuarios_obs_vencidas_todo = [];
-var graph_ranking_usuarios_obs_vencidas_todo;
-//Para gráficos chart_ranking_usuarios_ingreso
-function ActualizarDatosGraficoRankingUsuarioObsVencidas() {
+var data_ranking_usuarios_obs_vencidas_todo_inspeccion = [];
+var graph_ranking_usuarios_obs_vencidas_todo_inspeccion;
+//Para gráficos chart_inspeccion_ranking_usuarios_ingreso
+function ActualizarInspeccionDatosGraficoRankingUsuarioObsVencidas() {
     $.ajax({
         type: "POST",
-        url: "/DashboardGeneral/RankingUsuariosObsVencidas",
-        //data: {
-        //    "tipo_incidente": $("#TipoIncidente").val(),
-        //},
+        url: "/DashboardInspecciones/RankingUsuariosObsVencidas",
+        data: {
+            "IdGerenciaInsp": $("#IdGerenciaInsp").val(),
+            "IdEmpresaInsp": $("#IdEmpresaInsp").val(),
+            "FInicioInsp": $("#FInicioInsp").val(),
+            "FFinInsp": $("#FFinInsp").val(),
+            "IdGerenciaInspeccionadaInsp": $("#IdGerenciaInspeccionadaInsp").val(),
+            "IdAsesorInsp": $("#IdAsesorInsp").val(),
+            "IdRespLevInsp": $("#IdRespLevInsp").val(),
+            "EstadoInsp": $("#EstadoInsp").val(),
+        },
         traditional: true,
         success: (response) => {
             //MAP
-            if (data_ranking_usuarios_obs_vencidas_map.length > 0) {
+            if (data_ranking_usuarios_obs_vencidas_map_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_map = response.data.resultadosMAP;
+                data_ranking_usuarios_obs_vencidas_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_map.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_map[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_map[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_map_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_map_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_obs_vencidas_map.data.labels = labels;
-                graph_ranking_usuarios_obs_vencidas_map.data.datasets[0].data = data;
-                graph_ranking_usuarios_obs_vencidas_map.update();
+                graph_ranking_usuarios_obs_vencidas_map_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_obs_vencidas_map_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_obs_vencidas_map_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_map = response.data.resultadosMAP;
+                data_ranking_usuarios_obs_vencidas_map_inspeccion = response.data.resultadosMAP;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_map.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_map[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_map[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_map_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_map_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_map_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioObsVencidasMAP(labels, data);
+                CrearGraficoInspeccionRankingUsuarioObsVencidasMAP(labels, data);
             }
             //SSO
-            if (data_ranking_usuarios_obs_vencidas_sso.length > 0) {
+            if (data_ranking_usuarios_obs_vencidas_sso_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_sso = response.data.resultadosSSO;
+                data_ranking_usuarios_obs_vencidas_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_sso.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_sso[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_sso[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_sso_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_obs_vencidas_sso.data.labels = labels;
-                graph_ranking_usuarios_obs_vencidas_sso.data.datasets[0].data = data;
-                graph_ranking_usuarios_obs_vencidas_sso.update();
+                graph_ranking_usuarios_obs_vencidas_sso_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_obs_vencidas_sso_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_obs_vencidas_sso_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_sso = response.data.resultadosSSO;
+                data_ranking_usuarios_obs_vencidas_sso_inspeccion = response.data.resultadosSSO;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_sso.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_sso[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_sso[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_sso_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_sso_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_sso_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioObsVencidasSSO(labels, data);
+                CrearGraficoInspeccionRankingUsuarioObsVencidasSSO(labels, data);
             }
             //Todo
-            if (data_ranking_usuarios_obs_vencidas_todo.length > 0) {
+            if (data_ranking_usuarios_obs_vencidas_todo_inspeccion.length > 0) {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_todo = response.data.resultadosTodos;
+                data_ranking_usuarios_obs_vencidas_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_todo.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_todo[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_todo[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_todo_inspeccion[i].valor);
                 }
                 //Actualizar gráfica
-                graph_ranking_usuarios_obs_vencidas_todo.data.labels = labels;
-                graph_ranking_usuarios_obs_vencidas_todo.data.datasets[0].data = data;
-                graph_ranking_usuarios_obs_vencidas_todo.update();
+                graph_ranking_usuarios_obs_vencidas_todo_inspeccion.data.labels = labels;
+                graph_ranking_usuarios_obs_vencidas_todo_inspeccion.data.datasets[0].data = data;
+                graph_ranking_usuarios_obs_vencidas_todo_inspeccion.update();
             } else {
                 //Actualizar contador
-                data_ranking_usuarios_obs_vencidas_todo = response.data.resultadosTodos;
+                data_ranking_usuarios_obs_vencidas_todo_inspeccion = response.data.resultadosTodos;
 
                 var labels = [];
                 var data = [];
-                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_todo.length; i++) {
-                    labels.push(data_ranking_usuarios_obs_vencidas_todo[i].nombre);
-                    data.push(data_ranking_usuarios_obs_vencidas_todo[i].valor);
+                for (var i = 0; i < data_ranking_usuarios_obs_vencidas_todo_inspeccion.length; i++) {
+                    labels.push(data_ranking_usuarios_obs_vencidas_todo_inspeccion[i].nombre);
+                    data.push(data_ranking_usuarios_obs_vencidas_todo_inspeccion[i].valor);
                 }
                 //Crear gráfica
-                CrearGraficoRankingUsuarioObsVencidasTodo(labels, data);
+                CrearGraficoInspeccionRankingUsuarioObsVencidasTodo(labels, data);
             }
         }
     });
 }
-function CrearGraficoRankingUsuarioObsVencidasMAP(labels, data) {
-    graph_ranking_usuarios_obs_vencidas_map = new Chart(
-        document.getElementById("chart_ranking_usuarios_obs_vencido_map"),
+function CrearGraficoInspeccionRankingUsuarioObsVencidasMAP(labels, data) {
+    graph_ranking_usuarios_obs_vencidas_map_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_obs_vencido_map"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1867,9 +1932,9 @@ function CrearGraficoRankingUsuarioObsVencidasMAP(labels, data) {
         }
     );
 }
-function CrearGraficoRankingUsuarioObsVencidasSSO(labels, data) {
-    graph_ranking_usuarios_obs_vencidas_sso = new Chart(
-        document.getElementById("chart_ranking_usuarios_obs_vencido_sso"),
+function CrearGraficoInspeccionRankingUsuarioObsVencidasSSO(labels, data) {
+    graph_ranking_usuarios_obs_vencidas_sso_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_obs_vencido_sso"),
         {
             "type": "horizontalBar",
             "data": {
@@ -1913,9 +1978,9 @@ function CrearGraficoRankingUsuarioObsVencidasSSO(labels, data) {
         }
     );
 }
-function CrearGraficoRankingUsuarioObsVencidasTodo(labels, data) {
-    graph_ranking_usuarios_obs_vencidas_todo = new Chart(
-        document.getElementById("chart_ranking_usuarios_obs_vencido_todo"),
+function CrearGraficoInspeccionRankingUsuarioObsVencidasTodo(labels, data) {
+    graph_ranking_usuarios_obs_vencidas_todo_inspeccion = new Chart(
+        document.getElementById("chart_inspeccion_ranking_usuarios_obs_vencido_todo"),
         {
             "type": "horizontalBar",
             "data": {

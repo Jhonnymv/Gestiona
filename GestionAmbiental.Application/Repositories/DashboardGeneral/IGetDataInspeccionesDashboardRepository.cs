@@ -8,13 +8,13 @@ namespace GestionAmbiental.Application.Repositories.DashboardGeneral
 {
     public interface IGetDataInspeccionesDashboardRepository
     {
-        Task<InspeccionesMAPSSOOutput> InspeccionesActoCondicionBP();
-        Task<InspeccionesMAPSSOOutput> InspeccionesEstadosCondicion();
-        Task<InspeccionesMAPSSOOutput> TopActosSubestandar(int topLimit);
-        Task<InspeccionesMAPSSOOutput> TopCondicionesSubestandar(int topLimit);
-        Task<InspeccionesMAPSSOOutput> RankingGerenciaReportante(int topLimit);
-        Task<InspeccionesMAPSSOOutput> RankingGerenciaObsVencidas(int topLimit);
-        Task<InspeccionesMAPSSOOutput> RankingUsuariosIngresoInspecciones(int topLimit);
-        Task<InspeccionesMAPSSOOutput> RankingUsuariosObsVencidas(int topLimit);
+        Task<InspeccionesMAPSSOOutput> InspeccionesActoCondicionBP(int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> InspeccionesEstadosCondicion(int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> TopActosSubestandar(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> TopCondicionesSubestandar(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> RankingGerenciaReportante(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> RankingGerenciaObsVencidas(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> RankingUsuariosIngresoInspecciones(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
+        Task<InspeccionesMAPSSOOutput> RankingUsuariosObsVencidas(int topLimit, int IdGerenciaInsp, int IdEmpresaInsp, DateTime FInicioInsp, DateTime FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
     }
 }

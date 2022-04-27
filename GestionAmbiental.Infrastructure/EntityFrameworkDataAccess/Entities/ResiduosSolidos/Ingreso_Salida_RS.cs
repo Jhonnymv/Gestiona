@@ -24,7 +24,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Res
         public DateTime Fecha_Ingreso_Salida { get; set; }
         [Column(TypeName = "int")]
         public int Id_Residuo_Solido { get; set; }
-        [Column(TypeName = "decimal(6,2)")]
+        [Column(TypeName = "decimal(10,2)")]
         public double Cantidad { get; set; }
         [Column(TypeName = "int")]
         public int Id_Empresa_RS { get; set; }

@@ -8,6 +8,6 @@ namespace GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.In
 {
     public interface IInspeccionesEstadosCondicion
     {
-        Task<InspeccionesMAPSSOOutput> Execute();
+        Task<InspeccionesMAPSSOOutput> Execute(int IdGerenciaInsp, int IdEmpresaInsp, string FInicioInsp, string FFinInsp, int IdRespLevInsp, int IdAsesorInsp, string EstadoInsp, int IdGerenciaInspeccionadaInsp);
     }
 }
