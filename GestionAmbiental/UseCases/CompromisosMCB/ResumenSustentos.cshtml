@@ -294,6 +294,10 @@
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
                             <div class="row">
                                 <div class="col-12">
+                                    <div id="viewPDFDet"></div>
+                                    <img id="viewImageDet">
+                                </div>
+                                <div class="col-12">
                                     <label>Texto Compromiso</label>
                                     <textarea class="form-control" id="Texto_original_compromiso" readonly></textarea>
                                 </div>
@@ -467,29 +471,29 @@
 <!--Modal Preview PDF-->
 @*<div id="modal_preview_pdf" class="modal fade" tabindex="-1" aria-labelledby="compromisosModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-menu modal-compromisos">
-            <div class="modal-content">
-                <div class="compromisos">
-                    <div class="image-header-container">
-                        <div class="header-title compromisos-opacity-color">
-                            <h3>Previsualización</h3>
-                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-body">
-                    <div id="viewPDF">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
-                    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
-                </div>
-            </div>
-        </div>
+    <div class="modal-menu modal-compromisos">
+    <div class="modal-content">
+    <div class="compromisos">
+    <div class="image-header-container">
+    <div class="header-title compromisos-opacity-color">
+    <h3>Previsualización</h3>
+    <img src="~/img/logo-white.png" alt="Logo Marcobre">
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-</div>*@
+    </div>
+    </div>
+    <div class="modal-body">
+    <div id="viewPDF">
+    </div>
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
+    <button type="button" class="btn btn-primary" id="btn_descargar">Descargar</button>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>*@
 
 @section scripts{
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -500,12 +504,13 @@
     $(document).ready(function () {
         filtrar(1)
     });
-    function OpenModal(compromiso_id){
+    function OpenModal(compromiso_id,sustentoId){
         $.ajax({
             type: "POST",
             url: "/CompromisosMCB/GetCompromiso",
             data: {
                 "idCompromiso": compromiso_id,
+                "idSustento":sustentoId
             },
             traditional: true,
             success: (response) => {
@@ -520,6 +525,13 @@
                 $("#Autoridad").val(response.data.nombreAutoridad)
                 $("#Fecha").val(date.toLocaleDateString())
                 //dataModulo();
+                $("#viewPDFDet").html('')
+                $("#viewImageDet").html('')
+                if(response.sustentos.evidencia)
+                    PrevisualizarEvidencia(response.sustentos.evidencia,'viewPDFDet','viewImageDet');
+                else
+                   $("#viewPDFDet").html('<h1 class:"text-warning">Aún no hay evidencia</h1>').removeAttr('style')
+                    
             }
         });
         $('#modal_docs_tipo').modal('show')
@@ -537,7 +549,7 @@
             success:(response)=>{
                 $("#idImplementacion").val(response.data.id)
                 $("#fechaRegistro").val(fechaOutput)
-                
+
             }
         });
         $('#modal_implementacion_sustento').modal('show')
@@ -553,7 +565,7 @@
             },
             traditional:true,
             success:(response)=>{
-                console.log(response)
+
                 $("#idValidar").val(response.data.id)
                 $("#fechaValidar").val(fechaOutput)
                 $("#idCompromisoValidar").val(response.data.idCompromiso)
@@ -561,14 +573,17 @@
                 $("#comentarioCumplimiento_validar").html(response.data.comentario_implementacion)
                 $("#sustentoCumplimiento_validar").html(response.data.sustento_cumplimiento)
                 $("#textoCompromiso_validar").html(response.dataCompromiso.texto_compromiso)
-
+                $("#viewPDF").html('')
+                $("#viewImage").html('')
                 if(response.data.evidencia)
-                    PrevisualizarEvidencia(response.data.evidencia);
+                    PrevisualizarEvidencia(response.data.evidencia,'viewPDF','viewImage');
+                else
+                    $("#viewPDF").html('<h1 class:"text-warning">Aún no hay evidencia</h1>').removeAttr('style')
             }
         });
         $('#modal_validar_sustento').modal('show')
     }
-    function PrevisualizarEvidencia(fileName){
+    function PrevisualizarEvidencia(fileName,divPDF,divImage){
         $.ajax({
             type:"POST",
             url:"/CompromisosMCB/PreviewFile",
@@ -579,20 +594,20 @@
             success:(response)=>{
                 if (response.result == "Ok") {
                             rutaArchivo = response.path
-                            if (response.extension == ".pdf" ){ 
-                                PDFObject.embed(response.path, "#viewPDF");
-                                $("#viewPDF").css("height", "500px");
-                                $("#viewImage").hide();
-                                $("#viewPDF").show();
+                            if (response.extension == ".pdf" ){
+                                PDFObject.embed(response.path, "#"+divPDF.toString());
+                                $("#"+divPDF.toString()).css("height", "500px");
+                                $("#"+divImage.toString()).hide();
+                                $("#"+divPDF.toString()).show();
                             }
                             else if (response.extension == ".jpg"|| response.extension == ".png"|| response.extension == ".jpeg"){
-                                $("#viewImage").attr("src", response.path);
-                                $("#viewImage").css("width", "100%");
-                                $("#viewImage").show();
-                                $("#viewPDF").hide();
+                                $("#"+divImage.toString()).attr("src", response.path);
+                                $("#"+divImage.toString()).css("width", "100%");
+                                $("#"+divImage.toString()).show();
+                                $("#"+divPDF.toString()).hide();
                             }
                             else {
-                                $("#viewPDF").html("<h2>No se pudo previsualizar el archivo</h2>")
+                                $("#"+divPDF.toString()).html("<h2>No se pudo previsualizar el archivo</h2>")
                             }
 
                         } else {
@@ -639,7 +654,7 @@
                 $('#tabla_sustentos_gen tbody').empty()
                 $('#tabla_sustentos_gen tbody').html(response.data)
                 $('#paginado').html(response.paginador)
-                console.log(response.data)
+
             }
         });
     }

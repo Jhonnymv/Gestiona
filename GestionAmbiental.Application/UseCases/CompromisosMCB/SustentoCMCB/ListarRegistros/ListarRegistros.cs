@@ -40,10 +40,12 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
             var data = await _sustentoReadOnlyRepository.ListarSustentos(gerencias, areas, criterios, estados, etapas);
             var usuarioActual = await _gestorUsuarioReadOnlyRepository.GetUsuario(usuario);
             //Filtrar sustentos si no eres asesorMAP
-            if(usuarioActual.IdRol != (int)Domain.Enum.InspeccionRol.AsesorMAP)
-            {
+            //if (usuarioActual.IdRol != (int)Domain.Enum.InspeccionRol.AsesorMAP)
+                if (usuarioActual.IdRol == (int)Domain.Enum.InspeccionRol.AsesorMAP)
+                {
                 data = data.Where(x => x.Responsable1.IdUsuario.Equals(usuarioActual.IdUsuario) || x.Responsable2.IdUsuario.Equals(usuarioActual.IdUsuario)).ToList();
             }
+
 
             var output = new SustentosOuput();
 

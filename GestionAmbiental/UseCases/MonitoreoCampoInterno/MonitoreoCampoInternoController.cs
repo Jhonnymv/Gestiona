@@ -24,5 +24,9 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno
                 return View();
             }
         }
+        public async Task<IActionResult> NuevoRegistro()
+        {
+            return View();
+        }
     }
 }

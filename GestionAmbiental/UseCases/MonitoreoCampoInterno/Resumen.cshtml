@@ -16,16 +16,71 @@
             </div>
         </div>
 
-        <div class="tabs-mc container">
-            <div class="tab-content mt-4" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-doccompromisos" role="tabpanel" aria-labelledby="pills-doccompromisos-tab">
-                    <div class="filter-mc-content d-flex justify-content-center">
-                        <div class="div-scroll-horizontal">
-                           <img src="~/img/mantenimiento.png" alt="">
+        <div class="content-header container">
+            <div class="action-container fauna-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="NuevoRegistro" asp-controller="MonitoreoCampoInterno">NUEVO REGISTRO</a>
+                </div>
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" >CATÁLOGO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Tipo de Fauna</label>
+                           <select id="filtro_tipo_fauna" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Estado de Fauna</label>
+                          <select id="filtro_estado_fauna"  class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Lugar de Referencia</label>
+                            <select id="filtro_lugar_referencia"  class="form-control">
+                            </select>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="secondary-content col-12">
+        <div class="table-responsive fauna-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>Item</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Ubicación</th>
+                        <th>Cantidad</th>
+                        <th>Tipo de Fauna</th>
+                        <th>Nombre Común</th>
+                        <th>Estado de la Fauna</th>
+                        <th>Tipo de Avistamiento</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container fauna-color" id="paginado">
         </div>
     </div>
 </div>

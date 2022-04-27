@@ -4,6 +4,13 @@
     ViewData["Title"] = "Compromiso Nuevo Registro";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+
+@section Styles{
+<style>
+
+</style>
+}
+
 <div class="tablas">
     <div class="primary-content col-12">
         <div class="image-header-container">
@@ -27,14 +34,17 @@
                             <input type="text" class="form-control" asp-for="Codigo">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
+
+
                             <label asp-for="Id_Criterio">Criterio</label>
-                            @*<span class="text-danger" asp-validation-for="Id_Criterio"></span>*@
-                           @* <select id="select_Criterio" class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></sele*@ct>
+                            <span class="text-danger" asp-validation-for="Id_Criterio"></span>
+
+                            @*<select id="select_Criterio" class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>*@
                             @*<button type="button" class="btn btn-info" id="btnAddCriterio">+</button>*@
                             <div class="input-group">
-                                <select class="form-control form-control-sm" id="select_Criterio" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                                <select class="form-control" id="select_Criterio" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
                                 <div class="input-group-append">
-                                    <button class="btn btn-outline-secondary" type="button" id="btnAddCriterio">+</button>
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddCriterio">+</button>
                                 </div>
                             </div>
                         </div>
@@ -46,8 +56,12 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Etapa">Etapa</label>
                             <span class="text-danger" asp-validation-for="Id_Etapa"></span>
-                            <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
-                            <button type="button" class="btn btn-info" id="btnAddEtapa">+</button>
+                            <div class="input-group">
+                                <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddEtapa">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Texto_compromiso"></label>
@@ -57,8 +71,12 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Origen">Origen</label>
                             <span class="text-danger" asp-validation-for="Id_Origen"></span>
-                            <select id="select_Origen" class="form-control" asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
-                            <button type="button" class="btn btn-info" id="btnAddOrigen">+</button>
+                            <div class="input-group">
+                                <select id="select_Origen" class="form-control" asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddOrigen">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Tomo"></label>
@@ -88,32 +106,52 @@
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Autoridad">Autoridad</label>
                             <span class="text-danger" asp-validation-for="Id_Autoridad"></span>
-                            <select id="select_Autoridad" class="form-control" asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
-                            <button type="button" class="btn btn-info" id="btnAddAutoridad">+</button>
+                            <div class="input-group">
+                                <select id="select_Autoridad" class="form-control" asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddAutoridad">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Aspecto">Aspecto</label>
                             <span class="text-danger" asp-validation-for="Id_Aspecto"></span>
-                            <select id="select_Aspecto" class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
-                            <button type="button" class="btn btn-info" id="btnAddAspecto">+</button>
+                            <div class="input-group">
+                                <select id="select_Aspecto" class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddAspecto">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Componente">Componente</label>
                             <span class="text-danger" asp-validation-for="Id_Componente"></span>
-                            <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
-                            <button type="button" class="btn btn-info" id="btnAddComponente">+</button>
+                            <div class="input-group">
+                                <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Gerencia">Gerencia</label>
                             <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
-                            <select id="select_Gerencia" class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
-                            <button type="button" class="btn btn-info" id="btnAddGerencia">+</button>
+                            <div class="input-group">
+                                <select id="select_Gerencia" class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddGerencia">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Area">Area</label>
                             <span class="text-danger" asp-validation-for="Id_Area"></span>
-                            <select id="select_Area" class="form-control" asp-for="Id_Area" asp-items="@ViewBag.Areas"></select>
-                            <button type="button" class="btn btn-info" id="btnAddArea">+</button>
+                            <div class="input-group">
+                                <select id="select_Area" class="form-control" asp-for="Id_Area" asp-items="@ViewBag.Areas"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddArea">+</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Frecuencia">Frecuencia</label>
@@ -212,7 +250,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Volver</button>
                         <button type="button" class="btn btn-primary" id="btn_saveCriterio">Guardar</button>
                     </div>
                 </form>

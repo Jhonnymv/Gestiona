@@ -185,7 +185,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public async Task<IActionResult> ListarSustentos(int pagina, int rpp, int[] gerencias, int[] areas, int[] criterios, string[] estados, int[] etapas)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            var datosTabla = await _listarSustentos.Execute(pagina, rpp, gerencias, areas, criterios, estados, etapas,userInfo.NombreUsuario);
+            var datosTabla = await _listarSustentos.Execute(pagina, rpp, gerencias, areas, criterios, estados, etapas, userInfo.NombreUsuario);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -195,12 +195,22 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 //Contenido de la tabla
                 foreach (var fila in datosTabla.Registros)
                 {
+                    var button = "";
+                    if (fila.Estado == "Registrado")
+                    {
+                        button = "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Implementar(" + fila.Id + ")\">Implementar</button>";
+                    }
+                    if (fila.Estado == "Implementado")
+                    {
+                        button = "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Validar(" + fila.Id + ")\">Validar</button>";
+                    }
+
                     filasTabla += "<tr>";
                     filasTabla += "<td>" + fila.IdCompromiso + "</td>";
                     filasTabla += "<td><a href=\"#\"></a>" +
-                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.IdCompromiso + ")\">Detalle</button>" +
-                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Implementar(" + fila.Id + ")\">Implementar</button>" +
-                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"Validar(" + fila.Id + ")\">Validar</button>" +
+                        "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.IdCompromiso + "," + fila.Id + ")\">Detalle</button>" +
+                        button
+                         +
                         " </td>";
                     filasTabla += "<td>" + fila.Criterio + "</td>";
                     filasTabla += "<td>" + fila.Detalle_compromiso + "</td>";
@@ -406,11 +416,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetCompromiso(int idCompromiso)
+        public async Task<IActionResult> GetCompromiso(int idCompromiso,int? idSustento)
         {
-
+      
             var datos = await _listarCompromisos.BuscarPorID(idCompromiso);
-            dynamic response = new { Data = datos };
+            dynamic response = new { Data = datos};
+            if (idSustento.HasValue)
+            {
+            var sustento = await _listarSustentos.ObtenerSustento(Convert.ToInt32(idSustento));
+                response.Sustento = sustento;
+            }
 
             return Ok(response);
 
@@ -930,9 +945,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public async Task<IActionResult> saveComponente(string tipoComponente, string nameComponente, string servicioComponente)
         {
             var id = 0;
-            if (nameComponente.Length != null && tipoComponente.Length!=null)
+            if (nameComponente.Length != null && tipoComponente.Length != null)
             {
-                id = await _nuevoRegistroComponente.Execute(tipoComponente,nameComponente,servicioComponente);
+                id = await _nuevoRegistroComponente.Execute(tipoComponente, nameComponente, servicioComponente);
 
             }
             dynamic response = new { id = id, value = nameComponente };
@@ -943,7 +958,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             var id = 0;
             if (nameGerencia.Length != null)
             {
-                id = await _nuevoRegistroGerencia.Execute(nameGerencia,descripcionGerencia);
+                id = await _nuevoRegistroGerencia.Execute(nameGerencia, descripcionGerencia);
 
             }
             dynamic response = new { id = id, value = nameGerencia };
@@ -960,6 +975,6 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             dynamic response = new { id = id, value = nameArea };
             return Json(response);
         }
-        
+
     }
 }

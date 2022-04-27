@@ -1,0 +1,234 @@
+﻿@model GestionAmbiental.UseCases.AvistamientoFauna.AvistamientoFaunaModel
+@{
+    ViewData["Title"] = "NuevoRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Nuevo Registro de Avistamiento de Flora Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form form-flex w-100" id="form_nuevo_avistamiento" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Opcion" />
+                <div class="mc-container col-12 col-xl-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center">Registro Fotográfico</span>
+                    </div>
+                    <div class="row input_container">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Fotos" data-valmsg-replace="true">
+                            <span id="alerta_fotos" class=""></span>
+                        </span>
+                        <label class="btn fauna-color btn btn-special-action" for="Fotos"><img src="~/img/icons/camara.png" /></label>
+                        <input type="file" style="visibility:hidden; display:none" accept=".jpg,.jpeg,.png" data-max-size="8388608" multiple>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 text-center">
+                            <img id="previsualizacion" style="width:30rem;height:auto;max-width:50%;display:none" />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="d-flex justify-content-center">
+                        <button type="button" id="botonCargarFoto" class="btn btn-mc" onclick="CargarFotos()" style="display:none;">Subir</button>
+                        </div>
+                        </div>*@
+                </div>
+                <div class="form-tabs-mc mc-separator-top-left col-12 col-xl-8">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold">Datos Generales</span>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4 mb-4">
+                        <ul class="nav nav-pills col-9 div-scroll-horizontal" id="pills-tab" role="tablist">
+                            <li class="nav-item col-6" role="presentation">
+                                <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Datos del Avistamiento</button>
+                            </li>
+                            <li class="nav-item col-6" role="presentation">
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Datos del Reportante</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-step1" role="tabpanel" aria-labelledby="pills-step1-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label>Fecha</label>
+                                    <span class="text-danger"></span>
+                                    <input type="date" class="form-control" />
+                                </div>
+                                <div class="col-12 col-sm-3 col-lg-3">
+                                    <label>Hora</label>
+                                    <span class="text-danger"></span>
+                                    <input type="time" class="form-control" />
+                                </div>
+                                <div class="col-12 col-sm-5 col-lg-5">
+                                    <div class="row d-flex align-items-end m-0">
+                                        <div class="col-8 p-0 m-0">
+                                             <label asp-for="Ubicacion">Ubicación</label>
+                                            <span class="text-danger" asp-validation-for="Ubicacion"></span>
+                                            <input type="text" class="form-control" asp-for="Ubicacion" />
+                                        </div>
+                                        <div class="col-4 m-0 d-flex justify-content-end">
+                                            <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row input_container align-items-center">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Nombre Común</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control"></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <div id="card_img_referencia" class="card" style="border-radius: 15px; width:auto; display:none; overflow:hidden;">
+                                        <img id="img_referencia" style="width:auto; height:10rem; max-width:100%; object-fit:scale-down; border-radius: 15px;" alt="imagen referencia">
+                                        <div class="card-body">
+                                            <p class="card-text text-center">Imagen de Referencia</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Cantidad</label>
+                                    <span class="text-danger"></span>
+                                    <input type="number" class="form-control" value="1" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Tipo de Avistamiento</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Estado de Fauna</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control"></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Lugar Referencial de Avistamiento</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Empresa</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control" disabled></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Nombres y Apellidos</label>
+                                    <input type="text" class="form-control" readonly />
+                                    <input type="hidden" />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>Área de Trabajo</label>
+                                    <span class="text-danger"></span>
+                                    <select class="form-control" disabled></select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label>DNI</label>
+                                    <span class="text-danger"></span>
+                                    <input type="text" class="form-control" readonly />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="button-container">
+                                    <div>
+                                        <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>
+                                        <button type="button" class="btn btn-mc-success" onclick="Registrar()">Registrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Ubicación-->
+<div class="modal fade mc-modal" id="modal_ubicacion" tabindex="-1" aria-labelledby="titulo_modal_ubicacion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="mc-modal-image-background">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 titulo-pagina">
+                        <h3 class="text-white text-center mb-4">No se tiene permiso para obtener la ubicación</h3>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="text-white">Para habilitarlos siga los siguientes pasos:</h4>
+                        <br>
+                        <h5 class="text-white">1. Acceder a las opciones del navegador (<img style="margin: unset; width: unset; filter: invert(1)" src="~/img/icons/options.png" />)</h5>
+                        <h5 class="text-white">2. Ingresar a la "Configuración"</h5>
+                        <h5 class="text-white">3. Buscar e ingresar a "Ubicación"</h5>
+                        <h5 class="text-white">4. Buscar los sitios bloqueados y quitar a Gestiona</h5>
+                        <h5 class="text-white">5. Actualizar esta página</h5>
+                        <h5 class="text-white">6. Conceder los permisos de ubicación cuando se le solicite</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+<script src="~/js/stepper.js"></script>
+<script type="text/javascript">
+    var ubicacion = $("#Ubicacion");
+    var imagenesReferencia = [];
+
+    function ObtenerUbicacion() {
+        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+            if (result.state == 'granted') {
+                ImprimirPermisos(result.state);
+                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+            } else if (result.state == 'prompt') {
+                ImprimirPermisos(result.state);
+                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+            } else if (result.state == 'denied') {
+                MostrarModalUbicacion()
+                ImprimirPermisos(result.state);
+            }
+            result.onchange = function () {
+                console.log("cambio")
+                ImprimirPermisos(result.state);
+            }
+        });
+    }
+    function MostrarUbicacion(position) {
+            ubicacion.val(position.coords.latitude + " , " + position.coords.longitude);
+        }
+
+    function MostrarModalUbicacion() {
+        $("#modal_ubicacion").modal('show');
+    }
+    function ImprimirPermisos(state) {
+        console.log('Permission ' + state);
+    }
+</script>
+}

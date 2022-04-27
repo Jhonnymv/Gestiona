@@ -460,8 +460,8 @@
             },
             traditional: true,
             success: (response) => {
-                console.log(response)
-
+             
+                 $("#dataSustentos").html('')
                 response.data.registros.forEach(item=>{
                     var template="<tr>"+
                     "<td>"+response.data_Compromiso.codigo+"</td>"+
@@ -486,17 +486,6 @@
                     $("#dataSustentos").append(template);
                 });
 
-                //let date = new Date(response.data.fecha);
-                //$("#Texto_original_compromiso").text(response.data.texto_compromiso)
-                //$("#Origen").val(response.data.nomOrigen)
-                //$("#Tomo").val(response.data.tomo)
-                //$("#Capitulo").val(response.data.capitulo)
-                //$("#Seccion").val(response.data.seccion)
-                //$("#Pagina").val(response.data.pagina)
-                //$("#Resolucion").val(response.data.resolucion)
-                //$("#Autoridad").val(response.data.nombreAutoridad)
-                //$("#Fecha").val(date.toLocaleDateString())
-                //dataModulo();
                 $('#modal_sustentos_by_compromiso').modal('show')
             }
         });
@@ -571,7 +560,7 @@
                 $('#tabla_compromisos_gen tbody').empty()
                 $('#tabla_compromisos_gen tbody').html(response.data)
                 $('#paginado').html(response.paginador)
-                console.log(response.data)
+              
                 //dataModulo();
             }
         });
