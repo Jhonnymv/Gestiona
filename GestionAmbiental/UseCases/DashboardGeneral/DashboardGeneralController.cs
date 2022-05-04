@@ -7,12 +7,14 @@ using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.Rankin
 using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.TopActosSubestandar;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.Inspecciones.TopCondicionesSubestandar;
 using GestionAmbiental.Application.UseCases.Reportes.Inspecciones.GetItemsFiltro;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,7 +30,8 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
         private readonly IRankingUsuariosObsVencidas _rankingUsuariosObsVencidas;
         private readonly ITopActosSubestandar _topActosSubestandar;
         private readonly ITopCondicionesSubestandar _topCondicionesSubestandar;
-
+        private DescargarRegistros _descargarRegistros;
+        private IWebHostEnvironment _hostingEnvironment;
 
         private readonly IGetItemsFiltro _getItemsFiltroInspecciones;
 
@@ -41,7 +44,9 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             IRankingUsuariosObsVencidas rankingUsuariosObsVencidas,
             ITopActosSubestandar topActosSubestandar,
             ITopCondicionesSubestandar topCondicionesSubestandar,
-            IGetItemsFiltro getItemsFiltroInspecciones)
+            IGetItemsFiltro getItemsFiltroInspecciones,
+            DescargarRegistros descargarRegistros,
+            IWebHostEnvironment hostingEnvironment)
         {
             _inspeccionesActoCondicionBP = inspeccionesActoCondicionBP;
             _inspeccionesEstadosCondicion = inspeccionesEstadosCondicion;
@@ -52,6 +57,8 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             _topActosSubestandar = topActosSubestandar;
             _topCondicionesSubestandar = topCondicionesSubestandar;
             _getItemsFiltroInspecciones = getItemsFiltroInspecciones;
+            _descargarRegistros = descargarRegistros;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public async Task<IActionResult> Test()
@@ -105,6 +112,13 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 return View();
             }
         }
-        
+        public async Task<IActionResult> DescargarRegistros()
+        {
+            string templatePath = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Dashboard");
+            var ms = await _descargarRegistros.DescargarInformacion("01/01/2021", "03/05/2022",templatePath);
+            ms.Position = 0;
+
+            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegistrosGestiona-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+        }
     }
 }

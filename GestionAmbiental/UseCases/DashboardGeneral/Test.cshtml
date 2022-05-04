@@ -67,6 +67,14 @@
     <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralInspecciones.js"></script>
     <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralRAC.js"></script>
     <script type="text/javascript">
-        
+        function DescargarRegistros() {
+            fechaInicio = $("#FInicioInsp").val();
+            fechaFin = $("#FFinInsp").val();
+            if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" ) {
+                $("#inspeccionesTest").submit()
+            } else {
+                alert("La fecha de fin debe ser mayor a la fecha de inicio y debe seleccionar la resolución");
+            }
+        }
     </script>
 }

@@ -28,7 +28,8 @@ namespace GestionAmbiental.Domain.Inspecciones
         public string ComentarioVerificacion { get; set; }
         public string Estado { get; set; }
         public string DescripcionActoCondicion { get; set; }
-                
+        public InspeccionCabecera Cabecera { get; set; }
+
         public InspeccionDetalle(
             int id_Inspeccion_Cabecera,
             int id_Inspeccion_Detalle,
