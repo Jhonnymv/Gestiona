@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionAmbiental.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,10 +9,13 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
     {
         public int Id_Accion_Incidente_Investigacion { get; set; }
         public int? Id_Investigacion_Final { get; set; }
+        public Investigacion_Final_Incidente? InvestigacionFinal { get; set; }
         public string Tipo_Accion { get; set; }
         public string Accion_Inmediata { get; set; }
         public int? Id_Usuario { get; set; }
+        public Usuario? Usuario { get; set; }
         public int? Id_Usuario2 { get; set; }
+        public Usuario? Usuario2 { get; set; }
         public string Responsable { get; set; }
         public DateTime? Fecha { get; set; }
         public string Evidencia { get; set; }

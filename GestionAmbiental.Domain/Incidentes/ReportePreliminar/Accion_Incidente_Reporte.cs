@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GestionAmbiental.Domain.ValueObjects;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -12,9 +13,12 @@ namespace GestionAmbiental.Domain.Incidentes.ReportePreliminar
         public int Id_Reporte_Preliminar { get; set; }
         public string Accion_Inmediata { get; set; }
         public int? Id_Usuario { get; set; }
+        public Usuario? ResponsableMarcobre { get; set; }
         public string Responsable { get; set; }
         public DateTime? Fecha { get; set; }
         public string Estatus { get; set; }
         public string Estado { get; set; }
+
+        public Reporte_Preliminar_Incidente Reporte { get; set; }
     }
 }

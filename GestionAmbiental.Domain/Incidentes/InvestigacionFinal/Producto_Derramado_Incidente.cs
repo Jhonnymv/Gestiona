@@ -11,6 +11,7 @@ namespace GestionAmbiental.Domain.Incidentes.InvestigacionFinal
     {
         public int Id_Producto_Derramado_Incidente { get; set; }
         public int Id_Investigacion_Final { get; set; }
+        public Investigacion_Final_Incidente Investigacion_Final { get; set; }
         public Producto_Incidente Producto_Incidente { get; set; }
         public Tipo_Producto_Incidente Tipo_Producto { get; set; }
         public string Estado_Producto { get; set; }
