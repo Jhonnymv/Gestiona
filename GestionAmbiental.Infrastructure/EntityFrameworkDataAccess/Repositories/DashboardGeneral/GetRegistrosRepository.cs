@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.DashboardGeneral
@@ -68,8 +67,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     ResponsableMarcobre = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos
+                        Nombres = responsable1.Nombres.ToUpper(),
+                        Apellidos = responsable1.Apellidos.ToUpper()
                     },
                     ResponsableContratista = observacion.Responsable_Contratista,
                     CorreoContratista = observacion.Correo_Contratista,
@@ -77,8 +76,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Asesor = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = asesor.Id_Usuario,
-                        Nombres = asesor.Nombres,
-                        Apellidos = asesor.Apellidos
+                        Nombres = asesor.Nombres.ToUpper(),
+                        Apellidos = asesor.Apellidos.ToUpper()
                     },
                     FechaProgramada = observacion.Fecha_Programada,
                     FechaVerificacion = observacion.Fecha_Verificacion,
@@ -104,8 +103,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.ResponsableMarcobre2 = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable2.Id_Usuario,
-                        Nombres = responsable2.Nombres,
-                        Apellidos = responsable2.Apellidos
+                        Nombres = responsable2.Nombres.ToUpper(),
+                        Apellidos = responsable2.Apellidos.ToUpper()
                     };
                 }
                 if (tipoCondicion != null)
@@ -195,15 +194,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Responsable_Cierre = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos
+                        Nombres = responsable1.Nombres.ToUpper(),
+                        Apellidos = responsable1.Apellidos.ToUpper()
                     },
                     Fecha_Cierre = rac.Fecha_Cierre,
                     Supervisor = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = asesor.Id_Usuario,
-                        Nombres = asesor.Nombres,
-                        Apellidos = asesor.Apellidos
+                        Nombres = asesor.Nombres.ToUpper(),
+                        Apellidos = asesor.Apellidos.ToUpper()
                     },
                     Comentario_Cierre = rac.Comentario_Cierre,
                     Comentario_Verificacion = rac.Comentario_Verificacion,
@@ -264,8 +263,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.ResponsableMarcobre = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos
+                        Nombres = responsable1.Nombres.ToUpper(),
+                        Apellidos = responsable1.Apellidos.ToUpper()
                     };
                 }
                 output.Add(item);
@@ -388,8 +387,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable1.Id_Usuario,
-                        Nombres = responsable1.Nombres,
-                        Apellidos = responsable1.Apellidos
+                        Nombres = responsable1.Nombres.ToUpper(),
+                        Apellidos = responsable1.Apellidos.ToUpper()
                     };
                 }
                 if (responsable2 != null)
@@ -397,8 +396,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.Usuario2 = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = responsable2.Id_Usuario,
-                        Nombres = responsable2.Nombres,
-                        Apellidos = responsable2.Apellidos
+                        Nombres = responsable2.Nombres.ToUpper(),
+                        Apellidos = responsable2.Apellidos.ToUpper()
                     };
                 }
                 output.Add(item);
@@ -552,8 +551,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     item.Supervisor_MA = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
-                        Nombres = usuario.Nombres,
-                        Apellidos = usuario.Apellidos
+                        Nombres = usuario.Nombres.ToUpper(),
+                        Apellidos = usuario.Apellidos.ToUpper()
                     };
                 }
                 output.Add(item);
@@ -645,6 +644,91 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     Estado = productoDerramado.Estado
                 };
+                output.Add(item);
+            }
+            return output;
+        }
+        public async Task<List<Domain.AvistamientoFauna.AvistamientoFauna>>Avistamientos(DateTime startTime, DateTime endTime)
+        {
+            var output = new List<Domain.AvistamientoFauna.AvistamientoFauna>();
+            var avistamientos = await _context.Avistamientos_Fauna
+                .Where(x=>!x.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))
+                .ToListAsync();
+
+            //Todos los nombres comunes
+            var nombresComunes = await _context.Nombres_Comunes_Fauna.ToListAsync();
+            //Todos los tipos avistamiento
+            var tiposAvistamiento = await _context.Tipos_Avistamiento.ToListAsync();
+            //Todos los estados fauna
+            var estadosFauna = await _context.Estados_Fauna.ToListAsync();
+            //Todos los luegares referencia
+            var lugaresReferencia = await _context.Lugares_Referencia_AF.ToListAsync();
+            //Todos los usuarios
+            var usuarios = await _context.Usuarios.ToListAsync();
+
+            foreach(var avistamiento in avistamientos)
+            {
+                var nombreComun = nombresComunes.Find(x => x.Id_Nombre_Comun_Fauna.Equals(avistamiento.Id_Nombre_Comun_Fauna));
+                var tipoAvistamiento = tiposAvistamiento.Find(x => x.Id_Tipo_Avistamiento.Equals(avistamiento.Id_Tipo_Avistamiento));
+                var estadoFauna = estadosFauna.Find(x => x.Id_Estado_Fauna.Equals(avistamiento.Id_Estado_Fauna));
+                var lugarReferencia = lugaresReferencia.Find(x => x.Id_Lugar_Referencia.Equals(avistamiento.Id_Lugar_Referencia));
+                var usuario = usuarios.Find(x => x.Id_Usuario.Equals(avistamiento.Id_Usuario));
+                var supervisor = usuarios.Find(x => x.Id_Usuario.Equals(avistamiento.Id_Supervisor));
+
+                var item = new Domain.AvistamientoFauna.AvistamientoFauna
+                {
+                    IdAvistamientoFauna = avistamiento.Id_Avistamiento_Fauna,
+                    Ubicacion = avistamiento.Ubicacion,
+                    Cantidad = avistamiento.Cantidad,
+                    Codigo = avistamiento.Codigo,
+                    DescripcionAccion = avistamiento.Descripcion_Accion,
+                    FechaAvistamiento = avistamiento.Fecha_Avistamiento,
+                    EvidenciaAccion = avistamiento.Evidencia_Accion,
+                    Fotos = avistamiento.Fotos,
+                    Estado = avistamiento.Estado,
+                    EstadoFauna = new Domain.AvistamientoFauna.Items.EstadoFauna
+                    {
+                        IdEstadoFauna = estadoFauna.Id_Estado_Fauna,
+                        Descripcion = estadoFauna.Descripcion,
+                        Estado = estadoFauna.Estado
+                    },
+                    Usuario = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = usuario.Id_Usuario,
+                        Nombres = usuario.Nombres.ToUpper(),
+                        Apellidos = usuario.Apellidos.ToUpper()
+                    },
+                    NombreComun = new Domain.AvistamientoFauna.Items.NombreComunFauna
+                    {
+                        IdNombreComunFauna = nombreComun.Id_Nombre_Comun_Fauna,
+                        Descripcion = nombreComun.Descripcion,
+                        Estado = nombreComun.Estado,
+                        Foto = nombreComun.Foto                        
+                    },
+                    TipoAvistamiento = new Domain.AvistamientoFauna.Items.TipoAvistamiento
+                    {
+                        IdTipoAvistamiento = tipoAvistamiento.Id_Tipo_Avistamiento,
+                        Descripcion = tipoAvistamiento.Descripcion,
+                        Estado = tipoAvistamiento.Estado
+                    },
+                    LugarReferencia = new Domain.AvistamientoFauna.Items.LugarReferencia
+                    {
+                        IdLugarReferencia = lugarReferencia.Id_Lugar_Referencia,
+                        Descripcion = lugarReferencia.Descripcion,
+                        Estado = lugarReferencia.Estado,
+                        Latitud = lugarReferencia.Latitud,
+                        Longitud = lugarReferencia.Longitud
+                    }                    
+                };
+                if (supervisor != null)
+                {
+                    item.Supervisor = new Domain.ValueObjects.Usuario
+                    {
+                        IdUsuario = supervisor.Id_Usuario,
+                        Nombres = supervisor.Nombres.ToUpper(),
+                        Apellidos = supervisor.Apellidos.ToUpper()
+                    };
+                }
                 output.Add(item);
             }
             return output;

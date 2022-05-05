@@ -5,6 +5,21 @@
 
 
 <div class="mc_container">
+    @if (ViewBag.Rol.Equals("Admin")) {
+    <form autocomplete="off" class="custom-form w-100 row" id="registrosForm" asp-controller="DashboardGeneral" asp-action="DescargarRegistros">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <input type="date" class="form-control" name="sTime" id="sTime" value="@ViewBag.FechaInicioRegistros" />
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <input type="date" class="form-control" name="eTime" id="eTime" value="@ViewBag.FechaFinRegistros" />
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <button type="button" class="btn btn-mc-success w-100" onclick="DescargarRegistros()">Descargar Registros</button>
+            </div>
+        </div>
+    </form>
+    }
     <div class="menu_settings">
         <ul class="nav nav-pills mb-3 div-scroll-horizontal justify-content-center" id="pills-tabs-configuration" role="tablist">
             <li class="nav-item" role="presentation">
@@ -68,12 +83,12 @@
     <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralRAC.js"></script>
     <script type="text/javascript">
         function DescargarRegistros() {
-            fechaInicio = $("#FInicioInsp").val();
-            fechaFin = $("#FFinInsp").val();
+            fechaInicio = $("#sTime").val();
+            fechaFin = $("#eTime").val();
             if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" ) {
-                $("#inspeccionesTest").submit()
+                $("#registrosForm").submit();
             } else {
-                alert("La fecha de fin debe ser mayor a la fecha de inicio y debe seleccionar la resolución");
+                alert("La fecha de fin debe ser mayor a la fecha de inicio");
             }
         }
     </script>

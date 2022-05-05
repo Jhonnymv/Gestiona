@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.Incidentes.InvestigacionFinal.Acciones;
+﻿using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.AvistamientoFauna;
+using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.Incidentes.InvestigacionFinal.Acciones;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.Incidentes.InvestigacionFinal.Causas;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.Incidentes.InvestigacionFinal.ProductoDerramado;
 using GestionAmbiental.Application.UseCases.DashboardGeneral.ObtenerRegistros.Incidentes.ReportesPreliminares.Acciones;
@@ -26,17 +27,27 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
         private readonly IObtenerCausasInvestigacion _obtenerCausasInvestigacion;
         private readonly IProductoDerramadoRP _productoDerramadoRP;
         private readonly IProductoDerramadoInvestigacion _productoDerramadoInvestigacion;
+        private readonly IObtenerAvistamientos _obtenerAvistamientos;
 
-        public DescargarRegistros(IObtenerRegistrosInspecciones obtenerRegistrosInspecciones, IObtenerRegistrosRAC obtenerRegistrosRAC, IObtenerAccionesRP obtenerAccionesRP, IObtenerCausasRP obtenerCausasRP, IObtenerAccionesInvestigacion obtenerAccionesInvestigacion, IObtenerCausasInvestigacion obtenerCausasInvestigacion, IProductoDerramadoRP productoDerramadoRP, IProductoDerramadoInvestigacion productoDerramadoInvestigacion)
+        public DescargarRegistros(
+            IObtenerRegistrosInspecciones obtenerRegistrosInspecciones, 
+            IObtenerRegistrosRAC obtenerRegistrosRAC, IObtenerAccionesRP obtenerAccionesRP,
+            IObtenerCausasRP obtenerCausasRP,
+            IObtenerAccionesInvestigacion obtenerAccionesInvestigacion,
+            IObtenerCausasInvestigacion obtenerCausasInvestigacion, 
+            IProductoDerramadoRP productoDerramadoRP,
+            IProductoDerramadoInvestigacion productoDerramadoInvestigacion,
+            IObtenerAvistamientos obtenerAvistamientos)
         {
-            _obtenerRegistrosInspecciones = obtenerRegistrosInspecciones ?? throw new ArgumentNullException(nameof(obtenerRegistrosInspecciones));
-            _obtenerRegistrosRAC = obtenerRegistrosRAC ?? throw new ArgumentNullException(nameof(obtenerRegistrosRAC));
-            _obtenerAccionesRP = obtenerAccionesRP ?? throw new ArgumentNullException(nameof(obtenerAccionesRP));
-            _obtenerCausasRP = obtenerCausasRP ?? throw new ArgumentNullException(nameof(obtenerCausasRP));
-            _obtenerAccionesInvestigacion = obtenerAccionesInvestigacion ?? throw new ArgumentNullException(nameof(obtenerAccionesInvestigacion));
-            _obtenerCausasInvestigacion = obtenerCausasInvestigacion ?? throw new ArgumentNullException(nameof(obtenerCausasInvestigacion));
-            _productoDerramadoRP = productoDerramadoRP ?? throw new ArgumentNullException(nameof(productoDerramadoRP));
-            _productoDerramadoInvestigacion = productoDerramadoInvestigacion ?? throw new ArgumentNullException(nameof(productoDerramadoInvestigacion));
+            _obtenerRegistrosInspecciones = obtenerRegistrosInspecciones;
+            _obtenerRegistrosRAC = obtenerRegistrosRAC;
+            _obtenerAccionesRP = obtenerAccionesRP;
+            _obtenerCausasRP = obtenerCausasRP;
+            _obtenerAccionesInvestigacion = obtenerAccionesInvestigacion;
+            _obtenerCausasInvestigacion = obtenerCausasInvestigacion;
+            _productoDerramadoRP = productoDerramadoRP;
+            _productoDerramadoInvestigacion = productoDerramadoInvestigacion;
+            _obtenerAvistamientos = obtenerAvistamientos;
         }
 
         private XSSFCellStyle GetDefaultCellStyle(XSSFWorkbook templateWorkbook)
@@ -69,6 +80,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             ISheet sheetCausasInvestigacion = await DescargarCausasInvestigacion(sTime, eTime, templateWorkbook, "Causas Invest - Incidente");
             ISheet sheetProductosRP = await DescargarProductoDerramadoRP(sTime, eTime, templateWorkbook, "Producto Derramado - RP Inc ");
             ISheet sheetProductosInvestigacion = await DescargarProductoDerramadoInvestigacion(sTime, eTime, templateWorkbook, "Producto Derramado - Incidente");
+            ISheet sheetAvistamientos = await DescargarAvistamientos(sTime, eTime, templateWorkbook, "Avistamiento de Fauna");
 
             MemoryStream ms = new MemoryStream();
             templateWorkbook.Write(ms);
@@ -483,7 +495,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
             }
             return sheet;
         }
-        public async Task<ISheet> DescargarProductoDerramadoInvestigacion (string sTime, string eTime, XSSFWorkbook templateWorkbook, string sheetName)
+        public async Task<ISheet> DescargarProductoDerramadoInvestigacion(string sTime, string eTime, XSSFWorkbook templateWorkbook, string sheetName)
         {
             // Load the sheet you are going to use as a template into NPOI
             ISheet sheet = templateWorkbook.GetSheet(sheetName);
@@ -499,7 +511,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 row.CreateCell(0).SetCellValue(productosInvestigacion[i].Investigacion_Final.Codigo);
                 row.GetCell(0).CellStyle = customCellStyle;
                 //Reportante
-                row.CreateCell(1).SetCellValue(productosInvestigacion[i].Investigacion_Final.Fecha_Incidente!=null? productosInvestigacion[i].Investigacion_Final.Fecha_Incidente.Value.ToString("dd/MM/yyyy"):"");
+                row.CreateCell(1).SetCellValue(productosInvestigacion[i].Investigacion_Final.Fecha_Incidente != null ? productosInvestigacion[i].Investigacion_Final.Fecha_Incidente.Value.ToString("dd/MM/yyyy") : "");
                 row.GetCell(1).CellStyle = customCellStyle;
                 //Gerencia
                 row.CreateCell(2).SetCellValue(productosInvestigacion[i].Producto_Incidente.Descripcion);
@@ -511,7 +523,7 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 row.CreateCell(4).SetCellValue(productosInvestigacion[i].Estado_Producto);
                 row.GetCell(4).CellStyle = customCellStyle;
                 //Empresa Observada
-                row.CreateCell(5).SetCellValue(productosInvestigacion[i].Cantidad_Derramada!=null? productosInvestigacion[i].Cantidad_Derramada.Value.ToString():"");
+                row.CreateCell(5).SetCellValue(productosInvestigacion[i].Cantidad_Derramada != null ? productosInvestigacion[i].Cantidad_Derramada.Value.ToString() : "");
                 row.GetCell(5).CellStyle = customCellStyle;
                 //Gerencia Observada
                 row.CreateCell(6).SetCellValue(productosInvestigacion[i].Unidad.Descripcion);
@@ -529,8 +541,65 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 row.CreateCell(10).SetCellValue(productosInvestigacion[i].Cantidad_No_Recuperado != null ? productosInvestigacion[i].Cantidad_No_Recuperado.Value.ToString() : "");
                 row.GetCell(10).CellStyle = customCellStyle;
                 //Nivel de Riesgo
-                row.CreateCell(11).SetCellValue(productosInvestigacion[i].Estado); 
+                row.CreateCell(11).SetCellValue(productosInvestigacion[i].Estado);
                 row.GetCell(11).CellStyle = customCellStyle;
+            }
+            return sheet;
+        }
+        public async Task<ISheet> DescargarAvistamientos(string sTime, string eTime, XSSFWorkbook templateWorkbook, string sheetName)
+        {
+            // Load the sheet you are going to use as a template into NPOI
+            ISheet sheet = templateWorkbook.GetSheet(sheetName);
+            var nColumns = sheet.GetRow(0).Cells.Count();
+
+            XSSFCellStyle customCellStyle = GetDefaultCellStyle(templateWorkbook);
+
+            var avistamientos = await _obtenerAvistamientos.Execute(sTime, eTime);
+            for (int i = 0; i < avistamientos.Count; i++)
+            {
+                IRow row = sheet.CreateRow(i + 1);
+                //Codigo
+                row.CreateCell(0).SetCellValue(avistamientos[i].Codigo);
+                row.GetCell(0).CellStyle = customCellStyle;
+                //FechaAvistamiento
+                row.CreateCell(1).SetCellValue(avistamientos[i].FechaAvistamiento.ToString("dd/MM/yyyy"));
+                row.GetCell(1).CellStyle = customCellStyle;
+                //Ubicacion
+                row.CreateCell(2).SetCellValue(avistamientos[i].Ubicacion);
+                row.GetCell(2).CellStyle = customCellStyle;
+                //NombreComun
+                row.CreateCell(3).SetCellValue(avistamientos[i].NombreComun.Descripcion);
+                row.GetCell(3).CellStyle = customCellStyle;
+                //Cantidad
+                row.CreateCell(4).SetCellValue(avistamientos[i].Cantidad.ToString());
+                row.GetCell(4).CellStyle = customCellStyle;
+                //TipoAvistamiento
+                row.CreateCell(5).SetCellValue(avistamientos[i].TipoAvistamiento.Descripcion);
+                row.GetCell(5).CellStyle = customCellStyle;
+                //EstadoFauna
+                row.CreateCell(6).SetCellValue(avistamientos[i].EstadoFauna.Descripcion);
+                row.GetCell(6).CellStyle = customCellStyle;
+                //LugarReferencia
+                row.CreateCell(7).SetCellValue(avistamientos[i].LugarReferencia.Descripcion);
+                row.GetCell(7).CellStyle = customCellStyle;
+                //LugarReferencia.Latitud
+                row.CreateCell(8).SetCellValue(avistamientos[i].LugarReferencia.Latitud);
+                row.GetCell(8).CellStyle = customCellStyle;
+                //LugarReferencia.Longitud
+                row.CreateCell(9).SetCellValue(avistamientos[i].LugarReferencia.Longitud);
+                row.GetCell(9).CellStyle = customCellStyle;
+                //Usuario
+                row.CreateCell(10).SetCellValue(avistamientos[i].Usuario.Nombres+ " "+ avistamientos[i].Usuario.Apellidos);
+                row.GetCell(10).CellStyle = customCellStyle;
+                //DescripcionAccion
+                row.CreateCell(11).SetCellValue(avistamientos[i].DescripcionAccion);
+                row.GetCell(11).CellStyle = customCellStyle;
+                //Supervisor
+                row.CreateCell(12).SetCellValue(avistamientos[i].Supervisor!=null? avistamientos[i].Supervisor.Nombres + " " + avistamientos[i].Supervisor.Apellidos:"");
+                row.GetCell(12).CellStyle = customCellStyle;
+                //Estado
+                row.CreateCell(13).SetCellValue(avistamientos[i].Estado);
+                row.GetCell(13).CellStyle = customCellStyle;
             }
             return sheet;
         }

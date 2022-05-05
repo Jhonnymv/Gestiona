@@ -15,5 +15,6 @@ namespace GestionAmbiental.Application.Repositories.DashboardGeneral
         Task<List<Domain.Incidentes.InvestigacionFinal.Causa_Incidente_Investigacion>> CausasInvestigacion(DateTime startTime, DateTime endTime);
         Task<List<Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente>> ProductosDerramadosRP(DateTime startTime, DateTime endTime);
         Task<List<Domain.Incidentes.InvestigacionFinal.Producto_Derramado_Incidente>> ProductosDerramadosInvestigacion(DateTime startTime, DateTime endTime);
+        Task<List<Domain.AvistamientoFauna.AvistamientoFauna>> Avistamientos(DateTime startTime, DateTime endTime);
     }
 }

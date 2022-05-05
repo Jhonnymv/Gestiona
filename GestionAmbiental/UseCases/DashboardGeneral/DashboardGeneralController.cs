@@ -108,14 +108,16 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 ViewBag.FiltroEstados = filtroEstados;
                 ViewBag.FechaInicio = DateTime.Now.AddDays(-30).ToString("yyyy-MM-dd");
                 ViewBag.FechaFin = DateTime.Now.ToString("yyyy-MM-dd");
+                ViewBag.FechaInicioRegistros = new DateTime(DateTime.Now.Year,1,1).ToString("yyyy-MM-dd");
+                ViewBag.FechaFinRegistros = DateTime.Now.ToString("yyyy-MM-dd");
 
                 return View();
             }
         }
-        public async Task<IActionResult> DescargarRegistros()
+        public async Task<IActionResult> DescargarRegistros(string sTime, string eTime)
         {
             string templatePath = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Dashboard");
-            var ms = await _descargarRegistros.DescargarInformacion("01/01/2021", "03/05/2022",templatePath);
+            var ms = await _descargarRegistros.DescargarInformacion(sTime, eTime, templatePath);
             ms.Position = 0;
 
             return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegistrosGestiona-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
