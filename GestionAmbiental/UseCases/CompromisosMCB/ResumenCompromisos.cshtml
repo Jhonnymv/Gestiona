@@ -316,7 +316,7 @@
                                 </div>
                                 <div class="col-12 col-sm-3">
                                     <label>Página</label>
-                                    <input type="text" class="form-control" id="Pagina" readonly>
+                                    <input type="text" class="form-control" id="PaginaDet" readonly>
                                 </div>
                                 <div class="col-12 col-sm-3">
                                     <label>Resolución</label>
@@ -441,9 +441,9 @@
                 $("#Tomo").val(response.data.tomo)
                 $("#Capitulo").val(response.data.capitulo)
                 $("#Seccion").val(response.data.seccion)
-                $("#Pagina").val(response.data.pagina)
+                $("#PaginaDet").val(response.data.pagina)
                 $("#Resolucion").val(response.data.resolucion)
-                $("#Autoridad").val(response.data.nombreAutoridad)
+                $("#Autoridad").val(response.data.nomAutoridad)
                 $("#Fecha").val(date.toLocaleDateString())
                 //dataModulo();
             }

@@ -1,0 +1,346 @@
+﻿@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+@section styles {
+<link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+<link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
+}
+<div class="avistamientoFlora">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title compromisos-opacity-color">
+                <h3><span id="titulo_pagina">Monitoreo de Campo Interno</span></h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="content-header container">
+            <div class="action-container fauna-color">
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color" asp-action="NuevoRegistro" asp-controller="AvistamientoFlora">NUEVO REGISTRO</a>
+                </div>
+                <div class="w-100 row-center-center">
+                    <a class="btn btn-special-action-outline fauna-color">CATÁLOGO</a>
+                </div>
+            </div>
+            <form autocomplete="off" class="custom-form">
+                <div class="col-12 col-lg-9">
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Fecha</label>
+                            <input type="date" class="form-control" id="filtro_fecha">
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Tipo de Fauna</label>
+                            <select id="filtro_tipo_fauna" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-md-6">
+                            <label for="">Estado de Fauna</label>
+                            <select id="filtro_estado_fauna" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label for="">Lugar de Referencia</label>
+                            <select id="filtro_lugar_referencia" class="form-control">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 row-center-center">
+                    <button type="button" class="btn btn-mc" onclick="filtrar(1)">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="secondary-content col-12">
+        <div class="table-responsive fauna-color">
+            <table class="table" id="tabla_resumen">
+                <thead class="">
+                    <tr>
+                        <th></th>
+                        <th>Codigo</th>
+                        <th>Fecha</th>
+                        <th>Zona</th>
+                        <th>Ubicacion</th>
+                        <th>Altura</th>
+                        <th>Geneto</th>
+                        <th>Rameto</th>
+                        <th>Cond. Rehubicación</th>
+                        <th>Sustrato</th>
+                        <th>Diámetro Mayor</th>
+                        <th>Diámetro Menor</th>
+                        <th>Altura</th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="pagination-container fauna-color" id="paginado">
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_detalle" tabindex="-1" aria-labelledby="avistamientoFloraModal" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-menu modal-compromisos">
+            <div class="modal-content">
+                <div class="compromisos">
+                    <div class="image-header-container">
+                        <div class="header-title compromisos-opacity-color">
+                            <h3>Detalle Avistamiento Flora</h3>
+                            <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="compromisos">
+                        <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Cod. Ficha</label>
+                                    <input class="form-control" readonly id="IdFichaDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Fecha</label>
+                                    <input class="form-control" readonly id="FechaDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Ubicación</label>
+                                    <input class="form-control" readonly id="UbiDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Altitud</label>
+                                    <input class="form-control" readonly id="AltitudDet" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Geneto</label>
+                                    <input class="form-control" readonly id="GenetoDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Rameto</label>
+                                    <input class="form-control" readonly id="RametoDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Condicíon</label>
+                                    <input class="form-control" readonly id="CondiDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Sustrato</label>
+                                    <input class="form-control" readonly id="SustratoDet" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Diametro Mayor</label>
+                                    <input class="form-control" readonly id="DiaMayorDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Diametro Menor</label>
+                                    <input class="form-control" readonly id="DiaMenorDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Altura</label>
+                                    <input class="form-control" readonly id="DiaAlturaDet" />
+                                </div>
+                              
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    @*<label>Nombres de Compromiso</label>*@
+                                    <table class="table table-striped table-info">
+                                        <thead>
+                                        <th>Nombre</th>
+                                        <th>Nombre Común</th>
+                                        <th style="text-align:center">cantidad</th>
+                                        </thead>
+                                        <tbody id="dataNombre">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    @*<label>Fenologías</label>*@
+                                    <table class="table table-striped table-info">
+                                        <thead>
+                                        <th>Fenologia</th>
+                                        <th style="text-align:center">Cantidad</th>
+                                        </thead>
+                                        <tbody id="dataFenologia">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    @*<label>Vigores</label>*@
+                                    <table class="table table-striped table-info">
+                                        <thead>
+                                        <th>Vigor</th>
+                                        <th style="text-align:center">cantidad</th>
+                                        </thead>
+                                        <tbody id="dataVigor">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    @*<label>Salud</label>*@
+                                    <table class="table table-striped table-info">
+                                        <thead>
+                                        <th>Salud</th>
+                                        <th style="text-align:center">Cantidad</th>
+                                        </thead>
+                                        <tbody id="dataSalud">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    @*<label>Vigores</label>*@
+                                    <table class="table table-striped table-info">
+                                        <thead>
+                                        <th>Fauna</th>
+                                        <th style="text-align:center">cantidad</th>
+                                        </thead>
+                                        <tbody id="dataFauna">
+                                        </tbody>
+                                    </table>
+                                </div>
+                                @*<div class="col-12 col-sm-6">
+                                    <label>Salud</label>
+                                    <table class="table table-striped">
+                                    <thead>
+                                    <th>Salud</th>
+                                    <th style="text-align:center">Cantidad</th>
+                                    </thead>
+                                    <tbody id="dataSalud">
+                                    </tbody>
+                                    </table>
+                                    </div>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/selectpicker/js/bootstrap-select.js"></script>
+<script src="~/lib/pdfobject/pdfobject.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        filtrar(1)
+    });
+
+    function filtrar(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/AvistamientoFlora/listarAvistamientos",
+            data: {
+                "pagina": pag,
+                "rpp": 10,
+
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tabla_resumen tbody').empty()
+                $('#tabla_resumen tbody').html(response.data)
+                $('#paginado').html(response.paginador)
+            }
+        });
+    }
+    function OpenModal(avistamientoId){
+        $.ajax({
+             type: "POST",
+            url: "/AvistamientoFlora/GetAvistameinto",
+            data: {
+                "id": avistamientoId
+            },
+            traditional: true,
+            success: (response) => {
+                console.log(response)
+                $("#IdFichaDet").val(response.data.idFicha)
+                $("#FechaDet").val(response.data.fechavalidacion)
+                $("#UbiDet").val(response.data.ubicacion_Este+" , "+response.data.ubicacion_Norte)
+                $("#AltitudDet").val(response.data.ubicacion_Altitud)
+                $("#GenetoDet").val(response.data.geneto)
+                $("#RametoDet").val(response.data.rameto)
+                $("#CondiDet").val(response.data.condicion_Reubicacion)
+                $("#SustratoDet").val(response.data.sustrato)
+                $("#DiaMayorDet").val(response.data.cobertura_Diametro_Mayor)
+                $("#DiaMenorDet").val(response.data.cobertura_Diametro_Menor)
+                $("#DiaAlturaDet").val(response.data.cobertura_Diametro_Altura)
+
+
+
+                $('#dataNombre').html("")
+                response.nombres.forEach(elementNombre=>{
+                    $('#dataNombre').append(
+                        "<tr>"+
+                        "<td>"+elementNombre.nombreCientifico+"</td>"+
+                        "<td>"+elementNombre.nombreComun+"</td>"+
+                        "<td style='text-align:center'>"+elementNombre.cantidad+"</td>"+
+                        "</tr>"
+                    )
+                })
+                $('#dataFenologia').html("")
+                response.fenologias.forEach(elementfenologia=>{
+                    $('#dataFenologia').append(
+                        "<tr>"+
+                        "<td>"+elementfenologia.name+"</td>"+
+                        "<td style='text-align:center'>"+elementfenologia.cantidad+"</td>"+
+                        "</tr>"
+                    )
+                })
+                $('#dataVigor').html("")
+                response.vigores.forEach(elementVigor=>{
+                    $('#dataVigor').append(
+                        "<tr>"+
+                        "<td>"+elementVigor.name+"</td>"+
+                        "<td style='text-align:center'>"+elementVigor.cantidad+"</td>"+
+                        "</tr>"
+                    )
+                })
+                $('#dataSalud').html("")
+                response.saluds.forEach(elementSalud=>{
+                    $('#dataSalud').append(
+                        "<tr>"+
+                        "<td>"+elementSalud.name+"</td>"+
+                        "<td style='text-align:center'>"+elementSalud.cantidad+"</td>"+
+                        "</tr>"
+                    )
+                })
+                $('#dataFauna').html("")
+                response.faunas.forEach(elementFauna=>{
+                    $('#dataFauna').append(
+                        "<tr>"+
+                        "<td>"+elementFauna.name+"</td>"+
+                        "<td style='text-align:center'>"+elementFauna.cantidad+"</td>"+
+                        "</tr>"
+                    )
+                })
+                $("#modal_detalle").modal('show')
+
+            }
+        })
+    }
+</script>
+}

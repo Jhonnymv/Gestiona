@@ -44,6 +44,7 @@
     <Folder Include="logs\" />
     <Folder Include="UseCases\SGA_Documentos\Indicadores\" />
     <Folder Include="UseCases\SGA_Documentos\Auditoria\" />
+    <Folder Include="Views\GestionFOCAM\" />
     <Folder Include="Views\MonitoreoCampoInterno\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\Investigacion\" />
     <Folder Include="wwwroot\ExcelTemplates\Incidentes\ReportePreliminar\" />

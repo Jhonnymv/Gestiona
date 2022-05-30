@@ -10,6 +10,8 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.RAC;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.ResiduosSolidos;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA_Documentos;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Test;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.MonitoreoCampoInterno.AvistamientoFlora;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM;
 using Microsoft.EntityFrameworkCore;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
@@ -117,6 +119,31 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<MedioVerificacionCMCB> MedioVerificacionCMCB { get; set; }
         public DbSet<OrigenCMCB> OrigenCMCB { get; set; }
         public DbSet<SustentoCMCB> SustentoCMCB { get; set; }
+
+
+        // Avistameinto Flora
+        public DbSet<AvistamientoFlora> AvistamientoFloraMCIF { get; set; }
+        public DbSet<FaunaAsociada> FaunaAsociadaMCIF { get; set; }
+        public DbSet<FaunaAsociadaAvistamiento> FaunaAsociadaAvistamientoMCIF { get; set; }
+        public DbSet<FloraAsociadaAvistamiento> FloraAsociadaAvistamientoMCIF { get; set; }
+        public DbSet<Fenologia> FenologiaMCIF { get; set; }
+        public DbSet<FenologiaAvistamiento> FenologiaAvistamientoMCIF { get; set; }
+        public DbSet<NombreCientifico> NombreFientificoMCIF { get; set; }
+        public DbSet<NombreCientificoAvistamiento> NombreFientificoAvistamientoMCIF { get; set; }
+        public DbSet<Salud> SaludMCIF { get; set; }
+        public DbSet<SaludAvistamiento> SaludAvistamientoMCIF { get; set; }
+        public DbSet<Uso> UsoMCIF { get; set; }
+        public DbSet<UsoAvistamiento> UsoAvistamientoMCIF { get; set; }
+        public DbSet<Vigor> VigorMCIF { get; set; }
+        public DbSet<VigorAvistamiento> VigorAvistamientoMCIF { get; set; }
+        public DbSet<Zona> ZonaMCIF { get; set; }
+
+
+        //Gestión FOCAM
+
+        public DbSet<GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM.Tipo> TipoFOCAM { get; set; }
+        public DbSet<GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM.Documentos> DocumentoFOCAM { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -320,6 +347,59 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<SustentoCMCB>()
                 .ToTable("Tb_Sustentos_CMCB");
+
+
+            modelBuilder.Entity<AvistamientoFlora>()
+                .ToTable("Tb_MCIF_Avistamiento_Flora");
+
+            modelBuilder.Entity<FaunaAsociada>()
+                .ToTable("Tb_MCIF_Fauna_Asociada");
+
+            modelBuilder.Entity<FaunaAsociadaAvistamiento>()
+                .ToTable("Tb_MCIF_FaunaAsociada_Avistamiento");
+
+            modelBuilder.Entity<FloraAsociadaAvistamiento>()
+                .ToTable("Tb_MCIF_FloraAsociada_Avistamiento");
+
+            modelBuilder.Entity<FenologiaAvistamiento>()
+                .ToTable("Tb_MCIF_Fenologia_Avistamiento");
+
+            modelBuilder.Entity<Fenologia>()
+                .ToTable("Tb_MCIF_Fenologias");
+
+            modelBuilder.Entity<NombreCientifico>()
+                .ToTable("Tb_MCIF_Nombre_Cientifico");
+
+            modelBuilder.Entity<NombreCientificoAvistamiento>()
+                .ToTable("Tb_MCIF_NombreCientifico_Avistamiento");
+
+            modelBuilder.Entity<Salud>()
+                .ToTable("Tb_MCIF_Salud");
+
+            modelBuilder.Entity<SaludAvistamiento>()
+                .ToTable("Tb_MCIF_Salud_Avistamiento");
+
+            modelBuilder.Entity<Uso>()
+                .ToTable("Tb_MCIF_Usos");
+
+            modelBuilder.Entity<UsoAvistamiento>()
+                .ToTable("Tb_MCIF_Uso_Avistamiento");
+
+            modelBuilder.Entity<Vigor>()
+                .ToTable("Tb_MCIF_Vigores");
+
+            modelBuilder.Entity<VigorAvistamiento>()
+                .ToTable("Tb_MCIF_Vigor_Avistamiento");
+
+            modelBuilder.Entity<Zona>()
+                .ToTable("Tb_MCIF_Zonas");
+
+
+            //Gestión FOCAM
+            modelBuilder.Entity<Tipo>()
+                .ToTable("Tb_FOCAM_Tipo");
+            modelBuilder.Entity<Documentos>()
+                .ToTable("Tb_FOCAM_Documentos");
         }
     }
 }

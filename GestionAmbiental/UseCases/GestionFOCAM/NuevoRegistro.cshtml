@@ -1,0 +1,82 @@
+﻿@model GestionAmbiental.UseCases.GestionFOCAM.GestionFOCAMModel
+@{
+    ViewData["Title"] = "NuevoRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Nuevo Registro de Avistamiento de Flora Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" asp-controller="GestionFOCAM" asp-action="NuevoRegistro" autocomplete="off" method="post" enctype="multipart/form-data" autocomplete="off">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        @*<input type="hidden" asp-for="Opcion" />*@
+
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="IdTipo">Tipo</label>
+                            <span class="text-danger" asp-validation-for="IdTipo"></span>
+                            <select class="form-control" asp-for="IdTipo" asp-items="ViewBag.tipos"></select>
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="Codigo">Código</label>
+                            <span class="text-danger" asp-validation-for="Codigo"></span>
+                            <input type="text" class="form-control" asp-for="Codigo" />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="Titulo">Título</label>
+                            <span class="text-danger" asp-validation-for="Titulo"></span>
+                            <input type="text" class="form-control" asp-for="Titulo" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="Version">Versión</label>
+                            <span class="text-danger" asp-validation-for="Version"></span>
+                            <input type="text" class="form-control" asp-for="Version" />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="FechaAprobacion">fecha Aprobación</label>
+                            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+                            <input type="date" class="form-control" asp-for="FechaAprobacion" />
+                        </div>
+
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="Estado">Estado</label>
+                            <span class="text-danger" asp-validation-for="Estado"></span>
+                            <input type="text" class="form-control" asp-for="Estado" />
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="Comentarios">Comentarios</label>
+                            <span class="text-danger" asp-validation-for="Comentarios"></span>
+                            <input type="text" class="form-control" asp-for="Comentarios" />
+                        </div>
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label asp-for="FechaTentaivaVersion">Fecha Tentativa Version</label>
+                            <span class="text-danger" asp-validation-for="FechaTentaivaVersion"></span>
+                            <input type="date" class="form-control" asp-for="FechaTentaivaVersion" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="button-container">
+                            <div>
+                                <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                            </div>
+                            <div>
+                                @*<button type="button" class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>*@
+                                <button type="submit" class="btn btn-mc-success">Registrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

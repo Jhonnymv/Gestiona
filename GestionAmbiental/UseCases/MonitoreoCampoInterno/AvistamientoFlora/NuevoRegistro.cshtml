@@ -1,0 +1,464 @@
+﻿@model GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFloraModel
+@{
+    ViewData["Title"] = "NuevoRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Nuevo Registro de Avistamiento de Flora Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form form-flex w-100" id="form_nuevo_avistamiento" asp-action="NuevoRegistro" asp-controller="AvistamientoFlora" method="post" enctype="multipart/form-data" autocomplete="off">
+                <input type="hidden" asp-for="Opcion" />
+                <div class="mc-container col-12 col-xl-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold text-center">Registro Fotográfico</span>
+                    </div>
+                    <div class="row input_container">
+                        <span class="text-danger field-validation-error" data-valmsg-for="Fotos" data-valmsg-replace="true">
+                            <span id="alerta_fotos" class=""></span>
+                        </span>
+                        <label class="btn fauna-color btn btn-special-action" for="Fotos"><img src="~/img/icons/camara.png" /></label>
+                        <input type="file" style="visibility:hidden; display:none" asp-for="Fotos" accept=".jpg,.jpeg,.png" data-max-size="8388608" multiple>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 text-center">
+                            <img id="previsualizacion" style="width:30rem;height:auto;max-width:50%;display:none" />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                        <div class="d-flex justify-content-center">
+                        <button type="button" id="botonCargarFoto" class="btn btn-mc" onclick="CargarFotos()" style="display:none;">Subir</button>
+                        </div>
+                        </div>*@
+                </div>
+                <div class="form-tabs-mc mc-separator-top-left col-12 col-xl-8">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold">Datos Generales</span>
+                    </div>
+                    <div class="d-flex justify-content-center mt-4 mb-4">
+                        <ul class="nav nav-pills col-9 div-scroll-horizontal" id="pills-tab" role="tablist">
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link  col-12 active" id="pills-step1-tab" data-bs-toggle="pill" data-bs-target="#pills-step1" type="button" role="tab" aria-controls="pills-step1" aria-selected="true" disabled>Datos del Avistamiento</button>
+                            </li>
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link col-12" id="pills-step2-tab" data-bs-toggle="pill" data-bs-target="#pills-step2" type="button" role="tab" aria-controls="pills-step2" aria-selected="false" disabled>Caracteristicas</button>
+                            </li>
+                            <li class="nav-item col-4" role="presentation">
+                                <button class="nav-link col-12" id="pills-step3-tab" data-bs-toggle="pill" data-bs-target="#pills-step3" type="button" role="tab" aria-controls="pills-step3" aria-selected="false" disabled>Fauna y Flora asociada</button>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-step1" role="tabpanel" aria-labelledby="pills-step1-tab">
+                            <div class="message"></div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Idficha">Cod. Ficha</label>
+                                    <span class="text-danger" asp-validation-for="Idficha"></span>
+                                    <input type="text" class="form-control" asp-for="Idficha" />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="Fechavalidación">Fecha</label>
+                                    <span class="text-danger" asp-validation-for="Fechavalidación"></span>
+                                    <input id="FechaValidacion" type="date" class="form-control" asp-for="Fechavalidación" />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="IdZona">Zona</label>
+                                    <span class="text-danger" asp-validation-for="IdZona"></span>
+                                    <select class="form-control" asp-for="IdZona" asp-items="ViewBag.Zonas"></select>
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <div class="row d-flex align-items-end m-0">
+                                        <div class="col-8 p-0 m-0">
+                                            <label asp-for="Ubicacion_Este">Ubicación</label>
+                                            <span class="text-danger" asp-validation-for="Ubicacion_Este"></span>
+                                            <input id="Ubicacion" type="text" class="form-control" asp-for="Ubicacion_Este" />
+                                        </div>
+                                        <div class="col-4 m-0 d-flex justify-content-end">
+                                            <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Ubicacion_Altitud">Altitud</label>
+                                    <span class="text-danger" asp-validation-for="Ubicacion_Altitud" ></span>
+                                    <input id="inputAltitud" type="text" class="form-control" asp-for="Ubicacion_Altitud" />
+                                </div>
+                            </div>
+                            <div class="row input_container">
+                            </div>
+                            <div class="row">
+                                <label>Nombre Científico</label>
+                                <div class="row">
+                                    <div class="col-5">
+                                        <b>Nombre</b>
+                                    </div>
+                                    <div class="col-5">
+                                        <b>Nombre Común</b>
+                                    </div>
+                                    <div class="col-2">
+                                        <b>Cantidad</b>
+                                    </div>
+                                </div>
+                                @foreach (var item in ViewBag.nombres)
+                                {
+                                    <div class="row input_container">
+                                        <input type="hidden" asp-for="NombreId" value="@item.Id"></input>
+                                        <div class="col-5">
+                                            <span>@item.Nombre</span>
+                                        </div>
+                                        <div class="col-5">
+                                            <span>@item.NombreComun</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <input type="number" asp-for="NombreCantidad" class="form-control form-control-sm" min="0" value="0"></input>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="row input_container align-items-center">
+                                @*<div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="IdNombreCientifico">Nombre científico</label>
+                                    <span class="text-danger" asp-validation-for="IdNombreCientifico"></span>
+                                    <select class="form-control" asp-for="IdNombreCientifico" asp-items="ViewBag.nombresCientificos"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="NombreComun">Nombre Común</label>
+                                    <span class="text-danger" asp-validation-for="NombreComun"></span>
+                                    <input type="text" class="form-control" asp-for="NombreComun" />
+                                    </div>*@
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Geneto">Geneto</label>
+                                    <span class="text-danger" asp-validation-for="Geneto"></span>
+                                    <input type="text" class="form-control" asp-for="Geneto" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Rameto">Rameto</label>
+                                    <span class="text-danger" asp-validation-for="Rameto"></span>
+                                    <input type="text" class="form-control" asp-for="Rameto" />
+                                </div>
+                                @*<div class="col-12 col-sm-6 col-lg-6">
+                                    <div id="card_img_referencia" class="card" style="border-radius: 15px; width:auto; display:none; overflow:hidden;">
+                                    <img id="img_referencia" style="width:auto; height:10rem; max-width:100%; object-fit:scale-down; border-radius: 15px;" alt="imagen referencia">
+                                    <div class="card-body">
+                                    <p class="card-text text-center">Imagen de Referencia</p>
+                                    </div>
+                                    </div>
+                                    </div>*@
+                            </div>
+                            <div class="row input_container align-items-center">
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for=CondicionReubicacion> Cond.reubicación</label>
+                                    <span class="text-danger" asp-validation-for="CondicionReubicacion"></span>
+                                    <select class="form-control" asp-for="CondicionReubicacion">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Sembrada">Sembrada</option>
+                                        <option value="Silvestre">Silvestre</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-6">
+                                    <label asp-for="Sustrato">Sustrato</label>
+                                    <span class="text-danger" asp-validation-for="Sustrato"></span>
+                                    <select class="form-control" asp-for="Sustrato">
+                                        <option value="">Seleccione una opción</option>
+                                        <option value="Seco">Seco</option>
+                                        <option value="Húmedo">Humedo</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row input_container align-items-center">
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="CoberturaDiametroMayor">Diámetro mayor</label>
+                                    <span class="text-danger" asp-validation-for="CoberturaDiametroMayor"></span>
+                                    <input type="text" class="form-control" asp-for="CoberturaDiametroMayor" />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="CoberturaDiametroMenor">Diámetro Menor</label>
+                                    <span class="text-danger" asp-validation-for="CoberturaDiametroMenor"></span>
+                                    <input type="text" class="form-control" asp-for="CoberturaDiametroMenor" />
+                                </div>
+                                <div class="col-12 col-sm-4 col-lg-4">
+                                    <label asp-for="CoberturaDiametroAltura">Altura</label>
+                                    <span class="text-danger" asp-validation-for="CoberturaDiametroAltura"></span>
+                                    <input type="text" class="form-control" asp-for="CoberturaDiametroAltura" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-step2" role="tabpanel" aria-labelledby="pills-step2-tab">
+                            <div class="message"></div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="FenologiaCantidad">Fenología</label>
+                                    @foreach (var item in ViewBag.fenologias)
+                                    {
+                                        <input type="hidden" value="@item.Id" asp-for="FenologiaId" />
+                                        <div class="row input_container">
+                                            <div class="col-8">
+                                                <span>@item.Nombre</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" min="0" value="0" asp-for="FenologiaCantidad">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="VigorCantidad">Vigor</label>
+                                    <span class="text-danger" asp-validation-for="VigorCantidad"></span>
+                                    @foreach (var item in ViewBag.vigores)
+                                    {
+                                        <input type="hidden" asp-for="VigorId" value="@item.Id" />
+                                        <div class="row input_container">
+                                            <div class="col-8">
+                                                <span>@item.Nombre</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" min="0" value="0" asp-for="VigorCantidad"></input>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-sm-6">
+                                    <label>Salud</label>
+                                    @foreach (var item in ViewBag.salud)
+                                    {
+                                        <div class="row input_container">
+                                            <input type="hidden" value="@item.Id" asp-for="SaludId">
+                                            <div class="col-8">
+                                                <span>@item.Nombre</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" min="0" value="0" asp-for="SaludCantidad">
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="col-12 col-sm-6">
+                                    <label asp-for="UsoId">Usos</label>
+                                    <span class="text-danger" asp-validation-for="UsoId"></span>
+                                    @foreach (var item in ViewBag.usos)
+                                    {
+                                        <input type="hidden" value="@item.Id" asp-for="UsoId">
+                                        <div class="row input_container">
+                                            <div class="col-8">
+                                                <span>@item.Nombre</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" min="0" value="0" asp-for="UsoCantidad"></input>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-mc next-btn">Siguiente</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-step3" role="tabpanel" aria-labelledby="pills-step3-tab">
+                            <div class="message"></div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <label asp-for="VigorId">Vigor</label>
+                                    <span class="text-danger" asp-validation-for="VigorId"></span>
+                                    @*<select class="form-control" asp-for="IdVigor" asp-items="ViewBag.vigores"></select>*@
+                                    @foreach (var item in ViewBag.faunAsoc)
+                                    {
+                                        <input type="hidden" value="@item.Id" asp-for="FaunaAsociadaId">
+                                        <div class="row input_container">
+                                            <div class="col-8">
+                                                <span>@item.Nombre</span>
+                                            </div>
+                                            <div class="col-4">
+                                                <input type="number" class="form-control form-control-sm" min="0" value="0" asp-for="FaunaAsociadaCantidad"></input>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="button-container">
+                                    <div>
+                                        <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                    </div>
+                                    <div>
+                                        @*<button type="button" class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>*@
+                                        <button type="button" class="btn btn-mc-success" onclick="Registrar()">Registrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Ubicación-->
+<div class="modal fade mc-modal" id="modal_ubicacion" tabindex="-1" aria-labelledby="titulo_modal_ubicacion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="mc-modal-image-background">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="col-12 titulo-pagina">
+                        <h3 class="text-white text-center mb-4">No se tiene permiso para obtener la ubicación</h3>
+                    </div>
+                    <div class="col-12">
+                        <h4 class="text-white">Para habilitarlos siga los siguientes pasos:</h4>
+                        <br>
+                        <h5 class="text-white">1. Acceder a las opciones del navegador (<img style="margin: unset; width: unset; filter: invert(1)" src="~/img/icons/options.png" />)</h5>
+                        <h5 class="text-white">2. Ingresar a la "Configuración"</h5>
+                        <h5 class="text-white">3. Buscar e ingresar a "Ubicación"</h5>
+                        <h5 class="text-white">4. Buscar los sitios bloqueados y quitar a Gestiona</h5>
+                        <h5 class="text-white">5. Actualizar esta página</h5>
+                        <h5 class="text-white">6. Conceder los permisos de ubicación cuando se le solicite</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+<script src="~/js/stepper.js"></script>
+<script type="text/javascript">
+    var ubicacion = $("#Ubicacion");
+    var imagenesReferencia = [];
+
+    $(document).ready(function () {
+        var fechaActual = new Date();
+        $("#FechaValidacion").val(DarFormatoFecha(fechaActual));
+        ObtenerUbicacion();
+    });
+    function preview_image(event) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                var output = document.getElementById('previsualizacion');
+                output.src = reader.result;
+            }
+            try {
+                reader.readAsDataURL(event.target.files[0]);
+                $("#previsualizacion").show();
+                $("#botonCargarFoto").show();
+            } catch (error) {
+                $("#previsualizacion").hide();
+                $("#botonCargarFoto").hide();
+            }
+        }
+        $("#Fotos").change(function (event) {
+            $("#alerta_fotos").html("");
+            //Validacion del tamaño del archivo
+            var maxSize = $("#Fotos").data('max-size');
+            var archivos = $("#Fotos").get(0).files;
+
+            if (archivos.length > 0) {
+                var fileSize = 0
+                for (var i = 0; i < archivos.length; i++) {
+                    fileSize += archivos[i].size;
+                }
+                if (fileSize > maxSize) {
+                    this.value = '';
+                    var filesname = this.files.length + " Archivos";
+                    $("#alerta_fotos").html("El  archivo supera el límite permitido de 8MB<br/>");
+                    $("#previsualizacion").hide();
+                    $("#botonCargarFoto").hide();
+                    return;
+                }
+                var filesName = "";
+                for (var i = 0; i < archivos.length; i++) {
+                    switch (this.value.match(/\.([^\.]+)$/)[1]) {
+                        case 'jpg':
+                        case 'JPG':
+                        case 'jpeg':
+                        case 'JPEG':
+                        case 'png':
+                        case 'PNG':
+                            filesName += archivos[i].name + "<br/>";
+                            break;
+                        default:
+                            this.value = '';
+                            var filesname = this.files.length + " Archivos";
+                            $("#files_name").text(filesname);
+                            $("#alerta_fotos").html("No se admiten este tipo de archivos<br/>");
+                            return;
+                    }
+                }
+                filesName.length > 0 ? $("#files_name").html(filesName) : null;
+                preview_image(event);
+            }
+        });
+
+    function DarFormatoFecha(date) {
+            var d = new Date(date),
+                month = '' + (d.getMonth() + 1),
+                day = '' + d.getDate(),
+                year = d.getFullYear();
+
+            if (month.length < 2)
+                month = '0' + month;
+            if (day.length < 2)
+                day = '0' + day;
+
+            return [year, month, day].join('-');
+        }
+
+    function ObtenerUbicacion() {
+        navigator.permissions.query({ name: 'geolocation' }).then(function (result) {
+            if (result.state == 'granted') {
+                ImprimirPermisos(result.state);
+                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+            } else if (result.state == 'prompt') {
+                ImprimirPermisos(result.state);
+                navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+            } else if (result.state == 'denied') {
+                MostrarModalUbicacion()
+                ImprimirPermisos(result.state);
+            }
+            result.onchange = function () {
+                console.log("cambio")
+                ImprimirPermisos(result.state);
+            }
+        });
+    }
+    function MostrarUbicacion(position) {
+            ubicacion.val(position.coords.latitude + " , " + position.coords.longitude);
+            $("#inputAltitud").val(position.coords.altitudeAccuracy)
+        }
+
+    function MostrarModalUbicacion() {
+        $("#modal_ubicacion").modal('show');
+    }
+    function ImprimirPermisos(state) {
+        console.log('Permission ' + state);
+    }
+    function Registrar() {
+            //if (ValidarCampos()) {
+                //$("#Opcion").val("Registrar");
+                $("#Modal_Guardando").modal('show');
+                $("#form_nuevo_avistamiento").submit();
+            //} else {
+            //    alert("Existen campos vacios");
+            //}
+        }
+</script>
+}
