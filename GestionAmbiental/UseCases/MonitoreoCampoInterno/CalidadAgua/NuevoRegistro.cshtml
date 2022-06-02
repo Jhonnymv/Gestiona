@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "NuevoRegistro";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="fauna">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title fauna-opacity-color">
+                <h3>Nuevo Registro de Avistamiento de Flora Silvestre</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form form-flex w-100" id="form_nuevo_avistamiento" method="post" enctype="multipart/form-data" autocomplete="off">
+                @*<input type="hidden" asp-for="Opcion" />*@
+                <div class="mc-container col-12 col-xl-4">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold">Datos de Campo</span>
+                    </div>
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-4 col-lg-4">
+                            <label >Cod. Ficha</label>
+                            <span class="text-danger" ></span>
+                            <input type="text" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-tabs-mc mc-separator-top-left col-12 col-xl-8">
+                    <div class="d-flex justify-content-center">
+                        <span class="text-mc bold">Datos Generales</span>
+                    </div>
+
+                </div>
+            </form>
+            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</div>
