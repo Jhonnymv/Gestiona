@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using GestionAmbiental.Application.Repositories.DashboardGeneral;
 using GestionAmbiental.Domain.DashboardGeneral;
 using GestionAmbiental.Domain.DashboardGeneral.ResiduosSolidos.IngresoSalida;
 using GestionAmbiental.Domain.Enum;
@@ -10,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories.DashboardGeneral
 {
-    public class GetDataIngresoSalidaResiduosDashboardRepository
+    public class GetDataIngresoSalidaResiduosDashboardRepository : IGetDataIngresoSalidaResiduosDashboardReadOnlyRepository
     {
         private readonly Context _context;
 
@@ -54,7 +55,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Salida = item.Where(x => x.Id_Ingreso_Salida.Equals(2)).Sum(x => x.Cantidad)
                 });
             }
-            output = output.OrderBy(x => x.Ingreso + x.Salida).ToList();
+            output = output.OrderByDescending(x => x.Ingreso + x.Salida).ToList();
             return output;
         }
         //Obtener la cantidad de ingreso o salida según el P y NP (Peligroso / No Peligroso)
@@ -490,7 +491,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                output.Add(outputItem);
             }
 
-            output = output.OrderBy(x => x.Total).ToList();
+            output = output.OrderByDescending(x => x.Total).ToList();
 
             return output;
         }

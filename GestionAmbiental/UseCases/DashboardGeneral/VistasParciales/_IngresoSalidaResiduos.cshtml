@@ -1,3 +1,4 @@
+<!--FILTERS-->
 <div class="residuos mb-4">
     <div class="primary-content col-12">
         <div class="image-header-container">
@@ -7,60 +8,108 @@
             </div>
         </div>
         <div class="content-header container">
-            <form class="custom-form w-100" autocomplete="off" id="ingresoSalidaresiduosDashboard">
-                <div class="col-12 col-lg-9">
-                    <div class="row">
-                        <h5 class="text-mc text-center">Filtros</h5>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label>ACR/CMRS</label>
-                            <select class="form-control" id="ACR_CMRS_ISRS" asp-items="@ViewBag.FiltroACR_CMRS"></select>
+            <form class="custom-form w-100 row" autocomplete="off" id="ingresoSalidaresiduosDashboard">
+                <div class="col-12">
+                    <div class="col-12 mb-4">
+                        <div class="row">
+                            <h5 class="text-mc text-center">Filtros</h5>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label>Ingreso o Salida de Residuos</label>
-                            <select class="form-control" id="IngresoSalida_ISRS" asp-items="@ViewBag.FiltroIngresoSalida"></select>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                                <label>ACR/CMRS</label>
+                                <select class="form-control" id="ACR_CMRS_ISRS"
+                                    asp-items="@ViewBag.FiltroACR_CMRS"></select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Ingreso o Salida de Residuos</label>
+                                <select class="form-control" id="IngresoSalida_ISRS"
+                                    asp-items="@ViewBag.FiltroIngresoSalida"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label>Tipo de Residuo</label>
-                            <select class="form-control" id="TipoResiduo_ISRS" asp-items="@ViewBag.FiltroTipoResiduo"></select>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                                <label>Tipo de Residuo</label>
+                                <select class="form-control" id="TipoResiduo_ISRS"
+                                    asp-items="@ViewBag.FiltroTipoResiduo"></select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Motivo de Ingreso o Salida de Residuos</label>
+                                <select class="form-control" id="Motivo_ISRS"
+                                    asp-items="@ViewBag.FiltroMotivo"></select>
+                            </div>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label>Motivo de Ingreso o Salida de Residuos</label>
-                            <select class="form-control" id="Motivo_ISRS" asp-items="@ViewBag.FiltroMotivo"></select>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                                <label>Fecha de Inicio (Ingreso o Salida de Residuo)</label>
+                                <input type="date" class="form-control" id="FInicio_ISRS"
+                                    value="@ViewBag.FechaInicio" />
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Fecha de Fin (Ingreso o Salida de Residuo)</label>
+                                <input type="date" class="form-control" id="FFin_ISRS" value="@ViewBag.FechaFin" />
+                            </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label>Fecha de Inicio (Ingreso o Salida de Residuo)</label>
-                            <input type="date" class="form-control" id="FInicio_ISRS" value="@ViewBag.FechaInicio" />
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label>Fecha de Fin (Ingreso o Salida de Residuo)</label>
-                            <input type="date" class="form-control" id="FFin_ISRS" value="@ViewBag.FechaFin" />
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-md-6">
-                            <label>Gerencia de Marcobre que Entrega/Retira el Residuo</label>
-                            <select class="form-control" id="Gerencia_ISRS" asp-items="@ViewBag.FiltroGerencias"></select>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label>Empresa que Generó/Retiró el Residuo</label>
-                            <select class="form-control" id="Empresa_ISRS" asp-items="@ViewBag.FiltroEmpresas"></select>
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6">
+                                <label>Gerencia de Marcobre que Entrega/Retira el Residuo</label>
+                                <select class="form-control" id="Gerencia_ISRS"
+                                    asp-items="@ViewBag.FiltroGerencias"></select>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label>Empresa que Generó/Retiró el Residuo</label>
+                                <select class="form-control" id="Empresa_ISRS"
+                                    asp-items="@ViewBag.FiltroEmpresas"></select>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-lg-1">
-                </div>
-                <div class="col-12 col-lg-2">
+                <div class="col-12 col-md-6 col-lg-4 col-xl-4 flex-column">
                     <div class="w-100 row-center-center">
-                        <button type="button" class="btn btn-mc w-100" onclick="FiltrarIngresoSalidaRS()">Filtrar</button>
+                        <button type="button" class="btn btn-mc w-100"
+                            onclick="FiltrarIngresoSalidaRS()">Filtrar</button>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+<!--END FILTERS-->
+<!--Dashboard content-->
+<div class="container">
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Ingreso y Salida de Residuos Sólidos</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_ingreso_salida_tipo_residuo" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>Salida de Residuos Sólidos</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_salida_tipo_residuo" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

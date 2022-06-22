@@ -9,8 +9,8 @@ namespace GestionAmbiental.Application.UseCases.DashboardGeneral.ResiduosSolidos
 {
     public class GetNombreResiduoxIngresoSalida : IGetNombreResiduoxIngresoSalida
     {
-        private readonly GetDataIngresoSalidaResiduosDashboardReadOnlyRepository _getDataIngresoSalidaResiduosDashboardReadOnlyRepository;
-        public GetNombreResiduoxIngresoSalida(GetDataIngresoSalidaResiduosDashboardReadOnlyRepository getDataIngresoSalidaResiduosDashboardReadOnlyRepository)
+        private readonly IGetDataIngresoSalidaResiduosDashboardReadOnlyRepository _getDataIngresoSalidaResiduosDashboardReadOnlyRepository;
+        public GetNombreResiduoxIngresoSalida(IGetDataIngresoSalidaResiduosDashboardReadOnlyRepository getDataIngresoSalidaResiduosDashboardReadOnlyRepository)
         {
             _getDataIngresoSalidaResiduosDashboardReadOnlyRepository = getDataIngresoSalidaResiduosDashboardReadOnlyRepository;
         }
