@@ -143,7 +143,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 x.Fecha_Ingreso_Salida >= fechaInicio &&
                 x.Fecha_Ingreso_Salida <= fechaFin &&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
-                .OrderByDescending(x => Convert.ToInt16(x.Item))
+                .OrderByDescending(x => Convert.ToInt64(x.Item))
                 .ToList();
 
             var acr_cmrs_entities = await _context.ACR_CMRs.ToListAsync();
