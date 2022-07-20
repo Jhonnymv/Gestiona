@@ -10,5 +10,8 @@ namespace GestionAmbiental.Application.Repositories.DashboardGeneral
     {
         Task<List<NombreResiduoxIngresoSalida>> GetNombreResiduoxIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa);
         Task<List<DestinoResiduos>> GetDestinoxNombreResiduoxIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa);
+        Task<List<IngresoSalidaNombreResiduo>> GetNombreResiduoxDestinoxIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int[] residuos, int[] destinos);
+        Task<List<GerenciaIngresoSalida>> GetGerenciaIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa);
+        Task<List<IngresoSalidaNombreResiduo>> GetNombreResiduoxGerencia(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int[] residuos, int[] gerencias);
     }
 }

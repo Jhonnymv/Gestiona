@@ -462,6 +462,23 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 // Send the memory stream to the browser
                 ms.Position = 0;
+
+                /*
+                //VACIAR CARPETA TEMPORAL
+                var tempPath = Path.GetTempPath();
+                var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+                if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+
+                if (Directory.Exists(filePath))
+                {
+                    Directory.Delete(filePath, true);
+                }
+                //Directory.CreateDirectory(filePath);
+                */
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteObservaciones-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }
@@ -476,8 +493,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
             var evidenciasCondicion = JArray.Parse(path);
-            foreach (var evidencia in evidenciasCondicion)
-            {
+            var evidencia = evidenciasCondicion[0];
+            //foreach (var evidencia in evidenciasCondicion)
+            //{
                 var imgNCol = 0;
 
                 //1. Vaciar carpeta temporal del usuario 
@@ -501,7 +519,15 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 }
                 Directory.CreateDirectory(filePath);
                 Directory.CreateDirectory(archivePath);
-
+                /*if (!Directory.Exists(SGATempPath))
+                {
+                    Directory.CreateDirectory(SGATempPath);
+                }
+                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive"+imageIndex.ToString()+".zip";
+                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+                */
+                                
                 //2. Descargar .zip de ftp y guardar en carpeta temporal zip
                 string host = "", port = "", user = "", pass = "", dir = "";
                 var serverInfo = new Info_SGAOutput();
@@ -554,8 +580,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 fileStream.Close();
 
                 //3. Desencriptar archivo
-                await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
-                var pathDesencriptado = archivePath + "desencriptado.zip";
+                await DecryptFileAsync(archiveFile, archivePath + "desencriptado"+imageIndex+".zip");
+                var pathDesencriptado = archivePath + "desencriptado"+imageIndex+".zip";                
+                fileStream.Dispose();
                 //4. descomprimir en carpeta temporal submission
                 if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                     filePath += Path.DirectorySeparatorChar;
@@ -642,8 +669,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     output.rowHeight = rowHeight;
                     output.image = picture;
                 }
+                
                 output.extension = extension;
-            }
+            //}
 
             return output;
         }

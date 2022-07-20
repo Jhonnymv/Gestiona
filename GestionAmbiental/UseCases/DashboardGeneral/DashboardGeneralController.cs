@@ -82,6 +82,9 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
 
                 var filtroEmpresas = itemsFiltroInspecciones.Empresas.OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 filtroEmpresas.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
+                var filtroEmpresasActivas = itemsFiltroInspecciones.Empresas.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var filtroGerenciasActivas = itemsFiltroInspecciones.Gerencias.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
 
                 var filtroGerencias = itemsFiltroInspecciones.Gerencias.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 filtroGerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
@@ -100,6 +103,9 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 filtroACR_CMRS.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var filtroIngresoSalida = itemsFiltroResiduos.ItemsIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Ingreso_Salida.ToString(), Text = g.Descripcion }).ToList();
                 filtroIngresoSalida.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
+                var filtroResiduos = itemsFiltroResiduos.ItemsResiduoSolido.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Residuo_Solido.ToString(), Text = g.Descripcion }).ToList();
+
                 var filtroMotivo = itemsFiltroResiduos.ItemsMotivoIngresoSalida.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Motivo.ToString(), Text = g.Descripcion }).ToList();
                 filtroMotivo.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
                 var filtroTipoResiduo = itemsFiltroResiduos.ItemsTipoResiduo.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.Id_Tipo_Residuo.ToString(), Text = g.Descripcion }).ToList();
@@ -134,6 +140,9 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
                 ViewBag.FiltroTipoResiduo = filtroTipoResiduo;
                 ViewBag.FiltroResiduosPeligrosos = filtroResiduosPeligrosos;
                 ViewBag.FiltroResiduosNoPeligrosos = filtroResiduosNoPeligrosos;
+                ViewBag.FiltroResiduos = filtroResiduos;
+                ViewBag.FiltroEmpresasActivas = filtroEmpresasActivas;
+                ViewBag.FiltroGerenciasActivas = filtroGerenciasActivas;
                 
                 return View();
             }

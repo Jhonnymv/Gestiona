@@ -52,7 +52,7 @@ namespace GestionAmbiental.Controllers
 
                     var cards = JsonConvert.DeserializeObject<List<TarjetaModel>>(cardsText);
 
-                    model.Tarjetas = cards.OrderBy(x => x.Fecha).ToList();
+                    model.Tarjetas = cards.OrderByDescending(x => x.Fecha).ToList();
                 }
                 catch (Exception e)
                 {

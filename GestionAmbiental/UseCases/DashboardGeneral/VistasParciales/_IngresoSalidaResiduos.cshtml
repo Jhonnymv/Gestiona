@@ -79,7 +79,7 @@
     <div class="row">
         <div class="dashboard-section col-12">
             <div class="dashboard-header">
-                <h5>Ingreso y Salida de Residuos Sólidos</h5>
+                <h5>INGRESO Y SALIDA DE RESIDUOS SÓLIDOS</h5>
             </div>
             <div class="row">
                 <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
@@ -97,7 +97,7 @@
     <div class="row">
         <div class="dashboard-section col-12">
             <div class="dashboard-header">
-                <h5>Salida de Residuos Sólidos</h5>
+                <h5>SALIDA DE RESIDUOS SÓLIDOS</h5>
             </div>
             <div class="row">
                 <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
@@ -105,6 +105,129 @@
                         <div class="col-12">
                             <div class="chart-area">
                                 <canvas id="chart_salida_tipo_residuo" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>TIPO DE RESIDUOS QUE SALIERON Y POR DESTINO</h5>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12">
+                        <div class="col-6">
+                            <label>Residuo Sólido: </label>
+                            <select id="ISRS_NombreResiduo_DTRS" class="selectpicker form-control" asp-items="ViewBag.FiltroResiduos" title="No se ha seleccionado ninguna opción" data-live-search="true" multiple>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>Destino</label>
+                            <select id="ISRS_Destino_DTRS" class="selectpicker form-control" asp-items="ViewBag.FiltroEmpresasActivas" title="No se ha seleccionado ninguna opción" data-live-search="true" multiple>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_salida_tipo_residuo_destino" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>TOP 10 ÁREAS GENERADORAS DE RESIDUOS (INGRESO)</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_areas_generadoras" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>TOP 10 RESIDUOS INGRESADOS</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_tipo_residuo_ingreso" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>TOP 10 RESIDUOS SALIDA</h5>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_tipo_residuo_salida" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="dashboard-section col-12">
+            <div class="dashboard-header">
+                <h5>TOP 10 ÁREA GENERADORAS DE RESIDUOS (INGRESO) POR CADA TIPO DE RESIDUO  </h5>
+            </div>
+            <div class="row">
+                <div class="custom-form justify-content-start w-100 p-0">
+                    <div class="row input_container col-12">
+                        <div class="col-6">
+                            <label>Residuo Sólido: </label>
+                            <select id="ISRS_NombreResiduo_GTRI" class="selectpicker form-control" asp-items="ViewBag.FiltroResiduos" title="No se ha seleccionado ninguna opción" data-live-search="true" multiple>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label>Destino</label>
+                            <select id="ISRS_Gerencia_GTRI" class="selectpicker form-control" asp-items="ViewBag.FiltroGerenciasActivas" title="No se ha seleccionado ninguna opción" data-live-search="true" multiple>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="secondary-dashboard-item col-12 col-md-12 col-lg-12" style="cursor: pointer">
+                    <div class="secondary-content">                        
+                        <div class="col-12">
+                            <div class="chart-area">
+                                <canvas id="chart_top_ingreso_tipo_residuo_gerencia" style="display: block; height: 600px; width: 100%;" class="chartjs-render-monitor"></canvas>
                             </div>
                         </div>
                     </div>

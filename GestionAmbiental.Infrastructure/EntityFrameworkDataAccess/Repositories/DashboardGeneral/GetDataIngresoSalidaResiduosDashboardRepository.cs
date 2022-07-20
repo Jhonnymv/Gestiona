@@ -203,24 +203,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
                     var distinctSalidaNP = lstSemSinValor.Where(x => !lstSemConValorSalidaNP.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
                     salidaNP = distinctSalidaNP.Union(lstSemConValorSalidaNP).OrderBy(x => x.Index).ToList();
-                    /*
-                    foreach (var item in frec)
-                    {
-                        var week = Convert.ToInt32(item.Key.Substring(0, 2));
-                        var year = Convert.ToInt32(item.Key.Substring(3, 4));
-                        if (item.Where(x => x.ingreso_salida.Equals(1)).ToList().Count > 0)
-                            lstSemConValorIngreso.Add(new Dimension("Sem " + week + " - " + year, item.Where(x => x.ingreso_salida.Equals(1)).Sum(x => x.cantidad), year * 100 + week));
-                        if (item.Where(x => x.ingreso_salida.Equals(2)).ToList().Count > 0)
-                            lstSemConValorSalida.Add(new Dimension("Sem " + week + " - " + year, item.Where(x => x.ingreso_salida.Equals(2)).Sum(x => x.cantidad), year * 100 + week));
-                    }
-                    var distinctIngreso = lstSemSinValor.Where(x => !lstSemConValorIngreso.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    ingreso = distinctIngreso.Union(lstSemConValorIngreso).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    ingreso = ingreso.OrderBy(x => x.Index).ToList();
-
-                    var distinctSalida = lstSemSinValor.Where(x => !lstSemConValorSalida.Select(y => y.Nombre).ToList().Contains(x.Nombre)).ToList();
-                    salida = distinctSalida.Union(lstSemConValorSalida).Where(x => x.Index >= 0).OrderByDescending(x => x.Index).ToList();
-                    salida = salida.OrderBy(x => x.Index).ToList();
-                    */
+                    
                 }
                 //Diferentes años
                 else
@@ -484,7 +467,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     });
                }
 
-               outputItem.NombreResiduos = outputItem.NombreResiduos.OrderBy(x=>x.Total).ToList();
+               outputItem.NombreResiduos = outputItem.NombreResiduos.ToList();
                outputItem.TotalIngreso = outputItem.NombreResiduos.Sum(x=>x.Ingreso);
                outputItem.TotalSalida = outputItem.NombreResiduos.Sum(x=>x.Salida);
                outputItem.Total = outputItem.TotalIngreso + outputItem.TotalSalida;
@@ -493,6 +476,186 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
             output = output.OrderByDescending(x => x.Total).ToList();
 
+            return output;
+        }
+        public async Task<List<IngresoSalidaNombreResiduo>> GetNombreResiduoxDestinoxIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int[] residuos, int[] destinos)
+        {
+            var output = new List<IngresoSalidaNombreResiduo>();
+
+            var residuosSolido = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))                
+                .ToListAsync();
+
+            var residuosPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(1))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+            var residuosNoPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(2))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
+                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
+                residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
+                x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
+                //x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
+                x.Id_Gerencia.Equals(responsable != 0 ? responsable : x.Id_Gerencia) &&
+                x.Fecha_Ingreso_Salida >= FechaInicio &&
+                x.Fecha_Ingreso_Salida <= FechaFin)
+                .ToListAsync();
+
+            if(residuos.Count() > 0)
+                registros = registros.Where(x=>residuos.Contains(x.Id_Residuo_Solido)).ToList();
+
+            var destinosEmpresas = await _context.Empresas.ToListAsync();
+            
+            //Agrupar por nombre residuo
+            var registrosxNombreResiduo = registros.GroupBy(x => x.Id_Residuo_Solido).ToList();
+            
+            foreach (var item in registrosxNombreResiduo)
+            {
+                var nombre = residuosSolido.Find(x => x.Id_Residuo_Solido.Equals(item.Key)).Descripcion;
+                //cada destino agrupa por residuo
+                var grupoDestinos = item.GroupBy(x=>x.Id_Empresa_RS).ToList();
+                
+                if(destinos.Count() != 0)
+                    grupoDestinos = grupoDestinos.Where(x=>destinos.Contains(x.Key)).ToList();
+
+                var outputItem = new IngresoSalidaNombreResiduo();
+                outputItem.NombreResiduo = nombre;
+
+                foreach(var datosDestino in grupoDestinos){
+                    outputItem.Destinos.Add(new DestinoResiduos{
+                        Destino = destinosEmpresas.Find(x=> x.Id_Empresa.Equals(datosDestino.Key)).Razon_Social,
+                        TotalIngreso = datosDestino.Where(x => x.Id_Ingreso_Salida.Equals(1)).Sum(x => x.Cantidad),                     
+                        TotalSalida = datosDestino.Where(x => x.Id_Ingreso_Salida.Equals(2)).Sum(x => x.Cantidad),
+                        Total = datosDestino.Sum(x => x.Cantidad)
+                    });
+               }
+               outputItem.TotalIngreso = outputItem.Destinos.Sum(x=>x.TotalIngreso);
+               outputItem.TotalSalida = outputItem.Destinos.Sum(x=>x.TotalSalida);
+               outputItem.Total = outputItem.TotalIngreso + outputItem.TotalSalida;
+               output.Add(outputItem);
+            }
+
+            output = output.OrderByDescending(x => x.Total).ToList();
+            //output = output.Where(x=>x.TotalSalida>0).ToList();
+
+            return output;
+        }
+        public async Task<List<GerenciaIngresoSalida>> GetGerenciaIngresoSalida(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int responsable, int empresa)
+        {
+            var output = new List<GerenciaIngresoSalida>();
+
+            var residuosSolido = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))                
+                .ToListAsync();
+
+            var residuosPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(1))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+            var residuosNoPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(2))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
+                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
+                residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
+                x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
+                x.Id_Empresa_RS.Equals(empresa != 0 ? empresa : x.Id_Empresa_RS) &&
+                x.Id_Gerencia.Equals(responsable != 0 ? responsable : x.Id_Gerencia) &&
+                x.Fecha_Ingreso_Salida >= FechaInicio &&
+                x.Fecha_Ingreso_Salida <= FechaFin)
+                .ToListAsync();
+
+            var gerencias = await _context.Gerencias.ToListAsync();
+            //Agrupar por gerencia
+            var registrosxGerencia = registros.GroupBy(x => x.Id_Gerencia).ToList();
+            
+            foreach (var item in registrosxGerencia)
+            {
+                var nombre = gerencias.Find(x => x.Id_Gerencia.Equals(item.Key)).Descripcion;
+                output.Add(new GerenciaIngresoSalida{
+                    Gerencia = nombre,
+                    Ingreso = item.Where(x => x.Id_Ingreso_Salida.Equals(1)).Sum(x => x.Cantidad),
+                    Salida = item.Where(x => x.Id_Ingreso_Salida.Equals(2)).Sum(x => x.Cantidad),
+                    Total = item.Sum(x => x.Cantidad)
+                });
+            }
+            output = output.OrderByDescending(x => x.Total).ToList();
+            return output;
+        }
+        //Obtener la cantidad de INGRESO y SALIDA de cada NOMBRE DE RESIDUO y agruparlo según DESTINO (empresa)
+        public async Task<List<IngresoSalidaNombreResiduo>> GetNombreResiduoxGerencia(int acr_cmrs, int ingreso_salida, int tipo_residuo, int motivo, DateTime FechaInicio, DateTime FechaFin, int[] residuos, int[] gerencias){
+            var output = new List<IngresoSalidaNombreResiduo>();
+
+            var residuosSolido = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(tipo_residuo != 0 ? tipo_residuo : x.Id_Tipo_Residuo))                
+                .ToListAsync();
+
+            var residuosPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(1))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+            var residuosNoPeligrosos = await _context.Residuos_Solidos.Where(x =>
+                x.Id_Tipo_Residuo.Equals(2))
+                .Select(y => y.Id_Residuo_Solido)
+                .ToListAsync();
+
+            var registros = await _context.Ingresos_Salidas_RS.Where(x =>
+                !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()) &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString()) &&
+                x.Id_ACR_CMRS.Equals(acr_cmrs != 0 ? acr_cmrs : x.Id_ACR_CMRS) &&
+                x.Id_Ingreso_Salida.Equals(ingreso_salida != 0 ? ingreso_salida : x.Id_Ingreso_Salida) &&
+                residuosSolido.Select(y => y.Id_Residuo_Solido).Contains(x.Id_Residuo_Solido) &&
+                x.Id_Motivo.Equals(motivo != 0 ? motivo : x.Id_Motivo) &&
+                x.Fecha_Ingreso_Salida >= FechaInicio &&
+                x.Fecha_Ingreso_Salida <= FechaFin)
+                .ToListAsync();
+
+            if(residuos.Count() > 0)
+                registros = registros.Where(x=>residuos.Contains(x.Id_Residuo_Solido)).ToList();
+
+            var listaGerencias = await _context.Gerencias.ToListAsync();
+            
+            //Agrupar por nombre residuo
+            var registrosxNombreResiduo = registros.GroupBy(x => x.Id_Residuo_Solido).ToList();
+            
+            foreach (var item in registrosxNombreResiduo)
+            {
+                var nombre = residuosSolido.Find(x => x.Id_Residuo_Solido.Equals(item.Key)).Descripcion;
+                //cada destino agrupa por residuo
+                var grupoGerencias = item.GroupBy(x=>x.Id_Gerencia).ToList();
+                
+                if(gerencias.Count() != 0)
+                    grupoGerencias = grupoGerencias.Where(x=>gerencias.Contains(x.Key)).ToList();
+
+                var outputItem = new IngresoSalidaNombreResiduo();
+                outputItem.NombreResiduo = nombre;
+
+                foreach(var datosGerencias in grupoGerencias){
+                    outputItem.Gerencias.Add(new GerenciaIngresoSalida{
+                        Gerencia = listaGerencias.Find(x=> x.Id_Gerencia.Equals(datosGerencias.Key)).Descripcion,
+                        Ingreso = datosGerencias.Where(x => x.Id_Ingreso_Salida.Equals(1)).Sum(x => x.Cantidad),                     
+                        Salida = datosGerencias.Where(x => x.Id_Ingreso_Salida.Equals(2)).Sum(x => x.Cantidad),
+                        Total = datosGerencias.Sum(x => x.Cantidad)
+                    });
+               }
+               outputItem.TotalIngreso = outputItem.Gerencias.Sum(x=>x.Ingreso);
+               outputItem.TotalSalida = outputItem.Gerencias.Sum(x=>x.Salida);
+               outputItem.Total = outputItem.TotalIngreso + outputItem.TotalSalida;
+               output.Add(outputItem);
+            }
+            output = output.OrderByDescending(x => x.Total).ToList();
             return output;
         }
     }

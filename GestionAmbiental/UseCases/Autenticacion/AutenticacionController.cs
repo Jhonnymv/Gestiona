@@ -39,7 +39,7 @@ namespace GestionAmbiental.UseCases.Autenticacion
             if (ModelState.IsValid)
             {
                 string returnUrl = TempData["returnUrl"] as string;
-                // Get LDAP connection data
+                // // Get LDAP connection data
                 var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
                 string ldap_path = "", ldap_domain = "";
                 foreach (var item in info.Info)
