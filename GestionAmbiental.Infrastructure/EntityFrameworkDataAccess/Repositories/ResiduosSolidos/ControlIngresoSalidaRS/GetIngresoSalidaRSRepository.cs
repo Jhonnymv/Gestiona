@@ -37,11 +37,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
                 .ToList();
 
-            var acr_cmrs_entities = await _context.ACR_CMRs.Where(x => x.Estado.Equals("ACT")).ToListAsync();
-            var ing_sal_entities = await _context.Ingresos_Salidas.Where(x => x.Estado.Equals("ACT")).ToListAsync();
-            var motivos_entities = await _context.Motivos_Ingreso_Salida.Where(x => x.Estado.Equals("ACT")).ToListAsync();
-            var residuo_solido_entities = await _context.Residuos_Solidos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
-            var tipo_residuo_entities = await _context.Tipo_Residuos.Where(x => x.Estado.Equals("ACT")).ToListAsync();
+            var acr_cmrs_entities = await _context.ACR_CMRs.ToListAsync();
+            var ing_sal_entities = await _context.Ingresos_Salidas.ToListAsync();
+            var motivos_entities = await _context.Motivos_Ingreso_Salida.ToListAsync();
+            var residuo_solido_entities = await _context.Residuos_Solidos.ToListAsync();
+            var tipo_residuo_entities = await _context.Tipo_Residuos.ToListAsync();
             var empresas_entities = await _context.Empresas.ToListAsync();
             var responsables_arc_cmrs = await _context.Responsables_ACR_CRM.ToListAsync();
             var gerencias = await _context.Gerencias.ToListAsync();
@@ -49,9 +49,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Ingreso_Salida_RS>();
             var tbd = new List<Ingreso_Salida_RS>();
             var registrados = new List<Ingreso_Salida_RS>();
-
+            
             foreach (var item in data)
             {
+                
                 var acr_cmrs_model = acr_cmrs_entities.Find(x => x.Id_ACR_CMRS.Equals(item.Id_ACR_CMRS));
                 var ing_sal_model = ing_sal_entities.Find(x => x.Id_Ingreso_Salida.Equals(item.Id_Ingreso_Salida));
                 var motivo_model = motivos_entities.Find(x => x.Id_Motivo.Equals(item.Id_Motivo));
@@ -88,7 +89,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     tbd.Add(outputItem);
                 else
                     registrados.Add(outputItem);
-            } 
+            }
+            
             registrados = registrados.OrderByDescending(x => Convert.ToInt32(x.Item)).ToList();
 
             output.AddRange(tbd);
