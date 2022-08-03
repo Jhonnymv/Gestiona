@@ -1123,7 +1123,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         case "directory": dir = item.Value;break;
                     }
                 }
-                
                 using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
                 {                   
                     sftp.Connect();
@@ -1133,7 +1132,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         sftp.UploadFile(fs, newFileName, true);
                     }
                     sftp.Dispose();                    
-                }            
+                }     
                 return newFileName;
             }
         }

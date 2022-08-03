@@ -2,16 +2,33 @@
     ViewData["Title"] = "Dashboard";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
-
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+}
 
 <div class="mc_container">
+    @if (ViewBag.Rol.Equals("Admin")) {
+    <form autocomplete="off" class="custom-form w-100 row" id="registrosForm" asp-controller="DashboardGeneral" asp-action="DescargarRegistros">
+        <div class="row">
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <input type="date" class="form-control" name="sTime" id="sTime" value="@ViewBag.FechaInicioRegistros" />
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <input type="date" class="form-control" name="eTime" id="eTime" value="@ViewBag.FechaFinRegistros" />
+            </div>
+            <div class="col-sm-12 col-md-4 col-lg-4 col-xl-4 align-self-center">
+                <button type="button" class="btn btn-mc-success w-100" onclick="DescargarRegistros()">Descargar Registros</button>
+            </div>
+        </div>
+    </form>
+    }
     <div class="menu_settings">
-        <ul class="nav nav-pills mb-3 div-scroll-horizontal justify-content-center" id="pills-tabs-configuration" role="tablist">
+        <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tabs-configuration" role="tablist" style="display: flex; flex-direction: row; white-space: nowrap;">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-inspections-tab" data-bs-toggle="pill" data-bs-target="#pills-inspections" type="button" role="tab" aria-controls="pills-inspections" aria-selected="true">Inspeccciones</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac" type="button" role="tab" aria-controls="pills-rac" aria-selected="false">Reporte de Acto y Condición Subestándar</button>
+                <button class="nav-link" id="pills-rac-tab" data-bs-toggle="pill" data-bs-target="#pills-rac" type="button" role="tab" aria-controls="pills-rac" aria-selected="false">RAC</button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-residuos-tab" data-bs-toggle="pill" data-bs-target="#pills-residuos" type="button" role="tab" aria-controls="pills-residuos" aria-selected="false">Residuos Sólidos</button>
@@ -37,9 +54,8 @@
         <div class="tab-pane fade" id="pills-rac" role="tabpanel" aria-labelledby="pills-rac-tab">
                 <partial name="../DashboardGeneral/VistasParciales/_RACDashboard.cshtml" />
         </div>
-        <div class="tab-pane fade" id="pills-residuos" role="tabpanel" aria-labelledby="pills-residuos-tab">
-            <div class="content-settings">
-            </div>
+        <div class="tab-pane fade" id="pills-residuos" role="tabpanel" aria-labelledby="pills-residuos-tab">            
+                <partial name="../DashboardGeneral/VistasParciales/_IngresoSalidaResiduos.cshtml" />
         </div>
         <div class="tab-pane fade" id="pills-incidentes" role="tabpanel" aria-labelledby="pills-incidentes-tab">
             <div class="content-settings">
@@ -63,10 +79,29 @@
         </div>
     </div>
 </div>
-@section Scripts{
+@section Scripts{    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
+
     <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralInspecciones.js"></script>
     <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralRAC.js"></script>
+    <script src="~/js/UseCases/DashboardGeneral/dashboardGeneralIngresoSalidaRS.js"></script>
     <script type="text/javascript">
         
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker('refresh');
+        $('.selectpicker').selectpicker('deselectAll');
+    //ActualizarIngresoSalidaTipoResiduo();
+    });
+
+    function DescargarRegistros() {
+            fechaInicio = $("#sTime").val();
+            fechaFin = $("#eTime").val();
+            if (fechaInicio <= fechaFin && fechaInicio != "" && fechaFin != "" ) {
+                $("#registrosForm").submit();
+            } else {
+                alert("La fecha de fin debe ser mayor a la fecha de inicio");
+            }
+        }
     </script>
 }

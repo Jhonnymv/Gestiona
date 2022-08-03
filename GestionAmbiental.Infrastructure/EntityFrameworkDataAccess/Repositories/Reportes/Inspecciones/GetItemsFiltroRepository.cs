@@ -46,7 +46,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Empresa>();
             foreach (var item in empresas)
             {
-                output.Add(new Empresa(item.Id_Empresa,item.Razon_Social));
+                output.Add(new Empresa{
+                    IdEmpresa = item.Id_Empresa,
+                    RazonSocial = item.Razon_Social,
+                    Estado = item.Estado
+                });
             }
             return output;
         }
