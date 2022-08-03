@@ -432,6 +432,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         }
         public async Task<IActionResult> EditarRegistro(int id)
         {
+
+            var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
             var items = await _selectItems.Execute();
 
             var areasItems = items.ItemsArea.OrderBy(x => x.Area).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Area }).ToList();
@@ -507,6 +510,9 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             ViewBag.Componentes = componentesItems;
             ViewBag.Gerencias = GerenciasItems;
             ViewBag.Usuarios = UsuariosItems;
+
+            ViewBag.Rol = userInfo.Rol.ToString();
+            ViewBag.Usuario = userInfo.NombreUsuario;
 
             return View(model);
 
