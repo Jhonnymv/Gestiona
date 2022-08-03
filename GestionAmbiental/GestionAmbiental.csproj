@@ -230,5 +230,7 @@
     <None Include="wwwroot\selectpicker\js\i18n\defaults-zh_TW.js.map" />
     <None Include="wwwroot\selectpicker\js\i18n\defaults-zh_TW.min.js" />
   </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
   
 </Project>
