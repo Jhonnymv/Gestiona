@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Lexend+Tera&display=swap');*/
+@import "GoogleFonts/fonts.googleapis.com.css2.css";
 body {
     font-family: 'HelveticaNeueLT Std', sans-serif;
     background: #ffffff;
