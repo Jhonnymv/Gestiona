@@ -26,7 +26,7 @@ namespace GestionAmbiental
                 options.IdleTimeout = TimeSpan.FromMinutes(60);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
-                options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+                //options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
             });
 
@@ -34,7 +34,7 @@ namespace GestionAmbiental
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
+                //options.Cookie.SecurePolicy = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always;
                 options.Cookie.SameSite = Microsoft.AspNetCore.Http.SameSiteMode.Strict;
             });
 
@@ -64,7 +64,7 @@ namespace GestionAmbiental
             new CookiePolicyOptions
             {
                 HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
-                Secure = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always,
+                //Secure = Microsoft.AspNetCore.Http.CookieSecurePolicy.Always,
                 MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
                 
             });
