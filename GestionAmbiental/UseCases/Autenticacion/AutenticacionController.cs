@@ -39,18 +39,18 @@ namespace GestionAmbiental.UseCases.Autenticacion
             if (ModelState.IsValid)
             {
                 string returnUrl = TempData["returnUrl"] as string;
-                //// Get LDAP connection data
-                //var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
-                //string ldap_path = "", ldap_domain = "";
-                //foreach (var item in info.Info)
-                //{
-                //    switch (item.Key)
-                //    {
-                //        case "Path": ldap_path = item.Value; break;
-                //        case "Domain": ldap_domain = item.Value; break;
-                //    }
-                //}
-                //// Validate credentials
+                // Get LDAP connection data
+                var info = await _info_SGA.Execute(Tipo_Info_SGA.LDAPConnection);
+                string ldap_path = "", ldap_domain = "";
+                foreach (var item in info.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "Path": ldap_path = item.Value; break;
+                        case "Domain": ldap_domain = item.Value; break;
+                    }
+                }
+                // Validate credentials
                 //using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
                 //{
                 //    if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
@@ -80,6 +80,8 @@ namespace GestionAmbiental.UseCases.Autenticacion
                 //            mensaje = "El usuario o la contraseña son incorrectos"
                 //        };
                 //}
+
+
                 var rol = await _getRolUsuario.Execute(model.User);
                 if (!rol.HasValue)
                 {

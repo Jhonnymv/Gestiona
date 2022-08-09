@@ -13,6 +13,7 @@ using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Test;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.MonitoreoCampoInterno.AvistamientoFlora;
 using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.FOCAM;
 using Microsoft.EntityFrameworkCore;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.MonitoreoCampoInterno.Calidad_Agua;
 
 namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 {
@@ -138,6 +139,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
         public DbSet<VigorAvistamiento> VigorAvistamientoMCIF { get; set; }
         public DbSet<Zona> ZonaMCIF { get; set; }
 
+        //Calidad de AGUA
+        public DbSet<CalidadAgua> CalidadAgua { get; set; }
 
         //Gestión FOCAM
 
@@ -393,6 +396,11 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
             modelBuilder.Entity<Zona>()
                 .ToTable("Tb_MCIF_Zonas");
+
+            //Calidad de Agua
+
+            modelBuilder.Entity<CalidadAgua>()
+                .ToTable("Tb_MCI_Calidad_Agua");
 
 
             //Gestión FOCAM

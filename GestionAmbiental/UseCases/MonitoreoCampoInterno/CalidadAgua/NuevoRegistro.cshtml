@@ -25,29 +25,29 @@
             </div>
         </div>
         <div class="container ">
-            <form class="custom-form form-flex w-100" id="form_nuevo_avistamiento" method="post" enctype="multipart/form-data" autocomplete="off">
+            <form class="custom-form form-flex w-100" asp-controller="CalidadAgua" asp-action="NuevoRegistro" id="form_nuevo_avistamiento" method="post" enctype="multipart/form-data" autocomplete="off">
                 <div class="row">
                     <div class="col-6">
                         <div class="row input-group">
                             <div class="col-12 col-sm-6 col-lg-6">
-                                <label>Fecha</label>
-                                <span class="text-danger"></span>
-                                <input type="date" class="form-control" />
+                                <label asp-for="Fecha">Fecha</label>
+                                <span class="text-danger" asp-validation-for="Fecha"></span>
+                                <input type="date" class="form-control" value="@ViewBag.Fecha" asp-for="Fecha" />
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
-                                <label>Hora</label>
-                                <span class="text-danger"></span>
-                                <input type="time" class="form-control" />
+                                <label asp-for="Hora">Hora</label>
+                                <span class="text-danger" asp-validation-for="Hora"></span>
+                                <input type="time" class="form-control" value="@ViewBag.Hora" asp-for="Hora" />
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
-                                <label>Cod. Estación</label>
-                                <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <label asp-for="Cod_Estacion">Cod. Estación</label>
+                                <span class="text-danger" asp-validation-for="Cod_Estacion"></span>
+                                <input type="text" class="form-control" asp-for="Cod_Estacion" />
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
-                                <label>descripción</label>
-                                <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <label asp-for="Descripcion">descripción</label>
+                                <span class="text-danger" asp-validation-for="Descripcion"></span>
+                                <input type="text" class="form-control" asp-for="Descripcion" />
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <div class="row d-flex align-items-end m-0">
@@ -63,8 +63,8 @@
                             </div>
                             <div class="col-12 col-sm-6 col-lg-6">
                                 <label>Responsable</label>
-                                <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <span class="text-danger" asp-validation-for="Id_Usuario"></span>
+                                <select class="form-control" asp-for="Id_Usuario" asp-items="ViewBag.Usuarios"></select>
                             </div>
                         </div>
                     </div>
@@ -87,11 +87,11 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="TemperaturaResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="TemperaturaEquipo" />
                             </div>
                         </div>
                         <div class="row input-group">
@@ -101,11 +101,11 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="PhResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="PhEquipo"/>
                             </div>
                         </div>
                         <div class="row input-group">
@@ -115,11 +115,11 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="ConductividadResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="ConductividadEquipo" />
                             </div>
                         </div>
                         <div class="row input-group">
@@ -129,11 +129,11 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="OxigenoResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="OxigenoEquipo" />
                             </div>
                         </div>
                         <div class="row input-group">
@@ -143,11 +143,11 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="TurbiedadResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="TurbiedadEquipo" />
                             </div>
                         </div>
                         <div class="row input-group">
@@ -157,26 +157,31 @@
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="number" class="form-control" />
+                                <input type="number" class="form-control" asp-for="CloroResult" />
                             </div>
                             <div class="col-12 col-sm-4 col-lg-4">
                                 <span class="text-danger"></span>
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" asp-for="CloroEquipo" />
                             </div>
                         </div>
                     </div>
-                </div>
 
+                    <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                        <button type="submit" class="btn btn-mc-success">Guardar</button>
+                        <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
+                    </div>
+                </div>
             </form>
-            <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
-                <button type="submit" class="btn btn-mc-success">Guardar</button>
-                <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
-            </div>
         </div>
     </div>
 </div>
 @section Scripts{
     <script src="~/js/stepper.js"></script>
+    <script>
+        $.(function() {
+            $("fechaNow").val(new Date().toDateString())
+        })
+    </script>
     <script type="text/javascript">
         var ubicacion = $("#Ubicacion");
         var imagenesReferencia = [];
@@ -287,14 +292,14 @@
         function ImprimirPermisos(state) {
             console.log('Permission ' + state);
         }
-                                                                    //function Registrar() {
-                                                                    //        //if (ValidarCampos()) {
-                                                                    //            //$("#Opcion").val("Registrar");
-                                                                    //            $("#Modal_Guardando").modal('show');
-                                                                    //            $("#form_nuevo_avistamiento").submit();
-                                                                    //        //} else {
-                                                                    //        //    alert("Existen campos vacios");
-                                                                    //        //}
-                                                                    //    }
+                                                                                            //function Registrar() {
+                                                                                            //        //if (ValidarCampos()) {
+                                                                                            //            //$("#Opcion").val("Registrar");
+                                                                                            //            $("#Modal_Guardando").modal('show');
+                                                                                            //            $("#form_nuevo_avistamiento").submit();
+                                                                                            //        //} else {
+                                                                                            //        //    alert("Existen campos vacios");
+                                                                                            //        //}
+                                                                                            //    }
     </script>
 }
