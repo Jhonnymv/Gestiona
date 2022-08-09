@@ -1,4 +1,5 @@
-﻿@{
+﻿@model GestionAmbiental.UseCases.MonitoreoCampoInterno.CalidadAgua.CalidadAguaModel
+@{
     ViewData["Title"] = "NuevoRegistro";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
@@ -7,35 +8,293 @@
     <div class="primary-content col-12">
         <div class="image-header-container">
             <div class="header-title fauna-opacity-color">
-                <h3>Nuevo Registro de Avistamiento de Flora Silvestre</h3>
+                <h3>Nuevo Registro Calidad de Agua</h3>
                 <img src="~/img/logo-white.png" alt="Logo Marcobre">
             </div>
         </div>
-        <div class="container pt-4 pb-4">
+        <div class="row">
+            <div class="col-6">
+                <div class="d-flex justify-content-center">
+                    <span class="text-mc bold">Datos de Campo</span>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="d-flex justify-content-center">
+                    <span class="text-mc bold">Datos Generales</span>
+                </div>
+            </div>
+        </div>
+        <div class="container ">
             <form class="custom-form form-flex w-100" id="form_nuevo_avistamiento" method="post" enctype="multipart/form-data" autocomplete="off">
-                @*<input type="hidden" asp-for="Opcion" />*@
-                <div class="mc-container col-12 col-xl-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold">Datos de Campo</span>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Fecha</label>
+                                <span class="text-danger"></span>
+                                <input type="date" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Hora</label>
+                                <span class="text-danger"></span>
+                                <input type="time" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Cod. Estación</label>
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>descripción</label>
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <div class="row d-flex align-items-end m-0">
+                                    <div class="col-8 p-0 m-0">
+                                        <label asp-for="Ubicacion">Ubicación</label>
+                                        <span class="text-danger" asp-validation-for="Ubicacion"></span>
+                                        <input id="Ubicacion" type="text" class="form-control" asp-for="Ubicacion" />
+                                    </div>
+                                    <div class="col-4 m-0 d-flex justify-content-end">
+                                        <button type="button" class="btn btn-primary" onclick="ObtenerUbicacion()"><img src="~/img/icons/gps.png" /></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-6">
+                                <label>Responsable</label>
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-4 col-lg-4">
-                            <label >Cod. Ficha</label>
-                            <span class="text-danger" ></span>
-                            <input type="text" class="form-control"/>
+                    <div class="col-6">
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span>Parámetro (Unidad)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span>Resultado</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span>Equipo</span>
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>Temperatura (°)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>pH (unid. ph)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>Conductividad (uS/cm ó mS/cm)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>Oxígeno Disuelto (mg/L)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>Turbiedad (NTU)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="row input-group">
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <br />
+                                <span>Cloro (mg/l)</span>
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="number" class="form-control" />
+                            </div>
+                            <div class="col-12 col-sm-4 col-lg-4">
+                                <span class="text-danger"></span>
+                                <input type="text" class="form-control" />
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="form-tabs-mc mc-separator-top-left col-12 col-xl-8">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold">Datos Generales</span>
-                    </div>
 
-                </div>
             </form>
             <div class="d-flex justify-content-end button-container pd-t-b-12-37 m-0">
+                <button type="submit" class="btn btn-mc-success">Guardar</button>
                 <a type="button" class="btn btn-mc-outline-danger">Cancelar</a>
             </div>
         </div>
     </div>
 </div>
+@section Scripts{
+    <script src="~/js/stepper.js"></script>
+    <script type="text/javascript">
+        var ubicacion = $("#Ubicacion");
+        var imagenesReferencia = [];
+
+        $(document).ready(function() {
+            //var fechaActual = new Date();
+            //$("#FechaValidacion").val(DarFormatoFecha(fechaActual));
+            ObtenerUbicacion();
+        });
+        //function preview_image(event) {
+        //        var reader = new FileReader();
+        //        reader.onload = function () {
+        //            var output = document.getElementById('previsualizacion');
+        //            output.src = reader.result;
+        //        }
+        //        try {
+        //            reader.readAsDataURL(event.target.files[0]);
+        //            $("#previsualizacion").show();
+        //            $("#botonCargarFoto").show();
+        //        } catch (error) {
+        //            $("#previsualizacion").hide();
+        //            $("#botonCargarFoto").hide();
+        //        }
+        //    }
+        //$("#Fotos").change(function (event) {
+        //    $("#alerta_fotos").html("");
+        //    //Validacion del tamaño del archivo
+        //    var maxSize = $("#Fotos").data('max-size');
+        //    var archivos = $("#Fotos").get(0).files;
+
+        //    if (archivos.length > 0) {
+        //        var fileSize = 0
+        //        for (var i = 0; i < archivos.length; i++) {
+        //            fileSize += archivos[i].size;
+        //        }
+        //        if (fileSize > maxSize) {
+        //            this.value = '';
+        //            var filesname = this.files.length + " Archivos";
+        //            $("#alerta_fotos").html("El  archivo supera el límite permitido de 8MB<br/>");
+        //            $("#previsualizacion").hide();
+        //            $("#botonCargarFoto").hide();
+        //            return;
+        //        }
+        //        var filesName = "";
+        //        for (var i = 0; i < archivos.length; i++) {
+        //            switch (this.value.match(/\.([^\.]+)$/)[1]) {
+        //                case 'jpg':
+        //                case 'JPG':
+        //                case 'jpeg':
+        //                case 'JPEG':
+        //                case 'png':
+        //                case 'PNG':
+        //                    filesName += archivos[i].name + "<br/>";
+        //                    break;
+        //                default:
+        //                    this.value = '';
+        //                    var filesname = this.files.length + " Archivos";
+        //                    $("#files_name").text(filesname);
+        //                    $("#alerta_fotos").html("No se admiten este tipo de archivos<br/>");
+        //                    return;
+        //            }
+        //        }
+        //        filesName.length > 0 ? $("#files_name").html(filesName) : null;
+        //        preview_image(event);
+        //    }
+        //});
+
+        //function DarFormatoFecha(date) {
+        //        var d = new Date(date),
+        //            month = '' + (d.getMonth() + 1),
+        //            day = '' + d.getDate(),
+        //            year = d.getFullYear();
+
+        //        if (month.length < 2)
+        //            month = '0' + month;
+        //        if (day.length < 2)
+        //            day = '0' + day;
+
+        //        return [year, month, day].join('-');
+        //    }
+
+        function ObtenerUbicacion() {
+            navigator.permissions.query({ name: 'geolocation' }).then(function(result) {
+                if (result.state == 'granted') {
+                    ImprimirPermisos(result.state);
+                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+                } else if (result.state == 'prompt') {
+                    ImprimirPermisos(result.state);
+                    navigator.geolocation.getCurrentPosition(MostrarUbicacion);
+                } else if (result.state == 'denied') {
+                    MostrarModalUbicacion()
+                    ImprimirPermisos(result.state);
+                }
+                result.onchange = function() {
+                    console.log("cambio")
+                    ImprimirPermisos(result.state);
+                }
+            });
+        }
+        function MostrarUbicacion(position) {
+            ubicacion.val(position.coords.latitude + " , " + position.coords.longitude);
+            $("#inputAltitud").val(position.coords.altitudeAccuracy)
+        }
+
+        function MostrarModalUbicacion() {
+            $("#modal_ubicacion").modal('show');
+        }
+        function ImprimirPermisos(state) {
+            console.log('Permission ' + state);
+        }
+                                                                    //function Registrar() {
+                                                                    //        //if (ValidarCampos()) {
+                                                                    //            //$("#Opcion").val("Registrar");
+                                                                    //            $("#Modal_Guardando").modal('show');
+                                                                    //            $("#form_nuevo_avistamiento").submit();
+                                                                    //        //} else {
+                                                                    //        //    alert("Existen campos vacios");
+                                                                    //        //}
+                                                                    //    }
+    </script>
+}
