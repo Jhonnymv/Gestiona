@@ -64,10 +64,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         }
         public async Task EditarDocumentosRelacionados(List<int> secundarios, int idDocumento)
         {
-            var data = await _context.SGA_Documentos_Relacionados
-                .Where(x =>
-                x.Id_Documento_Principal.Equals(idDocumento))
-                .ToListAsync();
+            var data = await _context.SGA_Documentos_Relacionados.Where(x => x.Id_Documento_Principal.Equals(idDocumento)).ToListAsync();
 
             var eliminados = data.Where(x => !secundarios.Contains(x.Id_Documento_Secundario)).ToList();
             var existentes = data.Where(x => secundarios.Contains(x.Id_Documento_Secundario)).ToList();
@@ -210,7 +207,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             _context.SGA_Documentos.Update(data);
             await _context.SaveChangesAsync();
             //Actualizar estado del predecesor
-            if (data.Doc_Predecesor != null) {
+            if (data.Doc_Predecesor != null)
+            {
                 var predecesorDoc = new Documento
                 {
                     IdSGADocumento = data.Doc_Predecesor.Value,
@@ -222,6 +220,30 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 };
                 await EditarEstadoDocumento(predecesorDoc);
             }
+        }
+        public async Task DeleteDocument(int idDocument)
+        {
+            var document = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(idDocument));
+            if (document.Doc_Predecesor != null)
+            {
+                var doc_predecesor = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(document.Doc_Predecesor));
+                doc_predecesor.Estado = "Eliminado";
+
+                if (doc_predecesor.Doc_Predecesor != null)
+                {
+                    var doc_predecesor2 = await _context.SGA_Documentos.FirstAsync(x => x.Id_SGA_Documento.Equals(doc_predecesor.Doc_Predecesor));
+                    doc_predecesor2.Estado = "Eliminado";
+                    _context.SGA_Documentos.UpdateRange(doc_predecesor2);
+                    await _context.SaveChangesAsync();
+                }
+                _context.SGA_Documentos.UpdateRange(doc_predecesor);
+                await _context.SaveChangesAsync();
+            }
+            document.Estado = "Eliminado";
+            _context.SGA_Documentos.UpdateRange(document);
+            await _context.SaveChangesAsync();
+
+
         }
         //public async Task AmpliarFechaRevision(RevisionDocumento revision)
         //{

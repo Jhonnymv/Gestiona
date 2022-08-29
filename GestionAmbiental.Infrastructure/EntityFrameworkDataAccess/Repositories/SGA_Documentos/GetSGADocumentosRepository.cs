@@ -166,7 +166,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             data = data.Where(x =>
             x.Doc_Nombre.ToLower().Contains(nombre != null ? nombre.ToLower() : x.Doc_Nombre.ToLower()) &&
             x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower()) &&
-            x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)).ToList();
+            x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)
+            ).ToList();
 
             var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
             var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();
@@ -260,7 +261,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = await _context.SGA_Documentos.ToListAsync();
             data = data.Where(x =>
             x.Doc_Nombre.ToLower().Contains(nombre != null ? nombre.ToLower() : x.Doc_Nombre.ToLower()) &&
-            x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower())).ToList();
+            x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower())
+            && !x.Estado.Equals("Eliminado")
+            ).ToList();
 
             var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
             var categoriasData = await _context.SGA_Categoria_Documento.ToListAsync();

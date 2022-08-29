@@ -36,7 +36,7 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="number" asp-for="DocVersion" class="form-control" value="1">
+                            <input type="text" asp-for="DocVersion" class="form-control" value="1">
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
@@ -80,13 +80,15 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                <span id="danger_documento_editable" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
-                        </div>
+                    
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                    <span id="danger_documento_editable" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                            </div>
+                       
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
@@ -291,7 +293,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -506,7 +507,7 @@
             var id = $("#IdSGATipoDocumento").val();
             for (var i = 0; i < listTipoDocRuta.length; i++) {
                 if (id == listTipoDocRuta[i].Id && listTipoDocRuta[i].Ruta != 0) {
-                    $("#btn_descargar_plantilla").attr("href","@Url.Action("DescargarPlantilla", "SGAAdministracion")"+"?IdCategoriaTipo=" + id);
+                    $("#btn_descargar_plantilla").attr("href", "@Url.Action("DescargarPlantilla", "SGAAdministracion")" + "?IdCategoriaTipo=" + id);
                     $("#btn_descargar_plantilla").show();
                     return;
                 }
@@ -522,12 +523,12 @@
         });
         $("#btn_registrar").on("click", function () {
             if (ValidarDatos() @*&& ValidarDatosRevisores()*@) {
-                $("#Opcion").val("Registrar");
-                $("#modal_registrando").modal('show');
-                $("#mensajeModalConfig").text("Guardando Informacion")
-                $("#form_registrar_documento").submit();
-            }
-        });
+            $("#Opcion").val("Registrar");
+            $("#modal_registrando").modal('show');
+            $("#mensajeModalConfig").text("Guardando Informacion")
+            $("#form_registrar_documento").submit();
+        }
+                });
         //Scripts del Partial
         $("#Documento_Formato_Pdf").change(function () {
             $("#danger_documento_formato_pdf").html("");

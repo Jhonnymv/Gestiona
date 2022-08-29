@@ -11,7 +11,7 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public CategoriaTipo SGACategoriaTipo { get; set; }
         public string DocCodigo { get; set; }
         public string DocNombre { get; set; }
-        public double DocVersion { get; set; }
+        public string DocVersion { get; set; }
         public bool Principal { get; set; }
         public Documento DocPredecesor { get; set; }
         public DateTime? FechaAprobacion { get; set; }

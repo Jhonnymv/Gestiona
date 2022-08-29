@@ -20,7 +20,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int categoriaTipo, string nombreDoc, double versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf,string rutaEditable, int idElaborador)
+        public async Task<int> Execute(int categoriaTipo, string nombreDoc, string versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf,string rutaEditable, int idElaborador)
         {
             //var usuario = await _getUsuario.Execute(usuarioRed);
 

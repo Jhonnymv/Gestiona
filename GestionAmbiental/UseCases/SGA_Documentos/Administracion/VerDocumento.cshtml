@@ -31,7 +31,7 @@
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
-                            <input type="number" asp-for="DocVersion" class="form-control" readonly>
+                            <input type="text" asp-for="DocVersion" class="form-control" readonly>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
@@ -49,10 +49,13 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaTentativa"></label>
-                            <input type="text" asp-for="FechaTentativa" class="form-control" readonly>
-                        </div>
+                        @if (ViewBag.CategoriaDoc != "Externos")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaTentativa"></label>
+                                <input type="text" asp-for="FechaTentativa" class="form-control" readonly>
+                            </div>
+                        }
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Condicion"></label>
                             <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
@@ -68,12 +71,15 @@
                             <button class="btn btn-mc form-control" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
                         </div>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+                    @if (ViewBag.CategoriaDoc != "Externos")
+                    {
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 @if (Model.Secundarios.Length > 2)
                 {
@@ -153,9 +159,15 @@
                                         <th>Documento</th>
                                         <th>Versión / Revisión</th>
                                         <th>Fecha de Aprobación</th>
-                                        <th>Condición</th>
+                                        @if (ViewBag.CategoriaDoc != "Externos")
+                                        {
+                                            <th>Condición</th>
+                                        }
                                         <th>Comentarios</th>
-                                        <th>Fecha Tentativa de la Nueva Versión</th>
+                                        @if (ViewBag.CategoriaDoc != "Externos")
+                                        {
+                                            <th>Fecha Tentativa de la Nueva Versión</th>
+                                        }
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,7 +179,6 @@
                 <div class="row">
                     <div class="button-container">
                         <div>
-
                         </div>
                         <div>
                             <a class="btn btn-mc-outline-danger" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>
@@ -361,7 +372,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -483,16 +493,16 @@
         function CargarSecundarios() {
             var listSecundarios = @Html.Raw(Model.Secundarios);
             var html = "";
-            for(var i = 0; i < listSecundarios.length; i++) {
+            for (var i = 0; i < listSecundarios.length; i++) {
                 html += "<tr>";
                 if (listSecundarios[i].Condicion == "Pendiente") {
                     html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
                 } else {
                     html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
                 }
-                html +="<td>" + listSecundarios[i].TipoDocumento +"</td>" +
-                    "<td>" + listSecundarios[i].Nombre +"</td>" +
-                    "<td>" + listSecundarios[i].Version +"</td >" +
+                html += "<td>" + listSecundarios[i].TipoDocumento + "</td>" +
+                    "<td>" + listSecundarios[i].Nombre + "</td>" +
+                    "<td>" + listSecundarios[i].Version + "</td >" +
                     "<td>" + listSecundarios[i].Condicion + "</td >" +
                     "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"PreviewPDF(\'" + listSecundarios[i].PdfRuta.replace('\\', '\\\\') + "\')\">Visualizar Pdf</button></td >" +
                     "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + listSecundarios[i].EditableRuta.replace('\\', '-') + "\')\">Descargar Editable</button></td >" +
@@ -535,40 +545,40 @@
             var html = "";
             for (var i = 0; i < lista.length; i++) {
                 html += "<tr>" +
-                    @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
+        @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
                     "<td style = \"width: 50%\" ><input class=\"form-control text-center\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                     "<td style=\"width: 20%\"><input class=\"form-control text-center\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
-                @*if (lista[i].Estado == "Vencido" && lista[i].Permiso)
-                    html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(\'" + lista[i].Id + "\')\">Ampliar</button></td>";
+        @*if (lista[i].Estado == "Vencido" && lista[i].Permiso)
+                html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"AmpliarFecha(\'" + lista[i].Id + "\')\">Ampliar</button></td>";
                 else
-                    html += "<td style=\"width: 10%\"></td>";
-                    *@
-                html += "</tr>";
+                html += "<td style=\"width: 10%\"></td>";
+                *@
+                    html += "</tr>";
             }
             return html;
         }
         @*
         function AmpliarFecha(Id) {
-            $("#modal_ampliacion").modal("show");
-            $("#idRevisionAmpliar").val(Id);
+        $("#modal_ampliacion").modal("show");
+        $("#idRevisionAmpliar").val(Id);
         }
         function EnviarNuevaFecha() {
-            $.ajax({
-                type: "POST",
-                url: "/SGAAdministracion/AmpliarFecha",
-                data: {
-                    "IdRevision": $("#idRevisionAmpliar").val(),
-                    "NuevaFecha": $("#nuevaFecha").val()
-                },
-                traditional: true,
-                success: (response) => {
-                    if (response.success) {
-                        location.reload();
-                    } else {
-                        console.log(response.error);
-                    }
-                }
-            });
+        $.ajax({
+        type: "POST",
+        url: "/SGAAdministracion/AmpliarFecha",
+        data: {
+        "IdRevision": $("#idRevisionAmpliar").val(),
+        "NuevaFecha": $("#nuevaFecha").val()
+        },
+        traditional: true,
+        success: (response) => {
+        if (response.success) {
+        location.reload();
+        } else {
+        console.log(response.error);
+        }
+        }
+        });
         }
         *@
     </script>

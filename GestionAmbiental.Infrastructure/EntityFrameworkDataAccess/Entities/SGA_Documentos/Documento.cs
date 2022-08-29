@@ -16,8 +16,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public string Doc_Codigo { get; set; }
         [Column(TypeName = "varchar(100)")]
         public string Doc_Nombre { get; set; }
-        [Column(TypeName = "decimal(5,2)")]
-        public double Doc_Version { get; set; }
+        [Column(TypeName = "varchar(255)")]
+        public string Doc_Version { get; set; }
         [Column(TypeName = "bit")]
         public bool Principal { get; set; }
         [Column(TypeName = "int")]
@@ -33,7 +33,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         [Column(TypeName = "text")]
         public string Pdf_Ruta { get; set; }
         [Column(TypeName = "text")]
-        public string Editable_Ruta { get; set; }
+        public string? Editable_Ruta { get; set; }
         [Column(TypeName = "int")]
         public int Id_Usuario { get; set; }
         [Column(TypeName = "datetime")]

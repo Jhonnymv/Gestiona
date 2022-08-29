@@ -23,8 +23,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string DocNombre { get; set; }
         [DisplayName("Código")]
         public string DocCodigo { get; set; }
-        [DisplayName("Versión")]
-        public double DocVersion { get; set; }
+        [DisplayName("Versión / Revisión / Edición ")]
+        public string DocVersion { get; set; }
         [DisplayName("Predecesor")]
         public int? DocPredecesor { get; set; }
         [DisplayName("Estado")]

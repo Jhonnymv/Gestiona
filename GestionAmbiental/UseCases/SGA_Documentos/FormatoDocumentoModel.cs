@@ -17,7 +17,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         [DisplayName("Nombre:")]
         public string Doc_Nombre_Formato { get; set; }
         [DisplayName("Versión:")]
-        public double Doc_Version_Formato { get; set; }
+        public string Doc_Version_Formato { get; set; }
         [DisplayName("Fecha Tentativa de la Nueva Versión:")]
         public string Fecha_Tentativa { get; set; }
         [DisplayName("Fecha de Aprobación:")]

@@ -18,6 +18,8 @@ namespace GestionAmbiental.Application.Repositories.SGA_Documentos
         Task FirmarDocumento(Documento documento);
         Task EditarDocumentosRelacionados(List<int> secundarios, int idDocumento);
         Task EditarDocumentosSecundarios(List<Documento> secundarios);
+
+        Task DeleteDocument(int IdDocumento);
         //Task AmpliarFechaRevision(RevisionDocumento revision);
     }
 }

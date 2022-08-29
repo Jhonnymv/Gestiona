@@ -15,7 +15,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public string SGACategoriaDocumento { get; set; }
         public string DocCodigo { get; set; }
         public string DocNombre { get; set; }
-        public double DocVersion { get; set; }
+        public string DocVersion { get; set; }
         public int? IdDocPredecesor { get; set; }
         public string DocPredecesorNombre { get; set; }
         public string DocPredecesorCodigo { get; set; }

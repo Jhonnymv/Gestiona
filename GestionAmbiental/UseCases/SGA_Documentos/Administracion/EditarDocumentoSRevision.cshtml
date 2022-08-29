@@ -38,7 +38,7 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="number" asp-for="DocVersion" class="form-control">
+                            <input type="text" asp-for="DocVersion" class="form-control">
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
@@ -59,11 +59,14 @@
                         </div>
                     </div>
                     <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaTentativa"></label>
-                            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-                            <input type="date" asp-for="FechaTentativa" class="form-control">
-                        </div>
+                        @if (ViewBag.CategoriaDoc != "Externo")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaTentativa"></label>
+                                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                                <input type="date" asp-for="FechaTentativa" class="form-control">
+                            </div>
+                        }
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Condicion"></label>
                             <span class="text-danger" asp-validation-for="Condicion"></span>
@@ -93,20 +96,27 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
+                        @if (ViewBag.CategoriaDoc != "Externo")
+                        {
+
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocumentoEditable"></label>
                             <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
                         </div>
+                        }
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label>Reemplazar Documento Editable</label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                <span id="danger_documento_editable" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                    @if (ViewBag.CategoriaDoc != "Externo")
+                    {
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label>Reemplazar Documento Editable</label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                    <span id="danger_documento_editable" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                            </div>
                         </div>
-                    </div>
+                    }
                     <input type="hidden" asp-for="DocPdfRuta" value="@Model.DocPdfRuta" />
                     <input type="hidden" asp-for="DocEditableRuta" value="@Model.DocEditableRuta" />
                 </div>
@@ -336,7 +346,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -507,7 +516,7 @@
             $('span[data-valmsg-for="DocCodigo"]').text("");
             $('span[data-valmsg-for="Documento"]').text("");
 
-            if (tipo != '0' && version != "" && nombre != "" && ( documento != "" || documentoRuta != ""))
+            if (tipo != '0' && version != "" && nombre != "" && (documento != "" || documentoRuta != ""))
                 return true;
             else {
                 if (tipo == '0')
@@ -518,7 +527,7 @@
                     $('span[data-valmsg-for="DocNombre"]').text("Este campo es requerido");
                 if (codigo == "")
                     $('span[data-valmsg-for="DocCodigo"]').text("Este campo es requerido");
-                if (documento == "" &&  documentoRuta == "")
+                if (documento == "" && documentoRuta == "")
                     $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
 
                 return false;

@@ -34,7 +34,7 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="number" asp-for="DocVersion" class="form-control" value="1">
+                            <input type="text" asp-for="DocVersion" class="form-control" value="1">
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
@@ -49,17 +49,20 @@
                             <input type="text" asp-for="DocCodigo" class="form-control">
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaAprobacion"></label>
+                            <label> Fecha del Documento</label>
                             <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
                             <input type="date" asp-for="FechaAprobacion" class="form-control">
                         </div>
                     </div>
                     <div class="row input_container align-items-start">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaTentativa"></label>
-                            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-                            <input type="date" asp-for="FechaTentativa" class="form-control">
-                        </div>
+                        @if (ViewBag.IdCategoria != 3)
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaTentativa"></label>
+                                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                                <input type="date" asp-for="FechaTentativa" class="form-control">
+                            </div>
+                        }
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Comentario"></label>
                             <span class="text-danger" asp-validation-for="Comentario"></span>
@@ -78,13 +81,16 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                <span id="danger_documento_editable" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
-                        </div>
+                        @if (ViewBag.IdCategoria != 3)
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                    <span id="danger_documento_editable" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                            </div>
+                        }
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
@@ -138,7 +144,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -155,14 +160,14 @@
     <script type="text/javascript">
         @*var listAprobadores = [];
         var listRevisores = [];*@
-        var IdPrimerUsuario;
+                var IdPrimerUsuario;
         var listTipoDocRuta = [];
 
         $(document).ready(function () {
             IdPrimerUsuario = $("#select_usuario").val();
-            @*$("#Revisores").val(JSON.stringify(listRevisores));
+        @*$("#Revisores").val(JSON.stringify(listRevisores));
             $("#Aprobadores").val(JSON.stringify(listAprobadores));*@
-            listTipoDocRuta = @Html.Raw(ViewBag.TiposDocRuta);
+                listTipoDocRuta = @Html.Raw(ViewBag.TiposDocRuta);
             $("#input_fecha_limite").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
             $("#Fecha_Tentativa").prop("min", '@Html.Raw(ViewBag.FechaHoy)');
         });
@@ -275,7 +280,7 @@
             var idUsuario = $("#select_usuario").val();
             var fecha = $("#input_fecha_limite").val();
 
-            if (tipo!='0' && orden != "" && idUsuario != '0' && fecha != "")
+            if (tipo != '0' && orden != "" && idUsuario != '0' && fecha != "")
                 return true;
             return false;
         }
@@ -287,7 +292,7 @@
             for (var i = 0; i < listTipoDocRuta.length; i++) {
                 console.log("Id", listTipoDocRuta[i].Id);
                 if (id == listTipoDocRuta[i].Id && listTipoDocRuta[i].Ruta != 0) {
-                    $("#btn_descargar_plantilla").attr("href","@Url.Action("DescargarPlantilla", "SGAAdministracion")"+"?IdCategoriaTipo=" + id);
+                    $("#btn_descargar_plantilla").attr("href", "@Url.Action("DescargarPlantilla", "SGAAdministracion")" + "?IdCategoriaTipo=" + id);
                     $("#btn_descargar_plantilla").show();
                     return;
                 }

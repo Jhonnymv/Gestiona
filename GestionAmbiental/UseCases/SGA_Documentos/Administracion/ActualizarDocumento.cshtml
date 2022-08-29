@@ -29,7 +29,7 @@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="number" asp-for="DocVersion" class="form-control" value="1">
+                            <input type="text" asp-for="DocVersion" class="form-control" value="1">
                         </div>
                     </div>
                     <div class="row input_container">
@@ -87,15 +87,18 @@
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                <span id="danger_documento_editable" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                    
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                    <span id="danger_documento_editable" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                            </div>
                         </div>
-                    </div>
+                   
+                    
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <a class="btn btn-mc-outline-success" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
