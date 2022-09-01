@@ -217,11 +217,11 @@
     </div>
 @if (ViewBag.Error != null)
 {
-                <div class="row mb-2 mr-2 d-flex justify-content-center">
-                    <div class="col-8">
-                        <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
-                    </div>
-                </div>
+                        <div class="row mb-2 mr-2 d-flex justify-content-center">
+                            <div class="col-8">
+                                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+                            </div>
+                        </div>
 }
     <input type="hidden" asp-for="Opcion" />-->
 @*<input type="hidden" asp-for="Revisores" />
@@ -230,7 +230,7 @@
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
 @if (ViewBag.DocPrincipal == null)
 {
-                    <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+                            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
 }
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
