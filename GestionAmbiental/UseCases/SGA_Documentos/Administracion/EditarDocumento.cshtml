@@ -39,11 +39,19 @@
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
                             <input type="text" asp-for="DocVersion" class="form-control">
+                            <div class="text-right">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
                             <span class="text-danger" asp-validation-for="DocNombre"></span>
                             <input type="text" asp-for="DocNombre" class="form-control">
+                            <div class="text-right">
+                                <span id="contadorNombre">0</span>
+                                <span>/ 255</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row input_container">
@@ -730,8 +738,8 @@
         $("#DocCodigo").on('keyup', function () {
             $('span[data-valmsg-for="DocCodigo"]').text("")
             var codigo = $("#DocCodigo").val();
-            if (listCodigos.includes(codigo))
-                $('span[data-valmsg-for="DocCodigo"]').text("El código ingresado ya fue utilizado")
+            //if (listCodigos.includes(codigo))
+            //    $('span[data-valmsg-for="DocCodigo"]').text("El código ingresado ya fue utilizado")
         });
         function DescargarEditable(ruta) {
             ruta = ruta.replace('-', '/');
@@ -907,7 +915,8 @@
             $('span[data-valmsg-for="DocumentoPdf"]').text("");
             $('span[data-valmsg-for="DocumentoEditable"]').text("");
 
-            if (tipo != '0' && elaborador != '0' && version != "" && nombre != "" && (documentoPdf != "" || documentoPdfRuta != "") && fechaAprobacion != "" && fechaTentativa != "" && comentario != "" && (documentoEditable != "" || documentoEditableRuta!="") && codigo != "" && !listCodigos.includes(codigo))
+            //if (tipo != '0' && elaborador != '0' && version != "" && nombre != "" && (documentoPdf != "" || documentoPdfRuta != "") && fechaAprobacion != "" && fechaTentativa != "" && comentario != "" && (documentoEditable != "" || documentoEditableRuta!="") && codigo != "" && !listCodigos.includes(codigo))
+            if (tipo != '0' && elaborador != '0' && version != "" && nombre != "" && (documentoPdf != "" || documentoPdfRuta != "") && fechaAprobacion != "" && fechaTentativa != "" && comentario != "")
                 return true;
             else {
                 if (tipo == '0')
@@ -926,12 +935,12 @@
                     $('span[data-valmsg-for="FechaTentativa"]').text("Este campo es requerido");
                 if (comentario == "")
                     $('span[data-valmsg-for="Comentario"]').text("Este campo es requerido");
-                if (listCodigos.includes(codigo))
-                    $('span[data-valmsg-for="DocCodigo"]').text("El código ingresado ya fue utilizado");
-                if (documentoPdf == "" && documentoPdfRuta=="")
-                    $('span[data-valmsg-for="DocumentoPdf"]').text("Debe cargar un archivo");
-                if (documentoEditable == "" && documentoEditableRuta =="")
-                    $('span[data-valmsg-for="DocumentoEditable"]').text("Debe cargar un archivo");
+                //if (listCodigos.includes(codigo))
+                //    $('span[data-valmsg-for="DocCodigo"]').text("El código ingresado ya fue utilizado");
+                //if (documentoPdf == "" && documentoPdfRuta=="")
+                //    $('span[data-valmsg-for="DocumentoPdf"]').text("Debe cargar un archivo");
+                //if (documentoEditable == "" && documentoEditableRuta =="")
+                //    $('span[data-valmsg-for="DocumentoEditable"]').text("Debe cargar un archivo");
                 return false;
             }
         }
@@ -1355,6 +1364,10 @@
         $('#Comentario').keyup(function () {
             var characterCount = $(this).val().length;
             $('#contadorComentario').text(characterCount);
+        });
+        $('#DocNombre').keyup(function () {
+            var characterCount = $(this).val().length;
+            $('#contadorNombre').text(characterCount);
         });
         $('#Comentario_Formato').keyup(function () {
             var characterCount = $(this).val().length;

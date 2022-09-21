@@ -7,6 +7,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
 {
     public interface IRegistrarFormatoDocumento
     {
-        Task<int> Execute(int categoriaTipo, string nombreDoc, string versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf, string rutaEditable, int idElaborador);
+        Task<int> Execute(string? Codigo_Doc_Formato, int categoriaTipo, string nombreDoc, string versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf, string rutaEditable, int idElaborador);
     }
 }

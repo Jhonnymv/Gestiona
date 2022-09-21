@@ -14,6 +14,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public int Id_Tipo_Documento_Formato { get; set; }
         [DisplayName("Elaborado Por:")]
         public int Id_Elaborado_Por { get; set; }
+        [DisplayName("Codigo_Doc_Formato")]
+        public string Codigo_Doc_Formato { get; set; }
         [DisplayName("Nombre:")]
         public string Doc_Nombre_Formato { get; set; }
         [DisplayName("Versión:")]

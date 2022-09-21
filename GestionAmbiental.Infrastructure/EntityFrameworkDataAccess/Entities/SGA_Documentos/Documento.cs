@@ -14,7 +14,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public int Id_SGA_Categoria_Tipo { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Doc_Codigo { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "varchar(255)")]
         public string Doc_Nombre { get; set; }
         [Column(TypeName = "varchar(255)")]
         public string Doc_Version { get; set; }
@@ -34,8 +34,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public string Pdf_Ruta { get; set; }
         [Column(TypeName = "text")]
         public string? Editable_Ruta { get; set; }
+
+        [Column(TypeName ="varchar(255)")]
+        public string? ElaboradoPorString { get; set; }
+
         [Column(TypeName = "int")]
-        public int Id_Usuario { get; set; }
+        public int? Id_Usuario { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Creacion { get; set; }
         [Column(TypeName = "datetime")]

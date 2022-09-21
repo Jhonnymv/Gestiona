@@ -37,11 +37,19 @@
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
                             <input type="text" asp-for="DocVersion" class="form-control" value="1">
+                            <div class="text-right">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
                             <span class="text-danger" asp-validation-for="DocNombre"></span>
                             <input type="text" asp-for="DocNombre" class="form-control">
+                            <div class="text-right">
+                                <span id="contadorNombre">0</span>
+                                <span>/ 255</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row input_container">
@@ -628,6 +636,7 @@
             }
         }
         function GuardarFormato() {
+            var codeFormato = $("#Codigo_Doc_Formato").val();
             var tipoDoc = $("#Id_Tipo_Documento_Formato").val();
             var fechaTentativa = $("#Fecha_Tentativa_Formato").val();
             var fechaAprobacion = $("#Fecha_Aprobacion_Formato").val();
@@ -647,6 +656,7 @@
                 for (var i = 0; i != filesEditable.length; i++) {
                     formData.append("Documento_Formato_Editable", filesEditable[i]);
                 }
+                formData.append("Codigo_Doc_Formato",codeFormato);
                 formData.append("Id_Tipo_Documento_Formato", tipoDoc);
                 formData.append("Fecha_Tentativa", fechaTentativa);
                 formData.append("Fecha_Aprobacion", fechaAprobacion);
@@ -927,6 +937,10 @@
         $('#Comentario').keyup(function () {
             var characterCount = $(this).val().length;
             $('#contadorComentario').text(characterCount);
+        });
+        $('#DocNombre').keyup(function () {
+            var characterCount = $(this).val().length;
+            $('#contadorNombre').text(characterCount);
         });
         $('#Comentario_Formato').keyup(function () {
             var characterCount = $(this).val().length;

@@ -138,7 +138,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 FechaTentativa = data.Fecha_Tentativa,
                 PdfRuta = data.Pdf_Ruta,
                 EditableRuta = data.Editable_Ruta,
-                Usuario = new Domain.ValueObjects.Usuario
+                ElaboradoPorString= data.ElaboradoPorString,
+                FechaCreacion = data.Fecha_Creacion,
+                FechaActualizacion = data.Fecha_Actualizacion,
+                Estado = data.Estado,
+                Revisiones = listRevisores,
+                Aprobaciones = listAprobadores
+            };
+            if (usuario!=null)
+            {
+                output.Usuario = new Domain.ValueObjects.Usuario
                 {
                     IdUsuario = usuario.Id_Usuario,
                     Nombres = usuario.Nombres,
@@ -149,13 +158,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Puesto = usuario.Puesto,
                     Estado = usuario.Estado,
                     IdRol = usuario.Id_Rol
-                },
-                FechaCreacion = data.Fecha_Creacion,
-                FechaActualizacion = data.Fecha_Actualizacion,
-                Estado = data.Estado,
-                Revisiones = listRevisores,
-                Aprobaciones = listAprobadores
-            };
+                };
+            }
             return output;
         }
         public async Task<List<Documento>> GetDocumentos(string nombre, int categoria, int[] tipos, string codigo, int condicion)
@@ -230,6 +234,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     FechaTentativa = item.Fecha_Tentativa,
                     PdfRuta = item.Pdf_Ruta,
                     EditableRuta = item.Editable_Ruta,
+                    ElaboradoPorString = item.ElaboradoPorString,
                     Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
@@ -290,7 +295,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var tipoItem = tiposData.First(x => x.Id_SGA_Tipo_Documento.Equals(tipoCategoria.Id_SGA_Tipo_Documento));
                 var categoriaItem = categoriasData.First(x => x.Id_SGA_Categoria_Documento.Equals(tipoCategoria.Id_SGA_Categoria_Documento));
                 var condicionModel = condicionesEntities.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
-                var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+                
+
 
                 var outputItem = new Documento
                 {
@@ -329,7 +335,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     FechaTentativa = item.Fecha_Tentativa,
                     PdfRuta = item.Pdf_Ruta,
                     EditableRuta = item.Editable_Ruta,
-                    Usuario = new Domain.ValueObjects.Usuario
+                    ElaboradoPorString = item.ElaboradoPorString,
+                    FechaCreacion = item.Fecha_Creacion,
+                    FechaActualizacion = item.Fecha_Actualizacion,
+                    Estado = item.Estado
+                };
+                if (item.Id_Usuario.HasValue)
+                {
+                    var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+                    outputItem.Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
                         Nombres = usuario.Nombres,
@@ -337,11 +351,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         IdRol = usuario.Id_Rol,
                         Email = usuario.Email,
                         Estado = usuario.Estado
-                    },
-                    FechaCreacion = item.Fecha_Creacion,
-                    FechaActualizacion = item.Fecha_Actualizacion,
-                    Estado = item.Estado
-                };
+                    };
+                }
                 if (item.Doc_Predecesor.HasValue)
                 {
                     outputItem.DocPredecesor = new Documento
@@ -373,7 +384,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var tipoItem = tiposData.First(x => x.Id_SGA_Tipo_Documento.Equals(tipoCategoria.Id_SGA_Tipo_Documento));
                 var categoriaItem = categoriasData.First(x => x.Id_SGA_Categoria_Documento.Equals(tipoCategoria.Id_SGA_Categoria_Documento));
                 var condicionModel = condiciones.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
-                var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+               
 
                 var outputItem = new Documento
                 {
@@ -411,8 +422,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Comentario = item.Comentario,
                     FechaTentativa = item.Fecha_Tentativa,
                     PdfRuta = item.Pdf_Ruta,
+                    ElaboradoPorString = item.ElaboradoPorString,
                     EditableRuta = item.Editable_Ruta,
-                    Usuario = new Domain.ValueObjects.Usuario
+                    FechaCreacion = item.Fecha_Creacion,
+                    FechaActualizacion = item.Fecha_Actualizacion,
+                    Estado = item.Estado
+                };
+                if (item.Id_Usuario.HasValue)
+                {
+                    var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+                    outputItem.Usuario = new Domain.ValueObjects.Usuario
                     {
                         IdUsuario = usuario.Id_Usuario,
                         Nombres = usuario.Nombres,
@@ -420,11 +439,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         IdRol = usuario.Id_Rol,
                         Email = usuario.Email,
                         Estado = usuario.Estado
-                    },
-                    FechaCreacion = item.Fecha_Creacion,
-                    FechaActualizacion = item.Fecha_Actualizacion,
-                    Estado = item.Estado
-                };
+                    };
+                }
+
                 if (item.Doc_Predecesor.HasValue)
                 {
                     outputItem.DocPredecesor = new Documento
@@ -480,7 +497,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     var tipoItem = tiposData.First(x => x.Id_SGA_Tipo_Documento.Equals(tipoCategoria.Id_SGA_Tipo_Documento));
                     var categoriaItem = categoriasData.First(x => x.Id_SGA_Categoria_Documento.Equals(tipoCategoria.Id_SGA_Categoria_Documento));
                     var condicionModel = condiciones.First(x => x.Id_SGA_Condicion.Equals(item.Condicion));
-                    var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+                    
 
                     var outputItem = new Documento
                     {
@@ -519,7 +536,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         FechaTentativa = item.Fecha_Tentativa,
                         PdfRuta = item.Pdf_Ruta,
                         EditableRuta = item.Editable_Ruta,
-                        Usuario = new Domain.ValueObjects.Usuario
+                        ElaboradoPorString = item.ElaboradoPorString,
+                        FechaCreacion = item.Fecha_Creacion,
+                        FechaActualizacion = item.Fecha_Actualizacion,
+                        Estado = item.Estado
+                    };
+                    if (item.Id_Usuario.HasValue)
+                    {
+                        var usuario = usuarios.First(x => x.Id_Usuario.Equals(item.Id_Usuario));
+                        outputItem.Usuario = new Domain.ValueObjects.Usuario
                         {
                             IdUsuario = usuario.Id_Usuario,
                             Nombres = usuario.Nombres,
@@ -527,11 +552,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                             IdRol = usuario.Id_Rol,
                             Email = usuario.Email,
                             Estado = usuario.Estado
-                        },
-                        FechaCreacion = item.Fecha_Creacion,
-                        FechaActualizacion = item.Fecha_Actualizacion,
-                        Estado = item.Estado
-                    };
+                        };
+                    }
 
                     output.Add(outputItem);
                 }

@@ -463,15 +463,16 @@
             });
         }
         function filtrarModal(pag) {
+
             $.ajax({
-                type: "POST",
-                url: "/SGADocumentacion/GetTablaModalResumenFiltrada",
+                type: "post",
+                url: "/sgadocumentacion/gettablamodalresumenfiltrada",
                 data: {
                     "pagina": pag,
                     "rpp": 5,
                     "nombre": $('#filtro_nombre').val(),
                     "categoria": categoria,
-                    "tipos": $("#filtro_tipoDoc").val(),
+                    "tipos": $("#filtro_tipodoc").val(),
                     "condicion": $('#filtro_condicion').val(),
                     "codigo": $("#filtro_codigo").val()
                 },
@@ -480,8 +481,8 @@
                     $('#tabla_documentos_tipo tbody').empty()
                     $('#tabla_documentos_tipo tbody').html(response.data)
                     $('#paginado_documentos_tipo').html(response.paginador)
-                    $("#filtro_tipoDoc").val([]);
-                    dataModulo();
+                    $("#filtro_tipodoc").val([]);
+                    datamodulo();
                 }
             });
         }

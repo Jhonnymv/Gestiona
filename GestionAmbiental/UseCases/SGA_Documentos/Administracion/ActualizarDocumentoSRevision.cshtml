@@ -19,6 +19,7 @@
                     </div>
                     <input asp-for="DocPrincipal" type="hidden" value="@ViewBag.DocPrincipal" />
                     <input asp-for="IdElaboradoPor" type="hidden" value="0" />
+                    <input asp-for="ElaboradoPorString" type="hidden" />
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="IdSGATipoDocumento"></label>
@@ -37,11 +38,19 @@
                             <span class="text-danger" asp-validation-for="DocNombre"></span>
                             <input type="hidden" asp-for="DocNombre" class="form-control">
                             <select asp-for="DocPredecesor" class="form-control"></select>
+                            <div class="text-right">
+                                <span id="contadorNombre">0</span>
+                                <span>/ 255</span>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocCodigo"></label>
                             <span class="text-danger" asp-validation-for="DocCodigo"></span>
                             <input type="text" asp-for="DocCodigo" class="form-control" readonly>
+                            <div class="text-right">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                     </div>
                     <div class="row input_container align-items-start">
@@ -68,11 +77,14 @@
                                 <span class="text-danger" asp-validation-for="FechaTentativa"></span>
                                 <input type="date" asp-for="FechaTentativa" class="form-control">
                             </div>
-                            <div class="col-12 col-sm-12 col-lg-6">
-                                <label>Documento Editable Versión Anterior:</label>
-                                <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+                            @if (ViewBag.CategoriaDoc == "SGA")
+                            {
+                                <div class="col-12 col-sm-12 col-lg-6">
+                                    <label>Documento Editable Versión Anterior:</label>
+                                    <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         </div>
                     }
                     <div class="row input_container">
@@ -83,7 +95,7 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
-                        @if (ViewBag.CategoriaDoc != "Externo")
+                        @if (ViewBag.CategoriaDoc == "SGA")
                         {
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <label asp-for="DocumentoEditable"></label>
@@ -217,11 +229,11 @@
     </div>
 @if (ViewBag.Error != null)
 {
-                        <div class="row mb-2 mr-2 d-flex justify-content-center">
-                            <div class="col-8">
-                                <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
-                            </div>
-                        </div>
+                                <div class="row mb-2 mr-2 d-flex justify-content-center">
+                                    <div class="col-8">
+                                        <div class="alert alert-danger" role="alert" style="text-align:center;">@Html.Raw(ViewBag.Error)</div>
+                                    </div>
+                                </div>
 }
     <input type="hidden" asp-for="Opcion" />-->
 @*<input type="hidden" asp-for="Revisores" />
@@ -230,7 +242,7 @@
         <a class="btn btn-secondary mr-2" style="color:white" asp-controller="SGAAdministracion" asp-action="Resumen">Cancelar</a>
 @if (ViewBag.DocPrincipal == null)
 {
-                            <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
+                                    <button type="button" class="btn btn-primary mr-2" id="btn_guardar_estado">Guardar Estado</button>
 }
         <button type="button" class="btn btn-primary mr-2" id="btn_registrar">Registrar</button>
     </div>
@@ -288,8 +300,9 @@
                     if (count == 0) {
                         $('#DocNombre').val(listDocumentosP[i].DocNombre);
                         $('#DocCodigo').val(listDocumentosP[i].DocCodigo);
-                        $('#DocVersion').val((listDocumentosP[i].DocVersion + 1));
+                        $('#DocVersion').val((listDocumentosP[i].DocVersion + ".1"));
                         $('#Comentario').val((listDocumentosP[i].Comentario));
+                        $('#ElaboradoPorString').val(listDocumentosP[i].ElaboradoPorString);
                         count++;
                     }
                 }
@@ -348,7 +361,8 @@
                 if (IdDoc == listDocumentosP[i].IdSGADocumento) {
                     $('#DocNombre').val(listDocumentosP[i].DocNombre);
                     $('#DocCodigo').val(listDocumentosP[i].DocCodigo);
-                    $('#DocVersion').val((listDocumentosP[i].DocVersion + 1));
+                    $('#DocVersion').val((listDocumentosP[i].DocVersion + ".1"));
+                    $('#ElaboradoPorString').val(listDocumentosP[i].ElaboradoPorString);
                     return;
                 }
             }
@@ -438,6 +452,10 @@
         $('#Comentario').keyup(function () {
             var characterCount = $(this).val().length;
             $('#contadorComentario').text(characterCount);
+        });
+        $('#DocNombre').keyup(function () {
+            var characterCount = $(this).val().length;
+            $('#contadorNombre').text(characterCount);
         });
     </script>
 

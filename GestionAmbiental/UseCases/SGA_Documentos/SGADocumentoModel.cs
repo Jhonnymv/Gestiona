@@ -16,13 +16,18 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public int DocPrincipal { get; set; }
         [DisplayName("Tipo de Documento")]
         public int IdSGATipoDocumento { get; set; }
+        [DisplayName("Elaborado por")]
+        public string? ElaboradoPorString { get; set; }
         [DisplayName("Elaborado Por")]
-        public int IdElaboradoPor { get; set; }
+        public int? IdElaboradoPor { get; set; }
         public int IdCategoria { get; set; }
         [DisplayName("Nombre")]
         public string DocNombre { get; set; }
         [DisplayName("Código")]
         public string DocCodigo { get; set; }
+        [DisplayName("Código Formato")]
+        public string DocCodigoFormato { get; set; }
+
         [DisplayName("Versión / Revisión / Edición ")]
         public string DocVersion { get; set; }
         [DisplayName("Predecesor")]

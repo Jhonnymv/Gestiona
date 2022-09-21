@@ -29,21 +29,41 @@
                             <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
                             <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdElaboradoPor"></label>
-                            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
-                        </div>
+                        @if (ViewBag.IdCategoria == "Externo")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="ElaboradoPorString"></label>
+                                <span class="text-danger" asp-validation-for="ElaboradoPorString"></span>
+                                <input type="text" asp-for="ElaboradoPorString" class="form-control">
+                            </div>
+                        }
+                        @if (ViewBag.IdCategoria != "Externo")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdElaboradoPor"></label>
+                                <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
+                                <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
+                            </div>
+                        }
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocVersion"></label>
                             <span class="text-danger" asp-validation-for="DocVersion"></span>
                             <input type="text" asp-for="DocVersion" class="form-control">
+                            <div class="text-right">
+                                <span></span>
+                                <span></span>
+                            </div>
                         </div>
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocNombre"></label>
                             <span class="text-danger" asp-validation-for="DocNombre"></span>
                             <input type="text" asp-for="DocNombre" class="form-control">
+                            <div class="text-right">
+                                <span id="contadorNombre">0</span>
+                                <span>/ 255</span>
+                            </div>
                         </div>
                     </div>
                     <div class="row input_container">
@@ -96,7 +116,7 @@
                             </span>
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
-                        @if (ViewBag.CategoriaDoc != "Externo")
+                        @if (ViewBag.CategoriaDoc == "SGA")
                         {
 
                         <div class="col-12 col-sm-12 col-lg-6">
@@ -105,7 +125,7 @@
                         </div>
                         }
                     </div>
-                    @if (ViewBag.CategoriaDoc != "Externo")
+                    @if (ViewBag.CategoriaDoc == "SGA")
                     {
                         <div class="row input_container">
                             <div class="col-12 col-sm-12 col-lg-6">
@@ -561,6 +581,10 @@
         $('#Comentario').keyup(function () {
             var characterCount = $(this).val().length;
             $('#contadorComentario').text(characterCount);
+        });
+        $('#DocNombre').keyup(function () {
+            var characterCount = $(this).val().length;
+            $('#contadorNombre').text(characterCount);
         });
     </script>
 }

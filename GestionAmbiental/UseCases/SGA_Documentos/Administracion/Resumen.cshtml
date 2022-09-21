@@ -104,7 +104,7 @@
                             <div class="row input_container">
                                 <div class="col-12 col-md-6 col-lg-6">
                                     <label for="">Tipo de Documento</label>
-                                    <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_tipoDoc" asp-items="ViewBag.TiposDoc" multiple>
+                                    <select class="selectpicker form-control" title="Ninguna opción seleccionada" id="filtro_tipoDoc" multiple>
                                     </select>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-6">
@@ -347,21 +347,49 @@
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var categoria = 1;
+        const tipoDocSGA = @Html.Raw(ViewBag.TiposSGAJson);
+        const tipoDocSIG = @Html.Raw(ViewBag.TiposSIGJson);
+        const tipoDocExternos = @Html.Raw(ViewBag.TiposExternosJson);
         $(document).ready(function () {
             $("#filtro_tipoDoc").val([]);
+            $("#filtro_tipoDoc")
+                .find('option')
+                .remove()
+                .end()
             //Buscar activo guardado en local storage
             var activeCartegoria = localStorage.getItem('activeDocSGACategoria');
             if (activeCartegoria != null) {
                 switch (activeCartegoria) {
-                    case "1": $("#pills-docsga-tab").click();break;
-                    case "2": $("#pills-docsig-tab").click();break;
-                    case "3": $("#pills-docext-tab").click();break;
+                    case "1":
+                        $("#pills-docsga-tab").click();
+                        //Add items to Tipo Doc list
+                        for (let i = 0; i < tipoDocSGA.length; i++) {
+                            $('#filtro_tipoDoc').append(new Option(tipoDocSGA[i].optionText, tipoDocSGA[i].optionValue))
+                        }
+                        ; break;
+                    case "2":
+                        $("#pills-docsig-tab").click();
+                        //Add items to Tipo Doc list
+                        for (let i = 0; i < tipoDocSIG.length; i++) {
+                            $('#filtro_tipoDoc').append(new Option(tipoDocSIG[i].optionText, tipoDocSIG[i].optionValue))
+                        }
+                        ; break;
+                    case "3":
+                        $("#pills-docext-tab").click();
+                        //Add items to Tipo Doc list
+                        for (let i = 0; i < tipoDocExternos.length; i++) {
+                            $('#filtro_tipoDoc').append(new Option(tipoDocExternos[i].optionText, tipoDocExternos[i].optionValue))
+                        }
+                        break;
                 };
             }
             //Si no existe, mostrar primer SGA
             else {
                 filtrar(1);
             }
+            //$('#select1').append(new Option(optionText, optionValue));
+
+            //$('#filtro_tipoDoc')
         });
         function dataModulo() {
             $.ajax({
@@ -421,7 +449,16 @@
             $("#colFechaTentativa").show()
             localStorage.setItem('activeDocSGACategoria', "1")
             categoria = 1;
+            $("#filtro_tipoDoc")
+                .find('option')
+                .remove()
+                .end()
+            for (let i = 0; i < tipoDocSGA.length; i++) {
+                $('#filtro_tipoDoc').append(new Option(tipoDocSGA[i].optionText, tipoDocSGA[i].optionValue))
+            }
+            $("#filtro_tipoDoc").selectpicker('refresh');
             filtrar(1);
+
         });
         $("#pills-docsig-tab").on('click', function () {
             $("#titulo_pagina").text("Administración de Documentos SIG");
@@ -432,7 +469,16 @@
             $("#colFechaTentativa").show()
             localStorage.setItem('activeDocSGACategoria', "2")
             categoria = 2;
+            $("#filtro_tipoDoc")
+                .find('option')
+                .remove()
+                .end()
+            for (let i = 0; i < tipoDocSIG.length; i++) {
+                $('#filtro_tipoDoc').append(new Option(tipoDocSIG[i].optionText, tipoDocSIG[i].optionValue))
+            }
+            $("#filtro_tipoDoc").selectpicker('refresh');
             filtrar(1);
+
         });
         $("#pills-docext-tab").on('click', function () {
             $("#titulo_pagina").text("Administración de Documentos Externos");
@@ -443,7 +489,16 @@
             $("#colFechaTentativa").hide()
             localStorage.setItem('activeDocSGACategoria', "3")
             categoria = 3;
+            $("#filtro_tipoDoc")
+                .find('option')
+                .remove()
+                .end()
+            for (let i = 0; i < tipoDocExternos.length; i++) {
+                $('#filtro_tipoDoc').append(new Option(tipoDocExternos[i].optionText, tipoDocExternos[i].optionValue))
+            }
+            $("#filtro_tipoDoc").selectpicker('refresh');
             filtrar(1);
+
         });
         function filtrar(pag) {
             $.ajax({
@@ -503,9 +558,9 @@
             $("#condicionDocModal").val(condiciones)
             filtrarModal(1);
         }
-        function deleteDocument(idDocumento){
+        function deleteDocument(idDocumento) {
             rc = confirm("¿Seguro que desea Eliminar?");
-            if(rc===true){
+            if (rc === true) {
                 $.ajax({
                     type: "POST",
                     url: "/SGAAdministracion/DeleteDocument",
@@ -514,10 +569,10 @@
                     },
                     traditional: true,
                     success: (response) => {
-                      location.reload()
+                        location.reload()
                     }
                 });
-            }     
+            }
         }
     </script>
 }

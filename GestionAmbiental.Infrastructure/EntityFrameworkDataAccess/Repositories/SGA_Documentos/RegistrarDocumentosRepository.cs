@@ -20,14 +20,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
 
         public async Task<int> RegistrarDocumento(Documento documento)
         {
-            
+
             var entidad = new Entities.SGA_Documentos.Documento();
             entidad.Id_SGA_Categoria_Tipo = documento.SGACategoriaTipo.IdSGACategoriaTipo;
             entidad.Doc_Codigo = documento.DocCodigo;
             entidad.Doc_Nombre = documento.DocNombre;
             entidad.Principal = documento.Principal;
             entidad.Doc_Version = documento.DocVersion;
-            if (documento.DocPredecesor!=null && documento.DocPredecesor.IdSGADocumento != 0)
+            if (documento.DocPredecesor != null && documento.DocPredecesor.IdSGADocumento != 0)
                 entidad.Doc_Predecesor = documento.DocPredecesor.IdSGADocumento;
 
             entidad.Fecha_Aprobacion = documento.FechaAprobacion;
@@ -36,10 +36,14 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Fecha_Tentativa = documento.FechaTentativa;
             entidad.Pdf_Ruta = documento.PdfRuta;
             entidad.Editable_Ruta = documento.EditableRuta;
-            entidad.Id_Usuario = documento.Usuario.IdUsuario;
+            entidad.ElaboradoPorString = documento.ElaboradoPorString;
+            if (documento.Usuario != null)
+            {
+                entidad.Id_Usuario = documento.Usuario.IdUsuario;
+            }
             entidad.Fecha_Creacion = DateTime.Now;
             entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
-            entidad.Estado = documento.Estado;           
+            entidad.Estado = documento.Estado;
 
             _context.SGA_Documentos.Add(entidad);
             await _context.SaveChangesAsync();
@@ -49,9 +53,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<string> GetUltimoCodigo()
         {
 
-            var codigo = await _context.SGA_Documentos.Where(x=>!x.Doc_Codigo.Equals("TBD")).ToListAsync();
+            var codigo = await _context.SGA_Documentos.Where(x => !x.Doc_Codigo.Equals("TBD")).ToListAsync();
             if (codigo.Count > 0)
-                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Remove(0,2))).Select(x => x.Doc_Codigo.Remove(0, 2)).LastOrDefault();
+                return codigo.OrderBy(x => Int32.Parse(x.Doc_Codigo.Remove(0, 2))).Select(x => x.Doc_Codigo.Remove(0, 2)).LastOrDefault();
             else
                 return null;
         }
@@ -75,7 +79,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         public async Task<int> RegistrarRevisiones(List<RevisionDocumento> revisiones)
         {
             var data = new List<Entities.SGA_Documentos.Revision_Documento>();
-            foreach(var item in revisiones)
+            foreach (var item in revisiones)
             {
                 data.Add(new Entities.SGA_Documentos.Revision_Documento
                 {
@@ -105,7 +109,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Estado = revision.Estado
             };
             _context.SGA_Revisiones_Documento.Add(entity);
-                
+
             await _context.SaveChangesAsync();
 
             return entity.Id_SGA_Revision_Documento;

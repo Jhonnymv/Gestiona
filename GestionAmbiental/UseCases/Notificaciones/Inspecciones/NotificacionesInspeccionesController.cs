@@ -29,10 +29,10 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
         private readonly IGetInfo_SGA _info_SGA;
 
         public NotificacionesInspeccionesController(
-            IWebHostEnvironment hostingEnvironment, 
-            IGetNuevaInspeccionInfo getNuevaInspeccionInfo, 
+            IWebHostEnvironment hostingEnvironment,
+            IGetNuevaInspeccionInfo getNuevaInspeccionInfo,
             IGetObservacionImplementada getObservacionImplementada,
-            IGetObservacionRechazada getObservacionRechazada, 
+            IGetObservacionRechazada getObservacionRechazada,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
@@ -104,8 +104,8 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.DescripcionActoCondicion,
                         observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
                         observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
-                        observacion.ResponsableMarcobre2!=null? 
-                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - "+observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : 
+                        observacion.ResponsableMarcobre2 != null ?
+                        (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) :
                         (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos),
                         observacion.ResponsableContratista,
                         (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "No Aplica"),
@@ -133,7 +133,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                         observacion.TipoCondicion != null ? observacion.TipoCondicion.Descripcion : "No Aplica",
                         observacion.DescripcionActoCondicion,
                         observacion.NivelRiesgo != null ? observacion.NivelRiesgo : "No Aplica",
-                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica", 
+                        observacion.DescripcionAccion != null ? observacion.DescripcionAccion : "No Aplica",
                         observacion.ResponsableMarcobre2 != null ?
                         (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) :
                         (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos),
@@ -167,6 +167,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 if (!observacion.DescripcionCondicion.Equals("Buenas Prácticas"))
                 {
                     msg.To.Add(new MailAddress(observacion.ResponsableMarcobre.Email));
+                    msg.To.Add(new MailAddress(observacion.Asesor.Email));
                     if (observacion.ResponsableMarcobre2 != null)
                         msg.To.Add(new MailAddress(observacion.ResponsableMarcobre2.Email));
                 }
@@ -207,7 +208,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 }
             }
             catch (Exception e)
-            {                
+            {
                 Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
                 Log.Error(e.Message);
             }
@@ -215,7 +216,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
             var info = await _getObservacionImplementada.Execute(IdObsDesencriptado);
             var template = Path.Combine(_hostingEnvironment.WebRootPath, "MailTemplates", "Inspecciones", "ObservacionImplementada.html");
             StreamReader SourceReader = System.IO.File.OpenText(template);
-            var templateReaded = SourceReader.ReadToEnd();            
+            var templateReaded = SourceReader.ReadToEnd();
             var msgBody = string.Format(templateReaded,
                 $"#{r:X2}{g:X2}{b:X2}",
                 info.Codigo,
@@ -236,9 +237,9 @@ namespace GestionAmbiental.UseCases.Notificaciones.Inspecciones
                 info.TipoCondicion,
                 info.NivelRiesgo,
                 info.DescripcionAccion,
-                info.ResponsableMarcobre2!=null? (info.ResponsableMarcobre + " -  "+info.ResponsableMarcobre2): info.ResponsableMarcobre,
+                info.ResponsableMarcobre2 != null ? (info.ResponsableMarcobre + " -  " + info.ResponsableMarcobre2) : info.ResponsableMarcobre,
                 info.ResponsableContratista,
-                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",     
+                info.FechaProgramada.HasValue ? info.FechaProgramada.Value.ToShortDateString() : "No Aplica",
                 info.ComentarioImplementacion,
                 info.FechaCierre,
                 _protector.Protect(info.IdInspeccionCabecera.ToString())

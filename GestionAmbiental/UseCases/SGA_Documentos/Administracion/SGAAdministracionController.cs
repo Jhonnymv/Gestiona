@@ -96,13 +96,39 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var items = await _selectItems.Execute();
+                var categoriaTipo = items.ItemsCategoriaTipo;
+
+                var tiposSGA = items.ItemsCategoriaTipo
+                    .Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(1))
+                    .Select(g => new { optionValue = g.TipoDocumento.IdSGATipoDocumento.ToString(), optionText = g.TipoDocumento.Descripcion })
+                    .ToList();
+
+                var tiposSIG = items.ItemsCategoriaTipo
+                    .Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(2))
+                    .Select(g => new { optionValue = g.TipoDocumento.IdSGATipoDocumento.ToString(), optionText = g.TipoDocumento.Descripcion })
+                    .ToList();
+                var tiposExternos = items.ItemsCategoriaTipo
+                    .Where(x => x.Estado.Equals("ACT") && x.CategoriaDocumento.Id_SGA_Categoria_Documento.Equals(3))
+                    .Select(g => new { optionValue = g.TipoDocumento.IdSGATipoDocumento.ToString(), optionText = g.TipoDocumento.Descripcion })
+                    .ToList();
+
                 var condiciones = items.ItemsCondicion.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGACondicion.ToString(), Text = g.Descripcion }).ToList();
 
                 var tipos = items.ItemsTipoDocumento.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdSGATipoDocumento.ToString(), Text = g.Descripcion }).ToList();
 
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
-                ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento);
+                //ViewBag.TiposDocJson = JsonConvert.SerializeObject(items.ItemsTipoDocumento);
+
+
+                //ViewBag.TiposSGA = tiposSGA;
+                ViewBag.TiposSGAJson = JsonConvert.SerializeObject(tiposSGA);
+
+                //ViewBag.TiposSIG = tiposSIG;
+                ViewBag.TiposSIGJson = JsonConvert.SerializeObject(tiposSIG);
+
+                //ViewBag.TiposExternos = tiposExternos;
+                ViewBag.TiposExternosJson = JsonConvert.SerializeObject(tiposExternos);
 
                 return View();
             }
@@ -313,13 +339,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriasTipos;
                 ViewBag.CategoriaDoc = documento.SGACategoriaDocumento;
+                ViewBag.IdCategoryDoc = documento.IdSGACategoriaDocumento;
 
                 var model = new SGADocumentoModel
                 {
                     IdEncriptado = IdDocumento,
                     IdSGADocumento = documento.IdSGADocumento,
                     IdSGATipoDocumento = documento.IdSGACategoriaTipo,
-                    IdElaboradoPor = documento.IdUsuario,
+                    ElaboradoPorString = documento.ElaboradoPorString,
                     DocNombre = documento.DocNombre,
                     DocPredecesor = documento.IdDocPredecesor,
                     DocCodigo = documento.DocCodigo,
@@ -334,6 +361,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
                     Secundarios = JsonConvert.SerializeObject(secundarios)
                 };
+                if (documento.IdUsuario.HasValue)
+                {
+                    model.IdElaboradoPor = documento.IdUsuario;
+                }
                 return View(model);
             }
         }
@@ -438,6 +469,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.Publicados = listPublicados;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriastipos;
+                ViewBag.TopoDocFormato = categoriastipos.Where(x => x.Value.Equals("9")).ToList();
                 ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x => new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato != null ? 1 : 0 }));
                 ViewBag.Usuarios = usuarios;
                 ViewBag.TiposRevision = tiposRevision;
@@ -480,6 +512,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         docEditableRuta,
                         model.FechaTentativa,
                         model.FechaAprobacion,
+                        model.ElaboradoPorString,
                         model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
@@ -490,8 +523,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
                         //Registrar
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
-                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento});
+                        //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(idDocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
                 else
                 {
@@ -578,8 +611,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var aprobadores = model.Aprobadores != null ? JsonConvert.DeserializeObject<List<RevisionAprobacionInputOutput>>(model.Aprobadores) : new List<RevisionAprobacionInputOutput>();
                 if (model.IdElaboradoPor == 0)
                 {
-                    var dataUsuario = await _getUsuario.Execute(userInfo.NombreUsuario);
-                    model.IdElaboradoPor = dataUsuario.IdUsuario;
+                    //var dataUsuario = await _getUsuario.Execute(userInfo.NombreUsuario);
+                    //model.IdElaboradoPor = dataUsuario.IdUsuario;
+
+                    model.IdElaboradoPor = null;
                 }
                 //if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
 
@@ -598,6 +633,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         cargaDocumentoEditable,
                         model.FechaTentativa,
                         model.FechaAprobacion,
+                        model.ElaboradoPorString,
                         model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
@@ -636,6 +672,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
                 {
                     var idDocumento = await _registrarFormatoDocumento.Execute(
+                        model.Codigo_Doc_Formato,
                       model.Id_Tipo_Documento_Formato,
                       model.Doc_Nombre_Formato,
                       model.Doc_Version_Formato,
@@ -789,6 +826,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         docEditableRuta,
                         model.FechaTentativa,
                         model.FechaAprobacion,
+                        model.ElaboradoPorString,
                         model.IdElaboradoPor,
                         model.Opcion,
                         revisores,
@@ -979,6 +1017,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     IdSGADocumento = documento.IdSGADocumento,
                     IdCategoria = IdCategoria,
                     IdSGATipoDocumento = documento.IdSGACategoriaTipo,
+                    ElaboradoPorString = documento.ElaboradoPorString,
                     IdElaboradoPor = documento.IdUsuario,
                     DocNombre = documento.DocNombre,
                     DocPredecesor = documento.IdDocPredecesor,
@@ -1037,7 +1076,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                cargaDocumentoEditable,
                                model.FechaTentativa,
                                model.FechaAprobacion,
-                               model.IdElaboradoPor,
+                               (int)model.IdElaboradoPor,
                                model.Opcion,
                                revisores,
                                aprobadores,
@@ -1060,7 +1099,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                    model.DocEditableRuta,
                                    model.FechaTentativa,
                                    model.FechaAprobacion,
-                                   model.IdElaboradoPor,
+                                   (int)model.IdElaboradoPor,
                                    model.Opcion,
                                    revisores,
                                    aprobadores,
@@ -1086,7 +1125,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                cargaDocumentoEditable,
                                model.FechaTentativa,
                                model.FechaAprobacion,
-                               model.IdElaboradoPor,
+                               (int)model.IdElaboradoPor,
                                model.Opcion,
                                revisores,
                                aprobadores,
@@ -1115,14 +1154,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             model.DocEditableRuta,
                             model.FechaTentativa,
                             model.FechaAprobacion,
-                            model.IdElaboradoPor,
+                            (int)model.IdElaboradoPor,
                             model.Opcion,
                             revisores,
                             aprobadores,
                             secundarios);
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
-                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                        //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
@@ -1223,6 +1262,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 {
                     IdEncriptado = IdDocumento,
                     IdSGADocumento = documento.IdSGADocumento,
+                    ElaboradoPorString = documento.ElaboradoPorString,
                     IdElaboradoPor = documento.IdUsuario,
                     DocCodigo = documento.DocCodigo,
                     IdCategoria = IdCategoria,
@@ -1284,7 +1324,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                cargaDocumentoEditable,
                                model.FechaTentativa,
                                model.FechaAprobacion,
-                               model.IdElaboradoPor,
+                               (int)model.IdElaboradoPor,
                                model.Opcion,
                                revisores,
                                aprobadores,
@@ -1307,7 +1347,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                    model.DocEditableRuta,
                                    model.FechaTentativa,
                                    model.FechaAprobacion,
-                                   model.IdElaboradoPor,
+                                   (int)model.IdElaboradoPor,
                                    model.Opcion,
                                    revisores,
                                    aprobadores,
@@ -1333,7 +1373,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                cargaDocumentoEditable,
                                model.FechaTentativa,
                                model.FechaAprobacion,
-                               model.IdElaboradoPor,
+                               (int)model.IdElaboradoPor,
                                model.Opcion,
                                revisores,
                                aprobadores,
@@ -1362,7 +1402,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             model.DocEditableRuta,
                             model.FechaTentativa,
                             model.FechaAprobacion,
-                            model.IdElaboradoPor,
+                            (int)model.IdElaboradoPor,
                             model.Opcion,
                             revisores,
                             aprobadores,
@@ -1446,7 +1486,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
+                var SGATempPath = tempPath + "SGA-Marcobre-Pruebas-v2/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);

@@ -27,13 +27,14 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
         public DateTime? FechaTentativa { get; set; }
         public string PdfRuta { get; set; }
         public string EditableRuta { get; set; }
-        public int IdUsuario { get; set; }
+        public string? ElaboradoPorString { get; set; }
+        public int? IdUsuario { get; set; }
         public string Usuario { get; set; }
         public string UsuarioEmail { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
-        public List<RevisionDocumento> Revisores { get; set; } 
-        public List<RevisionDocumento> Aprobadores { get; set; } 
+        public List<RevisionDocumento> Revisores { get; set; }
+        public List<RevisionDocumento> Aprobadores { get; set; }
         public string Estado { get; set; }
 
         public DocumentoOutput(Documento documento)
@@ -65,9 +66,13 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos
             Estado = documento.Estado;
             Revisores = documento.Revisiones;
             Aprobadores = documento.Aprobaciones;
-            IdUsuario = documento.Usuario.IdUsuario;
+            ElaboradoPorString = documento.ElaboradoPorString;
+            if (documento.Usuario != null)
+            {
+                IdUsuario = documento.Usuario.IdUsuario;
             Usuario = documento.Usuario.Nombres + " " + documento.Usuario.Apellidos;
             UsuarioEmail = documento.Usuario.Email;
+            }
             FechaCreacion = documento.FechaCreacion;
             FechaActualizacion = documento.FechaActualizacion;
             FechaAprobacion = documento.FechaAprobacion;

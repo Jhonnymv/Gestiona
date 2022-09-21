@@ -47,7 +47,7 @@ namespace GestionAmbiental
         //            .UseStartup<Startup>()
         //            .ConfigureAppConfiguration((builderContext, config) =>
         //            {
-                        
+                         
         //                IHostingEnvironment env = builderContext.HostingEnvironment;
         //                config.AddJsonFile("autofac.json");
         //                config.AddEnvironmentVariables();

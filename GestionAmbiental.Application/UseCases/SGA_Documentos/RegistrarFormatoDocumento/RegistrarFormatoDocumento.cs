@@ -11,7 +11,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
 {
     public class RegistrarFormatoDocumento : IRegistrarFormatoDocumento
     {
-        private readonly IRegistrarDocumentosReadOnlyRepository _registrarDocumentosReadOnlyRepository; 
+        private readonly IRegistrarDocumentosReadOnlyRepository _registrarDocumentosReadOnlyRepository;
         private readonly IGetUsuario _getUsuario;
 
         public RegistrarFormatoDocumento(IRegistrarDocumentosReadOnlyRepository registrarDocumentosReadOnlyRepository, IGetUsuario getUsuario)
@@ -20,7 +20,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int categoriaTipo, string nombreDoc, string versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf,string rutaEditable, int idElaborador)
+        public async Task<int> Execute(string? Codigo_Doc_Formato, int categoriaTipo, string nombreDoc, string versionDoc, string comentario, string fechaTentativa, string fechaAprobacion, string rutaPdf, string rutaEditable, int idElaborador)
         {
             //var usuario = await _getUsuario.Execute(usuarioRed);
 
@@ -29,7 +29,14 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarFormatoD
             {
                 IdSGACategoriaTipo = categoriaTipo
             };
-            model.DocCodigo = "TBD";
+            if (Codigo_Doc_Formato == null)
+            {
+                model.DocCodigo = "TBD";
+            }
+            else
+            {
+                model.DocCodigo = Codigo_Doc_Formato;
+            }
             model.DocNombre = nombreDoc;
             model.DocVersion = versionDoc;
             model.Comentario = comentario;

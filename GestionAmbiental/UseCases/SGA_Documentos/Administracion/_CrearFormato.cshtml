@@ -19,7 +19,7 @@
                                     <div class="col-12 col-sm-12 col-lg-6">
                                         <label>Tipo de Documento:</label>
                                         <span class="text-danger" id="Id_Tipo_Documento_Formato_Msg"></span>
-                                        <select id="Id_Tipo_Documento_Formato" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+                                        <select id="Id_Tipo_Documento_Formato" class="form-control" asp-items="ViewBag.TopoDocFormato"></select>
                                     </div>
                                     <div class="col-12 col-sm-12 col-lg-6">
                                         <label>Elaborado Por:</label>
@@ -28,6 +28,11 @@
                                     </div>
                                 </div>
                                 <div class="row input_container">
+                                    <div class="col-12 col-sm-12 col-lg-6">
+                                        <label>Codigo Formato</label>
+                                        <span class="text-danger" id="Doc_Codigo_Formato_Msg"></span>
+                                        <input type="text" id="Codigo_Doc_Formato" class="form-control" value="">
+                                    </div>
                                     <div class="col-12 col-sm-12 col-lg-6">
                                         <label>Versión:</label>
                                         <span class="text-danger" id="Doc_Version_Formato_Msg"></span>
@@ -38,8 +43,8 @@
                                         <span class="text-danger" id="Doc_Nombre_Formato_Msg"></span>
                                         <input type="text" id="Doc_Nombre_Formato" class="form-control">
                                     </div>
-                                </div>
-                                <div class="row input_container">
+                              @*  </div>
+                                <div class="row input_container">*@
                                     <div class="col-12 col-sm-12 col-lg-6">
                                         <label>Fecha de Aprobación:</label>
                                         <span class="text-danger" id="Fecha_Aprobacion_Formato_Msg"></span>

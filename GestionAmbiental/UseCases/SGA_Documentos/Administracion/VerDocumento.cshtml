@@ -23,10 +23,20 @@
                             <label asp-for="IdSGATipoDocumento"></label>
                             <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc" disabled></select>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdElaboradoPor"></label>
-                            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios" disabled></select>
-                        </div>
+                        @if (ViewBag.CategoriaDoc == "Externos")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="ElaboradoPorString"></label>
+                                <input type="text" asp-for="ElaboradoPorString" class="form-control" readonly>
+                            </div>
+                        }
+                        @if (ViewBag.CategoriaDoc != "Externos")
+                        {
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdElaboradoPor"></label>
+                                <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios" disabled></select>
+                            </div>
+                        }
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
@@ -71,7 +81,7 @@
                             <button class="btn btn-mc form-control" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
                         </div>
                     </div>
-                    @if (ViewBag.CategoriaDoc != "Externos")
+                    @if (ViewBag.CategoriaDoc == "SGA")
                     {
                         <div class="row input_container">
                             <div class="col-12 col-sm-12 col-lg-6">
@@ -179,6 +189,14 @@
                 <div class="row">
                     <div class="button-container">
                         <div>
+                            @if (ViewBag.CategoriaDoc != "Externos")
+                            {
+                                <a class="btn btn-mc-outline-success" href="/SGAAdministracion/EditarDocumento?IdDocumento=@Model.IdEncriptado&IdCategoria=@ViewBag.IdCategoryDoc">Editar</a>
+                            }
+                            @if (ViewBag.CategoriaDoc == "Externos")
+                            {
+                                <a class="btn btn-mc-outline-success" href="/SGAAdministracion/EditarDocumentoSRevision?IdDocumento=@Model.IdEncriptado&IdCategoria=@ViewBag.IdCategoryDoc">Editar</a>
+                            }
                         </div>
                         <div>
                             <a class="btn btn-mc-outline-danger" asp-controller="SGAAdministracion" asp-action="Resumen">Volver</a>

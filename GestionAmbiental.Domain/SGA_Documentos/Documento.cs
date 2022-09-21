@@ -20,7 +20,8 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public DateTime? FechaTentativa { get; set; }
         public string PdfRuta { get; set; }
         public string EditableRuta { get; set; }
-        public Usuario Usuario { get; set; }
+        public string? ElaboradoPorString { get; set; }
+        public Usuario? Usuario { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
         public string Estado { get; set; }

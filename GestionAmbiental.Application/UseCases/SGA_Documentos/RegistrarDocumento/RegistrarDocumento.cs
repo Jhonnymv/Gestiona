@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocumentos;
+using GestionAmbiental.Domain.ValueObjects;
 
 namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocumento
 {
@@ -25,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int IdCategoriaTipo, string codigo, int IdDocPrincipal, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf,string rutaEditable, string fechaTentativa, string fechaAprobacion, int IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int>secundarios)
+        public async Task<int> Execute(int IdCategoriaTipo, string codigo, int IdDocPrincipal, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf, string rutaEditable, string fechaTentativa, string fechaAprobacion, string ElaboradoPorString, int? IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value!=0)
@@ -46,12 +47,16 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 PdfRuta = rutaPdf,
                 EditableRuta = rutaEditable,
                 Principal = false,
-                Usuario = new Domain.ValueObjects.Usuario
-                {
-                    IdUsuario = IdElaboradoPor
-                },
+                ElaboradoPorString=ElaboradoPorString,
                 DocCodigo = "TBD"
             };
+            if(IdElaboradoPor.HasValue && IdElaboradoPor != 0)
+            {
+                model.Usuario = new Domain.ValueObjects.Usuario
+                {
+                    IdUsuario = (int)IdElaboradoPor
+                };
+            }
             if (fechaTentativa != null)
             {
                 model.FechaTentativa = Convert.ToDateTime(fechaTentativa);
@@ -152,7 +157,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                         {
                             var secundario = new Documento
                             {
-                                DocCodigo = model.DocCodigo + ".F" + docCount.ToString().PadLeft(2, '0'),
+                                ///POL-MARC-001.F0001
+                             
                                 Estado = EstadosDocumentosSGA.Aprobado.ToString(),
                                 Condicion = new Condicion
                                 {
@@ -163,6 +169,14 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                                 FechaActualizacion = DateTime.Now,
                                 FechaAprobacion = DateTime.Now,
                             };
+                            if (item.DocCodigo == "TBD")
+                            {
+                                secundario.DocCodigo = model.DocCodigo + ".F" + docCount.ToString().PadLeft(2, '0');
+                            }
+                            else
+                            {
+                                secundario.DocCodigo = item.DocCodigo;
+                            }
                             docsSecundarios.Add(secundario);
                             docCount++;
                         }
@@ -212,5 +226,6 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             
             return IdDoc;
         }
+
     }
 }

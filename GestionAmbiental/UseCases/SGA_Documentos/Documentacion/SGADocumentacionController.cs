@@ -182,6 +182,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             };
             return Ok(response);
         }
+        [HttpPost]
         public async Task<IActionResult> GetTablaModalResumenFiltrada(int categoria, int[] tipos, int pagina, int rpp)
         {
             var datosTabla = await _consultarDocumentos.Execute("", categoria, tipos, "", 0, pagina, rpp);
@@ -200,7 +201,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 {
                     var id_encriptado = _protector.Protect(fila.IdSGADocumento.ToString());
                     filasTabla += "<tr>";
-                    filasTabla += "<td>" + fila.DocCodigo + "</td>";
+                    filasTabla += "<td><a href=\"/SGADocumentacion/VerDocumento?IdDocumento=" + id_encriptado + "\">" + fila.DocCodigo + "</a></td>";
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
                     filasTabla += "<td>";
