@@ -1134,8 +1134,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         await DeleteFTPFileAsync(model.DocEditableRuta);
                     }
                     if (model.Opcion.Equals("Registrar"))
-                        //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                    //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
@@ -1161,8 +1161,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             aprobadores,
                             secundarios);
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
-                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
+                        //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                     else
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
                 }
@@ -1382,8 +1382,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         await DeleteFTPFileAsync(model.DocEditableRuta);
                     }
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
-                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
                         return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
                 }
@@ -1409,8 +1409,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             aprobadores,
                             secundarios);
                     if (model.Opcion.Equals("Registrar"))
-                        return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
-                    //return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
+                        return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
                                 return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
                 }

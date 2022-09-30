@@ -86,7 +86,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 {
                     IdSGACondicion = (int)EstadosDocumentosSGA.Aprobado
                 };
-                model.FechaAprobacion = DateTime.Today;
+                //model.FechaAprobacion = DateTime.Today;
                 model.Estado = EstadosDocumentosSGA.Aprobado.ToString();
             }
 
