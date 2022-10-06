@@ -192,6 +192,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
                 .OrderByDescending(x => x.FechaCreacion)
                 .ToList();
             datosTabla.NRegistros = datosTabla.Documentos.Count();
+            var numReg = datosTabla.NRegistros;
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -244,7 +245,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Documentacion
             dynamic response = new
             {
                 Data = filasTabla,
-                Paginador = paginador
+                Paginador = paginador,
+                numReg=numReg
             };
             return Ok(response);
         }

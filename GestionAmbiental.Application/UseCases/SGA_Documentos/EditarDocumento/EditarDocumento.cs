@@ -181,7 +181,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 //    model.DocCodigo = "JU-MAP-" + codigoTipoDoc + "-" + (Convert.ToInt32(ultimo) + 1).ToString().PadLeft(3, '0');
                 //else
                 //    model.DocCodigo = "JU-MAP-" + codigoTipoDoc + "-001";
-                model.FechaAprobacion = DateTime.Today;
+                //model.FechaAprobacion = DateTime.Today;
+                model.FechaAprobacion = Convert.ToDateTime(fechaAprobacion);
                 model.Condicion = new Condicion
                 {
                     IdSGACondicion = (int)EstadosDocumentosSGA.Aprobado
@@ -263,7 +264,8 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
 
                                 IdSGADocumento = item.IdSGADocumento,
                                 FechaActualizacion = DateTime.Now,
-                                FechaAprobacion = DateTime.Now,
+                                //FechaAprobacion = DateTime.Now,
+                                FechaAprobacion = Convert.ToDateTime(item.FechaAprobacion),
                             };
                             docsSecundarios.Add(secundario);
                             docCount++;

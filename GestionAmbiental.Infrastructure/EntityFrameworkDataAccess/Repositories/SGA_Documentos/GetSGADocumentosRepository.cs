@@ -171,6 +171,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             x.Doc_Nombre.ToLower().Contains(nombre != null ? nombre.ToLower() : x.Doc_Nombre.ToLower()) &&
             x.Doc_Codigo.ToLower().Contains(codigo != null ? codigo.ToLower() : x.Doc_Codigo.ToLower()) &&
             x.Condicion.Equals(condicion != 0 ? condicion : x.Condicion)
+            && !x.Estado.Equals("Eliminado")
             ).ToList();
 
             var tiposCategoria = await _context.SGA_Categoria_Tipo.Where(x => x.Id_SGA_Categoria_Documento.Equals(categoria)).ToListAsync();
