@@ -47,8 +47,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos
         public string DocPdfRuta { get; set; }
         public string DocEditableRuta { get; set; }
         public string Opcion { get; set; }
-        public string Revisores {get;set;}
-        public string Aprobadores {get;set;}
-        public string Secundarios {get;set;}
+        public string Revisores { get; set; }
+        public string Aprobadores { get; set; }
+        public string Secundarios { get; set; }
+        public List<int> Acceso { get;set;}
     }
 }

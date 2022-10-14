@@ -43,6 +43,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             entidad.Fecha_Creacion = DateTime.Now;
             entidad.Fecha_Actualizacion = entidad.Fecha_Creacion;
+            entidad.Acceso= documento.Acceso;
             entidad.Estado = documento.Estado;
 
             _context.SGA_Documentos.Add(entidad);

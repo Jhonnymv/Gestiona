@@ -8,6 +8,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
     public interface IConsultarDocumentos
     {
         Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion,int pagina, int rpp);
+        Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp, string usuario);
         Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int[] condicion,int pagina, int rpp);
         Task<List<DocumentoOutput>> ExecutePublicados();
         Task<List<DocumentoOutput>> ExecutePredecesores(int Id);

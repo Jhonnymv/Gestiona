@@ -3,92 +3,102 @@
     ViewData["Title"] = "Cargar Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+        @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">*@
+    }
 
-
-<div class="sga">
-    <div class="primary-content col-12">
-        <div class="image-header-container">
-            <div class="header-title sga-opacity-color">
-                <h3>Cargar Documento @ViewBag.CategoriaDoc</h3>
-                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+    <div class="sga">
+        <div class="primary-content col-12">
+            <div class="image-header-container">
+                <div class="header-title sga-opacity-color">
+                    <h3>Cargar Documento @ViewBag.CategoriaDoc</h3>
+                    <img src="~/img/logo-white.png" alt="Logo Marcobre">
+                </div>
             </div>
-        </div>
-        <div class="container pt-4 pb-4">
-            <form class="custom-form details-container w-100" id="form_registrar_documento" asp-controller="SGAAdministracion" asp-action="CargarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center text-uppercase">Datos del Documento</span>
-                    </div>
-                    <input type="hidden" asp-for="IdCategoria" value="@ViewBag.IdCategoria" />
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdSGATipoDocumento"></label>
-                            <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
-                            <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+            <div class="container pt-4 pb-4">
+                <form class="custom-form details-container w-100" id="form_registrar_documento" asp-controller="SGAAdministracion" asp-action="CargarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+                    <div class="detail-container col-12 col-xl-10 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center text-uppercase">Datos del Documento</span>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdElaboradoPor"></label>
-                            <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
-                            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocVersion"></label>
-                            <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="text" asp-for="DocVersion" class="form-control" value="1">
-                            <div class="text-right">
-                                <span></span>
-                                <span></span>
+                        <input type="hidden" asp-for="IdCategoria" value="@ViewBag.IdCategoria" />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdSGATipoDocumento"></label>
+                                <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
+                                <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdElaboradoPor"></label>
+                                <span class="text-danger" asp-validation-for="IdElaboradoPor"></span>
+                                <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
                             </div>
                         </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocNombre"></label>
-                            <span class="text-danger" asp-validation-for="DocNombre"></span>
-                            <input type="text" asp-for="DocNombre" class="form-control">
-                            <div class="text-right">
-                                <span id="contadorNombre">0</span>
-                                <span>/ 255</span>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocVersion"></label>
+                                <span class="text-danger" asp-validation-for="DocVersion"></span>
+                                <input type="text" asp-for="DocVersion" class="form-control" value="1">
+                                <div class="text-right">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocNombre"></label>
+                                <span class="text-danger" asp-validation-for="DocNombre"></span>
+                                <input type="text" asp-for="DocNombre" class="form-control">
+                                <div class="text-right">
+                                    <span id="contadorNombre">0</span>
+                                    <span>/ 255</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocCodigo"></label>
-                            <span class="text-danger" asp-validation-for="DocCodigo"></span>
-                            <input type="text" asp-for="DocCodigo" class="form-control">
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaAprobacion"></label>
-                            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
-                            <input type="date" asp-for="FechaAprobacion" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row input_container align-items-start">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaTentativa"></label>
-                            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-                            <input type="date" asp-for="FechaTentativa" class="form-control">
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="Comentario"></label>
-                            <span class="text-danger" asp-validation-for="Comentario"></span>
-                            <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
-                            <div class="text-right">
-                                <span id="contadorComentario">0</span>
-                                <span>/ 500</span>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocCodigo"></label>
+                                <span class="text-danger" asp-validation-for="DocCodigo"></span>
+                                <input type="text" asp-for="DocCodigo" class="form-control">
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaAprobacion"></label>
+                                <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+                                <input type="date" asp-for="FechaAprobacion" class="form-control">
                             </div>
                         </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoPdf"></label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
-                                <span id="danger_documento_pdf" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
+                        <div class="row input_container align-items-start">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaTentativa"></label>
+                                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                                <input type="date" asp-for="FechaTentativa" class="form-control">
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="Comentario"></label>
+                                <span class="text-danger" asp-validation-for="Comentario"></span>
+                                <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
+                                <div class="text-right">
+                                    <span id="contadorComentario">0</span>
+                                    <span>/ 500</span>
+                                </div>
+                            </div>
                         </div>
-                    
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">¿Quien puede ver?</label>
+                                <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoPdf"></label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
+                                    <span id="danger_documento_pdf" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
+                            </div>
+
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <label asp-for="DocumentoEditable"></label>
                                 <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
@@ -96,14 +106,14 @@
                                 </span>
                                 <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
                             </div>
-                       
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <a class="btn btn-mc-outline-success" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
+
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <a class="btn btn-mc-outline-success" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
+                            </div>
                         </div>
                     </div>
-                </div>
                 @if (ViewBag.Error != null)
                 {
                     <div class="row input_container justify-content-center">
@@ -354,6 +364,8 @@
 <partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var listAprobadores = [];
@@ -536,7 +548,7 @@
             $("#mensajeModalConfig").text("Guardando Informacion")
             $("#form_registrar_documento").submit();
         }
-                });
+                                                                });
         //Scripts del Partial
         $("#Documento_Formato_Pdf").change(function () {
             $("#danger_documento_formato_pdf").html("");
@@ -656,7 +668,7 @@
                 for (var i = 0; i != filesEditable.length; i++) {
                     formData.append("Documento_Formato_Editable", filesEditable[i]);
                 }
-                formData.append("Codigo_Doc_Formato",codeFormato);
+                formData.append("Codigo_Doc_Formato", codeFormato);
                 formData.append("Id_Tipo_Documento_Formato", tipoDoc);
                 formData.append("Fecha_Tentativa", fechaTentativa);
                 formData.append("Fecha_Aprobacion", fechaAprobacion);

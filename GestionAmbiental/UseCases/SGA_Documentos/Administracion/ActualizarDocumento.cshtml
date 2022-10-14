@@ -4,7 +4,10 @@
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
 
-
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+        @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">*@
+    }
 <div class="sga">
     <div class="primary-content col-12">
         <div class="image-header-container">
@@ -73,12 +76,21 @@
                             <input type="date" asp-for="FechaTentativa" class="form-control">
                         </div>
                     </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label>Documento Editable Versión Anterior:</label>
-                            <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+                         <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">¿Quien puede ver?</label>
+                                <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple">
+                                </select>
                             </div>
                         </div>
+                
+                    <div class="row input_container">
+                        @*<div class="col-12 col-sm-12 col-lg-6">
+                        <label>Documento Editable Versión Anterior:</label>
+                        <div class="col-sm-12 col-md-9 col-lg-4 mb-2" id="btnDescargarEditable">
+
+                        </div>
+                        </div>*@
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocumentoPdf"></label>
                             <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
@@ -87,18 +99,18 @@
                             <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
                         </div>
                     </div>
-                    
-                        <div class="row input_container">
-                            <div class="col-12 col-sm-12 col-lg-6">
-                                <label asp-for="DocumentoEditable"></label>
-                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                    <span id="danger_documento_editable" class=""></span>
-                                </span>
-                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
-                            </div>
+
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocumentoEditable"></label>
+                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                <span id="danger_documento_editable" class=""></span>
+                            </span>
+                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
                         </div>
-                   
-                    
+                    </div>
+
+
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <a class="btn btn-mc-outline-success" id="btn_descargar_plantilla" href="#" style="display:none">Descargar Plantilla</a>
@@ -308,7 +320,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -324,7 +335,8 @@
 <partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var listAprobadores = [];
@@ -542,7 +554,7 @@
                     $('span[data-valmsg-for="DocCodigo"]').text("Este campo es requerido");
                 if (documento == "")
                     $('span[data-valmsg-for="Documento"]').text("Este campo es requerido");
-                
+
                 if (elaborado == '0')
                     $('span[data-valmsg-for="IdElaboradoPor"]').text("Este campo es requerido");
 
@@ -583,8 +595,8 @@
             }
         });
         $("#btn_registrar").on("click", function () {
-            @*if (ValidarDatos() && ValidarDatosRevisores()) {*@
-            if (ValidarDatos()) {
+        @*if (ValidarDatos() && ValidarDatosRevisores()) {*@
+                    if (ValidarDatos()) {
                 $("#Opcion").val("Registrar");
                 $("#form_registrar_documento").submit();
             }
@@ -686,7 +698,7 @@
                 }
             }
         }
-       function GuardarFormato() {
+        function GuardarFormato() {
             //Agregar Validación y msgs
             var tipoDoc = $("#Id_Tipo_Documento_Formato").val();
             var fechaTentativa = $("#Fecha_Tentativa_Formato").val();
@@ -940,7 +952,7 @@
             var html = "";
             for (var i = 0; i < lista.length; i++) {
                 html += "<tr>" +
-                    @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
+        @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
                     "<td style = \"width: 50%\" ><input class=\"form-control\" type=\"text\" style=\"width:300px\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                     "<td style=\"width: 20%\"><input class=\"form-control\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
                     "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-primary\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
@@ -962,18 +974,18 @@
         @*
         //Validacion adicional para registrar
         function ValidarDatosRevisores() {
-            $('#danger_revisores').text("");
-            $('#danger_aprobadores').text("");
+        $('#danger_revisores').text("");
+        $('#danger_aprobadores').text("");
 
-            if (listAprobadores.length != 0  && listRevisores.length != 0)
-                return true;
-            else {
-                if (listAprobadores.length == 0)
-                    $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
-                if (listRevisores.length == 0)
-                    $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
-                return false;
-            }
+        if (listAprobadores.length != 0  && listRevisores.length != 0)
+        return true;
+        else {
+        if (listAprobadores.length == 0)
+        $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
+        if (listRevisores.length == 0)
+        $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
+        return false;
+        }
         }*@
 
     </script>

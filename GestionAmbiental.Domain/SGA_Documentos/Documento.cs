@@ -24,6 +24,7 @@ namespace GestionAmbiental.Domain.SGA_Documentos
         public Usuario? Usuario { get; set; }
         public DateTime FechaCreacion { get; set; }
         public DateTime FechaActualizacion { get; set; }
+        public string? Acceso { get; set; }
         public string Estado { get; set; }
         public List<RevisionDocumento> Revisiones { get; set; }
         public List<RevisionDocumento> Aprobaciones { get; set; }

@@ -69,6 +69,13 @@
                             <input type="date" asp-for="FechaAprobacion" class="form-control">
                         </div>
                     </div>
+                     <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">¿Quien puede ver?</label>
+                            <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple">
+                                </select>
+                            </div>
+                        </div>
                     @if (ViewBag.CategoriaDoc != "Externo")
                     {
                         <div class="row input_container">

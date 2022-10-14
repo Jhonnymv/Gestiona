@@ -3,6 +3,10 @@
     ViewData["Title"] = "Registrar Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+        @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">*@
+    }
 <div class="sga">
     <div class="primary-content col-12">
         <div class="image-header-container">
@@ -72,6 +76,13 @@
                         </div>
                     </div>
                     <div class="row input_container">
+                        <div class="col-12">
+                            <label for="">¿Quien puede ver?</label>
+                            <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple" readonly>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Comentario"></label>
                             <textarea asp-for="Comentario" class="form-control" readonly></textarea>
@@ -81,15 +92,21 @@
                             <button class="btn btn-mc form-control" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
                         </div>
                     </div>
-                    @if (ViewBag.CategoriaDoc == "SGA")
-                    {
-                        <div class="row input_container">
+
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocumentoPdf"></label>
+                            <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocPdfRuta.Replace('\\', '-')')">Descargar Pdf</button>
+                        </div>
+
+                        @if (ViewBag.CategoriaDoc == "SGA")
+                        {
                             <div class="col-12 col-sm-12 col-lg-6">
                                 <label asp-for="DocumentoEditable"></label>
                                 <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
                 @if (Model.Secundarios.Length > 2)
                 {
@@ -434,6 +451,9 @@
         </div>
     </div>*@
 @section Scripts{
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var rutaArchivo = "";

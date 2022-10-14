@@ -1,8 +1,12 @@
 ﻿using GestionAmbiental.Application.Repositories.SGA_Documentos;
+using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Domain.Enum;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,19 +15,23 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
     public class ConsultarDocumentos : IConsultarDocumentos
     {
         private readonly IGetSGADocumentosReadOnlyRepository _getSGADocumentosReadOnlyRepository;
+        private readonly IGetUsuario _getUsuario;
 
-        public ConsultarDocumentos(IGetSGADocumentosReadOnlyRepository getSGADocumentosReadOnlyRepository)
+        public ConsultarDocumentos(IGetSGADocumentosReadOnlyRepository getSGADocumentosReadOnlyRepository, IGetUsuario getUsuario)
         {
             _getSGADocumentosReadOnlyRepository = getSGADocumentosReadOnlyRepository ?? throw new ArgumentNullException(nameof(getSGADocumentosReadOnlyRepository));
+            _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
         public async Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion,int pagina, int rpp)
-        {
+        {            
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, categoria, tipos, codigo, condicion);
             //var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
             data = data
                 .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
-                !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString()))
+                !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString())
+                //&& x.Acceso.Contains()
+                )
                 //&&!predecesores.Contains(x.IdSGADocumento))
                 .OrderByDescending(x => x.FechaCreacion)
                 .ToList();
@@ -42,7 +50,42 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.ConsultarDocument
             
             return output;
         }
+        public async Task<DocumentosOutput> Execute(string nombre, int categoria, int[] tipos, string codigo, int condicion, int pagina, int rpp, string usuario)
+        {
+            var user = await _getUsuario.Execute(usuario);
+            var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos(nombre, categoria, tipos, codigo, condicion);
+            //var predecesores = data.Where(x => x.DocPredecesor != null).Select(x => x.DocPredecesor.IdSGADocumento).ToList();
+            data = data
+                .Where(x => !x.Estado.Equals(EstadosDocumentosSGA.Pendiente.ToString()) &&
+                !x.Estado.Equals(EstadosDocumentosSGA.Superado.ToString())
+                //&& x.Acceso.Contains()
+                )
+                //&&!predecesores.Contains(x.IdSGADocumento))
+                .OrderByDescending(x => x.FechaCreacion)
+                .ToList();
 
+            var output = new DocumentosOutput
+            {
+                Documentos = new List<DocumentoOutput>(),
+                NRegistros = 0
+            };
+
+            data = data.Skip((pagina - 1) * rpp).Take(rpp).ToList();
+            foreach (var item in data)
+            {                
+                if(item.Acceso!=null)
+                {
+                    if (item.Acceso.Split("|").Contains(user.IdUsuario.ToString()))
+                        output.Documentos.Add(new DocumentoOutput(item));
+                }
+                else
+                {
+                    output.Documentos.Add(new DocumentoOutput(item));
+                }
+            }
+            output.NRegistros = output.Documentos.Count;
+            return output;
+        }
         public async Task<List<DocumentoOutput>> ExecutePublicados()
         {
             var data = await _getSGADocumentosReadOnlyRepository.GetDocumentos();

@@ -141,6 +141,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 ElaboradoPorString= data.ElaboradoPorString,
                 FechaCreacion = data.Fecha_Creacion,
                 FechaActualizacion = data.Fecha_Actualizacion,
+                Acceso = data.Acceso,
                 Estado = data.Estado,
                 Revisiones = listRevisores,
                 Aprobaciones = listAprobadores
@@ -247,7 +248,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     },
                     FechaCreacion = item.Fecha_Creacion,
                     FechaActualizacion = item.Fecha_Actualizacion,
-                    Estado = item.Estado
+                    Estado = item.Estado,
+                    Acceso = item.Acceso
                 };
                 if (item.Doc_Predecesor.HasValue)
                 {
@@ -339,7 +341,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     ElaboradoPorString = item.ElaboradoPorString,
                     FechaCreacion = item.Fecha_Creacion,
                     FechaActualizacion = item.Fecha_Actualizacion,
-                    Estado = item.Estado
+                    Estado = item.Estado,
+                    Acceso = item.Acceso
                 };
                 if (item.Id_Usuario.HasValue)
                 {
@@ -427,7 +430,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     EditableRuta = item.Editable_Ruta,
                     FechaCreacion = item.Fecha_Creacion,
                     FechaActualizacion = item.Fecha_Actualizacion,
-                    Estado = item.Estado
+                    Estado = item.Estado,
+                    Acceso = item.Acceso
                 };
                 if (item.Id_Usuario.HasValue)
                 {
@@ -540,7 +544,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                         ElaboradoPorString = item.ElaboradoPorString,
                         FechaCreacion = item.Fecha_Creacion,
                         FechaActualizacion = item.Fecha_Actualizacion,
-                        Estado = item.Estado
+                        Estado = item.Estado,
+                        Acceso = item.Acceso
+
                     };
                     if (item.Id_Usuario.HasValue)
                     {

@@ -93,6 +93,13 @@
                             <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
                         </div>
                     </div>
+                    <div class="row input_container align-items-start">
+                        <div class="col-12 col-md-6 col-lg-6">
+                            <label for="">¿Quien puede ver?</label>
+                            <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple">
+                            </select>
+                        </div>
+                    </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="Comentario"></label>
@@ -119,10 +126,10 @@
                         @if (ViewBag.CategoriaDoc == "SGA")
                         {
 
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
-                        </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+                            </div>
                         }
                     </div>
                     @if (ViewBag.CategoriaDoc == "SGA")

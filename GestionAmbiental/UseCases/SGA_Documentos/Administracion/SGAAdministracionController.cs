@@ -157,9 +157,17 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     }
                     //filasTabla += "<button class='btn btn-mc form-control' type=\"button\" onclick=\"this.disabled=true;PreviewPDF(\'" + fila.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">Descargar Pdf</button></td>";
 
-                    filasTabla += " &nbsp; &nbsp;<a style=\"cursor:pointer\" onclick=\"this.disabled=true;PreviewPDF(\'" + fila.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">" +
+                    filasTabla += " &nbsp; &nbsp;" +
+                        "<a class=\"btnEscritorio\" style=\"cursor:pointer\" onclick=\"this.disabled=true;PreviewPDF(\'" + fila.PdfRuta.Replace("\\", "\\\\") + "\');this.disabled=false;\">" +
                         "<svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 48 48\" width=\"24px\" height=\"24px\"><path fill=\"#616161\" d=\"M34.6 28.1H38.6V45.1H34.6z\" transform=\"rotate(-45.001 36.586 36.587)\"/><path fill=\"#616161\" d=\"M20 4A16 16 0 1 0 20 36A16 16 0 1 0 20 4Z\"/><path fill=\"#37474F\" d=\"M36.2 32.1H40.2V44.400000000000006H36.2z\" transform=\"rotate(-45.001 38.24 38.24)\"/><path fill=\"#64B5F6\" d=\"M20 7A13 13 0 1 0 20 33A13 13 0 1 0 20 7Z\"/><path fill=\"#BBDEFB\" d=\"M26.9,14.2c-1.7-2-4.2-3.2-6.9-3.2s-5.2,1.2-6.9,3.2c-0.4,0.4-0.3,1.1,0.1,1.4c0.4,0.4,1.1,0.3,1.4-0.1C16,13.9,17.9,13,20,13s4,0.9,5.4,2.5c0.2,0.2,0.5,0.4,0.8,0.4c0.2,0,0.5-0.1,0.6-0.2C27.2,15.3,27.2,14.6,26.9,14.2z\"/></svg>" +
-                        "</a></td>";
+                        "</a>" +
+                        "<a class=\"btnMovil\" target=\"_blank\" style=\"cursor:pointer\" onclick=\"this.disabled=true;DescargarDocumento(\'" + fila.PdfRuta.Replace("\\", "-") + "\');this.disabled=false;\">" +
+                        "<svg xmlns=\"http://www.w3.org/2000/svg\"  viewBox=\"0 0 48 48\" width=\"24px\" height=\"24px\"><path fill=\"#616161\" d=\"M34.6 28.1H38.6V45.1H34.6z\" transform=\"rotate(-45.001 36.586 36.587)\"/><path fill=\"#616161\" d=\"M20 4A16 16 0 1 0 20 36A16 16 0 1 0 20 4Z\"/><path fill=\"#37474F\" d=\"M36.2 32.1H40.2V44.400000000000006H36.2z\" transform=\"rotate(-45.001 38.24 38.24)\"/><path fill=\"#64B5F6\" d=\"M20 7A13 13 0 1 0 20 33A13 13 0 1 0 20 7Z\"/><path fill=\"#BBDEFB\" d=\"M26.9,14.2c-1.7-2-4.2-3.2-6.9-3.2s-5.2,1.2-6.9,3.2c-0.4,0.4-0.3,1.1,0.1,1.4c0.4,0.4,1.1,0.3,1.4-0.1C16,13.9,17.9,13,20,13s4,0.9,5.4,2.5c0.2,0.2,0.5,0.4,0.8,0.4c0.2,0,0.5-0.1,0.6-0.2C27.2,15.3,27.2,14.6,26.9,14.2z\"/></svg>" +
+                        "</a>" +
+                        "</td>";
+
+                    //DescargarEditable('@Model.DocPdfRuta.Replace('\\', ' - ')')
+
                     filasTabla += "<td>" + fila.DocNombre + "</td>";
                     filasTabla += "<td>" + fila.DocVersion + "</td>";
                     filasTabla += "<td>";
@@ -335,7 +343,12 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var usuarios = items.ItemsUsuarios.Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
+                ViewBag.usuariosMultiple = usuariosMultiples;
+
                 ViewBag.Usuarios = usuarios;
+
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriasTipos;
                 ViewBag.CategoriaDoc = documento.SGACategoriaDocumento;
@@ -359,7 +372,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("dd/MM/yyyy") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
-                    Secundarios = JsonConvert.SerializeObject(secundarios)
+                    Secundarios = JsonConvert.SerializeObject(secundarios),
+
+                    Acceso = documento.Acceso != null ? documento.Acceso.Split('|').Select(Int32.Parse).ToList() : null
                 };
                 if (documento.IdUsuario.HasValue)
                 {
@@ -444,6 +459,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
+                
+                
+                var usuariosMultiples= items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+           
 
                 var publicadosData = await _consultarDocumentos.ExecutePublicados();
                 var publicadosCodigo = publicadosData.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => x.DocCodigo).ToList();
@@ -472,6 +491,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.TopoDocFormato = categoriastipos.Where(x => x.Value.Equals("9")).ToList();
                 ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x => new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato != null ? 1 : 0 }));
                 ViewBag.Usuarios = usuarios;
+                ViewBag.UsuariosMultiple = usuariosMultiples;
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -497,6 +517,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var docPdfRuta = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
                 var docEditableRuta = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
 
+              
+                var Acceso = model.Acceso != null?String.Join("|",model.Acceso):null;
+
                 if (!docPdfRuta.Equals("Error") && !docEditableRuta.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
@@ -517,7 +540,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         model.Opcion,
                         revisores,
                         aprobadores,
-                        secundarios);
+                        secundarios,
+                        Acceso
+                        );
                     if (model.Opcion.Equals("GuardarEstado"))
                         //Falta IdCategoria
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
@@ -570,11 +595,14 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
                 ViewBag.IdCategoria = IdCategoria;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = categoriastipos;
                 ViewBag.TiposDocRuta = JsonConvert.SerializeObject(categoriastipo.Select(x => new { Id = x.IdSGACategoriaTipo, Descripcion = x.TipoDocumento.Descripcion, Ruta = x.TipoDocumento.Formato != null ? 1 : 0 }));
                 ViewBag.Usuarios = usuarios;
+                ViewBag.UsuariosMultiple = usuariosMultiples;
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -619,6 +647,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 }
                 //if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
 
+                var Acceso = model.Acceso != null?String.Join("|",model.Acceso):null;
+
                 if (!cargaDocumentoPdf.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
@@ -639,7 +669,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         model.Opcion,
                         revisores,
                         aprobadores,
-                        secundarios
+                        secundarios,
+                        Acceso
                         );
                     if (model.Opcion.Equals("GuardarEstado"))
                         return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = model.IdCategoria });
@@ -668,7 +699,6 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var cargaDocumentoPdf = await CargarDocumento(model.Documento_Formato_Pdf[0], nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
                 var nombreDocEditable = DateTime.Now.ToString("ddMMyyyyHHmmss") + "_" + model.Doc_Nombre_Formato + "_v." + String.Format("{0:0.00}", model.Doc_Version_Formato) + Path.GetExtension(model.Documento_Formato_Editable[0].FileName);
                 var cargaDocumentoEditable = await CargarDocumento(model.Documento_Formato_Editable[0], nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
-
                 dynamic response;
                 if (!cargaDocumentoPdf.Equals("Error") && !cargaDocumentoEditable.Equals("Error"))
                 {
@@ -762,6 +792,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
                 var publicados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new
                 {
                     Id = x.IdSGADocumento,
@@ -790,6 +822,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.TiposDocExistentes = categoriasTiposExistentes;
                 ViewBag.TiposDoc = categoriastipos;
                 ViewBag.Usuarios = usuarios;
+                ViewBag.UsuariosMultiple = usuariosMultiples;
                 ViewBag.TiposRevision = tiposRevision;
                 ViewBag.FechaHoy = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -812,6 +845,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var secundarios = model.Secundarios != null ? JsonConvert.DeserializeObject<List<int>>(model.Secundarios) : new List<int>();
                 var docPdfRuta = await CargarDocumento(model.DocumentoPdf, nombreDocPdf, tipoDoc.TipoDocumento.Descripcion);
                 var docEditableRuta = await CargarDocumento(model.DocumentoEditable, nombreDocEditable, tipoDoc.TipoDocumento.Descripcion);
+                var Acceso = model.Acceso != null?String.Join("|",model.Acceso):null;
                 if (!docPdfRuta.Equals("Error") && !docEditableRuta.Equals("Error"))
                 {
                     var idDocumento = await _registrarDocumento.Execute(
@@ -832,7 +866,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                         model.Opcion,
                         revisores,
                         aprobadores,
-                        secundarios);
+                        secundarios, 
+                        Acceso);
                     if (model.Opcion.Equals("GuardarEstado"))
                         //Falta IdCategoria
                         return RedirectToAction("EditarDocumento", new { IdDocumento = _protector.Protect(idDocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
@@ -877,6 +912,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var documentosPublicados = JsonConvert.SerializeObject(documentos);
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
                 var publicados = documentos.Where(x => x.Estado.Equals(EstadosDocumentosSGA.Aprobado.ToString()) && x.IdSGACategoriaDocumento.Equals(IdCategoria)).Select(x => new
                 {
@@ -906,6 +942,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 ViewBag.CategoriaDoc = tituloCategoria;
                 ViewBag.Error = Error;
                 ViewBag.TiposDoc = categoriasTipos;
+
+                ViewBag.UsuariosMultiple=usuariosMultiples;
 
                 return View();
             }
@@ -947,7 +985,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 usuarios.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
                 ViewBag.Usuarios = usuarios;
+                ViewBag.UsuariosMultiple = usuariosMultiples;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.TiposRevision = tiposRevision;
@@ -1032,7 +1073,9 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                     FechaAprobacion = documento.FechaAprobacion != null ? documento.FechaAprobacion.Value.ToString("yyyy-MM-dd") : "",
                     Revisores = JsonConvert.SerializeObject(revisores),
                     Aprobadores = JsonConvert.SerializeObject(aprobadores),
-                    Secundarios = JsonConvert.SerializeObject(secundarios.Select(x => x.Id).ToList())
+                    Secundarios = JsonConvert.SerializeObject(secundarios.Select(x => x.Id).ToList()),
+
+                    Acceso = documento.Acceso != null ? documento.Acceso.Split('|').Select(Int32.Parse).ToList() : null
                 };
 
                 ViewBag.Error = Error;
@@ -1051,6 +1094,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var items = await _selectItems.Execute();
                 var tipoDoc = items.ItemsCategoriaTipo.Find(x => x.IdSGACategoriaTipo.Equals(model.IdSGATipoDocumento));
                 var secundarios = JsonConvert.DeserializeObject<List<int>>("[]");
+                var Acceso = model.Acceso != null?String.Join("|",model.Acceso):null;
+
                 if (model.Secundarios != null)
                     secundarios = JsonConvert.DeserializeObject<List<int>>(model.Secundarios);
                 if (model.DocumentoPdf != null || model.DocumentoEditable != null)
@@ -1081,7 +1126,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                model.Opcion,
                                revisores,
                                aprobadores,
-                               secundarios);
+                               secundarios,
+                               Acceso);
                             await DeleteFTPFileAsync(model.DocEditableRuta);
                         }
                         else
@@ -1104,7 +1150,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                    model.Opcion,
                                    revisores,
                                    aprobadores,
-                                   secundarios);
+                                   secundarios, 
+                                   Acceso);
                         }
                         await DeleteFTPFileAsync(model.DocPdfRuta);
                     }
@@ -1130,7 +1177,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                model.Opcion,
                                revisores,
                                aprobadores,
-                               secundarios);
+                               secundarios, Acceso);
                         await DeleteFTPFileAsync(model.DocEditableRuta);
                     }
                     if (model.Opcion.Equals("Registrar"))
@@ -1159,7 +1206,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             model.Opcion,
                             revisores,
                             aprobadores,
-                            secundarios);
+                            secundarios, Acceso);
                     if (model.Opcion.Equals("Registrar"))
                         //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                         return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = tipoDoc.CategoriaDocumento.Id_SGA_Categoria_Documento });
@@ -1205,7 +1252,10 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
 
                 var usuarios = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
+                var usuariosMultiples = items.ItemsUsuarios.Where(x => x.Estado.Equals("ACT")).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
+
                 ViewBag.Usuarios = usuarios;
+                ViewBag.UsuariosMultiples = usuariosMultiples;
                 ViewBag.Condiciones = condiciones;
                 ViewBag.TiposDoc = tipos;
                 ViewBag.TiposRevision = tiposRevision;
@@ -1300,7 +1350,7 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                 var secundarios = JsonConvert.DeserializeObject<List<int>>("[]");
                 if (model.Secundarios != null)
                     secundarios = JsonConvert.DeserializeObject<List<int>>(model.Secundarios);
-
+                var Acceso = model.Acceso != null?String.Join("|",model.Acceso):null;
                 if (model.DocumentoPdf != null || model.DocumentoEditable != null)
                 {
                     if (model.DocumentoPdf != null)
@@ -1329,7 +1379,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                model.Opcion,
                                revisores,
                                aprobadores,
-                               secundarios);
+                               secundarios, 
+                               Acceso);
                             await DeleteFTPFileAsync(model.DocEditableRuta);
                         }
                         else
@@ -1352,7 +1403,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                    model.Opcion,
                                    revisores,
                                    aprobadores,
-                                   secundarios);
+                                   secundarios, 
+                                   Acceso);
                         }
                         await DeleteFTPFileAsync(model.DocPdfRuta);
                     }
@@ -1378,7 +1430,8 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                                model.Opcion,
                                revisores,
                                aprobadores,
-                               secundarios);
+                               secundarios, 
+                               Acceso);
                         await DeleteFTPFileAsync(model.DocEditableRuta);
                     }
                     if (model.Opcion.Equals("Registrar"))
@@ -1407,12 +1460,13 @@ namespace GestionAmbiental.UseCases.SGA_Documentos.Administracion
                             model.Opcion,
                             revisores,
                             aprobadores,
-                            secundarios);
+                            secundarios, 
+                            Acceso);
                     if (model.Opcion.Equals("Registrar"))
                         //return RedirectToAction("NotificarNuevoDocumento", "NotificacionesSGAAdministracion", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                         return RedirectToAction("VerDocumento", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()) });
                     else
-                                return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
+                        return RedirectToAction("EditarDocumentoSRevision", new { IdDocumento = _protector.Protect(model.IdSGADocumento.ToString()), IdCategoria = model.IdCategoria });
                 }
             }
             return View(model);

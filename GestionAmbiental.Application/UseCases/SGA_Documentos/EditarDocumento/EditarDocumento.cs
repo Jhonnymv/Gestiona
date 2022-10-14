@@ -24,7 +24,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task Execute(int IdDoc, int IdCategoria, int IdCategoriaTipo, string codigo, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf,string rutaEditable,string fechaTentativa, string fechaAprobacion, int IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios)
+        public async Task Execute(int IdDoc, int IdCategoria, int IdCategoriaTipo, string codigo, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf,string rutaEditable,string fechaTentativa, string fechaAprobacion, int IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios,string? Acceso)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value != 0)
@@ -48,6 +48,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.EditarDocumento
                 },
                 DocCodigo = "TBD"
             };
+            model.Acceso = Acceso;
 
             ////Actualizar listas de revisores y aprobadores antes de activar la primera revision
             //var listRevisiones = new List<RevisionDocumento>();

@@ -26,7 +26,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
             _getUsuario = getUsuario ?? throw new ArgumentNullException(nameof(getUsuario));
         }
 
-        public async Task<int> Execute(int IdCategoriaTipo, string codigo, int IdDocPrincipal, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf, string rutaEditable, string fechaTentativa, string fechaAprobacion, string ElaboradoPorString, int? IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios)
+        public async Task<int> Execute(int IdCategoriaTipo, string codigo, int IdDocPrincipal, string codigoTipoDoc, string nombreDoc, string versionDoc, int? idPredecesor, string comentario, string rutaPdf, string rutaEditable, string fechaTentativa, string fechaAprobacion, string ElaboradoPorString, int? IdElaboradoPor, string opcion, List<RevisionAprobacionInputOutput> revisores, List<RevisionAprobacionInputOutput> aprobadores, List<int> secundarios,string? Acceso)
         {
             var predecesor = new Documento();
             if (idPredecesor.HasValue && idPredecesor.Value!=0)
@@ -50,6 +50,7 @@ namespace GestionAmbiental.Application.UseCases.SGA_Documentos.RegistrarDocument
                 ElaboradoPorString=ElaboradoPorString,
                 DocCodigo = "TBD"
             };
+            model.Acceso = Acceso;
             if(IdElaboradoPor.HasValue && IdElaboradoPor != 0)
             {
                 model.Usuario = new Domain.ValueObjects.Usuario

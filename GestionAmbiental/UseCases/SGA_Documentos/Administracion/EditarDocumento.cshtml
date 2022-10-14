@@ -3,121 +3,134 @@
     ViewData["Title"] = "Editar Documento";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
+@section styles {
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+        @*<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">*@
+    }
 
-<div class="sga">
-    <div class="primary-content col-12">
-        <div class="image-header-container">
-            <div class="header-title sga-opacity-color">
-                <h3>Editar Documento @ViewBag.CategoriaDoc</h3>
-                <img src="~/img/logo-white.png" alt="Logo Marcobre">
-            </div>
-        </div>
-        <div class="container pt-4 pb-4">
-            <form class="custom-form details-container w-100" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="EditarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
-
-                <div class="detail-container col-12 col-xl-10 mb-4">
-                    <div class="d-flex justify-content-center">
-                        <span class="text-mc bold text-center text-uppercase">Datos del Documento</span>
-                    </div>
-                    <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
-                    <input type="hidden" asp-for="IdSGADocumento" value="@Model.IdSGADocumento" />
-                    <input type="hidden" asp-for="IdCategoria" value="@Model.IdCategoria" />
-                    <input type="hidden" asp-for="DocPredecesor" value="@Model.DocPredecesor" />
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdSGATipoDocumento"></label>
-                            <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
-                            <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="IdElaboradoPor"></label>
-                            <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocVersion"></label>
-                            <span class="text-danger" asp-validation-for="DocVersion"></span>
-                            <input type="text" asp-for="DocVersion" class="form-control">
-                            <div class="text-right">
-                                <span></span>
-                                <span></span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocNombre"></label>
-                            <span class="text-danger" asp-validation-for="DocNombre"></span>
-                            <input type="text" asp-for="DocNombre" class="form-control">
-                            <div class="text-right">
-                                <span id="contadorNombre">0</span>
-                                <span>/ 255</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocCodigo"></label>
-                            <span class="text-danger" asp-validation-for="DocCodigo"></span>
-                            <input type="text" asp-for="DocCodigo" class="form-control">
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaAprobacion"></label>
-                            <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
-                            <input type="date" asp-for="FechaAprobacion" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="FechaTentativa"></label>
-                            <span class="text-danger" asp-validation-for="FechaTentativa"></span>
-                            <input type="date" asp-for="FechaTentativa" class="form-control">
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="Condicion"></label>
-                            <span class="text-danger" asp-validation-for="Condicion"></span>
-                            <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
-                        </div>
-                    </div>
-                    <div class="row input_container align-items-start">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="Comentario"></label>
-                            <span class="text-danger" asp-validation-for="Comentario"></span>
-                            <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
-                            <div class="text-right">
-                                <span id="contadorComentario">0</span>
-                                <span>/ 500</span>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoPdf"></label>
-                            <button class="btn btn-mc form-control" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label>Reemplazar Documento Pdf</label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
-                                <span id="danger_documento_pdf" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
-                        </div>
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label asp-for="DocumentoEditable"></label>
-                            <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
-                        </div>
-                    </div>
-                    <div class="row input_container">
-                        <div class="col-12 col-sm-12 col-lg-6">
-                            <label>Reemplazar Documento Editable</label>
-                            <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
-                                <span id="danger_documento_editable" class=""></span>
-                            </span>
-                            <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
-                        </div>
-                    </div>
-                    <input type="hidden" asp-for="DocPdfRuta" value="@Model.DocPdfRuta" />
-                    <input type="hidden" asp-for="DocEditableRuta" value="@Model.DocEditableRuta" />
+    <div class="sga">
+        <div class="primary-content col-12">
+            <div class="image-header-container">
+                <div class="header-title sga-opacity-color">
+                    <h3>Editar Documento @ViewBag.CategoriaDoc</h3>
+                    <img src="~/img/logo-white.png" alt="Logo Marcobre">
                 </div>
+            </div>
+            <div class="container pt-4 pb-4">
+                <form class="custom-form details-container w-100" id="form_editar_documento" asp-controller="SGAAdministracion" asp-action="EditarDocumento" method="post" enctype="multipart/form-data" autocomplete="off">
+
+                    <div class="detail-container col-12 col-xl-10 mb-4">
+                        <div class="d-flex justify-content-center">
+                            <span class="text-mc bold text-center text-uppercase">Datos del Documento</span>
+                        </div>
+                        <input type="hidden" asp-for="IdEncriptado" value="@Model.IdEncriptado" />
+                        <input type="hidden" asp-for="IdSGADocumento" value="@Model.IdSGADocumento" />
+                        <input type="hidden" asp-for="IdCategoria" value="@Model.IdCategoria" />
+                        <input type="hidden" asp-for="DocPredecesor" value="@Model.DocPredecesor" />
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdSGATipoDocumento"></label>
+                                <span class="text-danger" asp-validation-for="IdSGATipoDocumento"></span>
+                                <select asp-for="IdSGATipoDocumento" class="form-control" asp-items="ViewBag.TiposDoc"></select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="IdElaboradoPor"></label>
+                                <select asp-for="IdElaboradoPor" class="form-control" asp-items="ViewBag.Usuarios"></select>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocVersion"></label>
+                                <span class="text-danger" asp-validation-for="DocVersion"></span>
+                                <input type="text" asp-for="DocVersion" class="form-control">
+                                <div class="text-right">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocNombre"></label>
+                                <span class="text-danger" asp-validation-for="DocNombre"></span>
+                                <input type="text" asp-for="DocNombre" class="form-control">
+                                <div class="text-right">
+                                    <span id="contadorNombre">0</span>
+                                    <span>/ 255</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocCodigo"></label>
+                                <span class="text-danger" asp-validation-for="DocCodigo"></span>
+                                <input type="text" asp-for="DocCodigo" class="form-control">
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaAprobacion"></label>
+                                <span class="text-danger" asp-validation-for="FechaAprobacion"></span>
+                                <input type="date" asp-for="FechaAprobacion" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="FechaTentativa"></label>
+                                <span class="text-danger" asp-validation-for="FechaTentativa"></span>
+                                <input type="date" asp-for="FechaTentativa" class="form-control">
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="Condicion"></label>
+                                <span class="text-danger" asp-validation-for="Condicion"></span>
+                                <select asp-for="Condicion" class="form-control" asp-items="ViewBag.Condiciones" disabled></select>
+                            </div>
+                        </div>
+                        <div class="row input_container align-items-start">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="">¿Quien puede ver?</label>
+                                <select class="selectpicker form-control" id="puede_ver" title="Todos" asp-for="Acceso" multiple asp-items="ViewBag.UsuariosMultiple">
+                                </select>
+                            </div>
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="Comentario"></label>
+                                <span class="text-danger" asp-validation-for="Comentario"></span>
+                                <textarea asp-for="Comentario" class="form-control" maxlength="500"></textarea>
+                                <div class="text-right">
+                                    <span id="contadorComentario">0</span>
+                                    <span>/ 500</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row input_container ">
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoPdf"></label>
+                                <button class="btn btn-mc form-control" type="button" onclick="this.disabled = true; PreviewPDF('@Model.DocPdfRuta.Replace("\\", "\\\\")');this.disabled=false;">Visualizar PDF</button>
+                            </div>
+
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label>Reemplazar Documento Pdf</label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoPdf" data-valmsg-replace="true">
+                                    <span id="danger_documento_pdf" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoPdf" class="form-control" accept=".pdf" data-max-size="8971520">
+                            </div>
+                        </div>
+                        <div class="row input_container">
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label asp-for="DocumentoEditable"></label>
+                                <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
+                            </div>
+                            @*    </div>
+                        <div class="row input_container">*@
+                            <div class="col-12 col-sm-12 col-lg-6">
+                                <label>Reemplazar Documento Editable</label>
+                                <span class="text-danger field-validation-error" data-valmsg-for="DocumentoEditable" data-valmsg-replace="true">
+                                    <span id="danger_documento_editable" class=""></span>
+                                </span>
+                                <input type="file" asp-for="DocumentoEditable" class="form-control" accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx" data-max-size="8971520">
+                            </div>
+                        </div>
+                        <input type="hidden" asp-for="DocPdfRuta" value="@Model.DocPdfRuta" />
+                        <input type="hidden" asp-for="DocEditableRuta" value="@Model.DocEditableRuta" />
+                    </div>
                 @if (ViewBag.Error != null)
                 {
                     <div class="row input_container justify-content-center">
@@ -596,9 +609,8 @@
                     </div>
                 </div>
                 <form>
-                    <div class="modal-body"> 
+                    <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -652,6 +664,8 @@
 <partial name="_CrearFormato.cshtml" />
 
 @section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
     <script src="~/lib/pdfobject/pdfobject.min.js"></script>
     <script type="text/javascript">
         var listAprobadores = [];
@@ -869,8 +883,8 @@
             }
         });
         $("#btn_registrar").on("click", function () {
-            @*if (ValidarDatos() && ValidarDatosRevisores()) {*@
-            if (ValidarDatos()) {
+        @*if (ValidarDatos() && ValidarDatosRevisores()) {*@
+                                    if (ValidarDatos()) {
                 $("#Opcion").val("Registrar");
                 $("#modal_registrando").modal('show');
                 $("#mensajeModalConfig").text("Guardando Informacion")
@@ -1349,7 +1363,7 @@
             if (lista.length > 0) {
                 for (var i = 0; i < lista.length; i++) {
                     html += "<tr>" +
-                    @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
+        @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" style=\"width:50px\"  value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
                         "<td style = \"width: 50%\" ><input class=\"form-control text-center\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                         "<td style=\"width: 20%\"><input class=\"form-control text-center\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>" +
                         "<td style = \"width: 10%\"> <button type=\"button\" class=\"btn btn-mc\" onclick=\"EditarRevisor(" + tipo + "," + lista[i].Orden + ")\"><img src=\"/img/icons/edit-icon.png\"/></button></td >" +
@@ -1376,18 +1390,18 @@
         @*
         //Validacion adicional para registrar
         function ValidarDatosRevisores() {
-            $('#danger_revisores').text("");
-            $('#danger_aprobadores').text("");
+        $('#danger_revisores').text("");
+        $('#danger_aprobadores').text("");
 
-            if (listAprobadores.length != 0 && listRevisores.length != 0)
-                return true;
-            else {
-                if (listAprobadores.length == 0)
-                    $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
-                if (listRevisores.length == 0)
-                    $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
-                return false;
-            }
+        if (listAprobadores.length != 0 && listRevisores.length != 0)
+        return true;
+        else {
+        if (listAprobadores.length == 0)
+        $('#danger_aprobadores').text("Se requiere como mínimo a una persona encargada de la aprobación");
+        if (listRevisores.length == 0)
+        $('#danger_revisores').text("Se requiere como mínimo a una persona encargada de la revisión");
+        return false;
+        }
         } *@
     </script>
 }

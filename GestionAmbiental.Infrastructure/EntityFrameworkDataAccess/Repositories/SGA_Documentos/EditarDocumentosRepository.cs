@@ -48,6 +48,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             entidad.Editable_Ruta = documento.EditableRuta;
             entidad.Fecha_Aprobacion = documento.FechaAprobacion;
             entidad.Fecha_Actualizacion = DateTime.Now;
+            entidad.Acceso = documento.Acceso;
             entidad.Estado = documento.Estado;
             entidad.Id_Usuario = documento.Usuario.IdUsuario;
 

@@ -519,6 +519,7 @@
                     $('#tabla_documentos tbody').html(response.data);
                     $('#paginado').html(response.paginador);
                     dataModulo();
+                    validateBrowser()
                 }
             });
         }
@@ -542,9 +543,11 @@
                     $('#tabla_documentos_tipo tbody').html(response.data);
                     $('#paginado_documentos_tipo').html(response.paginador);
                     dataModulo();
+                    validateBrowser()
                 }
             });
         }
+
         function FiltrarTipo(tipos) {
             $("#filtro_tipoDoc").val([]);
             $('#filtro_tipoDoc').val(tipos);
@@ -572,6 +575,30 @@
                         location.reload()
                     }
                 });
+            }
+        }
+    </script>
+
+    <script>
+        function DescargarDocumento(ruta) {
+            ruta = ruta.replace('-', '/');
+            window.location.replace("/SGADocumentacion/Download?fileName=" + ruta);
+        }
+
+        function validateBrowser() {
+            let details = navigator.userAgent;
+            let regexp = /android|iphone|kindle|ipad/i;
+            let isMobileDevice = regexp.test(details);
+
+            console.log(isMobileDevice)
+
+            if (isMobileDevice == true) {
+                $(".btnEscritorio").hide()
+                $(".btnMovil").show()
+
+            } else {
+                $(".btnEscritorio").show()
+                $(".btnMovil").hide()
             }
         }
     </script>

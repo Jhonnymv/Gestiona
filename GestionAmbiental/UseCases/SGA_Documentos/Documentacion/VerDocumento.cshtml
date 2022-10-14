@@ -79,6 +79,10 @@
                     </div>
                     <div class="row input_container">
                         <div class="col-12 col-sm-12 col-lg-6">
+                            <label asp-for="DocumentoPdf"></label>
+                            <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocPdfRuta.Replace('\\', '-')')">Descargar Pdf</button>
+                        </div>
+                        <div class="col-12 col-sm-12 col-lg-6">
                             <label asp-for="DocumentoEditable"></label>
                             <button class="btn btn-mc form-control" type="button" onclick="DescargarEditable('@Model.DocEditableRuta.Replace('\\', '-')')">Descargar Editable</button>
                         </div>
@@ -176,7 +180,6 @@
                 <div class="row">
                     <div class="button-container">
                         <div>
-
                         </div>
                         <div>
                             <a class="btn btn-mc-outline-danger" asp-controller="SGADocumentacion" asp-action="Resumen">Volver</a>
@@ -423,7 +426,6 @@
                 <form>
                     <div class="modal-body">
                         <div id="viewPDF">
-
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -552,19 +554,19 @@
         function CargarSecundarios() {
             var listSecundarios = @Html.Raw(Model.Secundarios);
             var html = "";
-            for(var i = 0; i < listSecundarios.length; i++) {
+            for (var i = 0; i < listSecundarios.length; i++) {
                 html += "<tr>";
                 if (listSecundarios[i].Condicion == "Pendiente") {
                     html += "<td><a href=\"/SGAAdministracion/EditarDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
                 } else {
                     html += "<td><a href=\"/SGAAdministracion/VerDocumento?IdDocumento=" + listSecundarios[i].IdEncriptado + "\">" + listSecundarios[i].Codigo + "</a></td>";
                 }
-                html +="<td>" + listSecundarios[i].TipoDocumento +"</td>" +
-                    "<td>" + listSecundarios[i].Nombre +"</td>" +
-                    "<td>" + listSecundarios[i].Version +"</td >" +
-                    "<td>" + listSecundarios[i].Condicion +"</td >" +
-                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"PreviewPDF(\'" + listSecundarios[i].PdfRuta.replace('\\', '\\\\')+"\')\">Visualizar Pdf</button></td >" +
-                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + listSecundarios[i].EditableRuta.replace('\\', '-')+"\')\">Descargar Editable</button></td >" +
+                html += "<td>" + listSecundarios[i].TipoDocumento + "</td>" +
+                    "<td>" + listSecundarios[i].Nombre + "</td>" +
+                    "<td>" + listSecundarios[i].Version + "</td >" +
+                    "<td>" + listSecundarios[i].Condicion + "</td >" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"PreviewPDF(\'" + listSecundarios[i].PdfRuta.replace('\\', '\\\\') + "\')\">Visualizar Pdf</button></td >" +
+                    "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"DescargarEditable(\'" + listSecundarios[i].EditableRuta.replace('\\', '-') + "\')\">Descargar Editable</button></td >" +
                     "</tr>";
             }
             $("#tabla_secundarios tbody").html(html);
@@ -603,53 +605,53 @@
             var html = "";
             for (var i = 0; i < lista.length; i++) {
                 html += "<tr>" +
-                    @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
+        @*"<td style = \"width: 20%\" ><input class=\"form-control\" type=\"number\" value=\"" + lista[i].Orden + "\" readonly/></td>" +*@
                     "<td style = \"width: 60%\" ><input class=\"form-control text-center\" type=\"text\" value=\"" + lista[i].UsuarioNombre + "\" readonly/></td>" +
                     "<td style=\"width: 40%\"><input class=\"form-control text-center\" type=\"date\" value=\"" + lista[i].Fecha + "\" readonly/></td>";
-                @*if (lista[i].Permiso && lista[i].Estado == "Activo") {
-                    html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'" + lista[i].Id + "\')\">Revisar</button></td>";
+        @*if (lista[i].Permiso && lista[i].Estado == "Activo") {
+                html += "<td style=\"width: 10%\"><button type=\"button\" class=\"btn btn-primary\" onclick=\"RevisarDocumento(\'" + lista[i].Id + "\')\">Revisar</button></td>";
                 } else {
-                    html += "<td></td>";
+                html += "<td></td>";
                 }*@
-                html += "</tr>";
+                    html += "</tr>";
             }
             return html;
         }
-    @*
+        @*
 
         function RevisarDocumento(Id) {
-            $("#modal_revision").modal("show");
-            $("#IdSGADocRevision").val(Id);
+        $("#modal_revision").modal("show");
+        $("#IdSGADocRevision").val(Id);
         }
         $("#btn_aceptar").on("click", function () {
-            EnviarRevision("Aceptar");
+        EnviarRevision("Aceptar");
         });
         $("#btn_rechazar").on("click", function () {
-            EnviarRevision("Rechazar");
+        EnviarRevision("Rechazar");
         });
         function EnviarRevision(Opcion) {
-                $("#Modal_Enviando_Correo").modal('show');
-                $("#mensajeModalConfig").text("Notificando a Responsables")
-            $.ajax({
-                type: "GET",
-                url: "/SGADocumentacion/RevisarDocumento",
-                data: {
-                    "IdDocumentoRevision": $("#IdSGADocRevision").val(),
-                    "Comentario": $("#ComentarioRevision").val(),
-                    "IdDocumento": $("#Id_Encriptado").val(),
-                    "Opcion": Opcion,
-                },
-                traditional: true,
-                success: (response) => {
-                    if (response.success)
-                        location.reload();
-                    else {
-                        $("#modal_registrando").modal("toggle");
-                        alert(response.message);
-                    }
-                }
-            });
+        $("#Modal_Enviando_Correo").modal('show');
+        $("#mensajeModalConfig").text("Notificando a Responsables")
+        $.ajax({
+        type: "GET",
+        url: "/SGADocumentacion/RevisarDocumento",
+        data: {
+        "IdDocumentoRevision": $("#IdSGADocRevision").val(),
+        "Comentario": $("#ComentarioRevision").val(),
+        "IdDocumento": $("#Id_Encriptado").val(),
+        "Opcion": Opcion,
+        },
+        traditional: true,
+        success: (response) => {
+        if (response.success)
+        location.reload();
+        else {
+        $("#modal_registrando").modal("toggle");
+        alert(response.message);
         }
-         *@
+        }
+        });
+        }
+        *@
     </script>
 }

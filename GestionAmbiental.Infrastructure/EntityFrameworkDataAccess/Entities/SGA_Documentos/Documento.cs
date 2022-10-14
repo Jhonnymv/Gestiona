@@ -44,6 +44,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.SGA
         public DateTime Fecha_Creacion { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime Fecha_Actualizacion { get; set; }
+
+        [Column(TypeName ="text")]
+        public string? Acceso { get; set; }
         [Column(TypeName = "varchar(30)")]
         public string Estado { get; set; }
     }
