@@ -149,11 +149,22 @@ namespace GestionAmbiental.UseCases.DashboardGeneral
         }
         public async Task<IActionResult> DescargarRegistros(string sTime, string eTime)
         {
-            string templatePath = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Dashboard");
-            var ms = await _descargarRegistros.DescargarInformacion(sTime, eTime, templatePath);
-            ms.Position = 0;
+            if (!(HttpContext.Session.GetString("SessionUser") != null))
+            {
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
+            }
+            else
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-            return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegistrosGestiona-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+                string templatePath = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Dashboard");
+                var ms = await _descargarRegistros.DescargarInformacion(sTime, eTime, templatePath);
+                ms.Position = 0;
+
+                return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "RegistrosGestiona-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
+            }
         }
     }
 }

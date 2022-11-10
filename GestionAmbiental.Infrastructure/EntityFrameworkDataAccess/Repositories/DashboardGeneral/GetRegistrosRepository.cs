@@ -482,7 +482,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var output = new List<Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente>();
             var reportes = await _context.Reporte_Preliminar_Incidente
                 .Where(x =>
-                    !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString()) &&
+                    !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())&&
+                    !x.Estado.Equals(EstadosIncidentes.Pendiente.ToString())&&
                     x.Fecha_Incidente >= startTime &&
                     x.Fecha_Incidente <= endTime)
                 .ToListAsync();
@@ -495,7 +496,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var gerencias = await _context.Gerencias.ToListAsync();
             //Todos los usuarios
             var usuarios = await _context.Usuarios.ToListAsync();
-
             foreach (var reporte in reportes)
             {
                 var unidadCantidad = unidades.Find(x => x.Id_Unidad_Medida.Equals(reporte.Id_Unidad_Cantidad_Derramado));
@@ -503,7 +503,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var componente = componentes.Find(x => x.Id_Componente_Ambiental.Equals(reporte.Id_Componente_Ambiental));
                 var gerencia = gerencias.Find(x => x.Id_Gerencia.Equals(reporte.Id_Gerencia_Responsable));
                 var usuario = usuarios.Find(x => x.Id_Usuario.Equals(reporte.Id_Supervisor_MA));
-
+                
                 var item = new Domain.Incidentes.ReportePreliminar.Reporte_Preliminar_Incidente
                 {
                     Codigo = reporte.Codigo,
