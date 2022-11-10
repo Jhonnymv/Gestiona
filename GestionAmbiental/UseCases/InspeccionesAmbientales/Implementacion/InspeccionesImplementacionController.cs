@@ -220,6 +220,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Implementacion
 
                         if ((observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) || 
                             observacion.Estado.Equals(EstadosInspeccion.Ampliado.ToString()) || 
+                            observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) || 
                             (observacion.Estado.Equals(EstadosInspeccion.Rechazado.ToString()) && !observacion.DescripcionCondicion.Equals("Buenas Prácticas"))) &&
                             observacion.PermisosImplementar)                        
                             filaObservacion += "<td><button type=\"button\" class=\"btn btn-mc\" onclick=\"ImplementarObservacion(" + observacion.IdInspeccionDetalle + ")\">" + "Implementar" + "</button></td>";
