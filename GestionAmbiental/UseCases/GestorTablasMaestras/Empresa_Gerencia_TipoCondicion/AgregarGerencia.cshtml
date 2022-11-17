@@ -14,6 +14,7 @@
         </div>
         <div class="container pt-4 pb-4">
             <form class="custom-form w-100" autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarGerencia">
+                <input type="hidden" class="form-control" asp-for="Estado" value="ACT">
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container justify-content-center">
                         <label asp-for="Descripcion">Gerencia</label>
@@ -24,7 +25,8 @@
                         <div class="button-container">
                             <div></div>
                             <div id="bntsDetalle">
-                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="GestorEGTC" asp-action="Resumen" id="btnCancelar">Cancelar</a>
+                                <a type="button" class="btn btn-mc-outline-danger" asp-controller="GestorEGTC"
+                                    asp-action="Resumen" id="btnCancelar">Cancelar</a>
                                 <button class="btn btn-mc-success" type="submit" id="btnGuardar">Registrar</button>
                             </div>
                         </div>
@@ -37,26 +39,25 @@
 
 @*<div class="row mb-2">
     <div class="col-12 titulo-pagina">
-        <h2>Agregar Gerencia</h2>
+    <h2>Agregar Gerencia</h2>
     </div>
-</div>
-<div class="row mb-2 justify-content-center">
+    </div>
+    <div class="row mb-2 justify-content-center">
     <div class="col-lg-6 col-md-8 col-sm-10">
-        <form autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarGerencia">
-            <div class="row mb-2">
-                <div class="col-lg-4">
-                    <label asp-for="Descripcion"></label>
-                </div>
-                <div class="col-lg-8">
-                    <span class="text-danger" asp-validation-for="Descripcion"></span>
-                    <input type="text" class="form-control" asp-for="Descripcion">
-                </div>
-            </div>
-            <div class="row mt-2 justify-content-center">
-                <a asp-controller="GestorEGTC" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnCancelar">Cancelar</a>
-                <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
-            </div>
-        </form>
+    <form autocomplete="off" asp-controller="GestorEGTC" asp-action="AgregarGerencia">
+    <div class="row mb-2">
+    <div class="col-lg-4">
+    <label asp-for="Descripcion"></label>
     </div>
-</div>*@
-
+    <div class="col-lg-8">
+    <span class="text-danger" asp-validation-for="Descripcion"></span>
+    <input type="text" class="form-control" asp-for="Descripcion">
+    </div>
+    </div>
+    <div class="row mt-2 justify-content-center">
+    <a asp-controller="GestorEGTC" asp-action="Resumen" class="btn btn-secondary mr-2" id="btnCancelar">Cancelar</a>
+    <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
+    </div>
+    </form>
+    </div>
+    </div>*@
