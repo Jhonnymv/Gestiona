@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA.EditarInfo_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
@@ -181,19 +184,80 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                         var objLDAPInfo = JsonConvert.DeserializeObject<NewLDAPInfoObject>(model.Info);
                         var objEncriptionInfo = JsonConvert.DeserializeObject<NewEncriptionInfoObject>(model.Info);
 
-                        if (objSFTPInfo.Info!= null && objSFTPInfo.Info.host!=null)
-                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objSFTPInfo.Info));
-                        if(objSFTPInfo.Info != null && objNotificationInfo.Info.smtp != null)
-                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objNotificationInfo.Info));
-                        if(objLDAPInfo.Path != null)
-                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objLDAPInfo));
-                        if(objSFTPInfo.Info != null && objEncriptionInfo.Info.iv != null)
-                        await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objEncriptionInfo.Info));
+                        if (objSFTPInfo.Info != null && objSFTPInfo.Info.host != null)
+                            await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objSFTPInfo.Info));
+                        if (objSFTPInfo.Info != null && objNotificationInfo.Info.smtp != null)
+                            await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objNotificationInfo.Info));
+                        if (objLDAPInfo.Path != null)
+                            await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objLDAPInfo));
+                        if (objSFTPInfo.Info != null && objEncriptionInfo.Info.iv != null)
+                            await _editarInfo_SGA.Execute(model.IdInfo, model.Tipo, JsonConvert.SerializeObject(objEncriptionInfo.Info));
                     }
                     return RedirectToAction("DetalleInfo_SGA", new { IdInfo = model.IdInfo });
                 }
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EnviarCorreoPrueba(string email)
+        {
+            dynamic response;
+            try
+            {
+                var credenciales = await _getInfo_SGA.Execute(Tipo_Info_SGA.NotificationAccount);
+                string smtp = "", port = "", user = "", pass = "", mailFrom = "";
+                foreach (var item in credenciales.Info)
+                {
+                    switch (item.Key)
+                    {
+                        case "smtp": smtp = item.Value; break;
+                        case "ntwkuser": user = item.Value; break;
+                        case "ntwkpassword": pass = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "mailfrom": mailFrom = item.Value; break;
+                    }
+                }
+
+                SmtpClient mail = new SmtpClient(smtp, Convert.ToInt32(port));
+                MailMessage msg = new MailMessage();
+                msg.Priority = MailPriority.Normal;
+                mail.EnableSsl = false;
+
+                mail.UseDefaultCredentials = false;
+                NetworkCredential credential = new NetworkCredential(user, pass);
+                mail.Credentials = credential;
+
+                msg.To.Add(new MailAddress(email));
+
+                msg.Subject = "Mensaje Prueba Gestiona";
+                msg.SubjectEncoding = Encoding.UTF8;
+                msg.IsBodyHtml = true;
+                msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
+                msg.BodyEncoding = Encoding.UTF8;
+                msg.Body = "MENSAJE DE PRUEBA GESTIONA";
+
+                await mail.SendMailAsync(msg);
+                msg.Attachments.Dispose();
+                mail.Dispose();
+                msg.Dispose();
+
+                response = new
+                {
+                    success = true,
+                    msg = "Mensaje enviado"
+                };
+            }
+            catch (Exception ex)
+            {
+                response = new
+                {
+                    success = true,
+                    msg = "Error al enviar mensaje: " + ex.Message
+                };
+            }
+            return Ok(response);
+        }
+
         private class NewSFTPInfoObject
         {
             public int IdInfo { get; set; }

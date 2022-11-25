@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Info_SGA";
     Layout = "~/UseCases/Shared/_Layout.cshtml";
 }
@@ -29,7 +28,21 @@
             </form>
         </div>
     </div>
-
+    <div class="secondary-content col-12">
+        <form autocomplete="off" class="custom-form">
+            <div class="col-12">
+                <div class="row input_container">
+                    <div class="col-12 col-md-6">
+                        <label for="">Email</label>
+                        <input type="email" class="form-control" placeholder="Introducir Correo Electrónico " id="email">
+                    </div>
+                    <div class="col-12 col-md-6 text-end">
+                        <button type="button" class="btn btn-mc" onclick="enviarCorreo()">Enviar Correo</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="secondary-content col-12">
         <div class="table-responsive tablas-color">
             <table class="table" id="tabla_info">
@@ -47,89 +60,66 @@
         </div>
     </div>
 </div>
-
-@*<div class="row mb-2">
-        <div class="col-12 titulo-pagina">
-            <h2>Información del Sistema</h2>
-        </div>
-    </div>
-    <form autocomplete="off">
-        <div class="row mb-2 justify-content-center">
-            <div class="col-lg-1 mt-1">
-                <label>Buscar:</label>
-            </div>
-            <div class="col-lg-2 mt-1">
-                <input type="text" class="form-control" id="filtro">
-            </div>
-            <div class="col-lg-1 mt-1">
-                <button type="button" class="btn btn-primary" onclick="filtrar(1)" tabindex="-1">Filtrar</button>
-            </div>
-        </div>
-    </form>
-    <div class="row mb-2 justify-content-center">
-        <div class="col-md">
-            <table class="table" id="tabla_info" style="display:inline-table">
-                <thead class="thead-mcolor">
-                    <tr>
-                        <th>Tipo de Información</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="row mb-2 justify-content-center">
-        <nav id="paginado" aria-label="pagination">
-        </nav>
-    </div>*@
-
 @section scripts{
-    <script>
-        var r = 0;
-        var g = 0;
-        var b = 0;
-        var img_url = "";
-        $(document).ready(function () {
-            dataModulo();
-            filtrar(1);
+<script>
+    var r = 0;
+    var g = 0;
+    var b = 0;
+    var img_url = "";
+    $(document).ready(function () {
+        dataModulo();
+        filtrar(1);
+    });
+    function dataModulo() {
+        $.ajax({
+            type: "POST",
+            url: "/GestorContenido/PropiedadesModulo",
+            traditional: true,
+            success: (response) => {
+                if (response.success) {
+                    let data = JSON.parse(response.data);
+                    r = data.r;
+                    g = data.g;
+                    b = data.b;
+                    img_url = data.img_url;
+                } else {
+                    console.log("Ocurrió un problema: " + response.msg);
+                }
+            }
         });
-        function dataModulo() {
-            $.ajax({
-                type: "POST",
-                url: "/GestorContenido/PropiedadesModulo",
-                traditional: true,
-                success: (response) => {
-                    if (response.success) {
-                        let data = JSON.parse(response.data);
-                        r = data.r;
-                        g = data.g;
-                        b = data.b;
-                        img_url = data.img_url;
-                    } else {
-                        console.log("Ocurrió un problema: " + response.msg);
-                    }
-                }
-            });
-        }
-        function filtrar(pag) {
-            $.ajax({
-                type: "POST",
-                url: "/GestorInfo_SGA/Info_SGA",
-                data: {
-                    "pagina": pag,
-                    "rpp": 10,
-                    "filtro": $('#filtro').val()
-                },
-                traditional: true,
-                success: (response) => {
-                    $('#tabla_info tbody').empty();
-                    $('#tabla_info tbody').html(response.data);
-                    $('#paginado').html(response.paginador);
-                    tablasStyle(r, g, b);
-                }
-            });
-        }
-    </script>
+    }
+    function filtrar(pag) {
+        $.ajax({
+            type: "POST",
+            url: "/GestorInfo_SGA/Info_SGA",
+            data: {
+                "pagina": pag,
+                "rpp": 10,
+                "filtro": $('#filtro').val()
+            },
+            traditional: true,
+            success: (response) => {
+                $('#tabla_info tbody').empty();
+                $('#tabla_info tbody').html(response.data);
+                $('#paginado').html(response.paginador);
+                tablasStyle(r, g, b);
+            }
+        });
+    }
+    function enviarCorreo() {       
+        console.log("Enviando mensaje");
+        $.ajax({
+            type: "POST",
+            url: "/GestorInfo_SGA/EnviarCorreoPrueba",
+            data: {
+                "email": $('#email').val()
+            },
+            traditional: true,
+            success: (response) => {
+                alert(response.msg);
+                console.log(response);
+            }
+        });
+    }
+</script>
 }
