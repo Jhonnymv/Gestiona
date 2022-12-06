@@ -17,7 +17,8 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Ed
         }
         public async Task Execute(int Id, string Codigo, int? Id_Criterio, string? Detalle_compromiso, int? Id_Etapa, string? Texto_compromiso, int? Id_Origen, string? Tomo, string? Capitulo,
             string? Seccion, string? Pagina, string? Resolucion, int? Id_Autoridad, DateTime? Fecha, int? Id_Compromiso, int? Id_Aspecto, int? Id_Componente, int? Id_Gerencia, int? Id_Area,
-            string? Frecuencia, int? Id_Entidad, int? Id_Responsable1, int? Id_Responsable2, string? Frecuencia_reporte, string? Sustentos, string? Estado, int? Id_Aprueba, string? Medio_verificacion)
+            string? Frecuencia, int? Id_Entidad, int? Id_Responsable1, int? Id_Responsable2, string? Frecuencia_reporte, string? Sustentos, string? Estado, int? Id_Aprueba, string? Medio_verificacion,
+            string? Ano, string? Duplicado, int? Id_TipoCompromiso, string? Actividad, int? Id_ComponenteAux, int? Id_FactorAmbiental, string? Vigencia, string? Motivo, string? Comentario)
         {
             var input = await _compromisoReadOnlyRepository.ObtenerCompromiso(Id);
 
@@ -47,7 +48,27 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Ed
             input.Aprueba = Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)Id_Aprueba } : null;
             input.Medio_verificacion = Medio_verificacion;
 
-           await _compromisoReadOnlyRepository.EditarCompromiso(input);
+            input.Ano = Ano;
+            input.Duplicado = Duplicado;
+
+            if (Id_TipoCompromiso != null)
+            {
+                input.TipoCompromiso = new Domain.CompromisosMCB.TipoCompromisoCMCB { Id = (int)Id_TipoCompromiso };
+            }
+            input.Actividad = Actividad;
+            if (Id_ComponenteAux != null)
+            {
+                input.ComponenteAux = new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)Id_ComponenteAux };
+            }
+            if (Id_FactorAmbiental != null)
+            {
+                input.FactorAmbiental = new Domain.CompromisosMCB.FactorAmbientalCMCB { Id = (int)Id_FactorAmbiental };
+            }
+            input.Vigencia = Vigencia;
+            input.Motivo = Motivo;
+            input.Comentario = Comentario;
+
+            await _compromisoReadOnlyRepository.EditarCompromiso(input);
         }
 
         //public async Task ExecuteImplementar(int Id, string Fecha_entrega, string Sustento_cumplimiento, string Evidencia, string Comentario_implementacion)

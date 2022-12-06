@@ -63,5 +63,26 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public int? Id_Aprueba { get; set; }
         [DisplayName("Medio Verificación:")]
         public string? Medio_verificacion { get; set; }
+
+        // New Items
+
+        [DisplayName("Año")]
+        public string? Ano { get; set; }
+        [DisplayName("Concordancia y/o Duplicidad")]
+        public string? Duplicado { get; set; }
+        [DisplayName("Tipo Compromiso")]
+        public int? Id_TipoCompromiso { get; set; }
+        [DisplayName("Actividad")]
+        public string? Actividad { get; set; }
+        [DisplayName("Componente Auxiliar")]
+        public int? Id_ComponenteAux { get; set; }
+        [DisplayName("Factor Ambiental")]
+        public int? Id_FactorAmbiental { get; set; }
+        [DisplayName("Vigencia")]
+        public string? Vigencia { get; set; }
+        [DisplayName("Motivo")]
+        public string? Motivo { get; set; }
+        [DisplayName("Comentario")]
+        public string? Comentario { get; set; }
     }
 }

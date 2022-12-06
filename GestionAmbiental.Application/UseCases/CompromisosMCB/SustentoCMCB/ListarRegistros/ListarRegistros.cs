@@ -69,8 +69,8 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB.List
             ouput.Fecha_limite= sustemto.Fecha_limite;
             ouput.Fecha_entrega= sustemto.Fecha_entrega;
             ouput.Fecha_validacion= sustemto.Fecha_validacion;
-            ouput.IdResponsable1 = sustemto.Responsable1.IdUsuario;
-            ouput.IdResponsable2 = sustemto.Responsable2.IdUsuario;
+            ouput.IdResponsable1 = sustemto.Responsable1?.IdUsuario;
+            ouput.IdResponsable2 = sustemto.Responsable2?.IdUsuario;
             if (sustemto.Asesor != null)
             {
                 ouput.IdAsesor = sustemto.Asesor.IdUsuario;

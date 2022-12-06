@@ -290,8 +290,8 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var autoridadesItems = items.ItemsAutoridad.OrderBy(x => x.Autoridad).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Autoridad }).ToList();
                 autoridadesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
-                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Aspecto).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
-                aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+                var aspectosItems = items.ItemsAspecto.OrderBy(x => x.Id).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Aspecto }).ToList();
+                //aspectosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
                 var componentesItems = items.ItemsComponente.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
                 componentesItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
@@ -301,6 +301,13 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
 
                 var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
                 UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
+
+                var TiposCompromisosItems = items.TipoCompromisos.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Tipo }).ToList();
+
+                var ComponentesAux = items.ComponentesAux.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+
+                var FactoresAmbientales = items.FactoresAmbientales.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Factor }).ToList();
+
 
                 //var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();
                 //EstadosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
@@ -319,6 +326,10 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
+                ViewBag.TipoCompromisos = TiposCompromisosItems;
+                ViewBag.ComponentesAux = ComponentesAux;
+                ViewBag.FactoresAmbientales = FactoresAmbientales;
+
                 return View();
             }
         }
@@ -327,10 +338,11 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         {
             if (ModelState.IsValid)
             {
-                var id = await _nuevoRegistro.Execute(model.Codigo, (int)model.Id_Criterio, model.Detalle_compromiso, model.Id_Etapa, model.Texto_compromiso, model.Id_Origen, model.Tomo,
-                    model.Capitulo, model.Seccion, model.Pagina, model.Resolucion, model.Id_Autoridad, model.Fecha, model.Id_Compromiso, model.Id_Aspecto, model.Id_Componente, model.Id_Gerencia, model.Id_Area,
-                    model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos, model.Estado, model.Id_Aprueba,
-                    model.Medio_verificacion);
+                var id = await _nuevoRegistro.Execute(model.Codigo, model.Id_Criterio, model.Detalle_compromiso, model.Id_Etapa, model.Texto_compromiso, model.Id_Origen, model.Tomo,
+                    model.Capitulo, model.Seccion, model.Pagina, model.Resolucion, model.Id_Autoridad, model.Fecha, model.Id_Compromiso, model.Id_Aspecto, model.Id_Componente,
+                    model.Id_Gerencia, model.Id_Area, model.Frecuencia, model.Id_Entidad, model.Id_Responsable1, model.Id_Responsable2, model.Frecuencia_reporte, model.Sustentos,
+                    model.Estado, model.Id_Aprueba, model.Medio_verificacion, model.Ano, model.Duplicado, model.Id_TipoCompromiso, model.Actividad, model.Id_ComponenteAux,
+                    model.Id_FactorAmbiental, model.Vigencia, model.Motivo, model.Comentario);
 
 
                 if (model.Id_Responsable1 != null && model.Id_Gerencia != null)
@@ -375,7 +387,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     filasTabla += "<td>" + fila.NomGerencia + "</td>";
                     filasTabla += "<td>" + fila.NomArea + "</td>";
                     filasTabla += "<td>" + fila.Frecuencia + "</td>";
-                    filasTabla += "<td>" + fila.NomResponsable1 + "</td>";
+                    //filasTabla += "<td>" + fila.NomResponsable1 + "</td>";
                     filasTabla += "<td>" + fila.Frecuencia_reporte + "</td>";
                     filasTabla += "<td>" + "<a style=\" cursor:pointer\" onclick=\"GetSustentosByCompromiso(" + fila.Id + ")\">Sustentos</a>" + "</td>";
                     filasTabla += "<td>" + fila.Estado + "</td>";
@@ -416,14 +428,14 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> GetCompromiso(int idCompromiso,int? idSustento)
+        public async Task<IActionResult> GetCompromiso(int idCompromiso, int? idSustento)
         {
-      
+
             var datos = await _listarCompromisos.BuscarPorID(idCompromiso);
-            dynamic response = new { Data = datos};
+            dynamic response = new { Data = datos };
             if (idSustento.HasValue)
             {
-            var sustento = await _listarSustentos.ObtenerSustento(Convert.ToInt32(idSustento));
+                var sustento = await _listarSustentos.ObtenerSustento(Convert.ToInt32(idSustento));
                 response.Sustento = sustento;
             }
 
@@ -464,6 +476,11 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             var UsuariosItems = items.ItemsUsuario.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres }).ToList();
             UsuariosItems.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
+            var TiposCompromisosItems = items.TipoCompromisos.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Tipo }).ToList();
+
+            var ComponentesAux = items.ComponentesAux.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+
+            var FactoresAmbientales = items.FactoresAmbientales.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Factor }).ToList();
 
             var registros = await _listarCompromisos.Execute(1, 100, new int[0], new int[0], new int[0], new string[0], new int[0]);
 
@@ -499,6 +516,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             model.Id_Aprueba = registroEncontrado.Aprueba;
             model.Medio_verificacion = registroEncontrado.Medio_verificacion;
 
+            model.Ano = registroEncontrado.Ano;
+            model.Duplicado = registroEncontrado.Duplicado;
+            model.Id_TipoCompromiso = registroEncontrado.Id_TipoCompromiso;
+            model.Actividad = registroEncontrado.Actividad;
+            model.Id_ComponenteAux = registroEncontrado.Id_ComponenteAux;
+            model.Id_FactorAmbiental = registroEncontrado.Id_FactorAmbiental;
+            model.Vigencia= registroEncontrado.Vigencia;
+            model.Motivo= registroEncontrado.Motivo;
+            model.Comentario= registroEncontrado.Comentario;
+
             //Evidencia = registroEncontrado.Evidencia
 
             ViewBag.Areas = areasItems;
@@ -513,6 +540,10 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
 
             ViewBag.Rol = userInfo.Rol.ToString();
             ViewBag.Usuario = userInfo.NombreUsuario;
+
+            ViewBag.TipoCompromisos = TiposCompromisosItems;
+            ViewBag.ComponentesAux = ComponentesAux;
+            ViewBag.FactoresAmbientales = FactoresAmbientales;
 
             return View(model);
 
@@ -549,7 +580,16 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     model.Sustentos,
                     model.Estado,
                     model.Id_Aprueba,
-                    model.Medio_verificacion
+                    model.Medio_verificacion,
+                    model.Ano,
+                    model.Duplicado,
+                    model.Id_TipoCompromiso,
+                    model.Actividad,
+                    model.Id_ComponenteAux,
+                    model.Id_FactorAmbiental,
+                    model.Vigencia,
+                    model.Motivo,
+                    model.Comentario
                     );
 
                 return RedirectToAction("EditarRegistro", new { id = model.Id });
@@ -850,13 +890,15 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                     return RedirectToAction("CargaDataExcel", new { message = "Ocurrió un error: No se encontró la hoja en el archivo Excel", result = "Error" });
 
                 var data = _excelLecturaEscritura.ObtenerDatos();
+
                 var agregados = 0;
                 foreach (var item in data)
                 {
                     var id = await _nuevoRegistro.Execute(item.Codigo, (int)item.Id_Criterio, item.Detalle_compromiso, item.Id_Etapa, item.Texto_compromiso, item.Id_Origen, item.Tomo,
                    item.Capitulo, item.Seccion, item.Pagina, item.Resolucion, item.Id_Autoridad, item.Fecha, item.Id_Compromiso, item.Id_Aspecto, item.Id_Componente, item.Id_Gerencia, item.Id_Area,
                    item.Frecuencia, item.Id_Entidad, item.Id_Responsable1, item.Id_Responsable2, item.Frecuencia_reporte, item.Sustentos, item.Estado, item.Id_Aprueba,
-                   item.Medio_verificacion);
+                   item.Medio_verificacion,
+                   item.Ano, item.Duplicado, item.Id_TipoCompromiso, item.Actividad, item.Id_ComponenteAux, item.Id_FactorAmbiental, item.Vigencia, item.Motivo, item.Comentario);
                     agregados++;
                 }
                 /*

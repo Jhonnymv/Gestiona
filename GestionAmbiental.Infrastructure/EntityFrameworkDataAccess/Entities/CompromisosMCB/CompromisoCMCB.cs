@@ -13,60 +13,71 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         public int Id { get; set; }
         [Column(TypeName ="Varchar(255)")]
         public string Codigo { get; set; }
+        [Column(TypeName = "Text")]
+        public string Detalle_compromiso { get; set; }
+        [Column(TypeName = "Text")]
+        public string Texto_compromiso { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Origen { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string? Ano { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Tomo { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Capitulo { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Seccion { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Pagina { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Resolucion { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Autoridad { get; set; }
+        [Column(TypeName = "datetime")]
+        public DateTime Fecha { get; set; }
+        [Column(TypeName ="Varchar(255)")]
+        public string Duplicado { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_TipoCompromiso { get; set; }
+        [Column(TypeName ="Actividad")]
+        public string Actividad { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Etapa { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Componente { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_ComponenteAux { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_FactorAmbiental { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Aspecto { get; set; }
+        [Column(TypeName = "int")]
+        public int? Id_Area { get; set; }
+        [Column(TypeName ="Varchar(255)")]
+        public string Vigencia { get; set; }
+        [Column(TypeName ="Varchar(255)")]
+        public string? Motivo { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Frecuencia { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Frecuencia_reporte { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string Estado { get; set; }
+        [Column(TypeName = "Varchar(255)")]
+        public string? Sustentos { get; set; }
+        [Column(TypeName ="Text")]
+        public string? Comentario { get; set; }
+
+
 
         [Column(TypeName = "int")]
         public int? Id_Criterio { get; set; }
-
-        [Column(TypeName = "Text")]
-        public string Detalle_compromiso { get; set; }
-
-        [Column(TypeName = "int")]
-        public int? Id_Etapa { get; set; }
-
-        [Column(TypeName = "Text")]
-        public string Texto_compromiso { get; set; }
-
-        [Column(TypeName = "int")]
-        public int? Id_Origen { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Tomo { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Capitulo { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Seccion { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Pagina { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Resolucion { get; set; }
-
-        [Column(TypeName = "int")]
-        public int? Id_Autoridad { get; set; }
-
-        [Column(TypeName = "datetime")]
-        public DateTime Fecha { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Compromiso { get; set; }
 
         [Column(TypeName = "int")]
-        public int? Id_Aspecto { get; set; }
-
-        [Column(TypeName = "int")]
-        public int? Id_Componente { get; set; }
-
-        [Column(TypeName = "int")]
         public int? Id_Gerencia { get; set; }
-
-        [Column(TypeName = "int")]
-        public int? Id_Area { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Frecuencia { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Entidad { get; set; }
@@ -77,14 +88,6 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.Com
         [Column(TypeName = "int")]
         public int? Id_Responsable2 { get; set; }
 
-        [Column(TypeName = "Varchar(255)")]
-        public string Frecuencia_reporte { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Sustentos { get; set; }
-
-        [Column(TypeName = "Varchar(255)")]
-        public string Estado { get; set; }
 
         [Column(TypeName = "int")]
         public int? Id_Aprueba { get; set; }

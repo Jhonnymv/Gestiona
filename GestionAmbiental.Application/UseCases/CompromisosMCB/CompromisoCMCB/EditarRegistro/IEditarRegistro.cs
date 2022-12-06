@@ -34,7 +34,17 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Ed
             string? Sustentos,
             string? Estado,
             int? Id_Aprueba,
-            string? Medio_verificacion
+            string? Medio_verificacion,
+
+            string? Ano,
+            string? Duplicado,
+            int? Id_TipoCompromiso,
+            string? Actividad,
+            int? Id_ComponenteAux,
+            int? Id_FactorAmbiental,
+            string? Vigencia,
+            string? Motivo,
+            string? Comentario
             );
     }
 

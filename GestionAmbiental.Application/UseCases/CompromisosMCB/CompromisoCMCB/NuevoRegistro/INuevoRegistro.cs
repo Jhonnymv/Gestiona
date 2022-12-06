@@ -9,7 +9,7 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
     {
         Task<int> Execute(
             string Codigo, 
-            int Id_Criterio, 
+            int? Id_Criterio, 
             string? Detalle_compromiso,
             int? Id_Etapa,
             string? Texto_compromiso,
@@ -34,7 +34,17 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
             string? Sustentos,
             string? Estado,
             int? Id_Aprueba,
-            string? Medio_verificacion
+            string? Medio_verificacion,
+
+            string? Ano,
+            string?Duplicado,
+            int? Id_TipoCompromiso,
+            string? Actividad,
+            int? Id_ComponenteAux,
+            int? Id_FactorAmbiental,
+            string? Vigencia,
+            string? Motivo,
+            string? Comentario
             );
     }
 }

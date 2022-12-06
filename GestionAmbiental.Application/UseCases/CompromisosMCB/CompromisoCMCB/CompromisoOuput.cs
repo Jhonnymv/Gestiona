@@ -47,6 +47,21 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB
         public string? NomAprueba { get; set; }
         public string? Medio_verificacion { get; set; }
 
+        //last added
+
+        public string Ano { get; set; }
+        public string? Duplicado { get; set; }
+        public int? Id_TipoCompromiso { get; set; }
+        public string? Nomb_TipoCompromiso { get; set; }
+        public string? Actividad { get; set; }
+        public int? Id_ComponenteAux { get; set; }
+        public string? Nomb_ComponenteAux { get; set; }
+        public int? Id_FactorAmbiental { get; set; }
+        public string? Nomb_FactorAmbiental { get; set; }
+        public string? Vigencia { get; set; }
+        public string? Motivo { get; set; }
+        public string? Comentario { get; set; }
+
         public CompromisoOuput()
         {
 
@@ -95,7 +110,18 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB
             NomAprueba = compromiso.Aprueba?.Nombres + " " + compromiso.Aprueba?.Apellidos;
             Medio_verificacion = compromiso.Medio_verificacion;
 
-
+            Ano = compromiso.Ano;
+            Duplicado= compromiso.Duplicado;
+            Id_TipoCompromiso=compromiso.TipoCompromiso?.Id;
+            Nomb_TipoCompromiso = compromiso.TipoCompromiso?.Tipo;
+            Actividad= compromiso.Actividad;
+            Id_ComponenteAux= compromiso.ComponenteAux?.Id;
+            Nomb_ComponenteAux = compromiso.ComponenteAux?.Componente;
+            Id_FactorAmbiental=compromiso.FactorAmbiental?.Id;
+            Nomb_FactorAmbiental = compromiso.FactorAmbiental?.Factor;
+            Vigencia = compromiso.Vigencia;
+            Motivo=compromiso.Motivo;
+            Comentario= compromiso.Comentario;
         }
     }
 }

@@ -77,6 +77,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 entity.Id_Responsable2 = input.Responsable2.IdUsuario;
             };
 
+            entity.Ano = input.Ano;
+            entity.Duplicado= input.Duplicado;
+            if (input.TipoCompromiso != null)
+            {
+                entity.Id_TipoCompromiso = input.TipoCompromiso.Id;
+            }; 
+            entity.Actividad= input.Actividad;
+            if (input.ComponenteAux != null)
+            {
+                entity.Id_ComponenteAux = input.ComponenteAux.Id;
+            };
+            if (input.FactorAmbiental != null)
+            {
+                entity.Id_FactorAmbiental = input.FactorAmbiental.Id;
+            };
+            entity.Vigencia= input.Vigencia;
+            entity.Motivo= input.Motivo;
+            entity.Comentario= input.Comentario;
             await _context.CompromisoCMCB.AddAsync(entity);
             await _context.SaveChangesAsync();
 
@@ -130,6 +148,9 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 var dataResp2 = await _context.Usuarios.FindAsync(item.Id_Responsable2);
                 var dataAprueba = await _context.Usuarios.FindAsync(item.Id_Aprueba);
 
+                var dataTipoCompromiso = await _context.TipoCompromisosCMCB.FindAsync(item.Id_TipoCompromiso);
+                var dataComponenteAux = await _context.ComponenteCMCB.FindAsync(item.Id_ComponenteAux);
+                var dataFactorAmbiental = await _context.FactorAmbientalCMCB.FindAsync(item.Id_FactorAmbiental);
 
                 output.Add(new Domain.CompromisosMCB.CompromisoCMCB
                 {
@@ -159,7 +180,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Sustentos = item.Sustentos,
                     Estado = item.Estado,
                     Aprueba = item.Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)item.Id_Responsable2, Nombres = dataAprueba.Nombres, DNI = dataAprueba.DNI } : null,
-                    Medio_verificacion = item.Medio_verificacion
+                    Medio_verificacion = item.Medio_verificacion,
+                    Ano = item.Ano,
+                    Duplicado = item.Duplicado,
+                    TipoCompromiso = item.Id_TipoCompromiso != null ? new Domain.CompromisosMCB.TipoCompromisoCMCB { Id = (int)item.Id_TipoCompromiso, Tipo = dataTipoCompromiso.Tipo, Descripcion = dataTipoCompromiso.Descripcion } : null,
+                    Actividad = item.Actividad,
+                    ComponenteAux = item.Id_ComponenteAux != null ? new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)item.Id_ComponenteAux, Tipo = dataComponenteAux.Tipo, Componente = dataComponenteAux.Componente, Servicio = dataComponenteAux.Servicio } : null,
+                    FactorAmbiental = item.Id_FactorAmbiental != null ? new Domain.CompromisosMCB.FactorAmbientalCMCB { Id = (int)item.Id_FactorAmbiental, Factor = dataFactorAmbiental.Factor, Descripcion = dataFactorAmbiental.Descripcion } : null,
+                    Vigencia = item.Vigencia,
+                    Motivo = item.Motivo,
+                    Comentario = item.Comentario
                 });
             }
             //retornar nueva lista
@@ -182,6 +212,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var dataResp1 = await _context.Usuarios.FindAsync(data.Id_Responsable1);
             var dataResp2 = await _context.Usuarios.FindAsync(data.Id_Responsable2);
             var dataAprueba = await _context.Usuarios.FindAsync(data.Id_Aprueba);
+            
+            var dataTipoCompromiso = await _context.TipoCompromisosCMCB.FindAsync(data.Id_TipoCompromiso);
+            var dataComponenteAux = await _context.ComponenteCMCB.FindAsync(data.Id_ComponenteAux);
+            var dataFactorAmbiental = await _context.FactorAmbientalCMCB.FindAsync(data.Id_FactorAmbiental);
 
             //Nueva lista en blanco
             var output = new Domain.CompromisosMCB.CompromisoCMCB
@@ -225,7 +259,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 Sustentos = data.Sustentos,
                 Estado = data.Estado,
                 Aprueba = data.Id_Aprueba != null ? new Domain.ValueObjects.Usuario { IdUsuario = (int)data.Id_Responsable2, Nombres = dataAprueba.Nombres, DNI = dataAprueba.DNI } : null,
-                Medio_verificacion = data.Medio_verificacion
+                Medio_verificacion = data.Medio_verificacion,
+                Ano = data.Ano,
+                Duplicado= data.Duplicado,
+                TipoCompromiso = data.Id_TipoCompromiso != null ? new Domain.CompromisosMCB.TipoCompromisoCMCB { Id = (int)data.Id_TipoCompromiso, Tipo = dataTipoCompromiso.Tipo, Descripcion = dataTipoCompromiso.Descripcion } : null,
+                Actividad= data.Actividad,
+                ComponenteAux = data.Id_ComponenteAux != null ? new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)data.Id_ComponenteAux, Tipo= dataComponenteAux.Tipo,Componente = dataComponenteAux.Componente, Servicio = dataComponenteAux.Servicio } : null,
+                FactorAmbiental = data.Id_FactorAmbiental != null ? new Domain.CompromisosMCB.FactorAmbientalCMCB { Id = (int)data.Id_FactorAmbiental, Factor = dataFactorAmbiental.Factor, Descripcion = dataFactorAmbiental.Descripcion } : null,
+                Vigencia=data.Vigencia,
+                Motivo=data.Motivo,
+                Comentario=data.Comentario
             };
             //retornar nueva lista
             return output;
@@ -292,6 +335,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                 entity.Id_Responsable2 = input.Responsable2.IdUsuario;
             };
 
+            entity.Ano = input.Ano;
+            entity.Duplicado = input.Duplicado;
+            if (input.TipoCompromiso != null)
+            {
+                entity.Id_TipoCompromiso = input.TipoCompromiso.Id;
+            };
+            entity.Actividad = input.Actividad;
+            if (input.ComponenteAux != null)
+            {
+                entity.Id_ComponenteAux = input.ComponenteAux.Id;
+            };
+            if (input.FactorAmbiental != null)
+            {
+                entity.Id_FactorAmbiental = input.FactorAmbiental.Id;
+            };
+            entity.Vigencia = input.Vigencia;
+            entity.Motivo = input.Motivo;
+            entity.Comentario = input.Comentario;
             _context.CompromisoCMCB.Update(entity);
             await _context.SaveChangesAsync();
         }
@@ -310,6 +371,10 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var dataResponsable1 = await _context.Usuarios.FindAsync(data.Id_Responsable1);
             var dataResponsable2 = await _context.Usuarios.FindAsync(data.Id_Responsable2);
             var dataAprueba = await _context.Usuarios.FindAsync(data.Id_Aprueba);
+
+            var dataTipoCompromiso = await _context.TipoCompromisosCMCB.FindAsync(data.Id_TipoCompromiso);
+            var dataComponenteAux = await _context.ComponenteCMCB.FindAsync(data.Id_ComponenteAux);
+            var dataFactorAmbiental = await _context.FactorAmbientalCMCB.FindAsync(data.Id_FactorAmbiental);
 
 
             //Nueva lista en blanco
@@ -377,6 +442,16 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
                     Estado = dataResponsable2.Estado
                 } : null,
                 Medio_verificacion = data.Medio_verificacion,
+
+                Ano = data.Ano,
+                Duplicado = data.Duplicado,
+                TipoCompromiso = data.Id_TipoCompromiso != null ? new Domain.CompromisosMCB.TipoCompromisoCMCB { Id = (int)data.Id_TipoCompromiso, Tipo = dataTipoCompromiso.Tipo, Descripcion = dataTipoCompromiso.Descripcion } : null,
+                Actividad = data.Actividad,
+                ComponenteAux = data.Id_ComponenteAux != null ? new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)data.Id_ComponenteAux, Tipo = dataComponenteAux.Tipo, Componente = dataComponenteAux.Componente, Servicio = dataComponenteAux.Servicio } : null,
+                FactorAmbiental = data.Id_FactorAmbiental != null ? new Domain.CompromisosMCB.FactorAmbientalCMCB { Id = (int)data.Id_FactorAmbiental, Factor = dataFactorAmbiental.Factor, Descripcion = dataFactorAmbiental.Descripcion } : null,
+                Vigencia = data.Vigencia,
+                Motivo = data.Motivo,
+                Comentario = data.Comentario
 
                 //OrigenCMCB = new Domain.CompromisosMCB.OrigenCMCB { Id = (int)data.Id_Origen },
             };

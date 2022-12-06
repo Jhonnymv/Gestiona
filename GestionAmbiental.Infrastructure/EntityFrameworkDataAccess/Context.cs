@@ -107,9 +107,12 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
 
         public DbSet<Test_Lista> Test_Listas { get; set; }
         public DbSet<Test> Tests { get; set; }
-
+        
+        // Compromisos
+        public DbSet<TipoCompromisoCMCB> TipoCompromisosCMCB { get; set; }
         public DbSet<AreaCMCB> AreaCMCB { get; set; }
         public DbSet<AspectoCMCB> AspectoCMCB { get; set; }
+        public DbSet<FactorAmbientalCMCB> FactorAmbientalCMCB { get; set; }
         public DbSet<AutoridadCMCB> AutoridadCMCB { get; set; }
         public DbSet<ComponenteCMCB> ComponenteCMCB { get; set; }
         public DbSet<CompromisoCMCB> CompromisoCMCB { get; set; }
@@ -316,11 +319,17 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess
             modelBuilder.Entity<Test_Lista>()
                 .ToTable("Tb_Test_Lista");
 
+            modelBuilder.Entity<TipoCompromisoCMCB>()
+                .ToTable("Tb_CMCB_TipoCompromiso");
+
             modelBuilder.Entity<AreaCMCB>()
                 .ToTable("Tb_Areas_CMCB");
 
             modelBuilder.Entity<AspectoCMCB>()
                 .ToTable("Tb_Aspectos_CMCB");
+
+            modelBuilder.Entity<FactorAmbientalCMCB>()
+                .ToTable("Tb_CMCB_FactorAmbiental");
 
             modelBuilder.Entity<AutoridadCMCB>()
                 .ToTable("Tb_Autoridades_CMCB");

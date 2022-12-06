@@ -19,5 +19,9 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMC
         Task<List<Domain.CompromisosMCB.MedioVerificacionCMCB>> GetMediosVerificacion();
         Task<List<Domain.CompromisosMCB.OrigenCMCB>> GetOrigenes();
         Task<List<Domain.ValueObjects.Usuario>> GetUsuarios();
+
+        Task<List<Domain.CompromisosMCB.TipoCompromisoCMCB>> GetTipos();
+        Task<List<Domain.CompromisosMCB.ComponenteCMCB>> GestComponentesAux();
+        Task<List<Domain.CompromisosMCB.FactorAmbientalCMCB>> GetFactorAmbientals();
     }
 }

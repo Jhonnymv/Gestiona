@@ -35,6 +35,20 @@ namespace GestionAmbiental.Domain.CompromisosMCB
         public string? Estado { get; set; }
         public Usuario Aprueba { get; set; }
         public string? Medio_verificacion { get; set; }
+
+        //last added
+
+        public string? Ano { get; set; }
+        public string? Duplicado { get; set; }
+        public TipoCompromisoCMCB? TipoCompromiso { get; set; }
+        public string? Actividad { get; set; }
+        public ComponenteCMCB? ComponenteAux { get; set; }
+        public FactorAmbientalCMCB? FactorAmbiental { get; set; }
+        public string? Vigencia { get; set; }
+        public string? Motivo { get; set; }
+        public string? Comentario { get; set; }
+
+
         public CompromisoCMCB()
         {
 

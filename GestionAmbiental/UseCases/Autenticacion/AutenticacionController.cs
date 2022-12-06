@@ -50,57 +50,57 @@ namespace GestionAmbiental.UseCases.Autenticacion
                        case "Domain": ldap_domain = item.Value; break;
                    }
                 }
-                // Validate credentials
-                using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+                //// Validate credentials
+                //using (var context = new PrincipalContext(ContextType.Domain, ldap_domain))
+                //{
+                //   if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
+                //   {
+                //       var rol = await _getRolUsuario.Execute(model.User);
+                //       if (!rol.HasValue)
+                //           result = new
+                //           {
+                //               success = false,
+                //               mensaje = "Usuario no autorizado"
+                //           };
+                //       else
+                //       {
+                //           var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                //           HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                //           result = new
+                //           {
+                //               success = true,
+                //               returnUrl = returnUrl
+                //           };
+                //       }
+                //   }
+                //   else
+                //       result = new
+                //       {
+                //           success = false,
+                //           mensaje = "El usuario o la contraseña son incorrectos"
+                //       };
+                //}
+                var rol = await _getRolUsuario.Execute(model.User);
+                if (!rol.HasValue)
                 {
-                   if (context.ValidateCredentials(model.User, model.Password, ContextOptions.Negotiate))
-                   {
-                       var rol = await _getRolUsuario.Execute(model.User);
-                       if (!rol.HasValue)
-                           result = new
-                           {
-                               success = false,
-                               mensaje = "Usuario no autorizado"
-                           };
-                       else
-                       {
-                           var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                           HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                           result = new
-                           {
-                               success = true,
-                               returnUrl = returnUrl
-                           };
-                       }
-                   }
-                   else
-                       result = new
-                       {
-                           success = false,
-                           mensaje = "El usuario o la contraseña son incorrectos"
-                       };
-                }
-                // var rol = await _getRolUsuario.Execute(model.User);
-                // if (!rol.HasValue)
-                // {
-                //     model.MensajeAut = "El usuario o la contraseña son incorrectas";
-                //     result = new
-                //     {
-                //         success = false,
-                //         mensaje = "El usuario o la contraseña son incorrectas"
-                //     };
+                    model.MensajeAut = "El usuario o la contraseña son incorrectas";
+                    result = new
+                    {
+                        success = false,
+                        mensaje = "El usuario o la contraseña son incorrectas"
+                    };
 
-                // }
-                // else
-                // {
-                //     var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
-                //     HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
-                //     result = new
-                //     {
-                //         success = true,
-                //         returnUrl = returnUrl
-                //     };
-                // }
+                }
+                else
+                {
+                    var userInfo = new UserInfo { NombreUsuario = model.User, Rol = rol.Value };
+                    HttpContext.Session.SetString("SessionUser", JsonConvert.SerializeObject(userInfo));
+                    result = new
+                    {
+                        success = true,
+                        returnUrl = returnUrl
+                    };
+                }
             }
             return Ok(result);
         }

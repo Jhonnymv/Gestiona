@@ -18,16 +18,18 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
             _sustentoReadOnlyRepository = sustentoReadOnlyRepository ?? throw new ArgumentNullException(nameof(sustentoReadOnlyRepository));
         }
 
-        public async Task<int> Execute(string Codigo, int Id_Criterio, string? Detalle_compromiso, int? Id_Etapa, string? Texto_compromiso, int? Id_Origen, string? Tomo, string? Capitulo,
+        public async Task<int> Execute(string Codigo, int? Id_Criterio, string? Detalle_compromiso, int? Id_Etapa, string? Texto_compromiso, int? Id_Origen, string? Tomo, string? Capitulo,
             string? Seccion, string? Pagina, string? Resolucion, int? Id_Autoridad, DateTime? Fecha, int? Id_Compromiso, int? Id_Aspecto, int? Id_Componente, int? Id_Gerencia, int? Id_Area,
-            string? Frecuencia, int? Id_Entidad, int? Id_Responsable1, int? Id_Responsable2, string? Frecuencia_reporte, string? Sustentos, string? Estado, int? Id_Aprueba, string? Medio_verificacion)
+            string? Frecuencia, int? Id_Entidad, int? Id_Responsable1, int? Id_Responsable2, string? Frecuencia_reporte, string? Sustentos, string? Estado, int? Id_Aprueba, string? Medio_verificacion,
+            string? Ano, string? Duplicado, int? Id_TipoCompromiso, string? Actividad, int? Id_ComponenteAux, int? Id_FactorAmbiental, string? Vigencia, string? Motivo, string? Comentario
+            )
         {
             var input = new Domain.CompromisosMCB.CompromisoCMCB();
 
             input.Codigo = Codigo;
-            if (Id_Criterio != 0)
+            if (Id_Criterio != 0 && Id_Criterio != null)
             {
-                input.CriterioCMCB = new Domain.CompromisosMCB.CriterioCMCB { Id = Id_Criterio };
+                input.CriterioCMCB = new Domain.CompromisosMCB.CriterioCMCB { Id = (int)Id_Criterio };
             };
             if (Id_Etapa != null)
             {
@@ -78,9 +80,28 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
             input.Frecuencia_reporte = Frecuencia_reporte;
             input.Sustentos = Sustentos;
             input.Estado = Estado;
+            input.Ano = Ano;
+            input.Duplicado = Duplicado;
+
+            if (Id_TipoCompromiso != null)
+            {
+                input.TipoCompromiso = new Domain.CompromisosMCB.TipoCompromisoCMCB { Id = (int)Id_TipoCompromiso };
+            }
+            input.Actividad = Actividad;
+            if (Id_ComponenteAux != null)
+            {
+                input.ComponenteAux = new Domain.CompromisosMCB.ComponenteCMCB { Id = (int)Id_ComponenteAux };
+            }
+            if (Id_FactorAmbiental != null)
+            {
+                input.FactorAmbiental = new Domain.CompromisosMCB.FactorAmbientalCMCB { Id = (int)Id_FactorAmbiental };
+            }
+            input.Vigencia = Vigencia;
+            input.Motivo = Motivo;
+            input.Comentario = Comentario;
 
             var idCompromiso = await _compromisoReadOnlyRepository.RegistrarCompromiso(input);
-            
+
             var inputSustento = new Domain.CompromisosMCB.SustentoCMCB
             {
                 CompromisoCMCB = new Domain.CompromisosMCB.CompromisoCMCB { Id = idCompromiso },
@@ -97,6 +118,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Nu
             {
                 inputSustento.Responsable2 = new Domain.ValueObjects.Usuario { IdUsuario = (int)Id_Responsable2 };
             };
+
+           
+
 
             await _sustentoReadOnlyRepository.RegistrarSustento(inputSustento);
 

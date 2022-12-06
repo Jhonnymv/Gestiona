@@ -28,6 +28,10 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.It
             var componetes=await _getItemsReadOnlyRepository.GetComponentes();
             var gerencias=await _getItemsReadOnlyRepository.GetGerencias();
             var usuarios=await _getItemsReadOnlyRepository.GetUsuarios();
+            var tipoCompromisos = await _getItemsReadOnlyRepository.GetTipos();
+            var componentesAux = await _getItemsReadOnlyRepository.GestComponentesAux();
+            var FactoresAmbientales = await _getItemsReadOnlyRepository.GetFactorAmbientals();
+           
 
             var output = new SelectItemsOutput();
             output.ItemsArea = areas;
@@ -39,6 +43,9 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.It
             output.ItemsComponente = componetes;
             output.ItemsGerencia = gerencias;
             output.ItemsUsuario = usuarios;
+            output.TipoCompromisos = tipoCompromisos;
+            output.ComponentesAux = componentesAux;
+            output.FactoresAmbientales = FactoresAmbientales;
             output.EstadosSustento = Enum.GetNames(typeof(EstadosSustento)).ToList();
             output.EstadosCompromiso = Enum.GetNames(typeof(EstadosCompromiso)).ToList();
 

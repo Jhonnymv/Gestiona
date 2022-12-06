@@ -24,8 +24,8 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var entity = new Entities.CompromisosMCB.SustentoCMCB {
                 Id_Compromiso = sustentoCMCB.CompromisoCMCB.Id,
                 Fecha_limite = sustentoCMCB.Fecha_limite,
-                Id_Responsable1 = sustentoCMCB.Responsable1.IdUsuario,
-                Id_Responsable2 = sustentoCMCB.Responsable2.IdUsuario,
+                Id_Responsable1 = sustentoCMCB.Responsable1?.IdUsuario,
+                Id_Responsable2 = sustentoCMCB.Responsable2?.IdUsuario,
                 Detalle_compromiso = sustentoCMCB.Detalle_compromiso,
                 Medio_verificacion = sustentoCMCB.Medio_verificacion,
                 Estado = sustentoCMCB.Estado

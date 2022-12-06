@@ -6,9 +6,9 @@
 }
 
 @section Styles{
-<style>
+    <style>
 
-</style>
+    </style>
 }
 
 <div class="tablas">
@@ -24,44 +24,14 @@
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Fecha"></label>
-                            <span class="text-danger" asp-validation-for="Fecha"></span>
-                            <input type="date" class="form-control" asp-for="Fecha">
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Codigo"></label>
                             <span class="text-danger" asp-validation-for="Codigo"></span>
                             <input type="text" class="form-control" asp-for="Codigo">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-
-
-                            <label asp-for="Id_Criterio">Criterio</label>
-                            <span class="text-danger" asp-validation-for="Id_Criterio"></span>
-
-                            @*<select id="select_Criterio" class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>*@
-                            @*<button type="button" class="btn btn-info" id="btnAddCriterio">+</button>*@
-                            <div class="input-group">
-                                <select class="form-control" id="select_Criterio" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddCriterio">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Detalle_compromiso"></label>
                             <span class="text-danger" asp-validation-for="Detalle_compromiso"></span>
                             <textarea class="form-control" asp-for="Detalle_compromiso"></textarea>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Etapa">Etapa</label>
-                            <span class="text-danger" asp-validation-for="Id_Etapa"></span>
-                            <div class="input-group">
-                                <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddEtapa">+</button>
-                                </div>
-                            </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Texto_compromiso"></label>
@@ -77,6 +47,11 @@
                                     <button class="btn btn-outline-info btn-sm" type="button" id="btnAddOrigen">+</button>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Ano"></label>
+                            <span class="text-danger" asp-validation-for="Ano"></span>
+                            <input type="text" class="form-control" asp-for="Ano">
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Tomo"></label>
@@ -114,32 +89,72 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Fecha"></label>
+                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                            <input type="date" class="form-control" asp-for="Fecha">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Duplicado">Concordancia y/o Duplicidad</label>
+                            <span class="text-danger" asp-validation-for="Duplicado"></span>
+                            <input type="text" class="form-control" asp-for="Duplicado">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_TipoCompromiso">Tipo Compromiso</label>
+                            <span class="text-danger" asp-validation-for="Id_TipoCompromiso"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_TipoCompromiso" class="form-control" asp-for="Id_TipoCompromiso" asp-items="@ViewBag.TipoCompromisos"></select>
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Actividad">Actividad</label>
+                            <span class="text-danger" asp-validation-for="Actividad"></span>
+                            <select class="form-control" asp-for="Actividad">
+                                <option value="Exploración" selected>Exploración</option>
+                                <option value="Explotación">Explotación</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Etapa">Etapa</label>
+                            <span class="text-danger" asp-validation-for="Id_Etapa"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                            @*<div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddEtapa">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Componente">Componente</label>
+                            <span class="text-danger" asp-validation-for="Id_Componente"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                            @*   <div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_ComponenteAux">Componente Auxiliar </label>
+                            <span class="text-danger" asp-validation-for="Id_ComponenteAux"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_ComponenteAux" class="form-control" asp-for="Id_ComponenteAux" asp-items="@ViewBag.ComponentesAux"></select>
+                            @*   <div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_FactorAmbiental">Factor Ambiental </label>
+                            <span class="text-danger" asp-validation-for="Id_FactorAmbiental"></span>
+                            <select id="select_FactorAmbiental" class="form-control" asp-for="Id_FactorAmbiental" asp-items="@ViewBag.FactoresAmbientales"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Id_Aspecto">Aspecto</label>
                             <span class="text-danger" asp-validation-for="Id_Aspecto"></span>
                             <div class="input-group">
                                 <select id="select_Aspecto" class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
                                 <div class="input-group-append">
                                     <button class="btn btn-outline-info btn-sm" type="button" id="btnAddAspecto">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Componente">Componente</label>
-                            <span class="text-danger" asp-validation-for="Id_Componente"></span>
-                            <div class="input-group">
-                                <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Gerencia">Gerencia</label>
-                            <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
-                            <div class="input-group">
-                                <select id="select_Gerencia" class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddGerencia">+</button>
                                 </div>
                             </div>
                         </div>
@@ -154,59 +169,107 @@
                             </div>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Vigencia">Vigencia </label>
+                            <span class="text-danger" asp-validation-for="Vigencia"></span>
+                            <select id="select_Vigencia" class="form-control" asp-for="Vigencia">
+                                <option value="Vigente" selected>Vigente</option>
+                                <option value="No Vigente">No Vigente</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Motivo">Motivo </label>
+                            <span class="text-danger" asp-validation-for="Motivo"></span>
+                            <select id="select_Motivo" class="form-control" asp-for="Motivo">
+                                <option value="No Aplica" selected>No Aplica</option>
+                                <option value="Cambio de Normativa">Cambio de Normativa</option>
+                                <option value="Cambios en el proyecto">Cambios en el proyecto</option>
+                                <option value="Medidas administrativas">Medidas administrativas</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Frecuencia">Frecuencia</label>
                             <span class="text-danger" asp-validation-for="Frecuencia"></span>
                             <select class="form-control" asp-for="Frecuencia">
-                                <option value="">--Seleccione--</option>
-                                <option value="Diario">Diario</option>
+                                <option value="Única vez" selected>Única vez</option>
+                                <option value="Permanente">Permanente</option>
                                 <option value="Semanal">Semanal</option>
                                 <option value="Mensual">Mensual</option>
                                 <option value="Trimestral">Trimestral</option>
                                 <option value="Semestral">Semestral</option>
                                 <option value="Anual">Anual</option>
                             </select>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Responsable1">Responsable 2</label>
-                            <span class="text-danger" asp-validation-for="Id_Responsable1"></span>
-                            <select class="form-control" asp-for="Id_Responsable1" asp-items="@ViewBag.usuarios"></select>
-                        </div>
-
-                        <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Id_Responsable2">Responsable 1</label>
-                            <span class="text-danger" asp-validation-for="Id_Responsable2"></span>
-                            <select class="form-control" asp-for="Id_Responsable2" asp-items="@ViewBag.usuarios"></select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Frecuencia_reporte">Frecuencia Reporte</label>
                             <span class="text-danger" asp-validation-for="Frecuencia_reporte"></span>
                             <select class="form-control" asp-for="Frecuencia_reporte">
-                                <option value="">--Seleccione--</option>
-                                <option value="Diario">Diario</option>
-                                <option value="Semanal">Semanal</option>
-                                <option value="Mensual">Mensual</option>
+                                <option value="No Aplica" selected>No Aplica</option>
                                 <option value="Trimestral">Trimestral</option>
                                 <option value="Semestral">Semestral</option>
                                 <option value="Anual">Anual</option>
                             </select>
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
-                            <label asp-for="Sustentos"></label>
-                            <span class="text-danger" asp-validation-for="Sustentos"></span>
-                            <textarea class="form-control" asp-for="Sustentos"></textarea>
-                        </div>
-                        <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Estado">Estado</label>
                             <span class="text-danger" asp-validation-for="Estado"></span>
                             <select class="form-control" asp-for="Estado">
-                                <option value="">--Seleccione--</option>
-                                <option value="No Vigente">No vigente</option>
-                                <option value="En Proceso">En proceso</option>
-                                <option value="Registrado">Registrado</option>
-                                <option value="Vencido">Vencido</option>
+                                <option value="Valido" selected>Valido</option>
+                                <option value="Validado (con observaciones)">Validado (con observaciones)</option>
+                                <option value="No validado">No validado</option>
+                                <option value="Por Validar">Por Validar</option>
                             </select>
                         </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Comentario"></label>
+                            <span class="text-danger" asp-validation-for="Comentario"></span>
+                            <textarea class="form-control" asp-for="Comentario"></textarea>
+                        </div
+
+
+                  @*      <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Responsable1">Responsable</label>
+                            <span class="text-danger" asp-validation-for="Id_Responsable1"></span>
+                            <select class="form-control" asp-for="Id_Responsable1" asp-items="@ViewBag.usuarios"></select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                        <label asp-for="Id_Criterio">Criterio</label>
+                        <span class="text-danger" asp-validation-for="Id_Criterio"></span>
+                        <div class="input-group">
+                        <select class="form-control" id="select_Criterio" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-info btn-sm" type="button" id="btnAddCriterio">+</button>
+                        </div>
+                        </div>
+                        </div>
+
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                        <label asp-for="Id_Gerencia">Gerencia</label>
+                        <span class="text-danger" asp-validation-for="Id_Gerencia"></span>
+                        <div class="input-group">
+                        <select id="select_Gerencia" class="form-control" asp-for="Id_Gerencia" asp-items="@ViewBag.Gerencias"></select>
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-info btn-sm" type="button" id="btnAddGerencia">+</button>
+                        </div>
+                        </div>
+                        </div>
+
+
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                        <label asp-for="Id_Responsable2">Responsable 1</label>
+                        <span class="text-danger" asp-validation-for="Id_Responsable2"></span>
+                        <select class="form-control" asp-for="Id_Responsable2" asp-items="@ViewBag.usuarios"></select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                        <label asp-for="Sustentos"></label>
+                        <span class="text-danger" asp-validation-for="Sustentos"></span>
+                        <textarea class="form-control" asp-for="Sustentos"></textarea>
+                        </div>*@
+
                     </div>
                     <div class="row input_container">
                         <div class="button-container">
@@ -494,182 +557,182 @@
     </div>
 </div>
 @section scripts{
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/selectpicker/js/bootstrap-select.js"></script>
-<script src="~/lib/pdfobject/pdfobject.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#btnAddCriterio").on("click",function(){
-            $("#modal_add_criterio").modal("show")
-        })
-        $("#btn_saveCriterio").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveCriterio",
-                method:"GET",
-                 data: {
-                "nameCriterio": $("#nameCriterioAdd").val(),
-                "crieterioDetalle": $("#crieterioDetalleAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Criterio").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameCriterioAdd").val('')
-                $("#crieterioDetalleAdd").val('')
-                $("#modal_add_criterio").modal("hide")
-            }
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnAddCriterio").on("click", function () {
+                $("#modal_add_criterio").modal("show")
             })
-        })
-
-
-        $("#btnAddEtapa").on("click",function(){
-            $("#modal_add_Etapa").modal("show")
-        })
-        $("#btn_saveEtapa").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveEtapa",
-                method:"GET",
-                 data: {
-                "nameEtapa": $("#nameEtapaAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Etapa").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameEtapaAdd").val('')
-                $("#modal_add_Etapa").modal("hide")
-            }
+            $("#btn_saveCriterio").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveCriterio",
+                    method: "GET",
+                    data: {
+                        "nameCriterio": $("#nameCriterioAdd").val(),
+                        "crieterioDetalle": $("#crieterioDetalleAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Criterio").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameCriterioAdd").val('')
+                        $("#crieterioDetalleAdd").val('')
+                        $("#modal_add_criterio").modal("hide")
+                    }
+                })
             })
-        })
 
-        $("#btnAddOrigen").on("click",function(){
-            $("#modal_add_Origen").modal("show")
-        })
-        $("#btn_saveOrigen").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveOrigen",
-                method:"GET",
-                 data: {
-                "nameOrigen": $("#nameOrigenAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Origen").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameOrigenAdd").val('')
-                $("#modal_add_Origen").modal("hide")
-            }
+
+            $("#btnAddEtapa").on("click", function () {
+                $("#modal_add_Etapa").modal("show")
             })
-        })
-
-        $("#btnAddAutoridad").on("click",function(){
-            $("#modal_add_Autoridad").modal("show")
-        })
-        $("#btn_saveAutoridad").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveAutoridad",
-                method:"GET",
-                 data: {
-                "nameAutoridad": $("#nameAutoridadAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Autoridad").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameAutoridadAdd").val('')
-                $("#modal_add_Autoridad").modal("hide")
-            }
+            $("#btn_saveEtapa").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveEtapa",
+                    method: "GET",
+                    data: {
+                        "nameEtapa": $("#nameEtapaAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Etapa").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameEtapaAdd").val('')
+                        $("#modal_add_Etapa").modal("hide")
+                    }
+                })
             })
-        })
 
-        $("#btnAddAspecto").on("click",function(){
-            $("#modal_add_Aspecto").modal("show")
-        })
-        $("#btn_saveAspecto").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveAspecto",
-                method:"GET",
-                 data: {
-                "nameAspecto": $("#nameAspectoAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Aspecto").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameAspectoAdd").val(''),
-                $("#modal_add_Aspecto").modal("hide")
-            }
+            $("#btnAddOrigen").on("click", function () {
+                $("#modal_add_Origen").modal("show")
             })
-        })
-
-        $("#btnAddComponente").on("click",function(){
-            $("#modal_add_Componente").modal("show")
-        })
-        $("#btn_saveComponente").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveComponente",
-                method:"GET",
-                 data: {
-                "tipoComponente": $("#tipoComponenteAdd").val(),
-                "nameComponente": $("#nameComponenteAdd").val(),
-                "servicioComponente": $("#servicioComponenteAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Componente").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#tipoComponenteAdd").val('')
-                $("#nameComponenteAdd").val('')
-                $("#servicioComponenteAdd").val('')
-                $("#modal_add_Componente").modal("hide")
-            }
+            $("#btn_saveOrigen").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveOrigen",
+                    method: "GET",
+                    data: {
+                        "nameOrigen": $("#nameOrigenAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Origen").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameOrigenAdd").val('')
+                        $("#modal_add_Origen").modal("hide")
+                    }
+                })
             })
-        })
-        $("#btnAddGerencia").on("click",function(){
-            $("#modal_add_Gerencia").modal("show")
-        })
-        $("#btn_saveGerencia").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveGerencia",
-                method:"GET",
-                 data: {
-                "nameGerencia": $("#nameGerenciaAdd").val(),
-                "descripcionGerencia": $("#descripcionGerenciaAdd").val()
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Gerencia").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameGerenciaAdd").val('')
-                $("#descripcionGerenciaAdd").val('')
-                $("#modal_add_Gerencia").modal("hide")
-            }
+
+            $("#btnAddAutoridad").on("click", function () {
+                $("#modal_add_Autoridad").modal("show")
             })
-        })
-
-        $("#btnAddArea").on("click",function(){
-            $("#modal_add_Area").modal("show")
-        })
-        $("#btn_saveArea").on('click',function(){
-            $.ajax({
-                url:"/CompromisosMCB/saveArea",
-                method:"GET",
-                 data: {
-                "nameArea": $("#nameAreaAdd").val()
-
-            },
-            traditional: true,
-            success: (response) => {
-                console.log(response)
-                $("#select_Area").append("<option value='"+response.id+"'>"+response.value+"</option>")
-                $("#nameAreaAdd").val('')
-                $("#modal_add_Area").modal("hide")
-            }
+            $("#btn_saveAutoridad").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveAutoridad",
+                    method: "GET",
+                    data: {
+                        "nameAutoridad": $("#nameAutoridadAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Autoridad").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameAutoridadAdd").val('')
+                        $("#modal_add_Autoridad").modal("hide")
+                    }
+                })
             })
-        })
+
+            $("#btnAddAspecto").on("click", function () {
+                $("#modal_add_Aspecto").modal("show")
+            })
+            $("#btn_saveAspecto").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveAspecto",
+                    method: "GET",
+                    data: {
+                        "nameAspecto": $("#nameAspectoAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Aspecto").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameAspectoAdd").val(''),
+                            $("#modal_add_Aspecto").modal("hide")
+                    }
+                })
+            })
+
+            $("#btnAddComponente").on("click", function () {
+                $("#modal_add_Componente").modal("show")
+            })
+            $("#btn_saveComponente").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveComponente",
+                    method: "GET",
+                    data: {
+                        "tipoComponente": $("#tipoComponenteAdd").val(),
+                        "nameComponente": $("#nameComponenteAdd").val(),
+                        "servicioComponente": $("#servicioComponenteAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Componente").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#tipoComponenteAdd").val('')
+                        $("#nameComponenteAdd").val('')
+                        $("#servicioComponenteAdd").val('')
+                        $("#modal_add_Componente").modal("hide")
+                    }
+                })
+            })
+            $("#btnAddGerencia").on("click", function () {
+                $("#modal_add_Gerencia").modal("show")
+            })
+            $("#btn_saveGerencia").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveGerencia",
+                    method: "GET",
+                    data: {
+                        "nameGerencia": $("#nameGerenciaAdd").val(),
+                        "descripcionGerencia": $("#descripcionGerenciaAdd").val()
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Gerencia").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameGerenciaAdd").val('')
+                        $("#descripcionGerenciaAdd").val('')
+                        $("#modal_add_Gerencia").modal("hide")
+                    }
+                })
+            })
+
+            $("#btnAddArea").on("click", function () {
+                $("#modal_add_Area").modal("show")
+            })
+            $("#btn_saveArea").on('click', function () {
+                $.ajax({
+                    url: "/CompromisosMCB/saveArea",
+                    method: "GET",
+                    data: {
+                        "nameArea": $("#nameAreaAdd").val()
+
+                    },
+                    traditional: true,
+                    success: (response) => {
+                        console.log(response)
+                        $("#select_Area").append("<option value='" + response.id + "'>" + response.value + "</option>")
+                        $("#nameAreaAdd").val('')
+                        $("#modal_add_Area").modal("hide")
+                    }
+                })
+            })
 
 
 
-    });
-</script>
+        });
+    </script>
 }

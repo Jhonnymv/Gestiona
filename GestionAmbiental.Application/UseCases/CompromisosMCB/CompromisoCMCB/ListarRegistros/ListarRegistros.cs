@@ -101,6 +101,25 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
                 compItem.Sustentos = item.Sustentos;
                 compItem.Estado = item.Estado;
 
+                compItem.Ano= item.Ano;
+                compItem.Duplicado=item.Duplicado;
+                if(item.TipoCompromiso!= null)
+                {
+                    compItem.Id_TipoCompromiso = item.TipoCompromiso.Id;
+                    compItem.Nomb_TipoCompromiso = item.TipoCompromiso.Tipo;
+                }
+                compItem.Actividad= item.Actividad;
+                if (item.ComponenteAux != null)
+                {
+                    compItem.Id_ComponenteAux = item.ComponenteAux.Id;
+                    compItem.Nomb_ComponenteAux = item.ComponenteAux.Componente;
+                }
+                if (item.FactorAmbiental != null)
+                {
+                    compItem.Id_FactorAmbiental = item.FactorAmbiental.Id;
+                    compItem.Nomb_FactorAmbiental = item.FactorAmbiental.Factor;
+                }
+
                 output.Registros.Add(compItem);
             }
             //Contar registros
@@ -204,6 +223,24 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.CompromisoCMCB.Li
             ouput.Sustentos = compromiso.Sustentos;
             ouput.Estado = compromiso.Estado;
 
+            ouput.Ano = compromiso.Ano;
+            ouput.Duplicado = compromiso.Duplicado;
+            if (compromiso.TipoCompromiso != null)
+            {
+                ouput.Id_TipoCompromiso = compromiso.TipoCompromiso.Id;
+                ouput.Nomb_TipoCompromiso = compromiso.TipoCompromiso.Tipo;
+            }
+            ouput.Actividad = compromiso.Actividad;
+            if (compromiso.ComponenteAux != null)
+            {
+                ouput.Id_ComponenteAux = compromiso.ComponenteAux.Id;
+                ouput.Nomb_ComponenteAux = compromiso.ComponenteAux.Componente;
+            }
+            if (compromiso.FactorAmbiental != null)
+            {
+                ouput.Id_FactorAmbiental = compromiso.FactorAmbiental.Id;
+                ouput.Nomb_FactorAmbiental = compromiso.FactorAmbiental.Factor;
+            }
 
             return ouput;
         }

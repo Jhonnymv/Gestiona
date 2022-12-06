@@ -15,7 +15,225 @@
         <div class="container pt-4 pb-4">
             <form class="custom-form details-container w-100" autocomplete="off" asp-controller="CompromisosMCB" asp-action="EditarRegistro" method="post" enctype="multipart/form-data" autocomplete="off">
                 <input type="hidden" asp-for="Id" />
+
                 <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Codigo"></label>
+                            <span class="text-danger" asp-validation-for="Codigo"></span>
+                            <input type="text" class="form-control" asp-for="Codigo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Detalle_compromiso"></label>
+                            <span class="text-danger" asp-validation-for="Detalle_compromiso"></span>
+                            <textarea class="form-control" asp-for="Detalle_compromiso"></textarea>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Texto_compromiso"></label>
+                            <span class="text-danger" asp-validation-for="Texto_compromiso"></span>
+                            <textarea class="form-control" asp-for="Texto_compromiso"></textarea>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Origen">Origen</label>
+                            <span class="text-danger" asp-validation-for="Id_Origen"></span>
+                            <div class="input-group">
+                                <select id="select_Origen" class="form-control" asp-for="Id_Origen" asp-items="@ViewBag.Origenes"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddOrigen">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Ano"></label>
+                            <span class="text-danger" asp-validation-for="Ano"></span>
+                            <input type="text" class="form-control" asp-for="Ano">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Tomo"></label>
+                            <span class="text-danger" asp-validation-for="Tomo"></span>
+                            <input type="text" class="form-control" asp-for="Tomo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Capitulo"></label>
+                            <span class="text-danger" asp-validation-for="Capitulo"></span>
+                            <input type="text" class="form-control" asp-for="Capitulo">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Seccion"></label>
+                            <span class="text-danger" asp-validation-for="Seccion"></span>
+                            <input type="text" class="form-control" asp-for="Seccion">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Pagina"></label>
+                            <span class="text-danger" asp-validation-for="Pagina"></span>
+                            <input type="text" class="form-control" asp-for="Pagina">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Resolucion">Resolución</label>
+                            <span class="text-danger" asp-validation-for="Resolucion"></span>
+                            <input type="text" class="form-control" asp-for="Resolucion">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Autoridad">Autoridad</label>
+                            <span class="text-danger" asp-validation-for="Id_Autoridad"></span>
+                            <div class="input-group">
+                                <select id="select_Autoridad" class="form-control" asp-for="Id_Autoridad" asp-items="@ViewBag.Autoridades"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddAutoridad">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Fecha"></label>
+                            <span class="text-danger" asp-validation-for="Fecha"></span>
+                            <input type="date" class="form-control" asp-for="Fecha">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Duplicado">Concordancia y/o Duplicidad</label>
+                            <span class="text-danger" asp-validation-for="Duplicado"></span>
+                            <input type="text" class="form-control" asp-for="Duplicado">
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_TipoCompromiso">Tipo Compromiso</label>
+                            <span class="text-danger" asp-validation-for="Id_TipoCompromiso"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_TipoCompromiso" class="form-control" asp-for="Id_TipoCompromiso" asp-items="@ViewBag.TipoCompromisos"></select>
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Actividad">Actividad</label>
+                            <span class="text-danger" asp-validation-for="Actividad"></span>
+                            <select class="form-control" asp-for="Actividad">
+                                <option value="Exploración" selected>Exploración</option>
+                                <option value="Explotación">Explotación</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Etapa">Etapa</label>
+                            <span class="text-danger" asp-validation-for="Id_Etapa"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_Etapa" class="form-control" asp-for="Id_Etapa" asp-items="@ViewBag.Etapas"></select>
+                            @*<div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddEtapa">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Componente">Componente</label>
+                            <span class="text-danger" asp-validation-for="Id_Componente"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_Componente" class="form-control" asp-for="Id_Componente" asp-items="@ViewBag.Componentes"></select>
+                            @*   <div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_ComponenteAux">Componente Auxiliar </label>
+                            <span class="text-danger" asp-validation-for="Id_ComponenteAux"></span>
+                            @*<div class="input-group">*@
+                            <select id="select_ComponenteAux" class="form-control" asp-for="Id_ComponenteAux" asp-items="@ViewBag.ComponentesAux"></select>
+                            @*   <div class="input-group-append">
+                            <button class="btn btn-outline-info btn-sm" type="button" id="btnAddComponente">+</button>
+                            </div>*@
+                            @*</div>*@
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_FactorAmbiental">Factor Ambiental </label>
+                            <span class="text-danger" asp-validation-for="Id_FactorAmbiental"></span>
+                            <select id="select_FactorAmbiental" class="form-control" asp-for="Id_FactorAmbiental" asp-items="@ViewBag.FactoresAmbientales"></select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Aspecto">Aspecto</label>
+                            <span class="text-danger" asp-validation-for="Id_Aspecto"></span>
+                            <div class="input-group">
+                                <select id="select_Aspecto" class="form-control" asp-for="Id_Aspecto" asp-items="@ViewBag.Aspectos"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddAspecto">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Id_Area">Area</label>
+                            <span class="text-danger" asp-validation-for="Id_Area"></span>
+                            <div class="input-group">
+                                <select id="select_Area" class="form-control" asp-for="Id_Area" asp-items="@ViewBag.Areas"></select>
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-info btn-sm" type="button" id="btnAddArea">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Vigencia">Vigencia </label>
+                            <span class="text-danger" asp-validation-for="Vigencia"></span>
+                            <select id="select_Vigencia" class="form-control" asp-for="Vigencia">
+                                <option value="Vigente" selected>Vigente</option>
+                                <option value="No Vigente">No Vigente</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Motivo">Motivo </label>
+                            <span class="text-danger" asp-validation-for="Motivo"></span>
+                            <select id="select_Motivo" class="form-control" asp-for="Motivo">
+                                <option value="No Aplica" selected>No Aplica</option>
+                                <option value="Cambio de Normativa">Cambio de Normativa</option>
+                                <option value="Cambios en el proyecto">Cambios en el proyecto</option>
+                                <option value="Medidas administrativas">Medidas administrativas</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Frecuencia">Frecuencia</label>
+                            <span class="text-danger" asp-validation-for="Frecuencia"></span>
+                            <select class="form-control" asp-for="Frecuencia">
+                                <option value="Única vez" selected>Única vez</option>
+                                <option value="Permanente">Permanente</option>
+                                <option value="Semanal">Semanal</option>
+                                <option value="Mensual">Mensual</option>
+                                <option value="Trimestral">Trimestral</option>
+                                <option value="Semestral">Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Frecuencia_reporte">Frecuencia Reporte</label>
+                            <span class="text-danger" asp-validation-for="Frecuencia_reporte"></span>
+                            <select class="form-control" asp-for="Frecuencia_reporte">
+                                <option value="No Aplica" selected>No Aplica</option>
+                                <option value="Trimestral">Trimestral</option>
+                                <option value="Semestral">Semestral</option>
+                                <option value="Anual">Anual</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Estado">Estado</label>
+                            <span class="text-danger" asp-validation-for="Estado"></span>
+                            <select class="form-control" asp-for="Estado">
+                                <option value="Valido" selected>Valido</option>
+                                <option value="Validado (con observaciones)">Validado (con observaciones)</option>
+                                <option value="No validado">No validado</option>
+                                <option value="Por Validar">Por Validar</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-sm-6 col-lg-4">
+                            <label asp-for="Comentario"></label>
+                            <span class="text-danger" asp-validation-for="Comentario"></span>
+                            <textarea class="form-control" asp-for="Comentario"></textarea>
+                        </div>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="CompromisosMCB" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="submit" class="btn btn-mc-success">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                   
                     <div class="row input_container">
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Fecha"></label>
@@ -31,7 +249,6 @@
                             <label asp-for="Id_Criterio">Criterio</label>
                             <span class="text-danger" asp-validation-for="Id_Criterio"></span>
                             <select class="form-control" asp-for="Id_Criterio" asp-items="@ViewBag.Criterios"></select>
-                            @*<button type="button" class="btn btn-info" id="addCriterio">+</button>*@
                         </div>
                         <div class="col-12 col-sm-6 col-lg-4">
                             <label asp-for="Detalle_compromiso"></label>
@@ -162,13 +379,14 @@
                                 <div></div>
                                 <div id="bntsDetalle">
                                     <a asp-controller="CompromisosMCB" asp-action="ResumenCompromisos" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
-                                    @*<button id="eliminar" type="button" class="btn btn-mc-danger">Eliminar Inspección</button>*@
                                     <button type="submit" class="btn btn-mc-success">Guardar</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                 </div>
+                *@
             </form>
         </div>
     </div>

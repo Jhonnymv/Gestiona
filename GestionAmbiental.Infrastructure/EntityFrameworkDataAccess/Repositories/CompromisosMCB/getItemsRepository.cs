@@ -1,6 +1,7 @@
 ﻿using GestionAmbiental.Application.Repositories.CompromisosMCB.CompromisoCMCB;
 using GestionAmbiental.Domain.CompromisosMCB;
 using GestionAmbiental.Domain.ValueObjects;
+using GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities.AvistamientoFauna;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,24 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _context = context;
         }
+
+        public async Task<List<ComponenteCMCB>> GestComponentesAux()
+        {
+            var ComponenteEntity = await _context.ComponenteCMCB.ToListAsync();
+            var ouput = new List<ComponenteCMCB>();
+            foreach (var item in ComponenteEntity)
+            {
+                ouput.Add(new ComponenteCMCB
+                {
+                    Id = item.Id,
+                    Tipo = item.Tipo,
+                    Componente = item.Componente,
+                    Servicio = item.Servicio,
+                });
+            }
+            return ouput;
+        }
+
         public async Task<List<AreaCMCB>> GetAreas()
         {
             var ArearEntity = await _context.AreaCMCB.ToListAsync();
@@ -102,6 +121,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return ouput;
         }
+
+        public async Task<List<FactorAmbientalCMCB>> GetFactorAmbientals()
+        {
+            var FactorEntity = await _context.FactorAmbientalCMCB.ToListAsync();
+            var ouput = new List<FactorAmbientalCMCB>();
+            foreach (var item in FactorEntity)
+            {
+                ouput.Add(new FactorAmbientalCMCB
+                {
+                    Id = item.Id,
+                    Factor = item.Factor,
+                    Descripcion= item.Descripcion
+                });
+            }
+            return ouput;
+        }
+
         public async Task<List<GerenciaCMCB>> GetGerencias()
         {
             var GerenciaEntity = await _context.GerenciaCMCB.ToListAsync();
@@ -162,6 +198,19 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             }
             return ouput;
         }
+
+        public async Task<List<TipoCompromisoCMCB>> GetTipos()
+        {
+            var tiposEntity=await _context.TipoCompromisosCMCB.ToListAsync();
+            var output=new List<TipoCompromisoCMCB>();
+
+            foreach(var item in tiposEntity)
+            {
+                output.Add(new TipoCompromisoCMCB { Id = item.Id, Tipo=item.Tipo, Descripcion=item.Descripcion});
+            }
+            return output;
+        }
+
         public async Task<List<Usuario>> GetUsuarios()
         {
             var UsuarioEntity = await _context.Usuarios.ToListAsync();

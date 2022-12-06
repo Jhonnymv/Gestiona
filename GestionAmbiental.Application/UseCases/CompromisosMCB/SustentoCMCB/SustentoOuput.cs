@@ -40,10 +40,10 @@ namespace GestionAmbiental.Application.UseCases.CompromisosMCB.SustentoCMCB
         {
             Id = sustentoCMCB.Id;
             IdCompromiso = sustentoCMCB.CompromisoCMCB.Id;
-            Criterio = sustentoCMCB.CompromisoCMCB.CriterioCMCB.Criterio;
+            Criterio = sustentoCMCB.CompromisoCMCB.CriterioCMCB?.Criterio;
             Etapa = sustentoCMCB.CompromisoCMCB.EtapaCMCB.Etapa;
             Componente = sustentoCMCB.CompromisoCMCB.ComponenteCMCB.Componente;
-            Gerencia = sustentoCMCB.CompromisoCMCB.GerenciaCMCB.Gerencia ?? null;
+            Gerencia = sustentoCMCB.CompromisoCMCB.GerenciaCMCB?.Gerencia ;
             Area = sustentoCMCB.CompromisoCMCB.AreaCMCB.Area;
             Periodicidad = sustentoCMCB.CompromisoCMCB.Frecuencia;
             Frecuencia_Reporte = sustentoCMCB.CompromisoCMCB.Frecuencia_reporte;
