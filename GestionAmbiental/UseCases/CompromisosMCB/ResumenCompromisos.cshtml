@@ -290,7 +290,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body custom-form w-100">
                     <div class="compromisos">
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
                             <div class="row">
@@ -353,7 +353,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+                <div class=" modal-body custom-form w-100">
                     <div id="viewPDF">
                     </div>
                 </div>
@@ -380,7 +380,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-body">
+                <div class=" modal-body custom-form w-100">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
@@ -425,6 +425,25 @@
     $(document).ready(function () {
         filtrar(1)
     });
+    function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/CompromisosMCB/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        img_url = data.img_url;
+                        compromisosStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
     function OpenModal(compromiso_id){
         $.ajax({
             type: "POST",
@@ -445,7 +464,7 @@
                 $("#Resolucion").val(response.data.resolucion)
                 $("#Autoridad").val(response.data.nomAutoridad)
                 $("#Fecha").val(date.toLocaleDateString())
-                //dataModulo();
+                dataModulo();
             }
         });
         $('#modal_docs_tipo').modal('show')
@@ -523,25 +542,6 @@
             });
         //}
     }
-    //function dataModulo() {
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/compromisosDocumentacion/PropiedadesModulo",
-    //        traditional: true,
-    //        success: (response) => {
-    //            if (response.success) {
-    //                let data = JSON.parse(response.data);
-    //                let r = data.r;
-    //                let g = data.g;
-    //                let b = data.b;
-    //                let img_url = data.img_url;
-    //                compromisosStyle(r, g, b);
-    //            } else {
-    //                console.log("Ocurrió un problema: " + response.msg);
-    //            }
-    //        }
-    //    });
-    //}
     function filtrar(pag) {
         $.ajax({
             type: "POST",
@@ -560,8 +560,7 @@
                 $('#tabla_compromisos_gen tbody').empty()
                 $('#tabla_compromisos_gen tbody').html(response.data)
                 $('#paginado').html(response.paginador)
-              
-                //dataModulo();
+                dataModulo();
             }
         });
     }

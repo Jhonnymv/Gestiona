@@ -80,6 +80,38 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             _nuevoRegistroGerencia = nuevoRegistroGerencia;
             _nuevoRegistroArea = nuevoRegistroArea;
         }
+        public IActionResult PropiedadesModulo()
+        {
+            dynamic response;
+            try
+            {
+                var propPath = Path.Combine(_hostingEnvironment.WebRootPath, "json", "propiedades_modulos.json");
+                var propText = System.IO.File.ReadAllText(propPath, System.Text.Encoding.GetEncoding("iso-8859-1"));
+                var prop = JsonConvert.DeserializeObject<List<PropiedadModulos>>(propText);
+                var dataModulo = prop.Find(x => x.modulo.Equals("Compromisos"));
+                if (dataModulo != null)
+                    response = new
+                    {
+                        success = true,
+                        data = JsonConvert.SerializeObject(dataModulo)
+                    };
+                else
+                    response = new
+                    {
+                        success = false,
+                        msg = "No se encontraron las propiedades del módulo"
+                    };
+            }
+            catch (Exception e)
+            {
+                response = new
+                {
+                    success = false,
+                    msg = e.Message
+                };
+            }
+            return Ok(response);
+        }
         public async Task<IActionResult> ResumenCompromisos()
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
@@ -304,9 +336,11 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
 
                 var TiposCompromisosItems = items.TipoCompromisos.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Tipo }).ToList();
 
-                var ComponentesAux = items.ComponentesAux.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+                var ComponentesAux = items.ComponentesAux.OrderBy(x => x.Componente).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Componente }).ToList();
+                ComponentesAux.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
-                var FactoresAmbientales = items.FactoresAmbientales.Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Factor }).ToList();
+                var FactoresAmbientales = items.FactoresAmbientales.OrderBy(x => x.Factor).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Factor }).ToList();
+                FactoresAmbientales.Insert(0, new SelectListItem("--SELECCIONE--", "", true));
 
 
                 //var EstadosItems = items.EstadosSustento.OrderBy(x => x).Select(g => new SelectListItem() { Value = g, Text = g }).ToList();

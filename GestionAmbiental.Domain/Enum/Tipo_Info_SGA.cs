@@ -26,5 +26,6 @@ namespace GestionAmbiental.Domain.Enum
         FTPConnectionAvistamientoFaunaAccion = 18,
         FTPConnectionSGADocumentos = 19,
         FTPConnectionCMCBImp=20,
+        FTPConnectionAvistamientoFlora=21,
     }
 }

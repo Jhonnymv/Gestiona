@@ -57,7 +57,7 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.CalidadAgua
         }
 
         [HttpPost]
-        public async Task<IActionResult> listarRegistros(int pagina,int rpp)
+        public async Task<IActionResult> listarRegistros(int pagina, int rpp)
         {
             var datosTabla = await _listarRegistros.Execute(pagina, rpp);
             var filasTabla = "";
@@ -71,17 +71,17 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.CalidadAgua
                     filasTabla += "<td><a href=\"#\"></a>" +
                         "<button type =\"button\" class=\"btn btn-mc\" onclick=\"OpenModal(" + fila.Id + ")\">Detalle</button>" + " </td>";
                     //filasTabla += "<td><span>" + fila.Id + "</span></br>" + "</td>";
-                    filasTabla += "<td>" + fila.Fecha.ToString().Split(" ")[0] + " - "+fila.Hora+ "</td>";
+                    filasTabla += "<td>" + fila.Fecha.ToString().Split(" ")[0] + " - " + fila.Hora + "</td>";
                     filasTabla += "<td>" + fila.Cod_Estacion + "</td>";
                     filasTabla += "<td>" + fila.Descripcion + "</td>";
                     filasTabla += "<td>" + fila.Ubicacion + "</td>";
-                    filasTabla += "<td>" + fila.NombreResponsable+" "+fila.ApellidoResponsable + "</td>";
-                    filasTabla += "<td>" + fila.TemperaturaResult+" ("+ fila.TemperaturaEquipo + ")</td>";
-                    filasTabla += "<td>" + fila.PhResult+" ("+ fila.PhEquipo + ")</td>";
-                    filasTabla += "<td>" + fila.ConductividadResult+" ("+ fila.ConductividadEquipo + ")</td>";
-                    filasTabla += "<td>" + fila.OxigenoResult+" ("+ fila.OxigenoEquipo + ")</td>";
-                    filasTabla += "<td>" + fila.TurbiedadResult+" ("+ fila.TurbiedadEquipo + ")</td>";
-                    filasTabla += "<td>" + fila.CloroResult+" ("+ fila.CloroEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.NombreResponsable + " " + fila.ApellidoResponsable + "</td>";
+                    filasTabla += "<td>" + fila.TemperaturaResult + " (" + fila.TemperaturaEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.PhResult + " (" + fila.PhEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.ConductividadResult + " (" + fila.ConductividadEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.OxigenoResult + " (" + fila.OxigenoEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.TurbiedadResult + " (" + fila.TurbiedadEquipo + ")</td>";
+                    filasTabla += "<td>" + fila.CloroResult + " (" + fila.CloroEquipo + ")</td>";
                     filasTabla += "</tr>";
                 }
                 //Paginador
@@ -127,6 +127,10 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.CalidadAgua
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 ViewBag.Fecha = DateTime.Now.Date.ToString("yyyy-MM-dd");
                 ViewBag.Hora = DateTime.Now.ToString("hh:mm");
 

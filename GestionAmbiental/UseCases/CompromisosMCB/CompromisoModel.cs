@@ -21,6 +21,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         public string? Texto_compromiso { get; set; }
         [DisplayName("Origen:")]
         public int? Id_Origen { get; set; }
+        //public string Origne { get; set; }
         [DisplayName("Tomo:")]
         public string? Tomo { get; set; }
         [DisplayName("Capitulo:")]

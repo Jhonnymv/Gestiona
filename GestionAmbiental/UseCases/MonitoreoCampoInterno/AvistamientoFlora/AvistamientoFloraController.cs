@@ -98,7 +98,6 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
-
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
@@ -113,6 +112,10 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
             }
             else
             {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                
+
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
                 var items = await _selectItems.Execute();
 
                 var zonsaItems = items.ItemsZona.OrderBy(x => x.Nombre).Select(g => new SelectListItem() { Value = g.Id.ToString(), Text = g.Nombre }).ToList();
