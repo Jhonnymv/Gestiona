@@ -1,0 +1,66 @@
+@model GestionAmbiental.UseCases.GestorTablasMaestras.CompromisosMCB.Model.EtapaModel
+@{
+    ViewData["Title"] = "Detalle Etapa";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Información de Contacto de Emergencia</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+        <div class="container pt-4 pb-4">
+            <form class="custom-form details-container w-100" autocomplete="off" asp-controller="GestorCompromisosMCB" asp-action="EditarEtapa">
+                <input type="hidden" asp-for="Id" value="@Model.Id">
+                <div class="detail-container col-12 col-xl-10 mb-4">
+                    <div class="row input_container">
+                        <label asp-for="Etapa"></label>
+                        <span class="text-danger" asp-validation-for="Etapa"></span>
+                        <input type="text" class="form-control" asp-for="Etapa" disabled>
+                    </div>
+                    <div class="row input_container">
+                        <div class="button-container">
+                            <div></div>
+                            <div id="bntsEditar" style="display:none">
+                                <button type="button" class="btn btn-mc-outline-danger mr-2" id="btnCancelar" disabled>Cancelar</button>
+                                <button type="submit" class="btn btn-mc-success" id="btnGuardar" disabled>Guardar</button>
+                            </div>
+                            <div id="bntsDetalle">
+                                <a asp-controller="GestorCompromisosMCB" asp-action="Resumen" class="btn btn-mc-outline-danger mr-2" id="btnVolver">Volver</a>
+                                <button type="button" class="btn btn-mc-success" id="btnEditar">Editar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("#btnEditar").on('click', function () {
+            $("#bntsEditar").show();
+            $("#bntsDetalle").hide();
+            $("#btnVolver").prop('disabled', true);
+            $("#btnEditar").prop('disabled', true);
+            $("#btnCancelar").prop('disabled', false);
+            $("#btnGuardar").prop('disabled', false);
+            //Habilitar inputs
+            $("#Etapa").prop('disabled', false);
+        });
+
+        $("#btnCancelar").on('click', function () {
+            $("#bntsEditar").hide();
+            $("#bntsDetalle").show();
+            $("#btnVolver").prop('disabled', false);
+            $("#btnEditar").prop('disabled', false);
+            $("#btnCancelar").prop('disabled', true);
+            $("#btnGuardar").prop('disabled', true);
+            //Deshabilitar inputs
+            $("#Etapa").prop('disabled', true);
+        });
+    </script>
+}

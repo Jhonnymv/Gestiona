@@ -1,0 +1,305 @@
+
+@{
+    ViewData["Title"] = "Resumen";
+    Layout = "~/UseCases/Shared/_Layout.cshtml";
+}
+<div class="tablas">
+    <div class="primary-content col-12">
+        <div class="image-header-container">
+            <div class="header-title tablas-opacity-color">
+                <h3>Tablas Maestras - Compromisos MCB</h3>
+                <img src="~/img/logo-white.png" alt="Logo Marcobre">
+            </div>
+        </div>
+
+        <div class="tabs-mc">
+            <ul class="nav nav-pills mt-3 div-scroll-horizontal" id="listItems" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" type="button" id="Etapa" href="#Etapa" data-bs-toggle="pill" aria-selected="true">Etapa</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="TipoFauna" href="#TipoFauna" data-bs-toggle="pill" aria-selected="true">Tipo de Fauna</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" id="EstadoFauna" href="#EstadoFauna" data-bs-toggle="pill" aria-selected="false">Estado de Fauna</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="TipoAvistamiento" href="#TipoAvistamiento" aria-selected="false">Tipo de Avistamiento</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="ContactoEmergencia" href="#ContactoEmergencia" aria-selected="false">Contacto Emergencia</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="LugarReferencia" href="#LugarReferencia" aria-selected="false">Lugares de Referencia</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" type="button" data-bs-toggle="pill" id="Usuarios" href="#Usuarios" aria-selected="false">Usuarios a Notificar</a>
+                </li>
+
+            </ul>
+
+            <div class="content-header">
+                <div class="action-container tablas-color row-center-center">
+                    <div class="w-100 row-center-center">
+                        <a class="btn btn-special-action-outline tablas-color" id="btn_agregar">Agregar</a>
+                    </div>
+                </div>
+                <form autocomplete="off" class="custom-form">
+                    <div class="col-12 col-lg-9">
+                        <div class="row input_container">
+                            <div class="col-12 col-md-6 col-lg-6">
+                                <label for="filtro_nombre">Buscar</label>
+                                <input type="text" class="form-control" id="filtro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-3 row-center-center">
+                        <button type="button" class="btn btn-mc" id="btn_enviar">Buscar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="secondary-content col-12">
+        <div class="table-responsive tablas-color" id="tab_content">
+
+        </div>
+        <div class="pagination-container tablas-color" id="paginado" aria-label="pagination">
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Buscar tab activo guardado en local storage
+            var activeTab = localStorage.getItem('activeTabCompromisosMCB');
+            //Si existe el objeto en local storage mostrar
+            if (activeTab) {
+                $('.nav-pills a[href="' + activeTab + '"]').click();
+            }
+            //Si no existe, mostrar primer tab
+            else {
+                FiltrarEtapa(1);
+                $("#btn_agregar").prop("href", "/GestorCompromisosMCB/AgregarEtapa");
+            }
+        });
+        function dataModulo() {
+            $.ajax({
+                type: "POST",
+                url: "/GestorContenido/PropiedadesModulo",
+                traditional: true,
+                success: (response) => {
+                    if (response.success) {
+                        let data = JSON.parse(response.data);
+                        let r = data.r;
+                        let g = data.g;
+                        let b = data.b;
+                        let img_url = data.img_url;
+                        tablasStyle(r, g, b);
+                    } else {
+                        console.log("Ocurrió un problema: " + response.msg);
+                    }
+                }
+            });
+        }
+        //Guardar tab activo en local storage
+        $('a[data-bs-toggle="pill"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTabCompromisosMCB', $(e.target).attr('href'));
+        });
+        $("#btnenviar").on('click', function (e) {
+            if ($("#Etapa").hasClass("active")) {
+                FiltrarEtapa(1);
+            }
+            if ($("#NombreComun").hasClass("active")) {
+                FiltrarNombreComun(1);
+            }
+            if ($("#EstadoFauna").hasClass("active")) {
+                FiltrarEstadoFauna(1);
+            }
+            if ($("#TipoAvistamiento").hasClass("active")) {
+                FiltrarTipoAvistamiento(1);
+            }
+            if ($("#ContactoEmergencia").hasClass("active")) {
+                FiltrarContactoEmergencia(1);
+            }
+            if ($("#LugarReferencia").hasClass("active")) {
+                FiltrarLugarReferencia(1);
+            }
+            if ($("#Usuarios").hasClass("active")) {
+                FiltrarUsuario(1);
+            }
+        });
+        $("#Etapa").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorCompromisosMCB/AgregarEtapa");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarEtapa(1);
+        });
+        $("#NombreComun").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarNombreComun");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarNombreComun(1);
+        });
+        $("#EstadoFauna").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarEstadoFauna");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarEstadoFauna(1);
+        });
+        $("#TipoAvistamiento").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarTipoAvistamiento");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarTipoAvistamiento(1);
+        });
+        $("#ContactoEmergencia").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarContactoEmergencia");
+            $("#opcion_editar_mensaje").show();
+            FiltrarContactoEmergencia(1);
+        });
+        $("#LugarReferencia").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarLugarReferencia");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarLugarReferencia(1);
+        });
+        $("#Usuarios").on('click', function (e) {
+            $(this).tab('show');
+            $("#btn_agregar").prop("href", "/GestorAvistamientoFauna/AgregarUsuario");
+            $("#opcion_editar_mensaje").hide();
+            FiltrarUsuario(1);
+        });
+
+        function FiltrarTipoFauna(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarTipoFauna",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarEtapa(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorCompromisosMCB/FiltrarEtapas",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarEstadoFauna(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarEstadoFauna",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarTipoAvistamiento(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarTipoAvistamiento",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarContactoEmergencia(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarContactoEmergencia",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarLugarReferencia(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarLugarReferencia",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+        function FiltrarUsuario(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/GestorAvistamientoFauna/FiltrarUsuario",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
+                    "filtro": $('#filtro').val(),
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tab_content').empty();
+                    $('#tab_content').html(response.tabla);
+                    $('#paginado').html(response.paginador);
+                    dataModulo();
+                }
+            });
+        }
+    </script>
+}
+

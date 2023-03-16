@@ -14,5 +14,6 @@ namespace GestionAmbiental.Application.Repositories.CompromisosMCB.EtapaCMCB
 
         //Editar
         Task EditarEtapa(Domain.CompromisosMCB.EtapaCMCB etapaCMCB);
+        Task<Domain.CompromisosMCB.EtapaCMCB> DetalleEtapa(int Id);
     }
 }

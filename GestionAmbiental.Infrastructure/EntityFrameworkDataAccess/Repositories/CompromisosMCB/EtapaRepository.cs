@@ -16,7 +16,15 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             _contex = context;
         }
-
+        public async Task<EtapaCMCB> DetalleEtapa(int Id)
+        {
+            var etapa = await _contex.EtapaCMCB.FirstOrDefaultAsync(x => x.Id.Equals(Id));
+            return new EtapaCMCB
+            {
+                Id = etapa.Id,
+                Etapa = etapa.Etapa,
+            };
+        }
         public async Task EditarEtapa(EtapaCMCB input)
         {
             var entity = await _contex.EtapaCMCB.FirstOrDefaultAsync(x => x.Id.Equals(input.Id));
@@ -47,7 +55,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
         {
             var entity = new Entities.CompromisosMCB.EtapaCMCB
             {
-                Etapa =input.Etapa,
+                Etapa = input.Etapa,
             };
 
             await _contex.EtapaCMCB.AddAsync(entity);
