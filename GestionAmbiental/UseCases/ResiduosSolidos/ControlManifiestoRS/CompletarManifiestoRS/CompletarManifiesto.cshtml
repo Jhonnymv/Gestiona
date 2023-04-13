@@ -582,6 +582,7 @@
                     success: (response) => {
                         if (response.success) {
                             var evidencias = response.evidencia;
+                            console.log(response)
                             switch (tipo) {
                                 case "cert":
                                     var html_certificado = "";
@@ -597,7 +598,7 @@
                                             "</svg><span>Descargar Certificado " + (i + 1) + "</span></a></p>";
                                     }
                                     $("#Certificado_Lleno_Lista").html(html_certificado);
-                                    $("#Certificado_Lleno").val(evidencia);
+                                    $("#Certificado_Lleno").val(evidencias);
                                     break;
                                 case "inf":
                                     var html_informe = "";
