@@ -44,7 +44,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             IWebHostEnvironment hostingEnvironment,
             IGetSelectItems getSelectItems,
             IConsultarManifiestosRSCierre consultarManifiestosRS,
-            IConsultarManifiestoRSCierre consultarManifiestoRS, 
+            IConsultarManifiestoRSCierre consultarManifiestoRS,
             IConsultarEvidenciaManifiestoRS consultarEvidenciaManifiestoRS,
             ICompletarManifiestoRS completarManifiestoRS,
             IDataProtectionProvider dataProtectionProvider,
@@ -427,7 +427,8 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 {
                     success = true
                 };
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 response = new
                 {
@@ -464,7 +465,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
             }
             return Ok(response);
         }
-        private string CreateUniqueFileName(int index,string tipo)
+        private string CreateUniqueFileName(int index, string tipo)
         {
             switch (tipo)
             {
@@ -501,7 +502,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName +"&tipo="+tipo });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName + "&tipo=" + tipo });
             }
             else
             {
@@ -509,30 +510,38 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
 
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName, tipo);
-
-                    /* Save encrypted file in temp path*/
-                    var tempPath = Path.GetTempPath();
-
-                    var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
-                    if (!Directory.Exists(SGATempPath))
+                    var downloadResult = await DownloadFTPFileAsync(fileName, tipo);
+                    if (downloadResult.Success)
                     {
-                        Directory.CreateDirectory(SGATempPath);
+                        var encryptedFile = downloadResult.FilePath;
+
+                        /* Save encrypted file in temp path*/
+                        var tempPath = Path.GetTempPath();
+
+                        var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+                        if (!Directory.Exists(SGATempPath))
+                        {
+                            Directory.CreateDirectory(SGATempPath);
+                        }
+                        var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+                        var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+
+                        /*decrypt file*/
+                        var decryptedFileName = "desencriptado.zip";
+                        await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                        /*read decrypted file*/
+                        FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+
+                        return File(stream, GetContentType(decryptedFileName), fileName);
                     }
-                    var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                    var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-
-                    /*decrypt file*/
-                    var decryptedFileName = "desencriptado.zip";
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
-                    /*read decrypted file*/
-                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
-
-                    return File(stream, GetContentType(decryptedFileName), fileName);
+                    else
+                    {
+                        return Content("No es posible acceder al archivo: " + downloadResult.ErroMessage);
+                    }
                 }
                 catch (Exception e)
                 {
-                    return Content("No se encontró el archivo: " + e.Message);
+                    return Content("No es posible acceder al archivo: " + e.Message);
                 }
             }
         }
@@ -628,11 +637,15 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 return await UploadFTPFileAsync(encryptedArchiveFile, newFileName, tipo);
             }
         }
-        public async Task<string> DownloadFTPFileAsync(string fileName, string tipo)
+        public async Task<FileOutput> DownloadFTPFileAsync(string fileName, string tipo)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return "NoAutorizado";
+                return new FileOutput
+                {
+                    Success = false,
+                    ErroMessage = "NoAutorizado"
+                };
             }
             else
             {
@@ -674,6 +687,7 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 }
                 if (Directory.Exists(archivePath))
                 {
+                    ClearAttributes(archivePath);
                     Directory.Delete(archivePath, true);
                 }
 
@@ -683,20 +697,36 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                 var downloadedFilePath = archivePath + fileName;
                 /*Copy data to new temp file*/
                 var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                try
                 {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
+                    using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+                    {
+                        sftp.Connect();
+                        sftp.ChangeDirectory(dir);
 
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
+                        //Descargar archivo de sftp a nuevo archivo temporal creado
+                        sftp.DownloadFile(fileName, fileStream);
 
-                    sftp.Dispose();
+                        sftp.Dispose();
+                    }
+                }
+                catch (Exception e)
+                {
+                    fileStream.Close();
+                    fileStream.Dispose();
+                    return new FileOutput
+                    {
+                        Success = false,
+                        ErroMessage = e.Message
+                    };
                 }
                 //ftpStream.CopyTo(fileStream);
                 fileStream.Close();
-
-                return downloadedFilePath;
+                return new FileOutput
+                {
+                    FilePath = downloadedFilePath,
+                    Success = true
+                };
             }
         }
         private async Task EncryptFileAsync(string inputFile, string outputFile)
@@ -804,10 +834,36 @@ namespace GestionAmbiental.UseCases.ResiduosSolidos.ControlManifiestoRS.Completa
                     sftp.Dispose();
                 }
             }
-            catch (Exception e) {
+            catch (Exception e)
+            {
                 Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
                 Log.Error(e.Message);
             }
+        }
+        private static void ClearAttributes(string currentDir)
+        {
+            if (Directory.Exists(currentDir))
+            {
+                System.IO.File.SetAttributes(currentDir, FileAttributes.Normal);
+
+                string[] subDirs = Directory.GetDirectories(currentDir);
+                foreach (string dir in subDirs)
+                {
+                    ClearAttributes(dir);
+                }
+
+                string[] files = files = Directory.GetFiles(currentDir);
+                foreach (string file in files)
+                {
+                    System.IO.File.SetAttributes(file, FileAttributes.Normal);
+                }
+            }
+        }
+        public class FileOutput
+        {
+            public string FilePath { get; set; }
+            public bool Success { get; set; }
+            public string ErroMessage { get; set; }
         }
     }
 }

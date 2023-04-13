@@ -144,6 +144,7 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Repositories
             var data = ingresos_salidas_rs.Where(x =>
                 x.Fecha_Ingreso_Salida >= fechaInicio &&
                 x.Fecha_Ingreso_Salida <= fechaFin &&
+                !x.Estado.Equals(EstadosResiduosSolidos.Pendiente.ToString())&&
                 !x.Estado.Equals(EstadosResiduosSolidos.Eliminado.ToString()))
                 .OrderByDescending(x => Convert.ToInt64(x.Item))
                 .ToList();

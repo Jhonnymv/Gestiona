@@ -114,7 +114,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             mail.Credentials = credential;
             
             msg.To.Add(new MailAddress(info.Email_Supervisor_MA));
-            msg.Subject = "Nuevo Reporte Preliminar de Incidente";
+            msg.Subject = "Reporte Preliminar de Incidente";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
@@ -194,7 +194,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.ReportesPreliminar
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
 
-            msg.Subject = "Nuevo Reporte Preliminar de Incidente";
+            msg.Subject = "Reporte Preliminar de Incidente";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");

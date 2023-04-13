@@ -252,7 +252,8 @@ namespace GestionAmbiental.UseCases.GestorTablasMaestras.Info_SGA
                 response = new
                 {
                     success = true,
-                    msg = "Error al enviar mensaje: " + ex.Message
+                    msg = "Error al enviar mensaje: " + ex.Message,
+                    inner = JsonConvert.SerializeObject(ex.InnerException)
                 };
             }
             return Ok(response);
