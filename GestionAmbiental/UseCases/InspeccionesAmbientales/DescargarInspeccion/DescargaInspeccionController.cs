@@ -24,6 +24,7 @@ using Newtonsoft.Json;
 using Renci.SshNet;
 using Microsoft.AspNetCore.DataProtection;
 using NPOI.Util;
+using Serilog;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
@@ -78,7 +79,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 //->ÁREA EJECUTORA:
                 sheet.GetRow(11).GetCell(7).SetCellValue(cabecera.Gerencia);
                 //->LUGAR INSPECCIONADO
-                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.GerenciaInspeccionada + " - "+cabecera.AreaInspeccionada);
+                sheet.GetRow(11).GetCell(15).SetCellValue(cabecera.GerenciaInspeccionada + " - " + cabecera.AreaInspeccionada);
                 //->EMPRESA:   
                 sheet.GetRow(11).GetCell(24).SetCellValue(cabecera.Empresa);
                 //->TIPO DE INSPECCION
@@ -153,14 +154,20 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
                         evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 9, rowHeight, imageIndex, "condicion", false);
-                        rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
-                        imageIndex++;
+                        if (evidencia_condicion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                            imageIndex++;
+                        }
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
                         evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 25, rowHeight, imageIndex, "inspeccion", false);
-                        rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
-                        imageIndex++;
+                        if (evidencia_condicion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                            imageIndex++;
+                        }
                     }
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     row.Height = rowHeight;
@@ -207,7 +214,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //->Acción Preventiva / Correctiva Tomada
                     row.GetCell(18).SetCellValue(observacion.DescripcionAccion);
                     //->Responsable del Levanamiento del Acto / Condición Subestándar
-                    row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre2!=null? (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos):observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
+                    row.GetCell(23).SetCellValue(observacion.ResponsableMarcobre2 != null ? (observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos + " - " + observacion.ResponsableMarcobre2.Nombres + " " + observacion.ResponsableMarcobre2.Apellidos) : observacion.ResponsableMarcobre.Nombres + " " + observacion.ResponsableMarcobre.Apellidos);
                     //->Fecha Programada
                     row.GetCell(24).SetCellValue(observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToString("dd/MM/yyyy") : "");
 
@@ -229,7 +236,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 return File(ms, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ReporteInspección-" + DateTime.Now.ToString("ddMMyyyyHHmmss") + ".xlsx");
             }
         }
-        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin,string estado, int idGerenciaInspeccionada)
+        public async Task<IActionResult> DescargarFechas(int empresa, int gerencia, int respLevObs, int asesor, string FechaInicio, string FechaFin, string estado, int idGerenciaInspeccionada)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
@@ -240,7 +247,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
-                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin,estado,idGerenciaInspeccionada);
+                var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
                 var observaciones = new List<ObservacionReporte>();
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
                 string sFileName = @"DescargaObservacionesInspección.xlsx";
@@ -267,7 +274,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 XSSFFont fuenteRechazado = (XSSFFont)templateWorkbook.CreateFont();
 
                 var estilos = new List<Estilo>();
-                estilos.Add(new Estilo("Pendiente de Implementación", templateWorkbook,(byte)255, (byte)240, (byte)128, IndexedColors.DarkYellow.Index));
+                estilos.Add(new Estilo("Pendiente de Implementación", templateWorkbook, (byte)255, (byte)240, (byte)128, IndexedColors.DarkYellow.Index));
                 estilos.Add(new Estilo("Pendiente de Verificación", templateWorkbook, (byte)128, (byte)255, (byte)240, IndexedColors.DarkBlue.Index));
                 estilos.Add(new Estilo("Vencido", templateWorkbook, (byte)255, (byte)103, (byte)103, IndexedColors.DarkRed.Index));
                 estilos.Add(new Estilo("Aprobado", templateWorkbook, (byte)159, (byte)255, (byte)128, IndexedColors.DarkGreen.Index));
@@ -362,45 +369,55 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
                         evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
-                        rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
-                        imageIndex++;
+                        if (evidencia_condicion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
+                            imageIndex++;
+                        }
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
                         evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 11, rowHeight, imageIndex, "inspeccion", true);
-                        rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
-                        imageIndex++;
+                        if (evidencia_inspeccion != null)
+                        {
+                            rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
+                            imageIndex++;
+                        }
                     }
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     row.Height = rowHeight;
                     //rezise images
-
-                    if ((evidencia_condicion.extension == ".jpg" ||
-                        evidencia_condicion.extension == ".png" ||
-                        evidencia_condicion.extension == ".jpeg" ||
-                        evidencia_condicion.extension == ".JPG" ||
-                        evidencia_condicion.extension == ".PNG" ||
-                        evidencia_condicion.extension == ".JPEG" &&
-                        evidencia_condicion.extension != null) &&
-                        evidencia_condicion.rowHeight != 0 &&
-                        evidencia_condicion.rowHeight < row.Height)
+                    if (evidencia_condicion != null)
                     {
-                        //evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
-                        evidencia_condicion.image.Resize(0.5, 1.0);
+                        if ((evidencia_condicion.extension == ".jpg" ||
+                            evidencia_condicion.extension == ".png" ||
+                            evidencia_condicion.extension == ".jpeg" ||
+                            evidencia_condicion.extension == ".JPG" ||
+                            evidencia_condicion.extension == ".PNG" ||
+                            evidencia_condicion.extension == ".JPEG" &&
+                            evidencia_condicion.extension != null) &&
+                            evidencia_condicion.rowHeight != 0 &&
+                            evidencia_condicion.rowHeight < row.Height)
+                        {
+                            //evidencia_condicion.image.Resize(1.0, (double)evidencia_condicion.rowHeight / row.Height);
+                            evidencia_condicion.image.Resize(0.5, 1.0);
+                        }
                     }
-
-                    if ((evidencia_inspeccion.extension == ".jpg" ||
-                        evidencia_inspeccion.extension == ".png" ||
-                        evidencia_inspeccion.extension == ".jpeg" ||
-                        evidencia_inspeccion.extension == ".JPG" ||
-                        evidencia_inspeccion.extension == ".PNG" ||
-                        evidencia_inspeccion.extension == ".JPEG") &&
-                        evidencia_inspeccion.extension != null &&
-                        evidencia_inspeccion.rowHeight != 0 &&
-                        evidencia_inspeccion.rowHeight < row.Height)
+                    if (evidencia_inspeccion != null)
                     {
-                        //evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
-                        evidencia_inspeccion.image.Resize(0.5, 1.0);
+                        if ((evidencia_inspeccion.extension == ".jpg" ||
+                            evidencia_inspeccion.extension == ".png" ||
+                            evidencia_inspeccion.extension == ".jpeg" ||
+                            evidencia_inspeccion.extension == ".JPG" ||
+                            evidencia_inspeccion.extension == ".PNG" ||
+                            evidencia_inspeccion.extension == ".JPEG") &&
+                            evidencia_inspeccion.extension != null &&
+                            evidencia_inspeccion.rowHeight != 0 &&
+                            evidencia_inspeccion.rowHeight < row.Height)
+                        {
+                            //evidencia_inspeccion.image.Resize(1.0, (double)evidencia_inspeccion.rowHeight / row.Height);
+                            evidencia_inspeccion.image.Resize(0.5, 1.0);
+                        }
                     }
                     int startIndex = 1;
                     //->Index
@@ -426,7 +443,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     //-> Estado
                     row.GetCell(startIndex + 12).SetCellValue(observacion.Estado);
                     var estilo = estilos.FirstOrDefault(x => x.Estado.Equals(observacion.Estado));
-                    if(estilo!=null)
+                    if (estilo != null)
                         row.GetCell(startIndex + 12).CellStyle = estilo.EstiloCelda;
                     //-> Responsable Inspección
                     row.GetCell(startIndex + 13).SetCellValue(observacion.ResponsableInspeccion);
@@ -496,77 +513,79 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             var evidencia = evidenciasCondicion[0];
             //foreach (var evidencia in evidenciasCondicion)
             //{
-                var imgNCol = 0;
+            var imgNCol = 0;
 
-                //1. Vaciar carpeta temporal del usuario 
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
-                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+            //1. Vaciar carpeta temporal del usuario 
+            var tempPath = Path.GetTempPath();
+            var SGATempPath = tempPath + "SGA-Marcobre-v2\\";
+            if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
+            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
-                if (Directory.Exists(filePath))
+            if (Directory.Exists(filePath))
+            {
+                Directory.Delete(filePath, true);
+            }
+            if (Directory.Exists(archivePath))
+            {
+                Directory.Delete(archivePath, true);
+            }
+            Directory.CreateDirectory(filePath);
+            Directory.CreateDirectory(archivePath);
+            /*if (!Directory.Exists(SGATempPath))
+            {
+                Directory.CreateDirectory(SGATempPath);
+            }
+            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
+            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive"+imageIndex.ToString()+".zip";
+            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
+            */
+
+            //2. Descargar .zip de ftp y guardar en carpeta temporal zip
+            string host = "", port = "", user = "", pass = "", dir = "";
+            var serverInfo = new Info_SGAOutput();
+            if (tipoEvidencia == "condicion")
+            {
+                if (!reporte)
+                    imgNCol = 2;
+                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
+                foreach (var item in serverInfo.Info)
                 {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-                var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive"+imageIndex.ToString()+".zip";
-                var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-                */
-                                
-                //2. Descargar .zip de ftp y guardar en carpeta temporal zip
-                string host = "", port = "", user = "", pass = "", dir = "";
-                var serverInfo = new Info_SGAOutput();
-                if (tipoEvidencia == "condicion")
-                {
-                    if (!reporte)
-                        imgNCol = 2;
-                    serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                    foreach (var item in serverInfo.Info)
+                    switch (item.Key)
                     {
-                        switch (item.Key)
-                        {
-                            case "host": host = item.Value; break;
-                            case "port": port = item.Value; break;
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                            case "directory": dir = item.Value; break;
-                        }
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
                     }
                 }
-                else
+            }
+            else
+            {
+                if (!reporte)
+                    imgNCol = 4;
+                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
+                foreach (var item in serverInfo.Info)
                 {
-                    if (!reporte)
-                        imgNCol = 4;
-                    serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
-                    foreach (var item in serverInfo.Info)
+                    switch (item.Key)
                     {
-                        switch (item.Key)
-                        {
-                            case "host": host = item.Value; break;
-                            case "port": port = item.Value; break;
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                            case "directory": dir = item.Value; break;
-                        }
+                        case "host": host = item.Value; break;
+                        case "port": port = item.Value; break;
+                        case "user": user = item.Value; break;
+                        case "password": pass = item.Value; break;
+                        case "directory": dir = item.Value; break;
                     }
                 }
+            }
 
-                var fileStream = System.IO.File.Create(archiveFile);
+            var fileStream = System.IO.File.Create(archiveFile);
+            try
+            {
                 using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
                 {
                     sftp.Connect();
@@ -577,100 +596,113 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     sftp.Dispose();
                 }
+            }
+            catch (Exception e)
+            {
+                var log = new LoggerConfiguration()
+                .WriteTo.Console()
+                .WriteTo.File("log.txt")
+                .CreateLogger();
+
+                log.Information("Error al descargar archivo {@path}", path);
                 fileStream.Close();
-
-                //3. Desencriptar archivo
-                await DecryptFileAsync(archiveFile, archivePath + "desencriptado"+imageIndex+".zip");
-                var pathDesencriptado = archivePath + "desencriptado"+imageIndex+".zip";                
                 fileStream.Dispose();
-                //4. descomprimir en carpeta temporal submission
-                if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-                    filePath += Path.DirectorySeparatorChar;
+                return null;
+            }
+            fileStream.Close();
 
-                using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+            //3. Desencriptar archivo
+            await DecryptFileAsync(archiveFile, archivePath + "desencriptado" + imageIndex + ".zip");
+            var pathDesencriptado = archivePath + "desencriptado" + imageIndex + ".zip";
+            fileStream.Dispose();
+            //4. descomprimir en carpeta temporal submission
+            if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
+                filePath += Path.DirectorySeparatorChar;
+
+            using (ZipArchive archive = ZipFile.OpenRead(pathDesencriptado))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    foreach (ZipArchiveEntry entry in archive.Entries)
-                    {
-                        filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
-                        if (filePath.StartsWith(filePath, StringComparison.Ordinal))
-                            entry.ExtractToFile(filePath);
-                    }
+                    filePath = Path.GetFullPath(Path.Combine(filePath, entry.FullName));
+                    if (filePath.StartsWith(filePath, StringComparison.Ordinal))
+                        entry.ExtractToFile(filePath);
                 }
-                //5. validar extension y cargar en una celda
-                var extension = Path.GetExtension(filePath);
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
-                {
-                    byte[] bytes = System.IO.File.ReadAllBytes(filePath);
-                    PictureType pType;
-                    if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg"))
-                        pType = PictureType.JPEG;
-                    else
-                    {
-                        pType = PictureType.PNG;
-                    }
-
-                    templateWorkbook.AddPicture(bytes, pType);
-
-                    XSSFClientAnchor anchor = new XSSFClientAnchor();
-                    anchor.Col1 = column;
-                    anchor.Row1 = row;
-                    anchor.Col2 = column + imgNCol;
-
-                    IDrawing drawing = sheet.CreateDrawingPatriarch();
-
-                    IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-
-                    var image_dim = picture.GetImageDimension();
-                    var mergedCellWidth = 0.0;
-                    for (int i = column; i <= column + imgNCol; i++)
-                    {
-                        mergedCellWidth += sheet.GetColumnWidth(i);
-                    }
-
-                    rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
-                    picture.Resize(1.0);                    
-
-                    output.rowHeight = rowHeight;
-                    output.image = picture;
-                }
+            }
+            //5. validar extension y cargar en una celda
+            var extension = Path.GetExtension(filePath);
+            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
+            {
+                byte[] bytes = System.IO.File.ReadAllBytes(filePath);
+                PictureType pType;
+                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg"))
+                    pType = PictureType.JPEG;
                 else
                 {
-                    var pType = PictureType.PNG;
-                    byte[] bytes;
-                    switch (Path.GetExtension(filePath))
-                    {
-                        case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
-                        case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                        case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
-                        case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                        case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                        case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
-                        default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png")); break;
-                    }
-                    templateWorkbook.AddPicture(bytes, pType);
-
-                    XSSFClientAnchor anchor = new XSSFClientAnchor();
-                    anchor.Col1 = column;
-                    anchor.Row1 = row;
-                    anchor.Col2 = column + imgNCol;
-
-                    IDrawing drawing = sheet.CreateDrawingPatriarch();
-
-                    IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
-                    var image_dim = picture.GetImageDimension();
-                    var mergedCellWidth = 0.0;
-                    for (int i = column; i <= column + imgNCol; i++)
-                    {
-                        mergedCellWidth += sheet.GetColumnWidthInPixels(i);
-                    }
-                    rowHeight = 2000;
-                    picture.Resize(1.0);
-
-                    output.rowHeight = rowHeight;
-                    output.image = picture;
+                    pType = PictureType.PNG;
                 }
-                
-                output.extension = extension;
+
+                templateWorkbook.AddPicture(bytes, pType);
+
+                XSSFClientAnchor anchor = new XSSFClientAnchor();
+                anchor.Col1 = column;
+                anchor.Row1 = row;
+                anchor.Col2 = column + imgNCol;
+
+                IDrawing drawing = sheet.CreateDrawingPatriarch();
+
+                IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+
+                var image_dim = picture.GetImageDimension();
+                var mergedCellWidth = 0.0;
+                for (int i = column; i <= column + imgNCol; i++)
+                {
+                    mergedCellWidth += sheet.GetColumnWidth(i);
+                }
+
+                rowHeight = Convert.ToInt16(GetRowHeight(image_dim.Width, image_dim.Height, mergedCellWidth));
+                picture.Resize(1.0);
+
+                output.rowHeight = rowHeight;
+                output.image = picture;
+            }
+            else
+            {
+                var pType = PictureType.PNG;
+                byte[] bytes;
+                switch (Path.GetExtension(filePath))
+                {
+                    case ".pdf": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "pdf.png")); ; break;
+                    case ".doc": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                    case ".docx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "word.png")); break;
+                    case ".xls": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    case ".xlsx": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    case ".csv": bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "excel.png")); break;
+                    default: bytes = System.IO.File.ReadAllBytes(Path.Combine(_hostingEnvironment.WebRootPath, "img", "icons", "other-file.png")); break;
+                }
+                templateWorkbook.AddPicture(bytes, pType);
+
+                XSSFClientAnchor anchor = new XSSFClientAnchor();
+                anchor.Col1 = column;
+                anchor.Row1 = row;
+                anchor.Col2 = column + imgNCol;
+
+                IDrawing drawing = sheet.CreateDrawingPatriarch();
+
+                IPicture picture = drawing.CreatePicture(anchor, imageIndex + 1);
+                var image_dim = picture.GetImageDimension();
+                var mergedCellWidth = 0.0;
+                for (int i = column; i <= column + imgNCol; i++)
+                {
+                    mergedCellWidth += sheet.GetColumnWidthInPixels(i);
+                }
+                rowHeight = 2000;
+                picture.Resize(1.0);
+
+                output.rowHeight = rowHeight;
+                output.image = picture;
+            }
+
+            output.extension = extension;
             //}
 
             return output;
@@ -764,7 +796,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             public string Asesor { get; set; }
             public string Codigo { get; set; }
         }
-        private class Estilo{
+        private class Estilo
+        {
             public string Estado { get; set; }
             public XSSFCellStyle EstiloCelda { get; set; }
             public XSSFFont Fuente { get; set; }
@@ -772,7 +805,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             {
 
             }
-            public Estilo(string estado, XSSFWorkbook libro,byte r, byte g, byte b, short colorTexto)
+            public Estilo(string estado, XSSFWorkbook libro, byte r, byte g, byte b, short colorTexto)
             {
                 Estado = estado;
                 EstiloCelda = (XSSFCellStyle)libro.CreateCellStyle();
@@ -791,6 +824,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                 EstiloCelda.SetFont(Fuente);
             }
+        }
+        public class FileOutput
+        {
+            public string FilePath { get; set; }
+            public bool Success { get; set; }
+            public string ErroMessage { get; set; }
         }
     }
 }
