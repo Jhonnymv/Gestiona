@@ -4,8 +4,8 @@
 }
 
 @section styles {
-<link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
-<link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
+    <link rel="stylesheet" href="~/selectpicker/css/bootstrap-select.css">
+    <link rel="stylesheet" href="~/lib/css-circle/css/circle.css" />
 }
 <div class="avistamientoFlora">
     <div class="primary-content col-12">
@@ -75,14 +75,14 @@
     </div>
 </div>
 
-@*<div class="modal fade" id="modal_detalle" tabindex="-1" aria-labelledby="avistamientoFloraModal" aria-hidden="true">
+<div class="modal fade" id="modal_detalle" tabindex="-1" aria-labelledby="CalidadAguaModal" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-menu modal-compromisos">
             <div class="modal-content">
                 <div class="compromisos">
                     <div class="image-header-container">
                         <div class="header-title compromisos-opacity-color">
-                            <h3>Detalle Avistamiento Flora</h3>
+                            <h3>Detalle Calida de Agua</h3>
                             <img src="~/img/logo-white.png" alt="Logo Marcobre">
                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -94,239 +94,223 @@
                         <div class="secondary-content col-12" style="box-shadow: none; background-color: transparent">
                             <div class="row">
                                 <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Cod. Ficha</label>
-                                    <input class="form-control" readonly id="IdFichaDet" />
-                                </div>
-                                <div class="col-12 col-sm-6 col-md-3">
                                     <label>Fecha</label>
                                     <input class="form-control" readonly id="FechaDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Hora</label>
+                                    <input class="form-control" readonly id="HoraDet" />
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3">
+                                    <label>Cod. Estación</label>
+                                    <input class="form-control" readonly id="CodEstacionDet" />
                                 </div>
                                 <div class="col-12 col-sm-6 col-md-3">
                                     <label>Ubicación</label>
                                     <input class="form-control" readonly id="UbiDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Altitud</label>
-                                    <input class="form-control" readonly id="AltitudDet" />
+                                <div class="col-12">
+                                    <label>Descripción</label>
+                                    <input class="form-control" readonly id="descripcionDet" />
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Geneto</label>
-                                    <input class="form-control" readonly id="GenetoDet" />
+                                <div class="col-12 col-sm-6 col-md-6">
+                                    <label>Responsable</label>
+                                    <input class="form-control" readonly id="responsableDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Rameto</label>
-                                    <input class="form-control" readonly id="RametoDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>Temperatura</label>
+                                    <input class="form-control" readonly id="temperaturaDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Condicíon</label>
-                                    <input class="form-control" readonly id="CondiDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>PH</label>
+                                    <input class="form-control" readonly id="phDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Sustrato</label>
-                                    <input class="form-control" readonly id="SustratoDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>Conductividad</label>
+                                    <input class="form-control" readonly id="conductividadDet" />
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Diametro Mayor</label>
-                                    <input class="form-control" readonly id="DiaMayorDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>O Disuelto</label>
+                                    <input class="form-control" readonly id="oxigenoDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Diametro Menor</label>
-                                    <input class="form-control" readonly id="DiaMenorDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>Turbiedad</label>
+                                    <input class="form-control" readonly id="turbiedadDet" />
                                 </div>
-                                <div class="col-12 col-sm-6 col-md-3">
-                                    <label>Altura</label>
-                                    <input class="form-control" readonly id="DiaAlturaDet" />
+                                <div class="col-12 col-sm-6 col-md-2">
+                                    <label>Cloro</label>
+                                    <input class="form-control" readonly id="cloroDet" />
                                 </div>
-                              
-                            </div>
-                            <br />
-                            <div class="row">
-                                <div class="col-12 col-sm-6">
-                                    @*<label>Nombres de Compromiso</label>*@
-                                   @* <table class="table table-striped table-info">
-                                        <thead>
-                                        <th>Nombre</th>
-                                        <th>Nombre Común</th>
-                                        <th style="text-align:center">cantidad</th>
-                                        </thead>
-                                        <tbody id="dataNombre">
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-12 col-sm-6">*@
-                                    @*<label>Fenologías</label>*@
-                                  @*  <table class="table table-striped table-info">
-                                        <thead>
-                                        <th>Fenologia</th>
-                                        <th style="text-align:center">Cantidad</th>
-                                        </thead>
-                                        <tbody id="dataFenologia">
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>*@
 
-                            @*<div class="row">
-                                <div class="col-12 col-sm-6">*@
-                                    @*<label>Vigores</label>*@
-                                 @*   <table class="table table-striped table-info">
-                                        <thead>
-                                        <th>Vigor</th>
-                                        <th style="text-align:center">cantidad</th>
-                                        </thead>
-                                        <tbody id="dataVigor">
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <div class="col-12 col-sm-6">*@
-                                    @*<label>Salud</label>*@
-                                   @* <table class="table table-striped table-info">
-                                        <thead>
-                                        <th>Salud</th>
-                                        <th style="text-align:center">Cantidad</th>
-                                        </thead>
-                                        <tbody id="dataSalud">
-                                        </tbody>
-                                    </table>
-                                </div>
+                            </div>
+                            @*        <div class="row">
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Geneto</label>
+                            <input class="form-control" readonly id="GenetoDet" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Rameto</label>
+                            <input class="form-control" readonly id="RametoDet" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Condicíon</label>
+                            <input class="form-control" readonly id="CondiDet" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Sustrato</label>
+                            <input class="form-control" readonly id="SustratoDet" />
+                            </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 col-sm-6">*@
-                                    @*<label>Vigores</label>*@
-                                   @* <table class="table table-striped table-info">
-                                        <thead>
-                                        <th>Fauna</th>
-                                        <th style="text-align:center">cantidad</th>
-                                        </thead>
-                                        <tbody id="dataFauna">
-                                        </tbody>
-                                    </table>
-                                </div>*@
-                                @*<div class="col-12 col-sm-6">
-                                    <label>Salud</label>
-                                    <table class="table table-striped">
-                                    <thead>
-                                    <th>Salud</th>
-                                    <th style="text-align:center">Cantidad</th>
-                                    </thead>
-                                    <tbody id="dataSalud">
-                                    </tbody>
-                                    </table>
-                                    </div>*@
-                          @*  </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Diametro Mayor</label>
+                            <input class="form-control" readonly id="DiaMayorDet" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Diametro Menor</label>
+                            <input class="form-control" readonly id="DiaMenorDet" />
+                            </div>
+                            <div class="col-12 col-sm-6 col-md-3">
+                            <label>Altura</label>
+                            <input class="form-control" readonly id="DiaAlturaDet" />
+                            </div>
+
+                            </div>
+                            <br />*@
+                            @*            <div class="row">
+                            <div class="col-12 col-sm-6">
+                            <label>Nombres de Compromiso</label>
+                            <table class="table table-striped table-info">
+                            <thead>
+                            <th>Nombre</th>
+                            <th>Nombre Común</th>
+                            <th style="text-align:center">cantidad</th>
+                            </thead>
+                            <tbody id="dataNombre">
+                            </tbody>
+                            </table>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                            <label>Fenologías</label>
+                            <table class="table table-striped table-info">
+                            <thead>
+                            <th>Fenologia</th>
+                            <th style="text-align:center">Cantidad</th>
+                            </thead>
+                            <tbody id="dataFenologia">
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>*@
+                            @*
+                            <div class="row">
+                            <div class="col-12 col-sm-6">
+                            <label>Vigores</label>
+                            <table class="table table-striped table-info">
+                            <thead>
+                            <th>Vigor</th>
+                            <th style="text-align:center">cantidad</th>
+                            </thead>
+                            <tbody id="dataVigor">
+                            </tbody>
+                            </table>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                            <label>Salud</label>
+                            <table class="table table-striped table-info">
+                            <thead>
+                            <th>Salud</th>
+                            <th style="text-align:center">Cantidad</th>
+                            </thead>
+                            <tbody id="dataSalud">
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>*@
+                            @*                     <div class="row">
+                            <div class="col-12 col-sm-6">
+                            <label>Vigores</label>
+                            <table class="table table-striped table-info">
+                            <thead>
+                            <th>Fauna</th>
+                            <th style="text-align:center">cantidad</th>
+                            </thead>
+                            <tbody id="dataFauna">
+                            </tbody>
+                            </table>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                            <label>Salud</label>
+                            <table class="table table-striped">
+                            <thead>
+                            <th>Salud</th>
+                            <th style="text-align:center">Cantidad</th>
+                            </thead>
+                            <tbody id="dataSalud">
+                            </tbody>
+                            </table>
+                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>*@
+</div>
 
 @section scripts{
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/selectpicker/js/bootstrap-select.js"></script>
-<script src="~/lib/pdfobject/pdfobject.min.js"></script>
-<script type="text/javascript">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/selectpicker/js/bootstrap-select.js"></script>
+    <script src="~/lib/pdfobject/pdfobject.min.js"></script>
+    <script type="text/javascript">
 
-    $(document).ready(function () {
-        filtrar(1)
-    });
-
-    function filtrar(pag) {
-        $.ajax({
-            type: "POST",
-            url: "/CalidadAgua/listarRegistros",
-            data: {
-                "pagina": pag,
-                "rpp": 10,
-
-            },
-            traditional: true,
-            success: (response) => {
-                $('#tabla_resumen tbody').empty()
-                $('#tabla_resumen tbody').html(response.data)
-                $('#paginado').html(response.paginador)
-            }
+        $(document).ready(function () {
+            filtrar(1)
         });
-    }
-    //function OpenModal(avistamientoId){
-    //    $.ajax({
-    //         type: "POST",
-    //        url: "/AvistamientoFlora/GetAvistameinto",
-    //        data: {
-    //            "id": avistamientoId
-    //        },
-    //        traditional: true,
-    //        success: (response) => {
-    //            console.log(response)
-    //            $("#IdFichaDet").val(response.data.idFicha)
-    //            $("#FechaDet").val(response.data.fechavalidacion)
-    //            $("#UbiDet").val(response.data.ubicacion_Este+" , "+response.data.ubicacion_Norte)
-    //            $("#AltitudDet").val(response.data.ubicacion_Altitud)
-    //            $("#GenetoDet").val(response.data.geneto)
-    //            $("#RametoDet").val(response.data.rameto)
-    //            $("#CondiDet").val(response.data.condicion_Reubicacion)
-    //            $("#SustratoDet").val(response.data.sustrato)
-    //            $("#DiaMayorDet").val(response.data.cobertura_Diametro_Mayor)
-    //            $("#DiaMenorDet").val(response.data.cobertura_Diametro_Menor)
-    //            $("#DiaAlturaDet").val(response.data.cobertura_Diametro_Altura)
 
+        function filtrar(pag) {
+            $.ajax({
+                type: "POST",
+                url: "/CalidadAgua/listarRegistros",
+                data: {
+                    "pagina": pag,
+                    "rpp": 10,
 
-
-    //            $('#dataNombre').html("")
-    //            response.nombres.forEach(elementNombre=>{
-    //                $('#dataNombre').append(
-    //                    "<tr>"+
-    //                    "<td>"+elementNombre.nombreCientifico+"</td>"+
-    //                    "<td>"+elementNombre.nombreComun+"</td>"+
-    //                    "<td style='text-align:center'>"+elementNombre.cantidad+"</td>"+
-    //                    "</tr>"
-    //                )
-    //            })
-    //            $('#dataFenologia').html("")
-    //            response.fenologias.forEach(elementfenologia=>{
-    //                $('#dataFenologia').append(
-    //                    "<tr>"+
-    //                    "<td>"+elementfenologia.name+"</td>"+
-    //                    "<td style='text-align:center'>"+elementfenologia.cantidad+"</td>"+
-    //                    "</tr>"
-    //                )
-    //            })
-    //            $('#dataVigor').html("")
-    //            response.vigores.forEach(elementVigor=>{
-    //                $('#dataVigor').append(
-    //                    "<tr>"+
-    //                    "<td>"+elementVigor.name+"</td>"+
-    //                    "<td style='text-align:center'>"+elementVigor.cantidad+"</td>"+
-    //                    "</tr>"
-    //                )
-    //            })
-    //            $('#dataSalud').html("")
-    //            response.saluds.forEach(elementSalud=>{
-    //                $('#dataSalud').append(
-    //                    "<tr>"+
-    //                    "<td>"+elementSalud.name+"</td>"+
-    //                    "<td style='text-align:center'>"+elementSalud.cantidad+"</td>"+
-    //                    "</tr>"
-    //                )
-    //            })
-    //            $('#dataFauna').html("")
-    //            response.faunas.forEach(elementFauna=>{
-    //                $('#dataFauna').append(
-    //                    "<tr>"+
-    //                    "<td>"+elementFauna.name+"</td>"+
-    //                    "<td style='text-align:center'>"+elementFauna.cantidad+"</td>"+
-    //                    "</tr>"
-    //                )
-    //            })
-    //            $("#modal_detalle").modal('show')
-
-    //        }
-    //    })
-    //}
-</script>
+                },
+                traditional: true,
+                success: (response) => {
+                    $('#tabla_resumen tbody').empty()
+                    $('#tabla_resumen tbody').html(response.data)
+                    $('#paginado').html(response.paginador)
+                }
+            });
+        }
+        function OpenModal(itemId) {
+            $.ajax({
+                type: "POST",
+                url: "/CalidadAgua/GetRegisterById",
+                data: {
+                    "id": itemId
+                },
+                traditional: true,
+                success: (response) => {
+                    console.log(response)
+                    $("#FechaDet").val(new Date(response.data.fecha).toLocaleDateString())
+                    $("#HoraDet").val(response.data.hora)
+                    $("#CodEstacionDet").val(response.data.cod_Estacion)
+                    $("#descripcionDet").val(response.data.descripcion)
+                    $("#UbiDet").val(response.data.ubicacion)
+                    $("#responsableDet").val(response.data.nombreResponsable+" "+response.data.apellidoResponsable)
+                    $("#temperaturaDet").val(response.data.temperaturaResult + " ("+ response.data.temperaturaEquipo+")")
+                    $("#phDet").val(response.data.phResult + " ("+ response.data.phEquipo+")")
+                    $("#conductividadDet").val(response.data.conductividadResult + " ("+ response.data.conductividadEquipo+")")
+                    $("#oxigenoDet").val(response.data.oxigenoResult + " ("+ response.data.oxigenoEquipo+")")
+                    $("#turbiedadDet").val(response.data.turbiedadResult + " ("+ response.data.turbiedadEquipo+")")
+                    $("#cloroDet").val(response.data.cloroResult + " ("+ response.data.cloroEquipo+")")
+                    $("#modal_detalle").modal('show')
+                }
+            })
+        }
+    </script>
 }

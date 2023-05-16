@@ -156,6 +156,16 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.CalidadAgua
             return View();
         }
 
+        public async Task<ActionResult> GetRegisterById(int id)
+        {
+            var datos = await _listarRegistros.BuscarPorId(id);
+
+            dynamic response = new
+            {
+                Data = datos
+            };
+            return Ok(response);
+        }
 
     }
 }

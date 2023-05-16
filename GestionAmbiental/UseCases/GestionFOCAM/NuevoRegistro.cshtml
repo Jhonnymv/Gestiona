@@ -17,7 +17,6 @@
                 <div class="detail-container col-12 col-xl-10 mb-4">
                     <div class="row input_container">
                         @*<input type="hidden" asp-for="Opcion" />*@
-
                         <div class="col-12 col-sm-4 col-lg-4">
                             <label asp-for="IdTipo">Tipo</label>
                             <span class="text-danger" asp-validation-for="IdTipo"></span>
@@ -67,11 +66,11 @@
                     <div class="row">
                         <div class="button-container">
                             <div>
-                                <button type="button" class="btn btn-mc-outline back-btn">Atrás</button>
+                                <button type="button" class="btn btn-mc-outline back-btn" asp-controller="GestionFOCAM" asp-action="Resumen">Atrás</button>
                             </div>
                             <div>
                                 @*<button type="button" class="btn btn-mc-outline-success" onclick="GuardarEstado()">Guardar Estado</button>*@
-                                <button type="submit" class="btn btn-mc-success">Registrar</button>
+                                <button type="submit" class="btn btn-mc-success" >Registrar</button>
                             </div>
                         </div>
                     </div>
