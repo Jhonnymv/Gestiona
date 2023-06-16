@@ -1,4 +1,5 @@
-﻿using GestionAmbiental.Application.UseCases.FOCAM.Tipo.ListarRegistros;
+﻿using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
+using GestionAmbiental.Application.UseCases.FOCAM.Tipo.ListarRegistros;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
