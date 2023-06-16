@@ -704,7 +704,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
+                var SGATempPath = tempPath + "SGA-Marcobre-v2-Pruebas/";
                 if (!Directory.Exists(SGATempPath))
                 {
                     Directory.CreateDirectory(SGATempPath);
