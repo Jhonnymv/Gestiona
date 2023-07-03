@@ -1,1 +1,26 @@
-[{"Id":5,"Titulo":"FLUJO DE APROBACIÓN FOCAM","Contenido":"<p>Todo proyecto antes de su implementación debe tener el FOCAM aprobado. El FOCAM está formado por:</p><ol><li>Formulario FOCAM</li><li>Memoria descriptiva del proyecto: Diagrama de Procesos</li><li>Plan de manejo ambiental: Matriz IVAA</li></ol>","Imagen":"\\img\\uploads\\Home\\Tarjeta_520210831184228.jpg","Publicador":"Medio Ambiente y Permisos","Fecha":"2021-08-31","Tipo":"article-card article-left-top large-article","Tamanio":3,"PosicionE":2,"PosicionM":0},{"Id":1,"Titulo":"Título del Artículo Nuevo","Contenido":"<p>Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;Título del Artículo Nuevo.&nbsp;</p>","Imagen":"\\img\\uploads\\Home\\Tarjeta_120210914162922.jpg","Publicador":"Marcobre","Fecha":"2021-09-14","Tipo":"article-card article-left-bottom large-article","Tamanio":3,"PosicionE":2,"PosicionM":0}]
+[
+  {
+    "Id": 2,
+    "Titulo": "SISTEMA DE GESTIï¿½N AMBIENTAL",
+    "Contenido": "<p>DOCUMENTOS DEL SISTEMA DE GESTIï¿½N AMBIENTAL</p><p><br></p><p>La protecciï¿½n ambiental es fundamental en la gestiï¿½n de Mina Justa, por eso desarrollamos nuestras actividades dentro del marco legal ambiental, cumpliendo nuestras obligaciones asumidas. Desarrollamos nuestras actividades siguiendo procedimientos internos reflejados en nuestro Manual de Sistema de Gestiï¿½n Ambiental (SGA) y con ello, evaluamos nuestra eficiencia en la protecciï¿½n del medio ambiente.</p><p><br></p><p>ALCANCE DEL SISTEMA DE GESTIï¿½N AMBIENTAL</p><p>\"Extracciï¿½n de mineral, procesamiento, almacenamiento y despacho de concentrado y cï¿½todos de cobre en la unidad minera Mina Justa, distrito de San Juan de Marcona, Provincia de Nazca, Departamento de Ica, Perï¿½\".</p><p><br></p><p>Para ver los documentos del SGA de Mina Justa haz <a href=\"https://grupoatomosac239-my.sharepoint.com/personal/mariacabanillas_grupoatomosac239_onmicrosoft_com/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fmariacabanillas%5Fgrupoatomosac239%5Fonmicrosoft%5Fcom%2FDocuments%2FSGA%20MARCOBRE&amp;ga=1\" target=\"_blank\">click aquï¿½</a>.</p>",
+    "Imagen": "\\img\\uploads\\Home\\Tarjeta_220230601213953.jpg",
+    "Publicador": "Marcobre",
+    "Fecha": "2023-06-01",
+    "Tipo": "article-card article-left-top medium-article",
+    "Tamanio": 2,
+    "PosicionE": 2,
+    "PosicionM": 0
+  },
+  {
+    "Id": 1,
+    "Titulo": "Componentes aprobados de Mina Justa",
+    "Contenido": "<p class=\"ql-align-justify\"><a href=\"https://geoservices.business-geografic.com/adws/app/b7bc3d9c-a72f-11ea-9f8c-f95e67c2d15a/\" target=\"_blank\" style=\"color: rgb(13, 110, 253);\">SmartMaps</a></p><p class=\"ql-align-justify\">Consulta los componentes aprobados en Mina Justa</p><p class=\"ql-align-justify\">ï¿½reas del IGA</p><p class=\"ql-align-justify\">ï¿½reas de la CB</p><p class=\"ql-align-justify\">Estaciones de monitoreo</p><p class=\"ql-align-justify\">ï¿½rea de IAD | AII</p>",
+    "Imagen": "\\img\\uploads\\Home\\Tarjeta_120230601214446.png",
+    "Publicador": "Marcobre",
+    "Fecha": "2022-06-15",
+    "Tipo": "article-card article-left-top medium-article",
+    "Tamanio": 2,
+    "PosicionE": 2,
+    "PosicionM": 0
+  }
+]
