@@ -133,7 +133,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
                 if (accion.Responsable_Marcobre2 != null)
                     msg.To.Add(new MailAddress(accion.Responsable_Marcobre2_Email));
 
-                msg.Subject = "Nueva Acción de Incidente";
+                msg.Subject = "Acción de Incidente";
                 msg.SubjectEncoding = Encoding.UTF8;
                 msg.IsBodyHtml = true;
                 msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");
@@ -211,7 +211,7 @@ namespace GestionAmbiental.UseCases.Notificaciones.Incidentes.Investigaciones
             NetworkCredential credential = new NetworkCredential(user, pass);
             mail.Credentials = credential;
 
-            msg.Subject = "Nueva Investigación de Incidente";
+            msg.Subject = "Investigación de Incidente";
             msg.SubjectEncoding = Encoding.UTF8;
             msg.IsBodyHtml = true;
             msg.From = new MailAddress(mailFrom, @"Sistema de Gestión Ambiental");

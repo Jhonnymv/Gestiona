@@ -16,7 +16,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
         {
             _getReportePreliminarReadOnlyRepository = getReportePreliminarReadOnlyRepository ?? throw new ArgumentNullException(nameof(getReportePreliminarReadOnlyRepository));
         }
-        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int [] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
+        public async Task<ReportesPreliminaresOutput> Execute(string fecha_inicio, string fecha_fin, int[] gerencia, int[] titular, string[] estado, int[] responsable, int[] asesor, string codigo, int pagina, int rpp)
         {
             DateTime? fechaInicioFiltro = null;
             DateTime? fechaFinFiltro = null;
@@ -25,18 +25,18 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
                 fechaInicioFiltro = Convert.ToDateTime(fecha_inicio);
             if (fecha_fin != null)
                 fechaFinFiltro = Convert.ToDateTime(fecha_fin);
-            
+
             var estados = new List<string>();
             if (estado.Length > 0)
             {
                 if (estado.Contains("EnProceso"))
                     estados.Add("En Proceso");
                 if (estado.Contains("Cerrado"))
-                    estados.Add("Cerrado");                
+                    estados.Add("Cerrado");
             }
 
-            var data = await _getReportePreliminarReadOnlyRepository.GetReportes(fechaInicioFiltro, fechaFinFiltro,gerencia,titular,estados ,responsable,asesor,codigo);
-
+            var data = await _getReportePreliminarReadOnlyRepository.GetReportes(fechaInicioFiltro, fechaFinFiltro, gerencia, titular, estados, responsable, asesor, codigo);
+            data = data.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var output = new ReportesPreliminaresOutput
             {
                 Reportes = new List<ReportePreliminarOutput>(),
@@ -48,7 +48,7 @@ namespace GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Get
             {
                 var outputItem = new ReportePreliminarOutput(item);
                 output.Reportes.Add(outputItem);
-            }           
+            }
 
             return output;
         }
