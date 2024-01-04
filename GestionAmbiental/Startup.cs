@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Autofac.Configuration;
 using GestionAmbiental.UseCases;
+using GestionAmbiental.UseCases.Util.Implementation;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,7 +43,8 @@ namespace GestionAmbiental
             services.AddControllersWithViews()         
                 .AddFeatureFolders(new OdeToCode.AddFeatureFolders.FeatureFolderOptions()
                 { FeatureFolderName = "UseCases" });
-
+            services.AddScoped<IGestorArchivos, GestorArchivos>();
+            services.AddScoped<IGestorEncriptado, GestorEncriptado>();
             services.AddSingleton<DataProtectionPurpouseStrings>();
         }
 

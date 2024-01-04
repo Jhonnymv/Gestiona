@@ -16,6 +16,7 @@ using GestionAmbiental.Domain.Enum;
 using Renci.SshNet;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
+using GestionAmbiental.UseCases.Util.Interfaces;
 
 namespace GestionAmbiental.UseCases.CompromisosMCB
 {
@@ -31,7 +32,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.GerenciaUsuarioCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerenciaUsuario;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IWebHostEnvironment _hostingEnvironment;
-
+        private readonly IGestorArchivos _gestorArchivos;
         private readonly Application.UseCases.CompromisosMCB.CriterioCMBC.NuevoRegistro.INuevoRegistro _nuevoRegistroCriterio;
         private readonly Application.UseCases.CompromisosMCB.EtapaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroEtapa;
         private readonly Application.UseCases.CompromisosMCB.OrigenCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroOrigen;
@@ -41,6 +42,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
         private readonly Application.UseCases.CompromisosMCB.GerenciaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroGerencia;
         private readonly Application.UseCases.CompromisosMCB.AreaCMCB.NuevoRegistro.INuevoRegistro _nuevoRegistroArea;
         public CompromisosMCBController(
+            IGestorArchivos gestorArchivos,
             INuevoRegistro nuevoRegistro,
             ISelectItems selectItems,
             IEditarRegistro editarRegistro,
@@ -61,6 +63,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             Application.UseCases.CompromisosMCB.AreaCMCB.NuevoRegistro.INuevoRegistro nuevoRegistroArea
             )
         {
+            _gestorArchivos = gestorArchivos;
             _nuevoRegistro = nuevoRegistro;
             _selectItems = selectItems;
             _editarRegistro = editarRegistro;
@@ -737,54 +740,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 var newFilePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/" + newFileName;
                 //await EncryptFileAsync(fileName, encryptedArchiveFile);
 
-                return await UploadFTPFileAsync(newFilePath, newFileName);
-            }
-            else
-                return "Error";
-        }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
-        {
-            if (HttpContext.Session.GetString("SessionUser") != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                try
-                {
-                    var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionCMCBImp);
-                    string host = "", port = "", user = "", pass = "", dir = "";
-                    foreach (var item in serverInfo.Info)
-                    {
-                        switch (item.Key)
-                        {
-                            case "host": host = item.Value; break;
-                            case "port": port = item.Value; break;
-                            case "user": user = item.Value; break;
-                            case "password": pass = item.Value; break;
-                            case "directory": dir = item.Value; break;
-                        }
-                    }
-
-                    using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                    {
-                        sftp.Connect();
-                        if (!sftp.Exists(dir))
-                            sftp.CreateDirectory(dir);
-
-                        sftp.ChangeDirectory(dir);
-                        using (FileStream fs = System.IO.File.OpenRead(path))
-                        {
-                            sftp.UploadFile(fs, newFileName, true);
-                        }
-                        sftp.Dispose();
-                    }
-                    return newFileName;
-                }
-                catch (Exception e)
-                {
-                    Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
-                    Log.Error(e.Message);
-                    return "Error";
-                }
+                return await _gestorArchivos.UploadFTPFileAsync(newFilePath, newFileName,Tipo_Info_SGA.FTPConnectionCMCBImp);
             }
             else
                 return "Error";
@@ -805,7 +761,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
                 {
                     var nombreDoc = fileName;
 
-                    var downloadedFile = await DownloadFTPFileAsync(fileName, nombreDoc);
+                    var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(fileName, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionCMCBImp);
 
                     var docsDownloadedPath = Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot\Temp\DownloadedDocs");
                     if (Directory.Exists(docsDownloadedPath))
@@ -847,70 +803,7 @@ namespace GestionAmbiental.UseCases.CompromisosMCB
             FileStream stream = new FileStream(completePath, FileMode.Open);
             return File(stream, GetContentType(path), Path.GetFileName(path));
         }
-        public async Task<string> DownloadFTPFileAsync(string fileName, string nombreDoc)
-        {
-            try
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionCMCBImp);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(nombreDoc, fileStream);
-
-                    sftp.Dispose();
-                }
-                fileStream.Close();
-
-                return downloadedFilePath;
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
+        
         [HttpPost]
         public async Task<IActionResult> CargaDataExcel(CargaExcelModel model)
         {

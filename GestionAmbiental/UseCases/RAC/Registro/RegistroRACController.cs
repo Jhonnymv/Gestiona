@@ -20,6 +20,7 @@ using GestionAmbiental.Application.UseCases.RAC.Registro.EliminarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.RegistrarRAC;
 using GestionAmbiental.Application.UseCases.RAC.Registro.SelectItems;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -34,6 +35,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
     public class RegistroRACController : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private readonly IConsultarRACs _consultarRACs;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarRAC _registrarRAC;
@@ -46,11 +49,13 @@ namespace GestionAmbiental.UseCases.RAC.Registro
         private readonly IDataProtector _protector;
         private readonly IGetInfo_SGA _info_SGA;
         public RegistroRACController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IWebHostEnvironment hostingEnvironment,
             IConsultarRACs consultarRACs,
             IConsultarRAC consultarRAC,
             ISelectItems selectItems,
-            IRegistrarRAC registrarRAC, 
+            IRegistrarRAC registrarRAC,
             IEditarRAC editarRAC,
             IGetUsuario getUsuario,
             IAmpliarFechaRAC ampliarFechaRAC,
@@ -61,6 +66,8 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             IGetInfo_SGA info_SGA)
         {
             _hostingEnvironment = hostingEnvironment;
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _consultarRACs = consultarRACs;
             _consultarRAC = consultarRAC;
             _selectItems = selectItems;
@@ -150,7 +157,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 return View();
             }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigoFiltro, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] areasFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -163,7 +170,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 fechaFin = Convert.ToDateTime(fechaFinFiltro);
             else
                 fechaFin = DateTime.Now;
-            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, areasFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro,codigoFiltro);
+            var datosTabla = await _consultarRACs.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, areasFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NRegistros % rpp != 0 ? (datosTabla.NRegistros / rpp) + 1 : datosTabla.NRegistros / rpp;
@@ -176,7 +183,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     filasTabla += "<tr>";
                     if (fila.Estado != EstadosRAC.Eliminado.ToString())
                     {
-                        if(userInfo.Rol.Equals(InspeccionRol.Admin) || ((userInfo.Rol.Equals(InspeccionRol.AsesorSSO) || userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) && usuario.IdUsuario.Equals(fila.Id_Supervisor)))
+                        if (userInfo.Rol.Equals(InspeccionRol.Admin) || ((userInfo.Rol.Equals(InspeccionRol.AsesorSSO) || userInfo.Rol.Equals(InspeccionRol.AsesorMAP)) && usuario.IdUsuario.Equals(fila.Id_Supervisor)))
                             filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/EditarRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
                         else
                             filasTabla += "<td><label style=\"width:80px;\"><a href=\"/RegistroRAC/DetalleRAC?IdRAC=" + IdEncriptado + "\">" + fila.Codigo + "</a></label></td>";
@@ -498,7 +505,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     Id_RAC = reporte.Id_RAC,
                     IdEncriptado = IdRAC,
                     Nombres_Apellidos = reporte.Nombres_Apellidos,
-                    Id_Gerencia = reporte.Id_Gerencia!=null? reporte.Id_Gerencia.Value:0,
+                    Id_Gerencia = reporte.Id_Gerencia != null ? reporte.Id_Gerencia.Value : 0,
                     Id_Empresa = reporte.Id_Empresa != null ? reporte.Id_Empresa.Value : 0,
                     Otra_Empresa = reporte.Otra_Empresa,
                     Id_Empresa_Obs = reporte.Id_Empresa_Obs,
@@ -550,7 +557,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
 
                 ViewBag.PermisoAdmin = reporte.PermisoAdmin;
                 ViewBag.PermisoAsesor = reporte.PermisoAsesor;
-                ViewBag.Codigo = reporte.Codigo;                
+                ViewBag.Codigo = reporte.Codigo;
                 ViewBag.ModelJSON = JsonConvert.SerializeObject(toJson);
                 return View(model);
             }
@@ -567,7 +574,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 else
                 {
                     var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                    if (userInfo.Rol == InspeccionRol.Admin|| userInfo.Rol == InspeccionRol.AsesorSSO|| userInfo.Rol == InspeccionRol.AsesorMAP)
+                    if (userInfo.Rol == InspeccionRol.Admin || userInfo.Rol == InspeccionRol.AsesorSSO || userInfo.Rol == InspeccionRol.AsesorMAP)
                     {
                         var filePathObs = "";
                         var filePathCierre = "";
@@ -691,7 +698,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(fileName, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -705,10 +712,10 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                     var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
-                    var decryptedFileName = "desencriptado.zip";
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    var decryptedFileName = archivePath + "desencriptado.zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
                     /*read decrypted file*/
-                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
 
                     return File(stream, GetContentType(decryptedFileName), fileName);
                 }
@@ -716,50 +723,6 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 {
                     return Content("No se encontró el archivo: " + e.Message);
                 }
-            }
-        }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName,string tipo)
-        {
-            if (HttpContext.Session.GetString("SessionUser") != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
-                Tipo_Info_SGA directorio;
-                switch (tipo)
-                {
-                    case "implementacion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACI; break;
-                    default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACR; break;
-                }
-                var serverInfo = await _info_SGA.Execute(directorio);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                        fs.Close();
-                        fs.Dispose();
-                    }
-                    sftp.Dispose();
-                }
-                return newFileName;
-            }
-            else { 
-                return "NoAutorizado"; 
             }
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
@@ -771,7 +734,7 @@ namespace GestionAmbiental.UseCases.RAC.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
+
                 var tempPath = Path.GetTempPath();
                 var SGATempPath = tempPath + "SGA-Marcobre-v2/";
                 if (!Directory.Exists(SGATempPath))
@@ -805,143 +768,10 @@ namespace GestionAmbiental.UseCases.RAC.Registro
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
-                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
+                await _gestorEncriptado.EncryptFileAsync(archiveFile, encryptedArchiveFile);
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName,tipo);
+                return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
             }
-        }
-        public async Task<string> DownloadFTPFileAsync(string fileName)
-        {
-            try
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
-
-                    sftp.Dispose();
-                }
-                fileStream.Close();
-
-                return downloadedFilePath;
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
-        private async Task EncryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
         }
     }
 }

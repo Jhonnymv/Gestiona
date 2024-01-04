@@ -13,6 +13,7 @@ using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
 using GestionAmbiental.UseCases.Reportes.AvistamientoFauna;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
         private readonly IGetUsuario _getUsuario;
         private IWebHostEnvironment _hostingEnvironment;
+         private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private readonly IGetInfo_SGA _info_SGA;
 
         public DescargarAvistamientoFaunaController(
@@ -38,12 +41,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetUsuario getUsuario,
             IWebHostEnvironment hostingEnvironment,
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IGetInfo_SGA info_SGA)
         {
             _getAvistamientoFauna = getAvistamientoFauna;
             _getAvistamientosFauna = getAvistamientosFauna;
             _getUsuario = getUsuario;
             _hostingEnvironment = hostingEnvironment;
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _info_SGA = info_SGA;
         }
 
@@ -387,7 +394,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
 
             //3. Desencriptar archivo
             var pathDesencriptado = archivePath + "desencriptado" + imageIndex.ToString() + Path.GetExtension(path);
-            await DecryptFileAsync(pathEncriptado, pathDesencriptado);
+            await _gestorEncriptado.DecryptFileAsync(pathEncriptado, pathDesencriptado);
             //var pathDesencriptado = archivePath + "desencriptado.zip";
             if (tipoArchivo != "foto")
             {
@@ -513,40 +520,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
         }
     }
 }

@@ -17,6 +17,8 @@ using GestionAmbiental.Application.UseCases.AvistamienoFauna.ValidarPermisos;
 using GestionAmbiental.Application.UseCases.GestorUsuarios.GetUsuario;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Util.Implementation;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using ImageMagick;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
     public class AvistamientoFaunaController : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
+        private readonly IGetInfo_SGA _info_SGA;
 
         private readonly IGetItems _getItems;
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
@@ -47,13 +52,14 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         private readonly IValidarPermisos _validarPermisos;
 
         private readonly IDataProtector _protector;
-        private readonly IGetInfo_SGA _info_SGA;
         public AvistamientoFaunaController(
             IWebHostEnvironment hostingEnvironment,
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IGetItems getItems,
             IGetAvistamientosFauna getAvistamientosFauna,
             IGetAvistamientoFauna getAvistamientoFauna,
-            IGetUsuario getUsuario, 
+            IGetUsuario getUsuario,
             Application.UseCases.GestorTablasMaestras.Usuario.GetUsuario.IGetUsuario getUsuarioId,
             IGetInfo_SGA info_SGA,
             IRegistrarAvistamientoFauna registrarAvistamientoFauna,
@@ -65,6 +71,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
             _hostingEnvironment = hostingEnvironment;
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _getItems = getItems;
             _getAvistamientosFauna = getAvistamientosFauna;
             _getAvistamientoFauna = getAvistamientoFauna;
@@ -131,11 +139,11 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var estadosFauna = items.EstadosFauna.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdEstadoFauna.ToString(), Text = g.Descripcion }).ToList();
                 estadosFauna.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var lugaresReferencia = items.LugaresReferencia.OrderBy(x =>x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
+                var lugaresReferencia = items.LugaresReferencia.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdLugarReferencia.ToString(), Text = g.Descripcion }).ToList();
                 lugaresReferencia.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var contactosEmergencia = JsonConvert.SerializeObject(items.ContactosEmergencia.Select(x => x.Telefono).ToArray());
-                
+
                 var mensajeContactos = System.IO.File.ReadAllText(Path.Combine(_hostingEnvironment.WebRootPath, "ConfigFiles", "AvistamientoFauna.txt"), System.Text.Encoding.GetEncoding("iso-8859-1"));
                 mensajeContactos = mensajeContactos.Substring(10);
 
@@ -148,7 +156,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             }
         }
         [HttpPost]
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina,string usuario_red)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fecha, int tipo_fauna, int estado_fauna, int lugar_referencia, int rpp, int pagina, string usuario_red)
         {
             var datosTabla = await _getAvistamientosFauna.Execute(fecha, tipo_fauna, estado_fauna, lugar_referencia, rpp, pagina);
             var usuario = await _getUsuario.Execute(usuario_red);
@@ -163,16 +171,16 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     if (!fila.Estado.Equals(EstadosAvistamiento.Eliminado.ToString()))
                     {
                         var IdEncriptado = _protector.Protect(fila.IdAvistamientoFauna.ToString());
-                        filasTabla += "<tr>";                        
+                        filasTabla += "<tr>";
                         if ((fila.Estado.Equals(EstadosAvistamiento.Registrado.ToString()) || fila.Estado.Equals(EstadosAvistamiento.Completado.ToString())) && !usuario.IdRol.Equals((int)InspeccionRol.Admin))
                         {
-                            if(fila.FechaAvistamiento > DateTime.Now.AddDays(-1))
+                            if (fila.FechaAvistamiento > DateTime.Now.AddDays(-1))
                                 filasTabla += "<td><img class=\"icon\" src=\"../img/icons/bell.png\"/></td>";
                             else
                                 filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/DetalleRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                         }
-                        else if(fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
+                        else if (fila.Estado.Equals(EstadosAvistamiento.Pendiente.ToString()) || usuario.IdRol.Equals((int)InspeccionRol.Admin))
                         {
                             filasTabla += "<td></td>";
                             filasTabla += "<td><a href=\"/AvistamientoFauna/EditarRegistro?IdAvistamiento=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -313,7 +321,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -384,18 +392,18 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                     var extension = Path.GetExtension(model.Fotos[i].FileName);
                     var max_file_size = 8388608;
-                    
+
                     var allowed_extensions = new[] { ".jpg", ".JPG", ".jpeg", ".JPEG", ".png", ".PNG" };
 
                     if (allowed_extensions.Contains(extension) && model.Fotos[i].Length < max_file_size)
                     {
-                        var newfileName = CreateUniqueFileName(i+1) + extension;
+                        var newfileName = CreateUniqueFileName(i + 1) + extension;
                         filePath = await CargarImagen(model.Fotos[i], newfileName);
                         fotos.Add(filePath);
                     }
                 }
 
-                var IdAvistamiento = await _registrarAvistamientoFauna.Execute(userInfo.NombreUsuario,fotos.ToArray(),
+                var IdAvistamiento = await _registrarAvistamientoFauna.Execute(userInfo.NombreUsuario, fotos.ToArray(),
                     model.Fecha_Avistamiento,
                     model.Hora_Avistamiento,
                     model.Ubicacion,
@@ -413,7 +421,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     return RedirectToAction("Resumen");
                 else if (model.Opcion.Equals("Registrar"))
                     return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = _protector.Protect(IdAvistamiento.ToString()) });
-                
+
             }
             return RedirectToAction("NuevoRegistro");
         }
@@ -517,7 +525,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                         if (foto.Length == 0)
                             vacios.Add(fotos.IndexOf(foto));
                     }
-                    foreach(var vacio in vacios)
+                    foreach (var vacio in vacios)
                     {
                         fotos.RemoveAt(vacio);
                     }
@@ -534,12 +542,12 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                         if (allowed_extensions.Contains(extension) && model.Fotos[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(i+1) + extension;
+                            var newfileName = CreateUniqueFileName(i + 1) + extension;
                             filePath = await CargarImagen(model.Fotos[i], newfileName);
                             fotos.Add(filePath);
                         }
                     }
-                
+
                 await _editarAvistamientoFauna.Execute(userInfo.NombreUsuario,
                     model.IdAvistamientoFauna,
                     model.Codigo,
@@ -559,7 +567,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     model.Opcion,
                     model.Estado);
 
-                if (model.Opcion.Equals("GuardarEstado")|| model.Opcion.Equals("EditarAdmin"))
+                if (model.Opcion.Equals("GuardarEstado") || model.Opcion.Equals("EditarAdmin"))
                     return RedirectToAction("Resumen");
                 else if (model.Opcion.Equals("Registrar"))
                     return RedirectToAction("NotificarNuevoAvistamiento", "NotificacionesAvistamientoFauna", new { IdAvistamiento = model.IdEncriptado });
@@ -630,7 +638,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 model.IdTipoAvistamiento = avistamiento.IdTipoAvistamiento;
                 model.IdEstadoFauna = avistamiento.IdEstadoFauna;
                 model.IdLugarReferencia = avistamiento.IdLugarReferencia;
-                
+
                 model.IdUsuario = avistamiento.IdUsuario;
                 model.Nombres_Apellidos = avistamiento.Usuario;
                 if (avistamiento.IdEmpresa != null)
@@ -647,7 +655,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                 return View(model);
             }
-        }        
+        }
         [HttpPost]
         public async Task<IActionResult> ObtenerImagenesCargadas(string imagenes)
         {
@@ -660,7 +668,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 var imagesSrc = new List<ImagenCargada>();
                 for (int i = 0; i < listaImagenes.Count; i++)
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(listaImagenes[i]);
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(listaImagenes[i], userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -675,7 +683,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado" + i.ToString() + Path.GetExtension(listaImagenes[i]);
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
                     /*read decrypted file*/
                     byte[] imageByteData = System.IO.File.ReadAllBytes(archivePath + decryptedFileName);
                     string imageBase64Data = Convert.ToBase64String(imageByteData);
@@ -701,14 +709,14 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 };
             }
             return Ok(response);
-        }        
+        }
         public async Task<IActionResult> ObtenerImagenesReferencia()
         {
             var items = await _getItems.Execute();
             var nombresComunes = items.NombresComunes.ToList();
             dynamic response = new
             {
-                Ids = nombresComunes.OrderBy(x=>x.IdNombreComunFauna).Select(x=>x.IdNombreComunFauna).ToArray(),
+                Ids = nombresComunes.OrderBy(x => x.IdNombreComunFauna).Select(x => x.IdNombreComunFauna).ToArray(),
                 Nombres = nombresComunes.OrderBy(x => x.IdNombreComunFauna).Select(x => x.Descripcion).ToArray(),
                 Fotos = nombresComunes.OrderBy(x => x.IdNombreComunFauna).Select(x => x.Foto).ToArray()
             };
@@ -717,19 +725,19 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         [HttpPost]
         public async Task<IActionResult> EliminarImagen(int IdAvistamiento, string imagen)
         {
-            await DeleteFTPFileAsync(imagen);
+            await _gestorArchivos.DeleteFTPFileAsync(imagen, Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
 
             await _eliminarFoto.Execute(IdAvistamiento, imagen);
 
             return Ok();
         }
         [HttpGet]
-        public async Task<IActionResult> EliminarRegistro(int IdAvistamiento,string imagenes)
+        public async Task<IActionResult> EliminarRegistro(int IdAvistamiento, string imagenes)
         {
 
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento + "&imagenes="+imagenes });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdAvistamiento=" + IdAvistamiento + "&imagenes=" + imagenes });
             }
             else
             {
@@ -773,7 +781,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
         }
         private string CreateUniqueFileName(int nFile)
         {
-            var fileName = "Evidencia_Avistamiento_Fauna_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss")+ "_" + nFile;
+            var fileName = "Evidencia_Avistamiento_Fauna_" + DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "_" + nFile;
             return fileName;
         }
         private string GetContentType(string path)
@@ -823,7 +831,8 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     {
                         optimizer.LosslessCompress(stream);
                     }
-                    catch (Exception e) {
+                    catch (Exception e)
+                    {
                         Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
                         Log.Error(e.Message);
                     }
@@ -832,49 +841,12 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                     stream.Close();
                 }
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/" + newFileName;
-                await EncryptFileAsync(fileName, encryptedArchiveFile);
+                await _gestorEncriptado.EncryptFileAsync(fileName, encryptedArchiveFile);
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+                return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
             }
             else
                 return "Error";
-        }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
-        {
-            if (HttpContext.Session.GetString("SessionUser") != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();
-                }
-                return newFileName;
-            }
-            else
-            {
-                return "No Autorizado";
-            }
         }
         private Dictionary<string, string> GetMimeTypes()
         {
@@ -907,7 +879,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(fileName, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -922,7 +894,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado" + Path.GetExtension(fileName);
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
                     /*read decrypted file*/
                     FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
 
@@ -932,163 +904,6 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna
                 {
                     return Content("No se encontró el archivo: " + e.Message);
                 }
-            }
-        }
-        public async Task<string> DownloadFTPFileAsync(string fileName)
-        {
-            try
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
-
-                    sftp.Dispose();
-                }
-                fileStream.Close();
-
-                return downloadedFilePath;
-            }
-            catch (Exception e)
-            {
-                return e.Message;
-            }
-        }
-        private async Task EncryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
-        }
-        private async Task DeleteFTPFileAsync(string filename)
-        {
-            var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
-                {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
-                }
-            }
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-
-                sftp.DeleteFile(filename);
-
-                sftp.Dispose();
             }
         }
         private class ImagenCargada

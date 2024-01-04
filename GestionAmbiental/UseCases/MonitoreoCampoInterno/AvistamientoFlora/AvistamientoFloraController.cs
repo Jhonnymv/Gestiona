@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFlora.Items;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using ImageMagick;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +26,8 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
     {
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private readonly Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFlora.Items.ISelectItems _selectItems;
         private readonly Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFlora.NuevoRegistro.INuevoRegistro _nuevoRegistro;
         private readonly Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFlora.ListarRegistros.IListarRegistros _listarRegistrosAvistamientoFlora;
@@ -43,6 +46,8 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
         private readonly Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.FaunaAsociadaAvistamiento.ListarRegistros.IListarRegistros _listarFaunaByAvistamiento;
 
         public AvistamientoFloraController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IGetInfo_SGA info_SGA,
             IWebHostEnvironment hostingEnvironment,
             Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.AvistamientoFlora.Items.ISelectItems selectItems,
@@ -66,6 +71,8 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
             Application.UseCases.MonitoreoCampoInterno.AvistamientoFlora.FaunaAsociadaAvistamiento.ListarRegistros.IListarRegistros listarFaunaByAvistamiento
             )
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _info_SGA = info_SGA;
             _hostingEnvironment = hostingEnvironment;
             _selectItems = selectItems;
@@ -85,7 +92,7 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
             _listarVigorByAvistamiento = listarVigorByAvistamiento;
             _listarSaludByAvistamiento = listarSaludByAvistamiento;
             _listarUsoByAvistamiento = listarUsoByAvistamiento;
-            _listarFaunaByAvistamiento= listarFaunaByAvistamiento;
+            _listarFaunaByAvistamiento = listarFaunaByAvistamiento;
         }
 
         public async Task<IActionResult> Resumen()
@@ -112,7 +119,7 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));                
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
 
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
@@ -401,49 +408,12 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
                     stream.Close();
                 }
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/" + newFileName;
-                await EncryptFileAsync(fileName, encryptedArchiveFile);
+                await _gestorEncriptado.EncryptFileAsync(fileName, encryptedArchiveFile);
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+                return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionAvistamientoFlora);
             }
             else
                 return "Error";
-        }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
-        {
-            if (HttpContext.Session.GetString("SessionUser") != null)
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();
-                }
-                return newFileName;
-            }
-            else
-            {
-                return "No Autorizado";
-            }
         }
         private Dictionary<string, string> GetMimeTypes()
         {
@@ -462,41 +432,6 @@ namespace GestionAmbiental.UseCases.MonitoreoCampoInterno.AvistamientoFlora
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
-        }
-        private async Task EncryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
         }
     }
 }

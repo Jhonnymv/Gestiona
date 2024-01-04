@@ -22,6 +22,7 @@ using GestionAmbiental.Application.UseCases.Inspecciones.Registro.EliminarObserv
 using GestionAmbiental.Application.UseCases.Inspecciones.Registro.RegistrarInspeccion;
 using GestionAmbiental.Application.UseCases.Inspecciones.SelectItems;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
     {
 
         private readonly IConsultarCabeceras _consultarCabeceras;
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private readonly IConsultarCabecera _consultarCabecera;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInspeccionCabecera _registrarInspeccionCabecera;
@@ -54,6 +57,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         private readonly IEliminarVencidos _eliminarVencidos;
 
         public InspeccionesController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IConsultarCabeceras consultarCabeceras,
             ISelectItems selectItems,
             IRegistrarInspeccionCabecera registrarInspeccionCabecera,
@@ -71,6 +76,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings,
             IGetInfo_SGA info_SGA)
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _consultarCabeceras = consultarCabeceras;
             _selectItems = selectItems;
             _registrarInspeccionCabecera = registrarInspeccionCabecera;
@@ -123,35 +130,35 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));            
-            
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
 
                 var selectItemsResumen = await _selectItems.ItemVistaResumen();
 
-                var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var filtroEmpresas = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 var filtroGerencias = selectItemsResumen.GerenciaEjecutora.OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres+ " "+g.Apellidos }).ToList();
+                var filtroUsuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
 
                 var usuariosAgrupados = selectItemsResumen.Usuarios.GroupBy(x => x.IdRol).ToList();
                 var asesores = new List<SelectListItem>();
                 foreach (var grupo in usuariosAgrupados)
                 {
-                    if(grupo.Key.Equals((int)InspeccionRol.AsesorMAP))
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorMAP))
                     {
                         var nuevoGrupo = new SelectListGroup() { Name = "Asesores MAP", Disabled = false };
-                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " "+i.Apellidos, Group = nuevoGrupo }).ToList());
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
                     }
-                    if(grupo.Key.Equals((int)InspeccionRol.AsesorSSO))
+                    if (grupo.Key.Equals((int)InspeccionRol.AsesorSSO))
                     {
                         var nuevoGrupo = new SelectListGroup() { Name = "Asesores SSO", Disabled = false };
-                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " "+i.Apellidos, Group = nuevoGrupo }).ToList());
-                    }                    
+                        asesores.AddRange(grupo.OrderBy(x => x.Nombres).Select(i => new SelectListItem() { Value = i.IdUsuario.ToString(), Text = i.Nombres + " " + i.Apellidos, Group = nuevoGrupo }).ToList());
+                    }
                 }
 
                 ViewBag.Empresas = filtroEmpresas;
@@ -161,9 +168,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.PermisoAdmin = userInfo.Rol.Equals(InspeccionRol.Admin);
 
                 return View();
-           }
+            }
         }
-        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro,string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro,string codigoFiltro, int pagina, int rpp)
+        public async Task<IActionResult> GetTablaResumenFiltrada(string fechaInicioFiltro, string fechaFinFiltro, int[] gerenciaFiltro, int[] empresaFiltro, int[] registradoPorFiltro, string[] estadoFiltro, int[] responsableFiltro, int[] asesorFiltro, string codigoFiltro, int pagina, int rpp)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             DateTime fechaInicio;
@@ -177,7 +184,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             else
                 fechaFin = DateTime.Now;
 
-            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro,estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro);
+            var datosTabla = await _consultarCabeceras.Execute(pagina, rpp, fechaInicio, fechaFin, gerenciaFiltro, empresaFiltro, registradoPorFiltro, estadoFiltro, responsableFiltro, asesorFiltro, codigoFiltro);
             var filasTabla = "";
             var paginador = "";
             int nPaginas = datosTabla.NCabeceras % rpp != 0 ? (datosTabla.NCabeceras / rpp) + 1 : datosTabla.NCabeceras / rpp;
@@ -189,11 +196,11 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<tr>";
                     var obsAvance = fila.NObsAprobadas;
                     double avance = obsAvance != 0 ? Math.Round((float)obsAvance / fila.NObservaciones * 100, 1) : 0;
-                    if(fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
-                    filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
+                    if (fila.Estado.Equals(EstadosInspeccion.Pendiente.ToString()) || userInfo.Rol.Equals(InspeccionRol.Admin))
+                        filasTabla += "<td><a href=\"/Inspecciones/EditarInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td><a href=\"/Inspecciones/DetalleInspeccion?IdCabecera=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    if(userInfo.Rol.Equals(InspeccionRol.Admin))
+                    if (userInfo.Rol.Equals(InspeccionRol.Admin))
                         filasTabla += "<td>" + fila.RegistradoPor + "</td>";
                     filasTabla += "<td>" + fila.Gerencia + "</td>";
                     filasTabla += "<td>" + fila.Empresa + "</td>";
@@ -203,7 +210,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     filasTabla += "<td>" + fila.NObservaciones + "</td>";
                     filasTabla += "<td style=\"width: 10%\"><div class=\"progress\">" +
                                           "<span class=\"percent\" >" + avance + "%</span>" +
-                                          "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">" 
+                                          "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">"
                                            +
                                           "</div>" +
                                       "</div>" +
@@ -256,7 +263,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     message = "Exito"
                 };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 response = new
                 {
@@ -270,7 +277,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName});
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName });
             }
             else
             {
@@ -281,9 +288,9 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
 
                 var gerenciasEjecutorasMC = selectItemsResumen.GerenciaEjecutora.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
-                gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));                
+                gerenciasEjecutorasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
+                var empresasMC = selectItemsResumen.EmpContratMarcobre.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.RazonSocial).Select(g => new SelectListItem() { Value = g.IdEmpresa.ToString(), Text = g.RazonSocial }).ToList();
                 empresasMC.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
@@ -426,7 +433,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ViewBag.TiposCondicionSEG = tiposCondicionSEG;
 
                 ViewBag.Responsables = responsables;
-                
+
                 ViewBag.CabeceraEncriptada = IdCabecera;
                 ViewBag.idCabecera = IdDesencriptado;
 
@@ -478,7 +485,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             model.ResponsableCont,
                             model.CorreoCont,
                             model.FechaProgramada,
-                            userInfo.NombreUsuario);                                
+                            userInfo.NombreUsuario);
                 response = new
                 {
                     success = true,
@@ -533,17 +540,17 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                         switch (observacion.Estado)
                         {
-                            case "Aprobado": 
+                            case "Aprobado":
                                 filaObservacion += "<td><span class=\"badge bg-success\">Aprobado</span></td>"; break;
                             case "Vencido":
                                 filaObservacion += "<td><span class=\"badge bg-danger\">Vencido</span></td>"; break;
                             case "Implementado":
                                 filaObservacion += "<td><span class=\"badge bg-info\">Pendiente de<br/>Verificación</span></td>"; break;
                             default:
-                            //case "Rechazado":
-                            //case "Ampliado": 
-                            //case "Registrado":
-                                filaObservacion += observacion.DescripcionCondicion.Equals("Buenas Prácticas")? ( observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString())?"<td><span class=\"badge bg-info\">Pendiente de <br/>Verificación</span></td>":"<td><span class=\"badge bg-danger\">Rechazado</span></td>" ): "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
+                                //case "Rechazado":
+                                //case "Ampliado": 
+                                //case "Registrado":
+                                filaObservacion += observacion.DescripcionCondicion.Equals("Buenas Prácticas") ? (observacion.Estado.Equals(EstadosInspeccion.Registrado.ToString()) ? "<td><span class=\"badge bg-info\">Pendiente de <br/>Verificación</span></td>" : "<td><span class=\"badge bg-danger\">Rechazado</span></td>") : "<td><span class=\"badge bg-warning\">Pendiente de<br/>Implementación</span></td>"; break;
                         }
 
                         filaObservacion += "<td>" + observacion.TipoInspeccion + "</td>";
@@ -567,7 +574,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre2 + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue?observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";                                             
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
                         filaObservacion += "</tr>";
                     }
                 }
@@ -592,7 +599,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     ResponsableMarc2 = x.IdResponsableMarcobre2,
                     ResponsableCont = x.ResponsableContratista,
                     CorreoCont = x.CorreoContratista,
-                    FechaProgramada = x.FechaProgramada.HasValue? x.FechaProgramada.Value.ToString("yyyy-MM-dd"):"",
+                    FechaProgramada = x.FechaProgramada.HasValue ? x.FechaProgramada.Value.ToString("yyyy-MM-dd") : "",
                     Estado = x.Estado,
                     PermisoEditar = x.PermisosAsesor
                 }));
@@ -622,8 +629,8 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             }
             else
             {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));   
-                
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var selectItemsResumen = await _selectItems.ItemVistaEditarInspeccion();
@@ -638,7 +645,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 var responsables = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 var usuarios = selectItemsResumen.Usuarios.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 responsables.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                
+
                 var tiposActoMA = selectItemsResumen.TipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.ASA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion }).ToList();
                 tiposActoMA.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
@@ -656,7 +663,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                 var asesoresSeguridad = selectItemsResumen.Usuarios.Where(x => x.IdRol.Equals((int)InspeccionRol.AsesorSSO)).OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres + " " + g.Apellidos }).ToList();
                 asesoresSeguridad.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
-                
+
                 var tiposInspeccion = new List<SelectListItem>();
                 tiposInspeccion.Insert(0, new SelectListItem("OTRO", "OTRO", false));
                 tiposInspeccion.Insert(0, new SelectListItem("NO PLANEADA", "NO PLANEADA", false));
@@ -667,7 +674,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {
                     int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdCabecera));
                     var filaObservacion = "";
-                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado,userInfo.NombreUsuario);       
+                    var observaciones = await _consultarInspeccionDetalle.ExecuteRegistro(IdDesencriptado, userInfo.NombreUsuario);
                     var cabecera = await _consultarCabecera.Execute(IdDesencriptado, userInfo.NombreUsuario);
                     if (cabecera != null)
                     {
@@ -678,7 +685,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Tipo_Inspeccion = cabecera.TipoInspeccion;
                         model.Id_Empresa_Contratista = cabecera.IdEmpresa;
                         model.Id_Gerencia_Ejecutora = cabecera.IdGerencia;
-                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue? cabecera.IdGerenciaInspeccionada.Value:0;
+                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue ? cabecera.IdGerenciaInspeccionada.Value : 0;
                         model.Lugar_Inspeccionado = cabecera.AreaInspeccionada;
                         model.Id_Responsable_Lugar = cabecera.IdResponsableArea;
                         model.Fecha_Inspeccion = cabecera.FechaInspeccion.Year + "-" + (cabecera.FechaInspeccion.Month.ToString().Length > 1 ? cabecera.FechaInspeccion.Month.ToString() : "0" + cabecera.FechaInspeccion.Month.ToString()) + "-" + (cabecera.FechaInspeccion.Day.ToString().Length > 1 ? cabecera.FechaInspeccion.Day.ToString() : "0" + cabecera.FechaInspeccion.Day.ToString());
@@ -698,7 +705,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                             else
                                 evidencia = evidencia + "<a href=\"/Inspecciones/Download?fileName=" + observacion.EvidenciaCondicion[i] + "\">, Evidencia</a>";
                         }
-                        filaObservacion += "<tr>"; 
+                        filaObservacion += "<tr>";
                         if (observacion.Estado.Equals(EstadosInspeccion.Vencido.ToString()) && (observacion.PermisosAsesor || observacion.PermisosAdmin))
                         {
                             filaObservacion += "<td><a class=\"btn btn-mc\" style=\"color:white\" onclick=\"ampliarInspeccion(" + observacion.IdInspeccionDetalle + ")\">Ampliar Fecha</a></td>";
@@ -707,10 +714,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         if (observacion.PermisosAsesor && cabecera.Estado.Equals(EstadosInspeccion.Pendiente.ToString()))
                         {
                             filaObservacion += "<td><a class=\"btn btn-mc\" href=\"/Inspecciones/EditarObservacion?IdObservacion=" + IdObsEncriptado + "\">" + "Editar" + "</a></td>";
-                            filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado+ "&IdCabecera="+IdCabecera+"\">" + "Eliminar" + "</a></td>";
+                            filaObservacion += "<td><a class=\"btn btn-danger\" href=\"/Inspecciones/EliminarObservacion?IdObservacion=" + IdObsEncriptado + "&IdCabecera=" + IdCabecera + "\">" + "Eliminar" + "</a></td>";
                         }
-                        else 
-                        { 
+                        else
+                        {
                             filaObservacion += "<td></td>";
                             filaObservacion += "<td></td>";
                         }
@@ -734,10 +741,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         filaObservacion += "<td>" + observacion.ResponsableMarcobre + "</td>";
                         filaObservacion += "<td>" + observacion.ResponsableContratista + "</td>";
                         filaObservacion += "<td>" + observacion.CorreoContratista + "</td>";
-                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue? observacion.FechaProgramada.Value.ToShortDateString():"") + "</td>";                        
+                        filaObservacion += "<td>" + (observacion.FechaProgramada.HasValue ? observacion.FechaProgramada.Value.ToShortDateString() : "") + "</td>";
                         filaObservacion += "</tr>";
                     }
-                    ViewBag.ContenidoTabla = filaObservacion;      
+                    ViewBag.ContenidoTabla = filaObservacion;
                     ViewBag.GerenciaMC = gerenciasEjecutorasMC;
                     ViewBag.EmpresasMC = empresasMC;
                     ViewBag.Responsables = responsables;
@@ -875,7 +882,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                     model.E_DescripcionActoCondicion,
                     model.E_CondicionIdentificada,
                     model.E_TipoCondicion,
-                    evidencias.Count>0?evidencias:model.E_Evidencia,
+                    evidencias.Count > 0 ? evidencias : model.E_Evidencia,
                     model.E_NivelRiesgo,
                     model.E_AccionTomada,
                     model.E_ResponsableMarc,
@@ -914,7 +921,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdCabecera="+IdCabecera });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdCabecera=" + IdCabecera });
             }
             else
             {
@@ -973,7 +980,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                         model.Tipo_Inspeccion = cabecera.TipoInspeccion;
                         model.Id_Empresa_Contratista = cabecera.IdEmpresa;
                         model.Id_Gerencia_Ejecutora = cabecera.IdGerencia;
-                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue?cabecera.IdGerenciaInspeccionada.Value:0;
+                        model.Id_Gerencia_Inspeccionada = cabecera.IdGerenciaInspeccionada.HasValue ? cabecera.IdGerenciaInspeccionada.Value : 0;
                         model.Lugar_Inspeccionado = cabecera.AreaInspeccionada;
                         model.Id_Responsable_Lugar = cabecera.IdResponsableArea;
                         model.Fecha_Inspeccion = cabecera.FechaInspeccion.Year + "-" + (cabecera.FechaInspeccion.Month.ToString().Length > 1 ? cabecera.FechaInspeccion.Month.ToString() : "0" + cabecera.FechaInspeccion.Month.ToString()) + "-" + (cabecera.FechaInspeccion.Day.ToString().Length > 1 ? cabecera.FechaInspeccion.Day.ToString() : "0" + cabecera.FechaInspeccion.Day.ToString());
@@ -1033,7 +1040,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
         public async Task<IActionResult> AmpliarFechaObservacion(string idCabecera, int idObservacion, string fecha)
         {
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            await _ampliarFechaObservacion.Execute(idObservacion, fecha,userInfo.NombreUsuario);
+            await _ampliarFechaObservacion.Execute(idObservacion, fecha, userInfo.NombreUsuario);
             return RedirectToAction("EditarInspeccion", new { IdCabecera = idCabecera });
         }
         private string CreateUniqueFileName(int nFile)
@@ -1056,7 +1063,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 {".doc", "application/vnd.ms-word"},
                 {".docx", "application/vnd.ms-word"},
                 {".xls", "application/vnd.ms-excel"},
-                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},  
+                {".xlsx", "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet"},
                 {".png", "image/png"},
                 {".jpg", "image/jpeg"},
                 {".jpeg", "image/jpeg"},
@@ -1074,10 +1081,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
             else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-            
+
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName);
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(fileName, userInfo.NombreUsuario, Tipo_Info_SGA.FTPConnectionEvidenciaR);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -1092,7 +1099,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
 
                     /*decrypt file*/
                     var decryptedFileName = "desencriptado.zip";
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
                     /*read decrypted file*/
                     FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
 
@@ -1104,48 +1111,16 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 }
             }
         }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName)
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return "NoAutorizado";
-            else 
-            {           
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                string host = "",port="", user = "", pass = "",dir="";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value;break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value;break;
-                    }
-                }
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {                   
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    using (FileStream fs = System.IO.File.OpenRead(path))
-                    {
-                        sftp.UploadFile(fs, newFileName, true);
-                    }
-                    sftp.Dispose();                    
-                }     
-                return newFileName;
-            }
-        }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName)
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
                 return "NoAutorizado";
             }
-            else 
+            else
             {
                 var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                
+
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var tempPath = Path.GetTempPath();
@@ -1181,144 +1156,10 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.Registro
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
-                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");                
+                await _gestorEncriptado.EncryptFileAsync(archiveFile, encryptedArchiveFile);
 
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName);
+                return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, Tipo_Info_SGA.FTPConnectionEvidenciaR);
             }
-        }
-        public async Task<string> DownloadFTPFileAsync(string fileName)
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-            {
-                return "NoAutorizado";
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-                var serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-                    
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
-
-                    sftp.Dispose();
-                }
-                //ftpStream.CopyTo(fileStream);
-                fileStream.Close();
-
-                return downloadedFilePath;
-            }
-        }
-        private async Task EncryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach(var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-            
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
         }
     }
 }

@@ -45,13 +45,16 @@ using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.Editar
 using GestionAmbiental.Application.UseCases.Incidentes.InvestigacionFinal.GetEvidenciasNombre;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
+using GestionAmbiental.UseCases.Util.Interfaces;
+using GestionAmbiental.Domain.ValueObjects;
 
 namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 {
     public class InvestigacionFinalController : Controller
     {
         private readonly IWebHostEnvironment _hostingEnvironment;
-
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private readonly ISelectItems _selectItems;
         private readonly IRegistrarInvestigacionFinal _registrarInvestigacionFinal;
         private readonly IGetInvestigacionesFinales _getInvestigacionesFinales;
@@ -95,14 +98,16 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         private readonly IDataProtector _protector;
 
         public InvestigacionFinalController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IWebHostEnvironment hostingEnvironment,
-            ISelectItems selectItems, 
+            ISelectItems selectItems,
             IRegistrarInvestigacionFinal registrarInvestigacionFinal,
             IGetInvestigacionesFinales getInvestigacionesFinales,
             IGetInvestigacionFinal getInvestigacionFinal,
             IGetEstadoInvestigacion getEstadoInvestigacion,
             IGetImpactoAmbiental getImpactoAmbiental,
-            IEditarInvestigacionFinal editarInvestigacionFinal, 
+            IEditarInvestigacionFinal editarInvestigacionFinal,
             IEditarAdminInvestigacion editarAdminInvestigacion,
             IGetRolUsuario getRolUsuario,
 
@@ -142,6 +147,8 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             IGetInfo_SGA info_SGA
             )
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _hostingEnvironment = hostingEnvironment;
             _selectItems = selectItems;
             _registrarInvestigacionFinal = registrarInvestigacionFinal;
@@ -238,7 +245,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         filasTabla += "<td></td>";
                     if (fila.Estado.Equals(EstadosIncidentes.PendienteInvestigacion.ToString()))
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
-                    else if(datosTabla.PermisoAdmin)
+                    else if (datosTabla.PermisoAdmin)
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/EditarInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
                     else
                         filasTabla += "<td style=\"width: 115px;\"><a href=\"/InvestigacionFinal/DetalleInvestigacion?IdInvestigacion=" + IdEncriptado + "\">" + fila.Codigo + "</a></td>";
@@ -249,7 +256,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filasTabla += "</td>";
                     filasTabla += "<td>" + fila.Lugar_Incidente + "</td>";
                     filasTabla += "<td>" + fila.Gerencia_Responsable + "</td>";
-                    filasTabla += "<td>" + fila.Supervisor_MA + "</td>"; 
+                    filasTabla += "<td>" + fila.Supervisor_MA + "</td>";
                     filasTabla += "<td style=\"width: 10%\"><div class=\"progress\">" +
                                           "<span class=\"percent\" >" + avance + "%</span>" +
                                           "<div class=\"progress-bar\" role=\"progressbar\" style=\"width:" + avance + "%; \" aria-valuemin=\"0\" aria-valuemax=\"100\">"
@@ -297,7 +304,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName+ "?IdInvestigacion="+ IdInvestigacion });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?IdInvestigacion=" + IdInvestigacion });
             }
             else
             {
@@ -351,7 +358,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 causa_Incidente.AddRange(items.ItemsTipoCondicion.Where(x => x.Grupo.Equals(TiposCondicion.CSA.ToString())).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdTipoCondicion.ToString(), Text = g.Descripcion, Group = grupoCondicion }).ToList());
                 causa_Incidente.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
-                var gerencias = items.ItemsGerencia.Where(x=>x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
+                var gerencias = items.ItemsGerencia.Where(x => x.Estado.Equals("ACT")).OrderBy(x => x.Descripcion).Select(g => new SelectListItem() { Value = g.IdGerencia.ToString(), Text = g.Descripcion }).ToList();
                 gerencias.Insert(0, new SelectListItem("--SELECCIONE--", "0", true));
 
                 var supervisores = items.ItemsUsuarioMA.OrderBy(x => x.Nombres).Select(g => new SelectListItem() { Value = g.IdUsuario.ToString(), Text = g.Nombres.ToUpper() + " " + g.Apellidos.ToUpper() }).ToList();
@@ -424,7 +431,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
-                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado, userInfo.NombreUsuario);
 
                 var nombresEvidenciasJson = await _getEvidenciasNombre.Execute(IdDesencriptado);
 
@@ -519,7 +526,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 }
                 else
                 {
-                    return RedirectToAction("DetalleInvestigacion",new { IdInvestigacion = IdInvestigacion});
+                    return RedirectToAction("DetalleInvestigacion", new { IdInvestigacion = IdInvestigacion });
                 }
             }
         }
@@ -666,7 +673,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ViewBag.LugaresDisposicion = lugaresDisposicion;
 
                 int IdDesencriptado = Convert.ToInt32(_protector.Unprotect(IdInvestigacion));
-                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado,userInfo.NombreUsuario);
+                var investigacion = await _getInvestigacionFinal.Execute(IdDesencriptado, userInfo.NombreUsuario);
                 var nombresEvidenciasJson = await _getEvidenciasNombre.Execute(IdDesencriptado);
                 var impacto = await _getImpactoAmbiental.Execute(IdDesencriptado);
 
@@ -813,7 +820,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> NuevoInvolucrado(int IdInvestigacion, string tipo, int usuario, string nombres, string apellidos, string docIdentidad, int edad, string puestoTrabajo, string empresa)
         {
-            await _registrarInvolucradoIncidente.Execute(IdInvestigacion, tipo, usuario, nombres, apellidos,docIdentidad,edad,puestoTrabajo,empresa);
+            await _registrarInvolucradoIncidente.Execute(IdInvestigacion, tipo, usuario, nombres, apellidos, docIdentidad, edad, puestoTrabajo, empresa);
             return await ListarInvolucrados(IdInvestigacion);
         }
         [HttpGet]
@@ -884,7 +891,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 filas_productos += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filas_productos += "</tr>";
             }
-    dynamic response = new
+            dynamic response = new
             {
                 filas_productos = filas_productos,
                 nProductos = productos.Count
@@ -897,7 +904,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             await _registrarProductoDerramado.Execute(
                 IdInvestigacion,
                 producto,
-                tipo,estado_producto,
+                tipo, estado_producto,
                 cantidad_derramada,
                 unidad,
                 equipo,
@@ -928,9 +935,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> EditarProducto(int IdProducto ,int IdInvestigacion, int producto, int tipo, string estado_producto, double cantidad_derramada, int unidad, string equipo, int estado_equipo, double cantidad_recuperado, double cantidad_no_recuperado)
+        public async Task<IActionResult> EditarProducto(int IdProducto, int IdInvestigacion, int producto, int tipo, string estado_producto, double cantidad_derramada, int unidad, string equipo, int estado_equipo, double cantidad_recuperado, double cantidad_no_recuperado)
         {
-            await _editarProductoDerramado.Execute(IdProducto, IdInvestigacion,producto,tipo,estado_producto,cantidad_derramada,unidad,equipo,estado_equipo,cantidad_recuperado,cantidad_no_recuperado);
+            await _editarProductoDerramado.Execute(IdProducto, IdInvestigacion, producto, tipo, estado_producto, cantidad_derramada, unidad, equipo, estado_equipo, cantidad_recuperado, cantidad_no_recuperado);
             return await ListarProductoDerramado(IdInvestigacion);
         }
         [HttpPost]
@@ -1027,7 +1034,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         [HttpPost]
         public async Task<IActionResult> EditarCausa(int IdCausa, int IdInvestigacion, int IdActoCondicion, string Acto_Condicion, string Descripcion)
         {
-            await _editarCausaIncidenteInvestigacion.Execute(IdCausa, IdInvestigacion, IdActoCondicion, Acto_Condicion,IdActoCondicion,Descripcion);
+            await _editarCausaIncidenteInvestigacion.Execute(IdCausa, IdInvestigacion, IdActoCondicion, Acto_Condicion, IdActoCondicion, Descripcion);
             return await ListarCausas(IdInvestigacion);
         }
         [HttpPost]
@@ -1115,7 +1122,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     filas_acciones += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                     filas_acciones += "</tr>";
                 }
-            dynamic response = new
+                dynamic response = new
                 {
                     filas_acciones = filas_acciones,
                     nAcciones = acciones.Count,
@@ -1133,13 +1140,13 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             var estadoReporte = await _getEstadoInvestigacion.Execute(IdInvestigacion);
             var filas_acciones_inmediatas = "";
             var filas_acciones_correctivas = "";
-            if(acciones.Where(x=>x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
+            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Inmediata")).Count() == 0)
             {
                 filas_acciones_inmediatas += "<tr>";
                 filas_acciones_inmediatas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
                 filas_acciones_inmediatas += "</tr>";
             }
-            if(acciones.Where(x=>x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
+            if (acciones.Where(x => x.Tipo_Accion.Equals("Acción Correctiva")).Count() == 0)
             {
                 filas_acciones_correctivas += "<tr>";
                 filas_acciones_correctivas += "<td style=\"vertical-align:middle;\" colspan=\"100%\">Sin Datos</td>";
@@ -1218,9 +1225,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> NuevaAccion(int IdInvestigacion,string tipoAccion, string accion, int usuario, int usuario2, string contratista, string fecha, string estado)
+        public async Task<IActionResult> NuevaAccion(int IdInvestigacion, string tipoAccion, string accion, int usuario, int usuario2, string contratista, string fecha, string estado)
         {
-            await _registrarAccionCorrectivaIncidenteInvestigacion.Execute(IdInvestigacion,tipoAccion, accion, usuario, usuario2, contratista, fecha, estado);
+            await _registrarAccionCorrectivaIncidenteInvestigacion.Execute(IdInvestigacion, tipoAccion, accion, usuario, usuario2, contratista, fecha, estado);
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpGet]
@@ -1245,9 +1252,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
             return Ok(response);
         }
         [HttpPost]
-        public async Task<IActionResult> EditarAccion(int IdAccion, int IdInvestigacion,string tipoAccion, int usuario, int usuario2,string accion, string contratista, string fecha, string estado)
+        public async Task<IActionResult> EditarAccion(int IdAccion, int IdInvestigacion, string tipoAccion, int usuario, int usuario2, string accion, string contratista, string fecha, string estado)
         {
-            await _editarAccionIncidenteInvestigacion.Execute(IdAccion, IdInvestigacion,tipoAccion, usuario, usuario2, accion,fecha, contratista, estado);
+            await _editarAccionIncidenteInvestigacion.Execute(IdAccion, IdInvestigacion, tipoAccion, usuario, usuario2, accion, fecha, contratista, estado);
             return await ListarAcciones(IdInvestigacion);
         }
         [HttpPost]
@@ -1275,13 +1282,23 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 var evidencia = await _getEvidenciaInvestigacion.Execute(IdInvestigacion, Tipo);
                 try
                 {
-                    if(eliminado)
-                        await DeleteFTPFileAsync(Evidencia, Tipo);
+                    if (eliminado)
+                    {
+                        Tipo_Info_SGA directorio;
+                        switch (Tipo.ToLower())
+                        {
+                            case "papel": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel; break;
+                            case "persona": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona; break;
+                            case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
+                            default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
+                        }
+                        await _gestorArchivos.DeleteFTPFileAsync(Evidencia, directorio);
+                    }
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Log.Logger = new LoggerConfiguration().WriteTo.File(Path.Combine(_hostingEnvironment.ContentRootPath, "logs/exeption-error-log-" + DateTime.Today.ToString("yyyyMMdd") + ".log")).CreateLogger();
-                    Log.Error(e.Message + " - Archivo: "+ Evidencia + " - Tipo: "+Tipo);
+                    Log.Error(e.Message + " - Archivo: " + Evidencia + " - Tipo: " + Tipo);
                 }
                 if (eliminado)
                     response = new
@@ -1298,7 +1315,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                         message = "No se eliminó la evidencia"
                     };
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 response = new
                 {
@@ -1306,7 +1323,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     message = e.Message
                 };
             }
-            return Ok(response);            
+            return Ok(response);
         }
         [HttpPost]
         public async Task<IActionResult> EditarInvestigacion(EditarInvestigacionModel model)
@@ -1367,10 +1384,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                         if (allowed_extensions.Contains(extension) && model.Evidencias_Papel[i].Length < max_file_size)
                         {
-                            var newfileName = CreateUniqueFileName(i+1,"papel") + ".zip";
+                            var newfileName = CreateUniqueFileName(i + 1, "papel") + ".zip";
                             var filePath = await UploadZipFileAsync(model.Evidencias_Papel[i], newfileName, "papel");
-                            papeles.Add(filePath); 
-                            
+                            papeles.Add(filePath);
+
                             papelesNombres.Add(new NombreEvidencia
                             {
                                 NombreOrigen = model.Evidencias_Papel[i].FileName,
@@ -1378,7 +1395,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                                 ExtOrigen = Path.GetExtension(model.Evidencias_Papel[i].FileName),
                                 ExtCarga = Path.GetExtension(filePath)
                             });
-                        }                        
+                        }
                     }
                 }
 
@@ -1626,11 +1643,11 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     );
                 if (model.Opcion.Equals("Completar"))
                     return RedirectToAction("DifundirInvestigacion", "NotificacionInvestigacionIncidente", new { IdInvestigacion = model.Id_Investigacion_Final });
-                else 
+                else
                     return View("Resumen");
             }
             return View("EditarInvestigacion", new { IdInvestigacion = model.Id_Encriptado_Investigacion_Final });
-           
+
         }
         [HttpPost]
         public async Task<IActionResult> EditarAdminInvestigacion(EditarInvestigacionModel model)
@@ -1990,7 +2007,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
         {
             if (!(HttpContext.Session.GetString("SessionUser") != null))
             {
-                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName+"&tipo="+tipo });
+                return RedirectToAction("NoAutorizado", "Home", new { returnUrl = "/" + ControllerContext.ActionDescriptor.ControllerName + "/" + ControllerContext.ActionDescriptor.ActionName + "?fileName=" + fileName + "&tipo=" + tipo });
             }
             else
             {
@@ -1998,7 +2015,15 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
 
                 try
                 {
-                    var encryptedFile = await DownloadFTPFileAsync(fileName, tipo);
+                    Tipo_Info_SGA directorio;
+                    switch (tipo)
+                    {
+                        case "papel": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel; break;
+                        case "persona": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona; break;
+                        case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
+                        default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
+                    }
+                    var encryptedFile = await _gestorArchivos.DownloadFTPFileAsync(fileName, userInfo.NombreUsuario, directorio);
 
                     /* Save encrypted file in temp path*/
                     var tempPath = Path.GetTempPath();
@@ -2012,10 +2037,10 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
 
                     /*decrypt file*/
-                    var decryptedFileName = "desencriptado.zip";
-                    await DecryptFileAsync(encryptedFile, archivePath + decryptedFileName);
+                    var decryptedFileName = archivePath + "desencriptado.zip";
+                    await _gestorEncriptado.DecryptFileAsync(encryptedFile, decryptedFileName);
                     /*read decrypted file*/
-                    FileStream stream = new FileStream(archivePath + decryptedFileName, FileMode.Open);
+                    FileStream stream = new FileStream(decryptedFileName, FileMode.Open);
 
                     return File(stream, GetContentType(decryptedFileName), fileName);
                 }
@@ -2024,48 +2049,6 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     return Content("No se encontró el archivo: " + e.Message);
                 }
             }
-        }
-        public async Task<string> UploadFTPFileAsync(string path, string newFileName, string tipo)
-        {
-            /*if (!(HttpContext.Session.GetString("SessionUser") != null))
-                return "NoAutorizado";
-            else
-            {*/
-            Tipo_Info_SGA directorio;
-            switch (tipo)
-            {
-                case "papel": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel; break;
-                case "persona": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona; break;
-                case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
-            }
-            var serverInfo = await _info_SGA.Execute(directorio);
-
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
-                {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
-                }
-            }
-
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-                using (FileStream fs = System.IO.File.OpenRead(path))
-                {
-                    sftp.UploadFile(fs, newFileName, true);
-                }
-                sftp.Dispose();
-            }
-            return newFileName;
-            //}
         }
         public async Task<string> UploadZipFileAsync(IFormFile file, string newFileName, string tipo)
         {
@@ -2113,21 +2096,7 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                 ZipFile.CreateFromDirectory(filePath, archiveFile);
 
                 var encryptedArchiveFile = SGATempPath + "zip/" + userInfo.NombreUsuario + "/encriptado.zip";
-                await EncryptFileAsync(archiveFile, archivePath + "encriptado.zip");
-
-                return await UploadFTPFileAsync(encryptedArchiveFile, newFileName, tipo);
-            }
-        }
-        public async Task<string> DownloadFTPFileAsync(string fileName, string tipo)
-        {
-            if (!(HttpContext.Session.GetString("SessionUser") != null))
-            {
-                return "NoAutorizado";
-            }
-            else
-            {
-                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
-
+                await _gestorEncriptado.EncryptFileAsync(archiveFile, encryptedArchiveFile);
                 Tipo_Info_SGA directorio;
                 switch (tipo)
                 {
@@ -2136,165 +2105,9 @@ namespace GestionAmbiental.UseCases.Incidentes.InvestigacionFinal
                     case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
                     default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
                 }
-
-                var serverInfo = await _info_SGA.Execute(directorio);
-                string host = "", port = "", user = "", pass = "", dir = "";
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
-
-                /* Save file in application server to decrypt */
-                var tempPath = Path.GetTempPath();
-                var SGATempPath = tempPath + "SGA-Marcobre-v2/";
-                if (!Directory.Exists(SGATempPath))
-                {
-                    Directory.CreateDirectory(SGATempPath);
-                }
-                var filePath = SGATempPath + "submission/" + userInfo.NombreUsuario + "/";
-                var archivePath = SGATempPath + "zip/" + userInfo.NombreUsuario + "/";
-
-                if (Directory.Exists(filePath))
-                {
-                    Directory.Delete(filePath, true);
-                }
-                if (Directory.Exists(archivePath))
-                {
-                    Directory.Delete(archivePath, true);
-                }
-
-                Directory.CreateDirectory(filePath);
-                Directory.CreateDirectory(archivePath);
-                /*New file downloaded name*/
-                var downloadedFilePath = archivePath + fileName;
-                /*Copy data to new temp file*/
-                var fileStream = System.IO.File.Create(downloadedFilePath);
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(fileName, fileStream);
-
-                    sftp.Dispose();
-                }
-                fileStream.Close();
-
-                return downloadedFilePath;
+                return await _gestorArchivos.UploadFTPFileAsync(encryptedArchiveFile, newFileName, directorio);
             }
-        }
-        private async Task EncryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-
-            string cryptFile = outputFile;
-            FileStream fsCrypt = new FileStream(cryptFile, FileMode.Create);
-
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateEncryptor(key, IV),
-                CryptoStreamMode.Write);
-
-            FileStream fsIn = new FileStream(inputFile, FileMode.Open);
-
-            int data;
-            while ((data = fsIn.ReadByte()) != -1)
-                cs.WriteByte((byte)data);
-
-
-            fsIn.Close();
-            cs.Close();
-            fsCrypt.Close();
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
-        }
-        private async Task DeleteFTPFileAsync(string filename,string tipo)
-        {
-            Tipo_Info_SGA directorio;
-            switch (tipo.ToLower())
-            {
-                case "papel": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPapel; break;
-                case "persona": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPersona; break;
-                case "posicion": directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPosicion; break;
-                default: directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncInvPartes; break;
-            }
-
-            var serverInfo = await _info_SGA.Execute(directorio);
-            string host = "", port = "", user = "", pass = "", dir = "";
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
-                {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
-                }
-            }
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-
-                sftp.DeleteFile(filename);
-
-                sftp.Dispose();
-            }
-        }
+        }        
         private class EvidenciaCategoria
         {
             public string Categoria { get; set; }
