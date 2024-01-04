@@ -13,6 +13,7 @@ using GestionAmbiental.Application.UseCases.Incidentes.ReportePreliminar.Involuc
 using GestionAmbiental.Application.UseCases.Info_SGA;
 using GestionAmbiental.Application.UseCases.Info_SGA.GetInfo_SGA;
 using GestionAmbiental.Domain.Enum;
+using GestionAmbiental.UseCases.Util.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,8 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
     public class DescargarReportePreliminarController : Controller
     {
         private readonly IGetInfo_SGA _info_SGA;
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private IWebHostEnvironment _hostingEnvironment;
         private readonly IGetReportePreliminar _getReportePreliminar;
 
@@ -36,13 +39,17 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
         private readonly IGetCausasIncidenteReporte _getCausasIncidenteReporte;
 
         public DescargarReportePreliminarController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IGetInfo_SGA info_SGA,
             IWebHostEnvironment hostingEnvironment,
-            IGetReportePreliminar getReportePreliminar, 
-            IGetInvolucradosIncidente getInvolucradosIncidente, 
-            IGetAccionesIncidente getAccionesIncidente, 
+            IGetReportePreliminar getReportePreliminar,
+            IGetInvolucradosIncidente getInvolucradosIncidente,
+            IGetAccionesIncidente getAccionesIncidente,
             IGetCausasIncidenteReporte getCausasIncidenteReporte)
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _info_SGA = info_SGA;
             _hostingEnvironment = hostingEnvironment;
             _getReportePreliminar = getReportePreliminar;
@@ -51,11 +58,11 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             _getCausasIncidenteReporte = getCausasIncidenteReporte;
         }
 
-        public async Task<MemoryStream> PrepararReportePreliminar(int IdReporte,string NombreUsuario)
+        public async Task<MemoryStream> PrepararReportePreliminar(int IdReporte, string NombreUsuario)
         {
             var reporte = await _getReportePreliminar.Execute(IdReporte);
             var involucrados = await _getInvolucradosIncidente.Execute(IdReporte);
-            involucrados = involucrados.Where(x =>!x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
+            involucrados = involucrados.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var acciones = await _getAccionesIncidente.Execute(IdReporte);
             acciones = acciones.Where(x => !x.Estado.Equals(EstadosIncidentes.Eliminado.ToString())).ToList();
             var causas = await _getCausasIncidenteReporte.Execute(IdReporte);
@@ -86,8 +93,8 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
 
             sheet.GetRow(7).GetCell(22).SetCellValue(reporte.Num_Trabajadores);
 
-            sheet.GetRow(10).GetCell(2).SetCellValue(reporte.Razon_Social_Contratista!=null? reporte.Razon_Social_Contratista : "No Aplica");
-            sheet.GetRow(10).GetCell(13).SetCellValue(reporte.RUC_Contratista!=null? reporte.RUC_Contratista : "No Aplica");
+            sheet.GetRow(10).GetCell(2).SetCellValue(reporte.Razon_Social_Contratista != null ? reporte.Razon_Social_Contratista : "No Aplica");
+            sheet.GetRow(10).GetCell(13).SetCellValue(reporte.RUC_Contratista != null ? reporte.RUC_Contratista : "No Aplica");
             sheet.GetRow(10).GetCell(22).SetCellValue(reporte.Actividad_Contratista != null ? reporte.Actividad_Contratista : "No Aplica");
 
             sheet.GetRow(11).GetCell(2).SetCellValue(reporte.Domicilio_Contratista != null ? reporte.Domicilio_Contratista : "No Aplica");
@@ -212,44 +219,44 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             int filaEvidencias = filaSupervisor + 2;
             int imageIndex = 1;
 
-            
+
 
             if (reporte.Evidencia != null)
             {
-                int[] posisicon_columnas = {1,10,17,26};
+                int[] posisicon_columnas = { 1, 10, 17, 26 };
                 int contador_fila = 0;
                 int contador_columnas = 0;
 
-                foreach(var evidencia in reporte.Evidencia)
+                foreach (var evidencia in reporte.Evidencia)
                 {
-                    IRow filaEvidencia = sheet.CreateRow(filaEvidencias+ contador_fila);
-                    for (int currentCell = 1; currentCell < 26 ; currentCell++)
+                    IRow filaEvidencia = sheet.CreateRow(filaEvidencias + contador_fila);
+                    for (int currentCell = 1; currentCell < 26; currentCell++)
                     {
                         filaEvidencia.CreateCell(currentCell);
                         filaEvidencia.GetCell(currentCell).CellStyle = customCellStyle;
                     }
-                    if(contador_columnas == 0)
+                    if (contador_columnas == 0)
                     {
                         sheet.AddMergedRegion(new CellRangeAddress(filaEvidencias + contador_fila, filaEvidencias + contador_fila, 1, 9));
                         sheet.AddMergedRegion(new CellRangeAddress(filaEvidencias + contador_fila, filaEvidencias + contador_fila, 10, 16));
                         sheet.AddMergedRegion(new CellRangeAddress(filaEvidencias + contador_fila, filaEvidencias + contador_fila, 17, 25));
                     }
-                    
+
                     short evidenciaRowHeight = filaEvidencia.Height;
 
                     ImageProperties propiedadEvidencia = new ImageProperties();
-                    propiedadEvidencia = await AddImageToCellAsync(templateWorkbook, sheet, evidencia, filaEvidencias+contador_fila, posisicon_columnas[contador_columnas], posisicon_columnas[contador_columnas+1]-1, filaEvidencia.Height, imageIndex, NombreUsuario);
-                    
+                    propiedadEvidencia = await AddImageToCellAsync(templateWorkbook, sheet, evidencia, filaEvidencias + contador_fila, posisicon_columnas[contador_columnas], posisicon_columnas[contador_columnas + 1] - 1, filaEvidencia.Height, imageIndex, NombreUsuario);
+
                     evidenciaRowHeight = evidenciaRowHeight > propiedadEvidencia.rowHeight ? evidenciaRowHeight : propiedadEvidencia.rowHeight;
                     imageIndex++;
 
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     filaEvidencia.Height = evidenciaRowHeight;
-                    
+
                     contador_columnas++;
                     if (contador_columnas == 3)
                     {
-                        
+
                         contador_columnas = 0;
                         contador_fila++;
                     }
@@ -279,7 +286,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             return ((image_height * cellWidth) / image_width) / 3;
         }
         //Retorna el tamaño de la fila para la imagen agregada
-        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int startColumn,int endColumn, short rowHeight, int imageIndex,string NombreUsuario)
+        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int startColumn, int endColumn, short rowHeight, int imageIndex, string NombreUsuario)
         {
             var output = new ImageProperties();
             var evidencia = path;
@@ -309,39 +316,11 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             Directory.CreateDirectory(archivePath);
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
-            string host = "", port = "", user = "", pass = "", dir = "";
-            var serverInfo = new Info_SGAOutput();
-
-            //imgNCol = 7;
-            serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaIncR);
-            foreach (var item in serverInfo.Info)
-            {
-                switch (item.Key)
-                {
-                    case "host": host = item.Value; break;
-                    case "port": port = item.Value; break;
-                    case "user": user = item.Value; break;
-                    case "password": pass = item.Value; break;
-                    case "directory": dir = item.Value; break;
-                }
-            }
-
-            var fileStream = System.IO.File.Create(archiveFile);
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-
-                //Descargar archivo de sftp a nuevo archivo temporal creado
-                sftp.DownloadFile(evidencia.ToString(), fileStream);
-
-                sftp.Dispose();
-            }
-
-            fileStream.Close();
+            Tipo_Info_SGA directorio = Tipo_Info_SGA.FTPConnectionEvidenciaIncR;
+            var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.ToString(), NombreUsuario, directorio);            
             //3. Desencriptar archivo
-            await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
             var pathDesencriptado = archivePath + "desencriptado.zip";
+            await _gestorEncriptado.DecryptFileAsync(downloadedFile, pathDesencriptado);
             //4. descomprimir en carpeta temporal submission
             if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                 filePath += Path.DirectorySeparatorChar;
@@ -357,7 +336,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
             }
             //5. validar extension y cargar en una celda
             var extension = Path.GetExtension(filePath);
-            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") ||  extension.ToLower().Equals(".jpeg"))
+            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
             {
                 byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                 PictureType pType;
@@ -392,7 +371,7 @@ namespace GestionAmbiental.UseCases.Incidentes.DescargarReportePreliminar
                 output.image = picture;
 
             }
-           
+
             output.extension = extension;
 
             return output;

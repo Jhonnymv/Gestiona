@@ -25,22 +25,29 @@ using Renci.SshNet;
 using Microsoft.AspNetCore.DataProtection;
 using NPOI.Util;
 using Serilog;
+using GestionAmbiental.UseCases.Util.Interfaces;
 
 namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 {
     public class DescargaInspeccionController : Controller
     {
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private IWebHostEnvironment _hostingEnvironment;
         private readonly IConsultarInspeccionDescarga _consultarInspeccionDescarga;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IDataProtector _protector;
         public DescargaInspeccionController(
             IWebHostEnvironment hostingEnvironment,
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IConsultarInspeccionDescarga consultarInspeccionDescarga,
             IGetInfo_SGA info_SGA,
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _hostingEnvironment = hostingEnvironment;
             _consultarInspeccionDescarga = consultarInspeccionDescarga;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurpouseStrings.InspeccionIdRouteValue);
@@ -248,6 +255,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 ViewBag.Rol = userInfo.Rol.ToString();
                 ViewBag.Usuario = userInfo.NombreUsuario;
                 var inspecciones = await _consultarInspeccionDescarga.Execute(empresa, gerencia, respLevObs, asesor, FechaInicio, FechaFin, estado, idGerenciaInspeccionada);
+                inspecciones = inspecciones.OrderBy(x => x.FechaInspeccion).ToList();
                 var observaciones = new List<ObservacionReporte>();
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "Inspecciones");
                 string sFileName = @"DescargaObservacionesInspección.xlsx";
@@ -546,75 +554,24 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
             */
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
-            string host = "", port = "", user = "", pass = "", dir = "";
-            var serverInfo = new Info_SGAOutput();
+            Tipo_Info_SGA directorio;
             if (tipoEvidencia == "condicion")
             {
+                directorio = Tipo_Info_SGA.FTPConnectionEvidenciaR;
                 if (!reporte)
                     imgNCol = 2;
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaR);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
             }
             else
             {
+                directorio = Tipo_Info_SGA.FTPConnectionEvidenciaI;
                 if (!reporte)
                     imgNCol = 4;
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaI);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
             }
-
-            var fileStream = System.IO.File.Create(archiveFile);
-            try
-            {
-                using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-                {
-                    sftp.Connect();
-                    sftp.ChangeDirectory(dir);
-
-                    //Descargar archivo de sftp a nuevo archivo temporal creado
-                    sftp.DownloadFile(evidencia.ToString(), fileStream);
-
-                    sftp.Dispose();
-                }
-            }
-            catch (Exception e)
-            {
-                var log = new LoggerConfiguration()
-                .WriteTo.Console()
-                .WriteTo.File("log.txt")
-                .CreateLogger();
-
-                log.Information("Error al descargar archivo {@path}", path);
-                fileStream.Close();
-                fileStream.Dispose();
-                return null;
-            }
-            fileStream.Close();
-
+            var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.ToString(), userInfo.NombreUsuario, directorio);
             //3. Desencriptar archivo
-            await DecryptFileAsync(archiveFile, archivePath + "desencriptado" + imageIndex + ".zip");
             var pathDesencriptado = archivePath + "desencriptado" + imageIndex + ".zip";
-            fileStream.Dispose();
+            await _gestorEncriptado.DecryptFileAsync(downloadedFile, pathDesencriptado);
+            // fileStream.Dispose();
             //4. descomprimir en carpeta temporal submission
             if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                 filePath += Path.DirectorySeparatorChar;
@@ -736,40 +693,6 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
         }
         private class ObservacionReporte
         {

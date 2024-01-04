@@ -26,18 +26,23 @@ using Renci.SshNet;
 using GestionAmbiental.Application.UseCases.RAC.Verificacion.ConsultarRACs;
 using System.Data.SqlTypes;
 using GestionAmbiental.Application.UseCases.Reportes.RAC.GetRACsDescarga;
+using GestionAmbiental.UseCases.Util.Interfaces;
 
 namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 {
     public class DescargarRACController : Controller
     {
+        private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorEncriptado _gestorEncriptado;
         private IWebHostEnvironment _hostingEnvironment;
-        private readonly IGetRACDescarga _getRACDescarga; 
+        private readonly IGetRACDescarga _getRACDescarga;
         private readonly IGetInfo_SGA _info_SGA;
         private readonly IGetRACsDescarga _getRACsDescarga;
         private readonly IDataProtector _protector;
 
         public DescargarRACController(
+            IGestorArchivos gestorArchivos,
+            IGestorEncriptado gestorEncriptado,
             IWebHostEnvironment hostingEnvironment,
             IGetRACDescarga getRACDescarga,
             IGetRACsDescarga getRACsDescarga,
@@ -45,6 +50,8 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
             IDataProtectionProvider dataProtectionProvider,
             DataProtectionPurpouseStrings dataProtectionPurpouseStrings)
         {
+            _gestorArchivos = gestorArchivos;
+            _gestorEncriptado = gestorEncriptado;
             _hostingEnvironment = hostingEnvironment;
             _getRACsDescarga = getRACsDescarga;
             _getRACDescarga = getRACDescarga;
@@ -134,7 +141,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 //sheet.AddMergedRegion(new CellRangeAddress(27, 27, 8, 14));
                 if (rac.Evidencia_Cierre != "" && rac.Evidencia_Cierre != null)
                 {
-                    Evidencia_Cierre = await AddImageToCellAsync(templateWorkbook, sheet, rac.Evidencia_Cierre, 28, 8, rowHeight, imageIndex, "Cierre",false);
+                    Evidencia_Cierre = await AddImageToCellAsync(templateWorkbook, sheet, rac.Evidencia_Cierre, 28, 8, rowHeight, imageIndex, "Cierre", false);
                     rowHeight = rowHeight > Evidencia_Cierre.rowHeight ? rowHeight : Evidencia_Cierre.rowHeight;
                     imageIndex++;
                 }
@@ -153,7 +160,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                     Evidencia_Obs.image.Resize(1.0, (double)Evidencia_Obs.rowHeight / row.Height);
                 }
 
-                if (Evidencia_Cierre.extension != null && 
+                if (Evidencia_Cierre.extension != null &&
                     (Evidencia_Cierre.extension.ToLower() == ".jpg" ||
                     Evidencia_Cierre.extension.ToLower() == ".png" ||
                     Evidencia_Cierre.extension.ToLower() == ".jpeg") &&
@@ -162,7 +169,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 {
                     Evidencia_Cierre.image.Resize(1.0, (double)Evidencia_Cierre.rowHeight / row.Height);
                 }
-            
+
                 // Force formulas to update with new data we added
                 sheet.ForceFormulaRecalculation = true;
                 // Save the NPOI workbook into a memory stream to be sent to the browser, could have saved to disk.
@@ -196,7 +203,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 else
                     fechaFin = DateTime.Now;
 
-                var racs = await _getRACsDescarga.Execute(IdGerencia,IdEmpresa,IdUsuario,FechaInicio,FechaFin);
+                var racs = await _getRACsDescarga.Execute(IdGerencia, IdEmpresa, IdUsuario, FechaInicio, FechaFin);
                 string sWebRootFolder = Path.Combine(_hostingEnvironment.WebRootPath, "ExcelTemplates", "RAC");
                 string sFileName = @"DescargaRACs.xlsx";
                 string sFilePath = Path.Combine(sWebRootFolder, sFileName);
@@ -237,7 +244,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 estiloNormal.Alignment = HorizontalAlignment.Center;
 
                 racs = racs.OrderBy(x => x.Fecha).ToList();
-                
+
                 //índice de la primera imagen a insertar en la colección de images del workbook
                 int imageIndex = -1;
                 //indice de observacion
@@ -265,7 +272,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                             //if (rac.DescripcionCondicion.Equals("Buenas Prácticas"))
                             //    estadoObs = "Rechazado";
                             //else
-                                estadoObs = "Pendiente de Implementación";
+                            estadoObs = "Pendiente de Implementación";
                             break;
                     }
 
@@ -288,7 +295,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
 
                     if (rac.Evidencia_Obs != "[]" && rac.Evidencia_Obs != null)
                     {
-                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, rac.Evidencia_Obs, fila, 6, rowHeight, imageIndex, "Observacion",true);
+                        evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, rac.Evidencia_Obs, fila, 6, rowHeight, imageIndex, "Observacion", true);
                         rowHeight = rowHeight > evidencia_condicion.rowHeight ? rowHeight : evidencia_condicion.rowHeight;
                         imageIndex++;
                     }
@@ -349,7 +356,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                     //->Medidas de Control Inmediata
                     row.GetCell(startIndex + 9).SetCellValue(rac.Medida_Control);
                     //->Responsable Levantamiento
-                    row.GetCell(startIndex + 10).SetCellValue(rac.Responsable_Cierre.Nombres+" "+rac.Responsable_Cierre.Apellidos);
+                    row.GetCell(startIndex + 10).SetCellValue(rac.Responsable_Cierre.Nombres + " " + rac.Responsable_Cierre.Apellidos);
                     //->Fecha Programada
                     row.GetCell(startIndex + 11).SetCellValue(rac.Fecha.ToString("dd/MM/yyyy"));
                     //->Fecha de Cierre
@@ -371,7 +378,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                     row.GetCell(startIndex + 19).SetCellValue(rac.Codigo);
                     XSSFHyperlink UrlLinkLugReg = new XSSFHyperlink(HyperlinkType.Url)
                     {
-                         Address = "https://gestiona.marcobre.com:9190/RegistroRAC/DetalleRACNotificacion?IdRAC=" + rac.Id_RAC
+                        Address = "https://gestiona.marcobre.com:9190/RegistroRAC/DetalleRACNotificacion?IdRAC=" + rac.Id_RAC
                     };
                     row.GetCell(startIndex + 19).Hyperlink = (UrlLinkLugReg);
 
@@ -397,7 +404,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
         //Retorna el tamaño de la fila para la imagen agregada
         private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int column, short rowHeight, int imageIndex, string tipoEvidencia, bool reporte)
         {
-            
+
             var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
             var evidencia = path;
@@ -427,59 +434,26 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
             Directory.CreateDirectory(archivePath);
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
+            Tipo_Info_SGA directorio;
             string host = "", port = "", user = "", pass = "", dir = "";
             var serverInfo = new Info_SGAOutput();
             if (tipoEvidencia == "Observacion")
             {
                 if (!reporte)
                     imgNCol = 7;
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACR);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+                directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACR;
             }
             else
             {
                 if (!reporte)
                     imgNCol = 7;
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionEvidenciaRACI);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+                directorio = Tipo_Info_SGA.FTPConnectionEvidenciaRACI;
             }
 
-            var fileStream = System.IO.File.Create(archiveFile);
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
-
-                //Descargar archivo de sftp a nuevo archivo temporal creado
-                sftp.DownloadFile(evidencia.ToString(), fileStream);
-
-                sftp.Dispose();
-            }
-
-            fileStream.Close();
+            var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(evidencia.ToString(), userInfo.NombreUsuario, directorio);
             //3. Desencriptar archivo
-            await DecryptFileAsync(archiveFile, archivePath + "desencriptado.zip");
             var pathDesencriptado = archivePath + "desencriptado.zip";
+            await _gestorEncriptado.DecryptFileAsync(downloadedFile, pathDesencriptado);
             //4. descomprimir en carpeta temporal submission
             if (!filePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal))
                 filePath += Path.DirectorySeparatorChar;
@@ -495,7 +469,7 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
             }
             //5. validar extension y cargar en una celda
             var extension = Path.GetExtension(filePath);
-            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg") )
+            if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jpeg"))
             {
                 byte[] bytes = System.IO.File.ReadAllBytes(filePath);
                 PictureType pType;
@@ -600,40 +574,6 @@ namespace GestionAmbiental.UseCases.RAC.DescargarRAC
                 {".csv", "text/csv"},
                 {".zip","application/zip" }
             };
-        }
-        private async Task DecryptFileAsync(string inputFile, string outputFile)
-        {
-            var dataToEncrypt = await _info_SGA.Execute(Tipo_Info_SGA.FileEncryption);
-
-            var key = new byte[32];
-            var IV = new byte[16];
-
-            foreach (var item in dataToEncrypt.Info)
-            {
-                switch (item.Key)
-                {
-                    case "key": key = Encoding.UTF8.GetBytes(item.Value); break;
-                    case "iv": IV = Encoding.UTF8.GetBytes(item.Value); break;
-                }
-            }
-            RijndaelManaged RMCrypto = new RijndaelManaged();
-
-            FileStream fsCrypt = new FileStream(inputFile, FileMode.Open);
-
-            CryptoStream cs = new CryptoStream(fsCrypt,
-                RMCrypto.CreateDecryptor(key, IV),
-                CryptoStreamMode.Read);
-
-            FileStream fsOut = new FileStream(outputFile, FileMode.Create);
-
-            int data;
-            while ((data = cs.ReadByte()) != -1)
-                fsOut.WriteByte((byte)data);
-
-            fsOut.Close();
-            cs.Close();
-            fsCrypt.Close();
-
         }
         private class Estilo
         {

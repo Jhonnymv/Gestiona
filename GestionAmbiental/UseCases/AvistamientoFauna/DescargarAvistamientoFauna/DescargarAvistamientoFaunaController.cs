@@ -32,7 +32,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
         private readonly IGetAvistamientosFauna _getAvistamientosFauna;
         private readonly IGetUsuario _getUsuario;
         private IWebHostEnvironment _hostingEnvironment;
-         private readonly IGestorArchivos _gestorArchivos;
+        private readonly IGestorArchivos _gestorArchivos;
         private readonly IGestorEncriptado _gestorEncriptado;
         private readonly IGetInfo_SGA _info_SGA;
 
@@ -131,12 +131,12 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                 else
                 {
                     row = sheet.CreateRow(fila);
-                }                
+                }
 
                 ImageProperties imageProperties = new ImageProperties();
                 if (foto != "[]" && foto != null)
                 {
-                    imageProperties = await AddImageToCellAsync(templateWorkbook, sheet, foto, fila, columna, rowHeight, imageIndex, "foto",usuario.UsuarioRed);
+                    imageProperties = await AddImageToCellAsync(templateWorkbook, sheet, foto, fila, columna, rowHeight, imageIndex, "foto", usuario.UsuarioRed);
                     rowHeight = rowHeight > imageProperties.rowHeight ? rowHeight : imageProperties.rowHeight;
 
                     imageIndex++;
@@ -173,12 +173,12 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
             }
             */
 
-            for(var i = fila +2; i< sheet.LastRowNum; i++)
+            for (var i = fila + 2; i < sheet.LastRowNum; i++)
             {
                 var filaCambio = sheet.GetRow(i);
-                if(filaCambio!=null)
-                    for (var j = 0;j<filaCambio.LastCellNum;j++)
-                        if(filaCambio.GetCell(j)!=null)
+                if (filaCambio != null)
+                    for (var j = 0; j < filaCambio.LastCellNum; j++)
+                        if (filaCambio.GetCell(j) != null)
                             filaCambio.GetCell(j).CellStyle.WrapText = true;
             }
 
@@ -234,7 +234,7 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
                 {
                     IRow row = sheet.CreateRow(fila);
 
-                    row.CreateCell(0).SetCellValue(i+1);
+                    row.CreateCell(0).SetCellValue(i + 1);
                     row.GetCell(0).CellStyle = customCellStyle;
 
                     row.CreateCell(1).SetCellValue(avistamientos.Avistamientos[i].Codigo);
@@ -315,8 +315,9 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
             return ((image_height * cellWidth) / image_width) / 3;
         }
         //Retorna las propiedades de la imagen agregada
-        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int column, short rowHeight, int imageIndex, string tipoArchivo,string usuarioRed)
-        {           
+        private async Task<ImageProperties> AddImageToCellAsync(XSSFWorkbook templateWorkbook, ISheet sheet, string path, int row, int column, short rowHeight, int imageIndex, string tipoArchivo, string usuarioRed)
+        {
+            // var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
             var output = new ImageProperties();
 
             var imgNCol = 0;
@@ -343,58 +344,62 @@ namespace GestionAmbiental.UseCases.AvistamientoFauna.DescargarAvistamientoFauna
             Directory.CreateDirectory(archivePath);
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
-            string host = "", port = "", user = "", pass = "", dir = "";
-            var serverInfo = new Info_SGAOutput();
+            Tipo_Info_SGA directorio;
+            // string host = "", port = "", user = "", pass = "", dir = "";
+            // var serverInfo = new Info_SGAOutput();
             if (tipoArchivo == "foto")
             {
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+                directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFauna;
+                // serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFauna);
+                // foreach (var item in serverInfo.Info)
+                // {
+                //     switch (item.Key)
+                //     {
+                //         case "host": host = item.Value; break;
+                //         case "port": port = item.Value; break;
+                //         case "user": user = item.Value; break;
+                //         case "password": pass = item.Value; break;
+                //         case "directory": dir = item.Value; break;
+                //     }
+                // }
             }
             else
             {
-                serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion);
-                foreach (var item in serverInfo.Info)
-                {
-                    switch (item.Key)
-                    {
-                        case "host": host = item.Value; break;
-                        case "port": port = item.Value; break;
-                        case "user": user = item.Value; break;
-                        case "password": pass = item.Value; break;
-                        case "directory": dir = item.Value; break;
-                    }
-                }
+                directorio = Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion;
+                // serverInfo = await _info_SGA.Execute(Tipo_Info_SGA.FTPConnectionAvistamientoFaunaAccion);
+                // foreach (var item in serverInfo.Info)
+                // {
+                //     switch (item.Key)
+                //     {
+                //         case "host": host = item.Value; break;
+                //         case "port": port = item.Value; break;
+                //         case "user": user = item.Value; break;
+                //         case "password": pass = item.Value; break;
+                //         case "directory": dir = item.Value; break;
+                //     }
+                // }
             }
-            
+
             imgNCol = 4;
 
-            var pathEncriptado = archivePath + "encriptado" + imageIndex.ToString() + Path.GetExtension(path);
-            var fileStream = System.IO.File.Create(pathEncriptado);
-            using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
-            {
-                sftp.Connect();
-                sftp.ChangeDirectory(dir);
+            var downloadedFile = await _gestorArchivos.DownloadFTPFileAsync(path, usuarioRed, directorio);
+            // var pathEncriptado = archivePath + "encriptado" + imageIndex.ToString() + Path.GetExtension(path);
+            // var fileStream = System.IO.File.Create(pathEncriptado);
+            // using (SftpClient sftp = new SftpClient(host, Convert.ToInt32(port), user, pass))
+            // {
+            //     sftp.Connect();
+            //     sftp.ChangeDirectory(dir);
 
-                //Descargar archivo de sftp a nuevo archivo temporal creado
-                sftp.DownloadFile(path, fileStream);
+            //     //Descargar archivo de sftp a nuevo archivo temporal creado
+            //     sftp.DownloadFile(path, fileStream);
 
-                sftp.Dispose();
-            }
-            fileStream.Close();
+            //     sftp.Dispose();
+            // }
+            // fileStream.Close();
 
             //3. Desencriptar archivo
             var pathDesencriptado = archivePath + "desencriptado" + imageIndex.ToString() + Path.GetExtension(path);
-            await _gestorEncriptado.DecryptFileAsync(pathEncriptado, pathDesencriptado);
+            await _gestorEncriptado.DecryptFileAsync(downloadedFile, pathDesencriptado);
             //var pathDesencriptado = archivePath + "desencriptado.zip";
             if (tipoArchivo != "foto")
             {
