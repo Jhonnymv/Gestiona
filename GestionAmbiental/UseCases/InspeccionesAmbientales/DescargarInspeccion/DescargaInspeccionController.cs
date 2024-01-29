@@ -169,12 +169,14 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                     }
                     if (observacion.EvidenciaImplementacion != "[]" && observacion.EvidenciaImplementacion != null)
                     {
+
                         evidencia_inspeccion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaImplementacion, fila, 25, rowHeight, imageIndex, "inspeccion", false);
                         if (evidencia_condicion != null)
                         {
                             rowHeight = rowHeight > evidencia_inspeccion.rowHeight ? rowHeight : evidencia_inspeccion.rowHeight;
                             imageIndex++;
                         }
+
                     }
                     //adaptar el tamaño de la fila al mayor determinado por la imagen
                     row.Height = rowHeight;
@@ -376,6 +378,7 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
                     if (observacion.EvidenciaCondicion != "[]" && observacion.EvidenciaCondicion != null)
                     {
+
                         evidencia_condicion = await AddImageToCellAsync(templateWorkbook, sheet, observacion.EvidenciaCondicion, fila, 4, rowHeight, imageIndex, "condicion", true);
                         if (evidencia_condicion != null)
                         {
@@ -531,27 +534,28 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
                 Directory.CreateDirectory(SGATempPath);
             }
             var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
-            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-
             if (Directory.Exists(filePath))
             {
                 Directory.Delete(filePath, true);
+                Directory.CreateDirectory(filePath);
             }
+            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive.zip";
+            if (Directory.Exists(archiveFile))
+            {
+                Directory.Delete(archiveFile, true);
+                Directory.CreateDirectory(archiveFile);
+            }
+            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
             if (Directory.Exists(archivePath))
             {
                 Directory.Delete(archivePath, true);
+                Directory.CreateDirectory(archivePath);
             }
-            Directory.CreateDirectory(filePath);
-            Directory.CreateDirectory(archivePath);
-            /*if (!Directory.Exists(SGATempPath))
-            {
-                Directory.CreateDirectory(SGATempPath);
-            }
-            var filePath = SGATempPath + "submission\\" + userInfo.NombreUsuario + "\\";
-            var archiveFile = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\archive"+imageIndex.ToString()+".zip";
-            var archivePath = SGATempPath + "zip\\" + userInfo.NombreUsuario + "\\";
-            */
+            // if (Directory.Exists(filePath))
+            // {
+            //     Directory.Delete(filePath, true);
+            // }
+            // Directory.CreateDirectory(filePath);
 
             //2. Descargar .zip de ftp y guardar en carpeta temporal zip
             Tipo_Info_SGA directorio;
@@ -661,7 +665,12 @@ namespace GestionAmbiental.UseCases.InspeccionesAmbientales.DescargarInspeccion
 
             output.extension = extension;
             //}
-
+            //6. Eliminar pathtemporal
+            // if (Directory.Exists(archivePath))
+            // {
+            //     Directory.Delete(archivePath, true);
+            // }
+            // Directory.CreateDirectory(archivePath);
             return output;
         }
         private class ImageProperties

@@ -98,6 +98,7 @@ namespace GestionAmbiental.UseCases.Util.Implementation
 
                 sftp.Dispose();
             }
+            fileStream.Dispose();
             fileStream.Close();
 
             return downloadedFilePath;
