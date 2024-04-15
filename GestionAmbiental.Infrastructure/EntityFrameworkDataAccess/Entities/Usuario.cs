@@ -14,23 +14,23 @@ namespace GestionAmbiental.Infrastructure.EntityFrameworkDataAccess.Entities
         public int Id_Usuario { get; set; }
         [Column(TypeName = "int")]
         public int Id_Rol { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "varchar(1000)")]
         public string Nombres { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "varchar(1000)")]
         public string Apellidos { get; set; }
-        [Column(TypeName = "varchar(15)")]
+        [Column(TypeName = "varchar(1000)")]
         public string usuario_red { get; set; }
-        [Column(TypeName = "varchar(50)")]
+        [Column(TypeName = "varchar(1000)")]
         public string Email { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Superior { get; set; }
         [Column(TypeName = "varchar(3)")]
         public string Estado { get; set; }
-        [Column(TypeName = "varchar(10)")]
+        [Column(TypeName = "varchar(1000)")]
         public string DNI { get; set; }
-        [Column(TypeName = "varchar(11)")]
+        [Column(TypeName = "varchar(1000)")]
         public string Celular { get; set; }
-        [Column(TypeName = "varchar(100)")]
+        [Column(TypeName = "varchar(1000)")]
         public string Puesto { get; set; }
         [Column(TypeName = "int")]
         public int? Id_Area_Trabajo { get; set; }
