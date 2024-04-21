@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GestionAmbiental.Application.UseCases.GestorUsuarios;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Session;
 using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Serilog;
@@ -87,6 +89,32 @@ namespace GestionAmbiental.Controllers
             }
             TempData["returnUrl"] = returnUrl;
             return View();
+        }
+        public IActionResult SesionVencida(string returnUrl)
+        {
+            var controller = ControllerContext.ActionDescriptor.ControllerName;
+            var action = ControllerContext.ActionDescriptor.ActionName;
+            if (HttpContext.Session.GetString("SessionUser") != null)
+            {
+                var userInfo = JsonConvert.DeserializeObject<UserInfo>(HttpContext.Session.GetString("SessionUser"));
+                ViewBag.Rol = userInfo.Rol.ToString();
+                ViewBag.Usuario = userInfo.NombreUsuario;
+            }
+            TempData["returnUrl"] = returnUrl;
+            return View();
+        }
+        public int Time()
+        {
+            var value = GetInstanceField(typeof(DistributedSession), HttpContext.Session, "_idleTimeout").ToString();
+            string[] time = value.Split(':');
+            var seconds = int.Parse(time[0]) * 60 + int.Parse(time[1]) * 60 + int.Parse(time[2]);
+            return seconds;
+        }
+        private object GetInstanceField(Type type, ISession session, string v)
+        {
+            BindingFlags bindFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static;
+            FieldInfo field = type.GetField(v, bindFlags);
+            return field.GetValue(session);
         }
     }
 }
