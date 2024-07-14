@@ -110,7 +110,7 @@
             }
             //Si no existe, mostrar primer tab
             else {
-                FIltrarEO_RS(1);
+                FiltrarEO_RS(1);
                 $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
             }
         });
@@ -140,7 +140,7 @@
         $("#EO-RS").on('click', function (e) {
             $(this).tab('show');
             $("#btn_agregar").prop("href", "/GestorManifiestoRS/AgregarEO_RS");
-            FIltrarEO_RS(1);
+            FiltrarEO_RS(1);
         });
         $("#Conductor").on('click', function (e) {
             $(this).tab('show');
@@ -158,10 +158,10 @@
             FiltrarUsuarios(1);
         });
 
-        function FIltrarEO_RS(pag) {
+        function FiltrarEO_RS(pag) {
             $.ajax({
                 type: "POST",
-                url: "/GestorManifiestoRS/FIltrarEO_RS",
+                url: "/GestorManifiestoRS/FiltrarEO_RS",
                 data: {
                     "pagina": pag,
                     "rpp": 10,
